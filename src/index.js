@@ -11,6 +11,8 @@ import Full from './containers/Full/'
 ReactDOM.render(
   <HashRouter>
     <Switch>
+
+    
       <Route path="/" name="Home" component={Full} />
     </Switch>
   </HashRouter>,

@@ -1,0 +1,147 @@
+
+.gooroom {
+    font-size: 10pt;
+}
+
+.gr-app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    box-sizing: border-box;
+}
+
+.gr-app-body {
+    margin-top: 55px;
+
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    overflow-x: hidden;
+
+    box-sizing: border-box;
+}
+
+.gr-header {
+    position: fixed;
+    z-index: 1020;
+    width: 100%;
+    flex-direction: row;
+    height: 55px;
+    padding: 0;
+    margin: 0;
+    background-color: #fff;
+    border-bottom: 1px solid #a4b7c1;
+    transition: margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s;
+    flex: 0 0 55px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.gr-sidebar {
+    position: fixed;
+    z-index: 1019;
+    width: 200px;
+    height: calc(100vh - 55px);
+
+    flex: 0 0 200px;
+    order: -1;
+
+    transition: margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s;
+
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    color: #fff;
+    background: #29363d;
+
+    box-sizing: border-box;
+}
+
+.gr-main {
+    margin-right: 0;
+
+    margin-left: 200px;
+
+    flex: 1;
+    min-width: 0;
+
+    transition: margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s;
+
+    display: block;
+
+    box-sizing: border-box;
+}
+
+.gr-breadcrumb {
+    transition: left 0.25s, right 0.25s, width 0.25s;
+
+    position: relative;
+    border-bottom: 1px solid #a4b7c1;
+
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    margin-bottom: 10px;
+    list-style: none;
+    background-color: #fff;
+}
+
+.gr-container {
+    padding: 0 10px;
+
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+
+    box-sizing: border-box;
+
+    display: block;
+}
+
+.gr-aside {
+    position: fixed;
+    right: 0;
+    height: 100%;
+
+    margin-right: -250px;
+
+    flex: 0 0 250px;
+
+    transition: margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s;
+
+    z-index: 1019;
+    width: 250px;
+    color: #29363d;
+    background: #fff;
+    border-left: 1px solid #a4b7c1;
+
+    display: block;
+
+    box-sizing: border-box;
+}
+
+.gr-footer {
+    margin-right: 0;
+
+    margin-left: 200px;
+    
+    transition: margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s;
+
+    flex: 0 0 50px;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0 1rem;
+    color: #151b1e;
+    background: #f0f3f5;
+    border-top: 1px solid #a4b7c1;
+
+    box-sizing: border-box;
+}
+
+
