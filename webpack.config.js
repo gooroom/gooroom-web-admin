@@ -1,71 +1,84 @@
-const webpack = require("webpack");
-const path = require("path");
+const webpack = require('webpack');
+const path = require('path');
 
-module.exports = {
-  entry: "./src/App",
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-  output: {
-    filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "dist")
-  },
+const extractCSS = new ExtractTextPlugin('[name].fonts.css');
+const extractSCSS = new ExtractTextPlugin('[name].styles.css');
 
-  devServer: {
-    contentBase: path.resolve(__dirname, "dist"),
-    hot: true,
-    open: true,
-    inline: true,
-    port: 9191
-  },
-  mode: "development",
+const BUILD_DIR = path.resolve(__dirname, 'build');
+const SRC_DIR = path.resolve(__dirname, 'src');
 
-  optimization: {
-    minimize: false
-  },
+module.exports = (env = {}) => {
+  return {
 
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: "style-loader",
+    entry: {
+      index: [SRC_DIR + '/index.js']
+    },
+    output: {
+      path: BUILD_DIR,
+      filename: '[name].bundle.js'
+    },
+  
+    devServer: {
+      contentBase: BUILD_DIR,
+      hot: true,
+      open: true,
+      inline: true,
+      port: 9191
+    },
+  
+    module: {
+      rules: [
+        {
+          test: /\.(scss)$/,
+          use: ['css-hot-loader'].concat(extractSCSS.extract({
+            fallback: 'style-loader',
+            use: [
+              {
+                loader: 'css-loader',
+                options: {alias: {'../img': '../public/img'}}
+              },
+              {
+                loader: 'sass-loader'
+              }
+            ]
+          }))
+        },
+        {
+          test: /\.html$/,
+          loader: 'html-loader'
+        },
+        {
+          test: /\.css$/,
+          use: extractCSS.extract({
+            fallback: 'style-loader',
+            use: 'css-loader'
+          })
+        },
+        {
+          test: /\.(js|jsx)$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
             options: {
-              sourceMap: true
+              cacheDirectory: true,
+              presets: ['react']
             }
-          },
-          {
-            loader: "css-loader"
-          }
-        ]
-      },
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            cacheDirectory: true,
-            presets: ["react"]
           }
         }
-	  },
-	//   {
-	// 	test: /\.(scss)$/,
-	// 	use: ['css-hot-loader'].concat(extractSCSS.extract({
-	// 	  fallback: 'style-loader',
-	// 	  use: [
-	// 		{
-	// 		  loader: 'css-loader',
-	// 		  options: {alias: {'../img': '../public/img'}}
-	// 		},
-	// 		{
-	// 		  loader: 'sass-loader'
-	// 		}
-	// 	  ]
-	// 	}))
-	//   },
+      ]
+    },
+  
+    plugins: [new webpack.HotModuleReplacementPlugin(),
+      extractCSS,
+      extractSCSS,
+      new HtmlWebpackPlugin({
+        inject: true,
+        template: './public/index.html'
+      })
     ]
-  },
-
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  
+  }
 };
