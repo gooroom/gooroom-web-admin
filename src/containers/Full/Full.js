@@ -12,11 +12,11 @@ import Dashboard from "../Dashboard/";
 class Full extends Component {
   render() {
     return (
-      <div className="gr-app">
+      <div className="app">
         <Header />
-        <div className="gr-app-body">
+        <div className="app-body">
           <Sidebar {...this.props} />
-          <main className="gr-main">
+          <main className="main">
             <Breadcrumb />
             <Container fluid>
               <Switch>

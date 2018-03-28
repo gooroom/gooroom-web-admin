@@ -132,13 +132,52 @@ class Sidebar extends Component {
   
 
     return (
-        <div className="sidebar">
-        <nav className="sidebar-nav">
-          <ul className="nav">
-            {navList(nav.items)}
-          </ul>
-        </nav>
-        <SidebarMinimizer/>
+      <div className="sidebar">
+        <div className={classes.root}>
+          <List component="nav" subheader={
+              <ListSubheader component="div" color="primary" className={classes.grSideHeder} >GPMS</ListSubheader>
+            }>
+            <ListItem button className={classes.grSideMenu} onClick={this.handleClick}>
+              <ListItemIcon><ComputerIcon /></ListItemIcon>
+              <ListItemText inset className={classes.grSideMenuItem} primary="구름관리서버설정" />
+            </ListItem>
+            <ListItem button onClick={this.handleClick}>
+              <ListItemIcon>
+                <DraftsIcon />
+              </ListItemIcon>
+              <ListItemText inset primary="Drafts" />
+              {this.state.open ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <ListItemText inset primary="Starred" />
+                </ListItem>
+              </List>
+            </Collapse>
+
+            <ListItem button onClick={this.handleClick}>
+              <ListItemIcon>
+                <InboxIcon />
+              </ListItemIcon>
+              <ListItemText inset primary="Inbox" />
+              {this.state.open ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <ListItemText inset primary="Starred" />
+                </ListItem>
+              </List>
+            </Collapse>
+          </List>
+        </div>
       </div>
     );
   }

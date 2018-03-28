@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 class Aside extends Component {
     render() {
         return (
-          <div className="gr-aside">
+          <div className="aside-menu">
               gr-aside
           </div>
     
