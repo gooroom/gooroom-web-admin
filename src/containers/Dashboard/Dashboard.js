@@ -4,8 +4,8 @@ import React, {Component} from 'react';
 class Dashboard extends Component {
     render() {
         return (
-          <div className="gr-dashboard">
-              gr-dashboard
+          <div className="dashboard">
+              dashboard
           </div>
     
         )
