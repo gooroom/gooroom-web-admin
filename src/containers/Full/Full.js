@@ -11,7 +11,10 @@ import Dashboard from "../Dashboard/";
 
 class Full extends Component {
   render() {
+    console.log(this.props);
+    
     return (
+      
       <div className="gr-app">
         <Header />
         <div className="gr-app-body">
