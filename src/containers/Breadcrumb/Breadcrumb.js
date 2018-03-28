@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 class Breadcrumb extends Component {
     render() {
         return (
-          <div className="gr-breadcrumb">
+          <div className="breadcrumb">
               gr-breadcrumb
           </div>
     
