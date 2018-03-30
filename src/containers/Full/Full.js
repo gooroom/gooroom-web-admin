@@ -10,7 +10,9 @@ import Footer from "../Footer/";
 import Dashboard from "../Dashboard/";
 
 class Full extends Component {
+
   render() {
+
     return (
       <div className="app">
         <Header />
