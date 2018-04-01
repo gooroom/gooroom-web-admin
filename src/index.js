@@ -7,6 +7,7 @@ import './scss/main.scss'
 
 // Containers
 import Full from './containers/Full/'
+import GrSideMenu from './containers/GrSideMenu/'
 
 ReactDOM.render(
   <HashRouter>
