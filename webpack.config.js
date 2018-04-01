@@ -64,7 +64,8 @@ module.exports = (env = {}) => {
             loader: 'babel-loader',
             options: {
               cacheDirectory: true,
-              presets: ['env']
+              presets: ['env', 'react', 'stage-2'],
+              plugins: ['babel-plugin-transform-object-rest-spread']
             }
           }
         }
