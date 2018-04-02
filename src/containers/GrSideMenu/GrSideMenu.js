@@ -23,7 +23,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   appFrame: {
-    marginTop: 55,
+    marginTop: 0,
     height: 430,
     zIndex: 1,
     overflow: 'hidden',
@@ -99,18 +99,19 @@ const styles = theme => ({
 });
 
 class GrSideMenu extends React.Component {
-  state = {
-    open: true,
-    anchor: 'left',
-  };
 
-  handleDrawerOpen = () => {
-    this.setState({ open: true });
-  };
+  constructor(props) {
 
-  handleDrawerClose = () => {
-    this.setState({ open: false });
-  };
+    super(props);
+
+    console.log('--- GrSideMenu ---');
+    console.log(props);
+
+    this.state = {
+      anchor: 'left',
+    };
+  
+  }
 
   handleChangeAnchor = event => {
     this.setState({
@@ -120,13 +121,15 @@ class GrSideMenu extends React.Component {
 
   render() {
     const { classes, theme } = this.props;
-    const { anchor, open } = this.state;
+    const { anchor } = this.state;
+
+    console.log("GrSideMenu (render) .... " + this.state.open);
 
     const drawer = (
       <Drawer
         variant="persistent"
         anchor={anchor}
-        open={open}
+        open={this.props.sideOpen}
         classes={{
           paper: classes.drawerPaper,
         }}
@@ -146,31 +149,12 @@ class GrSideMenu extends React.Component {
     return (
       <div className={classes.root}>
         <div className={classes.appFrame}>
-          <AppBar
-            className={classNames(classes.appBar, {
-              [classes.appBarShift]: open,
-              [classes[`appBarShift-${anchor}`]]: open,
-            })}
-          >
-            <Toolbar disableGutters={!open}>
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={this.handleDrawerOpen}
-                className={classNames(classes.menuButton, open && classes.hide)}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="title" color="inherit" noWrap>
-                Persistent drawer
-              </Typography>
-            </Toolbar>
-          </AppBar>
+
           {drawer}
           <main
             className={classNames(classes.content, classes[`content-${anchor}`], {
-              [classes.contentShift]: open,
-              [classes[`contentShift-${anchor}`]]: open,
+              [classes.contentShift]: this.props.sideOpen,
+              [classes[`contentShift-${anchor}`]]: this.props.sideOpen,
             })}
           >
             <div className={classes.drawerHeader} />

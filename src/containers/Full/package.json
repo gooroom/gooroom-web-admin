@@ -1,6 +1,6 @@
 {
-  "name": "GrFull",
+  "name": "Full",
   "version": "0.0.0",
   "private": true,
-  "main": "./GrFull.js"
+  "main": "./Full.js"
 }

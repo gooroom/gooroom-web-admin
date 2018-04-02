@@ -1,6 +1,6 @@
 {
-  "name": "Header",
+  "name": "GrHeader",
   "version": "0.0.0",
   "private": true,
-  "main": "./Header.js"
+  "main": "./GrHeader.js"
 }
