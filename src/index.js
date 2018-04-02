@@ -6,7 +6,12 @@ import { HashRouter, Route, Switch } from "react-router-dom";
 import './scss/main.scss'
 
 // Containers
+<<<<<<< HEAD
 import GrFull from './containers/Full/'
+=======
+import Full from './containers/Full/'
+import GrSideMenu from './containers/GrSideMenu/'
+>>>>>>> 3715f199738fbcd32b87da8d31efb022c66364e1
 
 ReactDOM.render(
   <HashRouter>
