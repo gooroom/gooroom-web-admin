@@ -54,7 +54,7 @@ class Sidebar extends Component {
 
   handleClick(e) {
 
-    console.log(e.target.parentElement);
+    //console.log(e.target.parentElement);
     this.setState({ open: !this.state.open });
   }
 
@@ -74,7 +74,7 @@ class Sidebar extends Component {
 
     // nav item with nav link
     const navItem = (item, key) => {
-        console.log(item);
+        //console.log(item);
 
         const classes = {
           item: classNames( item.class) ,
