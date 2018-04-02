@@ -12,11 +12,15 @@ import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
 import AccountCircle from "material-ui-icons/AccountCircle";
 
-const styles = theme => ({
+const styles = {
   root: {
-    marginTop: 300
+    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    zIndex: 2100,
+  },
+  rootToolBar: {
+    minHeight: 55
   }
-});
+};
 
 class GrHeader extends Component {
   constructor(props) {
@@ -29,10 +33,10 @@ class GrHeader extends Component {
 
   render() {
     const { classes } = this.props;
-
+    console.log( classes.root);
     return (
-      <AppBar className="classes.root">
-        <Toolbar>
+      <AppBar className={classes.root}>
+        <Toolbar className={classes.rootToolBar}>
           <Typography type="title" color="inherit">
             Material-UI Demo App
           </Typography>
@@ -57,9 +61,16 @@ class GrHeader extends Component {
 
 //export default GrHeader;
 
-GrHeader.propTypes = {
-  classes: PropTypes.object.isRequired,
-  width: PropTypes.string.isRequired
-};
+// GrHeader.propTypes = {
+//   classes: PropTypes.object.isRequired,
+//   width: PropTypes.string.isRequired
+// };
+// export default compose(withStyles(styles), withWidth())(GrHeader);
 
-export default compose(withStyles(styles), withWidth())(GrHeader);
+GrHeader.propTypes = {
+  children: PropTypes.node,
+  classes: PropTypes.object.isRequired,
+};
+export default withStyles(styles)(GrHeader);
+
+
