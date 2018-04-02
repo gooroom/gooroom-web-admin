@@ -1,5 +1,10 @@
 import React, { Component } from "react";
+import CssBaseline from 'material-ui/CssBaseline';
+
 import { Switch, Route, Redirect } from "react-router-dom";
+import classNames from "classnames";
+
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
 import GrHeader from "../Header/";
 import Sidebar from "../Sidebar/";
@@ -9,16 +14,13 @@ import Aside from "../Aside/";
 import Footer from "../Footer/";
 import Dashboard from "../Dashboard/";
 
-
 import GrSideMenu from "../GrSideMenu";
 
+import Button from "material-ui/Button";
 
-
-import Button from 'material-ui/Button';
-
+const theme = createMuiTheme();
 
 class Full extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -38,16 +40,10 @@ class Full extends Component {
     //console.log(this.props);
 
     return (
-      <div className="app">
-
+      <div>
         <GrHeader toggleDrawer={this.toggleDrawer} />
-
-        <div className="app-body">
+        <div>
           <GrSideMenu sideOpen={this.state.sideOpen} />
-        </div>
-        
-        <div className="app-body">
-          <Sidebar {...this.props} />
           <main className="main">
             <Breadcrumb />
             <Container fluid>
@@ -60,9 +56,7 @@ class Full extends Component {
               </Switch>
             </Container>
           </main>
-          <Aside />
         </div>
-
         <Footer />
       </div>
     );
