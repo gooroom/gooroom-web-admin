@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import CssBaseline from 'material-ui/CssBaseline';
+import PropTypes from "prop-types";
+import { withStyles } from "material-ui/styles";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 import classNames from "classnames";
 
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-
 import GrHeader from "../Header/";
+import GrSideMenu from "../GrSideMenu";
+import Button from "material-ui/Button";
+
 import Sidebar from "../Sidebar/";
 import Breadcrumb from "../Breadcrumb/";
 import Container from "../Container/";
@@ -14,11 +16,13 @@ import Aside from "../Aside/";
 import Footer from "../Footer/";
 import Dashboard from "../Dashboard/";
 
-import GrSideMenu from "../GrSideMenu";
-
-import Button from "material-ui/Button";
-
-const theme = createMuiTheme();
+const styles = {
+  appBody: {
+    marginTop: 55,
+    background: 'linear-gradient(45deg, #feb26b 30%, #ffd753 90%)',
+    zIndex: 2100
+  }
+};
 
 class Full extends Component {
   constructor(props) {
@@ -38,13 +42,16 @@ class Full extends Component {
 
   render() {
     //console.log(this.props);
+    const { classes } = this.props;
 
     return (
       <div>
         <GrHeader toggleDrawer={this.toggleDrawer} />
-        <div>
+        <div className={classes.appBody}>
+          
           <GrSideMenu sideOpen={this.state.sideOpen} />
           <main className="main">
+
             <Breadcrumb />
             <Container fluid>
               <Switch>
@@ -63,4 +70,9 @@ class Full extends Component {
   }
 }
 
-export default Full;
+Full.propTypes = {
+  children: PropTypes.node,
+  classes: PropTypes.object.isRequired,
+};
+export default withStyles(styles)(Full);
+
