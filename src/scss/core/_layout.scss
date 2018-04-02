@@ -81,7 +81,7 @@ app-root {
     width: 100%;
   }
   .app-body {
-    margin-top: 0;//$navbar-height;
+    margin-top: $navbar-height;
   }
 }
 
@@ -206,7 +206,7 @@ app-root {
     }
   }
   .app-body {
-    margin-top: 0;//$navbar-height;
+    margin-top: $navbar-height;
   }
 
   .breadcrumb-fixed {

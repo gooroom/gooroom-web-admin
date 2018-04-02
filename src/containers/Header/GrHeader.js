@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
+
+import compose from "recompose/compose";
+import withWidth from "material-ui/utils/withWidth";
+
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
 import Typography from "material-ui/Typography";
@@ -10,25 +14,7 @@ import AccountCircle from "material-ui-icons/AccountCircle";
 
 const styles = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 3,
-    width: "100%",
-    backgroundColor: "white"
-  },
-  grNavBar: {
-    marginTop: 0,
-    width: "100%",
-    backgroundColor: "white"
-  },
-  flex: {
-    flex: 0.5
-  },
-  grTitle: {
-    width: 240,
-    color: "blue"
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20
+    marginTop: 300
   }
 });
 
@@ -45,16 +31,12 @@ class GrHeader extends Component {
     const { classes } = this.props;
 
     return (
-      <AppBar position="static" elevation={0} className={classes.grNavBar}>
+      <AppBar className="classes.root">
         <Toolbar>
-          <Typography className={classes.grTitle} type="title" color="inherit">
+          <Typography type="title" color="inherit">
             Material-UI Demo App
           </Typography>
-          <IconButton
-            className={classes.menuButton}
-            color="default"
-            onClick={this.props.toggleDrawer}
-          >
+          <IconButton color="default" onClick={this.props.toggleDrawer}>
             <MenuIcon />
           </IconButton>
           <div>
@@ -68,8 +50,16 @@ class GrHeader extends Component {
   }
 }
 
+// GrHeader.propTypes = {
+//   classes: PropTypes.object.isRequired
+// };
+// export default withStyles(styles)(GrHeader);
+
+//export default GrHeader;
+
 GrHeader.propTypes = {
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  width: PropTypes.string.isRequired
 };
 
-export default withStyles(styles)(GrHeader);
+export default compose(withStyles(styles), withWidth())(GrHeader);
