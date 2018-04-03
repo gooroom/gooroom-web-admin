@@ -10,15 +10,21 @@ import Drawer from "material-ui/Drawer";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
 import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
+import Collapse from 'material-ui/transitions/Collapse';
+import ExpandLess from 'material-ui-icons/ExpandLess';
+import ExpandMore from 'material-ui-icons/ExpandMore';
+
 import { MenuItem } from "material-ui/Menu";
 import Typography from "material-ui/Typography";
-import TextField from "material-ui/TextField";
 import Divider from "material-ui/Divider";
 import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
+import StarBorder from 'material-ui-icons/StarBorder';
 import ChevronLeftIcon from "material-ui-icons/ChevronLeft";
 import ChevronRightIcon from "material-ui-icons/ChevronRight";
+
 import { otherMailFolderListItems } from "./tileData";
+import { GrMenuItems } from "./menuData";
 
 import InboxIcon from "material-ui-icons/MoveToInbox";
 
@@ -45,24 +51,6 @@ const styles = {
     transition: "width 0.25s",
     background: grColors.sideBarBackgroup,
     color: "white",
-//    display: "block",
-    // overflowY: "auto",
-    // display: "flex",
-    // flexDirection: "column",
-    // height: "100vh",
-    // flex: "1 0 auto",
-    // //zIndex: theme.zIndex.drawer,
-    // WebkitOverflowScrolling: "touch", // Add iOS momentum scrolling.
-    // // temporary style
-    // // position: 'fixed',
-
-    // //top: 0,
-    // // We disable the focus ring for mouse, touch and keyboard users.
-    // // At some point, it would be better to keep it for keyboard users.
-    // // :focus-ring CSS pseudo-class will help.
-    "&:focus": {
-      outline: "none"
-    }
   },
   menuItem: {
     color: grColors.sideBarText,
@@ -73,12 +61,19 @@ class GrSideMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      anchor: "left"
+      anchor: "left",
+      open: false
     };
   }
 
+  handleClick = () => {
+    this.setState({ open: !this.state.open });
+  };
+
   render() {
     const { classes } = this.props;
+
+    console.log(GrMenuItems);
 
     return (
       <Drawer
@@ -104,18 +99,29 @@ class GrSideMenu extends React.Component {
             </ListItemText>
           </ListItem>
           <List>
-          <ListItem button >
-            <ListItemIcon>
-              <InboxIcon className={classes.menuItem} />
-            </ListItemIcon>
-            <ListItemText>
-              <Typography className={classes.menuItem}>등록관리</Typography>
-            </ListItemText>
-          </ListItem>
-        </List>
+            <ListItem button onClick={this.handleClick}>
+              <ListItemIcon>
+                <InboxIcon className={classes.menuItem} />
+              </ListItemIcon>
+              <ListItemText inset >
+                <Typography className={classes.menuItem}>등록관리</Typography>
+              </ListItemText>
+              {this.state.open ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItem button className={classes.nested}>
+                  <ListItemIcon>
+                    <StarBorder />
+                  </ListItemIcon>
+                  <ListItemText inset primary="Starred" />
+                </ListItem>
+              </List>
+            </Collapse>
+          </List>
         </List>
         <Divider />
-        <List>{otherMailFolderListItems}</List>
+        {GrMenuItems}
       </Drawer>
     );
   }
