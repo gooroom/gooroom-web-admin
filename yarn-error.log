@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\syhan\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js build
+  C:\Program Files\nodejs\node.exe C:\Users\syhan\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js start
 
 PATH: 
   C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\syhan\bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0;C:\Program Files\nodejs;D:\;D:\mariadb-10.2.13-winx64\bin;C:\Users\syhan\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Microsoft VS Code\bin;C:\Users\syhan\AppData\Roaming\npm
@@ -6255,9 +6255,9 @@ Lockfile:
 
 Trace: 
   Error: Command failed.
-  Exit code: 2
+  Exit code: 3221225786
   Command: C:\Windows\system32\cmd.exe
-  Arguments: /d /s /c webpack -p --progress
+  Arguments: /d /s /c webpack-dev-server --progress --color --inline --env.dev
   Directory: D:\_Programming\react\my-material-ui
   Output:
   

@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
 
-import compose from "recompose/compose";
-import withWidth from "material-ui/utils/withWidth";
+import { grLayout } from "../../templates/default/GrLayout";
+import { grColors } from "../../templates/default/GrColors"
 
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
@@ -14,11 +14,24 @@ import AccountCircle from "material-ui-icons/AccountCircle";
 
 const styles = {
   root: {
-    background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    display: "flex",
+    flexDirection: "row",
+    background: grColors.headerBackgroundColor,
     zIndex: 2100,
+    position: "fixed",
+    height: grLayout.headerHeight,
+    padding: 0,
+    margin: 0,  
   },
   rootToolBar: {
-    minHeight: 55
+    flexDirection: "row",
+    minHeight: grLayout.headerHeight,
+  },
+  brandLogo: {
+    color: grColors.logo,
+    width: "calc(" + grLayout.sideBarWidth + " - 24px)",
+    paddingLeft: 0,
+    paddingRight: 0,
   }
 };
 
@@ -33,12 +46,12 @@ class GrHeader extends Component {
 
   render() {
     const { classes } = this.props;
-    console.log( classes.root);
+
     return (
       <AppBar className={classes.root}>
         <Toolbar className={classes.rootToolBar}>
-          <Typography type="title" color="inherit">
-            Material-UI Demo App
+          <Typography type="title" color="inherit" className={classes.brandLogo}>
+            GPMS v2.0
           </Typography>
           <IconButton color="default" onClick={this.props.toggleDrawer}>
             <MenuIcon />
@@ -53,19 +66,6 @@ class GrHeader extends Component {
     );
   }
 }
-
-// GrHeader.propTypes = {
-//   classes: PropTypes.object.isRequired
-// };
-// export default withStyles(styles)(GrHeader);
-
-//export default GrHeader;
-
-// GrHeader.propTypes = {
-//   classes: PropTypes.object.isRequired,
-//   width: PropTypes.string.isRequired
-// };
-// export default compose(withStyles(styles), withWidth())(GrHeader);
 
 GrHeader.propTypes = {
   children: PropTypes.node,
