@@ -1,6 +1,6 @@
 {
-  "name": "Breadcrumb",
+  "name": "GrBreadcrumb",
   "version": "0.0.0",
   "private": true,
-  "main": "./Breadcrumb.js"
+  "main": "./GrBreadcrumb.js"
 }
