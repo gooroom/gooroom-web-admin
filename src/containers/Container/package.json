@@ -1,6 +1,6 @@
 {
-  "name": "Container",
+  "name": "GrContainer",
   "version": "0.0.0",
   "private": true,
-  "main": "./Container.js"
+  "main": "./GrContainer.js"
 }

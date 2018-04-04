@@ -9,8 +9,8 @@ export const grColors = {
   headerBackgroundColor: "linear-gradient(45deg, #C2C2C2 30%, #FFFFFF 90%)",
 
   sideBarBackgroup: "#E2E2E2",
-  sideBarIcon: "#121212",
-  sideBarText: "#121212",
+  sideBarMenuIcon: "#121212",
+  sideBarMenuText: "#878787",
 
 }
 
