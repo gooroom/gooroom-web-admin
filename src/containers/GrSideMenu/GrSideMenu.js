@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
+import classNames from "classnames";
+
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColors } from "../../templates/default/GrColors";
 
-import classNames from "classnames";
 import Drawer from "material-ui/Drawer";
 import AppBar from "material-ui/AppBar";
 import Toolbar from "material-ui/Toolbar";
@@ -14,21 +16,27 @@ import Collapse from 'material-ui/transitions/Collapse';
 import ExpandLess from 'material-ui-icons/ExpandLess';
 import ExpandMore from 'material-ui-icons/ExpandMore';
 
-import { MenuItem } from "material-ui/Menu";
+import { MenuList, MenuItem } from 'material-ui/Menu';
+import Paper from 'material-ui/Paper';
+
 import Typography from "material-ui/Typography";
 import Divider from "material-ui/Divider";
+
 import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
+import DraftsIcon from 'material-ui-icons/Drafts';
+import SendIcon from 'material-ui-icons/Send';
 import StarBorder from 'material-ui-icons/StarBorder';
 import ChevronLeftIcon from "material-ui-icons/ChevronLeft";
 import ChevronRightIcon from "material-ui-icons/ChevronRight";
 
 import { otherMailFolderListItems } from "./tileData";
-import { GrMenuItems } from "./menuData";
+
+import menus from "./_nav";
 
 import InboxIcon from "material-ui-icons/MoveToInbox";
 
-const styles = {
+const styles = theme => ({
   docked: {
     position: "fixed",
     zIndex: 1019,
@@ -52,28 +60,140 @@ const styles = {
     background: grColors.sideBarBackgroup,
     color: "white",
   },
+  menuHeader: {
+    minHeight: grLayout.breadcrumbHeight,
+    alignItems: "center",
+    borderBottom: "1px solid #a4b7c1",
+  },
   menuItem: {
-    color: grColors.sideBarText,
-  }
-};
+    padding: "3px 10px 3px 10px",
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& $primary, & $icon': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+  primary: {
+    color: grColors.sideBarMenuText,
+  },
+  icon: {},
+});
 
 class GrSideMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       anchor: "left",
-      open: false
+      menu1Open: false,
+      menu2Open: false,
     };
+
   }
 
-  handleClick = () => {
-    this.setState({ open: !this.state.open });
+  activeRoute(routeName, props) {
+    // return this.props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
+    return props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
+
+  }
+
+  handleMenuItemClick = (event, item) => {
+    console.log(item);
+    this.setState({ selectedIndex: item, anchorEl: null });
+  };
+
+  handleClick = (id, e) => {
+    console.log(id);
+    console.log(e);
+    switch(id) {
+      case 'menu1': this.setState({ menu1Open: !this.state.menu1Open }); break;
+      case 'menu2': this.setState({ menu2Open: !this.state.menu2Open }); break;
+    }
   };
 
   render() {
-    const { classes } = this.props;
+    const props = this.props;
+    const {classes} = this.props;
 
-    console.log(GrMenuItems);
+    const titleMenu = (item, key) => {
+      return (
+        <MenuItem key={key} className={classes.menuItem} >
+          <ListItemIcon>
+            <DraftsIcon />
+          </ListItemIcon>
+          <ListItemText classes={{ primary: classes.primary }} primary={item.name} />
+        </MenuItem>
+      );
+    }
+
+    const menuDivider = (divider, key) => {
+      return (<Divider />);
+    }
+
+    // nav item with nav link
+    const menuItem = (item, key) => {
+      const classes = {
+        item: classNames(item.class) ,
+        link: classNames('nav-link', item.variant ? `nav-link-${item.variant}` : ''),
+        icon: classNames(item.icon )
+      };
+      return (
+        menuLink(item, key, classes)
+      )
+    };
+
+    // nav link
+    // <MenuItem key={key} className={classes.menuItem} onClick={event => this.handleMenuItemClick(event, item)}>
+    const menuLink = (item, key, classParam) => {
+      const url = item.url ? item.url : '';
+      return (
+        <MenuItem key={key} 
+          className={classes.menuItem} 
+          component={Link}
+          to={item.url}>
+          <ListItemIcon className={classParam.icon}>
+            <SendIcon />
+          </ListItemIcon>
+          <ListItemText classes={{ primary: classes.primary }} inset primary={item.name}></ListItemText>
+        </MenuItem>
+      )
+    };
+
+    // menu dropdown
+    const menuDropdown = (item, key) => {
+      return (
+        <MenuItem key={key} name="menu2" className={classes.menuItem}>
+          <ListItemIcon className={classes.icon}>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText classes={{ primary: classes.primary }} inset primary={item.name} />
+          <ExpandLess />
+        </MenuItem>
+
+        // <Collapse in={this.state.menu2Open} timeout="auto" unmountOnExit>
+        //   <MenuList component="div" disablePadding>
+        //     <MenuItem button className={classes.nested}>
+        //       <ListItemIcon>
+        //         <StarBorder />
+        //       </ListItemIcon>
+        //       <ListItemText inset primary="Starred" />
+        //     </MenuItem>
+        //   </MenuList>
+        // </Collapse>
+      );
+    };
+
+    // menu type
+    const menuType = (item, idx) => {
+      return (item.title ? titleMenu(item, idx) :
+        item.divider ? menuDivider(item, idx) :
+        item.children ? menuDropdown(item, idx) : menuItem(item, idx));
+    }
+
+    // menu list
+    const menuList = (items) => {
+      return items.map((item, index) => menuType(item, index));
+    };
 
     return (
       <Drawer
@@ -82,61 +202,30 @@ class GrSideMenu extends React.Component {
         anchor={this.state.anchor}
         open={this.props.sideOpen}
       >
-        <div>
-          <IconButton onClick={this.handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
+        <div className={classes.menuHeader}>
+          <div>MMMM</div>
         </div>
-        <Divider />
         
-        <List>
-          <ListItem button >
-            <ListItemIcon>
-              <InboxIcon className={classes.menuItem} />
-            </ListItemIcon>
-            <ListItemText>
-              <Typography className={classes.menuItem}>등록관리</Typography>
-            </ListItemText>
-          </ListItem>
-          <List>
-            <ListItem button onClick={this.handleClick}>
-              <ListItemIcon>
-                <InboxIcon className={classes.menuItem} />
-              </ListItemIcon>
-              <ListItemText inset >
-                <Typography className={classes.menuItem}>등록관리</Typography>
-              </ListItemText>
-              {this.state.open ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                <ListItem button className={classes.nested}>
-                  <ListItemIcon>
-                    <StarBorder />
-                  </ListItemIcon>
-                  <ListItemText inset primary="Starred" />
-                </ListItem>
-              </List>
-            </Collapse>
-          </List>
-        </List>
-        <Divider />
-        {GrMenuItems}
+        <Paper>
+          <MenuList>
+          {menuList(menus.items)}
+          </MenuList>
+        </Paper>
       </Drawer>
     );
   }
 }
 
-// GrSideMenu.propTypes = {
-//   classes: PropTypes.object.isRequired,
-//   theme: PropTypes.object.isRequired
-// };
-// export default withStyles(styles, { withTheme: true })(GrSideMenu);
-
 GrSideMenu.propTypes = {
-  children: PropTypes.node,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  theme: PropTypes.object.isRequired
 };
-export default withStyles(styles)(GrSideMenu);
+export default withStyles(styles, { withTheme: true })(GrSideMenu);
+
+// GrSideMenu.propTypes = {
+//   children: PropTypes.node,
+//   classes: PropTypes.object.isRequired
+// };
+// export default withStyles(styles)(GrSideMenu);
 
 //export default GrSideMenu;

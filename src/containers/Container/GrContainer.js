@@ -17,17 +17,11 @@ const styles = {
     listStyle: "none",
     backgroundColor: "#fff",
     height: grLayout.breadcrumbHeight,
-    alignItems: "center",
-  },
-  menuParentItem: {
-    color: "blue",
-  },
-  menuSelectItem: {
-    color: "red",
+    alignItems: "center"
   }
 };
 
-class GrBreadcrumb extends Component {
+class GrContainer extends Component {
   constructor(props) {
     super(props);
   }
@@ -36,26 +30,13 @@ class GrBreadcrumb extends Component {
     const { classes } = this.props;
 
     return (
-      <div >
-        <ol className={classes.root}>
-            <li className={classes.menuParentItem}>
-                <a href="#/">Home</a> > 
-            </li>
-            <li className={classes.menuParentItem}>
-                <a href="#/clients">단말관리</a> > 
-            </li>
-            <li className={classes.menuSelectItem}>등록관리</li>
-        </ol>
-    </div>
-  )
-
-
-      ;
+        <div className="container-fluid">gr-container2</div>
+    );
   }
 }
 
-GrBreadcrumb.propTypes = {
+GrContainer.propTypes = {
   children: PropTypes.node,
   classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(GrBreadcrumb);
+export default withStyles(styles)(GrContainer);

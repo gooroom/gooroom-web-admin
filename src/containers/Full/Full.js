@@ -13,15 +13,14 @@ import GrHeader from "../Header/";
 import GrSideMenu from "../GrSideMenu";
 import GrBreadcrumb from "../Breadcrumb/";
 
-import Button from "material-ui/Button";
-
-import Sidebar from "../Sidebar/";
-
-import Container from "../Container/";
+import GrContainer from "../Container/";
 import Aside from "../Aside/";
 import Footer from "../Footer/";
-import Dashboard from "../Dashboard/";
 
+
+import Dashboard from "../Dashboard/";
+// Clients - client management
+import ClientManage from '../../views/Clients/ClientManage';
 
 const styles = {
   root: {
@@ -35,7 +34,7 @@ const styles = {
     flexDirection: "row",
     flexGrow: 1,
     overflowX: "hidden",
-    background: 'linear-gradient(45deg, #feb26b 30%, #ffd753 90%)',
+    //background: 'linear-gradient(45deg, #feb26b 30%, #ffd753 90%)',
   },
   main: {
     marginRight: 0,
@@ -59,6 +58,7 @@ const styles = {
 };
 
 class Full extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -67,15 +67,15 @@ class Full extends Component {
     };
 
     this.toggleDrawer = this.toggleDrawer.bind(this);
-    this.changeTempValue = this.changeTempValue.bind(this);
+//    this.changeTempValue = this.changeTempValue.bind(this);
   }
 
-  changeTempValue() {
-    console.log(this.state.tempValue);
-    this.setState({
-      tempValue: "zzz"
-    });
-  }
+  // changeTempValue() {
+  //   console.log(this.state.tempValue);
+  //   this.setState({
+  //     tempValue: "zzz"
+  //   });
+  // }
 
   toggleDrawer() {
     this.setState({
@@ -95,15 +95,11 @@ class Full extends Component {
           <GrSideMenu sideOpen={this.state.sideOpen} />
           <main className={classNames({[classes.main]: !this.state.isMainWide}, {[classes.mainWide]: this.state.isMainWide})}>
             <GrBreadcrumb />
-            <Container fluid>
               <Switch>
-                <Route
-                  path="/dashboard"
-                  name="Dashboard"
-                  component={Dashboard}
-                />
+              <Route exact path="/" name="Home" component={Dashboard} />
+              <Route path="/dashboard" name="Dashboard" component={Dashboard} />
+              <Route path="/clients/clientmanage" name="ClientManage" component={ClientManage}/>
               </Switch>
-            </Container>
           </main>
         </div>
         <Footer />
