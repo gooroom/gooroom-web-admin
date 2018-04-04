@@ -74,10 +74,16 @@ const styles = theme => ({
       },
     },
   },
+  nested: {
+    padding: "3px 10px 3px 30px",
+  },
   primary: {
     color: grColors.sideBarMenuText,
   },
-  icon: {},
+  icon: {
+    margin: 0,
+    padding: 0
+  },
 });
 
 class GrSideMenu extends React.Component {
@@ -86,7 +92,7 @@ class GrSideMenu extends React.Component {
     this.state = {
       anchor: "left",
       menu1Open: false,
-      menu2Open: false,
+      menu2Open: true,
     };
 
   }
@@ -135,26 +141,26 @@ class GrSideMenu extends React.Component {
       const classes = {
         item: classNames(item.class) ,
         link: classNames('nav-link', item.variant ? `nav-link-${item.variant}` : ''),
-        icon: classNames(item.icon )
+        icon: classNames(item.icon)
       };
       return (
         menuLink(item, key, classes)
       )
     };
 
-    // nav link
     // <MenuItem key={key} className={classes.menuItem} onClick={event => this.handleMenuItemClick(event, item)}>
     const menuLink = (item, key, classParam) => {
       const url = item.url ? item.url : '';
+      const menuclass = item.level == 1 ? classes.menuItem : classes.nested;
       return (
         <MenuItem key={key} 
-          className={classes.menuItem} 
+          className={menuclass} 
           component={Link}
           to={item.url}>
-          <ListItemIcon className={classParam.icon}>
+          <ListItemIcon className={classes.icon}>
             <SendIcon />
           </ListItemIcon>
-          <ListItemText classes={{ primary: classes.primary }} inset primary={item.name}></ListItemText>
+          <ListItemText className={classes.icon} inset primary={item.name}></ListItemText>
         </MenuItem>
       )
     };
@@ -162,24 +168,14 @@ class GrSideMenu extends React.Component {
     // menu dropdown
     const menuDropdown = (item, key) => {
       return (
-        <MenuItem key={key} name="menu2" className={classes.menuItem}>
-          <ListItemIcon className={classes.icon}>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText classes={{ primary: classes.primary }} inset primary={item.name} />
-          <ExpandLess />
-        </MenuItem>
-
-        // <Collapse in={this.state.menu2Open} timeout="auto" unmountOnExit>
-        //   <MenuList component="div" disablePadding>
-        //     <MenuItem button className={classes.nested}>
-        //       <ListItemIcon>
-        //         <StarBorder />
-        //       </ListItemIcon>
-        //       <ListItemText inset primary="Starred" />
-        //     </MenuItem>
-        //   </MenuList>
-        // </Collapse>
+        <div key={key}>
+        {menuItem(item, key)}
+        <Collapse in={this.state.menu2Open} timeout="auto" unmountOnExit>
+          <MenuList component="div" disablePadding>
+            {menuList(item.children)}
+          </MenuList>
+        </Collapse>
+        </div>
       );
     };
 
@@ -208,7 +204,7 @@ class GrSideMenu extends React.Component {
         
         <Paper>
           <MenuList>
-          {menuList(menus.items)}
+          {menuList(menus.items, 0)}
           </MenuList>
         </Paper>
       </Drawer>
