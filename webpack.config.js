@@ -21,6 +21,7 @@ module.exports = (env = {}) => {
       filename: '[name].bundle.js'
     },
   
+    devtool: env.prod ? 'source-map' : 'cheap-module-eval-source-map',
     devServer: {
       contentBase: BUILD_DIR,
       hot: true,
@@ -73,6 +74,7 @@ module.exports = (env = {}) => {
     },
   
     plugins: [new webpack.HotModuleReplacementPlugin(),
+      new webpack.optimize.UglifyJsPlugin({sourceMap: true}),
       extractCSS,
       extractSCSS,
       new HtmlWebpackPlugin({
