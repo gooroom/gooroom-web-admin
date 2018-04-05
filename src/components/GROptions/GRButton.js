@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 //import {FormGroup, Input, InputGroup, InputGroupAddon, Button} from 'reactstrap';
 
 
-class GRButton extends Component {
+class GrButton extends Component {
 
     constructor(props) {
         super(props);
@@ -19,5 +19,5 @@ class GRButton extends Component {
     }
 }
 
-export default GRButton;
+export default GrButton;
 

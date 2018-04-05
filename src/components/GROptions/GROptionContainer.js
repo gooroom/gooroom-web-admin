@@ -2,9 +2,11 @@
 import React, {Component} from 'react';
 //import {Form, FormGroup, Row, Col, Input, InputGroup, InputGroupAddon, Button, Label, Card, CardBody} from 'reactstrap';
 
-import GRButton from '../../components/GROptions/GRButton';
+import GrButton from '../../components/GrOptions/GrButton';
 
-class GROptionContainer extends Component {
+import Select from 'material-ui/Select';
+
+class GrOptionContainer extends Component {
 
     constructor(props) {
         super(props);
@@ -51,7 +53,7 @@ class GROptionContainer extends Component {
                 case 'button':
                     return (
                         <FormGroup key={option.id} className="mb-2 mr-sm-2 mb-sm-0">
-                            <GRButton align="right" label="그룹등록" onClick={option.toggleCreateDialog}/>
+                            <GrButton align="right" label="그룹등록" onClick={option.toggleCreateDialog}/>
                         </FormGroup>
                     );
                     break;
@@ -86,5 +88,5 @@ class GROptionContainer extends Component {
     }
 }
 
-export default GROptionContainer;
+export default GrOptionContainer;
 

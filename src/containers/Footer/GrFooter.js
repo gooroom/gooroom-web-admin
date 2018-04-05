@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
 
 import { grLayout } from "../../templates/default/GrLayout";
-import { grColor } from "../../templates/default/GrColors";
+import { grColors } from "../../templates/default/GrColors"
 
 const styles = {
   root: {
@@ -13,22 +13,16 @@ const styles = {
     display: "flex",
     flexWrap: "wrap",
     padding: "0.75rem 1rem",
-    marginTop: 0,
-    marginBottom: 0,
+    margin: 0,
     listStyle: "none",
     backgroundColor: "#fff",
     height: grLayout.breadcrumbHeight,
     alignItems: "center",
+    borderTop: "1px solid #a4b7c1",
   },
-  menuParentItem: {
-    color: "blue",
-  },
-  menuSelectItem: {
-    color: "red",
-  }
 };
 
-class GrBreadcrumb extends Component {
+class GrFooter extends Component {
   constructor(props) {
     super(props);
   }
@@ -36,27 +30,12 @@ class GrBreadcrumb extends Component {
   render() {
     const { classes } = this.props;
 
-    return (
-      <div >
-        <ol className={classes.root}>
-            <li className={classes.menuParentItem}>
-                <a href="#/">Home</a> > 
-            </li>
-            <li className={classes.menuParentItem}>
-                <a href="#/clients">단말관리</a> > 
-            </li>
-            <li className={classes.menuSelectItem}>등록관리</li>
-        </ol>
-    </div>
-  )
-
-
-      ;
+    return <div className={classes.root}>@ GPMS - Gooroom Platform Management System.</div>;
   }
 }
 
-GrBreadcrumb.propTypes = {
+GrFooter.propTypes = {
   children: PropTypes.node,
   classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(GrBreadcrumb);
+export default withStyles(styles)(GrFooter);
