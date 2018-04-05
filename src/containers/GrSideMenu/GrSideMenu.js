@@ -52,6 +52,7 @@ const styles = theme => ({
   paper: {                
     top: 0,
     width: grLayout.sideBarWidth,
+    height: "100vh",
     position: "relative",
     flex: 1,
     overflowX: "hidden",
@@ -61,9 +62,21 @@ const styles = theme => ({
     color: "white",
   },
   menuHeader: {
-    minHeight: grLayout.breadcrumbHeight,
-    alignItems: "center",
+    color: "#b59ba3",
+    textAlign: "center",
+    minHeight: grLayout.sideMenuHeaderHeight,
+    paddingTop: "0.5em",
     borderBottom: "1px solid #a4b7c1",
+  },
+  menuFooter: {
+    color: "#4779e0",
+    textAlign: "center",
+    minHeight: grLayout.sideMenuFooterHeight,
+    paddingTop: "0.5em",
+    borderTop: "1px solid #a4b7c1",
+  },
+  menuContent: {
+    height: "calc(100vh - " + grLayout.headerHeight + " - " + grLayout.sideMenuHeaderHeight + " - " + grLayout.sideMenuFooterHeight + ")",
   },
   menuItem: {
     padding: "3px 10px 3px 10px",
@@ -199,14 +212,16 @@ class GrSideMenu extends React.Component {
         open={this.props.sideOpen}
       >
         <div className={classes.menuHeader}>
-          <div>MMMM</div>
+          <div>SIDE HEADER</div>
         </div>
-        
-        <Paper>
+        <Paper className={classes.menuContent}>
           <MenuList>
           {menuList(menus.items, 0)}
           </MenuList>
         </Paper>
+        <div className={classes.menuFooter}>
+          <div>SIDE FOOTER</div>
+        </div>
       </Drawer>
     );
   }

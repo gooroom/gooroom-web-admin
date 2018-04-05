@@ -1,6 +1,6 @@
 {
-  "name": "Footer",
+  "name": "GrFooter",
   "version": "0.0.0",
   "private": true,
-  "main": "./Footer.js"
+  "main": "./GrFooter.js"
 }

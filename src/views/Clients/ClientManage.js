@@ -1,4 +1,9 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "material-ui/styles";
+
+import { grLayout } from "../../templates/default/GrLayout";
+import { grColor } from "../../templates/default/GrColors";
 /*
 import {
   Badge, Label, Table,
@@ -15,14 +20,23 @@ import {
 
 import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
 
-import GROptionContainer from "../../components/GROptions/GROptionContainer";
-import GRPageHeader from "../../components/Header/GRPageHeader";
-import {GRProps, GRGridColumns, GRGridData} from "./ClientManageProp";
+import GrOptionContainer from "../../components/GROptions/GrOptionContainer";
+import GrPageHeader from "../../components/GrHeader/GrPageHeader";
+import {GrProps, GrGridColumns, GrGridData} from "./ClientManageProp";
 
 import axios from "axios";
 
 import ReactTable from 'react-table';
 import "react-table/react-table.css";
+
+const styles = {
+  root: {
+  },
+  content: {
+    height: "calc(100vh - " + grLayout.headerHeight + grLayout.breadcrumbHeight + ")",
+    
+  },
+};
 
 class ClientManage extends Component {
   constructor(props) {
@@ -40,10 +54,12 @@ class ClientManage extends Component {
 
   componentDidMount() {
     var that = this;
-    
-    axios
-      .get("http://localhost:8080/gpms/readClientGroupList")
-      .then(function(response) {
+    axios({
+      method: 'post',
+      url: 'http://localhost:8080/gpms/readClientGroupList',
+      config: { headers: {'Content-Type': 'multipart/form-data' }},
+      data: {}
+    }).then(function(response) {
         if (response.data.data && response.data.data.length > 0) {
           const groupList = response.data.data.map(x => ({
             key: x.grpId,
@@ -57,7 +73,7 @@ class ClientManage extends Component {
         console.log(error);
       });
     
-    
+   
 
     // axios.post('http://localhost:8080/gpms/readClientGroupList', {
     //   firstName: 'Fred',
@@ -117,21 +133,23 @@ class ClientManage extends Component {
   }
 
   render() {
-
+    const { classes } = this.props;
     return (
-      <div className="animated fadeIn">
-            <Card>
-              <CardHeader>
-                <GRPageHeader path={this.props.location.pathname}/>
-              </CardHeader>
-              <CardContent>
-                <GROptionContainer options={GRProps(this.state.groupOptionList)} />
-                <ReactTable data={this.state.gridData} columns={GRGridColumns} defaultPageSize={5} />
-              </CardContent>
-            </Card>
+      <div className={classes.root} >
+        <Card className={classes.content}>
+          <GrPageHeader path={this.props.location.pathname}/>
+          <CardContent>
+            
+            <ReactTable data={this.state.gridData} columns={GrGridColumns} defaultPageSize={5} />
+          </CardContent>
+        </Card>
       </div>
     );
   }
 }
 
-export default ClientManage;
+ClientManage.propTypes = {
+  children: PropTypes.node,
+  classes: PropTypes.object.isRequired
+};
+export default withStyles(styles)(ClientManage);

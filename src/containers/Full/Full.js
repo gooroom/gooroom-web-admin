@@ -10,13 +10,12 @@ import { grColor } from "../../templates/default/GrColors";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import GrHeader from "../Header/";
+import GrFooter from "../Footer/";
 import GrSideMenu from "../GrSideMenu";
 import GrBreadcrumb from "../Breadcrumb/";
 
 import GrContainer from "../Container/";
 import Aside from "../Aside/";
-import Footer from "../Footer/";
-
 
 import Dashboard from "../Dashboard/";
 // Clients - client management
@@ -100,9 +99,9 @@ class Full extends Component {
               <Route path="/dashboard" name="Dashboard" component={Dashboard} />
               <Route path="/clients/clientmanage" name="ClientManage" component={ClientManage}/>
               </Switch>
+            <GrFooter />
           </main>
         </div>
-        <Footer />
       </div>
     );
   }
