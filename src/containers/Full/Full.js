@@ -4,10 +4,13 @@ import classNames from "classnames";
 import { withStyles } from "material-ui/styles";
 import Typography from "material-ui/Typography";
 
+import CssBaseline from 'material-ui/CssBaseline';
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColor } from "../../templates/default/GrColors";
 
-import { Switch, Route, Redirect } from "react-router-dom";
+
 
 import GrHeader from "../Header/";
 import GrFooter from "../Footer/";
@@ -17,9 +20,30 @@ import GrBreadcrumb from "../Breadcrumb/";
 import GrContainer from "../Container/";
 import Aside from "../Aside/";
 
-import Dashboard from "../Dashboard/";
-// Clients - client management
-import ClientManage from '../../views/Clients/ClientManage';
+
+import blue from 'material-ui/colors/blue';
+
+
+const theme = createMuiTheme({
+  palette: {
+    primary: blue,
+  },
+  overrides: {
+    MuiButton: {
+      // Name of the styleSheet
+      root: {
+        // Name of the rule
+        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+        borderRadius: 3,
+        border: 0,
+        color: 'white',
+        height: 48,
+        padding: '0 30px',
+        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .30)',
+      },
+    },
+  },
+});
 
 const styles = {
   root: {
@@ -33,7 +57,6 @@ const styles = {
     flexDirection: "row",
     flexGrow: 1,
     overflowX: "hidden",
-    //background: 'linear-gradient(45deg, #feb26b 30%, #ffd753 90%)',
   },
   main: {
     marginRight: 0,
@@ -88,29 +111,33 @@ class Full extends Component {
     const { classes } = this.props;
 
     return (
+
+      <React.Fragment>
+      <MuiThemeProvider theme={theme}>
+      <CssBaseline />
       <div className={classes.root} >
         <GrHeader toggleDrawer={this.toggleDrawer} />
         <div className={classes.appBody}>
           <GrSideMenu sideOpen={this.state.sideOpen} />
           <main className={classNames({[classes.main]: !this.state.isMainWide}, {[classes.mainWide]: this.state.isMainWide})}>
+            <div>
             <GrBreadcrumb />
-              <Switch>
-              <Route exact path="/" name="Home" component={Dashboard} />
-              <Route path="/dashboard" name="Dashboard" component={Dashboard} />
-              <Route path="/clients/clientmanage" name="ClientManage" component={ClientManage}/>
-              </Switch>
+            <GrContainer />
+            </div>
             <GrFooter />
-          </main>
-        </div>
+            </main>
+          </div>
       </div>
+      </MuiThemeProvider>
+      </React.Fragment>
+
     );
   }
 }
 
-Full.propTypes = {
-  children: PropTypes.node,
-  classes: PropTypes.object.isRequired,
-};
+// Full.propTypes = {
+//   classes: PropTypes.object.isRequired,
+// };
 export default withStyles(styles)(Full);
 
 

@@ -37,46 +37,41 @@ import menus from "./_nav";
 import InboxIcon from "material-ui-icons/MoveToInbox";
 
 const styles = theme => ({
-  docked: {
-    position: "fixed",
-    zIndex: 1019,
-    height: "calc(100vh - " + grLayout.headerHeight + ")",
-    flex: "0 0 " + grLayout.sideBarWidth,
-    order: -1,
-    transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
-    display: "flex",
-    flexDirection: "column",
-    padding: 0,
-    color: "#fff",
-  },
-  paper: {                
-    top: 0,
-    width: grLayout.sideBarWidth,
-    height: "100vh",
-    position: "relative",
-    flex: 1,
-    overflowX: "hidden",
-    overflowY: "auto",
-    transition: "width 0.25s",
-    background: grColors.sideBarBackgroup,
-    color: "white",
-  },
   menuHeader: {
-    color: "#b59ba3",
     textAlign: "center",
     minHeight: grLayout.sideMenuHeaderHeight,
     paddingTop: "0.5em",
     borderBottom: "1px solid #a4b7c1",
   },
   menuFooter: {
-    color: "#4779e0",
     textAlign: "center",
     minHeight: grLayout.sideMenuFooterHeight,
     paddingTop: "0.5em",
     borderTop: "1px solid #a4b7c1",
+    borderBottom: "1px solid #a4b7c1",
+  },
+  menuContainer: {
+    top: grLayout.headerHeight,
+    position: "fixed",
+    zIndex: 1019,
+    width: grLayout.sideBarWidth,
+    height: "calc(100vh - " + grLayout.headerHeight + ")",
+    flex: "0 0 200px",
+    order: "-1",
+    transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
+    overflowX: "hidden",
+    display: "flex",
+    flexDirection: "column",
+    padding: 0,
   },
   menuContent: {
-    height: "calc(100vh - " + grLayout.headerHeight + " - " + grLayout.sideMenuHeaderHeight + " - " + grLayout.sideMenuFooterHeight + ")",
+    position: "relative",
+    flex: 1,
+    overflowX: "hidden",
+    overflowY: "auto",
+    width: grLayout.sideBarWidth,
+    transition: "width 0.25s",
+    display: "block",
   },
   menuItem: {
     padding: "3px 10px 3px 10px",
@@ -91,7 +86,6 @@ const styles = theme => ({
     padding: "3px 10px 3px 30px",
   },
   primary: {
-    color: grColors.sideBarMenuText,
   },
   icon: {
     margin: 0,
@@ -113,17 +107,13 @@ class GrSideMenu extends React.Component {
   activeRoute(routeName, props) {
     // return this.props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
     return props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
-
   }
 
   handleMenuItemClick = (event, item) => {
-    console.log(item);
     this.setState({ selectedIndex: item, anchorEl: null });
   };
 
   handleClick = (id, e) => {
-    console.log(id);
-    console.log(e);
     switch(id) {
       case 'menu1': this.setState({ menu1Open: !this.state.menu1Open }); break;
       case 'menu2': this.setState({ menu2Open: !this.state.menu2Open }); break;
@@ -132,7 +122,7 @@ class GrSideMenu extends React.Component {
 
   render() {
     const props = this.props;
-    const {classes} = this.props;
+    const {classes, theme} = this.props;
 
     const titleMenu = (item, key) => {
       return (
@@ -173,7 +163,9 @@ class GrSideMenu extends React.Component {
           <ListItemIcon className={classes.icon}>
             <SendIcon />
           </ListItemIcon>
-          <ListItemText className={classes.icon} inset primary={item.name}></ListItemText>
+          <Typography variant="button" color="textSecondary">
+            {item.name}
+          </Typography>
         </MenuItem>
       )
     };
@@ -206,19 +198,19 @@ class GrSideMenu extends React.Component {
 
     return (
       <Drawer
-        classes={{ docked: classes.docked, paper: classes.paper }}
+        classes={{ docked: theme.palette.secondary, paper: classes.menuContainer }}
         variant="persistent"
         anchor={this.state.anchor}
         open={this.props.sideOpen}
       >
-        <div className={classes.menuHeader}>
-          <div>SIDE HEADER</div>
-        </div>
-        <Paper className={classes.menuContent}>
-          <MenuList>
-          {menuList(menus.items, 0)}
-          </MenuList>
-        </Paper>
+          <div className={classes.menuContent}>
+            <div className={classes.menuHeader}>
+              <div>SIDE HEADER</div>
+            </div>
+            <MenuList className={classes.menuList}>
+            {menuList(menus.items, 0)}
+            </MenuList>
+          </div>
         <div className={classes.menuFooter}>
           <div>SIDE FOOTER</div>
         </div>

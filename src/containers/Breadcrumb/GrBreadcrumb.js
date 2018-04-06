@@ -16,7 +16,6 @@ const styles = {
     marginTop: 0,
     marginBottom: 0,
     listStyle: "none",
-    backgroundColor: "#fff",
     height: grLayout.breadcrumbHeight,
     alignItems: "center",
   },
