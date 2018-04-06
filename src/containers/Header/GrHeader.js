@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
 
+import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColors } from "../../templates/default/GrColors"
 
@@ -12,23 +14,26 @@ import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
 import AccountCircle from "material-ui-icons/AccountCircle";
 
+
+
+
+
 const styles = {
   root: {
     display: "flex",
     flexDirection: "row",
-    background: grColors.headerBackgroundColor,
     zIndex: 2100,
     position: "fixed",
     height: grLayout.headerHeight,
     padding: 0,
-    margin: 0,  
+    margin: 0,
+    boxShadow: "none",
   },
   rootToolBar: {
     flexDirection: "row",
     minHeight: grLayout.headerHeight,
   },
   brandLogo: {
-    color: grColors.logo,
     width: "calc(" + grLayout.sideBarWidth + " - 24px)",
     paddingLeft: 0,
     paddingRight: 0,
@@ -48,7 +53,7 @@ class GrHeader extends Component {
     const { classes } = this.props;
 
     return (
-      <AppBar className={classes.root}>
+      <AppBar className={classes.root} color="primary">
         <Toolbar className={classes.rootToolBar}>
           <Typography type="title" color="inherit" className={classes.brandLogo}>
             GPMS v2.0
@@ -56,11 +61,9 @@ class GrHeader extends Component {
           <IconButton color="default" onClick={this.props.toggleDrawer}>
             <MenuIcon />
           </IconButton>
-          <div>
             <IconButton color="default" onClick={this.props.login}>
               <AccountCircle />
             </IconButton>
-          </div>
         </Toolbar>
       </AppBar>
     );
@@ -72,5 +75,7 @@ GrHeader.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 export default withStyles(styles)(GrHeader);
+
+//export default GrHeader;
 
 

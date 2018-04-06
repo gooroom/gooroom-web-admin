@@ -8,15 +8,10 @@ import { grColors } from "../../templates/default/GrColors"
 const styles = {
   root: {
     transition: "left 0.25s, right 0.25s, width 0.25s",
-    position: "relative",
     borderBottom: "1px solid #a4b7c1",
-    display: "flex",
-    flexWrap: "wrap",
-    padding: "0.75rem 1rem",
-    margin: 0,
-    listStyle: "none",
-    backgroundColor: "#fff",
-    height: grLayout.breadcrumbHeight,
+    textAlign: "right",
+    padding: "0.5rem 1rem",
+    height: grLayout.footerHeight,
     alignItems: "center",
     borderTop: "1px solid #a4b7c1",
   },
