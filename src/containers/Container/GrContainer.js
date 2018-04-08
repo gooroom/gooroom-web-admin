@@ -13,9 +13,9 @@ const styles = {
   root: {
     transition: "left 0.25s, right 0.25s, width 0.25s",
     position: "relative",
-    display: "flex",
+//    display: "flex",
     flexWrap: "wrap",
-    padding: "0.75rem 1rem",
+//    padding: "0.75rem 1rem",
     overflowX: "hidden",
     overflowY: "auto",
     marginTop: 0,

@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "material-ui/styles";
 
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColors } from "../../templates/default/GrColors"
 
@@ -53,15 +51,15 @@ class GrHeader extends Component {
     const { classes } = this.props;
 
     return (
-      <AppBar className={classes.root} color="primary">
+      <AppBar className={classes.root}>
         <Toolbar className={classes.rootToolBar}>
-          <Typography type="title" color="inherit" className={classes.brandLogo}>
+          <Typography type="title" className={classes.brandLogo}>
             GPMS v2.0
           </Typography>
-          <IconButton color="default" onClick={this.props.toggleDrawer}>
+          <IconButton onClick={this.props.toggleDrawer}>
             <MenuIcon />
           </IconButton>
-            <IconButton color="default" onClick={this.props.login}>
+            <IconButton onClick={this.props.login}>
               <AccountCircle />
             </IconButton>
         </Toolbar>

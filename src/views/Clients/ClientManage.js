@@ -4,19 +4,6 @@ import { withStyles } from "material-ui/styles";
 
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColor } from "../../templates/default/GrColors";
-/*
-import {
-  Badge, Label, Table,
-  Row, Col, Button, ButtonDropdown,
-  DropdownToggle, DropdownMenu, DropdownItem,
-  Modal, ModalHeader, ModalBody, ModalFooter, 
-  Card, CardHeader, CardFooter, CardBody,
-  Collapse,
-  Form, FormGroup, FormText,
-  Input, InputGroup, InputGroupAddon, InputGroupText,
-  Pagination, PaginationItem, PaginationLink
-} from 'reactstrap';
-*/
 
 import Card, { CardHeader, CardMedia, CardContent, CardActions } from 'material-ui/Card';
 
@@ -33,7 +20,8 @@ const styles = {
   root: {
   },
   content: {
-    height: "calc(100vh - " + grLayout.headerHeight + grLayout.breadcrumbHeight + ")",
+    //height: "calc(100vh - " + grLayout.headerHeight + " - " +  grLayout.breadcrumbHeight + ")",
+    height: "100%",
     
   },
 };

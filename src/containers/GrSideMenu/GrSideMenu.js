@@ -72,6 +72,26 @@ const styles = theme => ({
     width: grLayout.sideBarWidth,
     transition: "width 0.25s",
     display: "block",
+    "&::-webkit-scrollbar": {
+      position: "absolute",
+      width: 10,
+      marginLeft: "-10px",
+      "-webkit-appearance": "none",
+      },
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "#CFD8DC", 
+      borderRight: "1px solid #1f292e",
+      borderLeft: "1px solid #1f292e",
+      },
+    "&::-webkit-scrollbar-thumb": {
+      height: "30px",
+      backgroundColor: "#78909C",
+      backgroundClip: "content-box",
+      borderColor: "transparent",
+      borderStyle: "solid",
+      borderWidth: "1px 1px",
+      }
+
   },
   menuItem: {
     padding: "3px 10px 3px 10px",
@@ -204,9 +224,9 @@ class GrSideMenu extends React.Component {
         open={this.props.sideOpen}
       >
           <div className={classes.menuContent}>
-            <div className={classes.menuHeader}>
+            <Paper className={classes.menuHeader} elevation={0} square={true}>
               <div>SIDE HEADER</div>
-            </div>
+            </Paper>
             <MenuList className={classes.menuList}>
             {menuList(menus.items, 0)}
             </MenuList>
