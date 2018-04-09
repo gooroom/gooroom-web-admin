@@ -99,6 +99,7 @@ class Full extends Component {
   }
 
   render() {
+    //console.log("-Full.render-------------------------");
     //console.log(this.props);
     const { classes } = this.props;
 

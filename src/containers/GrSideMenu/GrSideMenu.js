@@ -38,7 +38,7 @@ import InboxIcon from "material-ui-icons/MoveToInbox";
 
 const styles = theme => ({
   menuHeader: {
-    textAlign: "center",
+    textAlign: "left",
     minHeight: grLayout.sideMenuHeaderHeight,
     paddingTop: "0.5em",
     borderBottom: "1px solid #a4b7c1",
@@ -216,9 +216,10 @@ class GrSideMenu extends React.Component {
       return items.map((item, index) => menuType(item, index));
     };
 
+    //console.log("-GrSideMenu.render-------------------------");
     return (
       <Drawer
-        classes={{ docked: theme.palette.secondary, paper: classes.menuContainer }}
+        classes={{ paper: classes.menuContainer }}
         variant="persistent"
         anchor={this.state.anchor}
         open={this.props.sideOpen}

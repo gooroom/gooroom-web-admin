@@ -1,29 +1,30 @@
 import React from "react";
 
-export const GrProps = (groupList) => ([
+export const GrProps = (groupList, valueObject) => ([
     {
+      type: "select-single",
       id: "clientStatus",
       label: "상태구분",
-      type: "select",
+      valueObject: "clientStatus",
       selectItems: [
-        { id: "", value: "정상단말" },
-        { id: "SECURE", value: "침해단말" },
-        { id: "REVOKED", value: "해지단말" },
-        { id: "ONLINE", value: "온라인" },
-        { id: "ALL", value: "전체" }
-      ]
+        { id: "", value: "정상단말", label: "정상단말" },
+        { id: "SECURE", value: "침해단말", label: "침해단말" },
+        { id: "REVOKED", value: "해지단말", label: "해지단말" },
+        { id: "ONLINE", value: "온라인", label: "온라인" },
+        { id: "ALL", value: "전체", label: "전체" }
+      ],
     },
-    {
-      id: "clientGroup",
-      label: "그룹선택",
-      type: "select",
-      selectItems: groupList
-    },
-    {
-      id: "searchData",
-      label: "검색",
-      type: "input-search"
-    }
+    // {
+    //   type: "select-single",
+    //   id: "clientGroup",
+    //   label: "그룹선택",
+    //   selectItems: groupList,
+    // },
+    // {
+    //   type: "input-search",
+    //   id: "searchData",
+    //   label: "검색",
+    // }
   ]);
 
 export const GrGridColumns = 
