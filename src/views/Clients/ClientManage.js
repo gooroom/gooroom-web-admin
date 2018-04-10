@@ -17,6 +17,7 @@ import GrPageHeader from "../../components/GrHeader/GrPageHeader";
 import { GrProps, GrGridColumns, GrGridData } from "./ClientManageProp";
 
 import axios from "axios";
+import qs from "qs";
 
 import ReactTable from "react-table";
 import "react-table/react-table.css";
@@ -47,6 +48,7 @@ const styles = theme => ({
   form: {
     marginBottom: 15
   },
+
   button: {
     margin: theme.spacing.unit
   },
@@ -55,153 +57,114 @@ const styles = theme => ({
   }
 });
 
-class ClientManage extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      collapse: true,
-      loading: true,
-      clientGroup: "",
-      clientGroupOptionList: [],
-      clientStatus: "",
-      clientStatusItems: [
-        { id: "", value: "정상단말", label: "정상단말" },
-        { id: "SECURE", value: "침해단말", label: "침해단말" },
-        { id: "REVOKED", value: "해지단말", label: "해지단말" },
-        { id: "ONLINE", value: "온라인", label: "온라인" },
-        { id: "ALL", value: "전체", label: "전체" }
-      ],
-      keyword: "",
-      gridData: []
-    };
+const requestData = (pageSize, page, sorted, filtered) => {
 
-    this.fetchData = this.fetchData.bind(this);
-  }
 
-  getClientData() {
-    // select data
-    var bodyFormData = new FormData();
-    bodyFormData.set("start", "0");
-    bodyFormData.set("length", "5");
-    var that = this;
 
+  return new Promise((resolve, reject) => {
+
+
+    console.log("pageSize : " + pageSize);
+    console.log("page : " + page);
+    console.log("sorted : " + sorted);
+    console.log("filtered : " + filtered);
+
+
+    //var that = this;
+    let rawData = [];
     axios({
       method: "post",
       url: "http://localhost:8080/gpms/readClientList",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
       transformRequest: [function (data, headers) {
-        // Do whatever you want to transform the data
-        const params = new FormData ();
-        params.set("keyword", that.state.keyword);
-
-    
-        return data;
+        return qs.stringify(data);
       }],
       data: {
         start: "0",
         length: "5",
-        keyword: that.state.keyword,
-        clientStatus: that.state.clientStatus,
-      }
-    })
-      .then(function(response) {
+        searchKey: that.state.keyword,
+        clientType: that.state.clientStatus,
+        groupId: that.state.clientGroup,
+      },
+      withCredentials: true
+    }).then(function(response) {
+
         if (response.data.data && response.data.data.length > 0) {
           const gridList = response.data.data.map(x => ({
             key: x.grpId,
             id: x.grpId,
             value: x.grpNm
           }));
-          const gridList2 = response.data.data;
-          that.setState({ gridData: gridList2 });
+
+          rawData = response.data.data;
+
+          //const gridList2 = response.data.data;
+          //that.setState({ clientListData: gridList2 });
         }
+
       })
       .catch(function(error) {
         console.log(error);
       });
+
+
+
+
+
+    // You can retrieve your data however you want, in this case, we will just use some local data.
+    let filteredData = rawData;
+
+    // You must return an object containing the rows of the current page, and optionally the total pages number.
+    const res = {
+      rows: filteredData.slice(pageSize * page, pageSize * page + pageSize),
+      pages: Math.ceil(filteredData.length / pageSize)
+    };
+
+    // Here we'll simulate a server response with 500ms of delay.
+    setTimeout(() => resolve(res), 500);
+  });
+};
+
+
+class ClientManage extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      collapse: true,
+      loading: true,
+
+      clientGroup: "",
+      clientGroupOptionList: [],
+      clientStatus: "",
+      clientStatusOptionList: [
+        { id: "NORMAL", value: "NORMAL", label: "정상단말" },
+        { id: "SECURE", value: "SECURE", label: "침해단말" },
+        { id: "REVOKED", value: "REVOKED", label: "해지단말" },
+        { id: "ONLINE", value: "ONLINE", label: "온라인" },
+        { id: "ALL", value: "ALL", label: "전체" }
+      ],
+      keyword: "",
+
+      clientListData: []
+    };
+
+    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
 
-    
-
-
-
-    axios.post('/gpms/testSite', {
-      param1: 'param1',
-      param2: 'param2'
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-
-/*
-    axios.post('http://localhost:9191/gpms/readClientGroupList', {
-      param1: 'param1',
-      param2: 'param2'
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-
-
-    
-
-
-    var that = this;
-
-    var params = new FormData();
-    params.set("param1", "param1");
-    params.set("param2", "param2");
-
-    axios({
-      method: "post",
-      url: "http://localhost:8080/gpms/readClientGroupList",
-      config: { headers: { "Content-Type": "multipart/form-data" } },
-      data: params,
-      withCredentials: true
-    })
-      .then(function(response) {
-        if (response.data.data && response.data.data.length > 0) {
-          const groupList = response.data.data.map(x => ({
-            key: x.grpId,
-            id: x.grpId,
-            value: x.grpNm,
-            label: x.grpNm
-          }));
-          that.setState({ clientGroupOptionList: groupList });
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-*/
-
-
       var that = this;
-
-      var params = new FormData();
-      params.set("param1", "param1");
-      params.set("param2", "param2");
   
       axios({
         method: "post",
         url: "http://localhost:8080/gpms/readClientGroupList",
         transformRequest: [function (data, headers) {
-          // Do whatever you want to transform the data
-      
-          return "aa=aaa&bb=bbb";
+          return "";
         }],
         data: {
-          param3: "param3",
-          param4: "param4",
-          param5: "param5",
         },
         withCredentials: true
       })
@@ -210,7 +173,7 @@ class ClientManage extends Component {
             const groupList = response.data.data.map(x => ({
               key: x.grpId,
               id: x.grpId,
-              value: x.grpNm,
+              value: x.grpId,
               label: x.grpNm
             }));
             that.setState({ clientGroupOptionList: groupList });
@@ -219,47 +182,70 @@ class ClientManage extends Component {
         .catch(function(error) {
           console.log(error);
         });
-  
-  
-  
 
-
-    this.getClientData();
+    //this.getClientData();
   }
 
   fetchData(state, instance) {
-    // Whenever the table model changes, or the user sorts or changes pages, this method gets called and passed the current table model.
-    // You can set the `loading` prop of the table to true to use the built-in one or show you're own loading bar if you want.
+
     this.setState({ loading: true });
-    // Request the data however you want.  Here, we'll use our mocked service we created earlier
-    requestData(state.pageSize, state.page, state.sorted, state.filtered).then(
-      res => {
-        // Now just get the rows of data to your React Table (and update anything else like total pages or loading)
-        this.setState({
-          data: res.rows,
-          pages: res.pages,
-          loading: false
-        });
-      }
-    );
+    const that = this;
+    axios({
+      method: "post",
+      url: "http://localhost:8080/gpms/readClientList",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      transformRequest: [function (data, headers) {
+        return qs.stringify(data);
+      }],
+      data: {
+        start: "0",
+        length: "5",
+        searchKey: that.state.keyword,
+        clientType: that.state.clientStatus,
+        groupId: that.state.clientGroup,
+      },
+      withCredentials: true
+    }).then(function(response) {
+
+        that.setState({ loading: false });
+
+        if (response.data.data && response.data.data.length > 0) {
+          const gridList = response.data.data.map(x => ({
+            key: x.grpId,
+            id: x.grpId,
+            value: x.grpNm
+          }));
+
+
+          //const gridList2 = response.data.data;
+          that.setState({ clientListData: response.data.data });
+        }
+
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
   }
 
+
+
+
+
+
   handleChangeSelect = event => {
-    //console.log("### : "  + event);
     this.setState({ [event.target.name]: event.target.value });
   };
 
   handleChangeKeyword = name => event => {
-    this.setState({
-      [name]: event.target.value
-    });
+    this.setState({[name]: event.target.value});
   };
 
   render() {
     //console.log("-ClientManage.render-------------------------");
     const { classes } = this.props;
+    const { clientListData, clientGroup, clientStatus, keyword, pages, loading } = this.state;
     //console.log(this.state.clientGroupOptionList);
-
     return (
       <div className={classes.root}>
         <Card className={classes.content}>
@@ -273,7 +259,7 @@ class ClientManage extends Component {
                   onChange={this.handleChangeSelect}
                   inputProps={{ name: "clientStatus", id: "client-status" }}
                 >
-                  {this.state.clientStatusItems.map(x => (
+                  {this.state.clientStatusOptionList.map(x => (
                     <MenuItem value={x.value} key={x.id}>
                       {x.label}
                     </MenuItem>
@@ -312,7 +298,7 @@ class ClientManage extends Component {
                 variant="raised"
                 color="primary"
                 onClick={() => {
-                  this.getClientData();
+                  this.fetchData();
                 }}
               >
                 <Search className={classes.leftIcon} />
@@ -321,9 +307,12 @@ class ClientManage extends Component {
             </form>
 
             <ReactTable
-              data={this.state.gridData}
+              data={clientListData}
               columns={GrGridColumns}
+              loading={loading}
               defaultPageSize={5}
+              onFetchData={this.fetchData}
+              
             />
           </CardContent>
         </Card>
