@@ -20,7 +20,7 @@ const styles = {
   root: {
     display: "flex",
     flexDirection: "row",
-    zIndex: 2100,
+    zIndex: 1300,
     position: "fixed",
     height: grLayout.headerHeight,
     padding: 0,
