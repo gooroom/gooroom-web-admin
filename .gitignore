@@ -18,3 +18,7 @@ Thumbs.db
 .idea
 npm-debug.log
 compilation-stats.json
+yarn-error.log
+yarn.lock
+yarn.lock
+.gitignore
