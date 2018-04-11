@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import classNames from 'classnames';
+import classNames from "classnames";
 import { withStyles } from "material-ui/styles";
 
 import { grLayout } from "../../templates/default/GrLayout";
@@ -19,10 +19,10 @@ import Table, {
   TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
-} from 'material-ui/Table';
-import Checkbox from 'material-ui/Checkbox';
-import Tooltip from 'material-ui/Tooltip';
+  TableSortLabel
+} from "material-ui/Table";
+import Checkbox from "material-ui/Checkbox";
+import Tooltip from "material-ui/Tooltip";
 
 import GrOptions from "../../containers/GrOptions";
 import GrPageHeader from "../../components/GrHeader/GrPageHeader";
@@ -48,21 +48,28 @@ const styles = theme => ({
     height: "100%"
   },
   pageContent: {
-    paddingTop: 2
+    paddingTop: 14
   },
-  control: {
-    marginTop: 0
+
+  form: {
+    marginBottom: 6,
+    display: "flex"
   },
   formControl: {
-    minWidth: 120,
-    marginRight: "15px"
+    minWidth: 100,
+    marginRight: "15px",
+    flexGrow: 1
   },
-  form: {
-    marginBottom: 15
+  formEmptyControl: {
+    flexGrow: "6"
+  },
+
+  textField: {
+    marginTop: 3
   },
 
   table: {
-    minWidth: 700,
+    minWidth: 700
   },
 
   button: {
@@ -72,53 +79,57 @@ const styles = theme => ({
     marginRight: theme.spacing.unit
   },
 
-  headCell: {
-    whiteSpace: "nowrap"
+  tableHeadCell: {
+    whiteSpace: "nowrap",
+    padding: 0
   },
   tableContainer: {
     overflowX: "auto"
   },
+  tableRow: {
+    height: "2em"
+  },
+  tableCell: {
+    height: "1em",
+    padding: 0,
+    cursor: "pointer"
+  }
 });
 
-
-let id = 0;
-function createData(name, calories, fat, carbs, protein) {
-  id += 1;
-  return { id, name, calories, fat, carbs, protein };
-}
-
 const columnData = [
-  { id: 'ischeck', numeric: false, disablePadding: true, label: '선택' },
-  { id: 'clientStatus', numeric: true, disablePadding: false, label: '상태' },
-  { id: 'clientId', numeric: true, disablePadding: false, label: '단말아이디' },
-  { id: 'clientName', numeric: true, disablePadding: false, label: '단말이름' },
-  { id: 'loginId', numeric: true, disablePadding: false, label: '접속자' },
-  { id: 'clientGroupName', numeric: true, disablePadding: false, label: '단말그룹' },
-  { id: 'regDate', numeric: true, disablePadding: false, label: '등록일' },
-];
-
-const data = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 24, 4.0),
-  createData('Eclair', 262, 16.0, 24, 6.0, 24, 4.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3, 24, 4.0),
-  createData('Gingerbread', 356, 16.0, 49, 3.9, 24, 4.0),
+  { id: "clientStatus", numeric: false, disablePadding: true, label: "상태" },
+  { id: "clientId", numeric: false, disablePadding: true, label: "단말아이디" },
+  { id: "clientName", numeric: false, disablePadding: true, label: "단말이름" },
+  { id: "loginId", numeric: false, disablePadding: true, label: "접속자" },
+  {
+    id: "clientGroupName",
+    numeric: false,
+    disablePadding: true,
+    label: "단말그룹"
+  },
+  { id: "regDate", numeric: false, disablePadding: true, label: "등록일" }
 ];
 
 class ClientManageHead extends Component {
+
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
   };
 
   render() {
     const { classes } = this.props;
-
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
+    const {
+      onSelectAllClick,
+      order,
+      orderBy,
+      numSelected,
+      rowCount
+    } = this.props;
 
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.headCell}>
+          <TableCell padding="checkbox" className={classes.tableHeadCell}>
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={numSelected === rowCount}
@@ -128,25 +139,19 @@ class ClientManageHead extends Component {
           {columnData.map(column => {
             return (
               <TableCell
-                className={classes.headCell}
+                className={classes.tableHeadCell}
                 key={column.id}
                 numeric={column.numeric}
-                padding={column.disablePadding ? 'none' : 'default'}
+                padding={column.disablePadding ? "none" : "default"}
                 sortDirection={orderBy === column.id ? order : false}
               >
-                <Tooltip
-                  title="Sort"
-                  placement={column.numeric ? 'bottom-end' : 'bottom-start'}
-                  enterDelay={300}
+                <TableSortLabel
+                  active={orderBy === column.id}
+                  direction={order}
+                  onClick={this.createSortHandler(column.id)}
                 >
-                  <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={order}
-                    onClick={this.createSortHandler(column.id)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
-                </Tooltip>
+                  {column.label}
+                </TableSortLabel>
               </TableCell>
             );
           }, this)}
@@ -157,45 +162,66 @@ class ClientManageHead extends Component {
 }
 
 ClientManageHead.propTypes = {
-  classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
-
 ClientManageHead = withStyles(styles)(ClientManageHead);
 
 
+const requestData = (param) => {
 
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "post",
+      url: param.url,
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      transformRequest: [
+        function(data, headers) {
+          return qs.stringify(data);
+        }
+      ],
+      data: param,
+      withCredentials: true
+    }).then(function(response) {
 
+        if (response.data.status.result === "success" && response.data.data && response.data.data.length > 0) {
 
+            // const listData = [];
+            // response.data.data.forEach(d => {
+            //   const obj = {
+            //     clientStatus: d.clientStatus,
+            //     clientId: d.clientId,
+            //     clientName: d.clientName,
+            //     loginId: d.loginId,
+            //     clientGroupName: d.clientGroupName,
+            //     regDate: d.regDate
+            //   };
+            //   listData.push(obj);
+            // });
 
+            // const res = {
+            //   rows: listData,
+            //   rowsTotal: response.data.recordsTotal,
+            //   rowsFiltered: response.data.recordsFiltered,
+            //   page: response.data.draw,
+            // };
+            // resolve(res);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            resolve(response.data);
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  });
+};
 
 
 
 class ClientManage extends Component {
-
-  
   constructor(props) {
     super(props);
 
     this.state = {
-
-      collapse: true,
       loading: true,
 
       clientGroup: "",
@@ -210,130 +236,107 @@ class ClientManage extends Component {
       ],
       keyword: "",
 
-      clientListData: [],
-
-
-
-      order: 'asc',
-      orderBy: 'calories',
+      order: "asc",
+      orderBy: "calories",
       selected: [],
-      data: [
-        createData('Cupcake', 305, 3.7, 67, 4.3, 67, 4.3),
-        createData('Donut', 452, 25.0, 51, 4.9, 67, 4.3),
-        createData('Eclair', 262, 16.0, 24, 6.0, 67, 4.3),
-        createData('Frozen yoghurt', 159, 6.0, 24, 4.0, 67, 4.3),
-        createData('Gingerbread', 356, 16.0, 49, 3.9, 67, 4.3),
-        createData('Honeycomb', 408, 3.2, 87, 6.5, 67, 4.3),
-        createData('Ice cream sandwich', 237, 9.0, 37, 4.3, 67, 4.3),
-        createData('Jelly Bean', 375, 0.0, 94, 0.0, 67, 4.3),
-        createData('KitKat', 518, 26.0, 65, 7.0, 67, 4.3),
-        createData('Lollipop', 392, 0.2, 98, 0.0, 67, 4.3),
-        createData('Marshmallow', 318, 0, 81, 2.0, 67, 4.3),
-        createData('Nougat', 360, 19.0, 9, 37.0, 67, 4.3),
-        createData('Oreo', 437, 18.0, 63, 4.0, 67, 4.3),
-      ].sort((a, b) => (a.calories < b.calories ? -1 : 1)),
+      data: [],
       page: 0,
-      rowsPerPage: 5,
+      rowsPerPage: 10,
+      rowsTotal: 0,
+      rowsFiltered: 0
     };
 
     this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
-
-      var that = this;
-      axios({
-        method: "post",
-        url: "http://localhost:8080/gpms/readClientGroupList",
-        transformRequest: [function (data, headers) {
-          return "";
-        }],
-        data: {
-        },
-        withCredentials: true
-      })
-        .then(function(response) {
-          if (response.data.data && response.data.data.length > 0) {
-            const groupList = response.data.data.map(x => ({
-              key: x.grpId,
-              id: x.grpId,
-              value: x.grpId,
-              label: x.grpNm
-            }));
-            that.setState({ clientGroupOptionList: groupList });
-          }
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
-
-    //this.getClientData();
-  }
-
-  fetchData(state, instance) {
-
-    this.setState({
-      loading: true,
-      pageSize: state.pageSize
-    });
-    const that = this;
+    var that = this;
     axios({
       method: "post",
-      url: "http://localhost:8080/gpms/readClientList",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      transformRequest: [function (data, headers) {
-        return qs.stringify(data);
-      }],
-      data: {
-        start: "0",
-        length: state.pageSize,
-        searchKey: that.state.keyword,
-        clientType: that.state.clientStatus,
-        groupId: that.state.clientGroup,
-      },
+      url: "http://localhost:8080/gpms/readClientGroupList",
+      transformRequest: [
+        function(data, headers) {
+          return "";
+        }
+      ],
+      data: {},
       withCredentials: true
-    }).then(function(response) {
-
-        that.setState({ loading: false });
-
+    })
+      .then(function(response) {
         if (response.data.data && response.data.data.length > 0) {
-          const gridList = response.data.data.map(x => ({
+          const groupList = response.data.data.map(x => ({
             key: x.grpId,
             id: x.grpId,
-            value: x.grpNm
+            value: x.grpId,
+            label: x.grpNm
           }));
-
-
-          //const gridList2 = response.data.data;
-          that.setState({ clientListData: response.data.data });
+          that.setState({ clientGroupOptionList: groupList });
         }
-
       })
       .catch(function(error) {
         console.log(error);
       });
   }
 
+  fetchData(page, rowsPerPage, orderBy, order) {
+
+    this.setState({
+      page: page,
+      rowsPerPage: rowsPerPage,
+      orderBy: orderBy,
+      order: order
+    });
+
+    requestData({
+      url: "http://localhost:8080/gpms/readGrClientList",
+
+      searchKey: this.state.keyword,
+      clientType: this.state.clientStatus,
+      groupId: this.state.clientGroup,
+
+      start: page * rowsPerPage,
+      length: rowsPerPage,
+      orderColumn: orderBy,
+      orderDir: order,
+    }).then(res => {
+      
+      const listData = [];
+      res.data.forEach(d => {
+        const obj = {
+          clientStatus: d.clientStatus,
+          clientId: d.clientId,
+          clientName: d.clientName,
+          loginId: d.loginId,
+          clientGroupName: d.clientGroupName,
+          regDate: d.regDate
+        };
+        listData.push(obj);
+      });
+
+      this.setState({
+        data: listData,
+        loading: false,
+        rowsTotal: parseInt(res.recordsTotal, 10),
+        rowsFiltered: parseInt(res.recordsFiltered, 10),
+      });
+
+    });
+  }
+
   // .................................................
   handleRequestSort = (event, property) => {
     const orderBy = property;
-    let order = 'desc';
-
-    if (this.state.orderBy === property && this.state.order === 'desc') {
-      order = 'asc';
+    let order = "desc";
+    if (this.state.orderBy === property && this.state.order === "desc") {
+      order = "asc";
     }
 
-    const data =
-      order === 'desc'
-        ? this.state.data.sort((a, b) => (b[orderBy] < a[orderBy] ? -1 : 1))
-        : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
-
-    this.setState({ data, order, orderBy });
+    this.fetchData(this.state.page, this.state.rowsPerPage, orderBy, order);
   };
 
   handleSelectAllClick = (event, checked) => {
     if (checked) {
-      this.setState({ selected: this.state.data.map(n => n.id) });
+      this.setState({ selected: this.state.data.map(n => n.clientId) });
       return;
     }
     this.setState({ selected: [] });
@@ -353,7 +356,7 @@ class ClientManage extends Component {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -361,20 +364,15 @@ class ClientManage extends Component {
   };
 
   handleChangePage = (event, page) => {
-    this.setState({ page });
+    this.fetchData(page, this.state.rowsPerPage, this.state.orderBy, this.state.order);
   };
 
   handleChangeRowsPerPage = event => {
-    this.setState({ rowsPerPage: event.target.value });
+    this.fetchData(this.state.page, event.target.value, this.state.orderBy, this.state.order);
   };
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
-
-
   // .................................................
-
-
-
 
   // Events...
   handleChangeSelect = event => {
@@ -382,15 +380,20 @@ class ClientManage extends Component {
   };
 
   handleChangeKeyword = name => event => {
-    this.setState({[name]: event.target.value});
+    this.setState({ [name]: event.target.value });
   };
 
   render() {
     const { classes } = this.props;
-    const { clientListData, clientGroup, clientStatus, keyword, pages, loading } = this.state;
+    const {
+      clientGroup,
+      clientStatus,
+      keyword,
+      loading
+    } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
 
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - data.length;
 
     return (
       <div className={classes.root}>
@@ -435,16 +438,18 @@ class ClientManage extends Component {
                   className={classes.textField}
                   value={this.state.keyword}
                   onChange={this.handleChangeKeyword("keyword")}
-                  margin="normal"
+                  margin="dense"
                 />
               </FormControl>
 
+              <div className={classes.formEmptyControl} />
+
               <Button
-                className={classes.button}
+                className={classNames(classes.button, classes.formControl)}
                 variant="raised"
                 color="primary"
                 onClick={() => {
-                  this.fetchData();
+                  this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);
                 }}
               >
                 <Search className={classes.leftIcon} />
@@ -452,67 +457,93 @@ class ClientManage extends Component {
               </Button>
             </form>
 
-    <div className={classNames(classes.tableWrapper, classes.tableContainer)}>
-          <Table className={classes.table}>
-            <ClientManageHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={this.handleSelectAllClick}
-              onRequestSort={this.handleRequestSort}
-              rowCount={data.length}
-            />
-            <TableBody>
-              {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(n => {
-                const isSelected = this.isSelected(n.id);
-                return (
-                  <TableRow
-                    hover
-                    onClick={event => this.handleClick(event, n.id)}
-                    role="checkbox"
-                    aria-checked={isSelected}
-                    tabIndex={-1}
-                    key={n.id}
-                    selected={isSelected}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox checked={isSelected} />
-                    </TableCell>
-                    <TableCell padding="none">{n.name}</TableCell>
-                    <TableCell numeric>{n.calories}</TableCell>
-                    <TableCell numeric>{n.fat}</TableCell>
-                    <TableCell numeric>{n.carbs}</TableCell>
-                    <TableCell numeric>{n.protein}</TableCell>
-                    <TableCell numeric>{n.carbs}</TableCell>
-                    <TableCell numeric>{n.protein}</TableCell>
-                  </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
+            <div
+              className={classNames(
+                classes.tableWrapper,
+                classes.tableContainer
               )}
-            </TableBody>
-          </Table>
-        </div>
-        <TablePagination
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          backIconButtonProps={{
-            'aria-label': 'Previous Page',
-          }}
-          nextIconButtonProps={{
-            'aria-label': 'Next Page',
-          }}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
+            >
+              <Table className={classes.table}>
+                <ClientManageHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={this.handleSelectAllClick}
+                  onRequestSort={this.handleRequestSort}
+                  rowCount={data.length}
+                />
+                <TableBody>
+                  {data
+                    .map(n => {
+                      const isSelected = this.isSelected(n.clientId);
+                      return (
+                        <TableRow
+                          className={classes.tableRow}
+                          hover
+                          onClick={event => this.handleClick(event, n.clientId)}
+                          role="checkbox"
+                          aria-checked={isSelected}
+                          tabIndex={-1}
+                          key={n.clientId}
+                          selected={isSelected}
+                        >
+                          <TableCell
+                            padding="checkbox"
+                            className={classes.tableCell}
+                          >
+                            <Checkbox
+                              checked={isSelected}
+                              className={classes.tableCell}
+                            />
+                          </TableCell>
+                          <TableCell className={classes.tableCell}>
+                            {n.clientStatus}
+                          </TableCell>
+                          <TableCell className={classes.tableCell}>
+                            {n.clientId}
+                          </TableCell>
+                          <TableCell className={classes.tableCell}>
+                            {n.clientName}
+                          </TableCell>
+                          <TableCell className={classes.tableCell}>
+                            {n.loginId}
+                          </TableCell>
+                          <TableCell className={classes.tableCell}>
+                            {n.clientGroupName}
+                          </TableCell>
+                          <TableCell className={classes.tableCell}>
+                            {n.regDate}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
 
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 32 * emptyRows }}>
+                      <TableCell
+                        colSpan={7}
+                        className={classes.tableCell}
+                      />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
 
-
+            <TablePagination
+              component="div"
+              count={rowsFiltered}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              backIconButtonProps={{
+                "aria-label": "Previous Page"
+              }}
+              nextIconButtonProps={{
+                "aria-label": "Next Page"
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
           </CardContent>
         </Card>
       </div>
