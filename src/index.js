@@ -6,14 +6,15 @@ import { HashRouter, Route, Switch } from "react-router-dom";
 import './scss/main.scss'
 
 // Containers
-import Full from './containers/Full/'
-import GrSideMenu from './containers/GrSideMenu/'
+import GrFull from './containers/GrFull/'
 
 ReactDOM.render(
   <HashRouter>
     <Switch>
 
-      <Route path="/" name="Home" component={Full} />
+      {/* list up another pages like 404, 500 error pages. */}
+
+      <Route path="/" name="Home" component={GrFull} />
     </Switch>
   </HashRouter>,
   document.getElementById("root")

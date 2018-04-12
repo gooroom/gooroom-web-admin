@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "material-ui/styles";
 import classNames from "classnames";
+import { css } from 'glamor';
 
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 
@@ -9,12 +9,10 @@ import { grLayout } from "../../templates/default/GrLayout";
 import { grColors } from "../../templates/default/GrColors";
 
 import Drawer from "material-ui/Drawer";
-import AppBar from "material-ui/AppBar";
+
 import Toolbar from "material-ui/Toolbar";
-import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
+import { ListItemIcon, ListItemText } from "material-ui/List";
 import Collapse from 'material-ui/transitions/Collapse';
-import ExpandLess from 'material-ui-icons/ExpandLess';
-import ExpandMore from 'material-ui-icons/ExpandMore';
 
 import { MenuList, MenuItem } from 'material-ui/Menu';
 import Paper from 'material-ui/Paper';
@@ -22,96 +20,96 @@ import Paper from 'material-ui/Paper';
 import Typography from "material-ui/Typography";
 import Divider from "material-ui/Divider";
 
-import IconButton from "material-ui/IconButton";
-import MenuIcon from "material-ui-icons/Menu";
 import DraftsIcon from 'material-ui-icons/Drafts';
 import SendIcon from 'material-ui-icons/Send';
-import StarBorder from 'material-ui-icons/StarBorder';
-import ChevronLeftIcon from "material-ui-icons/ChevronLeft";
-import ChevronRightIcon from "material-ui-icons/ChevronRight";
-
-import { otherMailFolderListItems } from "./tileData";
 
 import menus from "./_nav";
 
-import InboxIcon from "material-ui-icons/MoveToInbox";
 
-const styles = theme => ({
-  menuHeader: {
-    textAlign: "left",
-    minHeight: grLayout.sideMenuHeaderHeight,
-    paddingTop: "0.5em",
-    borderBottom: "1px solid #a4b7c1",
-  },
-  menuFooter: {
-    textAlign: "center",
-    minHeight: grLayout.sideMenuFooterHeight,
-    paddingTop: "0.5em",
-    borderTop: "1px solid #a4b7c1",
-    borderBottom: "1px solid #a4b7c1",
-  },
-  menuContainer: {
-    top: grLayout.headerHeight,
-    position: "fixed",
-    zIndex: 1019,
-    width: grLayout.sideBarWidth,
-    height: "calc(100vh - " + grLayout.headerHeight + ")",
-    flex: "0 0 200px",
-    order: "-1",
-    transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
-    overflowX: "hidden",
-    display: "flex",
-    flexDirection: "column",
-    padding: 0,
-  },
-  menuContent: {
-    position: "relative",
-    flex: 1,
-    overflowX: "hidden",
-    overflowY: "auto",
-    width: grLayout.sideBarWidth,
-    transition: "width 0.25s",
-    display: "block",
-    "&::-webkit-scrollbar": {
-      position: "absolute",
-      width: 10,
-      marginLeft: "-10px",
-      "-webkit-appearance": "none",
-      },
-    "&::-webkit-scrollbar-track": {
-      backgroundColor: "#CFD8DC", 
-      borderRight: "1px solid #1f292e",
-      borderLeft: "1px solid #1f292e",
-      },
-    "&::-webkit-scrollbar-thumb": {
-      height: "30px",
-      backgroundColor: "#78909C",
-      backgroundClip: "content-box",
-      borderColor: "transparent",
-      borderStyle: "solid",
-      borderWidth: "1px 1px",
-      }
+const menuHeaderClass = css({
+  textAlign: "left",
+  minHeight: grLayout.sideMenuHeaderHeight + " !important",
+  paddingTop: "0.5em",
+  paddingLeft: "1em",
+  borderBottom: "1px solid #a4b7c1",
+  backgroundColor: "#8fa5fa !important",
+  color: "#a83e2c",
+}).toString();
 
-  },
-  menuItem: {
-    padding: "3px 10px 3px 10px",
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& $primary, & $icon': {
-        color: theme.palette.common.white,
-      },
+const menuFooterClass = css({
+  textAlign: "left",
+  minHeight: grLayout.sideMenuFooterHeight + " !important",
+  paddingTop: "0.5em",
+  paddingLeft: "1em",
+  borderTop: "1px solid #a4b7c1",
+  borderBottom: "1px solid #a4b7c1",
+  backgroundColor: "#8fa5fa",
+  color: "#a83e2c",
+}).toString();
+
+const menuContainerClass = css({
+  top: grLayout.headerHeight + " !important",
+  position: "fixed",
+  zIndex: 1019,
+  width: grLayout.sideBarWidth,
+  height: "calc(100vh - " + grLayout.headerHeight + ") !important",
+  flex: "0 0 200px",
+  order: "-1",
+  transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
+  overflowX: "hidden",
+  display: "flex",
+  flexDirection: "column",
+  padding: 0,
+}).toString();
+
+const menuContentClass = css({
+  position: "relative",
+  flex: 1,
+  overflowX: "hidden",
+  overflowY: "auto",
+  width: grLayout.sideBarWidth,
+  transition: "width 0.25s",
+  display: "block",
+  "&::-webkit-scrollbar": {
+    position: "absolute",
+    width: 10,
+    marginLeft: "-10px",
+    },
+  "&::-webkit-scrollbar-track": {
+    backgroundColor: "#CFD8DC", 
+    borderRight: "1px solid #1f292e",
+    borderLeft: "0px solid #1f292e",
+    },
+  "&::-webkit-scrollbar-thumb": {
+    height: "30px",
+    backgroundColor: "#78909C",
+    backgroundClip: "content-box",
+    borderColor: "transparent",
+    borderStyle: "solid",
+    borderWidth: "1px 1px",
+    }
+}).toString();
+
+const menuItemClass = css({
+  padding: "3px 10px 3px 10px !important",
+  '&:focus': {
+    backgroundColor: "#78909C",
+    '& $primary, & $icon': {
+      color: "#FFFFFF",
     },
   },
-  nested: {
-    padding: "3px 10px 3px 30px",
-  },
-  primary: {
-  },
-  icon: {
-    margin: 0,
-    padding: 0
-  },
-});
+}).toString();
+
+const nestedClass = css({
+  padding: "3px 10px 3px 30px !important" ,
+}).toString();
+
+const iconClass = css({
+  margin: 0,
+  padding: 0
+}).toString();
+
+
 
 class GrSideMenu extends React.Component {
   constructor(props) {
@@ -121,7 +119,6 @@ class GrSideMenu extends React.Component {
       menu1Open: false,
       menu2Open: true,
     };
-
   }
 
   activeRoute(routeName, props) {
@@ -141,16 +138,14 @@ class GrSideMenu extends React.Component {
   };
 
   render() {
-    const props = this.props;
-    const {classes, theme} = this.props;
 
     const titleMenu = (item, key) => {
       return (
-        <MenuItem key={key} className={classes.menuItem} >
+        <MenuItem key={key} className={menuItem} >
           <ListItemIcon>
             <DraftsIcon />
           </ListItemIcon>
-          <ListItemText classes={{ primary: classes.primary }} primary={item.name} />
+          <ListItemText primary={item.name} />
         </MenuItem>
       );
     }
@@ -174,13 +169,13 @@ class GrSideMenu extends React.Component {
     // <MenuItem key={key} className={classes.menuItem} onClick={event => this.handleMenuItemClick(event, item)}>
     const menuLink = (item, key, classParam) => {
       const url = item.url ? item.url : '';
-      const menuclass = item.level == 1 ? classes.menuItem : classes.nested;
+      const menuclass = item.level == 1 ? menuItemClass : nestedClass;
       return (
         <MenuItem key={key} 
           className={menuclass} 
           component={Link}
           to={item.url}>
-          <ListItemIcon className={classes.icon}>
+          <ListItemIcon className={iconClass}>
             <SendIcon />
           </ListItemIcon>
           <Typography variant="button" color="textSecondary">
@@ -219,20 +214,20 @@ class GrSideMenu extends React.Component {
     //console.log("-GrSideMenu.render-------------------------");
     return (
       <Drawer
-        classes={{ paper: classes.menuContainer }}
+        classes={{ paper: menuContainerClass }}
         variant="persistent"
         anchor={this.state.anchor}
         open={this.props.sideOpen}
       >
-          <div className={classes.menuContent}>
-            <Paper className={classes.menuHeader} elevation={0} square={true}>
+          <div className={menuContentClass}>
+            <Paper className={menuHeaderClass} elevation={0} square={true}>
               <div>SIDE HEADER</div>
             </Paper>
-            <MenuList className={classes.menuList}>
+            <MenuList>
             {menuList(menus.items, 0)}
             </MenuList>
           </div>
-        <div className={classes.menuFooter}>
+        <div className={menuFooterClass}>
           <div>SIDE FOOTER</div>
         </div>
       </Drawer>
@@ -240,16 +235,4 @@ class GrSideMenu extends React.Component {
   }
 }
 
-GrSideMenu.propTypes = {
-  classes: PropTypes.object.isRequired,
-  theme: PropTypes.object.isRequired
-};
-export default withStyles(styles, { withTheme: true })(GrSideMenu);
-
-// GrSideMenu.propTypes = {
-//   children: PropTypes.node,
-//   classes: PropTypes.object.isRequired
-// };
-// export default withStyles(styles)(GrSideMenu);
-
-//export default GrSideMenu;
+export default GrSideMenu;
