@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withStyles } from "material-ui/styles";
+import { css } from 'glamor';
 
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColors } from "../../templates/default/GrColors"
@@ -12,13 +12,8 @@ import IconButton from "material-ui/IconButton";
 import MenuIcon from "material-ui-icons/Menu";
 import AccountCircle from "material-ui-icons/AccountCircle";
 
-
-
-
-
-const styles = {
-  root: {
-    display: "flex",
+const rootClass = css({
+  display: "flex",
     flexDirection: "row",
     zIndex: 1300,
     position: "fixed",
@@ -26,17 +21,21 @@ const styles = {
     padding: 0,
     margin: 0,
     boxShadow: "none",
-  },
-  rootToolBar: {
+    color: "white",
+}).toString();
+
+const toolBarClass = css({
+  color: "white",
     flexDirection: "row",
     minHeight: grLayout.headerHeight,
-  },
-  brandLogo: {
+}).toString();
+
+const brandLogoClass = css({
+  color: "white !important",
     width: "calc(" + grLayout.sideBarWidth + " - 24px)",
     paddingLeft: 0,
     paddingRight: 0,
-  }
-};
+}).toString();
 
 class GrHeader extends Component {
   constructor(props) {
@@ -48,12 +47,11 @@ class GrHeader extends Component {
   }
 
   render() {
-    const { classes } = this.props;
 
     return (
-      <AppBar className={classes.root}>
-        <Toolbar className={classes.rootToolBar}>
-          <Typography type="title" className={classes.brandLogo}>
+      <AppBar className={rootClass}>
+        <Toolbar className={toolBarClass}>
+          <Typography type="title" className={brandLogoClass}>
             GPMS v2.0
           </Typography>
           <IconButton onClick={this.props.toggleDrawer}>
@@ -68,12 +66,6 @@ class GrHeader extends Component {
   }
 }
 
-GrHeader.propTypes = {
-  children: PropTypes.node,
-  classes: PropTypes.object.isRequired,
-};
-export default withStyles(styles)(GrHeader);
-
-//export default GrHeader;
+export default GrHeader;
 
 

@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { withStyles } from "material-ui/styles";
+import { createMuiTheme } from 'material-ui/styles';
+import { css } from 'glamor';
 
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColor } from "../../templates/default/GrColors";
+import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 
 import Card, {
   CardHeader,
@@ -24,15 +26,11 @@ import Table, {
 import Checkbox from "material-ui/Checkbox";
 import Tooltip from "material-ui/Tooltip";
 
-import GrOptions from "../../containers/GrOptions";
 import GrPageHeader from "../../components/GrHeader/GrPageHeader";
-import { GrProps, GrGridColumns, GrGridData } from "./ClientManageProp";
 
+import { GrProps, GrGridColumns, GrGridData } from "./ClientManageProp";
 import axios from "axios";
 import qs from "qs";
-
-import ReactTable from "react-table";
-import "react-table/react-table.css";
 
 import TextField from "material-ui/TextField";
 import Select from "material-ui/Select";
@@ -42,6 +40,102 @@ import { FormControl, FormHelperText } from "material-ui/Form";
 
 import Button from "material-ui/Button";
 import Search from "@material-ui/icons/Search";
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      // light: will be calculated from palette.primary.main,
+      main: '#ff4400',
+      // dark: will be calculated from palette.primary.main,
+      // contrastText: will be calculated to contast with palette.primary.main
+    },
+    secondary: {
+      light: '#0066ff',
+      main: '#0044ff',
+      // dark: will be calculated from palette.secondary.main,
+      contrastText: '#ffcc00',
+    },
+    // error: will us the default color
+  },
+});
+
+const contentClass = css({
+  height: "100% !important"
+}).toString();
+
+const pageContentClass = css({
+  paddingTop: "14px !important"
+}).toString();
+
+const formClass = css({
+  marginBottom: "6px !important",
+    display: "flex"
+}).toString();
+
+const formControlClass = css({
+  minWidth: "100px !important",
+    marginRight: "15px !important",
+    flexGrow: 1
+}).toString();
+
+const formEmptyControlClass = css({
+  flexGrow: "6 !important"
+}).toString();
+
+const textFieldClass = css({
+  marginTop: "3px !important"
+}).toString();
+
+const buttonClass = css({
+  margin: theme.spacing.unit + " !important"
+}).toString();
+
+const leftIconClass = css({
+  marginRight: theme.spacing.unit + " !important"
+}).toString();
+
+
+const tableClass = css({
+  minWidth: "700px !important"
+}).toString();
+
+const tableHeadCellClass = css({
+  whiteSpace: "nowrap",
+  padding: "0px !important"
+}).toString();
+
+const tableContainerClass = css({
+  overflowX: "auto",
+  "&::-webkit-scrollbar": {
+    position: "absolute",
+    height: 10,
+    marginLeft: "-10px",
+    },
+  "&::-webkit-scrollbar-track": {
+    backgroundColor: "#CFD8DC", 
+    },
+  "&::-webkit-scrollbar-thumb": {
+    height: "30px",
+    backgroundColor: "#78909C",
+    backgroundClip: "content-box",
+    borderColor: "transparent",
+    borderStyle: "solid",
+    borderWidth: "1px 1px",
+    }
+}).toString();
+
+const tableRowClass = css({
+  height: "2em !important"
+}).toString();
+
+const tableCellClass = css({
+  height: "1em !important",
+  padding: "0px !important",
+  cursor: "pointer"
+}).toString();
+
+
+
 
 const styles = theme => ({
   content: {
@@ -67,11 +161,6 @@ const styles = theme => ({
   textField: {
     marginTop: 3
   },
-
-  table: {
-    minWidth: 700
-  },
-
   button: {
     margin: theme.spacing.unit
   },
@@ -79,12 +168,32 @@ const styles = theme => ({
     marginRight: theme.spacing.unit
   },
 
+  table: {
+    minWidth: 700
+  },
   tableHeadCell: {
     whiteSpace: "nowrap",
     padding: 0
   },
   tableContainer: {
-    overflowX: "auto"
+    overflowX: "auto",
+    "&::-webkit-scrollbar": {
+      position: "absolute",
+      height: 10,
+      marginLeft: "-10px",
+      "-webkit-appearance": "none",
+      },
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "#CFD8DC", 
+      },
+    "&::-webkit-scrollbar-thumb": {
+      height: "30px",
+      backgroundColor: "#78909C",
+      backgroundClip: "content-box",
+      borderColor: "transparent",
+      borderStyle: "solid",
+      borderWidth: "1px 1px",
+      }
   },
   tableRow: {
     height: "2em"
@@ -96,28 +205,27 @@ const styles = theme => ({
   }
 });
 
-const columnData = [
-  { id: "clientStatus", numeric: false, disablePadding: true, label: "상태" },
-  { id: "clientId", numeric: false, disablePadding: true, label: "단말아이디" },
-  { id: "clientName", numeric: false, disablePadding: true, label: "단말이름" },
-  { id: "loginId", numeric: false, disablePadding: true, label: "접속자" },
-  {
-    id: "clientGroupName",
-    numeric: false,
-    disablePadding: true,
-    label: "단말그룹"
-  },
-  { id: "regDate", numeric: false, disablePadding: true, label: "등록일" }
-];
-
 class ClientManageHead extends Component {
 
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
   };
 
+  columnData = [
+    { id: "clientStatus", numeric: false, disablePadding: true, label: "상태" },
+    { id: "clientId", numeric: false, disablePadding: true, label: "단말아이디" },
+    { id: "clientName", numeric: false, disablePadding: true, label: "단말이름" },
+    { id: "loginId", numeric: false, disablePadding: true, label: "접속자" },
+    {
+      id: "clientGroupName",
+      numeric: false,
+      disablePadding: true,
+      label: "단말그룹"
+    },
+    { id: "regDate", numeric: false, disablePadding: true, label: "등록일" }
+  ];
+
   render() {
-    const { classes } = this.props;
     const {
       onSelectAllClick,
       order,
@@ -129,17 +237,17 @@ class ClientManageHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" className={classes.tableHeadCell}>
+          <TableCell padding="checkbox" className={tableHeadCellClass}>
             <Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={numSelected === rowCount}
+              checked={numSelected === rowCount && rowCount > 0}
               onChange={onSelectAllClick}
             />
           </TableCell>
-          {columnData.map(column => {
+          {this.columnData.map(column => {
             return (
               <TableCell
-                className={classes.tableHeadCell}
+                className={tableCellClass}
                 key={column.id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? "none" : "default"}
@@ -160,61 +268,6 @@ class ClientManageHead extends Component {
     );
   }
 }
-
-ClientManageHead.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-ClientManageHead = withStyles(styles)(ClientManageHead);
-
-
-const requestData = (param) => {
-
-  return new Promise((resolve, reject) => {
-    axios({
-      method: "post",
-      url: param.url,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      transformRequest: [
-        function(data, headers) {
-          return qs.stringify(data);
-        }
-      ],
-      data: param,
-      withCredentials: true
-    }).then(function(response) {
-
-        if (response.data.status.result === "success" && response.data.data && response.data.data.length > 0) {
-
-            // const listData = [];
-            // response.data.data.forEach(d => {
-            //   const obj = {
-            //     clientStatus: d.clientStatus,
-            //     clientId: d.clientId,
-            //     clientName: d.clientName,
-            //     loginId: d.loginId,
-            //     clientGroupName: d.clientGroupName,
-            //     regDate: d.regDate
-            //   };
-            //   listData.push(obj);
-            // });
-
-            // const res = {
-            //   rows: listData,
-            //   rowsTotal: response.data.recordsTotal,
-            //   rowsFiltered: response.data.recordsFiltered,
-            //   page: response.data.draw,
-            // };
-            // resolve(res);
-
-            resolve(response.data);
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  });
-};
-
 
 
 class ClientManage extends Component {
@@ -250,32 +303,20 @@ class ClientManage extends Component {
   }
 
   componentDidMount() {
-    var that = this;
-    axios({
-      method: "post",
-      url: "http://localhost:8080/gpms/readClientGroupList",
-      transformRequest: [
-        function(data, headers) {
-          return "";
-        }
-      ],
-      data: {},
-      withCredentials: true
-    })
-      .then(function(response) {
-        if (response.data.data && response.data.data.length > 0) {
-          const groupList = response.data.data.map(x => ({
-            key: x.grpId,
-            id: x.grpId,
-            value: x.grpId,
-            label: x.grpNm
-          }));
-          that.setState({ clientGroupOptionList: groupList });
-        }
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
+
+    grRequestPromise("http://localhost:8080/gpms/readClientGroupList", {
+    }).then(res => {
+        const groupList = res.data.map(x => ({
+          key: x.grpId,
+          id: x.grpId,
+          value: x.grpId,
+          label: x.grpNm
+        }));
+        this.setState({ 
+          clientGroupOptionList: groupList,
+          selected: []
+        });
+    });
   }
 
   fetchData(page, rowsPerPage, orderBy, order) {
@@ -287,9 +328,7 @@ class ClientManage extends Component {
       order: order
     });
 
-    requestData({
-      url: "http://localhost:8080/gpms/readGrClientList",
-
+    grRequestPromise("http://localhost:8080/gpms/readGrClientList", {
       searchKey: this.state.keyword,
       clientType: this.state.clientStatus,
       groupId: this.state.clientGroup,
@@ -299,7 +338,6 @@ class ClientManage extends Component {
       orderColumn: orderBy,
       orderDir: order,
     }).then(res => {
-      
       const listData = [];
       res.data.forEach(d => {
         const obj = {
@@ -312,15 +350,15 @@ class ClientManage extends Component {
         };
         listData.push(obj);
       });
-
       this.setState({
         data: listData,
+        selected: [],
         loading: false,
         rowsTotal: parseInt(res.recordsTotal, 10),
         rowsFiltered: parseInt(res.recordsFiltered, 10),
       });
-
     });
+
   }
 
   // .................................................
@@ -384,24 +422,18 @@ class ClientManage extends Component {
   };
 
   render() {
-    const { classes } = this.props;
-    const {
-      clientGroup,
-      clientStatus,
-      keyword,
-      loading
-    } = this.state;
-    const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
 
+    const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
     const emptyRows = rowsPerPage - data.length;
 
     return (
-      <div className={classes.root}>
-        <Card className={classes.content}>
+      <div>
+        <Card className={contentClass}>
           <GrPageHeader path={this.props.location.pathname} />
-          <CardContent className={classes.pageContent}>
-            <form className={classes.form}>
-              <FormControl className={classes.formControl} autoComplete="off">
+          <CardContent className={pageContentClass}>
+          
+            <form className={formClass}>
+              <FormControl className={formControlClass} autoComplete="off">
                 <InputLabel htmlFor="client-status">단말상태</InputLabel>
                 <Select
                   value={this.state.clientStatus}
@@ -416,7 +448,7 @@ class ClientManage extends Component {
                 </Select>
               </FormControl>
 
-              <FormControl className={classes.formControl} autoComplete="off">
+              <FormControl className={formControlClass} autoComplete="off">
                 <InputLabel htmlFor="client-group">단말그룹</InputLabel>
                 <Select
                   value={this.state.clientGroup}
@@ -431,39 +463,36 @@ class ClientManage extends Component {
                 </Select>
               </FormControl>
 
-              <FormControl className={classes.formControl} autoComplete="off">
+              <FormControl className={formControlClass} autoComplete="off">
                 <TextField
                   id="keyword"
                   label="검색어"
-                  className={classes.textField}
+                  className={textFieldClass}
                   value={this.state.keyword}
                   onChange={this.handleChangeKeyword("keyword")}
                   margin="dense"
                 />
               </FormControl>
 
-              <div className={classes.formEmptyControl} />
+              <div className={formEmptyControlClass} />
 
               <Button
-                className={classNames(classes.button, classes.formControl)}
+                className={classNames(buttonClass, formControlClass)}
                 variant="raised"
                 color="primary"
                 onClick={() => {
                   this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);
                 }}
               >
-                <Search className={classes.leftIcon} />
+                <Search className={leftIconClass} />
                 조회
               </Button>
             </form>
 
             <div
-              className={classNames(
-                classes.tableWrapper,
-                classes.tableContainer
-              )}
+              className={tableContainerClass}
             >
-              <Table className={classes.table}>
+              <Table className={tableClass}>
                 <ClientManageHead
                   numSelected={selected.length}
                   order={order}
@@ -478,7 +507,7 @@ class ClientManage extends Component {
                       const isSelected = this.isSelected(n.clientId);
                       return (
                         <TableRow
-                          className={classes.tableRow}
+                          className={tableRowClass}
                           hover
                           onClick={event => this.handleClick(event, n.clientId)}
                           role="checkbox"
@@ -489,29 +518,29 @@ class ClientManage extends Component {
                         >
                           <TableCell
                             padding="checkbox"
-                            className={classes.tableCell}
+                            className={tableCellClass}
                           >
                             <Checkbox
                               checked={isSelected}
-                              className={classes.tableCell}
+                              className={tableCellClass}
                             />
                           </TableCell>
-                          <TableCell className={classes.tableCell}>
+                          <TableCell className={tableCellClass}>
                             {n.clientStatus}
                           </TableCell>
-                          <TableCell className={classes.tableCell}>
+                          <TableCell className={tableCellClass}>
                             {n.clientId}
                           </TableCell>
-                          <TableCell className={classes.tableCell}>
+                          <TableCell className={tableCellClass}>
                             {n.clientName}
                           </TableCell>
-                          <TableCell className={classes.tableCell}>
+                          <TableCell className={tableCellClass}>
                             {n.loginId}
                           </TableCell>
-                          <TableCell className={classes.tableCell}>
+                          <TableCell className={tableCellClass}>
                             {n.clientGroupName}
                           </TableCell>
-                          <TableCell className={classes.tableCell}>
+                          <TableCell className={tableCellClass}>
                             {n.regDate}
                           </TableCell>
                         </TableRow>
@@ -522,7 +551,7 @@ class ClientManage extends Component {
                     <TableRow style={{ height: 32 * emptyRows }}>
                       <TableCell
                         colSpan={7}
-                        className={classes.tableCell}
+                        className={tableCellClass}
                       />
                     </TableRow>
                   )}
@@ -551,7 +580,4 @@ class ClientManage extends Component {
   }
 }
 
-ClientManage.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-export default withStyles(styles)(ClientManage);
+export default ClientManage;
