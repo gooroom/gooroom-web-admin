@@ -56,6 +56,8 @@ export function grRequestPromise(url, param) {
               // resolve(res);
   
               resolve(response.data);
+          } else {
+            reject(response.data);
           }
         })
         .catch(function(error) {

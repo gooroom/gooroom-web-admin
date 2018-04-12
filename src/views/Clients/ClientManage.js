@@ -25,6 +25,15 @@ import Table, {
 } from "material-ui/Table";
 import Checkbox from "material-ui/Checkbox";
 import Tooltip from "material-ui/Tooltip";
+import Dialog, { DialogTitle } from 'material-ui/Dialog';
+
+
+import Avatar from 'material-ui/Avatar';
+import List, { ListItem, ListItemAvatar, ListItemText } from 'material-ui/List';
+import PersonIcon from '@material-ui/icons/Person';
+import AddIcon from '@material-ui/icons/Add';
+import Typography from 'material-ui/Typography';
+import blue from 'material-ui/colors/blue';
 
 import GrPageHeader from "../../components/GrHeader/GrPageHeader";
 
@@ -41,6 +50,7 @@ import { FormControl, FormHelperText } from "material-ui/Form";
 import Button from "material-ui/Button";
 import Search from "@material-ui/icons/Search";
 
+const emails = ['username@gmail.com', 'user02@gmail.com'];
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -135,75 +145,49 @@ const tableCellClass = css({
 }).toString();
 
 
+class SimpleDialog extends React.Component {
+  handleClose = () => {
+    this.props.onClose(this.props.selectedValue);
+  };
 
+  handleListItemClick = value => {
+    this.props.onClose(value);
+  };
 
-const styles = theme => ({
-  content: {
-    height: "100%"
-  },
-  pageContent: {
-    paddingTop: 14
-  },
+  render() {
+    const { onClose, selectedValue, ...other } = this.props;
 
-  form: {
-    marginBottom: 6,
-    display: "flex"
-  },
-  formControl: {
-    minWidth: 100,
-    marginRight: "15px",
-    flexGrow: 1
-  },
-  formEmptyControl: {
-    flexGrow: "6"
-  },
-
-  textField: {
-    marginTop: 3
-  },
-  button: {
-    margin: theme.spacing.unit
-  },
-  leftIcon: {
-    marginRight: theme.spacing.unit
-  },
-
-  table: {
-    minWidth: 700
-  },
-  tableHeadCell: {
-    whiteSpace: "nowrap",
-    padding: 0
-  },
-  tableContainer: {
-    overflowX: "auto",
-    "&::-webkit-scrollbar": {
-      position: "absolute",
-      height: 10,
-      marginLeft: "-10px",
-      "-webkit-appearance": "none",
-      },
-    "&::-webkit-scrollbar-track": {
-      backgroundColor: "#CFD8DC", 
-      },
-    "&::-webkit-scrollbar-thumb": {
-      height: "30px",
-      backgroundColor: "#78909C",
-      backgroundClip: "content-box",
-      borderColor: "transparent",
-      borderStyle: "solid",
-      borderWidth: "1px 1px",
-      }
-  },
-  tableRow: {
-    height: "2em"
-  },
-  tableCell: {
-    height: "1em",
-    padding: 0,
-    cursor: "pointer"
+    return (
+      <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
+        <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
+        <div>
+          <List>
+            {emails.map(email => (
+              <ListItem button onClick={() => this.handleListItemClick(email)} key={email}>
+                <ListItemAvatar>
+                  <Avatar >
+                    <PersonIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary={email} />
+              </ListItem>
+            ))}
+            <ListItem button onClick={() => this.handleListItemClick('addAccount')}>
+              <ListItemAvatar>
+                <Avatar>
+                  <AddIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="add account" />
+            </ListItem>
+          </List>
+        </div>
+      </Dialog>
+    );
   }
-});
+}
+
+
 
 class ClientManageHead extends Component {
 
@@ -214,6 +198,7 @@ class ClientManageHead extends Component {
   columnData = [
     { id: "clientStatus", numeric: false, disablePadding: true, label: "상태" },
     { id: "clientId", numeric: false, disablePadding: true, label: "단말아이디" },
+    { id: "clientSetup", numeric: false, disablePadding: true, label: "#" },
     { id: "clientName", numeric: false, disablePadding: true, label: "단말이름" },
     { id: "loginId", numeric: false, disablePadding: true, label: "접속자" },
     {
@@ -276,6 +261,8 @@ class ClientManage extends Component {
 
     this.state = {
       loading: true,
+      detailOpen: false,
+      selectedValue: "",
 
       clientGroup: "",
       clientGroupOptionList: [],
@@ -338,24 +325,32 @@ class ClientManage extends Component {
       orderColumn: orderBy,
       orderDir: order,
     }).then(res => {
-      const listData = [];
-      res.data.forEach(d => {
-        const obj = {
-          clientStatus: d.clientStatus,
-          clientId: d.clientId,
-          clientName: d.clientName,
-          loginId: d.loginId,
-          clientGroupName: d.clientGroupName,
-          regDate: d.regDate
-        };
-        listData.push(obj);
-      });
+        const listData = [];
+        res.data.forEach(d => {
+          const obj = {
+            clientStatus: d.clientStatus,
+            clientId: d.clientId,
+            clientName: d.clientName,
+            loginId: d.loginId,
+            clientGroupName: d.clientGroupName,
+            regDate: d.regDate
+          };
+          listData.push(obj);
+        });
+        this.setState({
+          data: listData,
+          selected: [],
+          loading: false,
+          rowsTotal: parseInt(res.recordsTotal, 10),
+          rowsFiltered: parseInt(res.recordsFiltered, 10),
+        });
+    }, res => {
       this.setState({
-        data: listData,
+        data: [],
         selected: [],
         loading: false,
-        rowsTotal: parseInt(res.recordsTotal, 10),
-        rowsFiltered: parseInt(res.recordsFiltered, 10),
+        rowsTotal: 0,
+        rowsFiltered: 0,
       });
     });
 
@@ -380,7 +375,19 @@ class ClientManage extends Component {
     this.setState({ selected: [] });
   };
 
+  handleCellClick = (event, id) => {
+    //event.preventDefault();
+    event.stopPropagation();
+    console.log("handleCellClick .. " + id);
+    this.setState({
+      detailOpen: true,
+    });
+  };
+
   handleClick = (event, id) => {
+    //event.preventDefault();
+    event.stopPropagation();
+    console.log("handleClick .. " + id);
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
@@ -419,6 +426,12 @@ class ClientManage extends Component {
 
   handleChangeKeyword = name => event => {
     this.setState({ [name]: event.target.value });
+  };
+
+  // .................................................
+  handleDetailClose = value => {
+    console.log("handleDetailClose...");
+    this.setState({ selectedValue: value, detailOpen: false });
   };
 
   render() {
@@ -531,6 +544,9 @@ class ClientManage extends Component {
                           <TableCell className={tableCellClass}>
                             {n.clientId}
                           </TableCell>
+                          <TableCell className={tableCellClass} onClick={event => this.handleCellClick(event, n.clientId)}>
+                            #
+                          </TableCell>
                           <TableCell className={tableCellClass}>
                             {n.clientName}
                           </TableCell>
@@ -575,7 +591,13 @@ class ClientManage extends Component {
             />
           </CardContent>
         </Card>
+        <SimpleDialog
+        selectedValue={this.state.selectedValue}
+        open={this.state.detailOpen}
+        onClose={this.handleDetailClose}
+        />
       </div>
+      
     );
   }
 }
