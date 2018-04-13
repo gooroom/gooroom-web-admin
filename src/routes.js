@@ -10,7 +10,7 @@ const routes = {
   '/clients/clientmanage': '등록관리',
   '/clients/clientgroup': '그룹관리',
   '/clients/packages': '패키지관리',
-  '/clients/jobmanage': '작업관리',
+  '/jobs/jobmanage': '작업관리',
 
   '/clientconfig': '단말설정',
   '/clientconfig/desktop': '데스크톱환경',

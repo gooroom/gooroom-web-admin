@@ -7,7 +7,6 @@ import { css } from 'glamor';
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColor } from "../../templates/default/GrColors";
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
-import GrPageHeader from "../../components/GrHeader/GrPageHeader";
 
 import Card, {
   CardHeader,
@@ -26,7 +25,17 @@ import Table, {
 } from "material-ui/Table";
 import Checkbox from "material-ui/Checkbox";
 import Tooltip from "material-ui/Tooltip";
-import Dialog, { DialogTitle, DialogActions } from 'material-ui/Dialog';
+import Dialog, { DialogTitle } from 'material-ui/Dialog';
+
+
+import Avatar from 'material-ui/Avatar';
+import List, { ListItem, ListItemAvatar, ListItemText } from 'material-ui/List';
+import PersonIcon from '@material-ui/icons/Person';
+import AddIcon from '@material-ui/icons/Add';
+import Typography from 'material-ui/Typography';
+import blue from 'material-ui/colors/blue';
+
+import GrPageHeader from "../../components/GrHeader/GrPageHeader";
 
 import TextField from "material-ui/TextField";
 import Select from "material-ui/Select";
@@ -36,17 +45,6 @@ import { FormControl, FormHelperText } from "material-ui/Form";
 
 import Button from "material-ui/Button";
 import Search from "@material-ui/icons/Search";
-
-
-
-//
-//  ## Temporary ########## ########## ########## ########## ########## 
-//
-import Avatar from 'material-ui/Avatar';
-import List, { ListItem, ListItemAvatar, ListItemText } from 'material-ui/List';
-import PersonIcon from '@material-ui/icons/Person';
-import AddIcon from '@material-ui/icons/Add';
-import Typography from 'material-ui/Typography';
 
 const emails = ['username@gmail.com', 'user02@gmail.com'];
 const theme = createMuiTheme({
@@ -67,12 +65,8 @@ const theme = createMuiTheme({
   },
 });
 
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
 const contentClass = css({
-  height: "100% !important"
+  height: "200% !important"
 }).toString();
 
 const pageContentClass = css({
@@ -146,9 +140,7 @@ const tableCellClass = css({
   cursor: "pointer"
 }).toString();
 
-//
-//  ## Dialog ########## ########## ########## ########## ########## 
-//
+
 class SimpleDialog extends React.Component {
   handleClose = () => {
     this.props.onClose(this.props.selectedValue);
@@ -162,12 +154,9 @@ class SimpleDialog extends React.Component {
     const { onClose, selectedValue, ...other } = this.props;
 
     return (
-      <Dialog disableBackdropClick="true" onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
-        <DialogTitle id="simple-dialog-title">단말 정보</DialogTitle>
-
+      <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
+        <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
         <div>
-        <Typography >General settings</Typography>
-        <Typography >I am an expansion panel</Typography>
           <List>
             {emails.map(email => (
               <ListItem button onClick={() => this.handleListItemClick(email)} key={email}>
@@ -189,46 +178,33 @@ class SimpleDialog extends React.Component {
             </ListItem>
           </List>
         </div>
-        <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Subscribe
-            </Button>
-          </DialogActions>
       </Dialog>
     );
   }
 }
 
 
-//
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class ClientManageHead extends Component {
+
+class JobManageHead extends Component {
 
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
   };
 
   static columnData = [
-    { id: "clientStatus", numeric: false, disablePadding: true, label: "상태" },
-    { id: "clientId", numeric: false, disablePadding: true, label: "단말아이디" },
-    { id: "clientSetup", numeric: false, disablePadding: true, label: "#" },
-    { id: "clientName", numeric: false, disablePadding: true, label: "단말이름" },
-    { id: "loginId", numeric: false, disablePadding: true, label: "접속자" },
-    {
-      id: "clientGroupName",
-      numeric: false,
-      disablePadding: true,
-      label: "단말그룹"
-    },
-    { id: "regDate", numeric: false, disablePadding: true, label: "등록일" }
+
+    { id: "jobNo", numeric: false, disablePadding: true, label: "작업번호" },
+    { id: "jobName", numeric: false, disablePadding: true, label: "작업이름" },
+    { id: "readyCount", numeric: false, disablePadding: true, label: "진행상태" },
+    { id: "clientCount", numeric: false, disablePadding: true, label: "대상단말수" },
+    { id: "errorCount", numeric: false, disablePadding: true, label: "작업오류수" },
+    { id: "compCount", numeric: false, disablePadding: true, label: "작업완료수" },
+    { id: "regUserId", numeric: false, disablePadding: true, label: "등록자" },
+    { id: "regDate", numeric: false, disablePadding: true, label: "등록일" },
   ];
 
   static getColumnData() {
-    return ClientManageHead.columnData;
+    return JobManageHead.columnData;
   }
 
   render() {
@@ -243,14 +219,7 @@ class ClientManageHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" className={tableHeadCellClass}>
-            <Checkbox
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={numSelected === rowCount && rowCount > 0}
-              onChange={onSelectAllClick}
-            />
-          </TableCell>
-          {ClientManageHead.columnData.map(column => {
+          {JobManageHead.columnData.map(column => {
             return (
               <TableCell
                 className={tableCellClass}
@@ -275,10 +244,8 @@ class ClientManageHead extends Component {
   }
 }
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
-class ClientManage extends Component {
+
+class JobManage extends Component {
   constructor(props) {
     super(props);
 
@@ -287,14 +254,11 @@ class ClientManage extends Component {
       detailOpen: false,
       selectedValue: "",
 
-      clientGroup: "",
-      clientGroupOptionList: [],
-      clientStatus: "",
-      clientStatusOptionList: [
-        { id: "NORMAL", value: "NORMAL", label: "정상단말" },
-        { id: "SECURE", value: "SECURE", label: "침해단말" },
-        { id: "REVOKED", value: "REVOKED", label: "해지단말" },
-        { id: "ONLINE", value: "ONLINE", label: "온라인" },
+      jobStatus: "",
+      jobStatusOptionList: [
+        { id: "R", value: "R", label: "작업전" },
+        { id: "D", value: "D", label: "작업중" },
+        { id: "C", value: "C", label: "작업완료" },
         { id: "ALL", value: "ALL", label: "전체" }
       ],
       keyword: "",
@@ -313,20 +277,7 @@ class ClientManage extends Component {
   }
 
   componentDidMount() {
-
-    grRequestPromise("http://localhost:8080/gpms/readClientGroupList", {
-    }).then(res => {
-        const groupList = res.data.map(x => ({
-          key: x.grpId,
-          id: x.grpId,
-          value: x.grpId,
-          label: x.grpNm
-        }));
-        this.setState({ 
-          clientGroupOptionList: groupList,
-          selected: []
-        });
-    });
+    // todo:
   }
 
   fetchData(page, rowsPerPage, orderBy, order) {
@@ -338,10 +289,9 @@ class ClientManage extends Component {
       order: order
     });
 
-    grRequestPromise("http://localhost:8080/gpms/readGrClientList", {
+    grRequestPromise("http://localhost:8080/gpms/readJobList", {
       searchKey: this.state.keyword,
-      clientType: this.state.clientStatus,
-      groupId: this.state.clientGroup,
+      job_status: this.state.jobStatus,
 
       start: page * rowsPerPage,
       length: rowsPerPage,
@@ -351,14 +301,14 @@ class ClientManage extends Component {
         const listData = [];
         res.data.forEach(d => {
           const obj = {
-            clientStatus: d.clientStatus,
+            jobStatus: d.jobStatus,
             clientId: d.clientId,
             clientName: d.clientName,
             loginId: d.loginId,
             clientGroupName: d.clientGroupName,
             regDate: d.regDate
           };
-          listData.push(obj);
+          listData.push(d);
         });
         this.setState({
           data: listData,
@@ -462,38 +412,23 @@ class ClientManage extends Component {
     const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
     const emptyRows = rowsPerPage - data.length;
 
-    console.log(ClientManageHead.getColumnData().length);
+    console.log(JobManageHead.getColumnData().length);
 
     return (
       <React.Fragment>
-        <Card>
+        <Card >
           <GrPageHeader path={this.props.location.pathname} />
           <CardContent className={pageContentClass}>
           
             <form className={formClass}>
               <FormControl className={formControlClass} autoComplete="off">
-                <InputLabel htmlFor="client-status">단말상태</InputLabel>
+                <InputLabel htmlFor="job-status">작업상태</InputLabel>
                 <Select
-                  value={this.state.clientStatus}
+                  value={this.state.jobStatus}
                   onChange={this.handleChangeSelect}
-                  inputProps={{ name: "clientStatus", id: "client-status" }}
+                  inputProps={{ name: "jobStatus", id: "job-status" }}
                 >
-                  {this.state.clientStatusOptionList.map(x => (
-                    <MenuItem value={x.value} key={x.id}>
-                      {x.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-              <FormControl className={formControlClass} autoComplete="off">
-                <InputLabel htmlFor="client-group">단말그룹</InputLabel>
-                <Select
-                  value={this.state.clientGroup}
-                  onChange={this.handleChangeSelect}
-                  inputProps={{ name: "clientGroup", id: "client-group" }}
-                >
-                  {this.state.clientGroupOptionList.map(x => (
+                  {this.state.jobStatusOptionList.map(x => (
                     <MenuItem value={x.value} key={x.id}>
                       {x.label}
                     </MenuItem>
@@ -527,9 +462,11 @@ class ClientManage extends Component {
               </Button>
             </form>
 
-            <div className={tableContainerClass}>
+            <div
+              className={tableContainerClass}
+            >
               <Table className={tableClass}>
-                <ClientManageHead
+                <JobManageHead
                   numSelected={selected.length}
                   order={order}
                   orderBy={orderBy}
@@ -540,44 +477,38 @@ class ClientManage extends Component {
                 <TableBody>
                   {data
                     .map(n => {
-                      const isSelected = this.isSelected(n.clientId);
+                      const isSelected = this.isSelected(n.jobNo);
                       return (
                         <TableRow
                           className={tableRowClass}
                           hover
-                          onClick={event => this.handleClick(event, n.clientId)}
+                          onClick={event => this.handleClick(event, n.jobNo)}
                           role="checkbox"
                           aria-checked={isSelected}
                           tabIndex={-1}
                           key={n.clientId}
                           selected={isSelected}
                         >
-                          <TableCell
-                            padding="checkbox"
-                            className={tableCellClass}
-                          >
-                            <Checkbox
-                              checked={isSelected}
-                              className={tableCellClass}
-                            />
+                          <TableCell className={tableCellClass}>
+                            {n.jobNo}
                           </TableCell>
                           <TableCell className={tableCellClass}>
-                            {n.clientStatus}
+                            {n.jobName}
                           </TableCell>
                           <TableCell className={tableCellClass}>
-                            {n.clientId}
-                          </TableCell>
-                          <TableCell className={tableCellClass} onClick={event => this.handleCellClick(event, n.clientId)}>
-                            #
+                            {n.readyCount}
                           </TableCell>
                           <TableCell className={tableCellClass}>
-                            {n.clientName}
+                            {n.clientCount}
                           </TableCell>
                           <TableCell className={tableCellClass}>
-                            {n.loginId}
+                            {n.errorCount}
                           </TableCell>
                           <TableCell className={tableCellClass}>
-                            {n.clientGroupName}
+                            {n.compCount}
+                          </TableCell>
+                          <TableCell className={tableCellClass}>
+                            {n.regUserId}
                           </TableCell>
                           <TableCell className={tableCellClass}>
                             {n.regDate}
@@ -589,7 +520,7 @@ class ClientManage extends Component {
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 32 * emptyRows }}>
                       <TableCell
-                        colSpan={ClientManageHead.getColumnData().length + 1}
+                        colSpan={JobManageHead.getColumnData().length + 1}
                         className={tableCellClass}
                       />
                     </TableRow>
@@ -625,4 +556,4 @@ class ClientManage extends Component {
   }
 }
 
-export default ClientManage;
+export default JobManage;
