@@ -77,7 +77,7 @@ export default {
         },
         {
           name: '작업관리',
-          url: '/clients/jobmanage',
+          url: '/jobs/jobmanage',
           icon: 'icon-notebook',
           level: 2,
         },

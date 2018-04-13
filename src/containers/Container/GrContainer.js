@@ -11,6 +11,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Dashboard from "../Dashboard/";
 // Clients - client management
 import ClientManage from '../../views/Clients/ClientManage';
+import JobManage from '../../views/Jobs/JobManage';
 
 
 const rootClass = css({
@@ -46,6 +47,11 @@ class GrContainer extends Component {
             path="/clients/clientmanage"
             name="ClientManage"
             component={ClientManage}
+          />
+          <Route
+            path="/jobs/jobmanage"
+            name="JobManage"
+            component={JobManage}
           />
         </Switch>
       </div>
