@@ -177,7 +177,7 @@ class SimpleDialog extends React.Component {
         <DialogTitle id="simple-dialog-title">단말 정보</DialogTitle>
 
         <div>
-        <Typography >General settings</Typography>
+        <Typography >{selectedValue}</Typography>
         <Typography >I am an expansion panel</Typography>
           <List>
             {emails.map(email => (
@@ -415,6 +415,7 @@ class ClientManage extends Component {
     console.log("handleCellClick .. " + id);
     this.setState({
       detailOpen: true,
+      selectedValue: id
     });
   };
 
