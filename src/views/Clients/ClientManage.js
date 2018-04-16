@@ -161,8 +161,19 @@ class SimpleDialog extends React.Component {
   render() {
     const { onClose, selectedValue, ...other } = this.props;
 
+    const clientInfo = {};
+    grRequestPromise("http://localhost:8080/gpms/readClientInfo", {
+    }).then(res => {
+        const groupList = res.data.map(x => ({
+          key: x.grpId,
+          id: x.grpId,
+          value: x.grpId,
+          label: x.grpNm
+        }));
+    });
+
     return (
-      <Dialog disableBackdropClick="true" onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
+      <Dialog disableBackdropClick={true} onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
         <DialogTitle id="simple-dialog-title">단말 정보</DialogTitle>
 
         <div>
@@ -461,8 +472,6 @@ class ClientManage extends Component {
 
     const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
     const emptyRows = rowsPerPage - data.length;
-
-    console.log(ClientManageHead.getColumnData().length);
 
     return (
       <React.Fragment>
