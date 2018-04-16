@@ -160,11 +160,13 @@ class SimpleDialog extends React.Component {
 
   render() {
     const { onClose, selectedValue, ...other } = this.props;
-
     const clientInfo = {};
+
+    console.log("SimpleDialog... render");
+
     grRequestPromise("http://localhost:8080/gpms/readClientInfo", {
     }).then(res => {
-        const groupList = res.data.map(x => ({
+        const clientInfo = res.data.map(x => ({
           key: x.grpId,
           id: x.grpId,
           value: x.grpId,
