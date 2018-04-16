@@ -161,12 +161,14 @@ class SimpleDialog extends React.Component {
   render() {
     const { onClose, selectedValue, ...other } = this.props;
 
+    const clientName = selectedValue;
+
     return (
-      <Dialog disableBackdropClick="true" onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
+      <Dialog disableBackdropClick={true} onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
         <DialogTitle id="simple-dialog-title">단말 정보</DialogTitle>
 
         <div>
-        <Typography >General settings</Typography>
+        <Typography >{selectedValue}</Typography>
         <Typography >I am an expansion panel</Typography>
           <List>
             {emails.map(email => (
@@ -404,6 +406,7 @@ class ClientManage extends Component {
     console.log("handleCellClick .. " + id);
     this.setState({
       detailOpen: true,
+      selectedValue: id
     });
   };
 
@@ -461,8 +464,6 @@ class ClientManage extends Component {
 
     const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
     const emptyRows = rowsPerPage - data.length;
-
-    console.log(ClientManageHead.getColumnData().length);
 
     return (
       <React.Fragment>
