@@ -32,6 +32,7 @@ export function grRequestPromise(url, param) {
         withCredentials: true
       }).then(function(response) {
   
+        if (response.data) {
           if (response.data.status.result === "success" && response.data.data && response.data.data.length > 0) {
   
               // const listData = [];
@@ -59,6 +60,9 @@ export function grRequestPromise(url, param) {
           } else {
             reject(response.data);
           }
+        } else {
+            reject(response);
+        }
         })
         .catch(function(error) {
           console.log(error);
