@@ -9,6 +9,8 @@ import { grColor } from "../../templates/default/GrColors";
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 import GrPageHeader from "../../components/GrHeader/GrPageHeader";
 
+import ClientDialog from "./ClientDialog";
+
 import Card, {
   CardHeader,
   CardMedia,
@@ -26,7 +28,6 @@ import Table, {
 } from "material-ui/Table";
 import Checkbox from "material-ui/Checkbox";
 import Tooltip from "material-ui/Tooltip";
-import Dialog, { DialogTitle, DialogActions } from 'material-ui/Dialog';
 
 import TextField from "material-ui/TextField";
 import Select from "material-ui/Select";
@@ -40,15 +41,8 @@ import Search from "@material-ui/icons/Search";
 
 
 //
-//  ## Temporary ########## ########## ########## ########## ########## 
+//  ## Temem override ########## ########## ########## ########## ########## 
 //
-import Avatar from 'material-ui/Avatar';
-import List, { ListItem, ListItemAvatar, ListItemText } from 'material-ui/List';
-import PersonIcon from '@material-ui/icons/Person';
-import AddIcon from '@material-ui/icons/Add';
-import Typography from 'material-ui/Typography';
-
-const emails = ['username@gmail.com', 'user02@gmail.com'];
 const theme = createMuiTheme({
   palette: {
     primary: {
@@ -146,75 +140,6 @@ const tableCellClass = css({
   cursor: "pointer"
 }).toString();
 
-//
-//  ## Dialog ########## ########## ########## ########## ########## 
-//
-class SimpleDialog extends React.Component {
-  handleClose = () => {
-    this.props.onClose(this.props.selectedValue);
-  };
-
-  handleListItemClick = value => {
-    this.props.onClose(value);
-  };
-
-  render() {
-    const { onClose, selectedValue, ...other } = this.props;
-    const clientInfo = {};
-
-    console.log("SimpleDialog... render");
-
-    grRequestPromise("http://localhost:8080/gpms/readClientInfo", {
-    }).then(res => {
-        const clientInfo = res.data.map(x => ({
-          key: x.grpId,
-          id: x.grpId,
-          value: x.grpId,
-          label: x.grpNm
-        }));
-    });
-
-    return (
-      <Dialog disableBackdropClick={true} onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
-        <DialogTitle id="simple-dialog-title">단말 정보</DialogTitle>
-
-        <div>
-        <Typography >{selectedValue}</Typography>
-        <Typography >I am an expansion panel</Typography>
-          <List>
-            {emails.map(email => (
-              <ListItem button onClick={() => this.handleListItemClick(email)} key={email}>
-                <ListItemAvatar>
-                  <Avatar >
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={email} />
-              </ListItem>
-            ))}
-            <ListItem button onClick={() => this.handleListItemClick('addAccount')}>
-              <ListItemAvatar>
-                <Avatar>
-                  <AddIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="add account" />
-            </ListItem>
-          </List>
-        </div>
-        <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Subscribe
-            </Button>
-          </DialogActions>
-      </Dialog>
-    );
-  }
-}
-
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -297,8 +222,8 @@ class ClientManage extends Component {
 
     this.state = {
       loading: true,
-      detailOpen: false,
-      selectedValue: "",
+      clientDialogOpen: false,
+      clientInfos: "",
 
       clientGroup: "",
       clientGroupOptionList: [],
@@ -411,13 +336,19 @@ class ClientManage extends Component {
     this.setState({ selected: [] });
   };
 
-  handleCellClick = (event, id) => {
-    //event.preventDefault();
+  handleInfoClick = (event, id) => {
+
     event.stopPropagation();
     console.log("handleCellClick .. " + id);
-    this.setState({
-      detailOpen: true,
-      selectedValue: id
+
+    grRequestPromise("http://localhost:8080/gpms/readClientInfo", {
+      clientId: id
+    }).then(res => {
+        const clientInfos = res.data;
+        this.setState({
+          clientDialogOpen: true,
+          clientInfos: clientInfos
+        });
     });
   };
 
@@ -466,9 +397,11 @@ class ClientManage extends Component {
   };
 
   // .................................................
-  handleDetailClose = value => {
-    console.log("handleDetailClose...");
-    this.setState({ selectedValue: value, detailOpen: false });
+  handleClientDialogClose = value => {
+    this.setState({ 
+      clientInfos: value, 
+      clientDialogOpen: false 
+    });
   };
 
   render() {
@@ -579,7 +512,7 @@ class ClientManage extends Component {
                           <TableCell className={tableCellClass}>
                             {n.clientId}
                           </TableCell>
-                          <TableCell className={tableCellClass} onClick={event => this.handleCellClick(event, n.clientId)}>
+                          <TableCell className={tableCellClass} onClick={event => this.handleInfoClick(event, n.clientId)}>
                             #
                           </TableCell>
                           <TableCell className={tableCellClass}>
@@ -626,10 +559,10 @@ class ClientManage extends Component {
             />
           </CardContent>
         </Card>
-        <SimpleDialog
-        selectedValue={this.state.selectedValue}
-        open={this.state.detailOpen}
-        onClose={this.handleDetailClose}
+        <ClientDialog
+          clientInfos={this.state.clientInfos}
+          open={this.state.clientDialogOpen}
+          onClose={this.handleClientDialogClose}
         />
       </React.Fragment>
       
