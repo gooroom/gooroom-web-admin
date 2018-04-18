@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { createMuiTheme } from "material-ui/styles";
-import { css } from 'glamor';
+import { css } from "glamor";
 
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 
@@ -22,26 +22,18 @@ import {
   FormHelperText
 } from "material-ui/Form";
 
-import Grid from "material-ui/Grid";
-import Paper from "material-ui/Paper";
-
 import Button from "material-ui/Button";
-import Search from "@material-ui/icons/Search";
+import Settings from "@material-ui/icons/Settings";
+
+import Icon from 'material-ui/Icon';
 
 //
 //  ## Temporary ########## ########## ########## ########## ##########
 //
-import Avatar from "material-ui/Avatar";
-import List, { ListItem, ListItemAvatar, ListItemText } from "material-ui/List";
-import PersonIcon from "@material-ui/icons/Person";
-import AddIcon from "@material-ui/icons/Add";
 import Typography from "material-ui/Typography";
 
-
-import AppBar from 'material-ui/AppBar';
-import Tabs, { Tab } from 'material-ui/Tabs';
-
-
+import AppBar from "material-ui/AppBar";
+import Tabs, { Tab } from "material-ui/Tabs";
 
 //
 //  ## Style ########## ########## ########## ########## ##########
@@ -51,37 +43,37 @@ const theme = createMuiTheme({
   palette: {
     primary: {
       // light: will be calculated from palette.primary.main,
-      main: '#ff4400',
+      main: "#ff4400"
       // dark: will be calculated from palette.primary.main,
       // contrastText: will be calculated to contast with palette.primary.main
     },
     secondary: {
-      light: '#0066ff',
-      main: '#0044ff',
+      light: "#0066ff",
+      main: "#0044ff",
       // dark: will be calculated from palette.secondary.main,
-      contrastText: '#ffcc00',
-    },
-  },
+      contrastText: "#ffcc00"
+    }
+  }
 });
 
 const paperClass = css({
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
+  textAlign: "center",
+  color: theme.palette.text.secondary
 }).toString();
 
 const tableContainerClass = css({
   margin: "0px 30px !important",
   minHeight: 500,
-  minWidth: 500,
+  minWidth: 500
 }).toString();
 
 const tableClass = css({
-  minWidth: 500,
+  minWidth: 500
 }).toString();
 
 const tableLabelCellClass = css({
   height: "1em !important",
-  padding: "5px !important",
+  padding: "5px !important"
 }).toString();
 
 const tableContentCellClass = css({
@@ -90,34 +82,143 @@ const tableContentCellClass = css({
   fontWeight: "bolder"
 }).toString();
 
+const leftIconClass = css({
+  marginRight: theme.spacing.unit + " !important"
+}).toString();
+
+function TabContainer({ children, type, data }) {
+  if (type == "0") {
+    return (
+      <Table className={tableClass}>
+        <TableBody>
+          <TableRow hover>
+            <TableCell className={tableLabelCellClass}>단말아이디</TableCell>
+            <TableCell className={tableContentCellClass}>
+              {data.clientId}
+            </TableCell>
+            <TableCell className={tableLabelCellClass}>단말상태</TableCell>
+            <TableCell className={tableContentCellClass}>
+              {data.clientStatus}
+            </TableCell>
+          </TableRow>
+          <TableRow hover>
+            <TableCell className={tableLabelCellClass}>단말이름</TableCell>
+            <TableCell className={tableContentCellClass}>
+              {data.clientName}
+              <Icon color="primary">add_circle</Icon>
+            </TableCell>
+            <TableCell className={tableLabelCellClass}>단말그룹</TableCell>
+            <TableCell className={tableContentCellClass}>
+              {data.clientGroupName}
+              <Settings  />
+            </TableCell>
+          </TableRow>
+          <TableRow hover>
+            <TableCell className={tableLabelCellClass}>제품번호</TableCell>
+            <TableCell colSpan={3} className={tableContentCellClass}>
+              {data.prodNo}
+            </TableCell>
+          </TableRow>
+          <TableRow hover>
+            <TableCell className={tableLabelCellClass}>단말아이피</TableCell>
+            <TableCell colSpan={3} className={tableContentCellClass}>
+              {data.clientIp}
+            </TableCell>
+          </TableRow>
+          <TableRow hover>
+            <TableCell className={tableLabelCellClass}>등록일</TableCell>
+            <TableCell className={tableContentCellClass}>
+              {data.regDate}
+            </TableCell>
+            <TableCell className={tableLabelCellClass}>수정일</TableCell>
+            <TableCell className={tableContentCellClass}>
+              {data.modDate}
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+  } else if (type == "1") {
+    const pollingValue = data.propArray
+      ? data.propArray.find(function(elem) {
+          return elem.propNm == "AGENTPOLLINGTIME";
+        }).propValue
+      : "";
+    const useHyperVisor = data.propArray
+      ? data.propArray.find(function(elem) {
+          return elem.propNm == "USEHYPERVISOR";
+        }).propValue
+      : "";
+
+    return (
+      <Table className={tableClass}>
+        <TableBody>
+          <TableRow hover>
+            <TableCell className={tableLabelCellClass}>정책이름</TableCell>
+            <TableCell className={tableContentCellClass}>
+              {data.objId}
+            </TableCell>
+            <TableCell className={tableLabelCellClass}>정책아이디</TableCell>
+            <TableCell className={tableContentCellClass}>
+              {data.objNm}
+            </TableCell>
+          </TableRow>
+          <TableRow hover>
+            <TableCell className={tableLabelCellClass}>정책설명</TableCell>
+            <TableCell colSpan={3} className={tableContentCellClass}>
+              {data.comment}
+            </TableCell>
+          </TableRow>
+          <TableRow hover>
+            <TableCell className={tableLabelCellClass}>Agent Polling</TableCell>
+            <TableCell className={tableContentCellClass}>
+              {pollingValue}
+            </TableCell>
+            <TableCell className={tableLabelCellClass}>운영체제보호</TableCell>
+            <TableCell className={tableContentCellClass}>
+              {useHyperVisor}
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+  } else {
+    return (
+      <Typography component="div" style={{ padding: 8 * 3 }}>
+        {children}
+      </Typography>
+    );
+  }
+}
+
+TabContainer.propTypes = {
+  children: PropTypes.node.isRequired,
+  type: PropTypes.string.isRequired,
+  data: PropTypes.object
+};
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
 class ClientDialog extends React.Component {
-
   constructor(props) {
     super(props);
 
     this.state = {
       tabValue: 0,
-      clientRuleInfo: {},
+      clientRuleInfo: {}
     };
 
     this.handleClose = this.handleClose.bind(this);
   }
 
   handleClose() {
-    this.setState({ 
-      tabValue: 0 ,
-      clientRuleInfo: {},
-    });
     this.props.onClose(this.props.clientInfos);
-  };
-
-  handleListItemClick = value => {
-    this.props.onClose(value);
-  };
+    this.setState({
+      tabValue: 0,
+      clientRuleInfo: {}
+    });
+  }
 
   handleTabChange = (event, value) => {
     this.setState({ tabValue: value });
@@ -131,18 +232,21 @@ class ClientDialog extends React.Component {
     if (clientInfos && clientInfos.length > 0) {
       clientInfo = clientInfos[0];
 
-      console.log("ClientDialog >>>>>>>>>>>>>>>>>> GET render tabValue: " + tabValue + ", clientRuleInfo: " + clientRuleInfo);
-
-      if(tabValue === 1 && (Object.keys(clientRuleInfo).length === 0 && clientRuleInfo.constructor === Object)) {
-        console.log("ClientDialog >>>>>>>############>>>>> GET render tabValue: " + tabValue);
+      if (
+        tabValue === 1 &&
+        (Object.keys(clientRuleInfo).length === 0 &&
+          clientRuleInfo.constructor === Object)
+      ) {
         grRequestPromise("http://localhost:8080/gpms/readClientConfByGroupId", {
-          clientGroupId: (clientInfo.clientGroupId) ? clientInfo.clientGroupId: ""
+          clientGroupId: clientInfo.clientGroupId
+            ? clientInfo.clientGroupId
+            : ""
         }).then(res => {
-            if(res.data && res.data.length > 0) {
-              this.setState({
-                clientRuleInfo: res.data[0]
-              });
-            }
+          if (res.data && res.data.length > 0) {
+            this.setState({
+              clientRuleInfo: res.data[0]
+            });
+          }
         });
       }
 
@@ -153,73 +257,28 @@ class ClientDialog extends React.Component {
           aria-labelledby="client-dialog-title"
           {...other}
         >
-          <DialogTitle id="client-dialog-title" >단말 정보</DialogTitle>
+          <DialogTitle id="client-dialog-title">단말 정보</DialogTitle>
 
           <div className={tableContainerClass}>
-
-          {tabValue === 0 && 
-            <Table className={tableClass}>
-              <TableBody >
-                <TableRow hover>
-                  <TableCell className={tableLabelCellClass}>단말아이디</TableCell>
-                  <TableCell className={tableContentCellClass}>{clientInfo.clientId}</TableCell>
-                  <TableCell className={tableLabelCellClass}>단말상태</TableCell>
-                  <TableCell className={tableContentCellClass}>{clientInfo.clientStatus}</TableCell>
-                </TableRow>
-                <TableRow hover>
-                  <TableCell className={tableLabelCellClass}>단말이름</TableCell>
-                  <TableCell className={tableContentCellClass}>{clientInfo.clientName}</TableCell>
-                  <TableCell className={tableLabelCellClass}>단말그룹</TableCell>
-                  <TableCell className={tableContentCellClass}>{clientInfo.clientGroupName}</TableCell>
-                </TableRow>
-                <TableRow hover>
-                  <TableCell className={tableLabelCellClass}>제품번호</TableCell>
-                  <TableCell colSpan={3} className={tableContentCellClass}>{clientInfo.prodNo}</TableCell>
-                </TableRow>
-                <TableRow hover>
-                  <TableCell className={tableLabelCellClass}>단말아이피</TableCell>
-                  <TableCell colSpan={3} className={tableContentCellClass}>{clientInfo.clientIp}</TableCell>
-                </TableRow>
-                <TableRow hover>
-                  <TableCell className={tableLabelCellClass}>등록일</TableCell>
-                  <TableCell className={tableContentCellClass}>{clientInfo.regDate}</TableCell>
-                  <TableCell className={tableLabelCellClass}>수정일</TableCell>
-                  <TableCell className={tableContentCellClass}>{clientInfo.modDate}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          }
-          {tabValue === 1 && 
-            <Table className={tableClass}>
-              <TableBody >
-                <TableRow hover>
-                  <TableCell className={tableLabelCellClass}>정책이름</TableCell>
-                  <TableCell className={tableContentCellClass}>{clientRuleInfo.objId}</TableCell>
-                  <TableCell className={tableLabelCellClass}>정책아이디</TableCell>
-                  <TableCell className={tableContentCellClass}>{clientRuleInfo.objNm}</TableCell>
-                </TableRow>
-                <TableRow hover>
-                  <TableCell className={tableLabelCellClass}>정책설명</TableCell>
-                  <TableCell colSpan={3} className={tableContentCellClass}>{clientRuleInfo.comment}</TableCell>
-                </TableRow>
-                <TableRow hover>
-                  <TableCell className={tableLabelCellClass}>Agent Polling</TableCell>
-                  <TableCell className={tableContentCellClass}>{clientRuleInfo.objNm}</TableCell>
-                  <TableCell className={tableLabelCellClass}>운영체제보호</TableCell>
-                  <TableCell className={tableContentCellClass}>{clientRuleInfo.objNm}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          }
-          {tabValue === 2 && <div>Item Three</div>}
+            {tabValue === 0 && (
+              <TabContainer type="0" data={clientInfo}>
+                tab1
+              </TabContainer>
+            )}
+            {tabValue === 1 && (
+              <TabContainer type="1" data={clientRuleInfo}>
+                tab2
+              </TabContainer>
+            )}
+            {tabValue === 2 && <TabContainer type="2">Item Three</TabContainer>}
           </div>
 
           <AppBar position="static">
-          <Tabs value={tabValue} onChange={this.handleTabChange}>
-            <Tab label="기본정보" />
-            <Tab label="정책정보" />
-            <Tab label="기타" />
-          </Tabs>
+            <Tabs value={tabValue} onChange={this.handleTabChange}>
+              <Tab label="기본정보" />
+              <Tab label="정책정보" />
+              <Tab label="기타" />
+            </Tabs>
           </AppBar>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
@@ -228,8 +287,6 @@ class ClientDialog extends React.Component {
           </DialogActions>
         </Dialog>
       );
-      
-
     } else {
       // ERROR
 
@@ -243,8 +300,6 @@ class ClientDialog extends React.Component {
         </Dialog>
       );
     }
-
-
   }
 }
 
