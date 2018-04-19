@@ -9,9 +9,10 @@ import { grColor } from "../../templates/default/GrColors";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import Dashboard from "../Dashboard/";
-// Clients - client management
-import ClientManage from '../../views/Clients/ClientManage';
-import JobManage from '../../views/Jobs/JobManage';
+// Client - client management
+import ClientManage from '../../views/Client/ClientManage';
+import ClientGroupManage from '../../views/ClientGroup/ClientGroupManage';
+import JobManage from '../../views/Job/JobManage';
 
 
 const rootClass = css({
@@ -47,6 +48,11 @@ class GrContainer extends Component {
             path="/clients/clientmanage"
             name="ClientManage"
             component={ClientManage}
+          />
+          <Route
+            path="/clients/clientgroupmanage"
+            name="ClientGroupManage"
+            component={ClientGroupManage}
           />
           <Route
             path="/jobs/jobmanage"

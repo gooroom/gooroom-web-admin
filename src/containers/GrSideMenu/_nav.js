@@ -50,7 +50,7 @@ export default {
         },
         {
           name: '그룹관리',
-          url: '/clients/clientgroup',
+          url: '/clients/clientgroupmanage',
           icon: 'icon-folder',
           level: 2,
         },
