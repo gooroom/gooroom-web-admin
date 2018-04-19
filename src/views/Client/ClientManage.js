@@ -224,6 +224,8 @@ class ClientManage extends Component {
       loading: true,
       clientDialogOpen: false,
       clientInfos: "",
+      selectedClientId: "",
+      selectedClientGroupId: "",
 
       clientGroup: "",
       clientGroupOptionList: [],
@@ -293,6 +295,7 @@ class ClientManage extends Component {
             clientId: d.clientId,
             clientName: d.clientName,
             loginId: d.loginId,
+            clientGroupId: d.clientGroupId,
             clientGroupName: d.clientGroupName,
             regDate: d.regDate
           };
@@ -336,20 +339,25 @@ class ClientManage extends Component {
     this.setState({ selected: [] });
   };
 
-  handleInfoClick = (event, id) => {
+  handleInfoClick = (event, clientId, clientGroupId) => {
 
     event.stopPropagation();
-    console.log("handleCellClick .. " + id);
-
-    grRequestPromise("http://localhost:8080/gpms/readClientInfo", {
-      clientId: id
-    }).then(res => {
-        const clientInfos = res.data;
-        this.setState({
-          clientDialogOpen: true,
-          clientInfos: clientInfos
-        });
+    console.log("handleCellClick .. " + clientId);
+    this.setState({
+      clientDialogOpen: true,
+      selectedClientId: clientId,
+      selectedClientGroupId: clientGroupId,
     });
+
+    // grRequestPromise("http://localhost:8080/gpms/readClientInfo", {
+    //   clientId: id
+    // }).then(res => {
+    //     const clientInfos = res.data;
+    //     this.setState({
+    //       clientDialogOpen: true,
+    //       clientInfos: clientInfos
+    //     });
+    // });
   };
 
   handleClick = (event, id) => {
@@ -512,7 +520,7 @@ class ClientManage extends Component {
                           <TableCell className={tableCellClass}>
                             {n.clientId}
                           </TableCell>
-                          <TableCell className={tableCellClass} onClick={event => this.handleInfoClick(event, n.clientId)}>
+                          <TableCell className={tableCellClass} onClick={event => this.handleInfoClick(event, n.clientId, n.clientGroupId)}>
                             #
                           </TableCell>
                           <TableCell className={tableCellClass}>
@@ -560,7 +568,8 @@ class ClientManage extends Component {
           </CardContent>
         </Card>
         <ClientDialog
-          clientInfos={this.state.clientInfos}
+          clientId={this.state.selectedClientId}
+          clientGroupId={this.state.selectedClientGroupId}
           open={this.state.clientDialogOpen}
           onClose={this.handleClientDialogClose}
         />

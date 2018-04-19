@@ -8,7 +8,7 @@ const routes = {
   
   '/clients': '단말관리',
   '/clients/clientmanage': '등록관리',
-  '/clients/clientgroup': '그룹관리',
+  '/clients/clientgroupmanage': '그룹관리',
   '/clients/packages': '패키지관리',
   '/jobs/jobmanage': '작업관리',
 
