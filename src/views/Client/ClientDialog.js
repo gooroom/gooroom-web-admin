@@ -25,7 +25,7 @@ const tabContainerClass = css({
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class ClientDialog extends React.Component {
+class ClientDialog extends Component {
   constructor(props) {
     super(props);
 
