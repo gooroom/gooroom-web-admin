@@ -9,7 +9,7 @@ import { grColor } from "../../templates/default/GrColors";
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 import GrPageHeader from "../../components/GrHeader/GrPageHeader";
 
-import ClientDialog from "../Client/ClientDialog";
+import ClientGroupDialog from "../ClientGroup/ClientGroupDialog";
 
 import Card, {
   CardHeader,
@@ -37,6 +37,7 @@ import { FormControl, FormHelperText } from "material-ui/Form";
 
 import Button from "material-ui/Button";
 import Search from "@material-ui/icons/Search";
+import Add from "@material-ui/icons/Add";
 
 import Typography from 'material-ui/Typography';
 import ExpansionPanel, {
@@ -47,7 +48,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 
 //
-//  ## Temem override ########## ########## ########## ########## ########## 
+//  ## Theme override ########## ########## ########## ########## ########## 
 //
 const theme = createMuiTheme({
   palette: {
@@ -147,7 +148,6 @@ const tableCellClass = css({
 }).toString();
 
 
-
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
@@ -215,13 +215,12 @@ class ClientGroupManage extends Component {
 
     this.state = {
       loading: true,
-      clientDialogOpen: false,
-      clientInfos: "",
+      clientGroupDialogOpen: false,
+      clientGroupInfo: "",
       selectedClientId: "",
       selectedClientGroupId: "",
 
       keyword: "",
-      expanded: null,
 
       order: "asc",
       orderBy: "calories",
@@ -378,20 +377,20 @@ class ClientGroupManage extends Component {
   };
 
   // .................................................
-  handleClientDialogClose = value => {
+  handleClientGroupDialogClose = value => {
     this.setState({ 
-      clientInfos: value, 
-      clientDialogOpen: false 
+      clientGroupInfo: value, 
+      clientGroupDialogOpen: false 
     });
   };
 
 
 
-  handleChange = panel => (event, expanded) => {
+  showClientGroupDialog = value => {
     this.setState({
-      expanded: expanded ? panel : false,
+      clientGroupDialogOpen: true 
     });
-  };
+  }
 
   render() {
 
@@ -416,9 +415,6 @@ class ClientGroupManage extends Component {
                   margin="dense"
                 />
               </FormControl>
-
-              <div className={formEmptyControlClass} />
-
               <Button
                 className={classNames(buttonClass, formControlClass)}
                 variant="raised"
@@ -429,6 +425,20 @@ class ClientGroupManage extends Component {
               >
                 <Search className={leftIconClass} />
                 조회
+              </Button>
+
+              <div className={formEmptyControlClass} />
+
+              <Button
+                className={classNames(buttonClass, formControlClass)}
+                variant="raised"
+                color="secondary"
+                onClick={() => {
+                  this.showClientGroupDialog();
+                }}
+              >
+                <Add className={leftIconClass} />
+                등록
               </Button>
             </form>
 
@@ -504,11 +514,9 @@ class ClientGroupManage extends Component {
             />
           </CardContent>
         </Card>
-        <ClientDialog
-          clientId={this.state.selectedClientId}
-          clientGroupId={this.state.selectedClientGroupId}
-          open={this.state.clientDialogOpen}
-          onClose={this.handleClientDialogClose}
+        <ClientGroupDialog 
+          open={this.state.clientGroupDialogOpen}
+          onClose={this.handleClientGroupDialogClose}
         />
       </React.Fragment>
       

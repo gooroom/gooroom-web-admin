@@ -56,7 +56,7 @@ export default {
         },
         {
           name: '패키지관리',
-          url: '/clients/packages',
+          url: '/package/packagemanage',
           icon: 'icon-layers',
           level: 2,
         },
