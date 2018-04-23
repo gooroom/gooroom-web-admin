@@ -14,7 +14,7 @@ import ClientManage from "../../views/Client/ClientManage";
 import ClientGroupManage from "../../views/ClientGroup/ClientGroupManage";
 import JobManage from "../../views/Job/JobManage";
 import DeptManage from "../../views/User/DeptManage";
-
+import PackageManage from '../../views/Package/PackageManage';
 
 const rootClass = css({
   transition: "left 0.25s, right 0.25s, width 0.25s",
@@ -64,6 +64,11 @@ class GrContainer extends Component {
             path="/user/department"
             name="DeptManage"
             component={DeptManage}
+          />
+          <Route
+            path="/package/packagemanage"
+            name="PackageManage"
+            component={PackageManage}
           />
         </Switch>
       </div>
