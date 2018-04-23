@@ -22,6 +22,12 @@ const routes = {
   '/userconfig/media': '매체제어정책관리',
   '/userconfig/browser': '브라우저제어정책관리',
   '/userconfig/security': '단말보안정책관리',
+
+  '/user': '사용자관리',
+  '/user/department': '조직관리',
+  '/user/account': '사용자계정관리',
+  '/user/role': '사용자롤관리',
+
   
   '/base': 'Base',
   '/base/cards': 'Cards',

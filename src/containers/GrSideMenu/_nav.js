@@ -126,5 +126,31 @@ export default {
         },
       ]
     },
+    {
+      name: '사용자관리',
+      url: '/user',
+      icon: 'icon-screen-desktop',
+      level: 1,
+      children: [
+        {
+          name: '조직관리',
+          url: '/user/department',
+          icon: 'icon-wrench',
+          level: 2,
+        },
+        {
+          name: '사용자계정관리',
+          url: '/user/account',
+          icon: 'icon-folder',
+          level: 2,
+        },
+        {
+          name: '사용자롤관리',
+          url: '/user/role',
+          icon: 'icon-layers',
+          level: 2,
+        },
+      ]
+    },
   ]
 };

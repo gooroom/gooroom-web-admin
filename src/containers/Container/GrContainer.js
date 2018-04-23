@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { css } from 'glamor';
+import { css } from "glamor";
 
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColor } from "../../templates/default/GrColors";
@@ -10,9 +10,10 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import Dashboard from "../Dashboard/";
 // Client - client management
-import ClientManage from '../../views/Client/ClientManage';
-import ClientGroupManage from '../../views/ClientGroup/ClientGroupManage';
-import JobManage from '../../views/Job/JobManage';
+import ClientManage from "../../views/Client/ClientManage";
+import ClientGroupManage from "../../views/ClientGroup/ClientGroupManage";
+import JobManage from "../../views/Job/JobManage";
+import DeptManage from "../../views/User/DeptManage";
 
 
 const rootClass = css({
@@ -58,6 +59,11 @@ class GrContainer extends Component {
             path="/jobs/jobmanage"
             name="JobManage"
             component={JobManage}
+          />
+          <Route
+            path="/user/department"
+            name="DeptManage"
+            component={DeptManage}
           />
         </Switch>
       </div>
