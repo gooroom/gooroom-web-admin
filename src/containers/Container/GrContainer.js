@@ -13,6 +13,8 @@ import Dashboard from "../Dashboard/";
 import ClientManage from '../../views/Client/ClientManage';
 import ClientGroupManage from '../../views/ClientGroup/ClientGroupManage';
 import JobManage from '../../views/Job/JobManage';
+import PackageManage from '../../views/Package/PackageManage';
+
 
 
 const rootClass = css({
@@ -58,6 +60,11 @@ class GrContainer extends Component {
             path="/jobs/jobmanage"
             name="JobManage"
             component={JobManage}
+          />
+          <Route
+            path="/package/packagemanage"
+            name="PackageManage"
+            component={PackageManage}
           />
         </Switch>
       </div>

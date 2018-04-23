@@ -8,6 +8,8 @@ import { grLayout } from "../../templates/default/GrLayout";
 import { grColor } from "../../templates/default/GrColors";
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 
+import GrPageHeader from "../../components/GrHeader/GrPageHeader";
+
 import Card, {
   CardHeader,
   CardMedia,
@@ -34,8 +36,6 @@ import PersonIcon from '@material-ui/icons/Person';
 import AddIcon from '@material-ui/icons/Add';
 import Typography from 'material-ui/Typography';
 import blue from 'material-ui/colors/blue';
-
-import GrPageHeader from "../../components/GrHeader/GrPageHeader";
 
 import TextField from "material-ui/TextField";
 import Select from "material-ui/Select";
