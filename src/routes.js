@@ -24,7 +24,7 @@ const routes = {
   '/userconfig/security': '단말보안정책관리',
 
   '/user': '사용자관리',
-  '/user/department': '조직관리',
+  '/user/deptmanage': '조직관리',
   '/user/account': '사용자계정관리',
   '/user/role': '사용자롤관리',
 

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import { grRequestPromise } from "../../components/GrUtils/GrRequester";
+
 import ListSubheader from 'material-ui/List/ListSubheader';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 
@@ -31,36 +33,107 @@ class GrTreeList extends Component {
         this.state = {
             expandedListItems: [],
             activeListItem: null,
-            searchTerm: ''
+            searchTerm: '',
+
+            url: props.url,
+            paramKeyName: props.paramKeyName,
+            rootKeyValue: props.rootKeyValue,
+            keyName: props.keyName,
+            title: props.title,
+
+            treeData: [],
         }
 
         this.handleTouchTap = this.handleTouchTap.bind(this);
+        this.fetchTreeData = this.fetchTreeData.bind(this);
+    }
+
+    componentDidMount() {
+
+        this.fetchTreeData(this.state.rootKeyValue);
+
+      }
+
+    fetchTreeData(keyValue, index) {
+        const keyName = this.state.keyName;
+        const param = {};
+        param[this.state.paramKeyName] = keyValue;
+
+        grRequestPromise(this.state.url, param).then(res => {
+            let indexCount = 0;
+
+            const resData = res.map(x => {
+                let children = null;
+                if(x.lazy) {
+                    children = [];
+                }
+                let node = {
+                    key: x[keyName],
+                    depth: (x.whleDeptCd.match(/;/g) || []).length,
+                    disabled: false,
+                    title: x[this.state.title],
+                    children: children
+                  };
+                if(index !== undefined) {
+                    node["parentIndex"] = index;
+                }
+                return (node);
+            });
+
+            if(this.state.treeData.length > 0) {
+                // set children data for stop refetch.
+                let parents = this.state.treeData;
+                parents[index].children = resData.map(d => {
+                    return d.key
+                });
+                // data merge.
+                // use SPLICE for insert in array
+                parents.splice.apply(parents, [index+1, 0].concat(resData));
+
+                this.setState({
+                    treeData: parents
+                });
+            } else {
+                this.setState({
+                    treeData: resData
+                });
+            }
+        });
     }
 
     handleTouchTap(listItem, index) {
-        console.log("handleTouchTap >>> " + listItem + ", " + index);
-
+        
         if (listItem.children) {
-            const indexOfListItemInArray = this.state.expandedListItems.indexOf(index)
+            // fetch children data
+            // request to server if children array is empty.
+            if(listItem.children < 1) {
+                this.fetchTreeData(listItem.key, index);
+            }           
+
+            const indexOfListItemInArray = this.state.expandedListItems.indexOf(index);
             if  (indexOfListItemInArray === -1) {
                 this.setState({
                     expandedListItems: this.state.expandedListItems.concat([index])
                 })
             } else {
-                let newArray = [].concat(this.state.expandedListItems)
-                newArray.splice(indexOfListItemInArray, 1)
+                let newArray = [].concat(this.state.expandedListItems);
+                newArray.splice(indexOfListItemInArray, 1);
                 this.setState({
                     expandedListItems: newArray
                 })
             }
         } else {
-            this.setState({
-                activeListItem: index
-            })
         }
 
-        if (this.props.handleTouchTap) this.props.handleTouchTap(listItem, index);
+        // select node
+        this.setState({
+            activeListItem: index
+        })
+        // call select node event
+        if (this.props.onSelectNode) this.props.onSelectNode(listItem);
     }
+
+
     
     render() {
 
@@ -71,7 +144,9 @@ class GrTreeList extends Component {
         const activeListItem = (this.props.activeListItem) ? this.props.activeListItem : this.state.activeListItem;
         const expandedListItems = (this.props.expandedListItems) ? this.props.expandedListItems : this.state.expandedListItems;
 
-        let listItemsModified = listItems
+        const datas = this.state.treeData;
+
+        let listItemsModified = this.state.treeData
             .map((listItem, i, inputArray) => {
                 listItem._styles = {
                     root: {
@@ -98,7 +173,7 @@ class GrTreeList extends Component {
         // JSX: array of listItems
         const listItemsJSX = listItemsModified
             .map((listItem, i) => {
-                console.log(listItem);
+                //console.log(listItem);
                 if (listItem._shouldRender) {
                     return (
                         <GrTreeItem
@@ -148,7 +223,7 @@ class GrTreeList extends Component {
                 if (expandedListItems.indexOf(listitem.parentIndex) === -1) {
                     return false
                 } else {
-                    const parent = listItems.filter((_listItem, index) => {
+                    const parent = datas.filter((_listItem, index) => {
                         return index === listitem.parentIndex
                     })[0]
                     return parentsAreExpanded(parent)

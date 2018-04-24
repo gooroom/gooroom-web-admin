@@ -70,6 +70,11 @@ class GrContainer extends Component {
             name="PackageManage"
             component={PackageManage}
           />
+          <Route
+            path="/user/deptmanage"
+            name="DeptManage"
+            component={DeptManage}
+          />
         </Switch>
       </div>
     );
