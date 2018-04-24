@@ -33,7 +33,7 @@ export function grRequestPromise(url, param) {
     }).then(function(response) {
 
       if (response.data) {
-        if (response.data.status.result === "success" && response.data.data && response.data.data.length > 0) {
+        if (response.data.status && response.data.status.result === "success" && response.data.data && response.data.data.length > 0) {
 
             // const listData = [];
             // response.data.data.forEach(d => {
@@ -58,7 +58,7 @@ export function grRequestPromise(url, param) {
 
             resolve(response.data);
         } else {
-          reject(response.data);
+          resolve(response.data);
         }
       } else {
           reject(response);

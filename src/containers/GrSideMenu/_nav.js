@@ -134,7 +134,7 @@ export default {
       children: [
         {
           name: '조직관리',
-          url: '/user/department',
+          url: '/user/deptmanage',
           icon: 'icon-wrench',
           level: 2,
         },
