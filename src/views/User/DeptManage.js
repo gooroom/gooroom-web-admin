@@ -39,7 +39,7 @@ class DeptManage extends Component {
   }
 
   handleSelectDept(node) {
-    console.log("handleSelectDept... " + node.title);
+    console.log("..... DeptManage handleSelectDept... " + node.title);
   }
 
   render() {

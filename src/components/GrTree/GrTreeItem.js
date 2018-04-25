@@ -1,10 +1,17 @@
 import React, {Component, PropTypes} from "react"
-import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
+import Checkbox from "material-ui/Checkbox"
 
 class GrTreeItem extends Component {
+
+    onClickNode = event => {
+        // for don't collapse folder.
+        event.stopPropagation();
+    };
+
     render() {
-        const {primaryText, style} = this.props
-        const {onTouchTap, leftIcon, rightIcon} = this.props
+        const {nodeKey, primaryText, style, checked, imperfect} = this.props
+        const {onClickNode, leftIcon, rightIcon, onCheckNode} = this.props
 
         const styles = {
             root: {
@@ -20,12 +27,18 @@ class GrTreeItem extends Component {
             
             <ListItem button
                 style={Object.assign({}, styles.root, style)}
-                onClick={onTouchTap}>
+                onClick={onClickNode}>
+                <Checkbox
+                    onClick={this.onClickNode}
+                    onChange={onCheckNode(nodeKey)}
+                    checked={checked.indexOf(nodeKey) !== -1}
+                    disableRipple
+                    indeterminate={imperfect.indexOf(nodeKey) !== -1}
+                />
                 {leftIcon}
                 <ListItemText inset primary={primaryText} />
                 {rightIcon}
             </ListItem>
-
 
         )
     }
