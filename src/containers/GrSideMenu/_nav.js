@@ -140,7 +140,7 @@ export default {
         },
         {
           name: '사용자계정관리',
-          url: '/user/account',
+          url: '/user/usermanage',
           icon: 'icon-folder',
           level: 2,
         },

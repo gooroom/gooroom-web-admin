@@ -14,9 +14,7 @@ import GrTreeList from "../../components/GrTree/GrTreeList";
 import GrPane from "../../containers/Container/GrPane";
 
 import Typography from 'material-ui/Typography';
-
 import Grid from "material-ui/Grid";
-import Paper from "material-ui/Paper";
 
 import Card, {
   CardHeader,

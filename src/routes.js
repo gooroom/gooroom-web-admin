@@ -25,7 +25,7 @@ const routes = {
 
   '/user': '사용자관리',
   '/user/deptmanage': '조직관리',
-  '/user/account': '사용자계정관리',
+  '/user/usermanage': '사용자계정관리',
   '/user/role': '사용자롤관리',
 
   
