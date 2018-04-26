@@ -26,8 +26,6 @@ import Table, {
   TableRow,
   TableSortLabel
 } from "material-ui/Table";
-import Checkbox from "material-ui/Checkbox";
-import Tooltip from "material-ui/Tooltip";
 
 import TextField from "material-ui/TextField";
 import { FormControl, FormHelperText } from "material-ui/Form";
@@ -342,10 +340,6 @@ class ClientGroupManage extends Component {
   // .................................................
 
   // Events...
-  handleChangeSelect = event => {
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
   handleChangeKeyword = name => event => {
     this.setState({ [name]: event.target.value });
   };
