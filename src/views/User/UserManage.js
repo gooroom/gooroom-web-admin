@@ -77,7 +77,6 @@ const leftIconClass = css({
   marginRight: theme.spacing.unit + " !important"
 }).toString();
 
-
 const tableClass = css({
   minWidth: "700px !important"
 }).toString();
@@ -116,7 +115,6 @@ const tableCellClass = css({
   padding: "0px !important",
   cursor: "pointer"
 }).toString();
-
 
 
 
@@ -204,7 +202,6 @@ class UserManage extends Component {
       rowsFiltered: 0
 
     }
-
   }
 
   fetchData(page, rowsPerPage, orderBy, order) {
@@ -244,86 +241,62 @@ class UserManage extends Component {
         rowsFiltered: 0,
       });
     });
-
   }
 
 
   
 
 
-    // .................................................
-    handleRequestSort = (event, property) => {
-      const orderBy = property;
-      let order = "desc";
-      if (this.state.orderBy === property && this.state.order === "desc") {
-        order = "asc";
-      }
-  
-      this.fetchData(this.state.page, this.state.rowsPerPage, orderBy, order);
-    };
-  
-    handleSelectAllClick = (event, checked) => {
-      if (checked) {
-        this.setState({ selected: this.state.data.map(n => n.grpId) });
-        return;
-      }
-      this.setState({ selected: [] });
-    };
-  
-    handleInfoClick = (event, clientId, clientGroupId) => {
-  
-      event.stopPropagation();
-      console.log("handleCellClick .. " + clientId);
-      this.setState({
-        clientDialogOpen: true,
-        selectedClientId: clientId,
-        selectedClientGroupId: clientGroupId,
-      });
-  
-    };
-  
-    handleClick = (event, id) => {
-      //event.preventDefault();
-      event.stopPropagation();
-      console.log("handleClick .. " + id);
-      const { selected } = this.state;
-      const selectedIndex = selected.indexOf(id);
-      let newSelected = [];
-  
-      if (selectedIndex === -1) {
-        newSelected = newSelected.concat(selected, id);
-      } else if (selectedIndex === 0) {
-        newSelected = newSelected.concat(selected.slice(1));
-      } else if (selectedIndex === selected.length - 1) {
-        newSelected = newSelected.concat(selected.slice(0, -1));
-      } else if (selectedIndex > 0) {
-        newSelected = newSelected.concat(
-          selected.slice(0, selectedIndex),
-          selected.slice(selectedIndex + 1)
-        );
-      }
-  
-      this.setState({ selected: newSelected });
-    };
-  
-    handleChangePage = (event, page) => {
-      this.fetchData(page, this.state.rowsPerPage, this.state.orderBy, this.state.order);
-    };
-  
-    handleChangeRowsPerPage = event => {
-      this.fetchData(this.state.page, event.target.value, this.state.orderBy, this.state.order);
-    };
-  
-    isSelected = id => this.state.selected.indexOf(id) !== -1;
-    // .................................................
+  // .................................................
+  handleRequestSort = (event, property) => {
+    const orderBy = property;
+    let order = "desc";
+    if (this.state.orderBy === property && this.state.order === "desc") {
+      order = "asc";
+    }
 
-    // Events...
+    this.fetchData(this.state.page, this.state.rowsPerPage, orderBy, order);
+  };
+  
+  handleInfoClick = (event, clientId, clientGroupId) => {
+
+    event.stopPropagation();
+    console.log("handleCellClick .. " + clientId);
+    this.setState({
+      clientDialogOpen: true,
+      selectedClientId: clientId,
+      selectedClientGroupId: clientGroupId,
+    });
+
+  };
+  
+  handleClick = (event, id) => {
+
+    console.log("handleClick .. " + id);
+    this.setState({ 
+      selectedUserId: id
+    });
+
+  };
+
+  handleChangePage = (event, page) => {
+    this.fetchData(page, this.state.rowsPerPage, this.state.orderBy, this.state.order);
+  };
+
+  handleChangeRowsPerPage = event => {
+    this.fetchData(this.state.page, event.target.value, this.state.orderBy, this.state.order);
+  };
+  
+  isSelected = id => this.state.selected.indexOf(id) !== -1;
+  // .................................................
+
+  // Events...
   handleChangeKeyword = name => event => {
     this.setState({ [name]: event.target.value });
   };
 
   // .................................................
-  handleClientGroupDialogClose = value => {
+  handleUserDialogClose = value => {
     this.setState({ 
       clientGroupInfo: value, 
       clientGroupDialogOpen: false 
@@ -336,9 +309,7 @@ class UserManage extends Component {
     });
   }
 
-
-
-
+  
   render() {
 
     const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.state;
@@ -348,71 +319,66 @@ class UserManage extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
+          <form className={formClass}>
+            <FormControl className={formControlClass} autoComplete="off">
+              <TextField
+                id="keyword"
+                label="검색어"
+                className={textFieldClass}
+                value={this.state.keyword}
+                onChange={this.handleChangeKeyword("keyword")}
+                margin="dense"
+              />
+            </FormControl>
+            <Button
+              className={classNames(buttonClass, formControlClass)}
+              variant="raised"
+              color="primary"
+              onClick={() => {
+                this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);
+              }}
+            >
+              <Search className={leftIconClass} />
+              조회
+            </Button>
 
-        <form className={formClass}>
+            <div className={formEmptyControlClass} />
 
-        <FormControl className={formControlClass} autoComplete="off">
-          <TextField
-            id="keyword"
-            label="검색어"
-            className={textFieldClass}
-            value={this.state.keyword}
-            onChange={this.handleChangeKeyword("keyword")}
-            margin="dense"
-          />
-        </FormControl>
-        <Button
-          className={classNames(buttonClass, formControlClass)}
-          variant="raised"
-          color="primary"
-          onClick={() => {
-            this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);
-          }}
-        >
-          <Search className={leftIconClass} />
-          조회
-        </Button>
+            <Button
+              className={classNames(buttonClass, formControlClass)}
+              variant="raised"
+              color="secondary"
+              onClick={() => {
+                this.showClientGroupDialog();
+              }}
+            >
+              <Add className={leftIconClass} />
+              등록
+            </Button>
+          </form>
 
-        <div className={formEmptyControlClass} />
-
-        <Button
-          className={classNames(buttonClass, formControlClass)}
-          variant="raised"
-          color="secondary"
-          onClick={() => {
-            this.showClientGroupDialog();
-          }}
-        >
-          <Add className={leftIconClass} />
-          등록
-        </Button>
-      </form>
-  
-
-
-      <div className={tableContainerClass}>
-      <Table className={tableClass}>
-        <UserManageHead
-          numSelected={selected.length}
-          order={order}
-          orderBy={orderBy}
-          onSelectAllClick={this.handleSelectAllClick}
-          onRequestSort={this.handleRequestSort}
-          rowCount={data.length}
-        />
-        <TableBody>
-          {data
-            .map(n => {
-              const isSelected = this.isSelected(n.grpId);
+          <div className={tableContainerClass}>
+            <Table className={tableClass}>
+              <UserManageHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={this.handleSelectAllClick}
+                onRequestSort={this.handleRequestSort}
+                rowCount={data.length}
+              />
+              <TableBody>
+          {data.map(n => {
+              const isSelected = this.isSelected(n.userId);
               return (
                 <TableRow
                   className={tableRowClass}
                   hover
-                  onClick={event => this.handleClick(event, n.grpId)}
+                  onClick={event => this.handleClick(event, n.userId)}
                   role="checkbox"
                   aria-checked={isSelected}
                   tabIndex={-1}
-                  key={n.grpId}
+                  key={n.userId}
                   selected={isSelected}
                 >
                   <TableCell className={tableCellClass}>
@@ -466,8 +432,8 @@ class UserManage extends Component {
         </GrPane>
 
         <UserManageDialog 
-          open={this.state.clientGroupDialogOpen}
-          onClose={this.handleClientGroupDialogClose}
+          open={this.state.userDialogOpen}
+          onClose={this.handleUserDialogClose}
         />
 
       </React.Fragment>
