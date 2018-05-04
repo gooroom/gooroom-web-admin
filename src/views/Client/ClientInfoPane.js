@@ -45,7 +45,6 @@ const tableContentCellClass = css({
 
 const iconClass = css({
   marginLeft: "0.5em",
-  marginBottom: "-0.3em"
 }).toString();
 
 
