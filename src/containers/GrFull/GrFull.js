@@ -14,7 +14,7 @@ import GrFooter from "../GrFooter/";
 import GrSideMenu from "../GrSideMenu";
 import GrBreadcrumb from "../GrBreadcrumb/";
 
-import GrContainer from "../Container/";
+import GrRouters from "../GrContent/";
 import Aside from "../Aside/";
 
 
@@ -126,7 +126,7 @@ class Full extends Component {
           <main className={classNames({[mainClass]: !this.state.isMainWide}, {[mainWideClass]: this.state.isMainWide})}>
             <div>
             <GrBreadcrumb />
-            <GrContainer />
+            <GrRouters />
             </div>
             <GrFooter />
             </main>

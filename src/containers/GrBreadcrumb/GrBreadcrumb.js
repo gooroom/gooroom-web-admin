@@ -42,9 +42,9 @@ class GrBreadcrumb extends Component {
             <a href="#/">Home</a> >
           </li>
           <li className={parentMenuClass}>
-            <a href="#/clients">단말관리</a> >
+            <a href="#/clients">메뉴1(임시)</a> >
           </li>
-          <li className={selectMenuClass}>등록관리</li>
+          <li className={selectMenuClass}>메뉴2(임시)</li>
         </ol>
       </div>
     );
