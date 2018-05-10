@@ -38,7 +38,11 @@ import { FormControl, FormHelperText } from "material-ui/Form";
 
 import Button from "material-ui/Button";
 import Search from "@material-ui/icons/Search";
-import Add from "@material-ui/icons/Add";
+import AddIcon from '@material-ui/icons/Add';
+import Icon from 'material-ui/Icon';
+import DeleteIcon from '@material-ui/icons/Delete';
+
+
 
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
@@ -118,6 +122,13 @@ const tableCellClass = css({
   cursor: "pointer"
 }).toString();
 
+
+const actButtonClass = css({
+    margin: "5px !important",
+    height: "24px !important",
+    minHeight: "24px !important",
+    width: "24px !important",
+}).toString();
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -321,7 +332,7 @@ class ClientRegKey extends Component {
                 this.showClientGroupDialog();
               }}
             >
-              <Add className={leftIconClass} />
+              <AddIcon className={leftIconClass} />
               등록
             </Button>
           </form>
@@ -378,7 +389,15 @@ class ClientRegKey extends Component {
                         {n.modDate}
                       </TableCell>
                       <TableCell className={tableCellClass}>
-                        {n.modDate}
+                        <Button variant="fab" color="primary" aria-label="add" className={actButtonClass}>
+                          <AddIcon />
+                        </Button>
+                        <Button variant="fab" color="secondary" aria-label="edit" className={actButtonClass}>
+                          <Icon>edit_icon</Icon>
+                        </Button>
+                        <Button variant="fab" aria-label="delete" className={actButtonClass}>
+                          <DeleteIcon />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
