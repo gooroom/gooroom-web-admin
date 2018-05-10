@@ -117,70 +117,10 @@ const tableCellClass = css({
 }).toString();
 
 
-
-//
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class UserManageHead extends Component {
-
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
-    { id: "userId", numeric: false, disablePadding: true, label: "아이디" },
-    { id: "userNm", numeric: false, disablePadding: true, label: "사용자이름" },
-    { id: "status", numeric: false, disablePadding: true, label: "상태" },
-    { id: "lastLoginDt", numeric: false, disablePadding: true, label: "최근로그인날짜" },
-    { id: "regDate", numeric: false, disablePadding: true, label: "등록일" }
-  ];
-
-  static getColumnData() {
-    return UserManageHead.columnData;
-  }
-
-  render() {
-    const {
-      onSelectAllClick,
-      order,
-      orderBy,
-      numSelected,
-      rowCount
-    } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {UserManageHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={tableCellClass}
-                key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? "none" : "default"}
-                sortDirection={orderBy === column.id ? order : false}
-              >
-                <TableSortLabel
-                  active={orderBy === column.id}
-                  direction={order}
-                  onClick={this.createSortHandler(column.id)}
-                >
-                  {column.label}
-                </TableSortLabel>
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class UserManage extends Component {
+class ClientRegKey extends Component {
   constructor(props) {
     super(props);
 
@@ -189,6 +129,14 @@ class UserManage extends Component {
       userDialogOpen: false,
       userInfo: "",
       selectedUserId: "",
+
+      columnData: [
+        { id: "userId", numeric: false, disablePadding: true, label: "아이디" },
+        { id: "userNm", numeric: false, disablePadding: true, label: "사용자이름" },
+        { id: "status", numeric: false, disablePadding: true, label: "상태" },
+        { id: "lastLoginDt", numeric: false, disablePadding: true, label: "최근로그인날짜" },
+        { id: "regDate", numeric: false, disablePadding: true, label: "등록일" }
+      ],
 
       keyword: "",
 
@@ -242,9 +190,7 @@ class UserManage extends Component {
       });
     });
   }
-
-
-  
+ 
 
 
   // .................................................
@@ -309,6 +255,13 @@ class UserManage extends Component {
     });
   }
 
+
+
+  // ====
+  createSortHandler = property => event => {
+    this.props.onRequestSort(event, property);
+  };
+
   
   render() {
 
@@ -359,14 +312,31 @@ class UserManage extends Component {
 
           <div className={tableContainerClass}>
             <Table className={tableClass}>
-              <UserManageHead
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                onSelectAllClick={this.handleSelectAllClick}
-                onRequestSort={this.handleRequestSort}
-                rowCount={data.length}
-              />
+
+      <TableHead>
+        <TableRow>
+          {this.state.columnData.map(column => {
+            return (
+              <TableCell
+                className={tableCellClass}
+                key={column.id}
+                numeric={column.numeric}
+                padding={column.disablePadding ? "none" : "default"}
+                sortDirection={orderBy === column.id ? order : false}
+              >
+                <TableSortLabel
+                  active={orderBy === column.id}
+                  direction={order}
+                  onClick={this.createSortHandler(column.id)}
+                >
+                  {column.label}
+                </TableSortLabel>
+              </TableCell>
+            );
+          }, this)}
+        </TableRow>
+      </TableHead>
+
               <TableBody>
           {data.map(n => {
               const isSelected = this.isSelected(n.userId);
@@ -403,7 +373,7 @@ class UserManage extends Component {
           {emptyRows > 0 && (
             <TableRow style={{ height: 32 * emptyRows }}>
               <TableCell
-                colSpan={UserManageHead.getColumnData().length + 1}
+                colSpan={this.state.columnData.length + 1}
                 className={tableCellClass}
               />
             </TableRow>
@@ -426,9 +396,6 @@ class UserManage extends Component {
       onChangePage={this.handleChangePage}
       onChangeRowsPerPage={this.handleChangeRowsPerPage}
     />
-
-
-
         </GrPane>
 
         <UserManageDialog 
@@ -441,4 +408,4 @@ class UserManage extends Component {
   }
 }
 
-export default UserManage;
+export default ClientRegKey;

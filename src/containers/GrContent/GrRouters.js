@@ -12,6 +12,9 @@ import Dashboard from "../Dashboard/";
 // Client - client management
 import ClientManage from "../../views/Client/ClientManage";
 import ClientGroupManage from "../../views/ClientGroup/ClientGroupManage";
+
+import ClientRegKey from "../../views/ClientConfig/ClientRegKey";
+
 import JobManage from "../../views/Job/JobManage";
 import PackageManage from '../../views/Package/PackageManage';
 
@@ -35,7 +38,7 @@ const rootClass = css({
     ")",
 }).toString();
 
-class GrContainer extends Component {
+class GrRouters extends Component {
   constructor(props) {
     super(props);
   }
@@ -56,6 +59,11 @@ class GrContainer extends Component {
             path="/clients/clientgroupmanage"
             name="ClientGroupManage"
             component={ClientGroupManage}
+          />
+          <Route
+            path="/clientconfig/regkey"
+            name="ClientRegKey"
+            component={ClientRegKey}
           />
           <Route
             path="/jobs/jobmanage"
@@ -88,4 +96,4 @@ class GrContainer extends Component {
   }
 }
 
-export default GrContainer;
+export default GrRouters;

@@ -8,10 +8,10 @@ import { grLayout } from "../../templates/default/GrLayout";
 import { grColor } from "../../templates/default/GrColors";
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 
-import GrPageHeader from "../../components/GrHeader/GrPageHeader";
+import GrPageHeader from "../../containers/GrContent/GrPageHeader";
 
 import GrTreeList from "../../components/GrTree/GrTreeList";
-import GrPane from "../../containers/Container/GrPane";
+import GrPane from "../../containers/GrContent/GrPane";
 
 import Typography from 'material-ui/Typography';
 import Grid from "material-ui/Grid";

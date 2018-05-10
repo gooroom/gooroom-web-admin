@@ -97,6 +97,12 @@ export default {
           url: '/clientconfig/setting',
           icon: 'icon-notebook',
           level: 2,
+        },
+        {
+          name: '단말등록키',
+          url: '/clientconfig/regkey',
+          icon: 'icon-notebook',
+          level: 2,
         }
       ]
     },
