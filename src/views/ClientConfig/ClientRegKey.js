@@ -4,12 +4,14 @@ import classNames from "classnames";
 import { createMuiTheme } from "material-ui/styles";
 import { css } from "glamor";
 
+import moment from "moment";
+
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColor } from "../../templates/default/GrColors";
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 import GrPageHeader from "../../containers/GrContent/GrPageHeader";
 
-import UserManageDialog from "../User/UserManageDialog";
+import ClientRegKeyDialog from "./ClientRegKeyDialog";
 import GrPane from "../../containers/GrContent/GrPane";
 
 import Typography from 'material-ui/Typography';
@@ -126,16 +128,16 @@ class ClientRegKey extends Component {
 
     this.state = {
       loading: true,
-      userDialogOpen: false,
+      clientRegKeyDialogOpen: false,
       userInfo: "",
       selectedUserId: "",
 
       columnData: [
-        { id: "userId", numeric: false, disablePadding: true, label: "아이디" },
-        { id: "userNm", numeric: false, disablePadding: true, label: "사용자이름" },
-        { id: "status", numeric: false, disablePadding: true, label: "상태" },
-        { id: "lastLoginDt", numeric: false, disablePadding: true, label: "최근로그인날짜" },
-        { id: "regDate", numeric: false, disablePadding: true, label: "등록일" }
+        { id: "colRegKey", numeric: false, disablePadding: true, label: "단말등록키" },
+        { id: "colValidDate", numeric: false, disablePadding: true, label: "유효날짜" },
+        { id: "colExpireDate", numeric: false, disablePadding: true, label: "인증서만료날짜" },
+        { id: "colModDate", numeric: false, disablePadding: true, label: "등록일" },
+        { id: "colAction", numeric: false, disablePadding: true, label: "수정/삭제" },
       ],
 
       keyword: "",
@@ -150,6 +152,8 @@ class ClientRegKey extends Component {
       rowsFiltered: 0
 
     }
+
+    this.formatDateToSimple = this.formatDateToSimple.bind(this);
   }
 
   fetchData(page, rowsPerPage, orderBy, order) {
@@ -161,7 +165,7 @@ class ClientRegKey extends Component {
       order: order
     });
 
-    grRequestPromise("http://localhost:8080/gpms/readUserList", {
+    grRequestPromise("http://localhost:8080/gpms/readRegKeyInfoList", {
       searchKey: this.state.keyword,
 
       start: page * rowsPerPage,
@@ -171,6 +175,10 @@ class ClientRegKey extends Component {
     }).then(res => {
         const listData = [];
         res.data.forEach(d => {
+          d.validDate = this.formatDateToSimple(d.validDate, "YYYY-MM-DD");
+          d.expireDate = this.formatDateToSimple(d.expireDate, "YYYY-MM-DD");
+          d.modDate = this.formatDateToSimple(d.modDate, "YYYY-MM-DD HH:mm");
+          //this.testFunction("aaaa");
           listData.push(d);
         });
         this.setState({
@@ -244,23 +252,30 @@ class ClientRegKey extends Component {
   // .................................................
   handleUserDialogClose = value => {
     this.setState({ 
-      clientGroupInfo: value, 
-      clientGroupDialogOpen: false 
+      clientRegKeyInfo: value,
+      clientRegKeyDialogOpen: false 
     });
   };
 
   showClientGroupDialog = value => {
     this.setState({
-      clientGroupDialogOpen: true 
+      clientRegKeyDialogOpen: true 
     });
   }
 
 
+  formatDateToSimple = (value, format) => {
+    try {
+      const date = new Date(value);
+      return moment(date).format(format);//date.toISOString().substring(0, 10);
+    } catch (err) {
+      console.log(err);
+      return "";
+    }
+    console.log(value);
+  }
 
-  // ====
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
+
 
   
   render() {
@@ -272,6 +287,7 @@ class ClientRegKey extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
+          {/* data option area */}
           <form className={formClass}>
             <FormControl className={formControlClass} autoComplete="off">
               <TextField
@@ -309,97 +325,95 @@ class ClientRegKey extends Component {
               등록
             </Button>
           </form>
-
+          {/* data area */}
           <div className={tableContainerClass}>
             <Table className={tableClass}>
 
-      <TableHead>
-        <TableRow>
-          {this.state.columnData.map(column => {
-            return (
-              <TableCell
-                className={tableCellClass}
-                key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? "none" : "default"}
-                sortDirection={orderBy === column.id ? order : false}
-              >
-                <TableSortLabel
-                  active={orderBy === column.id}
-                  direction={order}
-                  onClick={this.createSortHandler(column.id)}
-                >
-                  {column.label}
-                </TableSortLabel>
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
+              <TableHead>
+                <TableRow>
+                  {this.state.columnData.map(column => {
+                    return (
+                      <TableCell
+                        className={tableCellClass}
+                        key={column.id}
+                        numeric={column.numeric}
+                        padding={column.disablePadding ? "none" : "default"}
+                        sortDirection={orderBy === column.id ? order : false}
+                      >
+                        <TableSortLabel
+                          active={orderBy === column.id}
+                          direction={order}
+                          //onClick={this.handleRequestSort(column.id)}
+                        >
+                          {column.label}
+                        </TableSortLabel>
+                      </TableCell>
+                    );
+                  }, this)}
+                </TableRow>
+              </TableHead>
 
               <TableBody>
-          {data.map(n => {
-              const isSelected = this.isSelected(n.userId);
-              return (
-                <TableRow
-                  className={tableRowClass}
-                  hover
-                  onClick={event => this.handleClick(event, n.userId)}
-                  role="checkbox"
-                  aria-checked={isSelected}
-                  tabIndex={-1}
-                  key={n.userId}
-                  selected={isSelected}
-                >
-                  <TableCell className={tableCellClass}>
-                    {n.userId}
-                  </TableCell>
-                  <TableCell className={tableCellClass}>
-                    {n.userNm}
-                  </TableCell>
-                  <TableCell className={tableCellClass}>
-                    {n.status}
-                  </TableCell>
-                  <TableCell className={tableCellClass}>
-                    {n.lastLoginDt}
-                  </TableCell>
-                  <TableCell className={tableCellClass}>
-                    {n.regDate}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                {data.map(n => {
+                  const isSelected = this.isSelected(n.userId);
+                  return (
+                    <TableRow
+                      className={tableRowClass}
+                      hover
+                      onClick={event => this.handleClick(event, n.regkeyNo)}
+                      tabIndex={-1}
+                      key={n.regkeyNo}
+                      selected={isSelected}
+                    >
+                      <TableCell className={tableCellClass}>
+                        {n.regkeyNo}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.validDate}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.expireDate}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.modDate}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.modDate}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
 
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 32 * emptyRows }}>
-              <TableCell
-                colSpan={this.state.columnData.length + 1}
-                className={tableCellClass}
-              />
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 32 * emptyRows }}>
+                    <TableCell
+                      colSpan={this.state.columnData.length + 1}
+                      className={tableCellClass}
+                    />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
 
-    <TablePagination
-      component="div"
-      count={rowsFiltered}
-      rowsPerPage={rowsPerPage}
-      page={page}
-      backIconButtonProps={{
-        "aria-label": "Previous Page"
-      }}
-      nextIconButtonProps={{
-        "aria-label": "Next Page"
-      }}
-      onChangePage={this.handleChangePage}
-      onChangeRowsPerPage={this.handleChangeRowsPerPage}
-    />
+          <TablePagination
+            component="div"
+            count={rowsFiltered}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            backIconButtonProps={{
+              "aria-label": "Previous Page"
+            }}
+            nextIconButtonProps={{
+              "aria-label": "Next Page"
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
         </GrPane>
-
-        <UserManageDialog 
-          open={this.state.userDialogOpen}
+        {/* dialog(popup) component area */}
+        <ClientRegKeyDialog 
+          open={this.state.clientRegKeyDialogOpen}
           onClose={this.handleUserDialogClose}
         />
 
