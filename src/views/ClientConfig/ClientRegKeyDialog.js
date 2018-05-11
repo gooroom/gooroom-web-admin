@@ -7,7 +7,9 @@ import { withTheme } from "material-ui/styles";
 
 import { css } from "glamor";
 
+
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
+
 
 import Dialog, {DialogTitle, DialogActions } from "material-ui/Dialog";
 import Button from "material-ui/Button";
@@ -96,17 +98,23 @@ class ClientRegKeyDialog extends Component {
     }
 
     handleClose() {
+        this.setState({
+            regKey: "",
+            validDate: "2018-05-20",
+            expireDate: "2028-05-31",
+            ipRange: "",
+            keyComment: ""
+        })
         this.props.onClose("close");
     }
 
     handleSaveData() {
-        console.log("handleSaveData..");
-
         grRequestPromise("http://localhost:8080/gpms/createRegKeyData", {
             regkeyNo: this.state.regKey,
             validDate: this.state.validDate,
             expireDate: this.state.expireDate,
-            ipRange: this.state.ipRange
+            ipRange: this.state.ipRange,
+            comment: this.state.keyComment,
           }).then(res => {
               this.handleClose();
           }, res => {
@@ -114,9 +122,7 @@ class ClientRegKeyDialog extends Component {
         });        
     }
 
-    handleKeyGenerate() {
-        console.log("handleKeyGenerate....");
-
+    handleKeyGenerate = () => {
         grRequestPromise("http://localhost:8080/gpms/generateRegKeyNumber", {
           }).then(res => {
               this.setState({
@@ -133,10 +139,6 @@ class ClientRegKeyDialog extends Component {
         this.setState({
           [name]: event.target.value,
         });
-    }
-
-    handleChangeValidDate = () => {
-        console.log("aaaaaaaa");
     }
 
     render() {
