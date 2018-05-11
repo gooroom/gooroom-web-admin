@@ -8,6 +8,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColor } from "../../templates/default/GrColors";
+import GrAlert from "../../components/GrComponents/GrAlert";
 
 import GrHeader from "../GrHeader/";
 import GrFooter from "../GrFooter/";
@@ -121,6 +122,7 @@ class Full extends Component {
       <CssBaseline />
       <div className={rootClass} >
         <GrHeader toggleDrawer={this.toggleDrawer} />
+        <GrAlert />
         <div className={appBodyClass}>
           <GrSideMenu sideOpen={this.state.sideOpen} />
           <main className={classNames({[mainClass]: !this.state.isMainWide}, {[mainWideClass]: this.state.isMainWide})}>
