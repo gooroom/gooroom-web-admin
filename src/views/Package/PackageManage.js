@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { createMuiTheme } from "material-ui/styles";
+import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";
 
 import { grLayout } from "../../templates/default/GrLayout";
@@ -17,7 +17,7 @@ import Card, {
   CardMedia,
   CardContent,
   CardActions
-} from "material-ui/Card";
+} from "@material-ui/core/Card";
 
 //
 //  ## Style ########## ########## ########## ########## ##########

@@ -29,11 +29,10 @@
     "webpack-dev-server": "2.11.1"
   },
   "dependencies": {
-    "@material-ui/icons": "^1.0.0-beta.42",
+    "@material-ui/core": "^1.0.0",
+    "@material-ui/icons": "^1.0.0",
     "axios": "^0.18.0",
     "glamor": "^2.20.40",
-    "material-ui": "^1.0.0-beta.39",
-    "material-ui-icons": "^1.0.0-beta.36",
     "moment": "^2.22.1",
     "qs": "^6.5.1",
     "react": "^16.2.0",

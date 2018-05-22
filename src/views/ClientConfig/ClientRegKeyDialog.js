@@ -2,29 +2,23 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
-import { withTheme } from "material-ui/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { withTheme } from "@material-ui/core/styles";
 
 import { css } from "glamor";
 
-
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
 
-import Dialog, {DialogTitle, DialogActions } from "material-ui/Dialog";
-import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 
-import Typography from 'material-ui/Typography';
-import {
-    FormLabel,
-    FormControl,
-    FormGroup,
-    FormControlLabel,
-    FormHelperText,
-  } from 'material-ui/Form';
-import Grid from 'material-ui/Grid';
-
+import Typography from '@material-ui/core/Typography';
+import FormLabel from '@material-ui/core/FormLabel';
+import Grid from '@material-ui/core/Grid';
 import Add from "@material-ui/icons/Add";
 
 //
@@ -81,41 +75,52 @@ const keyCreateBtnClass = css({
 //  ## Dialog ########## ########## ########## ########## ##########
 //
 class ClientRegKeyDialog extends Component {
+
+    static TYPE_VIEW = 'VIEW';
+    static TYPE_ADD = 'ADD';
+    static TYPE_EDIT = 'EDIT';
+
     constructor(props) {
         super(props);
 
         this.state = {
-            regKey: "",
+            regKeyNo: "",
             validDate: "2018-05-20",
             expireDate: "2028-05-31",
             ipRange: "",
-            keyComment: ""
+            comment: ""
         }
 
         this.handleClose = this.handleClose.bind(this);
+        this.handleAddData = this.handleAddData.bind(this);
         this.handleSaveData = this.handleSaveData.bind(this);
         this.handleKeyGenerate = this.handleKeyGenerate.bind(this);
+
+        this.handleRegKeyData = props.handleRegKeyData.bind(this);
+    }
+
+    handleRegKeyData() {
+
     }
 
     handleClose() {
-        this.setState({
-            regKey: "",
-            validDate: "2018-05-20",
-            expireDate: "2028-05-31",
-            ipRange: "",
-            keyComment: ""
-        })
         this.props.onClose("close");
     }
 
+    handleAddData() {
+        grRequestPromise("http://localhost:8080/gpms/createRegKeyData", 
+            this.props.selectedData
+          ).then(res => {
+              this.handleClose();
+          }, res => {
+            this.handleClose();
+        });        
+    }
+
     handleSaveData() {
-        grRequestPromise("http://localhost:8080/gpms/createRegKeyData", {
-            regkeyNo: this.state.regKey,
-            validDate: this.state.validDate,
-            expireDate: this.state.expireDate,
-            ipRange: this.state.ipRange,
-            comment: this.state.keyComment,
-          }).then(res => {
+        grRequestPromise("http://localhost:8080/gpms/editRegKeyData", 
+            this.props.selectedData
+          ).then(res => {
               this.handleClose();
           }, res => {
             this.handleClose();
@@ -125,43 +130,57 @@ class ClientRegKeyDialog extends Component {
     handleKeyGenerate = () => {
         grRequestPromise("http://localhost:8080/gpms/generateRegKeyNumber", {
           }).then(res => {
-              this.setState({
-                regKey: res.data[0].key,
-              });
+              console.log(res);
+              this.handleRegKeyData('regKeyNo', res.data[0].key);
+            //   this.setState({
+            //     regKeyNo: res.data[0].key,
+            //   });
           }, res => {
-            this.setState({
-                regKey: "error",
-              });
+            // this.setState({
+            //     regKeyNo: "error",
+            //   });
           });        
     }
 
     handleChange = name => event => {
-        this.setState({
-          [name]: event.target.value,
-        });
+        this.handleRegKeyData(name, event.target.value);
+        // this.setState({
+        //   [name]: event.target.value,
+        // });
     }
 
     render() {
-        const {onClose, ...other} = this.props;
+        const {onClose, selectedData, type, handleRegKeyData, ...other} = this.props;
+
+        let title = "";
+        let buttons = {};
+        if(type === ClientRegKeyDialog.TYPE_ADD) {
+            title = "단말 등록키 등록";
+        } else if(type === ClientRegKeyDialog.TYPE_VIEW) {
+            title = "단말 등록키 정보";
+        } else if(type === ClientRegKeyDialog.TYPE_EDIT) {
+            title = "단말 등록키 수정";
+        }
 
         return (
             <Dialog
                 onClose={this.handleClose}
                 {...other}
             >
-                <DialogTitle className={titleClass}>단말 등록키 추가</DialogTitle>
+                <DialogTitle className={titleClass}>{title}</DialogTitle>
 
                 <form noValidate autoComplete="off" className={containerClass}>
 
                     <Grid container spacing={16}>
                         <Grid item xs={8}>
                             <TextField
-                                id="regKey"
+                                id="regKeyNo"
                                 label="등록키"
-                                value={this.state.regKey}
-                                onChange={this.handleChange("regKey")}
+                                value={selectedData.regKeyNo}
+                                onChange={this.handleChange("regKeyNo")}
                                 margin="normal"
                                 className={fullWidthClass}
+                                disabled 
                             />
                         </Grid>
                         <Grid item xs={4} className={keyCreateBtnClass}>
@@ -172,6 +191,7 @@ class ClientRegKeyDialog extends Component {
                             onClick={() => {
                                 this.handleKeyGenerate();
                             }}
+                            style={{display: type === ClientRegKeyDialog.TYPE_ADD ? 'block' : 'none' }}
                             ><Add className={leftIconClass} />키생성
                             </Button>
                         </Grid>
@@ -184,7 +204,7 @@ class ClientRegKeyDialog extends Component {
                             label="유효날짜"
                             type="date"
                             margin="normal"
-                            value={this.state.validDate}
+                            value={selectedData.validDate}
                             onChange={this.handleChange("validDate")}
                             className={fullWidthClass}
                             InputLabelProps={{
@@ -198,7 +218,7 @@ class ClientRegKeyDialog extends Component {
                             label="인증서만료날짜"
                             type="date"
                             margin="normal"
-                            value={this.state.expireDate}
+                            value={selectedData.expireDate}
                             onChange={this.handleChange("expireDate")}
                             className={fullWidthClass}
                             InputLabelProps={{
@@ -211,7 +231,7 @@ class ClientRegKeyDialog extends Component {
                     <TextField
                     id="ipRange"
                     label="유효 IP 범위"
-                    value={this.state.ipRange}
+                    value={selectedData.ipRange}
                     onChange={this.handleChange("ipRange")}
                     margin="normal"
                     className={fullWidthClass}
@@ -223,25 +243,21 @@ class ClientRegKeyDialog extends Component {
                         (샘플) "127.0.0.1, 169.0.0.1" 또는 "127.0.0.1 - 127.0.0.10"
                     </FormLabel>
                     <TextField
-                    id="keyComment"
-                    label="설명"
-                    margin="normal"
-                    onChange={this.handleChange("keyComment")}
-                    className={fullWidthClass}
-                    value={this.state.keyComment}
+                        id="comment"
+                        label="설명"
+                        margin="normal"
+                        onChange={this.handleChange("comment")}
+                        className={fullWidthClass}
+                        value={selectedData.comment}
                     />
 
                 </form>
 
                 <DialogActions>
-
-                    <Button onClick={this.handleSaveData} color="secondary">
-                        저장
-                    </Button>
-        
-                    <Button onClick={this.handleClose} color="primary">
-                        닫기
-                    </Button>
+                    
+                <Button onClick={this.handleAddData} color="secondary" style={{display: type === ClientRegKeyDialog.TYPE_ADD ? 'block' : 'none' }}>등록</Button>
+                <Button onClick={this.handleSaveData} color="secondary" style={{display: type === ClientRegKeyDialog.TYPE_EDIT ? 'block' : 'none' }}>저장</Button>
+                <Button onClick={this.handleClose} color="primary">닫기</Button>
 
                 </DialogActions>
             </Dialog>

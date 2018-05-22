@@ -1,17 +1,17 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { MuiThemeProvider, createMuiTheme } from "material-ui/styles";
-import { withTheme } from "material-ui/styles";
+import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { withTheme } from "@material-ui/core/styles";
 
 import { css } from "glamor";
 
-import Dialog, {DialogTitle, DialogActions } from "material-ui/Dialog";
-import Button from "material-ui/Button";
-import TextField from "material-ui/TextField";
+import Dialog, {DialogTitle, DialogActions } from "@material-ui/core/Dialog";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 
-import Typography from 'material-ui/Typography';
-import Card, { CardHeader, CardMedia, CardContent, CardActions } from "material-ui/Card";
+import Typography from '@material-ui/core/Typography';
+import Card, { CardHeader, CardMedia, CardContent, CardActions } from "@material-ui/core/Card";
 
 //
 //  ## Style ########## ########## ########## ########## ##########
