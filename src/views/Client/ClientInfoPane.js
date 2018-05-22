@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { createMuiTheme } from "material-ui/styles";
+import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";
 
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
@@ -11,17 +11,9 @@ import Table, {
   TableCell,
   TableHead,
   TableRow
-} from "material-ui/Table";
+} from "@material-ui/core/Table";
 
-import {
-  FormLabel,
-  FormControl,
-  FormGroup,
-  FormControlLabel,
-  FormHelperText
-} from "material-ui/Form";
-
-import Button from "material-ui/Button";
+import Button from "@material-ui/core/Button";
 import Settings from "@material-ui/icons/Settings";
 
 

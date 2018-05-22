@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 import { css } from 'glamor';
 
-import CssBaseline from 'material-ui/CssBaseline';
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColor } from "../../templates/default/GrColors";

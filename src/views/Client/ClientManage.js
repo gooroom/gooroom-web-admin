@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { createMuiTheme } from 'material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { grLayout } from "../../templates/default/GrLayout";
@@ -16,7 +16,7 @@ import Card, {
   CardMedia,
   CardContent,
   CardActions
-} from "material-ui/Card";
+} from "@material-ui/core/Card";
 
 import Table, {
   TableBody,
@@ -25,17 +25,17 @@ import Table, {
   TablePagination,
   TableRow,
   TableSortLabel
-} from "material-ui/Table";
-import Checkbox from "material-ui/Checkbox";
-import Tooltip from "material-ui/Tooltip";
+} from "@material-ui/core/Table";
+import Checkbox from "@material-ui/core/Checkbox";
+import Tooltip from "@material-ui/core/Tooltip";
 
-import TextField from "material-ui/TextField";
-import Select from "material-ui/Select";
-import { MenuItem } from "material-ui/Menu";
-import Input, { InputLabel } from "material-ui/Input";
-import { FormControl, FormHelperText } from "material-ui/Form";
+import TextField from "@material-ui/core/TextField";
+import Select from "@material-ui/core/Select";
+import { MenuItem } from "@material-ui/core/Menu";
+import Input, { InputLabel } from "@material-ui/core/Input";
+import FormControl from "@material-ui/core/FormControl";
 
-import Button from "material-ui/Button";
+import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 
 

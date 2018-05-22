@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { css } from 'glamor';
 
 import routes from '../../routes';
-import {CardHeader} from 'material-ui/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 
 
 const rootClass = css({
