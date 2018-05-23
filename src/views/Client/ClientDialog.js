@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { createMuiTheme } from "material-ui/styles";
+import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";
 
-import Dialog, { DialogTitle, DialogActions } from "material-ui/Dialog";
-import Button from "material-ui/Button";
+import Dialog, { DialogTitle, DialogActions } from "@material-ui/core/Dialog";
+import Button from "@material-ui/core/Button";
 
-import AppBar from "material-ui/AppBar";
-import Tabs, { Tab } from "material-ui/Tabs";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs, { Tab } from "@material-ui/core/Tabs";
 
 import ClientInfoPane from "./ClientInfoPane";
 import ClientRuleInfoPane from "./ClientRuleInfoPane";

@@ -1,12 +1,16 @@
 import React, { Component } from "react";
 import classNames from "classnames";
-import { createMuiTheme } from 'material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 
-import ListSubheader from "material-ui/List/ListSubheader";
-import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
+import ListSubheader from "@material-ui/core/ListSubheader";
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 import GrTreeItem from "./GrTreeItem";
 

@@ -8,20 +8,27 @@ import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { grLayout } from "../../templates/default/GrLayout";
 import { grColors } from "../../templates/default/GrColors";
 
-import Drawer from "material-ui/Drawer";
+import Drawer from "@material-ui/core/Drawer";
 
-import Toolbar from "material-ui/Toolbar";
-import { ListItemIcon, ListItemText } from "material-ui/List";
-import Collapse from 'material-ui/transitions/Collapse';
+import Toolbar from "@material-ui/core/Toolbar";
 
-import { MenuList, MenuItem } from 'material-ui/Menu';
-import Paper from 'material-ui/Paper';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
-import Typography from "material-ui/Typography";
-import Divider from "material-ui/Divider";
+import Collapse from '@material-ui/core/Collapse';
 
-import DraftsIcon from 'material-ui-icons/Drafts';
-import SendIcon from 'material-ui-icons/Send';
+import MenuList from '@material-ui/core/MenuList';
+import MenuItem from '@material-ui/core/MenuItem';
+
+import Paper from '@material-ui/core/Paper';
+
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+
+import DraftsIcon from '@material-ui/icons/Drafts';
+import SendIcon from '@material-ui/icons/Send';
 
 import menus from "./_nav";
 

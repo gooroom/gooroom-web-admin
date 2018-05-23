@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { createMuiTheme } from "material-ui/styles";
+import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";
 
 import { grLayout } from "../../templates/default/GrLayout";
@@ -13,15 +13,15 @@ import GrPageHeader from "../../containers/GrContent/GrPageHeader";
 import GrTreeList from "../../components/GrTree/GrTreeList";
 import GrPane from "../../containers/GrContent/GrPane";
 
-import Typography from 'material-ui/Typography';
-import Grid from "material-ui/Grid";
+import Typography from '@material-ui/core/Typography';
+import Grid from "@material-ui/core/Grid";
 
 import Card, {
   CardHeader,
   CardMedia,
   CardContent,
   CardActions
-} from "material-ui/Card";
+} from "@material-ui/core/Card";
 
 //
 //  ## Style ########## ########## ########## ########## ##########
