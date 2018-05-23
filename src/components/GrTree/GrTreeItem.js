@@ -1,6 +1,11 @@
 import React, {Component, PropTypes} from "react"
-import List, { ListItem, ListItemIcon, ListItemText } from "material-ui/List";
-import Checkbox from "material-ui/Checkbox"
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import Checkbox from "@material-ui/core/Checkbox"
 
 class GrTreeItem extends Component {
 
