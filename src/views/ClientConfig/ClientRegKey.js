@@ -192,7 +192,7 @@ class ClientRegKey extends Component {
       order: order
     });
 
-    grRequestPromise('http://localhost:8080/gpms/readRegKeyInfoList', {
+    grRequestPromise('/gpms/readRegKeyInfoList', {
       searchKey: this.state.keyword,
 
       start: page * rowsPerPage,
@@ -288,7 +288,7 @@ class ClientRegKey extends Component {
       console.log(params);
       console.log(this.state.selectedRegKeyInfo.regKeyNo);
 
-      grRequestPromise('http://localhost:8080/gpms/deleteRegKeyData', {
+      grRequestPromise('/gpms/deleteRegKeyData', {
           regKeyNo: this.state.selectedRegKeyInfo.regKeyNo,
         }).then(res => {
             this.handleClose();

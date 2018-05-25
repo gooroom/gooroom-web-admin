@@ -108,7 +108,7 @@ class ClientRegKeyDialog extends Component {
     }
 
     handleAddData() {
-        grRequestPromise("http://localhost:8080/gpms/createRegKeyData", 
+        grRequestPromise("/gpms/createRegKeyData", 
             this.props.selectedData
           ).then(res => {
               this.handleClose();
@@ -118,7 +118,7 @@ class ClientRegKeyDialog extends Component {
     }
 
     handleSaveData() {
-        grRequestPromise("http://localhost:8080/gpms/editRegKeyData", 
+        grRequestPromise("/gpms/editRegKeyData", 
             this.props.selectedData
           ).then(res => {
               this.handleClose();
@@ -128,7 +128,7 @@ class ClientRegKeyDialog extends Component {
     }
 
     handleKeyGenerate = () => {
-        grRequestPromise("http://localhost:8080/gpms/generateRegKeyNumber", {
+        grRequestPromise("/gpms/generateRegKeyNumber", {
           }).then(res => {
               console.log(res);
               this.handleRegKeyData('regKeyNo', res.data[0].key);
