@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+
+import { connect } from 'react-redux';
+import * as actions from '../../actions';
+
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
@@ -284,7 +288,7 @@ class ClientRegKey extends Component {
   handleDeleteConfirmResult = (params) => {
 
     if(params) {
-      console.log('>>> handleConfirmResult ㄱ ');
+      console.log('>>> handleConfirmResult  ');
       console.log(params);
       console.log(this.state.selectedRegKeyInfo.regKeyNo);
 
@@ -303,11 +307,12 @@ class ClientRegKey extends Component {
   };
 
 
-
+  // 페이지 번호 변경
   handleChangePage = (event, page) => {
     this.fetchData(page, this.state.rowsPerPage, this.state.orderBy, this.state.order);
   };
 
+  // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     this.fetchData(this.state.page, event.target.value, this.state.orderBy, this.state.order);
   };
@@ -367,6 +372,10 @@ class ClientRegKey extends Component {
     const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.state;
     const emptyRows = rowsPerPage - data.length;
 
+    console.log('---- render ----');
+    console.log(this.props.clientRegKey);
+    console.log('---- ------ ----');
+
     return (
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
@@ -387,9 +396,8 @@ class ClientRegKey extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='primary'
-              onClick={() => {
-                this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);
-              }}
+              //onClick={() => {this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);}}
+              onClick={this.props.onReadClientRegKeyList}
             >
               <Search className={leftIconClass} />
               조회
@@ -438,7 +446,7 @@ class ClientRegKey extends Component {
               </TableHead>
 
               <TableBody>
-                {data.map(n => {
+                {this.props.clientRegKey.regKeyList.dataList.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -518,4 +526,17 @@ class ClientRegKey extends Component {
   }
 }
 
-export default ClientRegKey;
+const mapStateToProps = (state) => {
+  console.log('--- STORE');
+  console.log(state);
+  
+  return({
+    clientRegKey: state.clientRegKey,
+  });
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  onReadClientRegKeyList: () => dispatch(actions.readRegKeyList())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientRegKey);

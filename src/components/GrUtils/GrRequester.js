@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import qs from "qs";
 
@@ -21,7 +20,7 @@ export function grRequestPromise(url, param) {
   return new Promise((resolve, reject) => {
     axios({
       method: "post",
-      url: url,
+      url: "http://localhost:8080" + url,
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       transformRequest: [
         function(data, headers) {
