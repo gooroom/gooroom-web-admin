@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter, Route, Switch } from 'react-router-dom';
-
-import { createStore } from 'redux';
-import reducers from './reducers';
+import store from './store';
 import { Provider } from 'react-redux';
 
 // Import Main styles for this application
@@ -11,9 +9,6 @@ import './scss/main.scss'
 
 // Containers
 import GrFull from './containers/GrFull/'
-
-// Create Store
-const store = createStore(reducers);
 
 ReactDOM.render(
   <Provider store={store}>

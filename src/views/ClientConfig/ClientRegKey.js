@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as actions from '../../actions';
+import * as clientRegKeyActions from '../../modules/clientRegKeyModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import moment from 'moment';
+import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 
 import { grLayout } from '../../templates/default/GrLayout';
 import { grColor } from '../../templates/default/GrColors';
@@ -183,8 +184,6 @@ class ClientRegKey extends Component {
       rowsTotal: 0,
       rowsFiltered: 0
     }
-
-    this.formatDateToSimple = this.formatDateToSimple.bind(this);
   }
 
   fetchData(page, rowsPerPage, orderBy, order) {
@@ -206,9 +205,9 @@ class ClientRegKey extends Component {
     }).then(res => {
         const listData = [];
         res.data.forEach(d => {
-          d.validDate = this.formatDateToSimple(d.validDate, 'YYYY-MM-DD');
-          d.expireDate = this.formatDateToSimple(d.expireDate, 'YYYY-MM-DD');
-          d.modDate = this.formatDateToSimple(d.modDate, 'YYYY-MM-DD HH:mm');
+          d.validDate = formatDateToSimple(d.validDate, 'YYYY-MM-DD');
+          d.expireDate = formatDateToSimple(d.expireDate, 'YYYY-MM-DD');
+          d.modDate = formatDateToSimple(d.modDate, 'YYYY-MM-DD HH:mm');
           //this.testFunction('aaaa');
           listData.push(d);
         });
@@ -355,26 +354,14 @@ class ClientRegKey extends Component {
     });
   }
 
-
-  formatDateToSimple = (value, format) => {
-    try {
-      const date = new Date(value);
-      return moment(date).format(format);//date.toISOString().substring(0, 10);
-    } catch (err) {
-      console.log(err);
-      return '';
-    }
-    //console.log(value);
-  }
-  
   render() {
 
     const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.state;
     const emptyRows = rowsPerPage - data.length;
 
     console.log('---- render ----');
-    console.log(this.props.clientRegKey);
-    console.log('---- ------ ----');
+    console.log('>>> ', this.props);
+    // console.log('---- ------ ----');
 
     return (
       <React.Fragment>
@@ -397,7 +384,7 @@ class ClientRegKey extends Component {
               variant='raised'
               color='primary'
               //onClick={() => {this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);}}
-              onClick={this.props.onReadClientRegKeyList}
+              onClick={this.props.clientRegKeyActions.readClientRegkeyList}
             >
               <Search className={leftIconClass} />
               조회
@@ -446,7 +433,7 @@ class ClientRegKey extends Component {
               </TableHead>
 
               <TableBody>
-                {this.props.clientRegKey.regKeyList.dataList.map(n => {
+                {this.props.clientRegKey.regkeydata.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -527,16 +514,14 @@ class ClientRegKey extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log('--- STORE');
-  console.log(state);
-  
+  console.log('--- mapStateToProps.state ', state);
   return({
-    clientRegKey: state.clientRegKey,
+    clientRegKey: state.clientRegKeyModule,
   });
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onReadClientRegKeyList: () => dispatch(actions.readRegKeyList())
-})
+  clientRegKeyActions: bindActionCreators(clientRegKeyActions, dispatch)
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientRegKey);
