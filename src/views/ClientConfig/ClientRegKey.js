@@ -231,6 +231,11 @@ class ClientRegKey extends Component {
  
 
   // .................................................
+  handleSelectBtnClick = (event, property) => {
+    console.log('<handleSelectBtnClick>');
+    this.props.ClientRegKeyActions.readClientRegkeyList(1);
+  };
+  // .................................................
   handleRequestSort = (event, property) => {
     const orderBy = property;
     let order = 'desc';
@@ -384,7 +389,7 @@ class ClientRegKey extends Component {
               variant='raised'
               color='primary'
               //onClick={() => {this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);}}
-              onClick={this.props.clientRegKeyActions.readClientRegkeyList}
+              onClick={this.handleSelectBtnClick}
             >
               <Search className={leftIconClass} />
               조회
@@ -514,14 +519,14 @@ class ClientRegKey extends Component {
 }
 
 const mapStateToProps = (state) => {
-  console.log('--- mapStateToProps.state ', state);
+  //console.log('--- mapStateToProps.state ', state);
   return({
     clientRegKey: state.clientRegKeyModule,
   });
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  clientRegKeyActions: bindActionCreators(clientRegKeyActions, dispatch)
+  ClientRegKeyActions: bindActionCreators(clientRegKeyActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientRegKey);
