@@ -11,37 +11,41 @@ import GrPageHeader from "../../containers/GrContent/GrPageHeader";
 
 import ClientDialog from "./ClientDialog";
 
-import Card, {
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions
-} from "@material-ui/core/Card";
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
 
-import Table, {
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel
-} from "@material-ui/core/Table";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+
+import Button from '@material-ui/core/Button';
+import Search from '@material-ui/icons/Search';
+import AddIcon from '@material-ui/icons/Add';
+import BuildIcon from '@material-ui/icons/Build';
+import Icon from '@material-ui/core/Icon';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import Checkbox from "@material-ui/core/Checkbox";
 import Tooltip from "@material-ui/core/Tooltip";
 
-import TextField from "@material-ui/core/TextField";
 import Select from "@material-ui/core/Select";
-import { MenuItem } from "@material-ui/core/Menu";
-import Input, { InputLabel } from "@material-ui/core/Input";
-import FormControl from "@material-ui/core/FormControl";
-
-import Button from "@material-ui/core/Button";
-import Search from "@material-ui/icons/Search";
-
+import MenuItem from "@material-ui/core/MenuItem";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
 
 
 //
-//  ## Temem override ########## ########## ########## ########## ########## 
+//  ## Theme override ########## ########## ########## ########## ########## 
 //
 const theme = createMuiTheme({
   palette: {
@@ -254,7 +258,7 @@ class ClientManage extends Component {
 
   componentDidMount() {
 
-    grRequestPromise("http://localhost:8080/gpms/readClientGroupList", {
+    grRequestPromise("/gpms/readClientGroupList", {
     }).then(res => {
         const groupList = res.data.map(x => ({
           key: x.grpId,
@@ -278,7 +282,7 @@ class ClientManage extends Component {
       order: order
     });
 
-    grRequestPromise("http://localhost:8080/gpms/readGrClientList", {
+    grRequestPromise("/gpms/readGrClientList", {
       searchKey: this.state.keyword,
       clientType: this.state.clientStatus,
       groupId: this.state.clientGroup,
@@ -349,7 +353,7 @@ class ClientManage extends Component {
       selectedClientGroupId: clientGroupId,
     });
 
-    // grRequestPromise("http://localhost:8080/gpms/readClientInfo", {
+    // grRequestPromise("/gpms/readClientInfo", {
     //   clientId: id
     // }).then(res => {
     //     const clientInfos = res.data;
