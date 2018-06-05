@@ -173,68 +173,80 @@ class ClientRegKey extends Component {
       confirmMsg: '',
       handleConfirmResult: null,
       
-      keyword: '',
+      keyword: ''
 
-      order: 'asc',
-      orderBy: 'calories',
-      selected: [],
-      data: [],
-      page: 0,
-      rowsPerPage: 5,
-      rowsTotal: 0,
-      rowsFiltered: 0
     }
   }
 
-  fetchData(page, rowsPerPage, orderBy, order) {
+  // fetchData(page, rowsPerPage, orderBy, order) {
 
-    this.setState({
-      page: page,
-      rowsPerPage: rowsPerPage,
-      orderBy: orderBy,
-      order: order
-    });
+  //   this.setState({
+  //     page: page,
+  //     rowsPerPage: rowsPerPage,
+  //     orderBy: orderBy,
+  //     order: order
+  //   });
 
-    grRequestPromise('/gpms/readRegKeyInfoList', {
-      searchKey: this.state.keyword,
+  //   grRequestPromise('/gpms/readRegKeyInfoList', {
+  //     searchKey: this.state.keyword,
 
-      start: page * rowsPerPage,
-      length: rowsPerPage,
-      orderColumn: orderBy,
-      orderDir: order,
-    }).then(res => {
-        const listData = [];
-        res.data.forEach(d => {
-          d.validDate = formatDateToSimple(d.validDate, 'YYYY-MM-DD');
-          d.expireDate = formatDateToSimple(d.expireDate, 'YYYY-MM-DD');
-          d.modDate = formatDateToSimple(d.modDate, 'YYYY-MM-DD HH:mm');
-          //this.testFunction('aaaa');
-          listData.push(d);
-        });
-        this.setState({
-          data: listData,
-          selected: [],
-          loading: false,
-          rowsTotal: parseInt(res.recordsTotal, 10),
-          rowsFiltered: parseInt(res.recordsFiltered, 10),
-        });
-    }, res => {
-      this.setState({
-        data: [],
-        selected: [],
-        loading: false,
-        rowsTotal: 0,
-        rowsFiltered: 0,
-      });
-    });
-  }
+  //     start: page * rowsPerPage,
+  //     length: rowsPerPage,
+  //     orderColumn: orderBy,
+  //     orderDir: order,
+  //   }).then(res => {
+  //       const listData = [];
+  //       res.data.forEach(d => {
+  //         d.validDate = formatDateToSimple(d.validDate, 'YYYY-MM-DD');
+  //         d.expireDate = formatDateToSimple(d.expireDate, 'YYYY-MM-DD');
+  //         d.modDate = formatDateToSimple(d.modDate, 'YYYY-MM-DD HH:mm');
+  //         //this.testFunction('aaaa');
+  //         listData.push(d);
+  //       });
+  //       this.setState({
+  //         data: listData,
+  //         selected: [],
+  //         loading: false,
+  //         rowsTotal: parseInt(res.recordsTotal, 10),
+  //         rowsFiltered: parseInt(res.recordsFiltered, 10),
+  //       });
+  //   }, res => {
+  //     this.setState({
+  //       data: [],
+  //       selected: [],
+  //       loading: false,
+  //       rowsTotal: 0,
+  //       rowsFiltered: 0,
+  //     });
+  //   });
+  // }
  
 
   // .................................................
-  handleSelectBtnClick = (event, property) => {
-    console.log('<handleSelectBtnClick>');
-    this.props.ClientRegKeyActions.readClientRegkeyList(1);
+  handleSelectBtnClick = (param) => {
+    console.log('====================================================');
+    console.log('====================================================');
+    console.log('<handleSelectBtnClick> param : ', param);
+    this.props.ClientRegKeyActions.readClientRegkeyList({
+        keyword: '',
+        page: param.pageNo,
+        rowsPerPage: 5,
+        orderBy: '',
+        order: 'desc'
+      });
   };
+
+
+
+
+
+
+
+
+
+
+
+  
   // .................................................
   handleRequestSort = (event, property) => {
     const orderBy = property;
@@ -243,7 +255,7 @@ class ClientRegKey extends Component {
       order = 'asc';
     }
 
-    this.fetchData(this.state.page, this.state.rowsPerPage, orderBy, order);
+    //this.fetchData(this.state.page, this.state.rowsPerPage, orderBy, order);
   };
   
   handleClick = (event, id) => {
@@ -253,11 +265,11 @@ class ClientRegKey extends Component {
       return element.regKeyNo == id;
     });
 
-    this.setState({ 
-      selectedRegKeyInfo: selectedItem,
-      clientRegKeyDialogType: ClientRegKeyDialog.TYPE_VIEW,
-      clientRegKeyDialogOpen: true
-    });
+    // this.setState({ 
+    //   selectedRegKeyInfo: selectedItem,
+    //   clientRegKeyDialogType: ClientRegKeyDialog.TYPE_VIEW,
+    //   clientRegKeyDialogOpen: true
+    // });
   };
 
   handleEditClick = (event, id) => {
@@ -267,11 +279,11 @@ class ClientRegKey extends Component {
       return element.regKeyNo == id;
     });
 
-    this.setState({ 
-      selectedRegKeyInfo: selectedItem,
-      clientRegKeyDialogType: ClientRegKeyDialog.TYPE_EDIT,
-      clientRegKeyDialogOpen: true
-    });
+    // this.setState({ 
+    //   selectedRegKeyInfo: selectedItem,
+    //   clientRegKeyDialogType: ClientRegKeyDialog.TYPE_EDIT,
+    //   clientRegKeyDialogOpen: true
+    // });
   };
 
   handleDeleteClick = (event, id) => {
@@ -281,13 +293,13 @@ class ClientRegKey extends Component {
       return element.regKeyNo == id;
     });
 
-    this.setState({ 
-      selectedRegKeyInfo: selectedItem,
-      confirmTitle: '단말등록키 삭제',
-      confirmMsg: '단말등록키(' + selectedItem.regKeyNo + ')를 삭제하시겠습니까?',
-      handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true
-    });
+    // this.setState({ 
+    //   selectedRegKeyInfo: selectedItem,
+    //   confirmTitle: '단말등록키 삭제',
+    //   confirmMsg: '단말등록키(' + selectedItem.regKeyNo + ')를 삭제하시겠습니까?',
+    //   handleConfirmResult: this.handleDeleteConfirmResult,
+    //   confirmOpen: true
+    // });
   };
   handleDeleteConfirmResult = (params) => {
 
@@ -305,67 +317,80 @@ class ClientRegKey extends Component {
       });        
     }
 
-    this.setState({ 
-      confirmOpen: false
-    });
+    // this.setState({ 
+    //   confirmOpen: false
+    // });
   };
 
 
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-    this.fetchData(page, this.state.rowsPerPage, this.state.orderBy, this.state.order);
+
+    console.log('< handleChangePage > event : ', event);
+    console.log('< handleChangePage > page : ', page);
+    this.props.ClientRegKeyActions.readClientRegkeyList({
+      keyword: '',
+      page: page,
+      rowsPerPage: 5,
+      orderBy: '',
+      order: ''
+    });
+
+
+    //this.fetchData(page, this.state.rowsPerPage, this.state.orderBy, this.state.order);
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
-    this.fetchData(this.state.page, event.target.value, this.state.orderBy, this.state.order);
+    //this.fetchData(this.state.page, event.target.value, this.state.orderBy, this.state.order);
   };
   
   // .................................................
 
   // Events...
   handleChangeKeyword = name => event => {
-    this.setState({ [name]: event.target.value });
+    // this.setState({ [name]: event.target.value });
   };
 
   // .................................................
   handleDialogClose = value => {
-    this.setState({ 
-      clientRegKeyInfo: value,
-      clientRegKeyDialogOpen: false 
-    });
+    console.log('handleDialogClose - ', value);
+    // this.setState({ 
+    //   clientRegKeyInfo: value,
+    //   clientRegKeyDialogOpen: false 
+    // });
   };
 
   handleRegKeyData = (name, value) => {
-    let beforeInfo = this.state.selectedRegKeyInfo;
-    beforeInfo[name] = value;
-    this.setState({
-      selectedRegKeyInfo: beforeInfo
-    });
-
+    // let beforeInfo = this.state.selectedRegKeyInfo;
+    // beforeInfo[name] = value;
+    // this.setState({
+    //   selectedRegKeyInfo: beforeInfo
+    // });
   };
 
   handleAddButton = value => {
-    this.setState({
-      selectedRegKeyInfo: {
-        regKeyNo: '',
-        validDate: '',
-        expireDate: '',
-        ipRange: '',
-        comment: ''  
-      },
-      clientRegKeyDialogType: ClientRegKeyDialog.TYPE_ADD,
-      clientRegKeyDialogOpen: true 
-    });
+    // this.setState({
+    //   selectedRegKeyInfo: {
+    //     regKeyNo: '',
+    //     validDate: '',
+    //     expireDate: '',
+    //     ipRange: '',
+    //     comment: ''  
+    //   },
+    //   clientRegKeyDialogType: ClientRegKeyDialog.TYPE_ADD,
+    //   clientRegKeyDialogOpen: true 
+    // });
   }
 
   render() {
 
-    const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.state;
-    const emptyRows = rowsPerPage - data.length;
+    const { listData, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.props;
+    const emptyRows = rowsPerPage - listData.length;
 
-    console.log('---- render ----');
-    console.log('>>> ', this.props);
+    console.log('---- render ----', this.props);
+    // console.log('[this.props] ', this.props);
+    // console.log('[this.state] ', this.state);
     // console.log('---- ------ ----');
 
     return (
@@ -380,7 +405,7 @@ class ClientRegKey extends Component {
                 label='검색어'
                 className={textFieldClass}
                 value={this.state.keyword}
-                onChange={this.handleChangeKeyword('keyword')}
+                onChange={ this.handleChangeKeyword('keyword')}
                 margin='dense'
               />
             </FormControl>
@@ -389,7 +414,7 @@ class ClientRegKey extends Component {
               variant='raised'
               color='primary'
               //onClick={() => {this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);}}
-              onClick={this.handleSelectBtnClick}
+              onClick={ () => this.handleSelectBtnClick({pageNo: 0}) }
             >
               <Search className={leftIconClass} />
               조회
@@ -438,12 +463,12 @@ class ClientRegKey extends Component {
               </TableHead>
 
               <TableBody>
-                {this.props.clientRegKey.regkeydata.map(n => {
+                {listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
                       hover
-                      onClick={event => this.handleClick(event, n.regKeyNo)}
+                      onClick={event => handleClick(event, n.regKeyNo)}
                       tabIndex={-1}
                       key={n.regKeyNo}
                     >
@@ -497,6 +522,7 @@ class ClientRegKey extends Component {
             onChangePage={this.handleChangePage}
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
+
         </GrPane>
         {/* dialog(popup) component area */}
         <ClientRegKeyDialog
@@ -519,9 +545,17 @@ class ClientRegKey extends Component {
 }
 
 const mapStateToProps = (state) => {
-  //console.log('--- mapStateToProps.state ', state);
+  console.log('--- mapStateToProps.state ', state);
   return({
-    clientRegKey: state.clientRegKeyModule,
+    listData: state.clientRegKeyModule.listData,
+    error: state.clientRegKeyModule.error,
+    order: state.clientRegKeyModule.order,
+    orderBy: state.clientRegKeyModule.orderBy,
+    page: state.clientRegKeyModule.page,
+    pending: state.clientRegKeyModule.pending,
+    rowsFiltered: state.clientRegKeyModule.rowsFiltered,
+    rowsPerPage: state.clientRegKeyModule.rowsPerPage,
+    rowsTotal: state.clientRegKeyModule.rowsTotal
   });
 };
 
