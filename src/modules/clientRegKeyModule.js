@@ -5,7 +5,6 @@ import axios from 'axios';
 import qs from 'qs';
 
 function getPostAPI(param) {
-    console.log('param : ', param);
 
     return axios({
         method: "post",
@@ -17,11 +16,12 @@ function getPostAPI(param) {
           }
         ],
         data: {
-            searchKey: param.keyword,
+            keyword: param.keyword,
+            page: param.page,
             start: param.page * param.rowsPerPage,
             length: param.rowsPerPage,
-            orderColumn: param.orderBy,
-            orderDir: param.order,
+            orderColumn: param.orderColumn,
+            orderDir: param.orderDir,
           },
         withCredentials: true
       });
@@ -34,18 +34,19 @@ const GET_REGKEY_LIST_FAILURE = 'clientRegKey/GET_REGKEY_LIST_FAILURE';
 
 
 //export const readClientRegkeyList = createAction(READ_REGKEY_DATA_LIST);
-export const readClientRegkeyList = (postId) => dispatch => {
+export const readClientRegkeyList = (param) => dispatch => {
 
     dispatch({type: GET_REGKEY_LIST_PENDING});
 
-    return getPostAPI(postId).then(
+    return getPostAPI(param).then(
+
         (response) => {
-            console.log('response: ', response);
             dispatch({
                 type: GET_REGKEY_LIST_SUCCESS,
                 payload: response
             });
         }
+
     ).catch(error => {
         dispatch({
             type: GET_REGKEY_LIST_FAILURE,
@@ -61,8 +62,9 @@ const initialState = {
     error: false,
     listData: [],
 
-    order: 'asc',
-    orderBy: '',
+    keyword: '',
+    orderDir: 'asc',
+    orderColumn: '',
     selected: [],
     page: 0,
     rowsPerPage: 5,
@@ -74,7 +76,6 @@ const initialState = {
 export default handleActions({
 
     [GET_REGKEY_LIST_PENDING]: (state, action) => {
-        console.log('GET_REGKEY_LIST_PENDING  action ', action);
 
         return {
             ...state,
@@ -84,21 +85,17 @@ export default handleActions({
     },
     [GET_REGKEY_LIST_SUCCESS]: (state, action) => {
 
-        console.log('GET_REGKEY_LIST_SUCCESS (state) : ', state);
-        console.log('GET_REGKEY_LIST_SUCCESS (action.payload) : ', action.payload);
-
-        const { data, recordsFiltered, recordsTotal } = action.payload.data;
-        console.log('GET_REGKEY_LIST_SUCCESS (recordsFiltered) : ' + recordsFiltered);
-        console.log('GET_REGKEY_LIST_SUCCESS (recordsTotal) : ' + recordsTotal);
-
-        
-
+        const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.payload.data;
         return {
             ...state,
             pending: false,
+            error: false,
             listData: data,
             rowsFiltered: parseInt(recordsFiltered, 10),
-            rowsTotal: parseInt(recordsTotal, 10)
+            rowsTotal: parseInt(recordsTotal, 10),
+            selected: [],
+            page: parseInt(draw, 10),
+            rowsPerPage: parseInt(rowLength, 10)
         };
     },  
     [GET_REGKEY_LIST_FAILURE]: (state, action) => {
@@ -113,7 +110,6 @@ export default handleActions({
     // ,
     // [READ_REGKEY_DATA_LIST]: (state, action) => {
     //     console.log('..READ_REGKEY_DATA_LIST..', state);
-
     //     return {
     //         regkeydata: [
     //                                          {
