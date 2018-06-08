@@ -17,7 +17,9 @@ const routes = {
   '/clientconfig/update': '업데이트서버설정',
   '/clientconfig/host': 'HOSTS설정',
   '/clientconfig/setting': '단말정책설정',
+  
   '/clientconfig/regkey': '단말등록키',
+  '/clientconfig/profileset': '단말프로파일',
   
 
   '/userconfig': '사용자정책관리',

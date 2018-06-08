@@ -8,6 +8,7 @@ import loggerMiddleware from './lib/loggerMiddleware';
 //     promiseTypeSuffixes: ['LOADING', 'SUCCESS', 'FAILURE']
 // });
 
-const store = createStore(modules, applyMiddleware(loggerMiddleware, ReduxThunk));
+const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+const store = createStore(modules, devTools, applyMiddleware(loggerMiddleware, ReduxThunk));
 
 export default store;
