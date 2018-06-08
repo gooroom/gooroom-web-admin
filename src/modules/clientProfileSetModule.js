@@ -1,4 +1,3 @@
-
 import { handleActions } from 'redux-actions';
 
 import axios from 'axios';
@@ -8,7 +7,7 @@ function getPostAPI(param) {
 
     return axios({
         method: "post",
-        url: "http://localhost:8080/gpms/readRegKeyInfoList",
+        url: "http://localhost:8080/gpms/readProfileSetList",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         transformRequest: [
           function(data, headers) {
@@ -27,33 +26,29 @@ function getPostAPI(param) {
       });
 }
 
-const GET_REGKEY_LIST_PENDING = 'clientRegKey/GET_LIST_PENDING';
-const GET_REGKEY_LIST_SUCCESS = 'clientRegKey/GET_LIST_SUCCESS';
-const GET_REGKEY_LIST_FAILURE = 'clientRegKey/GET_LIST_FAILURE';
-
 const GET_PROFILESET_LIST_PENDING = 'clientProfileSet/GET_LIST_PENDING';
 const GET_PROFILESET_LIST_SUCCESS = 'clientProfileSet/GET_LIST_SUCCESS';
 const GET_PROFILESET_LIST_FAILURE = 'clientProfileSet/GET_LIST_FAILURE';
 // ...
 
 
-//export const readClientRegkeyList = createAction(READ_REGKEY_DATA_LIST);
-export const readClientRegkeyList = (param) => dispatch => {
+//export const readClientRegkeyList = createAction(READ_PROFILESET_DATA_LIST);
+export const readClientProfileSetList = (param) => dispatch => {
 
-    dispatch({type: GET_REGKEY_LIST_PENDING});
+    dispatch({type: GET_PROFILESET_LIST_PENDING});
 
     return getPostAPI(param).then(
 
         (response) => {
             dispatch({
-                type: GET_REGKEY_LIST_SUCCESS,
+                type: GET_PROFILESET_LIST_SUCCESS,
                 payload: response
             });
         }
 
     ).catch(error => {
         dispatch({
-            type: GET_REGKEY_LIST_FAILURE,
+            type: GET_PROFILESET_LIST_FAILURE,
             payload: error
         });
     });
@@ -79,7 +74,7 @@ const initialState = {
 
 export default handleActions({
 
-    [GET_REGKEY_LIST_PENDING]: (state, action) => {
+    [GET_PROFILESET_LIST_PENDING]: (state, action) => {
 
         return {
             ...state,
@@ -87,7 +82,7 @@ export default handleActions({
             error: false
         };
     },
-    [GET_REGKEY_LIST_SUCCESS]: (state, action) => {
+    [GET_PROFILESET_LIST_SUCCESS]: (state, action) => {
 
         const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.payload.data;
         return {
@@ -102,8 +97,7 @@ export default handleActions({
             rowsPerPage: parseInt(rowLength, 10)
         };
     },  
-    [GET_REGKEY_LIST_FAILURE]: (state, action) => {
-        console.log('GET_REGKEY_LIST_FAILURE');
+    [GET_PROFILESET_LIST_FAILURE]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -112,8 +106,8 @@ export default handleActions({
     }
 
     // ,
-    // [READ_REGKEY_DATA_LIST]: (state, action) => {
-    //     console.log('..READ_REGKEY_DATA_LIST..', state);
+    // [READ_PROFILESET_DATA_LIST]: (state, action) => {
+    //     console.log('..READ_PROFILESET_DATA_LIST..', state);
     //     return {
     //         regkeydata: [
     //                                          {
