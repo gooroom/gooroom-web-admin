@@ -181,39 +181,39 @@ class ClientProfileSet extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     this.props.ClientProfileSetActions.readClientProfileSetList({
-        keyword: this.state.keyword,
-        page: param.pageNo,
-        rowsPerPage: this.props.rowsPerPage,
-        orderColumn: this.props.orderColumn,
-        orderDir: this.props.orderDir
-      });
+      keyword: this.state.keyword,
+      page: param.pageNo,
+      rowsPerPage: this.props.rowsPerPage,
+      orderColumn: this.props.orderColumn,
+      orderDir: this.props.orderDir
+    });
   };
   
   handleAddButton = () => {
-    this.setState({
-      selectedProfileSetInfo: {
-        profileNo: '',
-        validDate: (new Date()).setMonth((new Date()).getMonth() + 1),
-        expireDate: (new Date()).setMonth((new Date()).getMonth() + 1),
-        ipRange: '',
-        comment: ''
-      },
-      clientProfileSetDialogType: ClientProfileSetDialog.TYPE_ADD,
-      clientProfileSetDialogOpen: true 
+
+    this.props.ClientProfileSetActions.showDialog({
+      dialogType: ClientProfileSetDialog.TYPE_ADD,
+      dialogOpen: true
     });
   }
   
-  handleClick = (event, id) => {
-    event.stopPropagation();
+  handleRowClick = (event, id) => {
+
     const selectedItem = this.props.listData.find(function(element) {
       return element.profileNo == id;
     });
 
-    this.setState({ 
-      selectedProfileSetInfo: selectedItem,
-      clientProfileSetDialogType: ClientProfileSetDialog.TYPE_VIEW,
-      clientProfileSetDialogOpen: true
+    this.props.ClientProfileSetActions.showDialog({
+      selectedItem: selectedItem,
+      dialogType: ClientProfileSetDialog.TYPE_VIEW,
+      dialogOpen: true
     });
+
+    // this.setState({ 
+    //   selectedProfileSetInfo: selectedItem,
+    //   clientProfileSetDialogType: ClientProfileSetDialog.TYPE_VIEW,
+    //   clientProfileSetDialogOpen: true
+    // });
   };
 
   handleEditClick = (event, id) => {
@@ -308,12 +308,13 @@ class ClientProfileSet extends Component {
   // .................................................
 
   // .................................................
-  handleDialogClose = value => {
-    this.setState({ 
-      clientProfileSetInfo: value,
-      clientProfileSetDialogOpen: false 
-    });
-  };
+  // handleDialogClose = value => {
+  //   console.log('[P] handleDialogClose()...');
+  //   this.setState({ 
+  //     clientProfileSetInfo: value,
+  //     clientProfileSetDialogOpen: false 
+  //   });
+  // };
 
   handleKeywordChange = name => event => {
     this.setState({
@@ -329,10 +330,10 @@ class ClientProfileSet extends Component {
     });
   };
 
-
   render() {
 
     const { listData, orderDir, orderColumn, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.props;
+    const { dialogOpen } = this.props;
     const emptyRows = rowsPerPage - listData.length;
 
     return (
@@ -407,7 +408,7 @@ class ClientProfileSet extends Component {
                     <TableRow
                       className={tableRowClass}
                       hover
-                      onClick={event => this.handleClick(event, n.profileNo)}
+                      onClick={event => this.handleRowClick(event, n.profileNo)}
                       key={n.profileNo}
                     >
                       <TableCell className={tableCellClass}>{n.profileNo}</TableCell>
@@ -460,10 +461,7 @@ class ClientProfileSet extends Component {
         </GrPane>
         {/* dialog(popup) component area */}
         <ClientProfileSetDialog
-          type={this.state.clientProfileSetDialogType}
-          selectedData={this.state.selectedProfileSetInfo}
-          open={this.state.clientProfileSetDialogOpen}
-          onClose={this.handleDialogClose}
+          open={dialogOpen}
           handleProfileSetChangeData={this.handleProfileSetChangeData}
           handleRefreshList={this.handleRefreshList}
         />
@@ -479,9 +477,8 @@ class ClientProfileSet extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  
-  return({
+const mapStateToProps = (state) => ({
+
     listData: state.clientProfileSetModule.listData,
     error: state.clientProfileSetModule.error,
     orderDir: state.clientProfileSetModule.orderDir,
@@ -491,15 +488,15 @@ const mapStateToProps = (state) => {
     rowsFiltered: state.clientProfileSetModule.rowsFiltered,
     rowsPerPage: state.clientProfileSetModule.rowsPerPage,
     rowsTotal: state.clientProfileSetModule.rowsTotal,
-    keyword: state.clientProfileSetModule.keyword
-  });
+    keyword: state.clientProfileSetModule.keyword,
+    dialogOpen: state.clientProfileSetModule.dialogOpen
 
-};
+});
+
 
 const mapDispatchToProps = (dispatch) => ({
 
   ClientProfileSetActions: bindActionCreators(clientProfileSetActions, dispatch)
-  
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientProfileSet);
