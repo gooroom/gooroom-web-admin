@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as clientProfileSetActions from '../../modules/clientProfileSetModule';
+import * as grConfirmActions from '../../modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
@@ -44,6 +45,7 @@ import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import BuildIcon from '@material-ui/icons/Build';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 import Icon from '@material-ui/core/Icon';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -164,9 +166,11 @@ class ClientProfileSet extends Component {
       columnData: [
         { id: 'colProfileSetNo', numeric: false, disablePadding: true, label: '번호' },
         { id: 'colProfileSetName', numeric: false, disablePadding: true, label: '이름' },
+        { id: 'colClientId', numeric: false, disablePadding: true, label: 'Ref단말아이디' },
         { id: 'colRegDate', numeric: false, disablePadding: true, label: '등록일' },
         { id: 'colModDate', numeric: false, disablePadding: true, label: '수정일' },
         { id: 'colAction', numeric: false, disablePadding: true, label: '수정/삭제' },
+        { id: 'colProfile', numeric: false, disablePadding: true, label: '프로파일' },
       ],
 
       confirmTitle: '',
@@ -189,8 +193,7 @@ class ClientProfileSet extends Component {
     });
   };
   
-  handleAddButton = () => {
-
+  handleCreateButton = () => {
     this.props.ClientProfileSetActions.showDialog({
       dialogType: ClientProfileSetDialog.TYPE_ADD,
       dialogOpen: true
@@ -198,22 +201,14 @@ class ClientProfileSet extends Component {
   }
   
   handleRowClick = (event, id) => {
-
     const selectedItem = this.props.listData.find(function(element) {
       return element.profileNo == id;
     });
-
     this.props.ClientProfileSetActions.showDialog({
       selectedItem: selectedItem,
       dialogType: ClientProfileSetDialog.TYPE_VIEW,
       dialogOpen: true
     });
-
-    // this.setState({ 
-    //   selectedProfileSetInfo: selectedItem,
-    //   clientProfileSetDialogType: ClientProfileSetDialog.TYPE_VIEW,
-    //   clientProfileSetDialogOpen: true
-    // });
   };
 
   handleEditClick = (event, id) => {
@@ -221,11 +216,22 @@ class ClientProfileSet extends Component {
     const selectedItem = this.props.listData.find(function(element) {
       return element.profileNo == id;
     });
+    this.props.ClientProfileSetActions.showDialog({
+      selectedItem: selectedItem,
+      dialogType: ClientProfileSetDialog.TYPE_EDIT,
+      dialogOpen: true
+    });
+  };
 
-    this.setState({ 
-      selectedProfileSetInfo: selectedItem,
-      clientProfileSetDialogType: ClientProfileSetDialog.TYPE_EDIT,
-      clientProfileSetDialogOpen: true
+  handleProfileClick = (event, id) => {
+    event.stopPropagation();
+    const selectedItem = this.props.listData.find(function(element) {
+      return element.profileNo == id;
+    });
+    this.props.ClientProfileSetActions.showDialog({
+      selectedItem: selectedItem,
+      dialogType: ClientProfileSetDialog.TYPE_PROFILE,
+      dialogOpen: true
     });
   };
 
@@ -235,40 +241,44 @@ class ClientProfileSet extends Component {
       return element.profileNo == id;
     });
 
-    this.setState({ 
-      selectedProfileSetInfo: selectedItem,
-      confirmTitle: '단말등록키 삭제',
-      confirmMsg: '단말등록키(' + selectedItem.profileNo + ')를 삭제하시겠습니까?',
+    this.props.ClientProfileSetActions.setSelectedItem({
+      selectedItem: selectedItem
+    });
+
+    const re = this.props.GrConfirmActions.showConfirm({
+      confirmTitle: '단말프로파일 삭제',
+      confirmMsg: '단말프로파일(' + selectedItem.profileNo + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true
     });
+
+    console.log(re);
   };
 
-  handleDeleteConfirmResult = (params) => {
-    if(params) {
-      grRequestPromise('/gpms/deleteProfileSetData', {
-          profileNo: this.state.selectedProfileSetInfo.profileNo,
-        }).then(res => {
-          this.handleRefreshList();
-        }, res => {
-          //
-      });        
+  handleDeleteConfirmResult = (confirmValue) => {
+    if(confirmValue) {
+      this.props.ClientProfileSetActions.deleteClientProfileSetData({
+        profile_no: this.props.selectedItem.profileNo
+      }).then((res) => {
+        this.props.ClientProfileSetActions.readClientProfileSetList({
+              keyword: this.props.keyword,
+              page: this.props.page,
+              rowsPerPage: this.props.rowsPerPage,
+              length: this.props.rowsPerPage,
+              orderColumn: this.props.orderColumn,
+              orderDir: this.props.orderDir
+        });
+      }, (res) => {
+        // console.log("DELETE ERROR... ");
+      });
     }
+
     this.setState({ 
       confirmOpen: false
     });
   };
 
-  handleRefreshList = () => {
-    this.props.ClientProfileSetActions.readClientProfileSetList({
-      keyword: this.state.keyword,
-      page: this.props.page,
-      rowsPerPage: this.props.rowsPerPage,
-      orderColumn: this.props.orderColumn,
-      orderDir: this.props.orderDir
-    });
-  }
-
+  
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
 
@@ -333,7 +343,7 @@ class ClientProfileSet extends Component {
   render() {
 
     const { listData, orderDir, orderColumn, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.props;
-    const { dialogOpen } = this.props;
+    const { dialogOpen, confirmTitle, confirmMsg, handleConfirmResult, confirmOpen } = this.props;
     const emptyRows = rowsPerPage - listData.length;
 
     return (
@@ -368,7 +378,7 @@ class ClientProfileSet extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='secondary'
-              onClick={() => this.handleAddButton()}
+              onClick={() => this.handleCreateButton()}
             >
               <AddIcon className={leftIconClass} />
               등록
@@ -413,6 +423,7 @@ class ClientProfileSet extends Component {
                     >
                       <TableCell className={tableCellClass}>{n.profileNo}</TableCell>
                       <TableCell className={tableCellClass}>{n.profileName}</TableCell>
+                      <TableCell className={tableCellClass}>{n.clientId}</TableCell>
                       <TableCell className={tableCellClass}>
                         {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
                       </TableCell>
@@ -425,6 +436,11 @@ class ClientProfileSet extends Component {
                         </Button>
                         <Button variant='fab' color='secondary' aria-label='delete' className={actButtonClass} onClick={event => this.handleDeleteClick(event, n.profileNo)}>
                           <DeleteIcon className={toolIconClass} />
+                        </Button>
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        <Button variant='fab' color='secondary' aria-label='profile' className={actButtonClass} onClick={event => this.handleProfileClick(event, n.profileNo)}>
+                          <AssignmentIcon className={toolIconClass} />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -463,13 +479,12 @@ class ClientProfileSet extends Component {
         <ClientProfileSetDialog
           open={dialogOpen}
           handleProfileSetChangeData={this.handleProfileSetChangeData}
-          handleRefreshList={this.handleRefreshList}
         />
         <GrConfirm
-          open={this.state.confirmOpen}
-          confirmTitle={this.state.confirmTitle}
-          confirmMsg={this.state.confirmMsg}
-          resultConfirm={this.state.handleConfirmResult}
+          open={confirmOpen}
+          confirmTitle={confirmTitle}
+          confirmMsg={confirmMsg}
+          handleConfirmResult={this.handleDeleteConfirmResult}
         />
 
       </React.Fragment>
@@ -489,14 +504,21 @@ const mapStateToProps = (state) => ({
     rowsPerPage: state.clientProfileSetModule.rowsPerPage,
     rowsTotal: state.clientProfileSetModule.rowsTotal,
     keyword: state.clientProfileSetModule.keyword,
-    dialogOpen: state.clientProfileSetModule.dialogOpen
+    dialogOpen: state.clientProfileSetModule.dialogOpen,
+
+    confirmTitle: state.GrConfirmModule.confirmTitle,
+    confirmMsg: state.GrConfirmModule.confirmMsg,
+    confirmOpen: state.GrConfirmModule.confirmOpen,
+    selectedItem: state.clientProfileSetModule.selectedItem,
 
 });
 
 
 const mapDispatchToProps = (dispatch) => ({
 
-  ClientProfileSetActions: bindActionCreators(clientProfileSetActions, dispatch)
+  ClientProfileSetActions: bindActionCreators(clientProfileSetActions, dispatch),
+  GrConfirmActions: bindActionCreators(grConfirmActions, dispatch)
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientProfileSet);

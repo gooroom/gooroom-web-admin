@@ -18,6 +18,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 
+import Divider from "@material-ui/core/Divider";
+
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
@@ -84,24 +86,7 @@ class ClientProfileSetDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
-
-    constructor(props) {
-
-        super(props);
-
-        this.state = {
-            profileNo: "",
-            profileName: "",
-            profileComment: "",
-
-            handleProfileSetChangeData: props.handleProfileSetChangeData,
-            handleRefreshList: props.handleRefreshList
-        }
-
-        // this.handleClose = this.handleClose.bind(this);
-        // this.handleAddData = this.handleAddData.bind(this);
-        // this.handleSaveData = this.handleSaveData.bind(this);
-    }
+    static TYPE_PROFILE = 'PROFILE';
 
     handleClose = (event) => {
         this.props.ClientProfileSetActions.closeDialog({
@@ -110,41 +95,51 @@ class ClientProfileSetDialog extends Component {
         });
     }
 
-    handleAddData = (event) => {
-        const re = this.props.ClientProfileSetActions.setClientProfileSetData({
+    handleCreateData = (event) => {
+        
+        this.props.ClientProfileSetActions.createClientProfileSetData({
             client_id: this.props.clientId,
             profile_nm: this.props.profileName,
             profile_cmt: this.props.profileComment
-        });
-
-        console.log(re);
-
-        re.then((res) => {
-            console.log('11111111111', res);
-            this.props.ClientProfileSetActions.readClientProfileSetList();
+        }).then((res) => {
+            this.props.ClientProfileSetActions.readClientProfileSetList(
+                {
+                    keyword: this.props.keyword,
+                    page: this.props.page,
+                    rowsPerPage: this.props.rowsPerPage,
+                    length: this.props.rowsPerPage,
+                    orderColumn: this.props.orderColumn,
+                    orderDir: this.props.orderDir
+                }
+            );
             this.handleClose();
         }, (res) => {
-            console.log('2222222222', res);
+            //console.log('error...', res);
         })
-
-        // grRequestPromise("/gpms/createProfileSet", 
-        //     this.props.selectedItem
-        //   ).then(res => {
-        //       this.state.handleRefreshList();
-        //       this.handleClose();
-        //   }, res => {
-        //     this.handleClose();
-        // });        
     }
 
-    handleSaveData() {
-        grRequestPromise("/gpms/editProfileSetData", 
-            this.props.selectedItem
-          ).then(res => {
-              this.handleClose();
-          }, res => {
+    handleEditData = (event) => {
+
+        this.props.ClientProfileSetActions.editClientProfileSetData({
+            profile_no: this.props.selectedItem.profileNo,
+            client_id: this.props.clientId,
+            profile_nm: this.props.profileName,
+            profile_cmt: this.props.profileComment
+        }).then((res) => {
+            this.props.ClientProfileSetActions.readClientProfileSetList(
+                {
+                    keyword: this.props.keyword,
+                    page: this.props.page,
+                    rowsPerPage: this.props.rowsPerPage,
+                    length: this.props.rowsPerPage,
+                    orderColumn: this.props.orderColumn,
+                    orderDir: this.props.orderDir
+                }
+            );
             this.handleClose();
-        });        
+        }, (res) => {
+            //console.log('error...', res);
+        })
     }
 
     handleChange = name => event => {
@@ -160,7 +155,7 @@ class ClientProfileSetDialog extends Component {
 
     render() {
 
-        const { profileName, profileComment, clientId, dialogType, handleProfileSetChangeData, handleRefreshList } = this.props;
+        const { profileName, profileComment, clientId, dialogType, handleProfileSetChangeData } = this.props;
         //const { bindActions } = this.props;
         let title = "";
         let buttons = {};
@@ -194,7 +189,7 @@ class ClientProfileSetDialog extends Component {
                         value={profileName}
                         onChange={this.handleChange("profileName")}
                         className={fullWidthClass}
-                        disabled={(dialogType === ClientProfileSetDialog.TYPE_VIEW)}
+                        disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     <TextField
                         id="profileComment"
@@ -202,7 +197,7 @@ class ClientProfileSetDialog extends Component {
                         value={profileComment}
                         onChange={this.handleChange("profileComment")}
                         className={fullWidthClass}
-                        disabled={(dialogType === ClientProfileSetDialog.TYPE_VIEW)}
+                        disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     <TextField
                         id="clientId"
@@ -210,15 +205,17 @@ class ClientProfileSetDialog extends Component {
                         value={clientId}
                         onChange={this.handleChange("clientId")}
                         className={fullWidthClass}
-                        disabled={(dialogType === ClientProfileSetDialog.TYPE_VIEW)}
+                        disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
 
                 </form>
 
+                <Divider />
+
                 <DialogActions>
                     
-                <Button onClick={this.handleAddData} color="secondary" style={{display: dialogType === ClientProfileSetDialog.TYPE_ADD ? 'block' : 'none' }}>등록</Button>
-                <Button onClick={this.handleSaveData} color="secondary" style={{display: dialogType === ClientProfileSetDialog.TYPE_EDIT ? 'block' : 'none' }}>저장</Button>
+                <Button onClick={this.handleCreateData} color="secondary" style={{display: dialogType === ClientProfileSetDialog.TYPE_ADD ? 'block' : 'none' }}>등록</Button>
+                <Button onClick={this.handleEditData} color="secondary" style={{display: dialogType === ClientProfileSetDialog.TYPE_EDIT ? 'block' : 'none' }}>저장</Button>
                 <Button onClick={this.handleClose} color="primary">닫기</Button>
 
                 </DialogActions>
@@ -229,10 +226,19 @@ class ClientProfileSetDialog extends Component {
 
 //export default withTheme()(ClientProfileSetDialog);
 const mapStateToProps = (state) => ({
+    selectedItem: state.clientProfileSetModule.selectedItem, 
     profileName: state.clientProfileSetModule.profileName,
     profileComment: state.clientProfileSetModule.profileComment,
     clientId: state.clientProfileSetModule.clientId,
-    dialogType: state.clientProfileSetModule.dialogType
+    dialogType: state.clientProfileSetModule.dialogType,
+
+    keyword: state.clientProfileSetModule.keyword,
+    page: state.clientProfileSetModule.page,
+    rowsPerPage: state.clientProfileSetModule.rowsPerPage,
+    length: state.clientProfileSetModule.length,
+    orderColumn: state.clientProfileSetModule.orderColumn,
+    orderDir: state.clientProfileSetModule.orderDir,
+
 });
 
 const mapDispatchToProps = (dispatch) => ({
