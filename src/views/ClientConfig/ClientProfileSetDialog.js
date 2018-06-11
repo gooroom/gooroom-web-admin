@@ -13,6 +13,8 @@ import { css } from "glamor";
 
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 import { formatDateToSimple, formatSimpleStringToStartTime, formatSimpleStringToEndTime } from '../../components/GrUtils/GrDates';
+import GrClientSelector from '../../components/GrComponents/GrClientSelector';
+
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -20,6 +22,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import Divider from "@material-ui/core/Divider";
 
+import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
@@ -34,7 +37,7 @@ import Add from "@material-ui/icons/Add";
 const theme = createMuiTheme();
 const containerClass = css({
     margin: "0px 30px !important",
-    minHeight: 500,
+    minHeight: 300,
     minWidth: 500
 }).toString();
 
@@ -77,6 +80,10 @@ const keyCreateBtnClass = css({
 
 
 
+const labelClass = css({
+    height: "25px",
+    marginTop: "10px"
+}).toString();
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -153,27 +160,50 @@ class ClientProfileSetDialog extends Component {
         }
     }
 
+    handleSelectClient = (value) => {
+        this.props.ClientProfileSetActions.changeParamValue({
+            name: 'clientId',
+            value: value.clientId
+        });
+    }
+
+    handleSelectTargetClient = (value) => {
+
+        const { targetClient } = this.props;
+        const currentIndex = targetClient.indexOf(value);
+        const newChecked = [...targetClient];
+    
+        if (currentIndex === -1) {
+          newChecked.push(value);
+        } else {
+          newChecked.splice(currentIndex, 1);
+        }
+    
+        this.props.GrClientSelectorActions.changeParamValue({
+          name: 'targetClient',
+          value: newChecked
+        });
+    }
+
+    handleSelectTargetGroup = (value) => {
+        
+    }
+
     render() {
 
-        const { profileName, profileComment, clientId, dialogType, handleProfileSetChangeData } = this.props;
+        const { profileName, profileComment, clientId, targetClient, dialogType, handleProfileSetChangeData } = this.props;
         //const { bindActions } = this.props;
         let title = "";
         let buttons = {};
 
         if(dialogType === ClientProfileSetDialog.TYPE_ADD) {
             title = "단말 프로파일 등록";
-            // editData = {
-            //     comment: '',
-            //     expireDate: (new Date()).setMonth((new Date()).getMonth() + 1),
-            //     ipRange: '',
-            //     profileNo: '',
-            //     validDate: (new Date()).setMonth((new Date()).getMonth() + 1),
-            //     comment: ''
-            // }
         } else if(dialogType === ClientProfileSetDialog.TYPE_VIEW) {
             title = "단말 프로파일 정보";
         } else if(dialogType === ClientProfileSetDialog.TYPE_EDIT) {
             title = "단말 프로파일 수정";
+        } else if(dialogType === ClientProfileSetDialog.TYPE_PROFILE) {
+            title = "단말 프로파일 실행";
         }
 
         return (
@@ -201,15 +231,30 @@ class ClientProfileSetDialog extends Component {
                     />
                     <TextField
                         id="clientId"
-                        label="단말아이디 (임시)"
+                        label="단말아이디 (레퍼런스)"
                         value={clientId}
                         onChange={this.handleChange("clientId")}
                         className={fullWidthClass}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
-
+                    {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
+                        <div>
+                            <div className={labelClass}>
+                                <InputLabel >대상 단말</InputLabel>
+                            </div>
+                            <GrClientSelector selectorType='multiple' handleSelect={this.handleSelectTargetClient} handleGroupSelect={this.handleSelectTargetGroup}/>
+                        </div>
+                    }
+    
                 </form>
 
+                <Divider />
+                {(dialogType === ClientProfileSetDialog.TYPE_ADD) &&
+                    <GrClientSelector selectorType='single' handleSelect={this.handleSelectClient}/>
+                }
+                {(dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
+                    <GrClientSelector selectorType='single' handleSelect={this.handleSelectClient}/>
+                }
                 <Divider />
 
                 <DialogActions>
@@ -226,10 +271,14 @@ class ClientProfileSetDialog extends Component {
 
 //export default withTheme()(ClientProfileSetDialog);
 const mapStateToProps = (state) => ({
+
     selectedItem: state.clientProfileSetModule.selectedItem, 
+    
     profileName: state.clientProfileSetModule.profileName,
     profileComment: state.clientProfileSetModule.profileComment,
     clientId: state.clientProfileSetModule.clientId,
+    targetClient: state.clientProfileSetModule.targetClient,
+
     dialogType: state.clientProfileSetModule.dialogType,
 
     keyword: state.clientProfileSetModule.keyword,
