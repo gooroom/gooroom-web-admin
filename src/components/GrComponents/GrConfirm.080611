@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as grConfirmActions from '../../modules/GrConfirmModule';
-
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";
 
@@ -23,33 +18,25 @@ class GrConfirm extends Component {
   }
 
   handleClose = (selectValue) => {
+    console.log('GrConfirm : handleClose -> ' + selectValue);
     this.setState({ open: false });
   };
 
   handleCancel = () => {
-    this.props.GrConfirmActions.closeConfirm({
-      confirmResult: false,
-      confirmOpen: false
-    });
-
-    this.props.handleConfirmResult(false);
+    this.props.resultConfirm(false);
   };
 
   handleOk = () => {
-    this.props.GrConfirmActions.closeConfirm({
-      confirmResult: true,
-      confirmOpen: false
-    });
-    this.props.handleConfirmResult(true);
+    this.props.resultConfirm(true);
   };
 
   render() {
-    const {onClose, confirmTitle, confirmMsg, resultConfirm} = this.props;
+    const {onClose, confirmTitle, confirmMsg, resultConfirm, ...other} = this.props;
 
     return (
        <Dialog
           onClose={this.handleClose}
-          open={this.props.confirmOpen}
+          {...other}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
@@ -72,18 +59,6 @@ class GrConfirm extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-
-  confirmTitle: state.GrConfirmModule.confirmTitle,
-  confirmMsg: state.GrConfirmModule.confirmMsg,
-  confirmOpen: state.GrConfirmModule.confirmOpen
-
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  GrConfirmActions: bindActionCreators(grConfirmActions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(GrConfirm);
+export default GrConfirm;
 
 
