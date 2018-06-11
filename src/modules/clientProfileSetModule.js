@@ -42,7 +42,6 @@ const SET_PROFILESET_SELECTED = 'clientProfileSetPopup/SET_PROFILESET_SELECTED';
 // ...
 
 
-//export const readClientRegkeyList = createAction(READ_PROFILESET_DATA_LIST);
 export const readClientProfileSetList = (param) => dispatch => {
 
     const resetParam = {
@@ -174,6 +173,7 @@ const initialState = {
     profileName: '',
     profileComment: '',
     clientId: '',
+    targetClient: [],
 
     page: 0,
     rowsPerPage: 5,
