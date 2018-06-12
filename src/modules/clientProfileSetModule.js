@@ -35,6 +35,10 @@ const DELETE_PROFILESET_DATA_PENDING = 'clientProfileSet/DELETE_DATA_PENDING';
 const DELETE_PROFILESET_DATA_SUCCESS = 'clientProfileSet/DELETE_DATA_SUCCESS';
 const DELETE_PROFILESET_DATA_FAILURE = 'clientProfileSet/DELETE_DATA_FAILURE';
 
+const CREATE_PROFILESET_JOB_PENDING = 'clientProfileSet/CREATE_JOB_PENDING';
+const CREATE_PROFILESET_JOB_SUCCESS = 'clientProfileSet/CREATE_JOB_SUCCESS';
+const CREATE_PROFILESET_JOB_FAILURE = 'clientProfileSet/CREATE_JOB_FAILURE';
+
 const SHOW_PROFILESET_DATA = 'clientProfileSetPopup/SHOW_PROFILESET_DATA';
 const CLOSE_PROFILESET_DATA = 'clientProfileSetPopup/CLOSE_PROFILESET_DATA';
 const CHG_PROFILESET_PARAM = 'clientProfileSetPopup/CHG_PROFILESET_PARAM';
@@ -124,6 +128,25 @@ export const deleteClientProfileSetData = (param) => dispatch => {
     });
 };
 
+// create profile job
+export const createClientProfileSetJob = (param) => dispatch => {
+    dispatch({type: CREATE_PROFILESET_JOB_PENDING});
+    return requestPostAPI('createProfileJob', param).then(
+        (response) => {
+            dispatch({
+                type: CREATE_PROFILESET_JOB_SUCCESS,
+                payload: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: CREATE_PROFILESET_JOB_FAILURE,
+            payload: error
+        });
+    });
+};
+
+
 export const setSelectedItem = (param) => dispatch => {
     return dispatch({
         type: SET_PROFILESET_SELECTED,
@@ -174,6 +197,8 @@ const initialState = {
     profileComment: '',
     clientId: '',
     targetClient: [],
+    targetClientGroup: [],
+    isRemoval: true,
 
     page: 0,
     rowsPerPage: 5,
@@ -260,7 +285,29 @@ export default handleActions({
             ...state,
             selectedItem: action.payload.selectedItem
         }
-    }
+    },
+    [CREATE_PROFILESET_JOB_PENDING]: (state, action) => {
+        return {
+            ...state,
+            pending: true,
+            error: false
+        };
+    },
+    [CREATE_PROFILESET_JOB_SUCCESS]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: false,
+        };
+    },
+    [CREATE_PROFILESET_JOB_FAILURE]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: true
+        };
+    },
+
 
 }, initialState);
 

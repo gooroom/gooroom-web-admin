@@ -85,6 +85,10 @@ const labelClass = css({
     marginTop: "10px"
 }).toString();
 
+const itemRowClass = css({
+    marginTop: "15px"
+}).toString();
+
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
@@ -149,15 +153,41 @@ class ClientProfileSetDialog extends Component {
         })
     }
 
+    handleProfileJob = (event) => {
+
+        const { targetClient, targetClientGroup } = this.props;
+
+        const tc = (targetClient).map((v) => (v.clientId)).join(',');
+        const tcg = '';//(targetClientGroup).map((v) => (v.grpId)).join(',');
+
+        this.props.ClientProfileSetActions.createClientProfileSetJob({
+            profile_no: this.props.selectedItem.profileNo, 
+            client_id: tc,
+            group_id: tcg,
+            is_removal: this.props.isRemoval
+        }).then((res) => {
+            this.props.ClientProfileSetActions.readClientProfileSetList(
+                {
+                    keyword: this.props.keyword,
+                    page: this.props.page,
+                    rowsPerPage: this.props.rowsPerPage,
+                    length: this.props.rowsPerPage,
+                    orderColumn: this.props.orderColumn,
+                    orderDir: this.props.orderDir
+                }
+            );
+            this.handleClose();
+        }, (res) => {
+            //console.log('error...', res);
+        })
+
+    }
+
     handleChange = name => event => {
-        if(name == 'validDate' || name == 'expireDate') {
-            //this.state.handleProfileSetChangeData(name, formatSimpleStringToEndTime(event.target.value));
-        } else {
-            this.props.ClientProfileSetActions.changeParamValue({
-                name: name,
-                value: event.target.value
-            });
-        }
+        this.props.ClientProfileSetActions.changeParamValue({
+            name: name,
+            value: event.target.value
+        });
     }
 
     handleSelectClient = (value) => {
@@ -179,7 +209,7 @@ class ClientProfileSetDialog extends Component {
           newChecked.splice(currentIndex, 1);
         }
     
-        this.props.GrClientSelectorActions.changeParamValue({
+        this.props.ClientProfileSetActions.changeParamValue({
           name: 'targetClient',
           value: newChecked
         });
@@ -229,38 +259,50 @@ class ClientProfileSetDialog extends Component {
                         className={fullWidthClass}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
-                    <TextField
-                        id="clientId"
-                        label="단말아이디 (레퍼런스)"
-                        value={clientId}
-                        onChange={this.handleChange("clientId")}
-                        className={fullWidthClass}
-                        disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
-                    />
+                    {(dialogType === ClientProfileSetDialog.TYPE_VIEW) &&
+                        <TextField
+                            id="clientId"
+                            label="레퍼런스 단말"
+                            value={clientId}
+                            onChange={this.handleChange("clientId")}
+                            className={fullWidthClass}
+                            disabled
+                        />
+                    }
+                    {(dialogType === ClientProfileSetDialog.TYPE_ADD || dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
+                        <div>
+                            <TextField
+                                id="clientId"
+                                label="레퍼런스 단말"
+                                value={clientId}
+                                helperText="아래 목록에서 단말을 선택하세요."
+                                onChange={this.handleChange("clientId")}
+                                className={fullWidthClass}
+                            />
+                            <GrClientSelector selectorType='single' handleSelect={this.handleSelectClient}/>
+                        </div>
+                    }
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
                         <div>
                             <div className={labelClass}>
                                 <InputLabel >대상 단말</InputLabel>
                             </div>
+                            
                             <GrClientSelector selectorType='multiple' handleSelect={this.handleSelectTargetClient} handleGroupSelect={this.handleSelectTargetGroup}/>
                         </div>
                     }
     
                 </form>
-
-                <Divider />
+                <DialogActions>
+                {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
+                    <Button onClick={this.handleProfileJob} color="secondary">생성</Button>
+                }
                 {(dialogType === ClientProfileSetDialog.TYPE_ADD) &&
-                    <GrClientSelector selectorType='single' handleSelect={this.handleSelectClient}/>
+                    <Button onClick={this.handleCreateData} color="secondary">등록</Button>
                 }
                 {(dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
-                    <GrClientSelector selectorType='single' handleSelect={this.handleSelectClient}/>
+                    <Button onClick={this.handleEditData} color="secondary">저장</Button>
                 }
-                <Divider />
-
-                <DialogActions>
-                    
-                <Button onClick={this.handleCreateData} color="secondary" style={{display: dialogType === ClientProfileSetDialog.TYPE_ADD ? 'block' : 'none' }}>등록</Button>
-                <Button onClick={this.handleEditData} color="secondary" style={{display: dialogType === ClientProfileSetDialog.TYPE_EDIT ? 'block' : 'none' }}>저장</Button>
                 <Button onClick={this.handleClose} color="primary">닫기</Button>
 
                 </DialogActions>
@@ -278,6 +320,7 @@ const mapStateToProps = (state) => ({
     profileComment: state.clientProfileSetModule.profileComment,
     clientId: state.clientProfileSetModule.clientId,
     targetClient: state.clientProfileSetModule.targetClient,
+    isRemoval: state.clientProfileSetModule.isRemoval,
 
     dialogType: state.clientProfileSetModule.dialogType,
 

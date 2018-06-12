@@ -115,6 +115,7 @@ class GrClientSelector extends Component {
             </ListItem>
           ))}
         </List>
+        <div>
         <List>
           {clientList.map(value => (
             <ListItem key={value.clientId} dense button onClick={() => this.handleClickClient(value)}>
@@ -125,6 +126,7 @@ class GrClientSelector extends Component {
             </ListItem>
           ))}
         </List>
+        </div>
       </div>
     );
   }
