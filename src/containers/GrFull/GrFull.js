@@ -19,8 +19,23 @@ import GrRouters from "../GrContent/";
 import Aside from "../Aside/";
 
 
+import red from '@material-ui/core/colors/red';
+
+
 const theme = createMuiTheme({
   palette: {
+    primary: {
+      light: "#819ca9",
+      main: "#546e7a",
+      dark: "#29434e",
+      contrastText: "#fff"
+    },
+    secondary: {
+      light: "#a4a4a4",
+      main: "#757575",
+      dark: "#494949",
+      contrastText: "#fff"
+    }
   },
   overrides: {
   },
@@ -60,39 +75,38 @@ const mainWideClass = css({
     display: "block",
 }).toString();
 
-const styles = {
-  root: {
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column"
-  },
-  appBody: {
-    marginTop: grLayout.headerHeight,
-    display: "flex",
-    flexDirection: "row",
-    flexGrow: 1,
-    overflowX: "hidden",
-  },
-  main: {
-    marginRight: 0,
-    marginLeft: grLayout.sideBarWidth,
-    flex: 1,
-    zIndex: 1200,
-    minWidth: 0,
-    transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
-    display: "block",
-  },
-  mainWide: {
-    marginRight: 0,
-    marginLeft: 0,
-    flex: 1,
-    zIndex: 1200,
-    minWidth: 0,
-    transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
-    display: "block",
-  }
-
-};
+// const styles = {
+//   root: {
+//     minHeight: "100vh",
+//     display: "flex",
+//     flexDirection: "column"
+//   },
+//   appBody: {
+//     marginTop: grLayout.headerHeight,
+//     display: "flex",
+//     flexDirection: "row",
+//     flexGrow: 1,
+//     overflowX: "hidden",
+//   },
+//   main: {
+//     marginRight: 0,
+//     marginLeft: grLayout.sideBarWidth,
+//     flex: 1,
+//     zIndex: 1200,
+//     minWidth: 0,
+//     transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
+//     display: "block",
+//   },
+//   mainWide: {
+//     marginRight: 0,
+//     marginLeft: 0,
+//     flex: 1,
+//     zIndex: 1200,
+//     minWidth: 0,
+//     transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
+//     display: "block",
+//   }
+// };
 
 class Full extends Component {
 

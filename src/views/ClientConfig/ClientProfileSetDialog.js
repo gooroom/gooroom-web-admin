@@ -6,9 +6,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as clientProfileSetActions from '../../modules/clientProfileSetModule';
 
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { withTheme } from "@material-ui/core/styles";
-
 import { css } from "glamor";
 
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
@@ -34,15 +31,11 @@ import Add from "@material-ui/icons/Add";
 //
 //  ## Style ########## ########## ########## ########## ##########
 //
-const theme = createMuiTheme();
+
 const containerClass = css({
     margin: "0px 30px !important",
     minHeight: 300,
     minWidth: 500
-}).toString();
-
-const titleClass = css({
-    backgroundColor: theme.palette.primary
 }).toString();
 
 const fullWidthClass = css({
@@ -66,14 +59,6 @@ const formControlClass = css({
       flexGrow: 1
 }).toString();
 
-const buttonClass = css({
-    margin: theme.spacing.unit + " !important"
-}).toString();
-
-const leftIconClass = css({
-    marginRight: theme.spacing.unit + " !important"
-}).toString();
-
 const keyCreateBtnClass = css({
     paddingTop: 24 + " !important"
 }).toString();
@@ -86,7 +71,7 @@ const labelClass = css({
 }).toString();
 
 const itemRowClass = css({
-    marginTop: "15px"
+    marginTop: "10px !important"
 }).toString();
 
 //
@@ -112,7 +97,10 @@ class ClientProfileSetDialog extends Component {
             client_id: this.props.clientId,
             profile_nm: this.props.profileName,
             profile_cmt: this.props.profileComment
-        }).then((res) => {
+        }).then(() => {
+
+            console.log('this.props.error > ', this.props.error);
+            
             this.props.ClientProfileSetActions.readClientProfileSetList(
                 {
                     keyword: this.props.keyword,
@@ -125,7 +113,7 @@ class ClientProfileSetDialog extends Component {
             );
             this.handleClose();
         }, (res) => {
-            //console.log('error...', res);
+            console.log('error...', res);
         })
     }
 
@@ -240,7 +228,7 @@ class ClientProfileSetDialog extends Component {
             <Dialog
                 open={this.props.open}
             >
-                <DialogTitle className={titleClass}>{title}</DialogTitle>
+                <DialogTitle >{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={containerClass}>
 
                     <TextField
@@ -256,7 +244,7 @@ class ClientProfileSetDialog extends Component {
                         label="프로파일 설명"
                         value={profileComment}
                         onChange={this.handleChange("profileComment")}
-                        className={fullWidthClass}
+                        className={classNames(fullWidthClass, itemRowClass)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     {(dialogType === ClientProfileSetDialog.TYPE_VIEW) &&
@@ -265,7 +253,7 @@ class ClientProfileSetDialog extends Component {
                             label="레퍼런스 단말"
                             value={clientId}
                             onChange={this.handleChange("clientId")}
-                            className={fullWidthClass}
+                            className={classNames(fullWidthClass, itemRowClass)}
                             disabled
                         />
                     }
@@ -275,11 +263,13 @@ class ClientProfileSetDialog extends Component {
                                 id="clientId"
                                 label="레퍼런스 단말"
                                 value={clientId}
-                                helperText="아래 목록에서 단말을 선택하세요."
+                                placeholder="아래 목록에서 단말을 선택하세요."
                                 onChange={this.handleChange("clientId")}
-                                className={fullWidthClass}
+                                className={classNames(fullWidthClass, itemRowClass)}
                             />
-                            <GrClientSelector selectorType='single' handleSelect={this.handleSelectClient}/>
+                            <div className={itemRowClass}>
+                                <GrClientSelector selectorType='single' handleSelect={this.handleSelectClient} height='220' />
+                            </div>
                         </div>
                     }
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
@@ -288,22 +278,25 @@ class ClientProfileSetDialog extends Component {
                                 <InputLabel >대상 단말</InputLabel>
                             </div>
                             
-                            <GrClientSelector selectorType='multiple' handleSelect={this.handleSelectTargetClient} handleGroupSelect={this.handleSelectTargetGroup}/>
+                            <GrClientSelector selectorType='multiple' 
+                                handleSelect={this.handleSelectTargetClient} 
+                                handleGroupSelect={this.handleSelectTargetGroup} 
+                                height='220'/>
                         </div>
                     }
     
                 </form>
                 <DialogActions>
                 {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                    <Button onClick={this.handleProfileJob} color="secondary">생성</Button>
+                    <Button onClick={this.handleProfileJob} variant='raised' color="secondary">생성</Button>
                 }
                 {(dialogType === ClientProfileSetDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} color="secondary">등록</Button>
+                    <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
                 }
                 {(dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} color="secondary">저장</Button>
+                    <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
                 }
-                <Button onClick={this.handleClose} color="primary">닫기</Button>
+                <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
 
                 </DialogActions>
             </Dialog>
@@ -311,7 +304,6 @@ class ClientProfileSetDialog extends Component {
     }
 }
 
-//export default withTheme()(ClientProfileSetDialog);
 const mapStateToProps = (state) => ({
 
     selectedItem: state.clientProfileSetModule.selectedItem, 
@@ -323,6 +315,9 @@ const mapStateToProps = (state) => ({
     isRemoval: state.clientProfileSetModule.isRemoval,
 
     dialogType: state.clientProfileSetModule.dialogType,
+    error: state.clientProfileSetModule.error,
+    pending: state.clientProfileSetModule.pending,
+    resultMsg: state.clientProfileSetModule.resultMsg,
 
     keyword: state.clientProfileSetModule.keyword,
     page: state.clientProfileSetModule.page,
