@@ -16,6 +16,31 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 
 
+const groupDiv = css({
+  height: "100%",
+  width: "30%",
+  overflow: "auto"
+}).toString();
+
+const clientDiv = css({
+  height: "100%",
+  width: "70%",
+  overflow: "auto"
+}).toString();
+
+const selectItemList = css({
+  paddingTop: "0px !important",
+  paddingBottom: "0px !important"
+}).toString();
+
+const selectItem = css({
+  padding: "5px 0px 5px 0px !important"
+}).toString();
+
+const selectCheck = css({
+  width: "24px !important",
+  height: "24px !important"
+}).toString();
 
 
 class GrClientSelector extends Component {
@@ -97,35 +122,40 @@ class GrClientSelector extends Component {
   }
 
   render() {
-    const {groupList, clientList, selectorType, handleSelect} = this.props;
+    const {groupList, clientList, selectorType, handleSelect, height} = this.props;
+
+    console.log('height ', height);
 
     const temp = {
-      border: '1px solid red',
+      height: height,
+      border: '1px solid gray',
       display: 'flex'
     }
     return (
       <div style={temp}>
-        <List>
+        <div className={groupDiv}>
+        <List className={selectItemList}>
           {groupList.map(value => (
-            <ListItem key={value.grpId} dense button onClick={() => this.handleClickGroup(value)}>
+            <ListItem key={value.grpId} className={selectItem} dense button onClick={() => this.handleClickGroup(value)}>
               {(selectorType === 'multiple') ?
-                <Checkbox onChange={this.handleGroupToggle(value)} /> : ''
+                <Checkbox className={selectCheck} onChange={this.handleGroupToggle(value)} /> : ''
               }
               <ListItemText primary={value.grpNm} />
             </ListItem>
           ))}
         </List>
-        <div>
-        <List>
-          {clientList.map(value => (
-            <ListItem key={value.clientId} dense button onClick={() => this.handleClickClient(value)}>
-            {(selectorType === 'multiple') ?
-              <Checkbox onChange={this.handleClientToggle(value)} /> : ''
-            }
-              <ListItemText primary={value.clientName} />
-            </ListItem>
-          ))}
-        </List>
+        </div>
+        <div className={clientDiv}>
+          <List className={selectItemList}>
+            {clientList.map(value => (
+              <ListItem key={value.clientId} className={selectItem} dense button onClick={() => this.handleClickClient(value)}>
+              {(selectorType === 'multiple') ?
+                <Checkbox className={selectCheck} onChange={this.handleClientToggle(value)} /> : ''
+              }
+                <ListItemText primary={value.clientName} />
+              </ListItem>
+            ))}
+          </List>
         </div>
       </div>
     );

@@ -79,10 +79,17 @@ export const createClientProfileSetData = (param) => dispatch => {
     dispatch({type: CREATE_PROFILESET_DATA_PENDING});
     return requestPostAPI('createProfileSet', param).then(
         (response) => {
-            dispatch({
-                type: CREATE_PROFILESET_DATA_SUCCESS,
-                payload: response
-            });
+            if(response.data.status.result && response.data.status.result === 'success') {
+                dispatch({
+                    type: CREATE_PROFILESET_DATA_SUCCESS,
+                    payload: response
+                });
+            } else {
+                dispatch({
+                    type: CREATE_PROFILESET_DATA_FAILURE,
+                    payload: response
+                });
+            }
         }
     ).catch(error => {
         dispatch({
@@ -180,6 +187,7 @@ export const changeParamValue = (param) => dispatch => {
 const initialState = {
     pending: false,
     error: false,
+    resultMsg: '',
     listData: [],
 
     keyword: '',
@@ -251,10 +259,12 @@ export default handleActions({
         };
     },
     [CREATE_PROFILESET_DATA_FAILURE]: (state, action) => {
+        console.log('CREATE_PROFILESET_DATA_FAILURE > ', action);
         return {
             ...state,
             pending: false,
-            error: true
+            error: true,
+            resultMsg: action.payload.data.status.message
         };
     },
     [SHOW_PROFILESET_DATA]: (state, action) => {
