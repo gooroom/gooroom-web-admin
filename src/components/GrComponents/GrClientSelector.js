@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as grClientSelectorActions from '../../modules/GrClientSelectorModule';
+import { requestPostAPI } from  '../../modules/GrCommonImport';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";
@@ -45,86 +43,113 @@ const selectCheck = css({
 
 class GrClientSelector extends Component {
 
-  handleClose = (selectValue) => {
-    this.setState({ open: false });
-  };
+  constructor(props) {
+    super(props);
 
-  handleCancel = () => {
-    this.props.GrConfirmActions.closeConfirm({
-      confirmResult: false,
-      confirmOpen: false
+    this.state = {
+        pending: false,
+        error: false,
+
+        groupList: [],
+        clientList: [],
+        checkedGroup: [],
+        checkedClient: [],
+
+        functionForClickGroup: {},
+        functionForClickClient: {}
+    };
+  }
+
+  // life-cycle function.
+  componentDidMount() {
+
+    // init request client group list data
+    // TODO: error process.
+    requestPostAPI('readClientGroupList', {}).then(
+      (response) => {
+        const { data } = response.data;
+        this.setState({
+          groupList: data
+        });
     });
+  }
 
-    this.props.handleConfirmResult(false);
-  };
-
-  handleOk = () => {
-    this.props.GrConfirmActions.closeConfirm({
-      confirmResult: true,
-      confirmOpen: false
+  // handle click event in group list, to request client list in selected client group.
+  handleClickGroup = (value) => {
+    // TODO: error process.
+    requestPostAPI('readClientListForGroups', {groupId: value.grpId}).then(
+      (response) => {
+        const { data } = response.data;
+        this.setState({
+          clientList: data
+        });
     });
-    this.props.handleConfirmResult(true);
-  };
+  }
 
-  handleGroupToggle = value => () => {
-    const { checkedGroup } = this.props;
-    const currentIndex = checkedGroup.indexOf(value);
-    const newChecked = [...checkedGroup];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
+  // handle click event in client list, set selected client data and call parent function if exixted.
+  handleClickClient = (value) => {
+    // call assigned handler from parameters(properties), don't save in local state
+    // only call where type is 'single'
+    if(this.props.handleClientSelect && this.props.selectorType === 'single') {
+      this.props.handleClientSelect(value);
     }
+  }
 
-    this.props.GrClientSelectorActions.setValueByName({
-      name: 'checkedGroup',
-      value: newChecked
-    });
-  };
-
-  handleClientToggle = value => () => {
-    const { checkedClient } = this.props;
+  // handle click event in client check box list, 
+  handleClientCheckToggle = (value) => (event) => {
+    
+    const { checkedClient } = this.state;
     const currentIndex = checkedClient.indexOf(value);
     const newChecked = [...checkedClient];
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
+    // console.log('GrClientSelector.handleClientCheckToggle - value : ', value);
+    // console.log('GrClientSelector.handleClientCheckToggle - event.target.checked : ', event.target.checked);
+    // console.log('GrClientSelector.handleClientCheckToggle - newChecked[1] : ', newChecked);
 
-    this.props.GrClientSelectorActions.setValueByName({
-      name: 'checkedClient',
-      value: newChecked
+    if (currentIndex === -1 && event.target.checked) {
+      newChecked.push(value);
+    } else if(currentIndex !== -1 && !event.target.checked) {
+      newChecked.splice(currentIndex, 1);
+    } else {
+      // 
+    }
+    // console.log('GrClientSelector.handleClientCheckToggle - newChecked[2] : ', newChecked);
+
+    if(this.props.handleClientSelect && this.props.selectorType === 'multiple') {
+      this.props.handleClientSelect(newChecked);
+    }
+    this.setState({
+      checkedClient: newChecked
     });
   };
 
-  handleClickGroup = (value) => {
-    this.props.GrClientSelectorActions.readClientListByGroup({
-      groupId: value.grpId
-    });
-  }
+  // handle click event in client group check box list, 
+  handleGroupCheckToggle = (value) => (event) => {
 
-  handleClickClient = (value) => {
+    const { checkedGroup } = this.state;
+    const currentIndex = checkedGroup.indexOf(value);
+    const newChecked = [...checkedGroup];
 
-    if(this.props.handleSelect) {
-      this.props.handleSelect(value);
+    if (currentIndex === -1 && event.target.checked) {
+      newChecked.push(value);
+    } else if(currentIndex !== -1 && !event.target.checked) {
+      newChecked.splice(currentIndex, 1);
+    } else {
+      //
     }
 
-  }
-
-  componentDidMount() {
-
-    this.props.GrClientSelectorActions.readClientGroupList({
-
+    if(this.props.handleGroupSelect && this.props.selectorType === 'multiple') {
+      this.props.handleGroupSelect(newChecked);
+    }
+    this.setState({
+      checkedGroup: newChecked
     });
-  }
+  };
 
+  // RENDER...
   render() {
-    const {groupList, clientList, selectorType, handleSelect, height} = this.props;
-
-    console.log('height ', height);
+    const {groupList, clientList} = this.state;
+    const {selectorType, height} = this.props;
 
     const temp = {
       height: height,
@@ -138,7 +163,7 @@ class GrClientSelector extends Component {
           {groupList.map(value => (
             <ListItem key={value.grpId} className={selectItem} dense button onClick={() => this.handleClickGroup(value)}>
               {(selectorType === 'multiple') ?
-                <Checkbox className={selectCheck} onChange={this.handleGroupToggle(value)} /> : ''
+                <Checkbox className={selectCheck} onChange={this.handleGroupCheckToggle(value)} /> : ''
               }
               <ListItemText primary={value.grpNm} />
             </ListItem>
@@ -150,7 +175,7 @@ class GrClientSelector extends Component {
             {clientList.map(value => (
               <ListItem key={value.clientId} className={selectItem} dense button onClick={() => this.handleClickClient(value)}>
               {(selectorType === 'multiple') ?
-                <Checkbox className={selectCheck} onChange={this.handleClientToggle(value)} /> : ''
+                <Checkbox className={selectCheck} onChange={this.handleClientCheckToggle(value)} /> : ''
               }
                 <ListItemText primary={value.clientName} />
               </ListItem>
@@ -162,19 +187,6 @@ class GrClientSelector extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-
-  groupList: state.GrClientSelectorModule.groupList,
-  clientList: state.GrClientSelectorModule.clientList,
-  checkedGroup: state.GrClientSelectorModule.checkedGroup,
-  checkedClient: state.GrClientSelectorModule.checkedClient
-
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  GrClientSelectorActions: bindActionCreators(grClientSelectorActions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(GrClientSelector);
+export default GrClientSelector;
 
 

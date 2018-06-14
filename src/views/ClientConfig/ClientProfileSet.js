@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
@@ -12,23 +11,11 @@ import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 
-import { grLayout } from '../../templates/default/GrLayout';
-import { grColor } from '../../templates/default/GrColors';
-import { grRequestPromise } from '../../components/GrUtils/GrRequester';
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
 
 import ClientProfileSetDialog from './ClientProfileSetDialog';
 import GrPane from '../../containers/GrContent/GrPane';
-
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -46,7 +33,6 @@ import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import BuildIcon from '@material-ui/icons/Build';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import Icon from '@material-ui/core/Icon';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 
@@ -56,12 +42,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 //
 const theme = createMuiTheme();
 
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const pageContentClass = css({
-  paddingTop: '14px !important'
-}).toString();
 
 const formClass = css({
   marginBottom: '6px !important',
@@ -94,10 +74,6 @@ const tableClass = css({
   minWidth: '700px !important'
 }).toString();
 
-const tableHeadCellClass = css({
-  whiteSpace: 'nowrap',
-  padding: '0px !important'
-}).toString();
 
 const tableContainerClass = css({
   overflowX: 'auto',
@@ -141,27 +117,22 @@ const toolIconClass = css({
   height: '16px !important',
 }).toString();
 
+
+
+
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientProfileSet extends Component {
+  
   constructor(props) {
     super(props);
 
     this.state = {
       loading: true,
-      confirmOpen: false,
       
       clientProfileSetDialogOpen: false,
       clientProfileSetDialogType: '',
-
-      selectedProfileSetInfo: {
-        profileNo: '',
-        validDate: '',
-        expireDate: '',
-        ipRange: '',
-        comment: ''
-      },
 
       columnData: [
         { id: 'colProfileSetNo', numeric: false, disablePadding: true, label: '번호' },
@@ -173,23 +144,22 @@ class ClientProfileSet extends Component {
         { id: 'colProfile', numeric: false, disablePadding: true, label: '프로파일' },
       ],
 
+      confirmOpen: false,
       confirmTitle: '',
       confirmMsg: '',
       handleConfirmResult: null,
-      
-      keyword: ''
-
     }
   }
 
   // .................................................
   handleSelectBtnClick = (param) => {
+    const { profileSetModule } = this.props;
     this.props.ClientProfileSetActions.readClientProfileSetList({
-      keyword: this.state.keyword,
+      keyword: profileSetModule.keyword,
       page: param.pageNo,
-      rowsPerPage: this.props.rowsPerPage,
-      orderColumn: this.props.orderColumn,
-      orderDir: this.props.orderDir
+      rowsPerPage: profileSetModule.rowsPerPage,
+      orderColumn: profileSetModule.orderColumn,
+      orderDir: profileSetModule.orderDir
     });
   };
   
@@ -201,7 +171,7 @@ class ClientProfileSet extends Component {
   }
   
   handleRowClick = (event, id) => {
-    const selectedItem = this.props.listData.find(function(element) {
+    const selectedItem = this.props.profileSetModule.listData.find(function(element) {
       return element.profileNo == id;
     });
     this.props.ClientProfileSetActions.showDialog({
@@ -213,7 +183,7 @@ class ClientProfileSet extends Component {
 
   handleEditClick = (event, id) => {
     event.stopPropagation();
-    const selectedItem = this.props.listData.find(function(element) {
+    const selectedItem = this.props.profileSetModule.listData.find(function(element) {
       return element.profileNo == id;
     });
     this.props.ClientProfileSetActions.showDialog({
@@ -225,7 +195,7 @@ class ClientProfileSet extends Component {
 
   handleProfileClick = (event, id) => {
     event.stopPropagation();
-    const selectedItem = this.props.listData.find(function(element) {
+    const selectedItem = this.props.profileSetModule.listData.find(function(element) {
       return element.profileNo == id;
     });
     this.props.ClientProfileSetActions.showDialog({
@@ -237,7 +207,7 @@ class ClientProfileSet extends Component {
 
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const selectedItem = this.props.listData.find(function(element) {
+    const selectedItem = this.props.profileSetModule.listData.find(function(element) {
       return element.profileNo == id;
     });
 
@@ -252,25 +222,23 @@ class ClientProfileSet extends Component {
       confirmOpen: true
     });
 
-    console.log(re);
   };
 
   handleDeleteConfirmResult = (confirmValue) => {
+    const { profileSetModule } = this.props;
     if(confirmValue) {
       this.props.ClientProfileSetActions.deleteClientProfileSetData({
-        profile_no: this.props.selectedItem.profileNo
-      }).then((res) => {
-        this.props.ClientProfileSetActions.readClientProfileSetList({
-              keyword: this.props.keyword,
-              page: this.props.page,
-              rowsPerPage: this.props.rowsPerPage,
-              length: this.props.rowsPerPage,
-              orderColumn: this.props.orderColumn,
-              orderDir: this.props.orderDir
+        profile_no: profileSetModule.selectedItem.profileNo
+      }).then(() => {
+          this.props.ClientProfileSetActions.readClientProfileSetList({
+            keyword: profileSetModule.keyword,
+            page: profileSetModule.page,
+            rowsPerPage: profileSetModule.rowsPerPage,
+            orderColumn: profileSetModule.orderColumn,
+            orderDir: profileSetModule.orderDir
+          });
+        }, () => {
         });
-      }, (res) => {
-        // console.log("DELETE ERROR... ");
-      });
     }
 
     this.setState({ 
@@ -281,50 +249,38 @@ class ClientProfileSet extends Component {
   
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-
+    const { profileSetModule } = this.props;
     this.props.ClientProfileSetActions.readClientProfileSetList({
-      keyword: this.state.keyword,
+      keyword: profileSetModule.keyword,
       page: page,
-      rowsPerPage: this.props.rowsPerPage,
-      orderColumn: this.props.orderColumn,
-      orderDir: this.props.orderDir
+      rowsPerPage: profileSetModule.rowsPerPage,
+      orderColumn: profileSetModule.orderColumn,
+      orderDir: profileSetModule.orderDir
     });
-
-    //this.fetchData(page, this.state.rowsPerPage, this.state.orderColumn, this.state.orderDir);
   };
 
   // 페이지당 레코드수 변경
-  handleChangeRowsPerPage = event => {
-    //this.fetchData(this.state.page, event.target.value, this.state.orderColumn, this.state.orderDir);
+  handleChangeRowsPerPage = (event) => {
+    const { profileSetModule } = this.props;
     this.props.ClientProfileSetActions.readClientProfileSetList({
-      keyword: this.state.keyword,
-      page: this.props.page,
+      keyword: profileSetModule.keyword,
+      page: profileSetModule.page,
       rowsPerPage: event.target.value,
-      orderColumn: this.props.orderColumn,
-      orderDir: this.props.orderDir
+      orderColumn: profileSetModule.orderColumn,
+      orderDir: profileSetModule.orderDir
     });
-
   };
   
   // .................................................
-  handleRequestSort = (event, property) => {
-    const orderColumn = property;
-    let orderDir = 'desc';
-    if (this.state.orderColumn === property && this.state.orderDir === 'desc') {
+  // TODO: sort...
+  handleRequestSort = (property) => {
+    const { profileSetModule } = this.props;
+    if (profileSetModule.orderColumn === property && profileSetModule.orderDir === 'desc') {
       orderDir = 'asc';
     }
     //this.fetchData(this.state.page, this.state.rowsPerPage, orderColumn, orderDir);
   };
   // .................................................
-
-  // .................................................
-  // handleDialogClose = value => {
-  //   console.log('[P] handleDialogClose()...');
-  //   this.setState({ 
-  //     clientProfileSetInfo: value,
-  //     clientProfileSetDialogOpen: false 
-  //   });
-  // };
 
   handleKeywordChange = name => event => {
     this.setState({
@@ -332,19 +288,11 @@ class ClientProfileSet extends Component {
     });
   }
 
-  handleProfileSetChangeData = (name, value) => {
-    let beforeInfo = this.state.selectedProfileSetInfo;
-    beforeInfo[name] = value;
-    this.setState({
-      selectedProfileSetInfo: beforeInfo
-    });
-  };
-
   render() {
 
-    const { listData, orderDir, orderColumn, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.props;
-    const { dialogOpen, confirmTitle, confirmMsg, handleConfirmResult, confirmOpen } = this.props;
-    const emptyRows = rowsPerPage - listData.length;
+    const { profileSetModule, grConfirmModule } = this.props;
+
+    const emptyRows = profileSetModule.rowsPerPage - profileSetModule.listData.length;
 
     return (
       <React.Fragment>
@@ -357,7 +305,7 @@ class ClientProfileSet extends Component {
                 id='keyword'
                 label='검색어'
                 className={textFieldClass}
-                value={this.state.keyword}
+                value={profileSetModule.keyword}
                 onChange={this.handleKeywordChange('keyword')}
                 margin='dense'
               />
@@ -397,11 +345,11 @@ class ClientProfileSet extends Component {
                         key={column.id}
                         numeric={column.numeric}
                         padding={column.disablePadding ? 'none' : 'default'}
-                        sortDirection={orderColumn === column.id ? orderDir : false}
+                        sortDirection={profileSetModule.orderColumn === column.id ? profileSetModule.orderDir : false}
                       >
                         <TableSortLabel
-                          active={orderColumn === column.id}
-                          direction={orderDir}
+                          active={profileSetModule.orderColumn === column.id}
+                          direction={profileSetModule.orderDir}
                           //onClick={this.handleRequestSort(column.id)}
                         >
                           {column.label}
@@ -413,7 +361,7 @@ class ClientProfileSet extends Component {
               </TableHead>
 
               <TableBody>
-                {listData.map(n => {
+                {profileSetModule.listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -461,9 +409,9 @@ class ClientProfileSet extends Component {
 
           <TablePagination
             component='div'
-            count={rowsFiltered}
-            rowsPerPage={rowsPerPage}
-            page={page}
+            count={profileSetModule.rowsFiltered}
+            rowsPerPage={profileSetModule.rowsPerPage}
+            page={profileSetModule.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -477,13 +425,12 @@ class ClientProfileSet extends Component {
         </GrPane>
         {/* dialog(popup) component area */}
         <ClientProfileSetDialog
-          open={dialogOpen}
-          handleProfileSetChangeData={this.handleProfileSetChangeData}
+          open={profileSetModule.dialogOpen}
         />
         <GrConfirm
-          open={confirmOpen}
-          confirmTitle={confirmTitle}
-          confirmMsg={confirmMsg}
+          open={grConfirmModule.confirmOpen}
+          confirmTitle={grConfirmModule.confirmTitle}
+          confirmMsg={grConfirmModule.confirmMsg}
           handleConfirmResult={this.handleDeleteConfirmResult}
         />
 
@@ -494,22 +441,8 @@ class ClientProfileSet extends Component {
 
 const mapStateToProps = (state) => ({
 
-    listData: state.clientProfileSetModule.listData,
-    error: state.clientProfileSetModule.error,
-    orderDir: state.clientProfileSetModule.orderDir,
-    orderColumn: state.clientProfileSetModule.orderColumn,
-    page: state.clientProfileSetModule.page,
-    pending: state.clientProfileSetModule.pending,
-    rowsFiltered: state.clientProfileSetModule.rowsFiltered,
-    rowsPerPage: state.clientProfileSetModule.rowsPerPage,
-    rowsTotal: state.clientProfileSetModule.rowsTotal,
-    keyword: state.clientProfileSetModule.keyword,
-    dialogOpen: state.clientProfileSetModule.dialogOpen,
-
-    confirmTitle: state.GrConfirmModule.confirmTitle,
-    confirmMsg: state.GrConfirmModule.confirmMsg,
-    confirmOpen: state.GrConfirmModule.confirmOpen,
-    selectedItem: state.clientProfileSetModule.selectedItem,
+    profileSetModule: state.clientProfileSetModule,
+    grConfirmModule: state.GrConfirmModule,
 
 });
 
