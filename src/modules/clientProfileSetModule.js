@@ -206,10 +206,11 @@ const initialState = {
     clientId: '',
     targetClient: [],
     targetClientGroup: [],
-    isRemoval: true,
+    isRemoval: 'false',
 
     page: 0,
     rowsPerPage: 5,
+    // rowsPerPageOptions: [5, 10, 25],
     rowsTotal: 0,
     rowsFiltered: 0
 };
@@ -259,7 +260,6 @@ export default handleActions({
         };
     },
     [CREATE_PROFILESET_DATA_FAILURE]: (state, action) => {
-        console.log('CREATE_PROFILESET_DATA_FAILURE > ', action);
         return {
             ...state,
             pending: false,
