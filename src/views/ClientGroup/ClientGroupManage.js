@@ -209,7 +209,7 @@ class ClientGroupManage extends Component {
 
   componentDidMount() {
 
-    // grRequestPromise("http://localhost:8080/gpms/readClientGroupList", {
+    // grRequestPromise("https://gpms.gooroom.kr/gpms/readClientGroupList", {
     // }).then(res => {
     //     const groupList = res.data.map(x => ({
     //       key: x.grpId,
@@ -233,7 +233,7 @@ class ClientGroupManage extends Component {
       order: order
     });
 
-    grRequestPromise("http://localhost:8080/gpms/readClientGroupList", {
+    grRequestPromise("https://gpms.gooroom.kr/gpms/readClientGroupList", {
       searchKey: this.state.keyword,
 
       start: page * rowsPerPage,
@@ -293,7 +293,7 @@ class ClientGroupManage extends Component {
       selectedClientGroupId: clientGroupId,
     });
 
-    // grRequestPromise("http://localhost:8080/gpms/readClientInfo", {
+    // grRequestPromise("https://gpms.gooroom.kr/gpms/readClientInfo", {
     //   clientId: id
     // }).then(res => {
     //     const clientInfos = res.data;

@@ -1,5 +1,5 @@
-
 import { handleActions } from 'redux-actions';
+import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import axios from 'axios';
 import qs from 'qs';
@@ -8,7 +8,7 @@ function getPostAPI(param) {
 
     return axios({
         method: "post",
-        url: "http://localhost:8080/gpms/readRegKeyInfoList",
+        url: "https://gpms.gooroom.kr/gpms/readRegKeyInfoList",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         transformRequest: [
           function(data, headers) {
@@ -31,40 +31,32 @@ const GET_REGKEY_LIST_PENDING = 'clientRegKey/GET_LIST_PENDING';
 const GET_REGKEY_LIST_SUCCESS = 'clientRegKey/GET_LIST_SUCCESS';
 const GET_REGKEY_LIST_FAILURE = 'clientRegKey/GET_LIST_FAILURE';
 
-const GET_PROFILESET_LIST_PENDING = 'clientProfileSet/GET_LIST_PENDING';
-const GET_PROFILESET_LIST_SUCCESS = 'clientProfileSet/GET_LIST_SUCCESS';
-const GET_PROFILESET_LIST_FAILURE = 'clientProfileSet/GET_LIST_FAILURE';
-// ...
-
-
-//export const readClientRegkeyList = createAction(READ_REGKEY_DATA_LIST);
-export const readClientRegkeyList = (param) => dispatch => {
-
-    dispatch({type: GET_REGKEY_LIST_PENDING});
-
-    return getPostAPI(param).then(
-
-        (response) => {
-            dispatch({
-                type: GET_REGKEY_LIST_SUCCESS,
-                payload: response
-            });
-        }
-
-    ).catch(error => {
-        dispatch({
-            type: GET_REGKEY_LIST_FAILURE,
-            payload: error
-        });
-    });
-};
 
 // ...
-
 const initialState = {
     pending: false,
     error: false,
+    resultMsg: '',
+
     listData: [],
+    listParam: {
+        keyword: '',
+        orderDir: 'desc',
+        orderColumn: 'PROFILE_NO',
+        page: 0,
+        rowsPerPage: 10,
+        // rowsPerPageOptions: [5, 10, 25],
+        rowsTotal: 0,
+        rowsFiltered: 0
+    },
+
+    selectedItem: {
+        regKeyNo: '',
+        regKeyValidDate: '',
+        regKeyExpireDate: ''
+    },
+
+    dialogOpen: false,
 
     keyword: '',
     orderDir: 'asc',
@@ -75,6 +67,27 @@ const initialState = {
     rowsTotal: 0,
     rowsFiltered: 0
 };
+
+
+// ...
+export const readClientRegkeyList = (param) => dispatch => {
+
+    dispatch({type: GET_REGKEY_LIST_PENDING});
+    return requestPostAPI('readRegKeyInfoList', param).then(
+        (response) => {
+            dispatch({
+                type: GET_REGKEY_LIST_SUCCESS,
+                payload: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: GET_REGKEY_LIST_FAILURE,
+            payload: error
+        });
+    });
+};
+
 
 
 export default handleActions({
@@ -111,21 +124,4 @@ export default handleActions({
         };
     }
 
-    // ,
-    // [READ_REGKEY_DATA_LIST]: (state, action) => {
-    //     console.log('..READ_REGKEY_DATA_LIST..', state);
-    //     return {
-    //         regkeydata: [
-    //                                          {
-    //                         "regKeyNo": "1111",
-    //                         "validDate": 1527692400000,
-    //                         "expireDate": 1861801200000,
-    //                         "modDate": 1527040667000,
-    //                         "modUserId": "",
-    //                         "ipRange": "200.0.0.*",
-    //                         "comment": "테스트 등록 키"
-    //                     }
-        // ]
-        // }
-    //}
 }, initialState);

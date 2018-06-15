@@ -289,7 +289,7 @@ class JobManage extends Component {
       order: order
     });
 
-    grRequestPromise("http://localhost:8080/gpms/readJobList", {
+    grRequestPromise("https://gpms.gooroom.kr/gpms/readJobList", {
       searchKey: this.state.keyword,
       job_status: this.state.jobStatus,
 

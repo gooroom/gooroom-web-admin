@@ -74,7 +74,7 @@ class ClientRuleInfoPane extends Component {
 
   componentDidMount() {
 
-    grRequestPromise("http://localhost:8080/gpms/readClientConfByGroupId", {
+    grRequestPromise("https://gpms.gooroom.kr/gpms/readClientConfByGroupId", {
       clientGroupId: this.state.clientGroupId
     }).then(res => {
       if(res.data && res.data.length > 0) {
