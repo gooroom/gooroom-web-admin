@@ -326,6 +326,7 @@ class ClientManage extends Component {
 
   // .................................................
   handleRequestSort = (event, property) => {
+
     const orderBy = property;
     let order = "desc";
     if (this.state.orderBy === property && this.state.order === "desc") {
@@ -346,7 +347,7 @@ class ClientManage extends Component {
   handleInfoClick = (event, clientId, clientGroupId) => {
 
     event.stopPropagation();
-    console.log("handleCellClick .. " + clientId);
+
     this.setState({
       clientDialogOpen: true,
       selectedClientId: clientId,
@@ -367,7 +368,7 @@ class ClientManage extends Component {
   handleClick = (event, id) => {
     //event.preventDefault();
     event.stopPropagation();
-    console.log("handleClick .. " + id);
+
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
