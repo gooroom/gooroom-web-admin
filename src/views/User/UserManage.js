@@ -213,7 +213,7 @@ class UserManage extends Component {
       order: order
     });
 
-    grRequestPromise("http://localhost:8080/gpms/readUserList", {
+    grRequestPromise("https://gpms.gooroom.kr/gpms/readUserList", {
       searchKey: this.state.keyword,
 
       start: page * rowsPerPage,

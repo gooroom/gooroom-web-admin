@@ -210,7 +210,7 @@ class ClientProfileSetDialog extends Component {
 
     render() {
 
-        const { profileSetModule, profileName, profileComment, clientId, targetClient, isRemoval, dialogType } = this.props;
+        const { profileSetModule, dialogType } = this.props;
 
         let title = "";
         let buttons = {};

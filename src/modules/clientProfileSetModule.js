@@ -1,23 +1,5 @@
 import { handleActions } from 'redux-actions';
-
-import axios from 'axios';
-import qs from 'qs';
-
-function requestPostAPI(url, param) {
-
-    return axios({
-        method: "post",
-        url: "http://localhost:8080/gpms/" + url,
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        transformRequest: [
-          function(data, headers) {
-            return qs.stringify(data);
-          }
-        ],
-        data: param,
-        withCredentials: true
-      });
-}
+import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 const GET_PROFILESET_LIST_PENDING = 'clientProfileSet/GET_LIST_PENDING';
 const GET_PROFILESET_LIST_SUCCESS = 'clientProfileSet/GET_LIST_SUCCESS';
@@ -43,9 +25,45 @@ const SHOW_PROFILESET_DATA = 'clientProfileSetPopup/SHOW_PROFILESET_DATA';
 const CLOSE_PROFILESET_DATA = 'clientProfileSetPopup/CLOSE_PROFILESET_DATA';
 const CHG_PROFILESET_PARAM = 'clientProfileSetPopup/CHG_PROFILESET_PARAM';
 const SET_PROFILESET_SELECTED = 'clientProfileSetPopup/SET_PROFILESET_SELECTED';
+
+
 // ...
+const initialState = {
+    pending: false,
+    error: false,
+    resultMsg: '',
+
+    listData: [],
+    listParam: {
+        keyword: '',
+        orderDir: 'desc',
+        orderColumn: 'PROFILE_NO',
+        page: 0,
+        rowsPerPage: 10,
+        // rowsPerPageOptions: [5, 10, 25],
+        rowsTotal: 0,
+        rowsFiltered: 0
+    },
+
+    selectedItem: {
+        profileNo: '',
+        profileName: '',
+        profileComment: ''
+    },
+
+    dialogOpen: false,
+
+    profileName: '',
+    profileComment: '',
+    clientId: '',
+    targetClient: [],
+    targetClientGroup: [],
+    isRemoval: 'false'
+
+};
 
 
+// ...
 export const readClientProfileSetList = (param) => dispatch => {
 
     const resetParam = {
@@ -179,42 +197,6 @@ export const changeParamValue = (param) => dispatch => {
         type: CHG_PROFILESET_PARAM,
         payload: param
     });
-};
-
-// ...
-
-const initialState = {
-    pending: false,
-    error: false,
-    resultMsg: '',
-
-    listData: [],
-    listParam: {
-        keyword: '',
-        orderDir: 'desc',
-        orderColumn: 'PROFILE_NO',
-        page: 0,
-        rowsPerPage: 10,
-        // rowsPerPageOptions: [5, 10, 25],
-        rowsTotal: 0,
-        rowsFiltered: 0
-    },
-
-    selectedItem: {
-        profileNo: '',
-        profileName: '',
-        profileComment: ''
-    },
-
-    dialogOpen: false,
-
-    profileName: '',
-    profileComment: '',
-    clientId: '',
-    targetClient: [],
-    targetClientGroup: [],
-    isRemoval: 'false'
-
 };
 
 

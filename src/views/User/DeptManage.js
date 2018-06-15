@@ -93,7 +93,7 @@ class DeptManage extends Component {
                 <GrTreeList
                   useFolderIcons={true}
                   listHeight="24px"
-                  url="http://localhost:8080/gpms/readChildrenDeptList"
+                  url="https://gpms.gooroom.kr/gpms/readChildrenDeptList"
                   paramKeyName="deptCd"
                   rootKeyValue="000000000"
                   keyName="key"

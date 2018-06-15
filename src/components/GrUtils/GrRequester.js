@@ -20,7 +20,7 @@ export function grRequestPromise(url, param) {
   return new Promise((resolve, reject) => {
     axios({
       method: "post",
-      url: "http://localhost:8080" + url,
+      url: "https://gpms.gooroom.kr" + url,
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       transformRequest: [
         function(data, headers) {
@@ -67,8 +67,24 @@ export function grRequestPromise(url, param) {
         console.log(error);
       });
   });
-}
+};
 
+
+export function requestPostAPI(url, param) {
+
+  return axios({
+      method: "post",
+      url: "https://gpms.gooroom.kr/gpms/" + url,
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      transformRequest: [
+        function(data, headers) {
+          return qs.stringify(data);
+        }
+      ],
+      data: param,
+      withCredentials: true
+    });
+};
 
 const instanceOfCollection = collection();
 

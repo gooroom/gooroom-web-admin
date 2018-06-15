@@ -59,7 +59,7 @@ class ClientInfoPane extends Component {
 
   componentDidMount() {
 
-    grRequestPromise("http://localhost:8080/gpms/readClientInfo", {
+    grRequestPromise("https://gpms.gooroom.kr/gpms/readClientInfo", {
       clientId: this.state.clientId
     }).then(res => {
         if(res.data && res.data.length > 0) {
