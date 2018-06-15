@@ -58,7 +58,6 @@ export const readClientProfileSetList = (param) => dispatch => {
     };
 
     dispatch({type: GET_PROFILESET_LIST_PENDING});
-
     return requestPostAPI('readProfileSetList', resetParam).then(
         (response) => {
             dispatch({
@@ -188,17 +187,25 @@ const initialState = {
     pending: false,
     error: false,
     resultMsg: '',
-    listData: [],
 
-    keyword: '',
-    orderDir: 'asc',
-    orderColumn: '',
+    listData: [],
+    listParam: {
+        keyword: '',
+        orderDir: 'desc',
+        orderColumn: 'PROFILE_NO',
+        page: 0,
+        rowsPerPage: 10,
+        // rowsPerPageOptions: [5, 10, 25],
+        rowsTotal: 0,
+        rowsFiltered: 0
+    },
 
     selectedItem: {
         profileNo: '',
         profileName: '',
         profileComment: ''
     },
+
     dialogOpen: false,
 
     profileName: '',
@@ -206,13 +213,8 @@ const initialState = {
     clientId: '',
     targetClient: [],
     targetClientGroup: [],
-    isRemoval: 'false',
+    isRemoval: 'false'
 
-    page: 0,
-    rowsPerPage: 5,
-    // rowsPerPageOptions: [5, 10, 25],
-    rowsTotal: 0,
-    rowsFiltered: 0
 };
 
 
@@ -227,15 +229,21 @@ export default handleActions({
     },
     [GET_PROFILESET_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.payload.data;
+
+        let tempListParam = state.listParam;
+        Object.assign(tempListParam, {
+            rowsFiltered: parseInt(recordsFiltered, 10),
+            rowsTotal: parseInt(recordsTotal, 10),
+            page: parseInt(draw, 10),
+            rowsPerPage: parseInt(rowLength, 10)
+        });
+
         return {
             ...state,
             pending: false,
             error: false,
             listData: data,
-            rowsFiltered: parseInt(recordsFiltered, 10),
-            rowsTotal: parseInt(recordsTotal, 10),
-            page: parseInt(draw, 10),
-            rowsPerPage: parseInt(rowLength, 10)
+            listParam: tempListParam
         };
     },
     [GET_PROFILESET_LIST_FAILURE]: (state, action) => {

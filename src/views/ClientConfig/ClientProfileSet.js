@@ -25,9 +25,8 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
-
+import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
@@ -119,6 +118,67 @@ const toolIconClass = css({
 
 
 
+//
+//  ## Header ########## ########## ########## ########## ########## 
+//
+class ClientProfileSetHead extends Component {
+
+  createSortHandler = property => event => {
+    this.props.onRequestSort(event, property);
+  };
+
+  static columnData = [
+    { id: 'colProfileSetNo', orderColNm: 'PROFILE_NO', numeric: false, disablePadding: true, label: '번호' },
+    { id: 'colProfileSetName', orderColNm: 'PROFILE_NM', numeric: false, disablePadding: true, label: '이름' },
+    { id: 'colClientId', orderColNm: 'CLIENT_ID', numeric: false, disablePadding: true, label: 'Ref단말아이디' },
+    { id: 'colRegDate', orderColNm: 'REG_DT', numeric: false, disablePadding: true, label: '등록일' },
+    { id: 'colModDate', orderColNm: 'MOD_DT', numeric: false, disablePadding: true, label: '수정일' },
+    { id: 'colAction', orderColNm: '-', numeric: false, disablePadding: true, label: '수정/삭제' },
+    { id: 'colProfile', orderColNm: '-', numeric: false, disablePadding: true, label: '프로파일' },
+  ];
+
+  static getColumnData() {
+    return ClientManageHead.columnData;
+  }
+
+  render() {
+    const {
+      orderDir,
+      orderColumn
+    } = this.props;
+
+    return (
+      <TableHead>
+        <TableRow>
+          {ClientProfileSetHead.columnData.map(column => {
+            return (
+              <TableCell
+                className={tableCellClass}
+                key={column.id}
+                numeric={column.numeric}
+                padding={column.disablePadding ? "none" : "default"}
+                sortDirection={orderColumn === column.id ? orderDir : false}
+              >
+              {(column.orderColNm !== '-') &&
+                <TableSortLabel
+                  active={orderColumn === column.orderColNm}
+                  direction={orderDir}
+                  onClick={this.createSortHandler(column.orderColNm)}
+                >
+                  {column.label}
+                </TableSortLabel>
+              }
+              {(column.orderColNm === '-') &&
+                  <p>{column.label}</p>
+              }
+              </TableCell>
+            );
+          }, this)}
+        </TableRow>
+      </TableHead>
+    );
+  }
+}
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -130,9 +190,6 @@ class ClientProfileSet extends Component {
 
     this.state = {
       loading: true,
-      
-      clientProfileSetDialogOpen: false,
-      clientProfileSetDialogType: '',
 
       columnData: [
         { id: 'colProfileSetNo', numeric: false, disablePadding: true, label: '번호' },
@@ -151,16 +208,16 @@ class ClientProfileSet extends Component {
     }
   }
 
+  getMergedListParam = (param) => {
+    let tempListParam = this.props.profileSetModule.listParam;
+    Object.assign(tempListParam, param);
+    return tempListParam;
+  }
+
   // .................................................
   handleSelectBtnClick = (param) => {
-    const { profileSetModule } = this.props;
-    this.props.ClientProfileSetActions.readClientProfileSetList({
-      keyword: profileSetModule.keyword,
-      page: param.pageNo,
-      rowsPerPage: profileSetModule.rowsPerPage,
-      orderColumn: profileSetModule.orderColumn,
-      orderDir: profileSetModule.orderDir
-    });
+    const { profileSetModule, ClientProfileSetActions } = this.props;
+    ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam(param));
   };
   
   handleCreateButton = () => {
@@ -230,13 +287,7 @@ class ClientProfileSet extends Component {
       this.props.ClientProfileSetActions.deleteClientProfileSetData({
         profile_no: profileSetModule.selectedItem.profileNo
       }).then(() => {
-          this.props.ClientProfileSetActions.readClientProfileSetList({
-            keyword: profileSetModule.keyword,
-            page: profileSetModule.page,
-            rowsPerPage: profileSetModule.rowsPerPage,
-            orderColumn: profileSetModule.orderColumn,
-            orderDir: profileSetModule.orderDir
-          });
+          this.props.ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam({}));
         }, () => {
         });
     }
@@ -245,41 +296,32 @@ class ClientProfileSet extends Component {
       confirmOpen: false
     });
   };
-
   
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-    const { profileSetModule } = this.props;
-    this.props.ClientProfileSetActions.readClientProfileSetList({
-      keyword: profileSetModule.keyword,
-      page: page,
-      rowsPerPage: profileSetModule.rowsPerPage,
-      orderColumn: profileSetModule.orderColumn,
-      orderDir: profileSetModule.orderDir
-    });
+
+    const { ClientProfileSetActions } = this.props;
+    ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam({page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = (event) => {
-    const { profileSetModule } = this.props;
-    this.props.ClientProfileSetActions.readClientProfileSetList({
-      keyword: profileSetModule.keyword,
-      page: profileSetModule.page,
-      rowsPerPage: event.target.value,
-      orderColumn: profileSetModule.orderColumn,
-      orderDir: profileSetModule.orderDir
-    });
+
+    const { ClientProfileSetActions } = this.props;
+    ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam({rowsPerPage: event.target.value}));
   };
   
   // .................................................
   // TODO: sort...
-  handleRequestSort = (property) => {
-    const { profileSetModule } = this.props;
-    if (profileSetModule.orderColumn === property && profileSetModule.orderDir === 'desc') {
-      orderDir = 'asc';
+  handleRequestSort = (event, property) => {
+
+    const { profileSetModule, ClientProfileSetActions } = this.props;
+    let orderDir = "desc";
+    if (profileSetModule.listParam.orderColumn === property && profileSetModule.listParam.orderDir === "desc") {
+      orderDir = "asc";
     }
-    //this.fetchData(this.state.page, this.state.rowsPerPage, orderColumn, orderDir);
-  };
+    ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam({orderColumn: property, orderDir: orderDir}));
+  }
   // .................................................
 
   handleKeywordChange = name => event => {
@@ -291,8 +333,7 @@ class ClientProfileSet extends Component {
   render() {
 
     const { profileSetModule, grConfirmModule } = this.props;
-
-    const emptyRows = profileSetModule.rowsPerPage - profileSetModule.listData.length;
+    const emptyRows = profileSetModule.listParam.rowsPerPage - profileSetModule.listData.length;
 
     return (
       <React.Fragment>
@@ -305,7 +346,7 @@ class ClientProfileSet extends Component {
                 id='keyword'
                 label='검색어'
                 className={textFieldClass}
-                value={profileSetModule.keyword}
+                value={profileSetModule.listParam.keyword}
                 onChange={this.handleKeywordChange('keyword')}
                 margin='dense'
               />
@@ -314,7 +355,7 @@ class ClientProfileSet extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='primary'
-              onClick={() => this.handleSelectBtnClick({pageNo: 0})}
+              onClick={() => this.handleSelectBtnClick({page: 0})}
             >
               <Search className={leftIconClass} />
               조회
@@ -336,30 +377,11 @@ class ClientProfileSet extends Component {
           <div className={tableContainerClass}>
             <Table className={tableClass}>
 
-              <TableHead>
-                <TableRow>
-                  {this.state.columnData.map(column => {
-                    return (
-                      <TableCell
-                        className={tableCellClass}
-                        key={column.id}
-                        numeric={column.numeric}
-                        padding={column.disablePadding ? 'none' : 'default'}
-                        sortDirection={profileSetModule.orderColumn === column.id ? profileSetModule.orderDir : false}
-                      >
-                        <TableSortLabel
-                          active={profileSetModule.orderColumn === column.id}
-                          direction={profileSetModule.orderDir}
-                          //onClick={this.handleRequestSort(column.id)}
-                        >
-                          {column.label}
-                        </TableSortLabel>
-                      </TableCell>
-                    );
-                  }, this)}
-                </TableRow>
-              </TableHead>
-
+              <ClientProfileSetHead
+                orderDir={profileSetModule.listParam.orderDir}
+                orderColumn={profileSetModule.listParam.orderColumn}
+                onRequestSort={this.handleRequestSort}
+              />
               <TableBody>
                 {profileSetModule.listData.map(n => {
                   return (
@@ -409,9 +431,9 @@ class ClientProfileSet extends Component {
 
           <TablePagination
             component='div'
-            count={profileSetModule.rowsFiltered}
-            rowsPerPage={profileSetModule.rowsPerPage}
-            page={profileSetModule.page}
+            count={profileSetModule.listParam.rowsFiltered}
+            rowsPerPage={profileSetModule.listParam.rowsPerPage}
+            page={profileSetModule.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
