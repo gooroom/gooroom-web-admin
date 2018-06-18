@@ -11,6 +11,11 @@ export default {
           url: '/clients/clientmanage',
           icon: 'icon-wrench',
           level: 2,
+        }, {
+          name: '패키지관리',
+          url: '/package/packagemanage',
+          icon: 'icon-layers',
+          level: 2,
         },
       ]
     }, {

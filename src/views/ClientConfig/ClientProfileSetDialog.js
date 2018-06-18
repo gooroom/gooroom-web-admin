@@ -4,12 +4,10 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as clientProfileSetActions from '../../modules/clientProfileSetModule';
+import * as ClientProfileSetActions from '../../modules/ClientProfileSetModule';
 
 import { css } from "glamor";
 
-import { grRequestPromise } from "../../components/GrUtils/GrRequester";
-import { formatDateToSimple, formatSimpleStringToStartTime, formatSimpleStringToEndTime } from '../../components/GrUtils/GrDates';
 import GrClientSelector from '../../components/GrComponents/GrClientSelector';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -19,17 +17,12 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 
-import Divider from "@material-ui/core/Divider";
-
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import Typography from '@material-ui/core/Typography';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Grid from '@material-ui/core/Grid';
-import Add from "@material-ui/icons/Add";
 
 //
 //  ## Style ########## ########## ########## ########## ##########
@@ -318,14 +311,14 @@ class ClientProfileSetDialog extends Component {
 
 const mapStateToProps = (state) => ({
 
-    profileSetModule: state.clientProfileSetModule,
-    dialogType: state.clientProfileSetModule.dialogType,
+    profileSetModule: state.ClientProfileSetModule,
+    dialogType: state.ClientProfileSetModule.dialogType,
 
 });
 
 const mapDispatchToProps = (dispatch) => ({
 
-    ClientProfileSetActions: bindActionCreators(clientProfileSetActions, dispatch)
+    ClientProfileSetActions: bindActionCreators(ClientProfileSetActions, dispatch)
 
 });
 

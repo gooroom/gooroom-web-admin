@@ -3,8 +3,8 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as clientProfileSetActions from '../../modules/clientProfileSetModule';
-import * as grConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientProfileSetActions from '../../modules/ClientProfileSetModule';
+import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
@@ -463,7 +463,7 @@ class ClientProfileSet extends Component {
 
 const mapStateToProps = (state) => ({
 
-    profileSetModule: state.clientProfileSetModule,
+    profileSetModule: state.ClientProfileSetModule,
     grConfirmModule: state.GrConfirmModule,
 
 });
@@ -471,8 +471,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
 
-  ClientProfileSetActions: bindActionCreators(clientProfileSetActions, dispatch),
-  GrConfirmActions: bindActionCreators(grConfirmActions, dispatch)
+  ClientProfileSetActions: bindActionCreators(ClientProfileSetActions, dispatch),
+  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 
 });
 

@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import clientRegKeyModule from './clientRegKeyModule';
-import clientProfileSetModule from './clientProfileSetModule';
+import ClientRegKeyModule from './ClientRegKeyModule';
+import ClientProfileSetModule from './ClientProfileSetModule';
 import GrConfirmModule from './GrConfirmModule';
 
 export default combineReducers({
-    clientRegKeyModule, clientProfileSetModule, GrConfirmModule
+    ClientRegKeyModule, ClientProfileSetModule, GrConfirmModule
 });
