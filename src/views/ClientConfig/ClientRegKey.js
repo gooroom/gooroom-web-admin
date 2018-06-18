@@ -4,30 +4,19 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as clientRegKeyActions from '../../modules/clientRegKeyModule';
+import * as ClientRegKeyActions from '../../modules/ClientRegKeyModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 
-import { grLayout } from '../../templates/default/GrLayout';
-import { grColor } from '../../templates/default/GrColors';
 import { grRequestPromise } from '../../components/GrUtils/GrRequester';
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
 
 import ClientRegKeyDialog from './ClientRegKeyDialog';
 import GrPane from '../../containers/GrContent/GrPane';
-
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -44,7 +33,6 @@ import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import BuildIcon from '@material-ui/icons/Build';
-import Icon from '@material-ui/core/Icon';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 
@@ -490,22 +478,22 @@ class ClientRegKey extends Component {
 const mapStateToProps = (state) => {
   
   return({
-    listData: state.clientRegKeyModule.listData,
-    error: state.clientRegKeyModule.error,
-    orderDir: state.clientRegKeyModule.orderDir,
-    orderColumn: state.clientRegKeyModule.orderColumn,
-    page: state.clientRegKeyModule.page,
-    pending: state.clientRegKeyModule.pending,
-    rowsFiltered: state.clientRegKeyModule.rowsFiltered,
-    rowsPerPage: state.clientRegKeyModule.rowsPerPage,
-    rowsTotal: state.clientRegKeyModule.rowsTotal,
-    keyword: state.clientRegKeyModule.keyword
+    listData: state.ClientRegKeyModule.listData,
+    error: state.ClientRegKeyModule.error,
+    orderDir: state.ClientRegKeyModule.orderDir,
+    orderColumn: state.ClientRegKeyModule.orderColumn,
+    page: state.ClientRegKeyModule.page,
+    pending: state.ClientRegKeyModule.pending,
+    rowsFiltered: state.ClientRegKeyModule.rowsFiltered,
+    rowsPerPage: state.ClientRegKeyModule.rowsPerPage,
+    rowsTotal: state.ClientRegKeyModule.rowsTotal,
+    keyword: state.ClientRegKeyModule.keyword
   });
 
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientRegKeyActions: bindActionCreators(clientRegKeyActions, dispatch)
+  ClientRegKeyActions: bindActionCreators(ClientRegKeyActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientRegKey);
