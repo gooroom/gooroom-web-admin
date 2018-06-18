@@ -16,6 +16,11 @@ export default {
           url: '/package/packagemanage',
           icon: 'icon-layers',
           level: 2,
+        }, {
+          name: '작업관리',
+          url: '/jobs/jobmanage',
+          icon: 'icon-notebook',
+          level: 2,
         },
       ]
     }, {

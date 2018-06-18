@@ -128,18 +128,14 @@ class ClientProfileSetHead extends Component {
   };
 
   static columnData = [
-    { id: 'colProfileSetNo', orderColNm: 'PROFILE_NO', numeric: false, disablePadding: true, label: '번호' },
-    { id: 'colProfileSetName', orderColNm: 'PROFILE_NM', numeric: false, disablePadding: true, label: '이름' },
-    { id: 'colClientId', orderColNm: 'CLIENT_ID', numeric: false, disablePadding: true, label: 'Ref단말아이디' },
-    { id: 'colRegDate', orderColNm: 'REG_DT', numeric: false, disablePadding: true, label: '등록일' },
-    { id: 'colModDate', orderColNm: 'MOD_DT', numeric: false, disablePadding: true, label: '수정일' },
-    { id: 'colAction', orderColNm: '-', numeric: false, disablePadding: true, label: '수정/삭제' },
-    { id: 'colProfile', orderColNm: '-', numeric: false, disablePadding: true, label: '프로파일' },
+    { id: 'chProfileSetNo', isOrder: true, numeric: false, disablePadding: true, label: '번호' },
+    { id: 'chProfileSetName', isOrder: true, numeric: false, disablePadding: true, label: '이름' },
+    { id: 'chClientId', isOrder: true, numeric: false, disablePadding: true, label: 'Ref단말아이디' },
+    { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
+    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
+    { id: 'chProfile', isOrder: false, numeric: false, disablePadding: true, label: '프로파일' },
   ];
-
-  static getColumnData() {
-    return ClientManageHead.columnData;
-  }
 
   render() {
     const {
@@ -159,11 +155,11 @@ class ClientProfileSetHead extends Component {
                 padding={column.disablePadding ? "none" : "default"}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
-              {(column.orderColNm !== '-') &&
+              {(column.isOrder) &&
                 <TableSortLabel
                   active={orderColumn === column.orderColNm}
                   direction={orderDir}
-                  onClick={this.createSortHandler(column.orderColNm)}
+                  onClick={this.createSortHandler(column.id)}
                 >
                   {column.label}
                 </TableSortLabel>
@@ -191,16 +187,6 @@ class ClientProfileSet extends Component {
     this.state = {
       loading: true,
 
-      columnData: [
-        { id: 'colProfileSetNo', numeric: false, disablePadding: true, label: '번호' },
-        { id: 'colProfileSetName', numeric: false, disablePadding: true, label: '이름' },
-        { id: 'colClientId', numeric: false, disablePadding: true, label: 'Ref단말아이디' },
-        { id: 'colRegDate', numeric: false, disablePadding: true, label: '등록일' },
-        { id: 'colModDate', numeric: false, disablePadding: true, label: '수정일' },
-        { id: 'colAction', numeric: false, disablePadding: true, label: '수정/삭제' },
-        { id: 'colProfile', numeric: false, disablePadding: true, label: '프로파일' },
-      ],
-
       confirmOpen: false,
       confirmTitle: '',
       confirmMsg: '',
@@ -216,7 +202,7 @@ class ClientProfileSet extends Component {
 
   // .................................................
   handleSelectBtnClick = (param) => {
-    const { profileSetModule, ClientProfileSetActions } = this.props;
+    const { ClientProfileSetActions } = this.props;
     ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam(param));
   };
   
@@ -325,8 +311,11 @@ class ClientProfileSet extends Component {
   // .................................................
 
   handleKeywordChange = name => event => {
-    this.setState({
-      [name]: event.target.value
+    const { ClientProfileSetActions } = this.props;
+    const newParam = this.getMergedListParam({keyword: event.target.value});
+    ClientProfileSetActions.changeParamValue({
+      name: 'listParam',
+      value: newParam
     });
   }
 
@@ -420,7 +409,7 @@ class ClientProfileSet extends Component {
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
-                      colSpan={this.state.columnData.length + 1}
+                      colSpan={ClientProfileSetHead.columnData.length + 1}
                       className={tableCellClass}
                     />
                   </TableRow>

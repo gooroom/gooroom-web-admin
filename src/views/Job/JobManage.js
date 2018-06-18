@@ -1,69 +1,51 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import * as JobManageActions from '../../modules/JobManageModule';
+import * as GrConfirmActions from '../../modules/GrConfirmModule';
+
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import { grLayout } from "../../templates/default/GrLayout";
-import { grColor } from "../../templates/default/GrColors";
+import { formatDateToSimple } from '../../components/GrUtils/GrDates';
+
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 
 import GrPageHeader from "../../containers/GrContent/GrPageHeader";
+import GrConfirm from '../../components/GrComponents/GrConfirm';
 
-import Card, {
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions
-} from "@material-ui/core/Card";
+import GrPane from '../../containers/GrContent/GrPane';
 
-import Table, {
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel
-} from "@material-ui/core/Table";
-import Checkbox from "@material-ui/core/Checkbox";
-import Tooltip from "@material-ui/core/Tooltip";
-import Dialog, { DialogTitle } from '@material-ui/core/Dialog';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
+
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
+
+import Search from '@material-ui/icons/Search';
 
 
-import Avatar from '@material-ui/core/Avatar';
-import List, { ListItem, ListItemAvatar, ListItemText } from '@material-ui/core/List';
-import PersonIcon from '@material-ui/icons/Person';
-import AddIcon from '@material-ui/icons/Add';
-import Typography from '@material-ui/core/Typography';
-import blue from '@material-ui/core/colors/blue';
+// import AddIcon from '@material-ui/icons/Add';
+// import BuildIcon from '@material-ui/icons/Build';
+// import AssignmentIcon from '@material-ui/icons/Assignment';
+// import DeleteIcon from '@material-ui/icons/Delete';
 
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import { MenuItem } from "@material-ui/core/Menu";
-import Input, { InputLabel } from "@material-ui/core/Input";
-import FormControl from "@material-ui/core/FormControl";
 
-import Button from "@material-ui/core/Button";
-import Search from "@material-ui/icons/Search";
 
-const emails = ['username@gmail.com', 'user02@gmail.com'];
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      // light: will be calculated from palette.primary.main,
-      main: '#ff4400',
-      // dark: will be calculated from palette.primary.main,
-      // contrastText: will be calculated to contast with palette.primary.main
-    },
-    secondary: {
-      light: '#0066ff',
-      main: '#0044ff',
-      // dark: will be calculated from palette.secondary.main,
-      contrastText: '#ffcc00',
-    },
-    // error: will us the default color
-  },
-});
+const theme = createMuiTheme();
 
 const contentClass = css({
   height: "200% !important"
@@ -141,50 +123,10 @@ const tableCellClass = css({
 }).toString();
 
 
-class SimpleDialog extends React.Component {
-  handleClose = () => {
-    this.props.onClose(this.props.selectedValue);
-  };
 
-  handleListItemClick = value => {
-    this.props.onClose(value);
-  };
-
-  render() {
-    const { onClose, selectedValue, ...other } = this.props;
-
-    return (
-      <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
-        <DialogTitle id="simple-dialog-title">Set backup account</DialogTitle>
-        <div>
-          <List>
-            {emails.map(email => (
-              <ListItem button onClick={() => this.handleListItemClick(email)} key={email}>
-                <ListItemAvatar>
-                  <Avatar >
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={email} />
-              </ListItem>
-            ))}
-            <ListItem button onClick={() => this.handleListItemClick('addAccount')}>
-              <ListItemAvatar>
-                <Avatar>
-                  <AddIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="add account" />
-            </ListItem>
-          </List>
-        </div>
-      </Dialog>
-    );
-  }
-}
-
-
-
+//
+//  ## Header ########## ########## ########## ########## ########## 
+//
 class JobManageHead extends Component {
 
   createSortHandler = property => event => {
@@ -192,28 +134,20 @@ class JobManageHead extends Component {
   };
 
   static columnData = [
-
-    { id: "jobNo", numeric: false, disablePadding: true, label: "작업번호" },
-    { id: "jobName", numeric: false, disablePadding: true, label: "작업이름" },
-    { id: "readyCount", numeric: false, disablePadding: true, label: "진행상태" },
-    { id: "clientCount", numeric: false, disablePadding: true, label: "대상단말수" },
-    { id: "errorCount", numeric: false, disablePadding: true, label: "작업오류수" },
-    { id: "compCount", numeric: false, disablePadding: true, label: "작업완료수" },
-    { id: "regUserId", numeric: false, disablePadding: true, label: "등록자" },
-    { id: "regDate", numeric: false, disablePadding: true, label: "등록일" },
+    { id: "chJobNo", isOrder: true, numeric: false, disablePadding: true, label: "작업번호" },
+    { id: "chJobName", isOrder: true, numeric: false, disablePadding: true, label: "작업이름" },
+    { id: "chReadyCount", isOrder: true, numeric: false, disablePadding: true, label: "진행상태" },
+    { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "대상단말수" },
+    { id: "chErrorCount", isOrder: true, numeric: false, disablePadding: true, label: "작업오류수" },
+    { id: "chCompCount", isOrder: true, numeric: false, disablePadding: true, label: "작업완료수" },
+    { id: "chRegUserId", isOrder: true, numeric: false, disablePadding: true, label: "등록자" },
+    { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
   ];
-
-  static getColumnData() {
-    return JobManageHead.columnData;
-  }
 
   render() {
     const {
-      onSelectAllClick,
-      order,
-      orderBy,
-      numSelected,
-      rowCount
+      orderDir,
+      orderColumn,
     } = this.props;
 
     return (
@@ -226,15 +160,20 @@ class JobManageHead extends Component {
                 key={column.id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? "none" : "default"}
-                sortDirection={orderBy === column.id ? order : false}
+                sortDirection={orderColumn === column.id ? orderDir : false}
               >
+              {(column.isOrder) &&
                 <TableSortLabel
-                  active={orderBy === column.id}
-                  direction={order}
+                  active={orderColumn === column.id}
+                  direction={orderDir}
                   onClick={this.createSortHandler(column.id)}
                 >
                   {column.label}
                 </TableSortLabel>
+              }
+              {(!column.isOrder) &&
+                <p>{column.label}</p>
+              }
               </TableCell>
             );
           }, this)}
@@ -244,42 +183,49 @@ class JobManageHead extends Component {
   }
 }
 
-
+//
+//  ## Content ########## ########## ########## ########## ########## 
+//
 class JobManage extends Component {
+
   constructor(props) {
     super(props);
 
     this.state = {
       loading: true,
-      detailOpen: false,
-      selectedValue: "",
 
-      jobStatus: "",
-      jobStatusOptionList: [
-        { id: "R", value: "R", label: "작업전" },
-        { id: "D", value: "D", label: "작업중" },
-        { id: "C", value: "C", label: "작업완료" },
-        { id: "ALL", value: "ALL", label: "전체" }
-      ],
-      keyword: "",
+      confirmOpen: false,
+      confirmTitle: '',
+      confirmMsg: '',
+      handleConfirmResult: null,
 
-      order: "asc",
-      orderBy: "calories",
-      selected: [],
-      data: [],
-      page: 0,
-      rowsPerPage: 10,
-      rowsTotal: 0,
-      rowsFiltered: 0
     };
-
-    this.fetchData = this.fetchData.bind(this);
   }
 
-  componentDidMount() {
-    // todo:
+  getMergedListParam = (param) => {
+    let tempListParam = this.props.jobManageModule.listParam;
+    Object.assign(tempListParam, param);
+    return tempListParam;
   }
 
+  // .................................................
+  handleSelectBtnClick = (param) => {
+    const { JobManageActions } = this.props;
+    JobManageActions.readJobManageList(this.getMergedListParam(param));
+  };
+
+  handleRowClick = (event, id) => {
+    const selectedItem = this.props.jobManageModule.listData.find(function(element) {
+      return element.jobNo == id;
+    });
+    // this.props.JobManageActions.showDialog({
+    //   selectedItem: selectedItem,
+    //   dialogType: ClientProfileSetDialog.TYPE_VIEW,
+    //   dialogOpen: true
+    // });
+  };
+
+  
   fetchData(page, rowsPerPage, orderBy, order) {
 
     this.setState({
@@ -329,226 +275,186 @@ class JobManage extends Component {
 
   }
 
+
+
+  // 페이지 번호 변경
+  handleChangePage = (event, page) => {
+
+    const { JobManageActions } = this.props;
+    JobManageActions.readJobManageList(this.getMergedListParam({page: page}));
+  };
+
+  // 페이지당 레코드수 변경
+  handleChangeRowsPerPage = (event) => {
+
+    const { JobManageActions } = this.props;
+    JobManageActions.readJobManageList(this.getMergedListParam({rowsPerPage: event.target.value}));
+  };
+
   // .................................................
   handleRequestSort = (event, property) => {
-    const orderBy = property;
-    let order = "desc";
-    if (this.state.orderBy === property && this.state.order === "desc") {
-      order = "asc";
+
+    const { jobManageModule, JobManageActions } = this.props;
+    let orderDir = "desc";
+    if (jobManageModule.listParam.orderColumn === property && jobManageModule.listParam.orderDir === "desc") {
+      orderDir = "asc";
     }
-
-    this.fetchData(this.state.page, this.state.rowsPerPage, orderBy, order);
-  };
-
-  handleSelectAllClick = (event, checked) => {
-    if (checked) {
-      this.setState({ selected: this.state.data.map(n => n.clientId) });
-      return;
-    }
-    this.setState({ selected: [] });
-  };
-
-  handleCellClick = (event, id) => {
-    //event.preventDefault();
-    event.stopPropagation();
-    console.log("handleCellClick .. " + id);
-    this.setState({
-      detailOpen: true,
-    });
-  };
-
-  handleClick = (event, id) => {
-    //event.preventDefault();
-    event.stopPropagation();
-    console.log("handleClick .. " + id);
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    this.setState({ selected: newSelected });
-  };
-
-  handleChangePage = (event, page) => {
-    this.fetchData(page, this.state.rowsPerPage, this.state.orderBy, this.state.order);
-  };
-
-  handleChangeRowsPerPage = event => {
-    this.fetchData(this.state.page, event.target.value, this.state.orderBy, this.state.order);
+    JobManageActions.readJobManageList(this.getMergedListParam({orderColumn: property, orderDir: orderDir}));
   };
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
   // .................................................
 
   // Events...
-  handleChangeSelect = event => {
-    this.setState({ [event.target.name]: event.target.value });
+  handleStatusChange = event => {
+
+    const { JobManageActions } = this.props;
+    const paramName = event.target.name;
+    const newParam = this.getMergedListParam({[paramName]: event.target.value});
+    JobManageActions.changeParamValue({
+      name: 'listParam',
+      value: newParam
+    });
   };
 
-  handleChangeKeyword = name => event => {
-    this.setState({ [name]: event.target.value });
-  };
+  handleKeywordChange = name => event => {
 
-  // .................................................
-  handleDetailClose = value => {
-    console.log("handleDetailClose...");
-    this.setState({ selectedValue: value, detailOpen: false });
-  };
+    const { JobManageActions } = this.props;
+    const newParam = this.getMergedListParam({keyword: event.target.value});
+    JobManageActions.changeParamValue({
+      name: 'listParam',
+      value: newParam
+    });
+  }
+
+
 
   render() {
 
-    const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
-    const emptyRows = rowsPerPage - data.length;
-
-    console.log(JobManageHead.getColumnData().length);
+    const { jobManageModule, grConfirmModule } = this.props;
+    const emptyRows = jobManageModule.listParam.rowsPerPage - jobManageModule.listData.length;
 
     return (
+
       <React.Fragment>
-        <Card >
-          <GrPageHeader path={this.props.location.pathname} />
-          <CardContent className={pageContentClass}>
-          
-            <form className={formClass}>
-              <FormControl className={formControlClass} autoComplete="off">
-                <InputLabel htmlFor="job-status">작업상태</InputLabel>
-                <Select
-                  value={this.state.jobStatus}
-                  onChange={this.handleChangeSelect}
-                  inputProps={{ name: "jobStatus", id: "job-status" }}
-                >
-                  {this.state.jobStatusOptionList.map(x => (
-                    <MenuItem value={x.value} key={x.id}>
-                      {x.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
-              <FormControl className={formControlClass} autoComplete="off">
-                <TextField
-                  id="keyword"
-                  label="검색어"
-                  className={textFieldClass}
-                  value={this.state.keyword}
-                  onChange={this.handleChangeKeyword("keyword")}
-                  margin="dense"
-                />
-              </FormControl>
-
-              <div className={formEmptyControlClass} />
-
-              <Button
-                className={classNames(buttonClass, formControlClass)}
-                variant="raised"
-                color="primary"
-                onClick={() => {
-                  this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);
-                }}
+        <GrPageHeader path={this.props.location.pathname} />
+        <GrPane>
+          {/* data option area */}
+          <form className={formClass}>
+            <FormControl className={formControlClass} autoComplete="off">
+              <InputLabel htmlFor="job-status">작업상태</InputLabel>
+              <Select
+                value={jobManageModule.listParam.jobStatus}
+                onChange={this.handleStatusChange}
+                inputProps={{ name: "jobStatus", id: "job-status" }}
               >
-                <Search className={leftIconClass} />
-                조회
-              </Button>
-            </form>
-
-            <div
-              className={tableContainerClass}
+              {jobManageModule.jobStatusOptionList.map(x => (
+              <MenuItem value={x.value} key={x.id}>
+                {x.label}
+              </MenuItem>
+              ))}
+              </Select>
+            </FormControl>
+            <FormControl className={formControlClass} autoComplete='off'>
+              <TextField
+                id='keyword'
+                label='검색어'
+                className={textFieldClass}
+                value={jobManageModule.listParam.keyword}
+                onChange={this.handleKeywordChange('keyword')}
+                margin='dense'
+              />
+            </FormControl>
+            <Button
+              className={classNames(buttonClass, formControlClass)}
+              variant='raised'
+              color='primary'
+              onClick={() => this.handleSelectBtnClick({page: 0})}
             >
-              <Table className={tableClass}>
-                <JobManageHead
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={this.handleSelectAllClick}
-                  onRequestSort={this.handleRequestSort}
-                  rowCount={data.length}
-                />
-                <TableBody>
-                  {data
-                    .map(n => {
-                      const isSelected = this.isSelected(n.jobNo);
-                      return (
-                        <TableRow
-                          className={tableRowClass}
-                          hover
-                          onClick={event => this.handleClick(event, n.jobNo)}
-                          role="checkbox"
-                          aria-checked={isSelected}
-                          tabIndex={-1}
-                          key={n.clientId}
-                          selected={isSelected}
-                        >
-                          <TableCell className={tableCellClass}>
-                            {n.jobNo}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.jobName}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.readyCount}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientCount}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.errorCount}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.compCount}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.regUserId}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.regDate}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+              <Search className={leftIconClass} />
+              조회
+            </Button>
+            <div className={formEmptyControlClass} />
 
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 32 * emptyRows }}>
-                      <TableCell
-                        colSpan={JobManageHead.getColumnData().length + 1}
-                        className={tableCellClass}
-                      />
+          </form>
+          {/* data area */}
+          <div className={tableContainerClass}>
+            <Table className={tableClass}>
+
+              <JobManageHead
+                orderDir={jobManageModule.listParam.orderDir}
+                orderColumn={jobManageModule.listParam.orderColumn}
+                onRequestSort={this.handleRequestSort}
+              />
+              <TableBody>
+                {jobManageModule.listData.map(n => {
+                  return (
+                    <TableRow
+                      className={tableRowClass}
+                      hover
+                      onClick={event => this.handleRowClick(event, n.jobNo)}
+                      key={n.jobNo}
+                    >
+                      <TableCell className={tableCellClass}>
+                        {n.jobNo}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.jobName}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.readyCount}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.clientCount}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.errorCount}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.compCount}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.regUserId}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
+                      </TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                  );
+                })}
 
-            <TablePagination
-              component="div"
-              count={rowsFiltered}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              backIconButtonProps={{
-                "aria-label": "Previous Page"
-              }}
-              nextIconButtonProps={{
-                "aria-label": "Next Page"
-              }}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
-          </CardContent>
-        </Card>
-        <SimpleDialog
-        selectedValue={this.state.selectedValue}
-        open={this.state.detailOpen}
-        onClose={this.handleDetailClose}
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 32 * emptyRows }}>
+                    <TableCell
+                      colSpan={JobManageHead.columnData.length + 1}
+                      className={tableCellClass}
+                    />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+
+          <TablePagination
+            component='div'
+            count={jobManageModule.listParam.rowsFiltered}
+            rowsPerPage={jobManageModule.listParam.rowsPerPage}
+            page={jobManageModule.listParam.page}
+            backIconButtonProps={{
+              'aria-label': 'Previous Page'
+            }}
+            nextIconButtonProps={{
+              'aria-label': 'Next Page'
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+
+        </GrPane>
+        <GrConfirm
+          open={grConfirmModule.confirmOpen}
+          confirmTitle={grConfirmModule.confirmTitle}
+          confirmMsg={grConfirmModule.confirmMsg}
         />
       </React.Fragment>
       
@@ -556,4 +462,21 @@ class JobManage extends Component {
   }
 }
 
-export default JobManage;
+
+const mapStateToProps = (state) => ({
+
+  jobManageModule: state.JobManageModule,
+  grConfirmModule: state.GrConfirmModule,
+
+});
+
+
+const mapDispatchToProps = (dispatch) => ({
+
+  JobManageActions: bindActionCreators(JobManageActions, dispatch),
+  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(JobManage);
+
