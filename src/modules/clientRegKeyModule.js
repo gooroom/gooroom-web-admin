@@ -1,32 +1,6 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
-import axios from 'axios';
-import qs from 'qs';
-
-function getPostAPI(param) {
-
-    return axios({
-        method: "post",
-        url: "https://gpms.gooroom.kr/gpms/readRegKeyInfoList",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        transformRequest: [
-          function(data, headers) {
-            return qs.stringify(data);
-          }
-        ],
-        data: {
-            keyword: param.keyword,
-            page: param.page,
-            start: param.page * param.rowsPerPage,
-            length: param.rowsPerPage,
-            orderColumn: param.orderColumn,
-            orderDir: param.orderDir,
-          },
-        withCredentials: true
-      });
-}
-
 const GET_REGKEY_LIST_PENDING = 'clientRegKey/GET_LIST_PENDING';
 const GET_REGKEY_LIST_SUCCESS = 'clientRegKey/GET_LIST_SUCCESS';
 const GET_REGKEY_LIST_FAILURE = 'clientRegKey/GET_LIST_FAILURE';

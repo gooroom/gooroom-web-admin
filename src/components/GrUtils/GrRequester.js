@@ -1,6 +1,8 @@
 import axios from "axios";
 import qs from "qs";
 
+export const GPMS_URL = 'http://localhost:8080/gpms/'; //'https://gpms.gooroom.kr/gpms/';
+
 function collection() {
     let data = {};
     function getData(key) {
@@ -13,7 +15,7 @@ function collection() {
         getData: getData,
         setData: setData
     };
-}
+};
 
 export function grRequestPromise(url, param) {
 
@@ -70,11 +72,11 @@ export function grRequestPromise(url, param) {
 };
 
 
-export function requestPostAPI(url, param) {
+export function requestPostAPI(url, param, headers) {
 
   return axios({
       method: "post",
-      url: "https://gpms.gooroom.kr/gpms/" + url,
+      url: GPMS_URL + url,
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       transformRequest: [
         function(data, headers) {
