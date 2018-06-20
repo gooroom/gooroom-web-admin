@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import { requestPostAPI } from  '../../modules/GrCommonImport';
+import { requestPostAPI } from  '../../components/GrUtils/GrRequester';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";

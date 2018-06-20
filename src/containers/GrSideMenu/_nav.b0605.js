@@ -13,8 +13,7 @@ export default {
           level: 2,
         },
       ]
-    },
-    {
+    }, {
       name: '단말설정',
       url: '/clientconfig',
       icon: 'icon-screen-desktop',
@@ -23,6 +22,11 @@ export default {
         {
           name: '단말등록키',
           url: '/clientconfig/regkey',
+          icon: 'icon-notebook',
+          level: 2,
+        }, {
+          name: '단말프로파일',
+          url: '/clientconfig/profileset',
           icon: 'icon-notebook',
           level: 2,
         }
