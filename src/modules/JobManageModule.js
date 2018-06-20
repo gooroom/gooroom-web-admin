@@ -1,25 +1,25 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
-const GET_PROFILESET_LIST_PENDING = 'clientProfileSet/GET_LIST_PENDING';
-const GET_PROFILESET_LIST_SUCCESS = 'clientProfileSet/GET_LIST_SUCCESS';
-const GET_PROFILESET_LIST_FAILURE = 'clientProfileSet/GET_LIST_FAILURE';
+const GET_JOB_LIST_PENDING = 'jobManage/GET_LIST_PENDING';
+const GET_JOB_LIST_SUCCESS = 'jobManage/GET_LIST_SUCCESS';
+const GET_JOB_LIST_FAILURE = 'jobManage/GET_LIST_FAILURE';
 
-const CREATE_PROFILESET_DATA_PENDING = 'clientProfileSet/CREATE_DATA_PENDING';
-const CREATE_PROFILESET_DATA_SUCCESS = 'clientProfileSet/CREATE_DATA_SUCCESS';
-const CREATE_PROFILESET_DATA_FAILURE = 'clientProfileSet/CREATE_DATA_FAILURE';
+const CREATE_PROFILESET_DATA_PENDING = 'jobManage/CREATE_DATA_PENDING';
+const CREATE_PROFILESET_DATA_SUCCESS = 'jobManage/CREATE_DATA_SUCCESS';
+const CREATE_PROFILESET_DATA_FAILURE = 'jobManage/CREATE_DATA_FAILURE';
 
-const EDIT_PROFILESET_DATA_PENDING = 'clientProfileSet/EDIT_DATA_PENDING';
-const EDIT_PROFILESET_DATA_SUCCESS = 'clientProfileSet/EDIT_DATA_SUCCESS';
-const EDIT_PROFILESET_DATA_FAILURE = 'clientProfileSet/EDIT_DATA_FAILURE';
+const EDIT_PROFILESET_DATA_PENDING = 'jobManage/EDIT_DATA_PENDING';
+const EDIT_PROFILESET_DATA_SUCCESS = 'jobManage/EDIT_DATA_SUCCESS';
+const EDIT_PROFILESET_DATA_FAILURE = 'jobManage/EDIT_DATA_FAILURE';
 
-const DELETE_PROFILESET_DATA_PENDING = 'clientProfileSet/DELETE_DATA_PENDING';
-const DELETE_PROFILESET_DATA_SUCCESS = 'clientProfileSet/DELETE_DATA_SUCCESS';
-const DELETE_PROFILESET_DATA_FAILURE = 'clientProfileSet/DELETE_DATA_FAILURE';
+const DELETE_PROFILESET_DATA_PENDING = 'jobManage/DELETE_DATA_PENDING';
+const DELETE_PROFILESET_DATA_SUCCESS = 'jobManage/DELETE_DATA_SUCCESS';
+const DELETE_PROFILESET_DATA_FAILURE = 'jobManage/DELETE_DATA_FAILURE';
 
-const CREATE_PROFILESET_JOB_PENDING = 'clientProfileSet/CREATE_JOB_PENDING';
-const CREATE_PROFILESET_JOB_SUCCESS = 'clientProfileSet/CREATE_JOB_SUCCESS';
-const CREATE_PROFILESET_JOB_FAILURE = 'clientProfileSet/CREATE_JOB_FAILURE';
+const CREATE_PROFILESET_JOB_PENDING = 'jobManage/CREATE_JOB_PENDING';
+const CREATE_PROFILESET_JOB_SUCCESS = 'jobManage/CREATE_JOB_SUCCESS';
+const CREATE_PROFILESET_JOB_FAILURE = 'jobManage/CREATE_JOB_FAILURE';
 
 const SHOW_PROFILESET_DATA = 'clientProfileSetPopup/SHOW_PROFILESET_DATA';
 const CLOSE_PROFILESET_DATA = 'clientProfileSetPopup/CLOSE_PROFILESET_DATA';
@@ -33,8 +33,17 @@ const initialState = {
     error: false,
     resultMsg: '',
 
+    jobStatus: '',
+    jobStatusOptionList: [
+        { id: "R", value: "R", label: "작업전" },
+        { id: "D", value: "D", label: "작업중" },
+        { id: "C", value: "C", label: "작업완료" },
+        { id: "ALL", value: "ALL", label: "전체" }
+    ],
+
     listData: [],
     listParam: {
+        jobStatus: 'ALL',
         keyword: '',
         orderDir: 'desc',
         orderColumn: 'PROFILE_NO',
@@ -64,9 +73,10 @@ const initialState = {
 
 
 // ...
-export const readClientProfileSetList = (param) => dispatch => {
+export const readJobManageList = (param) => dispatch => {
 
     const resetParam = {
+        jobStatus: param.jobStatus,
         keyword: param.keyword,
         page: param.page,
         start: param.page * param.rowsPerPage,
@@ -75,17 +85,17 @@ export const readClientProfileSetList = (param) => dispatch => {
         orderDir: param.orderDir
     };
 
-    dispatch({type: GET_PROFILESET_LIST_PENDING});
-    return requestPostAPI('readProfileSetListPaged', resetParam).then(
+    dispatch({type: GET_JOB_LIST_PENDING});
+    return requestPostAPI('readJobListPaged', resetParam).then(
         (response) => {
             dispatch({
-                type: GET_PROFILESET_LIST_SUCCESS,
+                type: GET_JOB_LIST_SUCCESS,
                 payload: response
             });
         }
     ).catch(error => {
         dispatch({
-            type: GET_PROFILESET_LIST_FAILURE,
+            type: GET_JOB_LIST_FAILURE,
             payload: error
         });
     });
@@ -202,14 +212,14 @@ export const changeParamValue = (param) => dispatch => {
 
 export default handleActions({
 
-    [GET_PROFILESET_LIST_PENDING]: (state, action) => {
+    [GET_JOB_LIST_PENDING]: (state, action) => {
         return {
             ...state,
             pending: true,
             error: false
         };
     },
-    [GET_PROFILESET_LIST_SUCCESS]: (state, action) => {
+    [GET_JOB_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.payload.data;
 
         let tempListParam = state.listParam;
@@ -217,7 +227,7 @@ export default handleActions({
             rowsFiltered: parseInt(recordsFiltered, 10),
             rowsTotal: parseInt(recordsTotal, 10),
             page: parseInt(draw, 10),
-            rowsPerPage: parseInt(rowLength, 10)
+            rowsPerPage: parseInt(rowLength, 10),
         });
 
         return {
@@ -228,13 +238,15 @@ export default handleActions({
             listParam: tempListParam
         };
     },
-    [GET_PROFILESET_LIST_FAILURE]: (state, action) => {
+    [GET_JOB_LIST_FAILURE]: (state, action) => {
         return {
             ...state,
             pending: false,
             error: true
         };
     },
+    
+    
     [CREATE_PROFILESET_DATA_PENDING]: (state, action) => {
         return {
             ...state,
