@@ -8,6 +8,10 @@ import { connect } from 'react-redux';
 import * as JobManageActions from '../../modules/JobManageModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
+
+import JobInform from './JobInform';
+
+
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
@@ -57,7 +61,7 @@ const pageContentClass = css({
 
 const formClass = css({
   marginBottom: "6px !important",
-    display: "flex"
+  display: "flex"
 }).toString();
 
 const formControlClass = css({
@@ -218,11 +222,12 @@ class JobManage extends Component {
     const selectedItem = this.props.jobManageModule.listData.find(function(element) {
       return element.jobNo == id;
     });
-    // this.props.JobManageActions.showDialog({
-    //   selectedItem: selectedItem,
-    //   dialogType: ClientProfileSetDialog.TYPE_VIEW,
-    //   dialogOpen: true
-    // });
+
+    console.log('selectedItem', selectedItem);
+
+    this.props.JobManageActions.showJobInform({
+      selectedItem: selectedItem,
+    });
   };
 
   
@@ -451,6 +456,7 @@ class JobManage extends Component {
           />
 
         </GrPane>
+        <JobInform />
         <GrConfirm
           open={grConfirmModule.confirmOpen}
           confirmTitle={grConfirmModule.confirmTitle}
