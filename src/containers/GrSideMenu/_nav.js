@@ -12,6 +12,11 @@ export default {
           icon: 'icon-wrench',
           level: 2,
         }, {
+          name: '그룹관리',
+          url: '/clients/clientgroupmanage',
+          icon: 'icon-folder',
+          level: 2,
+        }, {
           name: '패키지관리',
           url: '/package/packagemanage',
           icon: 'icon-layers',
