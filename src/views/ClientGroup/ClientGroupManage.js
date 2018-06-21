@@ -1,31 +1,33 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import * as ClientGroupActions from '../../modules/ClientGroupModule';
+import * as GrConfirmActions from '../../modules/GrConfirmModule';
+
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import { grLayout } from "../../templates/default/GrLayout";
-import { grColor } from "../../templates/default/GrColors";
+import { formatDateToSimple } from '../../components/GrUtils/GrDates';
+import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 import GrPageHeader from "../../containers/GrContent/GrPageHeader";
 
+import GrPane from '../../containers/GrContent/GrPane';
+import GrConfirm from '../../components/GrComponents/GrConfirm';
 import ClientGroupDialog from "../ClientGroup/ClientGroupDialog";
 
-import Card, {
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions
-} from "@material-ui/core/Card";
-
-import Table, {
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel
-} from "@material-ui/core/Table";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TablePagination from "@material-ui/core/TablePagination";
+import TableRow from "@material-ui/core/TableRow";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
 
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
@@ -130,11 +132,11 @@ class ClientGroupManageHead extends Component {
   };
 
   static columnData = [
-    { id: "grpNm", numeric: false, disablePadding: true, label: "그룹이름" },
-    { id: "clientCount", numeric: false, disablePadding: true, label: "단말수" },
-    { id: "desktopConfigNm", numeric: false, disablePadding: true, label: "데스크톱환경" },
-    { id: "clientConfigNm", numeric: false, disablePadding: true, label: "단말정책" },
-    { id: "regDate", numeric: false, disablePadding: true, label: "등록일" }
+    { id: "chGrpNm", numeric: false, disablePadding: true, label: "그룹이름" },
+    { id: "chClientCount", numeric: false, disablePadding: true, label: "단말수" },
+    { id: "chDesktopConfigNm", numeric: false, disablePadding: true, label: "데스크톱환경" },
+    { id: "chClientConfigNm", numeric: false, disablePadding: true, label: "단말정책" },
+    { id: "chRegDate", numeric: false, disablePadding: true, label: "등록일" }
   ];
 
   static getColumnData() {
@@ -143,11 +145,8 @@ class ClientGroupManageHead extends Component {
 
   render() {
     const {
-      onSelectAllClick,
-      order,
-      orderBy,
-      numSelected,
-      rowCount
+      orderDir,
+      orderColumn,
     } = this.props;
 
     return (
@@ -160,11 +159,11 @@ class ClientGroupManageHead extends Component {
                 key={column.id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? "none" : "default"}
-                sortDirection={orderBy === column.id ? order : false}
+                sortDirection={orderColumn === column.id ? orderDir : false}
               >
                 <TableSortLabel
-                  active={orderBy === column.id}
-                  direction={order}
+                  active={orderColumn === column.id}
+                  direction={orderDir}
                   onClick={this.createSortHandler(column.id)}
                 >
                   {column.label}
@@ -187,21 +186,21 @@ class ClientGroupManage extends Component {
 
     this.state = {
       loading: true,
-      clientGroupDialogOpen: false,
-      clientGroupInfo: "",
-      selectedClientId: "",
-      selectedClientGroupId: "",
+      // clientGroupDialogOpen: false,
+      // clientGroupInfo: "",
+      // selectedClientId: "",
+      // selectedClientGroupId: "",
 
-      keyword: "",
+      // keyword: "",
 
-      order: "asc",
-      orderBy: "calories",
-      selected: [],
-      data: [],
-      page: 0,
-      rowsPerPage: 5,
-      rowsTotal: 0,
-      rowsFiltered: 0
+      // order: "asc",
+      // orderBy: "calories",
+      // selected: [],
+      // data: [],
+      // page: 0,
+      // rowsPerPage: 5,
+      // rowsTotal: 0,
+      // rowsFiltered: 0
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -233,7 +232,7 @@ class ClientGroupManage extends Component {
       order: order
     });
 
-    grRequestPromise("https://gpms.gooroom.kr/gpms/readClientGroupList", {
+    grRequestPromise("/gpms/readClientGroupList", {
       searchKey: this.state.keyword,
 
       start: page * rowsPerPage,
@@ -266,15 +265,14 @@ class ClientGroupManage extends Component {
 
   // .................................................
   handleRequestSort = (event, property) => {
-    const orderBy = property;
-    let order = "desc";
-    if (this.state.orderBy === property && this.state.order === "desc") {
-      order = "asc";
+    const { ClientGroupActions, clientGroupModule } = this.props;
+    let orderDir = "desc";
+    if (clientGroupModule.listParam.orderColumn === property && clientGroupModule.listParam.orderDir === "desc") {
+      orderDir = "asc";
     }
-
-    this.fetchData(this.state.page, this.state.rowsPerPage, orderBy, order);
+    ClientGroupActions.readClientGroupList(getMergedListParam(clientGroupModule.listParam, {orderColumn: property, orderDir: orderDir}));
   };
-
+  
   handleSelectAllClick = (event, checked) => {
     if (checked) {
       this.setState({ selected: this.state.data.map(n => n.grpId) });
@@ -304,45 +302,51 @@ class ClientGroupManage extends Component {
     // });
   };
 
-  handleClick = (event, id) => {
-    //event.preventDefault();
-    event.stopPropagation();
-    console.log("handleClick .. " + id);
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
+  handleRowClick = (event, id) => {
+    const { clientGroupModule, ClientGroupActions } = this.props;
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
+    const selectedItem = clientGroupModule.listData.find(function(element) {
+      return element.grpNo == id;
+    });
 
-    this.setState({ selected: newSelected });
+    console.log("handleRowClick .. selectedItem: ", selectedItem);
+
+    ClientGroupActions.showClientGroupInform({
+      selectedItem: selectedItem,
+    });
+    
+    // const { selected } = this.state;
+    // const selectedIndex = selected.indexOf(id);
+    // let newSelected = [];
+
+    // if (selectedIndex === -1) {
+    //   newSelected = newSelected.concat(selected, id);
+    // } else if (selectedIndex === 0) {
+    //   newSelected = newSelected.concat(selected.slice(1));
+    // } else if (selectedIndex === selected.length - 1) {
+    //   newSelected = newSelected.concat(selected.slice(0, -1));
+    // } else if (selectedIndex > 0) {
+    //   newSelected = newSelected.concat(
+    //     selected.slice(0, selectedIndex),
+    //     selected.slice(selectedIndex + 1)
+    //   );
+    // }
+
+    // this.setState({ selected: newSelected });
   };
 
   handleChangePage = (event, page) => {
-    this.fetchData(page, this.state.rowsPerPage, this.state.orderBy, this.state.order);
+    const { ClientGroupActions, clientGroupModule } = this.props;
+    ClientGroupActions.readClientGroupList(getMergedListParam(clientGroupModule.listParam, {page: page}));
   };
 
   handleChangeRowsPerPage = event => {
-    this.fetchData(this.state.page, event.target.value, this.state.orderBy, this.state.order);
+    const { ClientGroupActions, clientGroupModule } = this.props;
+    ClientGroupActions.readClientGroupList(getMergedListParam(clientGroupModule.listParam, {rowsPerPage: event.target.value}));
   };
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
   // .................................................
-
-  // Events...
-  handleChangeKeyword = name => event => {
-    this.setState({ [name]: event.target.value });
-  };
 
   // .................................................
   handleClientGroupDialogClose = value => {
@@ -355,141 +359,186 @@ class ClientGroupManage extends Component {
 
 
   showClientGroupDialog = value => {
-    this.setState({
-      clientGroupDialogOpen: true 
+    // const { clientGroupModule, ClientGroupActions } = this.props;
+
+    // ClientGroupActions.showClientGroupInform({
+    //   selectedItem: selectedItem,
+    // });
+    // this.setState({
+    //   clientGroupDialogOpen: true 
+    // });
+  }
+
+  handleCreateButton = () => {
+
+    this.props.ClientGroupActions.showCreateDialog({
+      dialogType: ClientGroupDialog.TYPE_ADD,
+      dialogOpen: true
+    });
+  }
+
+  // .................................................
+  handleSelectBtnClick = (param) => {
+    const { ClientGroupActions, clientGroupModule } = this.props;
+    ClientGroupActions.readClientGroupList(getMergedListParam(clientGroupModule.listParam, param));
+  };
+  
+  handleKeywordChange = name => event => {
+    const { ClientGroupActions, clientGroupModule } = this.props;
+    const newParam = getMergedListParam(clientGroupModule.listParam, {keyword: event.target.value});
+    ClientGroupActions.changeParamValue({
+      name: 'listParam',
+      value: newParam
     });
   }
 
   render() {
 
-    const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.state;
-    const emptyRows = rowsPerPage - data.length;
+    const { clientGroupModule, grConfirmModule } = this.props;
+    const emptyRows = clientGroupModule.listParam.rowsPerPage - clientGroupModule.listData.length;
+
+    // const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.state;
+    // const emptyRows = rowsPerPage - data.length;
 
     return (
+
       <React.Fragment>
-        <Card>
-          <GrPageHeader path={this.props.location.pathname} />
-          <CardContent className={pageContentClass}>
-          
-            <form className={formClass}>
+        <GrPageHeader path={this.props.location.pathname} />
+        <GrPane>
 
-              <FormControl className={formControlClass} autoComplete="off">
-                <TextField
-                  id="keyword"
-                  label="검색어"
-                  className={textFieldClass}
-                  value={this.state.keyword}
-                  onChange={this.handleChangeKeyword("keyword")}
-                  margin="dense"
-                />
-              </FormControl>
-              <Button
-                className={classNames(buttonClass, formControlClass)}
-                variant="raised"
-                color="primary"
-                onClick={() => {
-                  this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);
-                }}
-              >
-                <Search className={leftIconClass} />
-                조회
-              </Button>
+          {/* data option area */}
+          <form className={formClass}>
+            <FormControl className={formControlClass} autoComplete='off'>
+              <TextField
+                id='keyword'
+                label='검색어'
+                className={textFieldClass}
+                value={clientGroupModule.listParam.keyword}
+                onChange={this.handleKeywordChange('keyword')}
+                margin='dense'
+              />
+            </FormControl>
+            <Button
+              className={classNames(buttonClass, formControlClass)}
+              variant='raised'
+              color='primary'
+              onClick={() => this.handleSelectBtnClick({page: 0})}
+            >
+              <Search className={leftIconClass} />
+              조회
+            </Button>
+            <div className={formEmptyControlClass} />
+            <Button
+              className={classNames(buttonClass, formControlClass)}
+              variant="raised"
+              color="secondary"
+              onClick={() => {
+                this.handleCreateButton();
+              }}
+            >
+              <Add className={leftIconClass} />
+              등록
+            </Button>
+          </form>
 
-              <div className={formEmptyControlClass} />
+          {/* data area */}
+          <div className={tableContainerClass}>
+            <Table className={tableClass}>
 
-              <Button
-                className={classNames(buttonClass, formControlClass)}
-                variant="raised"
-                color="secondary"
-                onClick={() => {
-                  this.showClientGroupDialog();
-                }}
-              >
-                <Add className={leftIconClass} />
-                등록
-              </Button>
-            </form>
-
-            <div className={tableContainerClass}>
-              <Table className={tableClass}>
-                <ClientGroupManageHead
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={this.handleSelectAllClick}
-                  onRequestSort={this.handleRequestSort}
-                  rowCount={data.length}
-                />
-                <TableBody>
-                  {data
-                    .map(n => {
-                      const isSelected = this.isSelected(n.grpId);
-                      return (
-                        <TableRow
-                          className={tableRowClass}
-                          hover
-                          onClick={event => this.handleClick(event, n.grpId)}
-                          role="checkbox"
-                          aria-checked={isSelected}
-                          tabIndex={-1}
-                          key={n.grpId}
-                          selected={isSelected}
-                        >
-                          <TableCell className={tableCellClass}>
-                            {n.grpNm}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientCount}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.desktopConfigNm}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientConfigNm}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.regDate}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 32 * emptyRows }}>
-                      <TableCell
-                        colSpan={ClientGroupManageHead.getColumnData().length + 1}
-                        className={tableCellClass}
-                      />
+              <ClientGroupManageHead
+                orderDir={clientGroupModule.listParam.orderDir}
+                orderColumn={clientGroupModule.listParam.orderColumn}
+                onRequestSort={this.handleRequestSort}
+              />
+              <TableBody>
+              {clientGroupModule.listData.map(n => {
+                  return (
+                    <TableRow
+                      className={tableRowClass}
+                      hover
+                      onClick={event => this.handleRowClick(event, n.grpId)}
+                      key={n.grpId}
+                    >
+                      <TableCell className={tableCellClass}>
+                        {n.grpNm}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.clientCount}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.desktopConfigNm}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.clientConfigNm}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
+                      </TableCell>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                  );
+                })}
 
-            <TablePagination
-              component="div"
-              count={rowsFiltered}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              backIconButtonProps={{
-                "aria-label": "Previous Page"
-              }}
-              nextIconButtonProps={{
-                "aria-label": "Next Page"
-              }}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
-          </CardContent>
-        </Card>
+                {emptyRows > 0 && (
+                <TableRow style={{ height: 32 * emptyRows }}>
+                  <TableCell
+                    colSpan={ClientGroupManageHead.getColumnData().length + 1}
+                    className={tableCellClass}
+                  />
+                </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+
+          <TablePagination
+            component='div'
+            count={clientGroupModule.listParam.rowsFiltered}
+            rowsPerPage={clientGroupModule.listParam.rowsPerPage}
+            rowsPerPageOptions={clientGroupModule.listParam.rowsPerPageOptions}
+            page={clientGroupModule.listParam.page}
+            backIconButtonProps={{
+              'aria-label': 'Previous Page'
+            }}
+            nextIconButtonProps={{
+              'aria-label': 'Next Page'
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+
+        </GrPane>
+        <GrConfirm
+          open={grConfirmModule.confirmOpen}
+          confirmTitle={grConfirmModule.confirmTitle}
+          confirmMsg={grConfirmModule.confirmMsg}
+        />
         <ClientGroupDialog 
-          open={this.state.clientGroupDialogOpen}
+          open={clientGroupModule.informOpen}
           onClose={this.handleClientGroupDialogClose}
         />
       </React.Fragment>
-      
+
+
     );
   }
 }
 
-export default ClientGroupManage;
+
+const mapStateToProps = (state) => ({
+
+  clientGroupModule: state.ClientGroupModule,
+  grConfirmModule: state.GrConfirmModule,
+
+});
+
+
+const mapDispatchToProps = (dispatch) => ({
+
+  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientGroupManage);
+
+

@@ -1,36 +1,14 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
-const GET_JOB_LIST_PENDING = 'jobManage/GET_LIST_PENDING';
-const GET_JOB_LIST_SUCCESS = 'jobManage/GET_LIST_SUCCESS';
-const GET_JOB_LIST_FAILURE = 'jobManage/GET_LIST_FAILURE';
+const GET_CLIENT_LIST_PENDING = 'clientManage/GET_LIST_PENDING';
+const GET_CLIENT_LIST_SUCCESS = 'clientManage/GET_LIST_SUCCESS';
+const GET_CLIENT_LIST_FAILURE = 'clientManage/GET_LIST_FAILURE';
 
-const SHOW_JOBINFORM_DATA = 'jobManage/SHOW_JOBINFORM_DATA';
+const GET_GROUP_LIST_PENDING = 'groupManage/GET_LIST_PENDING';
+const GET_GROUP_LIST_SUCCESS = 'groupManage/GET_LIST_SUCCESS';
+const GET_GROUP_LIST_FAILURE = 'groupManage/GET_LIST_FAILURE';
 
-const GET_TARGET_LIST_PENDING = 'jobManage/GET_TARGETLIST_PENDING';
-const GET_TARGET_LIST_SUCCESS = 'jobManage/GET_TARGETLIST_SUCCESS';
-const GET_TARGET_LIST_FAILURE = 'jobManage/GET_TARGETLIST_FAILURE';
-
-
-// const CREATE_PROFILESET_DATA_PENDING = 'jobManage/CREATE_DATA_PENDING';
-// const CREATE_PROFILESET_DATA_SUCCESS = 'jobManage/CREATE_DATA_SUCCESS';
-// const CREATE_PROFILESET_DATA_FAILURE = 'jobManage/CREATE_DATA_FAILURE';
-
-// const EDIT_PROFILESET_DATA_PENDING = 'jobManage/EDIT_DATA_PENDING';
-// const EDIT_PROFILESET_DATA_SUCCESS = 'jobManage/EDIT_DATA_SUCCESS';
-// const EDIT_PROFILESET_DATA_FAILURE = 'jobManage/EDIT_DATA_FAILURE';
-
-// const DELETE_PROFILESET_DATA_PENDING = 'jobManage/DELETE_DATA_PENDING';
-// const DELETE_PROFILESET_DATA_SUCCESS = 'jobManage/DELETE_DATA_SUCCESS';
-// const DELETE_PROFILESET_DATA_FAILURE = 'jobManage/DELETE_DATA_FAILURE';
-
-// const CREATE_PROFILESET_JOB_PENDING = 'jobManage/CREATE_JOB_PENDING';
-// const CREATE_PROFILESET_JOB_SUCCESS = 'jobManage/CREATE_JOB_SUCCESS';
-// const CREATE_PROFILESET_JOB_FAILURE = 'jobManage/CREATE_JOB_FAILURE';
-
-// const CLOSE_PROFILESET_DATA = 'clientProfileSetPopup/CLOSE_PROFILESET_DATA';
-// const CHG_PROFILESET_PARAM = 'clientProfileSetPopup/CHG_PROFILESET_PARAM';
-// const SET_PROFILESET_SELECTED = 'clientProfileSetPopup/SET_PROFILESET_SELECTED';
 
 
 // ...
@@ -38,13 +16,6 @@ const initialState = {
     pending: false,
     error: false,
     resultMsg: '',
-
-    jobStatusOptionList: [
-        { id: "R", value: "R", label: "작업전" },
-        { id: "D", value: "D", label: "작업중" },
-        { id: "C", value: "C", label: "작업완료" },
-        { id: "ALL", value: "ALL", label: "전체" }
-    ],
 
     listData: [],
     listParam: {
@@ -89,17 +60,17 @@ export const readJobManageList = (param) => dispatch => {
         orderDir: param.orderDir
     };
 
-    dispatch({type: GET_JOB_LIST_PENDING});
+    dispatch({type: GET_GROUP_LIST_PENDING});
     return requestPostAPI('readJobListPaged', resetParam).then(
         (response) => {
             dispatch({
-                type: GET_JOB_LIST_SUCCESS,
+                type: GET_GROUP_LIST_SUCCESS,
                 payload: response
             });
         }
     ).catch(error => {
         dispatch({
-            type: GET_JOB_LIST_FAILURE,
+            type: GET_GROUP_LIST_FAILURE,
             payload: error
         });
     });
@@ -257,14 +228,14 @@ export const showJobInform = (param) => dispatch => {
 
 export default handleActions({
 
-    [GET_JOB_LIST_PENDING]: (state, action) => {
+    [GET_GROUP_LIST_PENDING]: (state, action) => {
         return {
             ...state,
             pending: true,
             error: false
         };
     },
-    [GET_JOB_LIST_SUCCESS]: (state, action) => {
+    [GET_GROUP_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.payload.data;
 
         let tempListParam = state.listParam;
@@ -283,7 +254,7 @@ export default handleActions({
             listParam: tempListParam
         };
     },
-    [GET_JOB_LIST_FAILURE]: (state, action) => {
+    [GET_GROUP_LIST_FAILURE]: (state, action) => {
         return {
             ...state,
             pending: false,

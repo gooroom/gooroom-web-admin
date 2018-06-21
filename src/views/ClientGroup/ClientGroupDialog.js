@@ -6,12 +6,17 @@ import { withTheme } from "@material-ui/core/styles";
 
 import { css } from "glamor";
 
-import Dialog, {DialogTitle, DialogActions } from "@material-ui/core/Dialog";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
 import Typography from '@material-ui/core/Typography';
-import Card, { CardHeader, CardMedia, CardContent, CardActions } from "@material-ui/core/Card";
+
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 //
 //  ## Style ########## ########## ########## ########## ##########
@@ -46,6 +51,12 @@ const ruleContentClass = css({
 //  ## Dialog ########## ########## ########## ########## ##########
 //
 class ClientGroupDialog extends Component {
+    
+    static TYPE_ADD = 'ADD';
+    static TYPE_VIEW = 'VIEW';
+    static TYPE_EDIT = 'EDIT';
+    static TYPE_PROFILE = 'PROFILE';
+
     constructor(props) {
         super(props);
 

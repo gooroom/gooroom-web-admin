@@ -10,6 +10,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
+import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
 
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
@@ -194,16 +195,10 @@ class ClientProfileSet extends Component {
     }
   }
 
-  getMergedListParam = (param) => {
-    let tempListParam = this.props.profileSetModule.listParam;
-    Object.assign(tempListParam, param);
-    return tempListParam;
-  }
-
   // .................................................
   handleSelectBtnClick = (param) => {
-    const { ClientProfileSetActions } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam(param));
+    const { ClientProfileSetActions, profileSetModule } = this.props;
+    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, param));
   };
   
   handleCreateButton = () => {
@@ -273,7 +268,7 @@ class ClientProfileSet extends Component {
       this.props.ClientProfileSetActions.deleteClientProfileSetData({
         profile_no: profileSetModule.selectedItem.profileNo
       }).then(() => {
-          this.props.ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam({}));
+          this.props.ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {}));
         }, () => {
         });
     }
@@ -286,15 +281,15 @@ class ClientProfileSet extends Component {
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
 
-    const { ClientProfileSetActions } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam({page: page}));
+    const { ClientProfileSetActions, profileSetModule } = this.props;
+    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = (event) => {
 
-    const { ClientProfileSetActions } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam({rowsPerPage: event.target.value}));
+    const { ClientProfileSetActions, profileSetModule } = this.props;
+    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
@@ -306,13 +301,13 @@ class ClientProfileSet extends Component {
     if (profileSetModule.listParam.orderColumn === property && profileSetModule.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientProfileSetActions.readClientProfileSetList(this.getMergedListParam({orderColumn: property, orderDir: orderDir}));
+    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {orderColumn: property, orderDir: orderDir}));
   }
   // .................................................
 
   handleKeywordChange = name => event => {
-    const { ClientProfileSetActions } = this.props;
-    const newParam = this.getMergedListParam({keyword: event.target.value});
+    const { ClientProfileSetActions, profileSetModule } = this.props;
+    const newParam = getMergedListParam(profileSetModule.listParam, {keyword: event.target.value});
     ClientProfileSetActions.changeParamValue({
       name: 'listParam',
       value: newParam
