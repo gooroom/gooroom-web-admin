@@ -53,6 +53,7 @@ const initialState = {
     },
 
     dialogOpen: false,
+    dialogType: '',
 
     profileName: '',
     profileComment: '',

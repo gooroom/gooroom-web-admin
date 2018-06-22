@@ -158,14 +158,14 @@ class ClientProfileSetHead extends Component {
               >
               {(column.isOrder) &&
                 <TableSortLabel
-                  active={orderColumn === column.orderColNm}
+                  active={orderColumn === column.id}
                   direction={orderDir}
                   onClick={this.createSortHandler(column.id)}
                 >
                   {column.label}
                 </TableSortLabel>
               }
-              {(column.orderColNm === '-') &&
+              {(!column.isOrder) &&
                   <p>{column.label}</p>
               }
               </TableCell>

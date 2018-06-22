@@ -21,6 +21,8 @@ import GrPane from '../../containers/GrContent/GrPane';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
 import ClientGroupDialog from "../ClientGroup/ClientGroupDialog";
 
+import ClientGroupInform from './ClientGroupInform';
+
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -34,8 +36,10 @@ import FormControl from "@material-ui/core/FormControl";
 
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
-import Add from "@material-ui/icons/Add";
-
+import AddIcon from '@material-ui/icons/Add';
+import BuildIcon from '@material-ui/icons/Build';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 
 //
@@ -121,6 +125,18 @@ const tableCellClass = css({
   cursor: "pointer"
 }).toString();
 
+const actButtonClass = css({
+  margin: '5px !important',
+  height: '24px !important',
+  minHeight: '24px !important',
+  width: '24px !important',
+}).toString();
+
+const toolIconClass = css({
+  height: '16px !important',
+}).toString();
+
+
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -132,11 +148,12 @@ class ClientGroupManageHead extends Component {
   };
 
   static columnData = [
-    { id: "chGrpNm", numeric: false, disablePadding: true, label: "그룹이름" },
-    { id: "chClientCount", numeric: false, disablePadding: true, label: "단말수" },
-    { id: "chDesktopConfigNm", numeric: false, disablePadding: true, label: "데스크톱환경" },
-    { id: "chClientConfigNm", numeric: false, disablePadding: true, label: "단말정책" },
-    { id: "chRegDate", numeric: false, disablePadding: true, label: "등록일" }
+    { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
+    { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
+    { id: "chDesktopConfigNm", isOrder: true, numeric: false, disablePadding: true, label: "데스크톱환경" },
+    { id: "chClientConfigNm", isOrder: true, numeric: false, disablePadding: true, label: "단말정책" },
+    { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
   ];
 
   static getColumnData() {
@@ -161,13 +178,18 @@ class ClientGroupManageHead extends Component {
                 padding={column.disablePadding ? "none" : "default"}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
-                <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >
-                  {column.label}
-                </TableSortLabel>
+                {(column.isOrder) &&
+                  <TableSortLabel
+                    active={orderColumn === column.id}
+                    direction={orderDir}
+                    onClick={this.createSortHandler(column.id)}
+                  >
+                    {column.label}
+                  </TableSortLabel>
+                }
+                {(!column.isOrder) &&
+                    <p>{column.label}</p>
+                }
               </TableCell>
             );
           }, this)}
@@ -306,7 +328,7 @@ class ClientGroupManage extends Component {
     const { clientGroupModule, ClientGroupActions } = this.props;
 
     const selectedItem = clientGroupModule.listData.find(function(element) {
-      return element.grpNo == id;
+      return element.grpId == id;
     });
 
     console.log("handleRowClick .. selectedItem: ", selectedItem);
@@ -348,34 +370,63 @@ class ClientGroupManage extends Component {
   isSelected = id => this.state.selected.indexOf(id) !== -1;
   // .................................................
 
-  // .................................................
-  handleClientGroupDialogClose = value => {
-    this.setState({ 
-      clientGroupInfo: value, 
-      clientGroupDialogOpen: false 
-    });
-  };
-
-
-
-  showClientGroupDialog = value => {
-    // const { clientGroupModule, ClientGroupActions } = this.props;
-
-    // ClientGroupActions.showClientGroupInform({
-    //   selectedItem: selectedItem,
-    // });
-    // this.setState({
-    //   clientGroupDialogOpen: true 
-    // });
-  }
-
+  // add
   handleCreateButton = () => {
-
-    this.props.ClientGroupActions.showCreateDialog({
+    this.props.ClientGroupActions.toggleCreateDialog({
       dialogType: ClientGroupDialog.TYPE_ADD,
       dialogOpen: true
     });
   }
+
+  // edit
+  handleEditClick = (event, id) => {
+    event.stopPropagation();
+    const selectedItem = this.props.clientGroupModule.listData.find(function(element) {
+      return element.grpId == id;
+    });
+    this.props.ClientGroupActions.toggleEditDialog({
+      selectedItem: selectedItem,
+      dialogType: ClientGroupDialog.TYPE_EDIT,
+      dialogOpen: true,
+      groupName: selectedItem.grpNm, 
+      groupComment: selectedItem.comment, 
+      clientConfigId: selectedItem.clientConfigId,
+      isDefault: '',
+    });
+  };
+
+  // delete
+  handleDeleteClick = (event, id) => {
+    event.stopPropagation();
+    const selectedItem = this.props.clientGroupModule.listData.find(function(element) {
+      return element.grpId == id;
+    });
+    this.props.ClientGroupActions.setSelectedItem({
+      selectedItem: selectedItem
+    });
+    const re = this.props.GrConfirmActions.showConfirm({
+      confirmTitle: '단말그룹 삭제',
+      confirmMsg: '단말그룹(' + selectedItem.grpNm + ')을 삭제하시겠습니까?',
+      handleConfirmResult: this.handleDeleteConfirmResult,
+      confirmOpen: true
+    });
+  };
+
+  handleDeleteConfirmResult = (confirmValue) => {
+    const { clientGroupModule, ClientGroupActions } = this.props;
+    if(confirmValue) {
+      ClientGroupActions.deleteClientProfileSetData({
+        profile_no: clientGroupModule.selectedItem.profileNo
+      }).then(() => {
+        ClientGroupActions.readClientGroupList(clientGroupModule.listParam);
+        }, () => {
+        });
+    }
+
+    this.setState({ 
+      confirmOpen: false
+    });
+  };
 
   // .................................................
   handleSelectBtnClick = (param) => {
@@ -396,9 +447,6 @@ class ClientGroupManage extends Component {
 
     const { clientGroupModule, grConfirmModule } = this.props;
     const emptyRows = clientGroupModule.listParam.rowsPerPage - clientGroupModule.listData.length;
-
-    // const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.state;
-    // const emptyRows = rowsPerPage - data.length;
 
     return (
 
@@ -436,7 +484,7 @@ class ClientGroupManage extends Component {
                 this.handleCreateButton();
               }}
             >
-              <Add className={leftIconClass} />
+              <AddIcon className={leftIconClass} />
               등록
             </Button>
           </form>
@@ -474,6 +522,14 @@ class ClientGroupManage extends Component {
                       <TableCell className={tableCellClass}>
                         {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
                       </TableCell>
+                      <TableCell className={tableCellClass}>
+                        <Button variant='fab' color='secondary' aria-label='edit' className={actButtonClass} onClick={event => this.handleEditClick(event, n.grpId)}>
+                          <BuildIcon className={toolIconClass} />
+                        </Button>
+                        <Button variant='fab' color='secondary' aria-label='delete' className={actButtonClass} onClick={event => this.handleDeleteClick(event, n.grpId)}>
+                          <DeleteIcon className={toolIconClass} />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -507,14 +563,14 @@ class ClientGroupManage extends Component {
           />
 
         </GrPane>
+        <ClientGroupInform />
         <GrConfirm
           open={grConfirmModule.confirmOpen}
           confirmTitle={grConfirmModule.confirmTitle}
           confirmMsg={grConfirmModule.confirmMsg}
         />
         <ClientGroupDialog 
-          open={clientGroupModule.informOpen}
-          onClose={this.handleClientGroupDialogClose}
+          open={clientGroupModule.dialogOpen}
         />
       </React.Fragment>
 

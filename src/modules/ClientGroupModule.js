@@ -6,7 +6,21 @@ const GET_GROUP_LIST_PENDING = 'groupManage/GET_LIST_PENDING';
 const GET_GROUP_LIST_SUCCESS = 'groupManage/GET_LIST_SUCCESS';
 const GET_GROUP_LIST_FAILURE = 'groupManage/GET_LIST_FAILURE';
 
+const CREATE_CLIENTGROUP_PENDING = 'groupManage/CREATE_CLIENTGROUP_PENDING';
+const CREATE_CLIENTGROUP_SUCCESS = 'groupManage/CREATE_CLIENTGROUP_SUCCESS';
+const CREATE_CLIENTGROUP_FAILURE = 'groupManage/CREATE_CLIENTGROUP_FAILURE';
+
+const EDIT_CLIENTGROUP_PENDING = 'groupManage/EDIT_CLIENTGROUP_PENDING';
+const EDIT_CLIENTGROUP_SUCCESS = 'groupManage/EDIT_CLIENTGROUP_SUCCESS';
+const EDIT_CLIENTGROUP_FAILURE = 'groupManage/EDIT_CLIENTGROUP_FAILURE';
+
 const SHOW_CLIENTGROUP_INFORM = 'groupManage/SHOW_CLIENTGROUP_INFORM';
+const TOGGLE_CLIENTGROUP_DIALOG = 'groupManage/TOGGLE_CLIENTGROUP_DIALOG';
+
+const SET_CLIENTGROUP_SELECTED = 'groupManage/SET_CLIENTGROUP_SELECTED';
+
+const TOGGLE_CLIENTGROUP_POPUP_SHOW = 'groupManage/TOGGLE_CLIENTGROUP_POPUP_SHOW';
+const TOGGLE_CLIENTGROUP_POPUP_CLOSE = 'groupManage/TOGGLE_CLIENTGROUP_POPUP_CLOSE';
 
 const CHG_PARAM_VALUE = 'groupManage/CHG_PARAM_VALUE';
 
@@ -30,6 +44,13 @@ const initialState = {
 
     selectedItem: {},
     informOpen: false,
+    dialogOpen: false,
+    dialogType: '',
+
+    groupName: '',
+    groupComment: '',
+    clientConfigId: '',
+    isDefault: ''
 };
 
 
@@ -68,59 +89,77 @@ export const showClientGroupInform = (param) => dispatch => {
     });
 };
 
-export const showCreateDialog = (param) => dispatch => {
+// export const showCreateDialog = (param) => dispatch => {
+//     return dispatch({
+//         type: TOGGLE_CLIENTGROUP_POPUP_SHOW,
+//         payload: param
+//     });
+// };
+
+// export const closeCreateDialog = (param) => dispatch => {
+//     return dispatch({
+//         type: TOGGLE_CLIENTGROUP_POPUP_CLOSE,
+//         payload: param
+//     });
+// };
+
+export const toggleCreateDialog = (param) => dispatch => {
     return dispatch({
-        type: SHOW_CLIENTGROUP_CREATE,
+        type: TOGGLE_CLIENTGROUP_DIALOG,
+        payload: param
+    });
+};
+
+export const toggleEditDialog = (param) => dispatch => {
+    return dispatch({
+        type: TOGGLE_CLIENTGROUP_DIALOG,
         payload: param
     });
 };
 
 
+// create (add)
+export const createClientGroupData = (param) => dispatch => {
+    dispatch({type: CREATE_CLIENTGROUP_PENDING});
+    return requestPostAPI('createClientGroup', param).then(
+        (response) => {
+            if(response.data.status.result && response.data.status.result === 'success') {
+                dispatch({
+                    type: CREATE_CLIENTGROUP_SUCCESS,
+                    payload: response
+                });
+            } else {
+                dispatch({
+                    type: CREATE_CLIENTGROUP_FAILURE,
+                    payload: response
+                });
+            }
+        }
+    ).catch(error => {
+        dispatch({
+            type: CREATE_CLIENTGROUP_FAILURE,
+            payload: error
+        });
+    });
+};
 
-
-
-// // create (add)
-// export const createClientProfileSetData = (param) => dispatch => {
-//     dispatch({type: CREATE_PROFILESET_DATA_PENDING});
-//     return requestPostAPI('createProfileSet', param).then(
-//         (response) => {
-//             if(response.data.status.result && response.data.status.result === 'success') {
-//                 dispatch({
-//                     type: CREATE_PROFILESET_DATA_SUCCESS,
-//                     payload: response
-//                 });
-//             } else {
-//                 dispatch({
-//                     type: CREATE_PROFILESET_DATA_FAILURE,
-//                     payload: response
-//                 });
-//             }
-//         }
-//     ).catch(error => {
-//         dispatch({
-//             type: CREATE_PROFILESET_DATA_FAILURE,
-//             payload: error
-//         });
-//     });
-// };
-
-// // edit
-// export const editClientProfileSetData = (param) => dispatch => {
-//     dispatch({type: EDIT_PROFILESET_DATA_PENDING});
-//     return requestPostAPI('editProfileSetData', param).then(
-//         (response) => {
-//             dispatch({
-//                 type: EDIT_PROFILESET_DATA_SUCCESS,
-//                 payload: response
-//             });
-//         }
-//     ).catch(error => {
-//         dispatch({
-//             type: EDIT_PROFILESET_DATA_FAILURE,
-//             payload: error
-//         });
-//     });
-// };
+// edit
+export const editClientGroupData = (param) => dispatch => {
+    dispatch({type: EDIT_CLIENTGROUP_PENDING});
+    return requestPostAPI('updateClientGroup', param).then(
+        (response) => {
+            dispatch({
+                type: EDIT_CLIENTGROUP_SUCCESS,
+                payload: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: EDIT_CLIENTGROUP_FAILURE,
+            payload: error
+        });
+    });
+};
 
 // // delete
 // export const deleteClientProfileSetData = (param) => dispatch => {
@@ -159,20 +198,12 @@ export const showCreateDialog = (param) => dispatch => {
 // };
 
 
-// export const setSelectedItem = (param) => dispatch => {
-//     return dispatch({
-//         type: SET_PROFILESET_SELECTED,
-//         payload: param
-//     });
-// };
-
-
-// export const closeDialog = (param) => dispatch => {
-//     return dispatch({
-//         type: CLOSE_PROFILESET_DATA,
-//         payload: param
-//     });
-// };
+export const setSelectedItem = (param) => dispatch => {
+    return dispatch({
+        type: SET_CLIENTGROUP_SELECTED,
+        payload: param
+    });
+};
 
 export const changeParamValue = (param) => dispatch => {
     return dispatch({
@@ -180,7 +211,6 @@ export const changeParamValue = (param) => dispatch => {
         payload: param
     });
 };
-
 
 export default handleActions({
 
@@ -217,6 +247,7 @@ export default handleActions({
             error: true
         };
     },
+
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
         return {
             ...state,
@@ -224,31 +255,64 @@ export default handleActions({
             informOpen: true
         };
     },
+    [TOGGLE_CLIENTGROUP_DIALOG]: (state, action) => {
+        return {
+            ...state,
+            dialogOpen: (action.payload.dialogOpen) ? true: false, 
+            dialogType: (action.payload.dialogType) ? action.payload.dialogType: '',  
+            groupName: (action.payload.groupName) ? action.payload.groupName: '', 
+            groupComment: (action.payload.groupComment) ? action.payload.groupComment: '', 
+            clientConfigId: (action.payload.clientConfigId) ? action.payload.clientConfigId: '', 
+            isDefault: (action.payload.isDefault) ? action.payload.isDefault: '',
+            selectedItem: (action.payload.selectedItem) ? action.payload.selectedItem: '',
+        };
+    },
+    
+    [CREATE_CLIENTGROUP_PENDING]: (state, action) => {
+        return {
+            ...state,
+            pending: true,
+            error: false
+        };
+    },
+    [CREATE_CLIENTGROUP_SUCCESS]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: false,
+        };
+    },
+    [CREATE_CLIENTGROUP_FAILURE]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: true,
+            resultMsg: action.payload.data.status.message
+        };
+    },
 
-    
-    
-    // [CREATE_PROFILESET_DATA_PENDING]: (state, action) => {
-    //     return {
-    //         ...state,
-    //         pending: true,
-    //         error: false
-    //     };
-    // },
-    // [CREATE_PROFILESET_DATA_SUCCESS]: (state, action) => {
-    //     return {
-    //         ...state,
-    //         pending: false,
-    //         error: false,
-    //     };
-    // },
-    // [CREATE_PROFILESET_DATA_FAILURE]: (state, action) => {
-    //     return {
-    //         ...state,
-    //         pending: false,
-    //         error: true,
-    //         resultMsg: action.payload.data.status.message
-    //     };
-    // },
+    [EDIT_CLIENTGROUP_PENDING]: (state, action) => {
+        return {
+            ...state,
+            pending: true,
+            error: false
+        };
+    },
+    [EDIT_CLIENTGROUP_SUCCESS]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: false,
+        };
+    },
+    [EDIT_CLIENTGROUP_FAILURE]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: true,
+            resultMsg: action.payload.data.status.message
+        };
+    },
 
     [CHG_PARAM_VALUE]: (state, action) => {
         return {
@@ -257,12 +321,13 @@ export default handleActions({
         }
     },
     
-    // [SET_PROFILESET_SELECTED]: (state, action) => {
-    //     return {
-    //         ...state,
-    //         selectedItem: action.payload.selectedItem
-    //     }
-    // },
+    [SET_CLIENTGROUP_SELECTED]: (state, action) => {
+        return {
+            ...state,
+            selectedItem: action.payload.selectedItem
+        }
+    },
+
     // [CREATE_PROFILESET_JOB_PENDING]: (state, action) => {
     //     return {
     //         ...state,
