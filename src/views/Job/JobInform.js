@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 //import classNames from "classnames";
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-
-import { withStyles } from '@material-ui/core/styles';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import { formatDateToSimple } from '../../components/GrUtils/GrDates';
+import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+
+import { withStyles } from '@material-ui/core/styles';
 
 import * as JobManageActions from '../../modules/JobManageModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
@@ -146,12 +147,6 @@ class JobTargetListHead extends Component {
 //
 class JobInform extends Component {
 
-  getMergedTargetListParam = (param) => {
-    let tempListParam = this.props.jobManageModule.targetListParam;
-    Object.assign(tempListParam, param);
-    return tempListParam;
-  }
-
   // .................................................
   handleRequestSort = (event, property) => {
 
@@ -160,7 +155,7 @@ class JobInform extends Component {
     if (jobManageModule.listParam.orderColumn === property && jobManageModule.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    JobManageActions.readJobTargetList(this.getMergedTargetListParam({orderColumn: property, orderDir: orderDir}));
+    JobManageActions.readJobTargetList(getMergedListParam(jobManageModule.targetListParam, {orderColumn: property, orderDir: orderDir}));
   };
 
   render() {

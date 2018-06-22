@@ -206,8 +206,6 @@ class ClientProfileSetDialog extends Component {
         const { profileSetModule, dialogType } = this.props;
 
         let title = "";
-        let buttons = {};
-
         if(dialogType === ClientProfileSetDialog.TYPE_ADD) {
             title = "단말 프로파일 등록";
         } else if(dialogType === ClientProfileSetDialog.TYPE_VIEW) {
