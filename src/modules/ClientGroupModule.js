@@ -14,6 +14,10 @@ const EDIT_CLIENTGROUP_PENDING = 'groupManage/EDIT_CLIENTGROUP_PENDING';
 const EDIT_CLIENTGROUP_SUCCESS = 'groupManage/EDIT_CLIENTGROUP_SUCCESS';
 const EDIT_CLIENTGROUP_FAILURE = 'groupManage/EDIT_CLIENTGROUP_FAILURE';
 
+const DELETE_CLIENTGROUP_PENDING = 'groupManage/DELETE_CLIENTGROUP_PENDING';
+const DELETE_CLIENTGROUP_SUCCESS = 'groupManage/DELETE_CLIENTGROUP_SUCCESS';
+const DELETE_CLIENTGROUP_FAILURE = 'groupManage/DELETE_CLIENTGROUP_FAILURE';
+
 const SHOW_CLIENTGROUP_INFORM = 'groupManage/SHOW_CLIENTGROUP_INFORM';
 const TOGGLE_CLIENTGROUP_DIALOG = 'groupManage/TOGGLE_CLIENTGROUP_DIALOG';
 
@@ -161,23 +165,23 @@ export const editClientGroupData = (param) => dispatch => {
     });
 };
 
-// // delete
-// export const deleteClientProfileSetData = (param) => dispatch => {
-//     dispatch({type: DELETE_PROFILESET_DATA_PENDING});
-//     return requestPostAPI('deleteProfileSetData', param).then(
-//         (response) => {
-//             dispatch({
-//                 type: DELETE_PROFILESET_DATA_SUCCESS,
-//                 payload: response
-//             });
-//         }
-//     ).catch(error => {
-//         dispatch({
-//             type: DELETE_PROFILESET_DATA_FAILURE,
-//             payload: error
-//         });
-//     });
-// };
+// delete
+export const deleteClientGroupData = (param) => dispatch => {
+    dispatch({type: DELETE_CLIENTGROUP_PENDING});
+    return requestPostAPI('deleteClientGroup', param).then(
+        (response) => {
+            dispatch({
+                type: DELETE_CLIENTGROUP_SUCCESS,
+                payload: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: DELETE_CLIENTGROUP_FAILURE,
+            payload: error
+        });
+    });
+};
 
 // // create profile job
 // export const createClientProfileSetJob = (param) => dispatch => {
@@ -314,6 +318,29 @@ export default handleActions({
         };
     },
 
+    [DELETE_CLIENTGROUP_PENDING]: (state, action) => {
+        return {
+            ...state,
+            pending: true,
+            error: false
+        };
+    },
+    [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: false,
+        };
+    },
+    [DELETE_CLIENTGROUP_FAILURE]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: true,
+            resultMsg: action.payload.data.status.message
+        };
+    },
+
     [CHG_PARAM_VALUE]: (state, action) => {
         return {
             ...state,
@@ -326,29 +353,7 @@ export default handleActions({
             ...state,
             selectedItem: action.payload.selectedItem
         }
-    },
-
-    // [CREATE_PROFILESET_JOB_PENDING]: (state, action) => {
-    //     return {
-    //         ...state,
-    //         pending: true,
-    //         error: false
-    //     };
-    // },
-    // [CREATE_PROFILESET_JOB_SUCCESS]: (state, action) => {
-    //     return {
-    //         ...state,
-    //         pending: false,
-    //         error: false,
-    //     };
-    // },
-    // [CREATE_PROFILESET_JOB_FAILURE]: (state, action) => {
-    //     return {
-    //         ...state,
-    //         pending: false,
-    //         error: true
-    //     };
-    // },
+    }
 
 
 }, initialState);

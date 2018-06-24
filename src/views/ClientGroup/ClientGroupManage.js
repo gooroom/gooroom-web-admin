@@ -415,14 +415,13 @@ class ClientGroupManage extends Component {
   handleDeleteConfirmResult = (confirmValue) => {
     const { clientGroupModule, ClientGroupActions } = this.props;
     if(confirmValue) {
-      ClientGroupActions.deleteClientProfileSetData({
-        profile_no: clientGroupModule.selectedItem.profileNo
+      ClientGroupActions.deleteClientGroupData({
+        groupId: clientGroupModule.selectedItem.grpId
       }).then(() => {
         ClientGroupActions.readClientGroupList(clientGroupModule.listParam);
         }, () => {
         });
     }
-
     this.setState({ 
       confirmOpen: false
     });
@@ -446,7 +445,7 @@ class ClientGroupManage extends Component {
   render() {
 
     const { clientGroupModule, grConfirmModule } = this.props;
-    const emptyRows = clientGroupModule.listParam.rowsPerPage - clientGroupModule.listData.length;
+    const emptyRows = 0;// = clientGroupModule.listParam.rowsPerPage - clientGroupModule.listData.length;
 
     return (
 
@@ -564,11 +563,7 @@ class ClientGroupManage extends Component {
 
         </GrPane>
         <ClientGroupInform />
-        <GrConfirm
-          open={grConfirmModule.confirmOpen}
-          confirmTitle={grConfirmModule.confirmTitle}
-          confirmMsg={grConfirmModule.confirmMsg}
-        />
+        <GrConfirm />
         <ClientGroupDialog 
           open={clientGroupModule.dialogOpen}
         />

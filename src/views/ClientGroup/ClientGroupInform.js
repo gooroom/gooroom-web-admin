@@ -103,7 +103,7 @@ class ClientGroupInform extends Component {
   render() {
 
     const { clientGroupModule } = this.props;
-    console.log('ClientGroupInform-render clientGroupModule >> ', clientGroupModule);
+    // console.log('ClientGroupInform-render clientGroupModule >> ', clientGroupModule);
 
     return (
       <div>
