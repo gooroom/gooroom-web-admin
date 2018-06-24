@@ -27,36 +27,34 @@ class GrConfirm extends Component {
   };
 
   handleCancel = () => {
-    this.props.GrConfirmActions.closeConfirm({
+    this.props.GrConfirmActions.closeWithCallbackConfirm({
       confirmResult: false,
       confirmOpen: false
     });
-
-    this.props.handleConfirmResult(false);
   };
 
   handleOk = () => {
-    this.props.GrConfirmActions.closeConfirm({
+    this.props.GrConfirmActions.closeWithCallbackConfirm({
       confirmResult: true,
       confirmOpen: false
     });
-    this.props.handleConfirmResult(true);
   };
 
   render() {
-    const {onClose, confirmTitle, confirmMsg, resultConfirm} = this.props;
+    //console.log("GrConfirm.... ", this.props);
+    const {grConfirmModule} = this.props;
 
     return (
        <Dialog
           onClose={this.handleClose}
-          open={this.props.confirmOpen}
+          open={grConfirmModule.confirmOpen}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{confirmTitle}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">{grConfirmModule.confirmTitle}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              {confirmMsg}
+              {grConfirmModule.confirmMsg}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -74,14 +72,17 @@ class GrConfirm extends Component {
 
 const mapStateToProps = (state) => ({
 
-  confirmTitle: state.GrConfirmModule.confirmTitle,
-  confirmMsg: state.GrConfirmModule.confirmMsg,
-  confirmOpen: state.GrConfirmModule.confirmOpen
+  grConfirmModule: state.GrConfirmModule,
+  // confirmTitle: state.GrConfirmModule.confirmTitle,
+  // confirmMsg: state.GrConfirmModule.confirmMsg,
+  // confirmOpen: state.GrConfirmModule.confirmOpen
 
 });
 
 const mapDispatchToProps = (dispatch) => ({
+
   GrConfirmActions: bindActionCreators(grConfirmActions, dispatch)
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GrConfirm);

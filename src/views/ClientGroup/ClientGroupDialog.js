@@ -6,7 +6,9 @@ import { css } from "glamor";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
 import * as ClientGroupActions from '../../modules/ClientGroupModule';
+import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -15,6 +17,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
+import GrConfirm from '../../components/GrComponents/GrConfirm';
 
 //
 //  ## Style ########## ########## ########## ########## ##########
@@ -70,25 +73,65 @@ class ClientGroupDialog extends Component {
     }
 
     handleEditData = (event) => {
-        const { clientGroupModule, ClientGroupActions } = this.props;
-        ClientGroupActions.editClientGroupData({
-            groupId: clientGroupModule.selectedItem.grpId,
-            groupName: clientGroupModule.groupName,
-            groupComment: clientGroupModule.groupComment,
-            clientConfigId: clientGroupModule.clientConfigId,
-            isDefault: clientGroupModule.isDefault
-        }).then((res) => {
-            ClientGroupActions.readClientGroupList(clientGroupModule.listParam);
-            this.handleClose();
-        }, (res) => {
-            //console.log('error...', res);
-        })
-    }
+        const { clientGroupModule, ClientGroupActions, GrConfirmActions } = this.props;
+        // ClientGroupActions.editClientGroupData({
+        //     groupId: clientGroupModule.selectedItem.grpId,
+        //     groupName: clientGroupModule.groupName,
+        //     groupComment: clientGroupModule.groupComment,
+        //     clientConfigId: clientGroupModule.clientConfigId,
+        //     isDefault: clientGroupModule.isDefault
+        // }).then((res) => {
+        //     ClientGroupActions.readClientGroupList(clientGroupModule.listParam);
+        //     this.handleClose();
+        // }, (res) => {
+        //     //console.log('error...', res);
+        // });
 
+        const re = this.props.GrConfirmActions.showConfirm({
+            confirmTitle: '단말그룹 수정',
+            confirmMsg: '단말그룹을 수정하시겠습니까?',
+            confirmOpen: true,
+            handleConfirmResult: this.handleEditConfirmResult
+          });
+    }
+    handleEditConfirmResult = (confirmValue) => {
+        console.log('handleEditConfirmResult confirmValue : ', confirmValue);
+        if(confirmValue) {
+            console.log(this.props.clientGroupModule);
+            const { clientGroupModule, ClientGroupActions } = this.props;
+
+            console.log('CALL editClientGroupData................');
+            ClientGroupActions.editClientGroupData({
+                groupId: clientGroupModule.selectedItem.grpId,
+                groupName: clientGroupModule.groupName,
+                groupComment: clientGroupModule.groupComment,
+                clientConfigId: clientGroupModule.clientConfigId
+            }).then((res) => {
+                console.log('THEN......................');
+                ClientGroupActions.readClientGroupList(clientGroupModule.listParam);
+                this.handleClose();
+            }, (res) => {
+                //console.log('error...', res);
+            })
+        }
+        // const { clientGroupModule, ClientGroupActions } = this.props;
+        // ClientGroupActions.editClientGroupData({
+        //     groupId: clientGroupModule.selectedItem.grpId,
+        //     groupName: clientGroupModule.groupName,
+        //     groupComment: clientGroupModule.groupComment,
+        //     clientConfigId: clientGroupModule.clientConfigId,
+        //     isDefault: clientGroupModule.isDefault
+        // }).then((res) => {
+        //     ClientGroupActions.readClientGroupList(clientGroupModule.listParam);
+        //     this.handleClose();
+        // }, (res) => {
+        //     //console.log('error...', res);
+        // })
+    }
 
     render() {
 
-        const { clientGroupModule, dialogType } = this.props;
+        const { clientGroupModule, dialogType, grConfirmModule } = this.props;
 
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
@@ -137,6 +180,11 @@ class ClientGroupDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
                 </DialogActions>
+                <GrConfirm
+                    open={grConfirmModule.confirmOpen}
+                    confirmTitle={grConfirmModule.confirmTitle}
+                    confirmMsg={grConfirmModule.confirmMsg}
+                />
             </Dialog>
         );
     }
@@ -147,12 +195,14 @@ const mapStateToProps = (state) => ({
 
     clientGroupModule: state.ClientGroupModule,
     dialogType: state.ClientGroupModule.dialogType,
+    grConfirmModule: state.GrConfirmModule,
 
 });
 
 const mapDispatchToProps = (dispatch) => ({
 
-    ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch)
+    ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 
 });
 
