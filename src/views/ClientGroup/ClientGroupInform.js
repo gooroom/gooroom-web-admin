@@ -117,7 +117,7 @@ class ClientGroupInform extends Component {
             <Grid item xs={12} sm={12}>
               <CardContent>
                 <Typography component="pre">
-                  {clientGroupModule.selectedItem.grpNm}
+                  {clientGroupModule.selectedItem.comment}
                 </Typography>
               </CardContent>
             </Grid>

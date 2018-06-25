@@ -27,14 +27,15 @@ class GrConfirm extends Component {
   };
 
   handleCancel = () => {
-    this.props.GrConfirmActions.closeWithCallbackConfirm({
+    this.props.GrConfirmActions.closeConfirm({
       confirmResult: false,
       confirmOpen: false
     });
   };
 
   handleOk = () => {
-    this.props.GrConfirmActions.closeWithCallbackConfirm({
+    this.props.grConfirmModule.handleConfirmResult(true);
+    this.props.GrConfirmActions.closeConfirm({
       confirmResult: true,
       confirmOpen: false
     });
@@ -71,18 +72,11 @@ class GrConfirm extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
   grConfirmModule: state.GrConfirmModule,
-  // confirmTitle: state.GrConfirmModule.confirmTitle,
-  // confirmMsg: state.GrConfirmModule.confirmMsg,
-  // confirmOpen: state.GrConfirmModule.confirmOpen
-
 });
 
 const mapDispatchToProps = (dispatch) => ({
-
   GrConfirmActions: bindActionCreators(grConfirmActions, dispatch)
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GrConfirm);

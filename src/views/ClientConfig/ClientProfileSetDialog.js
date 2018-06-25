@@ -5,10 +5,12 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientProfileSetActions from '../../modules/ClientProfileSetModule';
+import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { css } from "glamor";
 
 import GrClientSelector from '../../components/GrComponents/GrClientSelector';
+import GrConfirm from '../../components/GrComponents/GrConfirm';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
@@ -112,27 +114,29 @@ class ClientProfileSetDialog extends Component {
     }
 
     handleEditData = (event) => {
-        const { profileSetModule } = this.props;
-        this.props.ClientProfileSetActions.editClientProfileSetData({
-            profile_no: profileSetModule.selectedItem.profileNo,
-            client_id: profileSetModule.clientId,
-            profile_nm: profileSetModule.profileName,
-            profile_cmt: profileSetModule.profileComment
-        }).then((res) => {
-            this.props.ClientProfileSetActions.readClientProfileSetList(
-                {
-                    keyword: profileSetModule.keyword,
-                    page: profileSetModule.page,
-                    rowsPerPage: profileSetModule.rowsPerPage,
-                    length: profileSetModule.rowsPerPage,
-                    orderColumn: profileSetModule.orderColumn,
-                    orderDir: profileSetModule.orderDir
-                }
-            );
-            this.handleClose();
-        }, (res) => {
-            //console.log('error...', res);
-        })
+        const { GrConfirmActions } = this.props;
+        const re = GrConfirmActions.showConfirm({
+            confirmTitle: '단말 프로파일 수정',
+            confirmMsg: '단말 프로파일을 수정하시겠습니까?',
+            confirmOpen: true,
+            handleConfirmResult: this.handleEditConfirmResult
+          });
+    }
+    handleEditConfirmResult = (confirmValue) => {
+        if(confirmValue) {
+            const { profileSetModule, ClientProfileSetActions } = this.props;
+            ClientProfileSetActions.editClientProfileSetData({
+                profile_no: profileSetModule.selectedItem.profileNo,
+                client_id: profileSetModule.clientId,
+                profile_nm: profileSetModule.profileName,
+                profile_cmt: profileSetModule.profileComment
+            }).then((res) => {
+                ClientProfileSetActions.readClientProfileSetList(profileSetModule.listParam);
+                this.handleClose();
+            }, (res) => {
+                //console.log('error...', res);
+            })
+        }
     }
 
     handleProfileJob = (event) => {
@@ -302,22 +306,21 @@ class ClientProfileSetDialog extends Component {
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
 
                 </DialogActions>
+                <GrConfirm />
             </Dialog>
         );
     }
 }
 
 const mapStateToProps = (state) => ({
-
     profileSetModule: state.ClientProfileSetModule,
     dialogType: state.ClientProfileSetModule.dialogType,
-
+    grConfirmModule: state.GrConfirmModule,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-
-    ClientProfileSetActions: bindActionCreators(ClientProfileSetActions, dispatch)
-
+    ClientProfileSetActions: bindActionCreators(ClientProfileSetActions, dispatch),
+    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientProfileSetDialog);
