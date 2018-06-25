@@ -433,13 +433,7 @@ class ClientProfileSet extends Component {
         <ClientProfileSetDialog
           open={profileSetModule.dialogOpen}
         />
-        <GrConfirm
-          open={grConfirmModule.confirmOpen}
-          confirmTitle={grConfirmModule.confirmTitle}
-          confirmMsg={grConfirmModule.confirmMsg}
-          handleConfirmResult={this.handleDeleteConfirmResult}
-        />
-
+        <GrConfirm />
       </React.Fragment>
     );
   }
