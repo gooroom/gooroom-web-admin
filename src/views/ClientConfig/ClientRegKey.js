@@ -5,11 +5,13 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientRegKeyActions from '../../modules/ClientRegKeyModule';
+import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
+import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
 
 import { grRequestPromise } from '../../components/GrUtils/GrRequester';
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
@@ -127,6 +129,60 @@ const toolIconClass = css({
   height: '16px !important',
 }).toString();
 
+
+//
+//  ## Header ########## ########## ########## ########## ########## 
+//
+class ClientRegKeyHead extends Component {
+
+  createSortHandler = property => event => {
+    this.props.onRequestSort(event, property);
+  };
+
+  static columnData = [
+    { id: 'colRegKey', numeric: false, disablePadding: true, label: '단말등록키' },
+    { id: 'colValidDate', numeric: false, disablePadding: true, label: '유효날짜' },
+    { id: 'colExpireDate', numeric: false, disablePadding: true, label: '인증서만료날짜' },
+    { id: 'colModDate', numeric: false, disablePadding: true, label: '등록일' },
+    { id: 'colAction', numeric: false, disablePadding: true, label: '수정/삭제' },
+  ];
+
+  render() {
+    const { orderDir, orderColumn, } = this.props;
+
+    return (
+      <TableHead>
+        <TableRow>
+          {ClientRegKeyHead.columnData.map(column => {
+            return (
+              <TableCell
+                className={tableCellClass}
+                key={column.id}
+                sortDirection={orderColumn === column.id ? orderDir : false}
+              >
+              {(() => {
+                if(column.isOrder) {
+                  return <TableSortLabel
+                  active={orderColumn === column.id}
+                  direction={orderDir}
+                  onClick={this.createSortHandler(column.id)}
+                >
+                  {column.label}
+                </TableSortLabel>
+                } else {
+                  return <p>{column.label}</p>
+                }
+              })()}
+
+              </TableCell>
+            );
+          }, this)}
+        </TableRow>
+      </TableHead>
+    );
+  }
+}
+
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
@@ -136,45 +192,13 @@ class ClientRegKey extends Component {
 
     this.state = {
       loading: true,
-      confirmOpen: false,
-      
-      clientRegKeyDialogOpen: false,
-      clientRegKeyDialogType: '',
-
-      selectedRegKeyInfo: {
-        regKeyNo: '',
-        validDate: '',
-        expireDate: '',
-        ipRange: '',
-        comment: ''
-      },
-
-      columnData: [
-        { id: 'colRegKey', numeric: false, disablePadding: true, label: '단말등록키' },
-        { id: 'colValidDate', numeric: false, disablePadding: true, label: '유효날짜' },
-        { id: 'colExpireDate', numeric: false, disablePadding: true, label: '인증서만료날짜' },
-        { id: 'colModDate', numeric: false, disablePadding: true, label: '등록일' },
-        { id: 'colAction', numeric: false, disablePadding: true, label: '수정/삭제' },
-      ],
-
-      confirmTitle: '',
-      confirmMsg: '',
-      handleConfirmResult: null,
-      
-      keyword: ''
-
     }
   }
 
   // .................................................
   handleSelectBtnClick = (param) => {
-    this.props.ClientRegKeyActions.readClientRegkeyList({
-        keyword: this.state.keyword,
-        page: param.pageNo,
-        rowsPerPage: this.props.rowsPerPage,
-        orderColumn: this.props.orderColumn,
-        orderDir: this.props.orderDir
-      });
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    ClientRegKeyActions.readClientRegkeyList(getMergedListParam(ClientRegKeyProps.listParam, param));
   };
   
   handleAddButton = () => {
@@ -191,16 +215,16 @@ class ClientRegKey extends Component {
     });
   }
   
-  handleClick = (event, id) => {
-    event.stopPropagation();
-    const selectedItem = this.props.listData.find(function(element) {
+  handleRowClick = (event, id) => {
+    const { ClientRegKeyProps } = this.props;
+    const selectedItem = ClientRegKeyProps.listData.find(function(element) {
       return element.regKeyNo == id;
     });
 
-    this.setState({ 
-      selectedRegKeyInfo: selectedItem,
-      clientRegKeyDialogType: ClientRegKeyDialog.TYPE_VIEW,
-      clientRegKeyDialogOpen: true
+    ClientProfileSetActions.showDialog({
+      selectedItem: selectedItem,
+      dialogType: ClientRegKeyDialog.TYPE_VIEW,
+      dialogOpen: true
     });
   };
 
@@ -286,12 +310,13 @@ class ClientRegKey extends Component {
   
   // .................................................
   handleRequestSort = (event, property) => {
-    const orderColumn = property;
-    let orderDir = 'desc';
-    if (this.state.orderColumn === property && this.state.orderDir === 'desc') {
-      orderDir = 'asc';
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
+    let orderDir = "desc";
+    if (ClientRegKeyProps.listParam.orderColumn === property && ClientRegKeyProps.listParam.orderDir === "desc") {
+      orderDir = "asc";
     }
-    //this.fetchData(this.state.page, this.state.rowsPerPage, orderColumn, orderDir);
+    ClientRegKeyActions.readClientRegkeyList(getMergedListParam(ClientRegKeyProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
   // .................................................
 
@@ -321,7 +346,8 @@ class ClientRegKey extends Component {
   render() {
 
     const { listData, orderDir, orderColumn, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.props;
-    const emptyRows = rowsPerPage - listData.length;
+    const { ClientRegKeyProps } = this.props;
+    const emptyRows = ClientRegKeyProps.listParam.rowsPerPage - ClientRegKeyProps.listData.length;
 
     return (
       <React.Fragment>
@@ -343,7 +369,6 @@ class ClientRegKey extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='primary'
-              //onClick={() => {this.fetchData(0, this.state.rowsPerPage, this.state.orderColumn, this.state.orderDir);}}
               onClick={ () => this.handleSelectBtnClick({pageNo: 0}) }
             >
               <Search className={leftIconClass} />
@@ -368,37 +393,19 @@ class ClientRegKey extends Component {
           <div className={tableContainerClass}>
             <Table className={tableClass}>
 
-              <TableHead>
-                <TableRow>
-                  {this.state.columnData.map(column => {
-                    return (
-                      <TableCell
-                        className={tableCellClass}
-                        key={column.id}
-                        numeric={column.numeric}
-                        padding={column.disablePadding ? 'none' : 'default'}
-                        sortDirection={orderColumn === column.id ? orderDir : false}
-                      >
-                        <TableSortLabel
-                          active={orderColumn === column.id}
-                          direction={orderDir}
-                          //onClick={this.handleRequestSort(column.id)}
-                        >
-                          {column.label}
-                        </TableSortLabel>
-                      </TableCell>
-                    );
-                  }, this)}
-                </TableRow>
-              </TableHead>
+              <ClientRegKeyHead
+                orderDir={ClientRegKeyProps.listParam.orderDir}
+                orderColumn={ClientRegKeyProps.listParam.orderColumn}
+                onRequestSort={this.handleRequestSort}
+              />
 
               <TableBody>
-                {listData.map(n => {
+                {ClientRegKeyProps.listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
                       hover
-                      onClick={event => this.handleClick(event, n.regKeyNo)}
+                      onClick={event => this.handleRowClick(event, n.regKeyNo)}
                       tabIndex={-1}
                       key={n.regKeyNo}
                     >
@@ -429,7 +436,7 @@ class ClientRegKey extends Component {
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
-                      colSpan={this.state.columnData.length + 1}
+                      colSpan={ClientRegKeyHead.columnData.length + 1}
                       className={tableCellClass}
                     />
                   </TableRow>
@@ -440,9 +447,10 @@ class ClientRegKey extends Component {
 
           <TablePagination
             component='div'
-            count={rowsFiltered}
-            rowsPerPage={rowsPerPage}
-            page={page}
+            count={ClientRegKeyProps.listParam.rowsFiltered}
+            rowsPerPage={ClientRegKeyProps.listParam.rowsPerPage}
+            rowsPerPageOptions={ClientRegKeyProps.listParam.rowsPerPageOptions}
+            page={ClientRegKeyProps.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -456,9 +464,10 @@ class ClientRegKey extends Component {
         </GrPane>
         {/* dialog(popup) component area */}
         <ClientRegKeyDialog
+          open={this.state.clientRegKeyDialogOpen}
+
           type={this.state.clientRegKeyDialogType}
           selectedData={this.state.selectedRegKeyInfo}
-          open={this.state.clientRegKeyDialogOpen}
           onClose={this.handleDialogClose}
           handleRegKeyChangeData={this.handleRegKeyChangeData}
           handleRefreshList={this.handleRefreshList}
@@ -475,25 +484,31 @@ class ClientRegKey extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  
-  return({
-    listData: state.ClientRegKeyModule.listData,
-    error: state.ClientRegKeyModule.error,
-    orderDir: state.ClientRegKeyModule.orderDir,
-    orderColumn: state.ClientRegKeyModule.orderColumn,
-    page: state.ClientRegKeyModule.page,
-    pending: state.ClientRegKeyModule.pending,
-    rowsFiltered: state.ClientRegKeyModule.rowsFiltered,
-    rowsPerPage: state.ClientRegKeyModule.rowsPerPage,
-    rowsTotal: state.ClientRegKeyModule.rowsTotal,
-    keyword: state.ClientRegKeyModule.keyword
-  });
+const mapStateToProps = (state) => ({
 
-};
+  ClientRegKeyProps: state.ClientRegKeyModule,
+  grConfirmModule: state.GrConfirmModule,
+  
+  // return({
+  //   listData: state.ClientRegKeyModule.listData,
+  //   error: state.ClientRegKeyModule.error,
+  //   orderDir: state.ClientRegKeyModule.orderDir,
+  //   orderColumn: state.ClientRegKeyModule.orderColumn,
+  //   page: state.ClientRegKeyModule.page,
+  //   pending: state.ClientRegKeyModule.pending,
+  //   rowsFiltered: state.ClientRegKeyModule.rowsFiltered,
+  //   rowsPerPage: state.ClientRegKeyModule.rowsPerPage,
+  //   rowsTotal: state.ClientRegKeyModule.rowsTotal,
+  //   keyword: state.ClientRegKeyModule.keyword
+  // });
+
+});
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientRegKeyActions: bindActionCreators(ClientRegKeyActions, dispatch)
+
+  ClientRegKeyActions: bindActionCreators(ClientRegKeyActions, dispatch),
+  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientRegKey);

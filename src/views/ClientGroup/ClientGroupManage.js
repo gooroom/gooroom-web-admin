@@ -208,81 +208,7 @@ class ClientGroupManage extends Component {
 
     this.state = {
       loading: true,
-      // clientGroupDialogOpen: false,
-      // clientGroupInfo: "",
-      // selectedClientId: "",
-      // selectedClientGroupId: "",
-
-      // keyword: "",
-
-      // order: "asc",
-      // orderBy: "calories",
-      // selected: [],
-      // data: [],
-      // page: 0,
-      // rowsPerPage: 5,
-      // rowsTotal: 0,
-      // rowsFiltered: 0
     };
-
-    this.fetchData = this.fetchData.bind(this);
-  }
-
-  componentDidMount() {
-
-    // grRequestPromise("https://gpms.gooroom.kr/gpms/readClientGroupList", {
-    // }).then(res => {
-    //     const groupList = res.data.map(x => ({
-    //       key: x.grpId,
-    //       id: x.grpId,
-    //       value: x.grpId,
-    //       label: x.grpNm
-    //     }));
-    //     this.setState({ 
-    //       clientGroupOptionList: groupList,
-    //       selected: []
-    //     });
-    // });
-  }
-
-  fetchData(page, rowsPerPage, orderBy, order) {
-
-    this.setState({
-      page: page,
-      rowsPerPage: rowsPerPage,
-      orderBy: orderBy,
-      order: order
-    });
-
-    grRequestPromise("/gpms/readClientGroupList", {
-      searchKey: this.state.keyword,
-
-      start: page * rowsPerPage,
-      length: rowsPerPage,
-      orderColumn: orderBy,
-      orderDir: order,
-    }).then(res => {
-        const listData = [];
-        res.data.forEach(d => {
-          listData.push(d);
-        });
-        this.setState({
-          data: listData,
-          selected: [],
-          loading: false,
-          rowsTotal: parseInt(res.recordsTotal, 10),
-          rowsFiltered: parseInt(res.recordsFiltered, 10),
-        });
-    }, res => {
-      this.setState({
-        data: [],
-        selected: [],
-        loading: false,
-        rowsTotal: 0,
-        rowsFiltered: 0,
-      });
-    });
-
   }
 
   // .................................................
@@ -304,7 +230,6 @@ class ClientGroupManage extends Component {
   };
 
   handleInfoClick = (event, clientId, clientGroupId) => {
-
     event.stopPropagation();
     console.log("handleCellClick .. " + clientId);
     this.setState({
@@ -312,49 +237,18 @@ class ClientGroupManage extends Component {
       selectedClientId: clientId,
       selectedClientGroupId: clientGroupId,
     });
-
-    // grRequestPromise("https://gpms.gooroom.kr/gpms/readClientInfo", {
-    //   clientId: id
-    // }).then(res => {
-    //     const clientInfos = res.data;
-    //     this.setState({
-    //       clientDialogOpen: true,
-    //       clientInfos: clientInfos
-    //     });
-    // });
   };
 
   handleRowClick = (event, id) => {
-    const { clientGroupModule, ClientGroupActions } = this.props;
 
+    const { clientGroupModule, ClientGroupActions } = this.props;
     const selectedItem = clientGroupModule.listData.find(function(element) {
       return element.grpId == id;
     });
 
-    console.log("handleRowClick .. selectedItem: ", selectedItem);
-
     ClientGroupActions.showClientGroupInform({
       selectedItem: selectedItem,
     });
-    
-    // const { selected } = this.state;
-    // const selectedIndex = selected.indexOf(id);
-    // let newSelected = [];
-
-    // if (selectedIndex === -1) {
-    //   newSelected = newSelected.concat(selected, id);
-    // } else if (selectedIndex === 0) {
-    //   newSelected = newSelected.concat(selected.slice(1));
-    // } else if (selectedIndex === selected.length - 1) {
-    //   newSelected = newSelected.concat(selected.slice(0, -1));
-    // } else if (selectedIndex > 0) {
-    //   newSelected = newSelected.concat(
-    //     selected.slice(0, selectedIndex),
-    //     selected.slice(selectedIndex + 1)
-    //   );
-    // }
-
-    // this.setState({ selected: newSelected });
   };
 
   handleChangePage = (event, page) => {
@@ -422,9 +316,6 @@ class ClientGroupManage extends Component {
         }, () => {
         });
     }
-    this.setState({ 
-      confirmOpen: false
-    });
   };
 
   // .................................................

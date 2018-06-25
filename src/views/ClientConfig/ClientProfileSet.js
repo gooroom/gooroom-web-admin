@@ -187,11 +187,6 @@ class ClientProfileSet extends Component {
 
     this.state = {
       loading: true,
-
-      confirmOpen: false,
-      confirmTitle: '',
-      confirmMsg: '',
-      handleConfirmResult: null,
     }
   }
 
@@ -209,10 +204,11 @@ class ClientProfileSet extends Component {
   }
   
   handleRowClick = (event, id) => {
-    const selectedItem = this.props.profileSetModule.listData.find(function(element) {
+    const { profileSetModule, ClientProfileSetActions } = this.props;
+    const selectedItem = profileSetModule.listData.find(function(element) {
       return element.profileNo == id;
     });
-    this.props.ClientProfileSetActions.showDialog({
+    ClientProfileSetActions.showDialog({
       selectedItem: selectedItem,
       dialogType: ClientProfileSetDialog.TYPE_VIEW,
       dialogOpen: true
@@ -316,7 +312,7 @@ class ClientProfileSet extends Component {
 
   render() {
 
-    const { profileSetModule, grConfirmModule } = this.props;
+    const { profileSetModule } = this.props;
     const emptyRows = profileSetModule.listParam.rowsPerPage - profileSetModule.listData.length;
 
     return (
@@ -430,9 +426,7 @@ class ClientProfileSet extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientProfileSetDialog
-          open={profileSetModule.dialogOpen}
-        />
+        <ClientProfileSetDialog />
         <GrConfirm />
       </React.Fragment>
     );
