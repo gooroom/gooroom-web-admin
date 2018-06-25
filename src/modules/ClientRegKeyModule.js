@@ -5,6 +5,7 @@ const GET_REGKEY_LIST_PENDING = 'clientRegKey/GET_LIST_PENDING';
 const GET_REGKEY_LIST_SUCCESS = 'clientRegKey/GET_LIST_SUCCESS';
 const GET_REGKEY_LIST_FAILURE = 'clientRegKey/GET_LIST_FAILURE';
 
+const SHOW_REGKEY_DATA = 'clientRegKeyPopup/SHOW_REGKEY_DATA';
 
 // ...
 const initialState = {
@@ -27,10 +28,15 @@ const initialState = {
     selectedItem: {
         regKeyNo: '',
         regKeyValidDate: '',
-        regKeyExpireDate: ''
+        regKeyExpireDate: '',
+        validDate: '',
+        expireDate: '',
+        ipRange: '',
+        comment: ''
     },
 
     dialogOpen: false,
+    dialogType: '',
 
     keyword: '',
     orderDir: 'asc',
@@ -40,6 +46,13 @@ const initialState = {
     rowsPerPage: 5,
     rowsTotal: 0,
     rowsFiltered: 0
+};
+
+export const showDialog = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_PROFILESET_DATA,
+        payload: param
+    });
 };
 
 
@@ -96,6 +109,17 @@ export default handleActions({
             pending: false,
             error: true
         };
-    }
+    },
+    [SHOW_REGKEY_DATA]: (state, action) => {
+        return {
+            ...state,
+            selectedItem: action.payload.selectedItem,
+            dialogOpen: action.payload.dialogOpen,
+            dialogType: action.payload.dialogType,
+            profileName: ((action.payload.selectedItem) ? action.payload.selectedItem.profileName : ''),
+            profileComment: ((action.payload.selectedItem) ? action.payload.selectedItem.profileComment : ''),
+            clientId: ((action.payload.selectedItem) ? action.payload.selectedItem.clientId : '')
+        };
+    },
 
 }, initialState);

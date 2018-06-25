@@ -90,7 +90,6 @@ class ClientGroupDialog extends Component {
                 groupComment: clientGroupModule.groupComment,
                 clientConfigId: clientGroupModule.clientConfigId
             }).then((res) => {
-                console.log('THEN......................');
                 ClientGroupActions.readClientGroupList(clientGroupModule.listParam);
                 this.handleClose();
             }, (res) => {

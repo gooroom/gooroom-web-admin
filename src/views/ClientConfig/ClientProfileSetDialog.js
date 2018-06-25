@@ -39,29 +39,6 @@ const fullWidthClass = css({
     width: "100%"
 }).toString();
 
-const ruleContainerClass = css({
-    height: "346px",
-    overflowY: "auto",
-    boxShadow: "none !important"
-}).toString();
-
-const ruleContentClass = css({
-    padding: "5px 5px 24px 0px !important",
-}).toString();
-
-
-const formControlClass = css({
-    minWidth: "100px !important",
-      marginRight: "15px !important",
-      flexGrow: 1
-}).toString();
-
-const keyCreateBtnClass = css({
-    paddingTop: 24 + " !important"
-}).toString();
-
-
-
 const labelClass = css({
     height: "25px",
     marginTop: "10px"
@@ -207,7 +184,8 @@ class ClientProfileSetDialog extends Component {
 
     render() {
 
-        const { profileSetModule, dialogType } = this.props;
+        const { profileSetModule } = this.props;
+        const { dialogType } = profileSetModule;
 
         let title = "";
         if(dialogType === ClientProfileSetDialog.TYPE_ADD) {
@@ -221,9 +199,7 @@ class ClientProfileSetDialog extends Component {
         }
 
         return (
-            <Dialog
-                open={this.props.open}
-            >
+            <Dialog open={profileSetModule.dialogOpen}>
                 <DialogTitle >{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={containerClass}>
 
@@ -314,7 +290,6 @@ class ClientProfileSetDialog extends Component {
 
 const mapStateToProps = (state) => ({
     profileSetModule: state.ClientProfileSetModule,
-    dialogType: state.ClientProfileSetModule.dialogType,
     grConfirmModule: state.GrConfirmModule,
 });
 
@@ -324,6 +299,4 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientProfileSetDialog);
-
-
 
