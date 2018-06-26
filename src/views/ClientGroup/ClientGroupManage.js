@@ -161,10 +161,7 @@ class ClientGroupManageHead extends Component {
   }
 
   render() {
-    const {
-      orderDir,
-      orderColumn,
-    } = this.props;
+    const { orderDir, orderColumn } = this.props;
 
     return (
       <TableHead>
@@ -174,8 +171,6 @@ class ClientGroupManageHead extends Component {
               <TableCell
                 className={tableCellClass}
                 key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? "none" : "default"}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
                 {(column.isOrder) &&

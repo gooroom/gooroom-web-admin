@@ -10,7 +10,6 @@ import * as GrConfirmActions from '../../modules/GrConfirmModule';
 import { css } from "glamor";
 
 import GrClientSelector from '../../components/GrComponents/GrClientSelector';
-import GrConfirm from '../../components/GrComponents/GrConfirm';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
@@ -62,28 +61,15 @@ class ClientProfileSetDialog extends Component {
     
     handleClose = (event) => {
         this.props.ClientProfileSetActions.closeDialog({
-            dialogType: ClientProfileSetDialog.TYPE_VIEW,
             dialogOpen: false
         });
     }
 
     handleCreateData = (event) => {
         const { profileSetModule } = this.props;
-        this.props.ClientProfileSetActions.createClientProfileSetData({
-            client_id: profileSetModule.clientId,
-            profile_nm: profileSetModule.profileName,
-            profile_cmt: profileSetModule.profileComment
-        }).then(() => {
-            this.props.ClientProfileSetActions.readClientProfileSetList(
-                {
-                    keyword: profileSetModule.keyword,
-                    page: profileSetModule.page,
-                    rowsPerPage: profileSetModule.rowsPerPage,
-                    length: profileSetModule.rowsPerPage,
-                    orderColumn: profileSetModule.orderColumn,
-                    orderDir: profileSetModule.orderDir
-                }
-            );
+        this.props.ClientProfileSetActions.createClientProfileSetData(profileSetModule.selectedItem)
+        .then(() => {
+            this.props.ClientProfileSetActions.readClientProfileSetList(profileSetModule.listParam);
             this.handleClose();
         }, (res) => {
             // console.log('error...', res);
@@ -153,7 +139,6 @@ class ClientProfileSetDialog extends Component {
     }
 
     handleSelectClient = (value) => {
-        
         this.props.ClientProfileSetActions.changeParamValue({
             name: 'clientId',
             value: value.clientId
@@ -207,7 +192,7 @@ class ClientProfileSetDialog extends Component {
                         id="profileName"
                         label="프로파일 이름"
                         color="secondary"
-                        value={profileSetModule.profileName}
+                        value={(profileSetModule.selectedItem) ? profileSetModule.selectedItem.profileNm : ''}
                         onChange={this.handleChange("profileName")}
                         className={classNames(fullWidthClass)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
@@ -215,7 +200,7 @@ class ClientProfileSetDialog extends Component {
                     <TextField
                         id="profileComment"
                         label="프로파일 설명"
-                        value={profileSetModule.profileComment}
+                        value={(profileSetModule.selectedItem) ? profileSetModule.selectedItem.profileCmt : ''}
                         onChange={this.handleChange("profileComment")}
                         className={classNames(fullWidthClass, itemRowClass)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
@@ -282,7 +267,6 @@ class ClientProfileSetDialog extends Component {
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
 
                 </DialogActions>
-                <GrConfirm />
             </Dialog>
         );
     }

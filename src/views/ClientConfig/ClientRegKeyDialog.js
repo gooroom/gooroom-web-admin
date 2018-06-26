@@ -4,12 +4,11 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientRegKeyActions from '../../modules/ClientProfileSetModule';
+import * as ClientRegKeyActions from '../../modules/ClientRegKeyModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { css } from "glamor";
 
-import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 import { formatDateToSimple, formatSimpleStringToStartTime, formatSimpleStringToEndTime } from '../../components/GrUtils/GrDates';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -19,7 +18,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import Typography from '@material-ui/core/Typography';
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import Add from "@material-ui/icons/Add";
@@ -37,6 +35,10 @@ const fullWidthClass = css({
     width: "100%"
 }).toString();
 
+const keyCreateBtnClass = css({
+    paddingTop: 24 + " !important"
+}).toString();
+
 const labelClass = css({
     height: "25px",
     marginTop: "10px"
@@ -45,17 +47,6 @@ const labelClass = css({
 const itemRowClass = css({
     marginTop: "10px !important"
 }).toString();
-
-const formControlClass = css({
-    minWidth: "100px !important",
-      marginRight: "15px !important",
-      flexGrow: 1
-}).toString();
-
-const keyCreateBtnClass = css({
-    paddingTop: 24 + " !important"
-}).toString();
-
 
 
 
@@ -68,75 +59,54 @@ class ClientRegKeyDialog extends Component {
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
 
-    constructor(props) {
-
-        super(props);
-
-        this.state = {
-            regKeyNo: "",
-            validDate: "2018-05-20",
-            expireDate: "2028-05-31",
-            ipRange: "",
-            comment: "",
-
-            handleRegKeyChangeData: props.handleRegKeyChangeData,
-            handleRefreshList: props.handleRefreshList
-        }
-
-        this.handleClose = this.handleClose.bind(this);
-        this.handleAddData = this.handleAddData.bind(this);
-        this.handleSaveData = this.handleSaveData.bind(this);
-        this.handleKeyGenerate = this.handleKeyGenerate.bind(this);
-    }
-
-    // handleRegKeyChangeData = (name, value) => {
-    //     this.setState({
-    //         [name]: value
-    //     });
-    // }
-
-    handleClose() {
-        this.props.onClose("close");
-    }
-
-    handleAddData() {
-        grRequestPromise("/gpms/createRegKeyData", 
-            this.props.selectedData
-          ).then(res => {
-              this.state.handleRefreshList();
-              this.handleClose();
-          }, res => {
-            this.handleClose();
-        });        
-    }
-
-    handleSaveData() {
-        grRequestPromise("/gpms/editRegKeyData", 
-            this.props.selectedData
-          ).then(res => {
-              this.handleClose();
-          }, res => {
-            this.handleClose();
-        });        
-    }
-
-    handleKeyGenerate = () => {
-        grRequestPromise("/gpms/generateRegKeyNumber", {
-          }).then(res => {
-            this.state.handleRegKeyChangeData('regKeyNo', res.data[0].key);
-          }, res => {
-            // this.setState({
-            //     regKeyNo: "error",
-            //   });
-          });        
+    handleClose = (event) => {
+        this.props.ClientRegKeyActions.closeDialog({
+            dialogOpen: false
+        });
     }
 
     handleChange = name => event => {
-        if(name == 'validDate' || name == 'expireDate') {
-            this.state.handleRegKeyChangeData(name, formatSimpleStringToEndTime(event.target.value));
-        } else {
-            this.state.handleRegKeyChangeData(name, event.target.value);    
+        this.props.ClientRegKeyActions.changeParamValue({
+            name: name,
+            value: event.target.value
+        });
+    }
+
+    handleCreateData = (event) => {
+        const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
+
+        ClientRegKeyActions.createClientRegKeyData(ClientRegKeyProps.selectedItem)
+            .then(() => {
+                ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
+                this.handleClose();
+        }, (res) => {
+            // console.log('error...', res);
+        })
+    }
+
+    handleEditData = (event) => {
+        const { GrConfirmActions } = this.props;
+        const re = GrConfirmActions.showConfirm({
+            confirmTitle: '단말등록키 수정',
+            confirmMsg: '단말등록키를 수정하시겠습니까?',
+            confirmOpen: true,
+            handleConfirmResult: this.handleEditConfirmResult
+          });
+    }
+    handleEditConfirmResult = (confirmValue) => {
+        if(confirmValue) {
+            const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
+            ClientRegKeyActions.editClientRegKeyData(ClientRegKeyProps.selectedItem).then((res) => {
+                ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
+                this.handleClose();
+            }, (res) => {
+                //console.log('error...', res);
+            })
         }
+    }
+
+    handleKeyGenerate = () => {
+        this.props.ClientRegKeyActions.generateClientRegkey();
     }
 
     render() {
@@ -147,14 +117,6 @@ class ClientRegKeyDialog extends Component {
 
         if(dialogType === ClientRegKeyDialog.TYPE_ADD) {
             title = "단말 등록키 등록";
-            // editData = {
-            //     comment: '',
-            //     expireDate: (new Date()).setMonth((new Date()).getMonth() + 1),
-            //     ipRange: '',
-            //     regKeyNo: '',
-            //     validDate: (new Date()).setMonth((new Date()).getMonth() + 1),
-            //     comment: ''
-            // }
         } else if(dialogType === ClientRegKeyDialog.TYPE_VIEW) {
             title = "단말 등록키 정보";
         } else if(dialogType === ClientRegKeyDialog.TYPE_EDIT) {
@@ -171,7 +133,7 @@ class ClientRegKeyDialog extends Component {
                             <TextField
                                 id="regKeyNo"
                                 label="등록키"
-                                value={ClientRegKeyProps.selectedItem.regKeyNo}
+                                value={(ClientRegKeyProps.selectedItem) ? ClientRegKeyProps.selectedItem.regKeyNo: ''}
                                 onChange={this.handleChange("regKeyNo")}
                                 margin="normal"
                                 className={fullWidthClass}
@@ -198,7 +160,7 @@ class ClientRegKeyDialog extends Component {
                             label="유효날짜"
                             type="date"
                             margin="normal"
-                            value={formatDateToSimple(ClientRegKeyProps.selectedItem.validDate, 'YYYY-MM-DD')}
+                            value={(ClientRegKeyProps.selectedItem) ? formatDateToSimple(ClientRegKeyProps.selectedItem.validDate, 'YYYY-MM-DD') : ''}
                             onChange={this.handleChange("validDate")}
                             className={fullWidthClass}
                             InputLabelProps={{
@@ -213,7 +175,7 @@ class ClientRegKeyDialog extends Component {
                             label="인증서만료날짜"
                             type="date"
                             margin="normal"
-                            value={formatDateToSimple(ClientRegKeyProps.selectedItem.expireDate, 'YYYY-MM-DD')}
+                            value={(ClientRegKeyProps.selectedItem) ? formatDateToSimple(ClientRegKeyProps.selectedItem.expireDate, 'YYYY-MM-DD') : ''}
                             onChange={this.handleChange("expireDate")}
                             className={fullWidthClass}
                             InputLabelProps={{
@@ -227,7 +189,7 @@ class ClientRegKeyDialog extends Component {
                     <TextField
                         id="ipRange"
                         label="유효 IP 범위"
-                        value={ClientRegKeyProps.selectedItem.ipRange}
+                        value={(ClientRegKeyProps.selectedItem) ? ClientRegKeyProps.selectedItem.ipRange : ''}
                         onChange={this.handleChange("ipRange")}
                         margin="normal"
                         className={fullWidthClass}
@@ -243,7 +205,7 @@ class ClientRegKeyDialog extends Component {
                         id="comment"
                         label="설명"
                         margin="normal"
-                        value={ClientRegKeyProps.selectedItem.comment}
+                        value={(ClientRegKeyProps.selectedItem) ? ClientRegKeyProps.selectedItem.comment : ''}
                         onChange={this.handleChange("comment")}
                         className={fullWidthClass}
                         disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
@@ -253,9 +215,13 @@ class ClientRegKeyDialog extends Component {
 
                 <DialogActions>
                     
-                <Button onClick={this.handleAddData} color="secondary" style={{display: dialogType === ClientRegKeyDialog.TYPE_ADD ? 'block' : 'none' }}>등록</Button>
-                <Button onClick={this.handleSaveData} color="secondary" style={{display: dialogType === ClientRegKeyDialog.TYPE_EDIT ? 'block' : 'none' }}>저장</Button>
-                <Button onClick={this.handleClose} color="primary">닫기</Button>
+                {(dialogType === ClientRegKeyDialog.TYPE_ADD) &&
+                    <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
+                }
+                {(dialogType === ClientRegKeyDialog.TYPE_EDIT) &&
+                    <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
+                }
+                <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
 
                 </DialogActions>
             </Dialog>
