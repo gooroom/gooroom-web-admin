@@ -42,7 +42,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 //
 const theme = createMuiTheme();
 
-
+//
+//  ## Style ########## ########## ########## ########## ##########
+//
 const formClass = css({
   marginBottom: '6px !important',
     display: 'flex'
@@ -139,10 +141,7 @@ class ClientProfileSetHead extends Component {
   ];
 
   render() {
-    const {
-      orderDir,
-      orderColumn
-    } = this.props;
+    const { orderDir, orderColumn } = this.props;
 
     return (
       <TableHead>
@@ -152,22 +151,19 @@ class ClientProfileSetHead extends Component {
               <TableCell
                 className={tableCellClass}
                 key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? "none" : "default"}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
-              {(column.isOrder) &&
-                <TableSortLabel
+              {(() => {
+                if(column.isOrder) {
+                  return <TableSortLabel
                   active={orderColumn === column.id}
                   direction={orderDir}
                   onClick={this.createSortHandler(column.id)}
-                >
-                  {column.label}
-                </TableSortLabel>
-              }
-              {(!column.isOrder) &&
-                  <p>{column.label}</p>
-              }
+                >{column.label}</TableSortLabel>
+                } else {
+                  return <p>{column.label}</p>
+                }
+              })()}
               </TableCell>
             );
           }, this)}
@@ -217,10 +213,11 @@ class ClientProfileSet extends Component {
 
   handleEditClick = (event, id) => {
     event.stopPropagation();
-    const selectedItem = this.props.profileSetModule.listData.find(function(element) {
+    const { profileSetModule, ClientProfileSetActions } = this.props;
+    const selectedItem = profileSetModule.listData.find(function(element) {
       return element.profileNo == id;
     });
-    this.props.ClientProfileSetActions.showDialog({
+    ClientProfileSetActions.showDialog({
       selectedItem: selectedItem,
       dialogType: ClientProfileSetDialog.TYPE_EDIT,
       dialogOpen: true
@@ -229,10 +226,11 @@ class ClientProfileSet extends Component {
 
   handleProfileClick = (event, id) => {
     event.stopPropagation();
-    const selectedItem = this.props.profileSetModule.listData.find(function(element) {
+    const { profileSetModule, ClientProfileSetActions } = this.props;
+    const selectedItem = profileSetModule.listData.find(function(element) {
       return element.profileNo == id;
     });
-    this.props.ClientProfileSetActions.showDialog({
+    ClientProfileSetActions.showDialog({
       selectedItem: selectedItem,
       dialogType: ClientProfileSetDialog.TYPE_PROFILE,
       dialogOpen: true
@@ -241,57 +239,47 @@ class ClientProfileSet extends Component {
 
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const selectedItem = this.props.profileSetModule.listData.find(function(element) {
+    const { profileSetModule, ClientProfileSetActions, GrConfirmActions } = this.props;
+    const selectedItem = profileSetModule.listData.find(function(element) {
       return element.profileNo == id;
     });
-
-    this.props.ClientProfileSetActions.setSelectedItem({
-      selectedItem: selectedItem
+    ClientProfileSetActions.changeParamValue({
+      name: 'profileNo',
+      value: selectedItem.profileNo
     });
-
-    const re = this.props.GrConfirmActions.showConfirm({
+    const re = GrConfirmActions.showConfirm({
       confirmTitle: '단말프로파일 삭제',
       confirmMsg: '단말프로파일(' + selectedItem.profileNo + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true
     });
-
   };
-
   handleDeleteConfirmResult = (confirmValue) => {
-    const { profileSetModule } = this.props;
+    const { profileSetModule, ClientProfileSetActions } = this.props;
     if(confirmValue) {
       this.props.ClientProfileSetActions.deleteClientProfileSetData({
         profile_no: profileSetModule.selectedItem.profileNo
       }).then(() => {
-          this.props.ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {}));
+          ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {}));
         }, () => {
-        });
+      });
     }
-
-    this.setState({ 
-      confirmOpen: false
-    });
   };
   
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-
     const { ClientProfileSetActions, profileSetModule } = this.props;
     ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = (event) => {
-
     const { ClientProfileSetActions, profileSetModule } = this.props;
     ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
-  // TODO: sort...
   handleRequestSort = (event, property) => {
-
     const { profileSetModule, ClientProfileSetActions } = this.props;
     let orderDir = "desc";
     if (profileSetModule.listParam.orderColumn === property && profileSetModule.listParam.orderDir === "desc") {

@@ -21,10 +21,10 @@ const CREATE_PROFILESET_JOB_PENDING = 'clientProfileSet/CREATE_JOB_PENDING';
 const CREATE_PROFILESET_JOB_SUCCESS = 'clientProfileSet/CREATE_JOB_SUCCESS';
 const CREATE_PROFILESET_JOB_FAILURE = 'clientProfileSet/CREATE_JOB_FAILURE';
 
-const SHOW_PROFILESET_DATA = 'clientProfileSetPopup/SHOW_PROFILESET_DATA';
-const CLOSE_PROFILESET_DATA = 'clientProfileSetPopup/CLOSE_PROFILESET_DATA';
-const CHG_PROFILESET_PARAM = 'clientProfileSetPopup/CHG_PROFILESET_PARAM';
-const SET_PROFILESET_SELECTED = 'clientProfileSetPopup/SET_PROFILESET_SELECTED';
+const SHOW_PROFILESET_DIALOG = 'clientProfileSet/SHOW_PROFILESET_DIALOG';
+const CLOSE_PROFILESET_DIALOG = 'clientProfileSet/CLOSE_PROFILESET_DIALOG';
+const CHG_PROFILESET_PARAM = 'clientProfileSet/CHG_PROFILESET_PARAM';
+const SET_PROFILESET_SELECTED = 'clientProfileSet/SET_PROFILESET_SELECTED';
 
 
 
@@ -38,7 +38,7 @@ const initialState = {
     listParam: {
         keyword: '',
         orderDir: 'desc',
-        orderColumn: 'PROFILE_NO',
+        orderColumn: 'chProfileSetNo',
         page: 0,
         rowsPerPage: 10,
         // rowsPerPageOptions: [5, 10, 25],
@@ -48,19 +48,18 @@ const initialState = {
 
     selectedItem: {
         profileNo: '',
-        profileName: '',
-        profileComment: ''
+        profileNm: '',
+        profileCmt: '',
+        clientId: '',
+        targetClientIds: '',
+        targetClientIdArray: [],
+        groupIds: '',
+        groupIdArray: [],
+        isRemoval: 'false'
     },
 
     dialogOpen: false,
     dialogType: '',
-
-    profileName: '',
-    profileComment: '',
-    clientId: '',
-    targetClient: [],
-    targetClientGroup: [],
-    isRemoval: 'false'
 
 };
 
@@ -98,12 +97,14 @@ export const createClientProfileSetData = (param) => dispatch => {
     dispatch({type: CREATE_PROFILESET_DATA_PENDING});
     return requestPostAPI('createProfileSet', param).then(
         (response) => {
-            if(response.data.status.result && response.data.status.result === 'success') {
-                dispatch({
-                    type: CREATE_PROFILESET_DATA_SUCCESS,
-                    payload: response
-                });
-            } else {
+            try {
+                if(response.data.status.result === 'success') {
+                    dispatch({
+                        type: CREATE_PROFILESET_DATA_SUCCESS,
+                        payload: response
+                    });
+                }
+            } catch(ex) {
                 dispatch({
                     type: CREATE_PROFILESET_DATA_FAILURE,
                     payload: response
@@ -182,14 +183,14 @@ export const setSelectedItem = (param) => dispatch => {
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
-        type: SHOW_PROFILESET_DATA,
+        type: SHOW_PROFILESET_DIALOG,
         payload: param
     });
 };
 
 export const closeDialog = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_PROFILESET_DATA,
+        type: CLOSE_PROFILESET_DIALOG,
         payload: param
     });
 };
@@ -259,27 +260,28 @@ export default handleActions({
             resultMsg: action.payload.data.status.message
         };
     },
-    [SHOW_PROFILESET_DATA]: (state, action) => {
+    [SHOW_PROFILESET_DIALOG]: (state, action) => {
         return {
             ...state,
             selectedItem: action.payload.selectedItem,
             dialogOpen: action.payload.dialogOpen,
             dialogType: action.payload.dialogType,
-            profileName: ((action.payload.selectedItem) ? action.payload.selectedItem.profileName : ''),
-            profileComment: ((action.payload.selectedItem) ? action.payload.selectedItem.profileComment : ''),
-            clientId: ((action.payload.selectedItem) ? action.payload.selectedItem.clientId : '')
+            // profileName: ((action.payload.selectedItem) ? action.payload.selectedItem.profileName : ''),
+            // profileComment: ((action.payload.selectedItem) ? action.payload.selectedItem.profileComment : ''),
+            // clientId: ((action.payload.selectedItem) ? action.payload.selectedItem.clientId : '')
         };
     },
-    [CLOSE_PROFILESET_DATA]: (state, action) => {
+    [CLOSE_PROFILESET_DIALOG]: (state, action) => {
         return {
             ...state,
             dialogOpen: action.payload.dialogOpen
         }
     },
     [CHG_PROFILESET_PARAM]: (state, action) => {
+        const newRegKey = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
-            [action.payload.name]: action.payload.value
+            selectedItem: newRegKey
         }
     },
     [SET_PROFILESET_SELECTED]: (state, action) => {

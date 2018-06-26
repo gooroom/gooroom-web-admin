@@ -47,10 +47,6 @@ const theme = createMuiTheme();
 //
 //  ## Style ########## ########## ########## ########## ##########
 //
-const pageContentClass = css({
-  paddingTop: '14px !important'
-}).toString();
-
 const formClass = css({
   marginBottom: '6px !important',
     display: 'flex'
@@ -80,11 +76,6 @@ const leftIconClass = css({
 
 const tableClass = css({
   minWidth: '700px !important'
-}).toString();
-
-const tableHeadCellClass = css({
-  whiteSpace: 'nowrap',
-  padding: '0px !important'
 }).toString();
 
 const tableContainerClass = css({
@@ -140,11 +131,11 @@ class ClientRegKeyHead extends Component {
   };
 
   static columnData = [
-    { id: 'colRegKey', numeric: false, disablePadding: true, label: '단말등록키' },
-    { id: 'colValidDate', numeric: false, disablePadding: true, label: '유효날짜' },
-    { id: 'colExpireDate', numeric: false, disablePadding: true, label: '인증서만료날짜' },
-    { id: 'colModDate', numeric: false, disablePadding: true, label: '등록일' },
-    { id: 'colAction', numeric: false, disablePadding: true, label: '수정/삭제' },
+    { id: 'chRegKey', isOrder: true, numeric: false, disablePadding: true, label: '단말등록키' },
+    { id: 'chValidDate', isOrder: true, numeric: false, disablePadding: true, label: '유효날짜' },
+    { id: 'chExpireDate', isOrder: true, numeric: false, disablePadding: true, label: '인증서만료날짜' },
+    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
   ];
 
   render() {
@@ -166,14 +157,11 @@ class ClientRegKeyHead extends Component {
                   active={orderColumn === column.id}
                   direction={orderDir}
                   onClick={this.createSortHandler(column.id)}
-                >
-                  {column.label}
-                </TableSortLabel>
+                >{column.label}</TableSortLabel>
                 } else {
                   return <p>{column.label}</p>
                 }
               })()}
-
               </TableCell>
             );
           }, this)}
@@ -187,6 +175,7 @@ class ClientRegKeyHead extends Component {
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientRegKey extends Component {
+
   constructor(props) {
     super(props);
 
@@ -201,27 +190,27 @@ class ClientRegKey extends Component {
     ClientRegKeyActions.readClientRegkeyList(getMergedListParam(ClientRegKeyProps.listParam, param));
   };
   
-  handleAddButton = () => {
-    this.setState({
-      selectedRegKeyInfo: {
+  handleCreateButton = () => {
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    ClientRegKeyActions.showDialog({
+      selectedItem: {
         regKeyNo: '',
         validDate: (new Date()).setMonth((new Date()).getMonth() + 1),
         expireDate: (new Date()).setMonth((new Date()).getMonth() + 1),
         ipRange: '',
-        comment: ''
+        comment: '' 
       },
-      clientRegKeyDialogType: ClientRegKeyDialog.TYPE_ADD,
-      clientRegKeyDialogOpen: true 
+      dialogType: ClientRegKeyDialog.TYPE_ADD,
+      dialogOpen: true
     });
   }
   
   handleRowClick = (event, id) => {
-    const { ClientRegKeyProps } = this.props;
+    const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
     const selectedItem = ClientRegKeyProps.listData.find(function(element) {
       return element.regKeyNo == id;
     });
-
-    ClientProfileSetActions.showDialog({
+    ClientRegKeyActions.showDialog({
       selectedItem: selectedItem,
       dialogType: ClientRegKeyDialog.TYPE_VIEW,
       dialogOpen: true
@@ -230,87 +219,61 @@ class ClientRegKey extends Component {
 
   handleEditClick = (event, id) => {
     event.stopPropagation();
-    const selectedItem = this.props.listData.find(function(element) {
+    const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
+    const selectedItem = ClientRegKeyProps.listData.find(function(element) {
       return element.regKeyNo == id;
     });
-
-    this.setState({ 
-      selectedRegKeyInfo: selectedItem,
-      clientRegKeyDialogType: ClientRegKeyDialog.TYPE_EDIT,
-      clientRegKeyDialogOpen: true
+    ClientRegKeyActions.showDialog({
+      selectedItem: selectedItem,
+      dialogType: ClientRegKeyDialog.TYPE_EDIT,
+      dialogOpen: true
     });
   };
 
+  // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const selectedItem = this.props.listData.find(function(element) {
+    const { ClientRegKeyProps, ClientRegKeyActions, GrConfirmActions } = this.props;
+    const selectedItem = ClientRegKeyProps.listData.find(function(element) {
       return element.regKeyNo == id;
     });
-
-    this.setState({ 
-      selectedRegKeyInfo: selectedItem,
+    ClientRegKeyActions.changeParamValue({
+      name: 'regKeyNo',
+      value: selectedItem.regKeyNo
+    });
+    const re = GrConfirmActions.showConfirm({
       confirmTitle: '단말등록키 삭제',
       confirmMsg: '단말등록키(' + selectedItem.regKeyNo + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true
     });
   };
-
-  handleDeleteConfirmResult = (params) => {
-    if(params) {
-      grRequestPromise('/gpms/deleteRegKeyData', {
-          regKeyNo: this.state.selectedRegKeyInfo.regKeyNo,
-        }).then(res => {
-          this.handleRefreshList();
-        }, res => {
-          //
-      });        
+  handleDeleteConfirmResult = (confirmValue) => {
+    const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
+    if(confirmValue) {
+      ClientRegKeyActions.deleteClientRegKeyData({
+        regKeyNo: ClientRegKeyProps.selectedItem.regKeyNo
+      }).then(() => {
+        ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
+        }, () => {
+      });
     }
-    this.setState({ 
-      confirmOpen: false
-    });
   };
-
-  handleRefreshList = () => {
-    this.props.ClientRegKeyActions.readClientRegkeyList({
-      keyword: this.state.keyword,
-      page: this.props.page,
-      rowsPerPage: this.props.rowsPerPage,
-      orderColumn: this.props.orderColumn,
-      orderDir: this.props.orderDir
-    });
-  }
 
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-
-    this.props.ClientRegKeyActions.readClientRegkeyList({
-      keyword: this.state.keyword,
-      page: page,
-      rowsPerPage: this.props.rowsPerPage,
-      orderColumn: this.props.orderColumn,
-      orderDir: this.props.orderDir
-    });
-
-    //this.fetchData(page, this.state.rowsPerPage, this.state.orderColumn, this.state.orderDir);
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    ClientRegKeyActions.readClientRegkeyList(getMergedListParam(ClientRegKeyProps.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
-    //this.fetchData(this.state.page, event.target.value, this.state.orderColumn, this.state.orderDir);
-    this.props.ClientRegKeyActions.readClientRegkeyList({
-      keyword: this.state.keyword,
-      page: this.props.page,
-      rowsPerPage: event.target.value,
-      orderColumn: this.props.orderColumn,
-      orderDir: this.props.orderDir
-    });
-
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    ClientRegKeyActions.readClientRegkeyList(getMergedListParam(ClientRegKeyProps.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
   handleRequestSort = (event, property) => {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>');
     const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
     let orderDir = "desc";
     if (ClientRegKeyProps.listParam.orderColumn === property && ClientRegKeyProps.listParam.orderDir === "desc") {
@@ -321,31 +284,17 @@ class ClientRegKey extends Component {
   // .................................................
 
   // .................................................
-  handleDialogClose = value => {
-    this.setState({ 
-      clientRegKeyInfo: value,
-      clientRegKeyDialogOpen: false 
-    });
-  };
-
   handleKeywordChange = name => event => {
-    this.setState({
-      [name]: event.target.value
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    const newParam = getMergedListParam(ClientRegKeyProps.listParam, {keyword: event.target.value});
+    ClientRegKeyActions.changeParamValue({
+      name: 'listParam',
+      value: newParam
     });
   }
 
-  handleRegKeyChangeData = (name, value) => {
-    let beforeInfo = this.state.selectedRegKeyInfo;
-    beforeInfo[name] = value;
-    this.setState({
-      selectedRegKeyInfo: beforeInfo
-    });
-  };
-
-
   render() {
 
-    const { listData, orderDir, orderColumn, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.props;
     const { ClientRegKeyProps } = this.props;
     const emptyRows = ClientRegKeyProps.listParam.rowsPerPage - ClientRegKeyProps.listData.length;
 
@@ -382,7 +331,7 @@ class ClientRegKey extends Component {
               variant='raised'
               color='secondary'
               onClick={() => {
-                this.handleAddButton();
+                this.handleCreateButton();
               }}
             >
               <AddIcon className={leftIconClass} />
@@ -463,22 +412,8 @@ class ClientRegKey extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientRegKeyDialog
-          open={this.state.clientRegKeyDialogOpen}
-
-          type={this.state.clientRegKeyDialogType}
-          selectedData={this.state.selectedRegKeyInfo}
-          onClose={this.handleDialogClose}
-          handleRegKeyChangeData={this.handleRegKeyChangeData}
-          handleRefreshList={this.handleRefreshList}
-        />
-        <GrConfirm
-          open={this.state.confirmOpen}
-          confirmTitle={this.state.confirmTitle}
-          confirmMsg={this.state.confirmMsg}
-          resultConfirm={this.state.handleConfirmResult}
-        />
-
+        <ClientRegKeyDialog />
+        <GrConfirm />
       </React.Fragment>
     );
   }
@@ -488,19 +423,6 @@ const mapStateToProps = (state) => ({
 
   ClientRegKeyProps: state.ClientRegKeyModule,
   grConfirmModule: state.GrConfirmModule,
-  
-  // return({
-  //   listData: state.ClientRegKeyModule.listData,
-  //   error: state.ClientRegKeyModule.error,
-  //   orderDir: state.ClientRegKeyModule.orderDir,
-  //   orderColumn: state.ClientRegKeyModule.orderColumn,
-  //   page: state.ClientRegKeyModule.page,
-  //   pending: state.ClientRegKeyModule.pending,
-  //   rowsFiltered: state.ClientRegKeyModule.rowsFiltered,
-  //   rowsPerPage: state.ClientRegKeyModule.rowsPerPage,
-  //   rowsTotal: state.ClientRegKeyModule.rowsTotal,
-  //   keyword: state.ClientRegKeyModule.keyword
-  // });
 
 });
 

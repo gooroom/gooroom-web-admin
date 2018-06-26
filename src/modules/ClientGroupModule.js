@@ -37,7 +37,7 @@ const initialState = {
     listData: [],
     listParam: {
         keyword: '',
-        orderDir: 'asc',
+        orderDir: 'desc',
         orderColumn: 'chGrpNm',
         page: 0,
         rowsPerPage: 10,
