@@ -9,7 +9,7 @@ import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { css } from "glamor";
 
-import { formatDateToSimple, formatSimpleStringToStartTime, formatSimpleStringToEndTime } from '../../components/GrUtils/GrDates';
+import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -96,7 +96,8 @@ class ClientRegKeyDialog extends Component {
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
             const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-            ClientRegKeyActions.editClientRegKeyData(ClientRegKeyProps.selectedItem).then((res) => {
+            ClientRegKeyActions.editClientRegKeyData(ClientRegKeyProps.selectedItem)
+                .then((res) => {
                 ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
                 this.handleClose();
             }, (res) => {
@@ -231,8 +232,7 @@ class ClientRegKeyDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientRegKeyProps: state.ClientRegKeyModule,
-    grConfirmModule: state.GrConfirmModule,
+    ClientRegKeyProps: state.ClientRegKeyModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

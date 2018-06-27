@@ -13,7 +13,6 @@ import { css } from 'glamor';
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
 
-import { grRequestPromise } from '../../components/GrUtils/GrRequester';
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
 
@@ -211,7 +210,7 @@ class ClientRegKey extends Component {
       return element.regKeyNo == id;
     });
     ClientRegKeyActions.showDialog({
-      selectedItem: selectedItem,
+      selectedItem: Object.assign({}, selectedItem),
       dialogType: ClientRegKeyDialog.TYPE_VIEW,
       dialogOpen: true
     });
@@ -224,7 +223,7 @@ class ClientRegKey extends Component {
       return element.regKeyNo == id;
     });
     ClientRegKeyActions.showDialog({
-      selectedItem: selectedItem,
+      selectedItem: Object.assign({}, selectedItem),
       dialogType: ClientRegKeyDialog.TYPE_EDIT,
       dialogOpen: true
     });
@@ -420,17 +419,12 @@ class ClientRegKey extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
-  ClientRegKeyProps: state.ClientRegKeyModule,
-  grConfirmModule: state.GrConfirmModule,
-
+  ClientRegKeyProps: state.ClientRegKeyModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-
   ClientRegKeyActions: bindActionCreators(ClientRegKeyActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientRegKey);
