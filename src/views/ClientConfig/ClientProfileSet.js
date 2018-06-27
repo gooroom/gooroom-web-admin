@@ -76,7 +76,6 @@ const tableClass = css({
   minWidth: '700px !important'
 }).toString();
 
-
 const tableContainerClass = css({
   overflowX: 'auto',
   '&::-webkit-scrollbar': {
@@ -106,7 +105,6 @@ const tableCellClass = css({
   padding: '0px !important',
   cursor: 'pointer'
 }).toString();
-
 
 const actButtonClass = css({
     margin: '5px !important',
@@ -188,24 +186,35 @@ class ClientProfileSet extends Component {
 
   // .................................................
   handleSelectBtnClick = (param) => {
-    const { ClientProfileSetActions, profileSetModule } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, param));
+    const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
+    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(ClientProfileSetProps.listParam, param));
   };
   
   handleCreateButton = () => {
     this.props.ClientProfileSetActions.showDialog({
+      selectedItem: {
+        profileNo: '',
+        profileNm: '',
+        profileCmt: '',
+        clientId: '',
+        targetClientIds: '',
+        targetClientIdArray: [],
+        targetGroupIds: '',
+        targetGroupIdArray: [],
+        isRemoval: 'false'
+      },
       dialogType: ClientProfileSetDialog.TYPE_ADD,
       dialogOpen: true
     });
   }
   
   handleRowClick = (event, id) => {
-    const { profileSetModule, ClientProfileSetActions } = this.props;
-    const selectedItem = profileSetModule.listData.find(function(element) {
+    const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
+    const selectedItem = ClientProfileSetProps.listData.find(function(element) {
       return element.profileNo == id;
     });
     ClientProfileSetActions.showDialog({
-      selectedItem: selectedItem,
+      selectedItem: Object.assign({}, selectedItem),
       dialogType: ClientProfileSetDialog.TYPE_VIEW,
       dialogOpen: true
     });
@@ -213,12 +222,13 @@ class ClientProfileSet extends Component {
 
   handleEditClick = (event, id) => {
     event.stopPropagation();
-    const { profileSetModule, ClientProfileSetActions } = this.props;
-    const selectedItem = profileSetModule.listData.find(function(element) {
+    const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
+    const selectedItem = ClientProfileSetProps.listData.find(function(element) {
       return element.profileNo == id;
     });
+    
     ClientProfileSetActions.showDialog({
-      selectedItem: selectedItem,
+      selectedItem: Object.assign({}, selectedItem),
       dialogType: ClientProfileSetDialog.TYPE_EDIT,
       dialogOpen: true
     });
@@ -226,12 +236,18 @@ class ClientProfileSet extends Component {
 
   handleProfileClick = (event, id) => {
     event.stopPropagation();
-    const { profileSetModule, ClientProfileSetActions } = this.props;
-    const selectedItem = profileSetModule.listData.find(function(element) {
+    const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
+    const selectedItem = ClientProfileSetProps.listData.find(function(element) {
       return element.profileNo == id;
     });
     ClientProfileSetActions.showDialog({
-      selectedItem: selectedItem,
+      selectedItem: Object.assign({
+        targetClientIds: '',
+        targetClientIdArray: [],
+        targetGroupIds: '',
+        targetGroupIdArray: [],
+        isRemoval: 'false'
+      }, selectedItem),
       dialogType: ClientProfileSetDialog.TYPE_PROFILE,
       dialogOpen: true
     });
@@ -239,8 +255,8 @@ class ClientProfileSet extends Component {
 
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { profileSetModule, ClientProfileSetActions, GrConfirmActions } = this.props;
-    const selectedItem = profileSetModule.listData.find(function(element) {
+    const { ClientProfileSetProps, ClientProfileSetActions, GrConfirmActions } = this.props;
+    const selectedItem = ClientProfileSetProps.listData.find(function(element) {
       return element.profileNo == id;
     });
     ClientProfileSetActions.changeParamValue({
@@ -255,12 +271,12 @@ class ClientProfileSet extends Component {
     });
   };
   handleDeleteConfirmResult = (confirmValue) => {
-    const { profileSetModule, ClientProfileSetActions } = this.props;
+    const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
     if(confirmValue) {
       this.props.ClientProfileSetActions.deleteClientProfileSetData({
-        profile_no: profileSetModule.selectedItem.profileNo
+        profileNo: ClientProfileSetProps.selectedItem.profileNo
       }).then(() => {
-          ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {}));
+          ClientProfileSetActions.readClientProfileSetList(getMergedListParam(ClientProfileSetProps.listParam, {}));
         }, () => {
       });
     }
@@ -268,30 +284,30 @@ class ClientProfileSet extends Component {
   
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-    const { ClientProfileSetActions, profileSetModule } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {page: page}));
+    const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
+    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(ClientProfileSetProps.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = (event) => {
-    const { ClientProfileSetActions, profileSetModule } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {rowsPerPage: event.target.value}));
+    const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
+    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(ClientProfileSetProps.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
   handleRequestSort = (event, property) => {
-    const { profileSetModule, ClientProfileSetActions } = this.props;
+    const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
     let orderDir = "desc";
-    if (profileSetModule.listParam.orderColumn === property && profileSetModule.listParam.orderDir === "desc") {
+    if (ClientProfileSetProps.listParam.orderColumn === property && ClientProfileSetProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(profileSetModule.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientProfileSetActions.readClientProfileSetList(getMergedListParam(ClientProfileSetProps.listParam, {orderColumn: property, orderDir: orderDir}));
   }
   // .................................................
 
   handleKeywordChange = name => event => {
-    const { ClientProfileSetActions, profileSetModule } = this.props;
-    const newParam = getMergedListParam(profileSetModule.listParam, {keyword: event.target.value});
+    const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
+    const newParam = getMergedListParam(ClientProfileSetProps.listParam, {keyword: event.target.value});
     ClientProfileSetActions.changeParamValue({
       name: 'listParam',
       value: newParam
@@ -300,8 +316,8 @@ class ClientProfileSet extends Component {
 
   render() {
 
-    const { profileSetModule } = this.props;
-    const emptyRows = profileSetModule.listParam.rowsPerPage - profileSetModule.listData.length;
+    const { ClientProfileSetProps } = this.props;
+    const emptyRows = ClientProfileSetProps.listParam.rowsPerPage - ClientProfileSetProps.listData.length;
 
     return (
       <React.Fragment>
@@ -314,7 +330,7 @@ class ClientProfileSet extends Component {
                 id='keyword'
                 label='검색어'
                 className={textFieldClass}
-                value={profileSetModule.listParam.keyword}
+                value={ClientProfileSetProps.listParam.keyword}
                 onChange={this.handleKeywordChange('keyword')}
                 margin='dense'
               />
@@ -346,12 +362,12 @@ class ClientProfileSet extends Component {
             <Table className={tableClass}>
 
               <ClientProfileSetHead
-                orderDir={profileSetModule.listParam.orderDir}
-                orderColumn={profileSetModule.listParam.orderColumn}
+                orderDir={ClientProfileSetProps.listParam.orderDir}
+                orderColumn={ClientProfileSetProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
               />
               <TableBody>
-                {profileSetModule.listData.map(n => {
+                {ClientProfileSetProps.listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -360,13 +376,13 @@ class ClientProfileSet extends Component {
                       key={n.profileNo}
                     >
                       <TableCell className={tableCellClass}>{n.profileNo}</TableCell>
-                      <TableCell className={tableCellClass}>{n.profileName}</TableCell>
+                      <TableCell className={tableCellClass}>{n.profileNm}</TableCell>
                       <TableCell className={tableCellClass}>{n.clientId}</TableCell>
                       <TableCell className={tableCellClass}>
-                        {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
+                        {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
                       </TableCell>
                       <TableCell className={tableCellClass}>
-                        {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
+                        {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
                       </TableCell>
                       <TableCell className={tableCellClass}>
                         <Button variant='fab' color='secondary' aria-label='edit' className={actButtonClass} onClick={event => this.handleEditClick(event, n.profileNo)}>
@@ -399,9 +415,9 @@ class ClientProfileSet extends Component {
 
           <TablePagination
             component='div'
-            count={profileSetModule.listParam.rowsFiltered}
-            rowsPerPage={profileSetModule.listParam.rowsPerPage}
-            page={profileSetModule.listParam.page}
+            count={ClientProfileSetProps.listParam.rowsFiltered}
+            rowsPerPage={ClientProfileSetProps.listParam.rowsPerPage}
+            page={ClientProfileSetProps.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -422,18 +438,13 @@ class ClientProfileSet extends Component {
 }
 
 const mapStateToProps = (state) => ({
-
-    profileSetModule: state.ClientProfileSetModule,
-    grConfirmModule: state.GrConfirmModule,
-
+    ClientProfileSetProps: state.ClientProfileSetModule
 });
 
 
 const mapDispatchToProps = (dispatch) => ({
-
   ClientProfileSetActions: bindActionCreators(ClientProfileSetActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientProfileSet);

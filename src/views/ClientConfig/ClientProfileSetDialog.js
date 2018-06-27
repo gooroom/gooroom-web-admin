@@ -10,6 +10,7 @@ import * as GrConfirmActions from '../../modules/GrConfirmModule';
 import { css } from "glamor";
 
 import GrClientSelector from '../../components/GrComponents/GrClientSelector';
+import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
@@ -66,10 +67,10 @@ class ClientProfileSetDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { profileSetModule } = this.props;
-        this.props.ClientProfileSetActions.createClientProfileSetData(profileSetModule.selectedItem)
+        const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
+        ClientProfileSetActions.createClientProfileSetData(ClientProfileSetProps.selectedItem)
         .then(() => {
-            this.props.ClientProfileSetActions.readClientProfileSetList(profileSetModule.listParam);
+            ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
             this.handleClose();
         }, (res) => {
             // console.log('error...', res);
@@ -83,52 +84,45 @@ class ClientProfileSetDialog extends Component {
             confirmMsg: '단말 프로파일을 수정하시겠습니까?',
             confirmOpen: true,
             handleConfirmResult: this.handleEditConfirmResult
-          });
+        });
     }
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
-            const { profileSetModule, ClientProfileSetActions } = this.props;
-            ClientProfileSetActions.editClientProfileSetData({
-                profile_no: profileSetModule.selectedItem.profileNo,
-                client_id: profileSetModule.clientId,
-                profile_nm: profileSetModule.profileName,
-                profile_cmt: profileSetModule.profileComment
-            }).then((res) => {
-                ClientProfileSetActions.readClientProfileSetList(profileSetModule.listParam);
+            const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
+            ClientProfileSetActions.editClientProfileSetData(ClientProfileSetProps.selectedItem)
+                .then((res) => {
+                ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
                 this.handleClose();
             }, (res) => {
-                //console.log('error...', res);
+                //  ('error...', res);
             })
         }
     }
 
     handleProfileJob = (event) => {
 
-        const { profileSetModule } = this.props;
-        const tc = (profileSetModule.targetClient).map((v) => (v.clientId)).join(',');
-        const tcg = (profileSetModule.targetClientGroup).map((v) => (v.grpId)).join(',');
-
-        this.props.ClientProfileSetActions.createClientProfileSetJob({
-            profile_no: profileSetModule.selectedItem.profileNo, 
-            client_id: tc,
-            group_id: tcg,
-            is_removal: profileSetModule.isRemoval
-        }).then((res) => {
-            this.props.ClientProfileSetActions.readClientProfileSetList(
-                {
-                    keyword: profileSetModule.keyword,
-                    page: profileSetModule.page,
-                    rowsPerPage: profileSetModule.rowsPerPage,
-                    length: profileSetModule.rowsPerPage,
-                    orderColumn: profileSetModule.orderColumn,
-                    orderDir: profileSetModule.orderDir
-                }
-            );
-            this.handleClose();
-        }, (res) => {
-            //console.log('error...', res);
-        })
-
+        const { GrConfirmActions } = this.props;
+        const re = GrConfirmActions.showConfirm({
+            confirmTitle: '단말 프로파일 실행',
+            confirmMsg: '단말 프로파일을 실행하시겠습니까?',
+            confirmOpen: true,
+            handleConfirmResult: this.handleProfileJobConfirmResult
+        });
+    }
+    handleProfileJobConfirmResult = (confirmValue) => {
+        if(confirmValue) {
+            const { ClientProfileSetProps } = this.props;
+            const targetClientIds = (ClientProfileSetProps.selectedItem.targetClientIdArray).map((v) => (v.clientId)).join(',');
+            const targetGroupIds = (ClientProfileSetProps.selectedItem.targetGroupIdArray).map((v) => (v.grpId)).join(',');
+            const newSelectedItem = getMergedListParam(ClientProfileSetProps.selectedItem, {targetClientIds: targetClientIds, targetGroupIds: targetGroupIds});
+            this.props.ClientProfileSetActions.createClientProfileSetJob(newSelectedItem)
+                .then((res) => {
+                this.props.ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
+                this.handleClose();
+            }, (res) => {
+                //console.log('error...', res);
+            });
+        }
     }
 
     handleChange = name => event => {
@@ -143,25 +137,29 @@ class ClientProfileSetDialog extends Component {
             name: 'clientId',
             value: value.clientId
         });
+        this.props.ClientProfileSetActions.changeParamValue({
+            name: 'clientNm',
+            value: value.clientName
+        });
     }
 
     handleSelectClientArray = (value) => {
         this.props.ClientProfileSetActions.changeParamValue({
-          name: 'targetClient',
+          name: 'targetClientIdArray',
           value: value
         });
     }
 
     handleSelectGroupArray = (value) => {
         this.props.ClientProfileSetActions.changeParamValue({
-          name: 'targetClientGroup',
+          name: 'targetGroupIdArray',
           value: value
         });
     }
 
     handleChangeRemoval = key => (event, value) => {
         this.props.ClientProfileSetActions.changeParamValue({
-            name: key,
+            name: 'isRemoval',
             value: value
         });
     };
@@ -169,8 +167,8 @@ class ClientProfileSetDialog extends Component {
 
     render() {
 
-        const { profileSetModule } = this.props;
-        const { dialogType } = profileSetModule;
+        const { ClientProfileSetProps } = this.props;
+        const { dialogType } = ClientProfileSetProps;
 
         let title = "";
         if(dialogType === ClientProfileSetDialog.TYPE_ADD) {
@@ -184,31 +182,31 @@ class ClientProfileSetDialog extends Component {
         }
 
         return (
-            <Dialog open={profileSetModule.dialogOpen}>
+            <Dialog open={ClientProfileSetProps.dialogOpen}>
                 <DialogTitle >{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={containerClass}>
 
-                    <TextField
-                        id="profileName"
+                    <TextField  
+                        id="profileNm"
                         label="프로파일 이름"
                         color="secondary"
-                        value={(profileSetModule.selectedItem) ? profileSetModule.selectedItem.profileNm : ''}
-                        onChange={this.handleChange("profileName")}
+                        value={(ClientProfileSetProps.selectedItem) ? ClientProfileSetProps.selectedItem.profileNm : ''}
+                        onChange={this.handleChange("profileNm")}
                         className={classNames(fullWidthClass)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     <TextField
-                        id="profileComment"
+                        id="profileCmt"
                         label="프로파일 설명"
-                        value={(profileSetModule.selectedItem) ? profileSetModule.selectedItem.profileCmt : ''}
-                        onChange={this.handleChange("profileComment")}
+                        value={(ClientProfileSetProps.selectedItem) ? ClientProfileSetProps.selectedItem.profileCmt : ''}
+                        onChange={this.handleChange("profileCmt")}
                         className={classNames(fullWidthClass, itemRowClass)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
                         <div className={classNames(fullWidthClass, itemRowClass)}>
                             <FormLabel>기타 패키지 처리방식</FormLabel>
-                            <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={profileSetModule.isRemoval} row>
+                            <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={ClientProfileSetProps.selectedItem.isRemoval} row>
                                 <FormControlLabel value="true" control={<Radio />} label="삭제함" />
                                 <FormControlLabel value="false" control={<Radio />} label="삭제안함" />
                             </RadioGroup>
@@ -218,7 +216,7 @@ class ClientProfileSetDialog extends Component {
                         <TextField
                             id="clientId"
                             label="레퍼런스 단말"
-                            value={profileSetModule.clientId}
+                            value={(ClientProfileSetProps.selectedItem) ? ClientProfileSetProps.selectedItem.clientNm + ' (' + ClientProfileSetProps.selectedItem.clientId + ')' : ''}
                             onChange={this.handleChange("clientId")}
                             className={classNames(fullWidthClass, itemRowClass)}
                             disabled
@@ -229,7 +227,7 @@ class ClientProfileSetDialog extends Component {
                             <TextField
                                 id="clientId"
                                 label="레퍼런스 단말"
-                                value={profileSetModule.clientId}
+                                value={(ClientProfileSetProps.selectedItem && ClientProfileSetProps.selectedItem.clientNm) ? ClientProfileSetProps.selectedItem.clientNm + ' (' + ClientProfileSetProps.selectedItem.clientId + ')' : ''}
                                 placeholder="아래 목록에서 단말을 선택하세요."
                                 onChange={this.handleChange("clientId")}
                                 className={classNames(fullWidthClass, itemRowClass)}
@@ -273,8 +271,7 @@ class ClientProfileSetDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    profileSetModule: state.ClientProfileSetModule,
-    grConfirmModule: state.GrConfirmModule,
+    ClientProfileSetProps: state.ClientProfileSetModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

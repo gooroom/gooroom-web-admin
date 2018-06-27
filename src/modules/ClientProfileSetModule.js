@@ -1,6 +1,8 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
+import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
+
 const GET_PROFILESET_LIST_PENDING = 'clientProfileSet/GET_LIST_PENDING';
 const GET_PROFILESET_LIST_SUCCESS = 'clientProfileSet/GET_LIST_SUCCESS';
 const GET_PROFILESET_LIST_FAILURE = 'clientProfileSet/GET_LIST_FAILURE';
@@ -51,10 +53,11 @@ const initialState = {
         profileNm: '',
         profileCmt: '',
         clientId: '',
+        clientNm: '',
         targetClientIds: '',
         targetClientIdArray: [],
-        groupIds: '',
-        groupIdArray: [],
+        targetGroupIds: '',
+        targetGroupIdArray: [],
         isRemoval: 'false'
     },
 
@@ -266,9 +269,6 @@ export default handleActions({
             selectedItem: action.payload.selectedItem,
             dialogOpen: action.payload.dialogOpen,
             dialogType: action.payload.dialogType,
-            // profileName: ((action.payload.selectedItem) ? action.payload.selectedItem.profileName : ''),
-            // profileComment: ((action.payload.selectedItem) ? action.payload.selectedItem.profileComment : ''),
-            // clientId: ((action.payload.selectedItem) ? action.payload.selectedItem.clientId : '')
         };
     },
     [CLOSE_PROFILESET_DIALOG]: (state, action) => {
@@ -278,10 +278,10 @@ export default handleActions({
         }
     },
     [CHG_PROFILESET_PARAM]: (state, action) => {
-        const newRegKey = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
+        const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
-            selectedItem: newRegKey
+            selectedItem: newSelectedItem
         }
     },
     [SET_PROFILESET_SELECTED]: (state, action) => {
@@ -311,7 +311,6 @@ export default handleActions({
             error: true
         };
     },
-
 
 }, initialState);
 

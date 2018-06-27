@@ -55,15 +55,20 @@ const initialState = {
 
     dialogOpen: false,
     dialogType: '',
+};
 
-    // keyword: '',
-    // orderDir: 'asc',
-    // orderColumn: '',
-    // selected: [],
-    // page: 0,
-    // rowsPerPage: 5,
-    // rowsTotal: 0,
-    // rowsFiltered: 0
+export const showDialog = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_REGKEY_DIALOG,
+        payload: param
+    });
+};
+
+export const closeDialog = (param) => dispatch => {
+    return dispatch({
+        type: CLOSE_REGKEY_DIALOG,
+        payload: param
+    });
 };
 
 // ...
@@ -90,20 +95,6 @@ export const readClientRegkeyList = (param) => dispatch => {
             type: GET_REGKEY_LIST_FAILURE,
             payload: error
         });
-    });
-};
-
-export const showDialog = (param) => dispatch => {
-    return dispatch({
-        type: SHOW_REGKEY_DIALOG,
-        payload: param
-    });
-};
-
-export const closeDialog = (param) => dispatch => {
-    return dispatch({
-        type: CLOSE_REGKEY_DIALOG,
-        payload: param
     });
 };
 
@@ -204,14 +195,9 @@ export const deleteClientRegKeyData = (param) => dispatch => {
 };
 
 
-
-
-
-
 export default handleActions({
 
     [GET_REGKEY_LIST_PENDING]: (state, action) => {
-
         return {
             ...state,
             pending: true,
@@ -219,9 +205,7 @@ export default handleActions({
         };
     },
     [GET_REGKEY_LIST_SUCCESS]: (state, action) => {
-
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-
         let tempListParam = state.listParam;
         Object.assign(tempListParam, {
             rowsFiltered: parseInt(recordsFiltered, 10),
@@ -260,17 +244,17 @@ export default handleActions({
         }
     },
     [CHG_REGKEY_PARAM]: (state, action) => {
-        const newRegKey = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
+        const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
-            selectedItem: newRegKey
+            selectedItem: newSelectedItem
         }
     },
     [CREATE_REGKEY_NEWKEY]: (state, action) => {
-        const newRegKey = getMergedListParam(state.selectedItem, {regKeyNo: action.payload.key});
+        const newSelectedItem = getMergedListParam(state.selectedItem, {regKeyNo: action.payload.key});
         return {
             ...state,
-            selectedItem: newRegKey
+            selectedItem: newSelectedItem
         }
     },
     [CREATE_REGKEY_PENDING]: (state, action) => {
@@ -348,7 +332,6 @@ export default handleActions({
             resultMsg: action.payload.data.status.message
         };
     },
-
 
 }, initialState);
 
