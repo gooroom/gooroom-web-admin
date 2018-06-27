@@ -17,8 +17,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import GrConfirm from '../../components/GrComponents/GrConfirm';
-
 //
 //  ## Style ########## ########## ########## ########## ##########
 //
@@ -42,10 +40,9 @@ class ClientGroupDialog extends Component {
     static TYPE_ADD = 'ADD';
     static TYPE_VIEW = 'VIEW';
     static TYPE_EDIT = 'EDIT';
-    static TYPE_PROFILE = 'PROFILE';
 
     handleClose = (event) => {
-        this.props.ClientGroupActions.toggleCreateDialog({
+        this.props.ClientGroupActions.closeDialog({
             dialogOpen: false
         });
     }
@@ -58,15 +55,11 @@ class ClientGroupDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { clientGroupModule, ClientGroupActions } = this.props;
-        ClientGroupActions.createClientGroupData({
-            groupName: clientGroupModule.groupName,
-            groupComment: clientGroupModule.groupComment,
-            clientConfigId: clientGroupModule.clientConfigId,
-            isDefault: clientGroupModule.isDefault
-        }).then(() => {
-            this.props.ClientGroupActions.readClientGroupList(clientGroupModule.listParam);
-            this.handleClose();
+        const { ClientGroupProps, ClientGroupActions } = this.props;
+        ClientGroupActions.createClientGroupData(ClientGroupProps.selectedItem)
+            .then(() => {
+                ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
+                this.handleClose();
         }, (res) => {
             // console.log('error...', res);
         })
@@ -83,15 +76,11 @@ class ClientGroupDialog extends Component {
     }
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
-            const { clientGroupModule, ClientGroupActions } = this.props;
-            ClientGroupActions.editClientGroupData({
-                groupId: clientGroupModule.selectedItem.grpId,
-                groupName: clientGroupModule.groupName,
-                groupComment: clientGroupModule.groupComment,
-                clientConfigId: clientGroupModule.clientConfigId
-            }).then((res) => {
-                ClientGroupActions.readClientGroupList(clientGroupModule.listParam);
-                this.handleClose();
+            const { ClientGroupProps, ClientGroupActions } = this.props;
+            ClientGroupActions.editClientGroupData(ClientGroupProps.selectedItem)
+                .then((res) => {
+                    ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
+                    this.handleClose();
             }, (res) => {
                 //console.log('error...', res);
             })
@@ -100,41 +89,37 @@ class ClientGroupDialog extends Component {
 
     render() {
 
-        const { clientGroupModule, dialogType, grConfirmModule } = this.props;
+        const { ClientGroupProps } = this.props;
+        const { dialogType } = ClientGroupProps;
 
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
-            title = "단말 프로파일 등록";
+            title = "단말 그룹 등록";
         } else if(dialogType === ClientGroupDialog.TYPE_VIEW) {
-            title = "단말 프로파일 정보";
+            title = "단말 그룹 정보";
         } else if(dialogType === ClientGroupDialog.TYPE_EDIT) {
-            title = "단말 프로파일 수정";
-        } else if(dialogType === ClientGroupDialog.TYPE_PROFILE) {
-            title = "단말 프로파일 실행";
-        }
+            title = "단말 그룹 수정";
+        } 
 
         return (
-            <Dialog
-                onClose={this.handleClose}
-                open={this.props.open}
-            >
+            <Dialog open={ClientGroupProps.dialogOpen}>
                 <DialogTitle >{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={containerClass}>
 
                     <TextField
-                        id="groupName"
+                        id="grpNm"
                         label="단말그룹이름"
-                        value={clientGroupModule.groupName}
-                        onChange={this.handleChange('groupName')}
+                        value={(ClientGroupProps.selectedItem) ? ClientGroupProps.selectedItem.grpNm : ''}
+                        onChange={this.handleChange('grpNm')}
                         margin="normal"
                         className={fullWidthClass}
                     />
 
                     <TextField
-                        id="groupComment"
+                        id="comment"
                         label="단말그룹설명"
-                        value={clientGroupModule.groupComment}
-                        onChange={this.handleChange('groupComment')}
+                        value={(ClientGroupProps.selectedItem) ? ClientGroupProps.selectedItem.comment : ''}
+                        onChange={this.handleChange('comment')}
                         margin="normal"
                         className={fullWidthClass}
                     />
@@ -149,17 +134,13 @@ class ClientGroupDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
                 </DialogActions>
-                <GrConfirm />
             </Dialog>
         );
     }
-
 }
 
 const mapStateToProps = (state) => ({
-    clientGroupModule: state.ClientGroupModule,
-    dialogType: state.ClientGroupModule.dialogType,
-    grConfirmModule: state.GrConfirmModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
