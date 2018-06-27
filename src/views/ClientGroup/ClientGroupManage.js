@@ -208,12 +208,12 @@ class ClientGroupManage extends Component {
 
   // .................................................
   handleRequestSort = (event, property) => {
-    const { ClientGroupActions, clientGroupModule } = this.props;
+    const { ClientGroupActions, ClientGroupProps } = this.props;
     let orderDir = "desc";
-    if (clientGroupModule.listParam.orderColumn === property && clientGroupModule.listParam.orderDir === "desc") {
+    if (ClientGroupProps.listParam.orderColumn === property && ClientGroupProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupActions.readClientGroupList(getMergedListParam(clientGroupModule.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
   
   handleSelectAllClick = (event, checked) => {
@@ -224,36 +224,24 @@ class ClientGroupManage extends Component {
     this.setState({ selected: [] });
   };
 
-  handleInfoClick = (event, clientId, clientGroupId) => {
-    event.stopPropagation();
-    console.log("handleCellClick .. " + clientId);
-    this.setState({
-      clientDialogOpen: true,
-      selectedClientId: clientId,
-      selectedClientGroupId: clientGroupId,
-    });
-  };
-
   handleRowClick = (event, id) => {
-
-    const { clientGroupModule, ClientGroupActions } = this.props;
-    const selectedItem = clientGroupModule.listData.find(function(element) {
+    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const selectedItem = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
-
     ClientGroupActions.showClientGroupInform({
-      selectedItem: selectedItem,
+      viewItem: Object.assign({}, selectedItem),
     });
   };
 
   handleChangePage = (event, page) => {
-    const { ClientGroupActions, clientGroupModule } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedListParam(clientGroupModule.listParam, {page: page}));
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {page: page}));
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientGroupActions, clientGroupModule } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedListParam(clientGroupModule.listParam, {rowsPerPage: event.target.value}));
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {rowsPerPage: event.target.value}));
   };
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
@@ -261,7 +249,13 @@ class ClientGroupManage extends Component {
 
   // add
   handleCreateButton = () => {
-    this.props.ClientGroupActions.toggleCreateDialog({
+    this.props.ClientGroupActions.showDialog({
+      selectedItem: {
+        grpNm: '',
+        comment: '',
+        clientConfigId: '',
+        isDefault: ''
+      },
       dialogType: ClientGroupDialog.TYPE_ADD,
       dialogOpen: true
     });
@@ -270,30 +264,28 @@ class ClientGroupManage extends Component {
   // edit
   handleEditClick = (event, id) => {
     event.stopPropagation();
-    const selectedItem = this.props.clientGroupModule.listData.find(function(element) {
+    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const selectedItem = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
-    this.props.ClientGroupActions.toggleEditDialog({
-      selectedItem: selectedItem,
+    ClientGroupActions.showDialog({
+      selectedItem: Object.assign({}, selectedItem),
       dialogType: ClientGroupDialog.TYPE_EDIT,
-      dialogOpen: true,
-      groupName: selectedItem.grpNm, 
-      groupComment: selectedItem.comment, 
-      clientConfigId: selectedItem.clientConfigId,
-      isDefault: '',
+      dialogOpen: true
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const selectedItem = this.props.clientGroupModule.listData.find(function(element) {
+    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const selectedItem = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
-    this.props.ClientGroupActions.setSelectedItem({
+    ClientGroupActions.setSelectedItem({
       selectedItem: selectedItem
     });
-    const re = this.props.GrConfirmActions.showConfirm({
+    const re = GrConfirmActions.showConfirm({
       confirmTitle: '단말그룹 삭제',
       confirmMsg: '단말그룹(' + selectedItem.grpNm + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
@@ -302,12 +294,12 @@ class ClientGroupManage extends Component {
   };
 
   handleDeleteConfirmResult = (confirmValue) => {
-    const { clientGroupModule, ClientGroupActions } = this.props;
+    const { ClientGroupProps, ClientGroupActions } = this.props;
     if(confirmValue) {
       ClientGroupActions.deleteClientGroupData({
-        groupId: clientGroupModule.selectedItem.grpId
+        groupId: ClientGroupProps.selectedItem.grpId
       }).then(() => {
-        ClientGroupActions.readClientGroupList(clientGroupModule.listParam);
+        ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
         }, () => {
         });
     }
@@ -315,13 +307,13 @@ class ClientGroupManage extends Component {
 
   // .................................................
   handleSelectBtnClick = (param) => {
-    const { ClientGroupActions, clientGroupModule } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedListParam(clientGroupModule.listParam, param));
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, param));
   };
   
   handleKeywordChange = name => event => {
-    const { ClientGroupActions, clientGroupModule } = this.props;
-    const newParam = getMergedListParam(clientGroupModule.listParam, {keyword: event.target.value});
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    const newParam = getMergedListParam(ClientGroupProps.listParam, {keyword: event.target.value});
     ClientGroupActions.changeParamValue({
       name: 'listParam',
       value: newParam
@@ -330,8 +322,8 @@ class ClientGroupManage extends Component {
 
   render() {
 
-    const { clientGroupModule, grConfirmModule } = this.props;
-    const emptyRows = 0;// = clientGroupModule.listParam.rowsPerPage - clientGroupModule.listData.length;
+    const { ClientGroupProps } = this.props;
+    const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
 
     return (
 
@@ -346,7 +338,7 @@ class ClientGroupManage extends Component {
                 id='keyword'
                 label='검색어'
                 className={textFieldClass}
-                value={clientGroupModule.listParam.keyword}
+                value={ClientGroupProps.listParam.keyword}
                 onChange={this.handleKeywordChange('keyword')}
                 margin='dense'
               />
@@ -379,12 +371,12 @@ class ClientGroupManage extends Component {
             <Table className={tableClass}>
 
               <ClientGroupManageHead
-                orderDir={clientGroupModule.listParam.orderDir}
-                orderColumn={clientGroupModule.listParam.orderColumn}
+                orderDir={ClientGroupProps.listParam.orderDir}
+                orderColumn={ClientGroupProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
               />
               <TableBody>
-              {clientGroupModule.listData.map(n => {
+              {ClientGroupProps.listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -433,10 +425,10 @@ class ClientGroupManage extends Component {
 
           <TablePagination
             component='div'
-            count={clientGroupModule.listParam.rowsFiltered}
-            rowsPerPage={clientGroupModule.listParam.rowsPerPage}
-            rowsPerPageOptions={clientGroupModule.listParam.rowsPerPageOptions}
-            page={clientGroupModule.listParam.page}
+            count={ClientGroupProps.listParam.rowsFiltered}
+            rowsPerPage={ClientGroupProps.listParam.rowsPerPage}
+            rowsPerPageOptions={ClientGroupProps.listParam.rowsPerPageOptions}
+            page={ClientGroupProps.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -449,10 +441,8 @@ class ClientGroupManage extends Component {
 
         </GrPane>
         <ClientGroupInform />
+        <ClientGroupDialog />
         <GrConfirm />
-        <ClientGroupDialog 
-          open={clientGroupModule.dialogOpen}
-        />
       </React.Fragment>
 
 
@@ -462,18 +452,13 @@ class ClientGroupManage extends Component {
 
 
 const mapStateToProps = (state) => ({
-
-  clientGroupModule: state.ClientGroupModule,
-  grConfirmModule: state.GrConfirmModule,
-
+  ClientGroupProps: state.ClientGroupModule
 });
 
 
 const mapDispatchToProps = (dispatch) => ({
-
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientGroupManage);

@@ -2,6 +2,8 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
+import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
+
 const GET_GROUP_LIST_PENDING = 'groupManage/GET_LIST_PENDING';
 const GET_GROUP_LIST_SUCCESS = 'groupManage/GET_LIST_SUCCESS';
 const GET_GROUP_LIST_FAILURE = 'groupManage/GET_LIST_FAILURE';
@@ -19,14 +21,11 @@ const DELETE_CLIENTGROUP_SUCCESS = 'groupManage/DELETE_CLIENTGROUP_SUCCESS';
 const DELETE_CLIENTGROUP_FAILURE = 'groupManage/DELETE_CLIENTGROUP_FAILURE';
 
 const SHOW_CLIENTGROUP_INFORM = 'groupManage/SHOW_CLIENTGROUP_INFORM';
-const TOGGLE_CLIENTGROUP_DIALOG = 'groupManage/TOGGLE_CLIENTGROUP_DIALOG';
+const SHOW_CLIENTGROUP_DIALOG = 'groupManage/SHOW_CLIENTGROUP_DIALOG';
+const CLOSE_CLIENTGROUP_DIALOG = 'groupManage/CLOSE_CLIENTGROUP_DIALOG';
+const CHG_CLIENTGROUP_PARAM = 'groupManage/CHG_CLIENTGROUP_PARAM';
 
 const SET_CLIENTGROUP_SELECTED = 'groupManage/SET_CLIENTGROUP_SELECTED';
-
-const TOGGLE_CLIENTGROUP_POPUP_SHOW = 'groupManage/TOGGLE_CLIENTGROUP_POPUP_SHOW';
-const TOGGLE_CLIENTGROUP_POPUP_CLOSE = 'groupManage/TOGGLE_CLIENTGROUP_POPUP_CLOSE';
-
-const CHG_PARAM_VALUE = 'groupManage/CHG_PARAM_VALUE';
 
 // ...
 const initialState = {
@@ -46,15 +45,39 @@ const initialState = {
         rowsFiltered: 0
     },
 
-    selectedItem: {},
+    selectedItem: {
+        grpId: '',
+        grpNm: '',
+        comment: '',
+        clientConfigId: '',
+        isDefault: ''
+    },
+
+    viewItem: {
+        grpId: '',
+        grpNm: '',
+        comment: '',
+        clientConfigId: '',
+        isDefault: ''
+    },
+
     informOpen: false,
     dialogOpen: false,
-    dialogType: '',
+    dialogType: ''   
+};
 
-    groupName: '',
-    groupComment: '',
-    clientConfigId: '',
-    isDefault: ''
+export const showDialog = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_CLIENTGROUP_DIALOG,
+        payload: param
+    });
+};
+
+export const closeDialog = (param) => dispatch => {
+    return dispatch({
+        type: CLOSE_CLIENTGROUP_DIALOG,
+        payload: param
+    });
 };
 
 
@@ -93,39 +116,16 @@ export const showClientGroupInform = (param) => dispatch => {
     });
 };
 
-// export const showCreateDialog = (param) => dispatch => {
-//     return dispatch({
-//         type: TOGGLE_CLIENTGROUP_POPUP_SHOW,
-//         payload: param
-//     });
-// };
-
-// export const closeCreateDialog = (param) => dispatch => {
-//     return dispatch({
-//         type: TOGGLE_CLIENTGROUP_POPUP_CLOSE,
-//         payload: param
-//     });
-// };
-
-export const toggleCreateDialog = (param) => dispatch => {
-    return dispatch({
-        type: TOGGLE_CLIENTGROUP_DIALOG,
-        payload: param
-    });
-};
-
-export const toggleEditDialog = (param) => dispatch => {
-    return dispatch({
-        type: TOGGLE_CLIENTGROUP_DIALOG,
-        payload: param
-    });
-};
-
 
 // create (add)
 export const createClientGroupData = (param) => dispatch => {
     dispatch({type: CREATE_CLIENTGROUP_PENDING});
-    return requestPostAPI('createClientGroup', param).then(
+    return requestPostAPI('createClientGroup', {
+        groupName: param.grpNm,
+        groupComment: param.comment,
+        clientConfigId: param.clientConfigId,
+        isDefault: param.isDefault
+    }).then(
         (response) => {
             if(response.data.status.result && response.data.status.result === 'success') {
                 dispatch({
@@ -150,7 +150,15 @@ export const createClientGroupData = (param) => dispatch => {
 // edit
 export const editClientGroupData = (param) => dispatch => {
     dispatch({type: EDIT_CLIENTGROUP_PENDING});
-    return requestPostAPI('updateClientGroup', param).then(
+    return requestPostAPI('updateClientGroup', {
+        groupId: param.grpId,
+        groupName: param.grpNm,
+        groupComment: param.comment,
+        desktopConfigId: param.desktopConfigId,
+        clientConfigId: param.clientConfigId,
+        hostNameConfigId: param.hostNameConfigId,
+        updateServerConfigId: param.updateServerConfigId
+    }).then(
         (response) => {
             dispatch({
                 type: EDIT_CLIENTGROUP_SUCCESS,
@@ -183,25 +191,6 @@ export const deleteClientGroupData = (param) => dispatch => {
     });
 };
 
-// // create profile job
-// export const createClientProfileSetJob = (param) => dispatch => {
-//     dispatch({type: CREATE_PROFILESET_JOB_PENDING});
-//     return requestPostAPI('createProfileJob', param).then(
-//         (response) => {
-//             dispatch({
-//                 type: CREATE_PROFILESET_JOB_SUCCESS,
-//                 payload: response
-//             });
-//         }
-//     ).catch(error => {
-//         dispatch({
-//             type: CREATE_PROFILESET_JOB_FAILURE,
-//             payload: error
-//         });
-//     });
-// };
-
-
 export const setSelectedItem = (param) => dispatch => {
     return dispatch({
         type: SET_CLIENTGROUP_SELECTED,
@@ -211,7 +200,7 @@ export const setSelectedItem = (param) => dispatch => {
 
 export const changeParamValue = (param) => dispatch => {
     return dispatch({
-        type: CHG_PARAM_VALUE,
+        type: CHG_CLIENTGROUP_PARAM,
         payload: param
     });
 };
@@ -255,23 +244,25 @@ export default handleActions({
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
         return {
             ...state,
-            selectedItem: action.payload.selectedItem,
+            viewItem: action.payload.viewItem,
             informOpen: true
         };
     },
-    [TOGGLE_CLIENTGROUP_DIALOG]: (state, action) => {
+    [SHOW_CLIENTGROUP_DIALOG]: (state, action) => {
         return {
             ...state,
-            dialogOpen: (action.payload.dialogOpen) ? true: false, 
-            dialogType: (action.payload.dialogType) ? action.payload.dialogType: '',  
-            groupName: (action.payload.groupName) ? action.payload.groupName: '', 
-            groupComment: (action.payload.groupComment) ? action.payload.groupComment: '', 
-            clientConfigId: (action.payload.clientConfigId) ? action.payload.clientConfigId: '', 
-            isDefault: (action.payload.isDefault) ? action.payload.isDefault: '',
-            selectedItem: (action.payload.selectedItem) ? action.payload.selectedItem: '',
+            selectedItem: action.payload.selectedItem,
+            dialogOpen: action.payload.dialogOpen,
+            dialogType: action.payload.dialogType,
         };
     },
-    
+    [CLOSE_CLIENTGROUP_DIALOG]: (state, action) => {
+        return {
+            ...state,
+            dialogOpen: action.payload.dialogOpen
+        }
+    },
+
     [CREATE_CLIENTGROUP_PENDING]: (state, action) => {
         return {
             ...state,
@@ -330,6 +321,9 @@ export default handleActions({
             ...state,
             pending: false,
             error: false,
+            informOpen: false,
+            dialogOpen: false,
+            dialogType: ''   
         };
     },
     [DELETE_CLIENTGROUP_FAILURE]: (state, action) => {
@@ -341,10 +335,11 @@ export default handleActions({
         };
     },
 
-    [CHG_PARAM_VALUE]: (state, action) => {
+    [CHG_CLIENTGROUP_PARAM]: (state, action) => {
+        const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
-            [action.payload.name]: action.payload.value
+            selectedItem: newSelectedItem
         }
     },
     

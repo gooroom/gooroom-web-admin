@@ -74,7 +74,6 @@ class ClientRegKeyDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-
         ClientRegKeyActions.createClientRegKeyData(ClientRegKeyProps.selectedItem)
             .then(() => {
                 ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
