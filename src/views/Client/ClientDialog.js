@@ -4,6 +4,12 @@ import classNames from "classnames";
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import * as ClientManageActions from '../../modules/ClientManageModule';
+import * as GrConfirmActions from '../../modules/GrConfirmModule';
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -39,10 +45,9 @@ class ClientDialog extends Component {
     this.handleClose = this.handleClose.bind(this);
   }
 
-  handleClose() {
-    this.props.onClose(this.props.clientInfos);
-    this.setState({
-      tabValue: 0,
+  handleClose = (event) => {
+    this.props.ClientManageActions.closeDialog({
+        dialogOpen: false
     });
   }
 
@@ -53,19 +58,19 @@ class ClientDialog extends Component {
   };
 
   render() {
+
+    const { ClientManageProps } = this.props;
+    const { dialogType } = ClientManageProps;
+
     const { onClose, clientId, clientGroupId, ...other } = this.props;
     const { tabValue } = this.state;
 
     if (clientId !== "") {
 
       return (
-        <Dialog
-          disableBackdropClick={true}
-          onClose={this.handleClose}
-          aria-labelledby="client-dialog-title"
-          {...other}
-        >
-          <DialogTitle id="client-dialog-title">단말 정보</DialogTitle>
+        <Dialog open={ClientManageProps.dialogOpen}>
+
+          <DialogTitle>단말 정보</DialogTitle>
 
           <div className={tabContainerClass}>
             {tabValue === 0 && <ClientInfoPane clientId={clientId}></ClientInfoPane>}
@@ -81,9 +86,7 @@ class ClientDialog extends Component {
             </Tabs>
           </AppBar>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              닫기
-            </Button>
+            <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
           </DialogActions>
         </Dialog>
       );
@@ -92,11 +95,7 @@ class ClientDialog extends Component {
       // ERROR
 
       return (
-        <Dialog
-          disableBackdropClick={true}
-          onClose={this.handleClose}
-          {...other}
-        >
+        <Dialog open={ClientManageProps.dialogOpen}>
           <DialogTitle id="simple-dialog-title">단말 정보</DialogTitle>
         </Dialog>
       );
@@ -105,4 +104,13 @@ class ClientDialog extends Component {
   }
 }
 
-export default ClientDialog;
+const mapStateToProps = (state) => ({
+  ClientManageProps: state.ClientManageModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
+  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientDialog);

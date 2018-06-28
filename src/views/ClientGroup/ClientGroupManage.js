@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,32 +14,33 @@ import { css } from 'glamor';
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
 
-import { grRequestPromise } from "../../components/GrUtils/GrRequester";
-import GrPageHeader from "../../containers/GrContent/GrPageHeader";
+import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 
 import GrPane from '../../containers/GrContent/GrPane';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
-import ClientGroupDialog from "../ClientGroup/ClientGroupDialog";
 
-import ClientGroupInform from './ClientGroupInform';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-
-import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
-
-import Button from "@material-ui/core/Button";
-import Search from "@material-ui/icons/Search";
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Button from '@material-ui/core/Button';
+import Search from '@material-ui/icons/Search'; 
 import AddIcon from '@material-ui/icons/Add';
 import BuildIcon from '@material-ui/icons/Build';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import DeleteIcon from '@material-ui/icons/Delete';
+
+import ClientGroupDialog from './ClientGroupDialog';
+import ClientGroupSelect from '../Options/ClientGroupSelect';
+import ClientGroupInform from './ClientGroupInform';
+
+import ClientStatusSelect from '../Options/ClientStatusSelect';
 
 
 //
@@ -156,10 +157,6 @@ class ClientGroupManageHead extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
   ];
 
-  static getColumnData() {
-    return ClientGroupManageHead.columnData;
-  }
-
   render() {
     const { orderDir, orderColumn } = this.props;
 
@@ -173,18 +170,16 @@ class ClientGroupManageHead extends Component {
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
-                {(column.isOrder) &&
-                  <TableSortLabel
-                    active={orderColumn === column.id}
-                    direction={orderDir}
-                    onClick={this.createSortHandler(column.id)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
+              {(() => {
+                if(column.isOrder) {
+                  return <TableSortLabel active={orderColumn === column.id}
+                            direction={orderDir}
+                            onClick={this.createSortHandler(column.id)}
+                          >{column.label}</TableSortLabel>
+                } else {
+                  return <p>{column.label}</p>
                 }
-                {(!column.isOrder) &&
-                    <p>{column.label}</p>
-                }
+              })()}
               </TableCell>
             );
           }, this)}
@@ -320,6 +315,14 @@ class ClientGroupManage extends Component {
     });
   }
 
+  // .................................................
+  handleChangeGroupSelect = (event, property) => {
+    console.log(' handleChangeGroupSelect : ', property);
+  };
+  handleChangeClientStatusSelect = (event, property) => {
+    console.log(' handleChangeClientStatusSelect : ', property);
+  };
+
   render() {
 
     const { ClientGroupProps } = this.props;
@@ -343,6 +346,21 @@ class ClientGroupManage extends Component {
                 margin='dense'
               />
             </FormControl>
+
+            <FormControl className={formControlClass} autoComplete="off">
+              <InputLabel htmlFor="client-group">단말그룹</InputLabel>
+              <ClientGroupSelect 
+                onChangeSelect={this.handleChangeGroupSelect}
+              />
+            </FormControl>
+            <FormControl className={formControlClass} autoComplete="off">
+              <InputLabel htmlFor="client-status">단말상태</InputLabel>
+              <ClientStatusSelect 
+                onChangeSelect={this.handleChangeClientStatusSelect}
+              />
+            </FormControl>
+
+
             <Button
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
@@ -414,7 +432,7 @@ class ClientGroupManage extends Component {
                 {emptyRows > 0 && (
                 <TableRow style={{ height: 32 * emptyRows }}>
                   <TableCell
-                    colSpan={ClientGroupManageHead.getColumnData().length + 1}
+                    colSpan={ClientGroupManageHead.columnData.length + 1}
                     className={tableCellClass}
                   />
                 </TableRow>

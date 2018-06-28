@@ -1,21 +1,24 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import * as ClientManageActions from '../../modules/ClientManageModule';
+import * as GrConfirmActions from '../../modules/GrConfirmModule';
+
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import { grLayout } from "../../templates/default/GrLayout";
-import { grColor } from "../../templates/default/GrColors";
+import { formatDateToSimple } from '../../components/GrUtils/GrDates';
+import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 import GrPageHeader from "../../containers/GrContent/GrPageHeader";
+import GrPane from '../../containers/GrContent/GrPane';
 
 import ClientDialog from "./ClientDialog";
-
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -30,18 +33,16 @@ import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
-import BuildIcon from '@material-ui/icons/Build';
-import Icon from '@material-ui/core/Icon';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import Checkbox from "@material-ui/core/Checkbox";
-import Tooltip from "@material-ui/core/Tooltip";
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
+
+// option components
+import ClientGroupSelect from '../Options/ClientGroupSelect';
+import ClientStatusSelect from '../Options/ClientStatusSelect';
 
 
 //
@@ -155,29 +156,25 @@ class ClientManageHead extends Component {
   };
 
   static columnData = [
-    { id: "clientStatus", numeric: false, disablePadding: true, label: "상태" },
-    { id: "clientId", numeric: false, disablePadding: true, label: "단말아이디" },
-    { id: "clientSetup", numeric: false, disablePadding: true, label: "#" },
-    { id: "clientName", numeric: false, disablePadding: true, label: "단말이름" },
-    { id: "loginId", numeric: false, disablePadding: true, label: "접속자" },
+    { id: "clientStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
+    { id: "clientId", isOrder: true, numeric: false, disablePadding: true, label: "단말아이디" },
+    { id: "clientSetup", isOrder: true, numeric: false, disablePadding: true, label: "#" },
+    { id: "clientName", isOrder: true, numeric: false, disablePadding: true, label: "단말이름" },
+    { id: "loginId", isOrder: true, numeric: false, disablePadding: true, label: "접속자" },
     {
-      id: "clientGroupName",
+      id: "clientGroupName", isOrder: true, 
       numeric: false,
       disablePadding: true,
       label: "단말그룹"
     },
-    { id: "regDate", numeric: false, disablePadding: true, label: "등록일" }
+    { id: "regDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" }
   ];
-
-  static getColumnData() {
-    return ClientManageHead.columnData;
-  }
 
   render() {
     const {
       onSelectAllClick,
-      order,
-      orderBy,
+      orderDir,
+      orderColumn,
       numSelected,
       rowCount
     } = this.props;
@@ -197,17 +194,18 @@ class ClientManageHead extends Component {
               <TableCell
                 className={tableCellClass}
                 key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? "none" : "default"}
-                sortDirection={orderBy === column.id ? order : false}
+                sortDirection={orderColumn === column.id ? orderDir : false}
               >
-                <TableSortLabel
-                  active={orderBy === column.id}
-                  direction={order}
-                  onClick={this.createSortHandler(column.id)}
-                >
-                  {column.label}
-                </TableSortLabel>
+              {(() => {
+                if(column.isOrder) {
+                  return <TableSortLabel active={orderColumn === column.id}
+                            direction={orderDir}
+                            onClick={this.createSortHandler(column.id)}
+                         >{column.label}</TableSortLabel>
+                } else {
+                  return <p>{column.label}</p>
+                }
+              })()}
               </TableCell>
             );
           }, this)}
@@ -226,51 +224,49 @@ class ClientManage extends Component {
 
     this.state = {
       loading: true,
-      clientDialogOpen: false,
-      clientInfos: "",
-      selectedClientId: "",
-      selectedClientGroupId: "",
+      // clientDialogOpen: false,
+      // clientInfos: "",
+      // selectedClientId: "",
+      // selectedClientGroupId: "",
 
-      clientGroup: "",
-      clientGroupOptionList: [],
-      clientStatus: "",
-      clientStatusOptionList: [
-        { id: "NORMAL", value: "NORMAL", label: "정상단말" },
-        { id: "SECURE", value: "SECURE", label: "침해단말" },
-        { id: "REVOKED", value: "REVOKED", label: "해지단말" },
-        { id: "ONLINE", value: "ONLINE", label: "온라인" },
-        { id: "ALL", value: "ALL", label: "전체" }
-      ],
-      keyword: "",
+      // clientGroup: "",
+      // clientGroupOptionList: [],
+      // clientStatus: "",
+      // clientStatusOptionList: [
+      //   { id: "NORMAL", value: "NORMAL", label: "정상단말" },
+      //   { id: "SECURE", value: "SECURE", label: "침해단말" },
+      //   { id: "REVOKED", value: "REVOKED", label: "해지단말" },
+      //   { id: "ONLINE", value: "ONLINE", label: "온라인" },
+      //   { id: "ALL", value: "ALL", label: "전체" }
+      // ],
+      // keyword: "",
 
-      order: "asc",
-      orderBy: "calories",
-      selected: [],
-      data: [],
-      page: 0,
-      rowsPerPage: 10,
-      rowsTotal: 0,
-      rowsFiltered: 0
+      // order: "asc",
+      // orderBy: "calories",
+      // selected: [],
+      // data: [],
+      // page: 0,
+      // rowsPerPage: 10,
+      // rowsTotal: 0,
+      // rowsFiltered: 0
     };
-
-    this.fetchData = this.fetchData.bind(this);
   }
 
   componentDidMount() {
 
-    grRequestPromise("/gpms/readClientGroupList", {
-    }).then(res => {
-        const groupList = res.data.map(x => ({
-          key: x.grpId,
-          id: x.grpId,
-          value: x.grpId,
-          label: x.grpNm
-        }));
-        this.setState({ 
-          clientGroupOptionList: groupList,
-          selected: []
-        });
-    });
+    // grRequestPromise("/gpms/readClientGroupList", {
+    // }).then(res => {
+    //     const groupList = res.data.map(x => ({
+    //       key: x.grpId,
+    //       id: x.grpId,
+    //       value: x.grpId,
+    //       label: x.grpNm
+    //     }));
+    //     this.setState({ 
+    //       clientGroupOptionList: groupList,
+    //       selected: []
+    //     });
+    // });
   }
 
   fetchData(page, rowsPerPage, orderBy, order) {
@@ -389,24 +385,12 @@ class ClientManage extends Component {
     this.setState({ selected: newSelected });
   };
 
-  handleChangePage = (event, page) => {
-    this.fetchData(page, this.state.rowsPerPage, this.state.orderBy, this.state.order);
-  };
-
-  handleChangeRowsPerPage = event => {
-    this.fetchData(this.state.page, event.target.value, this.state.orderBy, this.state.order);
-  };
-
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
   // .................................................
 
   // Events...
   handleChangeSelect = event => {
+    
     this.setState({ [event.target.name]: event.target.value });
-  };
-
-  handleChangeKeyword = name => event => {
-    this.setState({ [name]: event.target.value });
   };
 
   // .................................................
@@ -417,86 +401,125 @@ class ClientManage extends Component {
     });
   };
 
+
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+  // .................................................
+
+  isSelected = id => {
+    
+    const { ClientManageActions, ClientManageProps } = this.props;
+    return ClientManageProps.selected.indexOf(id) !== -1;
+  }
+
+  handleChangePage = (event, page) => {
+    const { ClientManageActions, ClientManageProps } = this.props;
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {page: page}));
+  };
+
+  handleChangeRowsPerPage = event => {
+    const { ClientManageActions, ClientManageProps } = this.props;
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {rowsPerPage: event.target.value}));
+  };
+
+  handleSelectBtnClick = (param) => {
+    const { ClientManageActions, ClientManageProps } = this.props;
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, param));
+  };
+
+  handleKeywordChange = name => event => {
+    const { ClientManageActions, ClientManageProps } = this.props;
+    const newParam = getMergedListParam(ClientManageProps.listParam, {keyword: event.target.value});
+    ClientManageActions.changeParamValue({
+      name: 'listParam',
+      value: newParam
+    });
+  };
+
+  handleChangeGroupSelect = (event, property) => {
+    console.log(' handleChangeGroupSelect : ', property);
+  };
+  handleChangeClientStatusSelect = (event, property) => {
+    console.log(' handleChangeClientStatusSelect : ', property);
+  };
+
   render() {
 
-    const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
-    const emptyRows = rowsPerPage - data.length;
+    //const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
+    const { ClientManageProps } = this.props;
+    //const emptyRows = rowsPerPage - data.length;
+    const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
+
 
     return (
       <React.Fragment>
-        <Card>
-          <GrPageHeader path={this.props.location.pathname} />
-          <CardContent className={pageContentClass}>
-          
-            <form className={formClass}>
-              <FormControl className={formControlClass} autoComplete="off">
-                <InputLabel htmlFor="client-status">단말상태</InputLabel>
-                <Select
-                  value={this.state.clientStatus}
-                  onChange={this.handleChangeSelect}
-                  inputProps={{ name: "clientStatus", id: "client-status" }}
-                >
-                  {this.state.clientStatusOptionList.map(x => (
-                    <MenuItem value={x.value} key={x.id}>
-                      {x.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+        <GrPageHeader path={this.props.location.pathname} />
+        <GrPane>
 
-              <FormControl className={formControlClass} autoComplete="off">
-                <InputLabel htmlFor="client-group">단말그룹</InputLabel>
-                <Select
-                  value={this.state.clientGroup}
-                  onChange={this.handleChangeSelect}
-                  inputProps={{ name: "clientGroup", id: "client-group" }}
-                >
-                  {this.state.clientGroupOptionList.map(x => (
-                    <MenuItem value={x.value} key={x.id}>
-                      {x.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+          {/* data option area */}
+          <form className={formClass}>
+            <FormControl className={formControlClass} autoComplete="off">
+              <InputLabel htmlFor="client-status">단말상태</InputLabel>
+              <ClientGroupSelect 
+                onChangeSelect={this.handleChangeGroupSelect}
+              />
+            </FormControl>
 
-              <FormControl className={formControlClass} autoComplete="off">
-                <TextField
-                  id="keyword"
-                  label="검색어"
-                  className={textFieldClass}
-                  value={this.state.keyword}
-                  onChange={this.handleChangeKeyword("keyword")}
-                  margin="dense"
-                />
-              </FormControl>
+            <FormControl className={formControlClass} autoComplete="off">
+              <InputLabel htmlFor="client-group">단말그룹</InputLabel>
+              <ClientStatusSelect 
+                onChangeSelect={this.handleChangeClientStatusSelect}
+              />
+            </FormControl>
 
-              <div className={formEmptyControlClass} />
+            <FormControl className={formControlClass} autoComplete="off">
+              <TextField
+                id='keyword'
+                label='검색어'
+                className={textFieldClass}
+                value={ClientManageProps.listParam.keyword}
+                onChange={this.handleKeywordChange('keyword')}
+                margin='dense'
+              />
+            </FormControl>
 
-              <Button
-                className={classNames(buttonClass, formControlClass)}
-                variant="raised"
-                color="primary"
-                onClick={() => {
-                  this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);
-                }}
-              >
-                <Search className={leftIconClass} />
-                조회
-              </Button>
-            </form>
+            <div className={formEmptyControlClass} />
+
+            <Button
+              className={classNames(buttonClass, formControlClass)}
+              variant="raised"
+              color="primary"
+              onClick={() => this.handleSelectBtnClick({page: 0})}
+            >
+              <Search className={leftIconClass} />
+              조회
+            </Button>
+          </form>
 
             <div className={tableContainerClass}>
               <Table className={tableClass}>
                 <ClientManageHead
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
+                  numSelected={ClientManageProps.selected.length}
                   onSelectAllClick={this.handleSelectAllClick}
+                  orderDir={ClientManageProps.listParam.orderDir}
+                  orderColumn={ClientManageProps.listParam.orderColumn}
                   onRequestSort={this.handleRequestSort}
-                  rowCount={data.length}
+                  rowCount={ClientManageProps.listData.length}
                 />
                 <TableBody>
-                  {data
+                  {ClientManageProps.listData
                     .map(n => {
                       const isSelected = this.isSelected(n.clientId);
                       return (
@@ -547,7 +570,7 @@ class ClientManage extends Component {
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 32 * emptyRows }}>
                       <TableCell
-                        colSpan={ClientManageHead.getColumnData().length + 1}
+                        colSpan={ClientManageHead.columnData.length + 1}
                         className={tableCellClass}
                       />
                     </TableRow>
@@ -557,21 +580,21 @@ class ClientManage extends Component {
             </div>
 
             <TablePagination
-              component="div"
-              count={rowsFiltered}
-              rowsPerPage={rowsPerPage}
-              page={page}
+              component='div'
+              count={ClientManageProps.listParam.rowsFiltered}
+              rowsPerPage={ClientManageProps.listParam.rowsPerPage}
+              rowsPerPageOptions={ClientManageProps.listParam.rowsPerPageOptions}
+              page={ClientManageProps.listParam.page}
               backIconButtonProps={{
-                "aria-label": "Previous Page"
+                'aria-label': 'Previous Page'
               }}
               nextIconButtonProps={{
-                "aria-label": "Next Page"
+                'aria-label': 'Next Page'
               }}
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
-          </CardContent>
-        </Card>
+        </GrPane>
         <ClientDialog
           clientId={this.state.selectedClientId}
           clientGroupId={this.state.selectedClientGroupId}
@@ -584,4 +607,15 @@ class ClientManage extends Component {
   }
 }
 
-export default ClientManage;
+const mapStateToProps = (state) => ({
+  ClientManageProps: state.ClientManageModule
+});
+
+
+const mapDispatchToProps = (dispatch) => ({
+  ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
+  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ClientManage);
+

@@ -4,34 +4,28 @@ import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
 
-const GET_LIST_PENDING = 'groupManage/GET_LIST_PENDING';
-const GET_LIST_SUCCESS = 'groupManage/GET_LIST_SUCCESS';
-const GET_LIST_FAILURE = 'groupManage/GET_LIST_FAILURE';
+const GET_LIST_PENDING = 'clientManage/GET_LIST_PENDING';
+const GET_LIST_SUCCESS = 'clientManage/GET_LIST_SUCCESS';
+const GET_LIST_FAILURE = 'clientManage/GET_LIST_FAILURE';
 
-const GET_LISTALL_PENDING = 'groupManage/GET_LISTALL_PENDING';
-const GET_LISTALL_SUCCESS = 'groupManage/GET_LISTALL_SUCCESS';
-const GET_LISTALL_FAILURE = 'groupManage/GET_LISTALL_FAILURE';
+const CREATE_CLIENT_PENDING = 'clientManage/CREATE_CLIENT_PENDING';
+const CREATE_CLIENT_SUCCESS = 'clientManage/CREATE_CLIENT_SUCCESS';
+const CREATE_CLIENT_FAILURE = 'clientManage/CREATE_CLIENT_FAILURE';
 
-const CREATE_CLIENTGROUP_PENDING = 'groupManage/CREATE_CLIENTGROUP_PENDING';
-const CREATE_CLIENTGROUP_SUCCESS = 'groupManage/CREATE_CLIENTGROUP_SUCCESS';
-const CREATE_CLIENTGROUP_FAILURE = 'groupManage/CREATE_CLIENTGROUP_FAILURE';
+const EDIT_CLIENT_PENDING = 'clientManage/EDIT_CLIENT_PENDING';
+const EDIT_CLIENT_SUCCESS = 'clientManage/EDIT_CLIENT_SUCCESS';
+const EDIT_CLIENT_FAILURE = 'clientManage/EDIT_CLIENT_FAILURE';
 
-const EDIT_CLIENTGROUP_PENDING = 'groupManage/EDIT_CLIENTGROUP_PENDING';
-const EDIT_CLIENTGROUP_SUCCESS = 'groupManage/EDIT_CLIENTGROUP_SUCCESS';
-const EDIT_CLIENTGROUP_FAILURE = 'groupManage/EDIT_CLIENTGROUP_FAILURE';
+const DELETE_CLIENT_PENDING = 'clientManage/DELETE_CLIENT_PENDING';
+const DELETE_CLIENT_SUCCESS = 'clientManage/DELETE_CLIENT_SUCCESS';
+const DELETE_CLIENT_FAILURE = 'clientManage/DELETE_CLIENT_FAILURE';
 
-const DELETE_CLIENTGROUP_PENDING = 'groupManage/DELETE_CLIENTGROUP_PENDING';
-const DELETE_CLIENTGROUP_SUCCESS = 'groupManage/DELETE_CLIENTGROUP_SUCCESS';
-const DELETE_CLIENTGROUP_FAILURE = 'groupManage/DELETE_CLIENTGROUP_FAILURE';
+const SHOW_CLIENT_INFORM = 'clientManage/SHOW_CLIENT_INFORM';
+const SHOW_CLIENT_DIALOG = 'clientManage/SHOW_CLIENT_DIALOG';
+const CLOSE_CLIENT_DIALOG = 'clientManage/CLOSE_CLIENT_DIALOG';
+const CHG_CLIENT_PARAM = 'clientManage/CHG_CLIENT_PARAM';
 
-const SHOW_CLIENTGROUP_INFORM = 'groupManage/SHOW_CLIENTGROUP_INFORM';
-const SHOW_CLIENTGROUP_DIALOG = 'groupManage/SHOW_CLIENTGROUP_DIALOG';
-const CLOSE_CLIENTGROUP_DIALOG = 'groupManage/CLOSE_CLIENTGROUP_DIALOG';
-
-const CHG_CLIENTGROUP_PARAM = 'groupManage/CHG_CLIENTGROUP_PARAM';
-const CHG_CLIENTGROUP_SELECT = 'groupManage/CHG_CLIENTGROUP_SELECT';
-
-const SET_CLIENTGROUP_SELECTED = 'groupManage/SET_CLIENTGROUP_SELECTED';
+const SET_CLIENT_SELECTED = 'clientManage/SET_CLIENT_SELECTED';
 
 // ...
 const initialState = {
@@ -50,11 +44,6 @@ const initialState = {
         rowsTotal: 0,
         rowsFiltered: 0
     },
-    listDataForSelect: [],
-    selectedClientGroup: {
-        grpId: '',
-        grpNm: ''
-    },
 
     selectedItem: {
         grpId: '',
@@ -64,36 +53,38 @@ const initialState = {
         isDefault: ''
     },
 
-    viewItem: {
-        grpId: '',
-        grpNm: '',
-        comment: '',
-        clientConfigId: '',
-        isDefault: ''
-    },
+    // viewItem: {
+    //     grpId: '',
+    //     grpNm: '',
+    //     comment: '',
+    //     clientConfigId: '',
+    //     isDefault: ''
+    // },
 
     informOpen: false,
     dialogOpen: false,
-    dialogType: ''   
+    dialogType: '',
+
+    selected: [],
 };
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
-        type: SHOW_CLIENTGROUP_DIALOG,
+        type: SHOW_CLIENT_DIALOG,
         payload: param
     });
 };
 
 export const closeDialog = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_CLIENTGROUP_DIALOG,
+        type: CLOSE_CLIENT_DIALOG,
         payload: param
     });
 };
 
 
 // ...
-export const readClientGroupList = (param) => dispatch => {
+export const readClientList = (param) => dispatch => {
 
     const resetParam = {
         keyword: param.keyword,
@@ -105,7 +96,7 @@ export const readClientGroupList = (param) => dispatch => {
     };
 
     dispatch({type: GET_LIST_PENDING});
-    return requestPostAPI('readClientGroupListPaged', resetParam).then(
+    return requestPostAPI('readClientListPaged', resetParam).then(
         (response) => {
             dispatch({
                 type: GET_LIST_SUCCESS,
@@ -120,27 +111,9 @@ export const readClientGroupList = (param) => dispatch => {
     });
 };
 
-export const readClientGroupListAll = (param) => dispatch => {
-
-    dispatch({type: GET_LISTALL_PENDING});
-    return requestPostAPI('readClientGroupList', {}).then(
-        (response) => {
-            dispatch({
-                type: GET_LISTALL_SUCCESS,
-                payload: response
-            });
-        }
-    ).catch(error => {
-        dispatch({
-            type: GET_LISTALL_FAILURE,
-            payload: error
-        });
-    });
-};
-
 export const showClientGroupInform = (param) => dispatch => {
     return dispatch({
-        type: SHOW_CLIENTGROUP_INFORM,
+        type: SHOW_CLIENT_INFORM,
         payload: param
     });
 };
@@ -148,7 +121,7 @@ export const showClientGroupInform = (param) => dispatch => {
 
 // create (add)
 export const createClientGroupData = (param) => dispatch => {
-    dispatch({type: CREATE_CLIENTGROUP_PENDING});
+    dispatch({type: CREATE_CLIENT_PENDING});
     return requestPostAPI('createClientGroup', {
         groupName: param.grpNm,
         groupComment: param.comment,
@@ -158,19 +131,19 @@ export const createClientGroupData = (param) => dispatch => {
         (response) => {
             if(response.data.status.result && response.data.status.result === 'success') {
                 dispatch({
-                    type: CREATE_CLIENTGROUP_SUCCESS,
+                    type: CREATE_CLIENT_SUCCESS,
                     payload: response
                 });
             } else {
                 dispatch({
-                    type: CREATE_CLIENTGROUP_FAILURE,
+                    type: CREATE_CLIENT_FAILURE,
                     payload: response
                 });
             }
         }
     ).catch(error => {
         dispatch({
-            type: CREATE_CLIENTGROUP_FAILURE,
+            type: CREATE_CLIENT_FAILURE,
             payload: error
         });
     });
@@ -178,7 +151,7 @@ export const createClientGroupData = (param) => dispatch => {
 
 // edit
 export const editClientGroupData = (param) => dispatch => {
-    dispatch({type: EDIT_CLIENTGROUP_PENDING});
+    dispatch({type: EDIT_CLIENT_PENDING});
     return requestPostAPI('updateClientGroup', {
         groupId: param.grpId,
         groupName: param.grpNm,
@@ -190,13 +163,13 @@ export const editClientGroupData = (param) => dispatch => {
     }).then(
         (response) => {
             dispatch({
-                type: EDIT_CLIENTGROUP_SUCCESS,
+                type: EDIT_CLIENT_SUCCESS,
                 payload: response
             });
         }
     ).catch(error => {
         dispatch({
-            type: EDIT_CLIENTGROUP_FAILURE,
+            type: EDIT_CLIENT_FAILURE,
             payload: error
         });
     });
@@ -204,17 +177,17 @@ export const editClientGroupData = (param) => dispatch => {
 
 // delete
 export const deleteClientGroupData = (param) => dispatch => {
-    dispatch({type: DELETE_CLIENTGROUP_PENDING});
+    dispatch({type: DELETE_CLIENT_PENDING});
     return requestPostAPI('deleteClientGroup', param).then(
         (response) => {
             dispatch({
-                type: DELETE_CLIENTGROUP_SUCCESS,
+                type: DELETE_CLIENT_SUCCESS,
                 payload: response
             });
         }
     ).catch(error => {
         dispatch({
-            type: DELETE_CLIENTGROUP_FAILURE,
+            type: DELETE_CLIENT_FAILURE,
             payload: error
         });
     });
@@ -222,21 +195,14 @@ export const deleteClientGroupData = (param) => dispatch => {
 
 export const setSelectedItem = (param) => dispatch => {
     return dispatch({
-        type: SET_CLIENTGROUP_SELECTED,
+        type: SET_CLIENT_SELECTED,
         payload: param
     });
 };
 
 export const changeParamValue = (param) => dispatch => {
     return dispatch({
-        type: CHG_CLIENTGROUP_PARAM,
-        payload: param
-    });
-};
-
-export const changeSelectValue = (param) => dispatch => {
-    return dispatch({
-        type: CHG_CLIENTGROUP_SELECT,
+        type: CHG_CLIENT_PARAM,
         payload: param
     });
 };
@@ -244,10 +210,14 @@ export const changeSelectValue = (param) => dispatch => {
 export default handleActions({
 
     [GET_LIST_PENDING]: (state, action) => {
-        return { ...state, pending: true, error: false };
+        return {
+            ...state,
+            pending: true,
+            error: false
+        };
     },
     [GET_LIST_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.payload.data;
+        const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
 
         let tempListParam = state.listParam;
         Object.assign(tempListParam, {
@@ -266,27 +236,21 @@ export default handleActions({
         };
     },
     [GET_LIST_FAILURE]: (state, action) => {
-        return { ...state, pending: false, error: true };
+        return {
+            ...state,
+            pending: false,
+            error: true
+        };
     },
 
-    [GET_LISTALL_PENDING]: (state, action) => {
-        return { ...state, pending: true, error: false };
-    },
-    [GET_LISTALL_SUCCESS]: (state, action) => {
-        return { ...state, pending: false, error: false, listDataForSelect: action.payload.data.data };
-    },
-    [GET_LISTALL_FAILURE]: (state, action) => {
-        return { ...state, pending: false, error: true };
-    },
-
-    [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
+    [SHOW_CLIENT_INFORM]: (state, action) => {
         return {
             ...state,
             viewItem: action.payload.viewItem,
             informOpen: true
         };
     },
-    [SHOW_CLIENTGROUP_DIALOG]: (state, action) => {
+    [SHOW_CLIENT_DIALOG]: (state, action) => {
         return {
             ...state,
             selectedItem: action.payload.selectedItem,
@@ -294,28 +258,28 @@ export default handleActions({
             dialogType: action.payload.dialogType,
         };
     },
-    [CLOSE_CLIENTGROUP_DIALOG]: (state, action) => {
+    [CLOSE_CLIENT_DIALOG]: (state, action) => {
         return {
             ...state,
             dialogOpen: action.payload.dialogOpen
         }
     },
 
-    [CREATE_CLIENTGROUP_PENDING]: (state, action) => {
+    [CREATE_CLIENT_PENDING]: (state, action) => {
         return {
             ...state,
             pending: true,
             error: false
         };
     },
-    [CREATE_CLIENTGROUP_SUCCESS]: (state, action) => {
+    [CREATE_CLIENT_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
             error: false,
         };
     },
-    [CREATE_CLIENTGROUP_FAILURE]: (state, action) => {
+    [CREATE_CLIENT_FAILURE]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -324,21 +288,21 @@ export default handleActions({
         };
     },
 
-    [EDIT_CLIENTGROUP_PENDING]: (state, action) => {
+    [EDIT_CLIENT_PENDING]: (state, action) => {
         return {
             ...state,
             pending: true,
             error: false
         };
     },
-    [EDIT_CLIENTGROUP_SUCCESS]: (state, action) => {
+    [EDIT_CLIENT_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
             error: false,
         };
     },
-    [EDIT_CLIENTGROUP_FAILURE]: (state, action) => {
+    [EDIT_CLIENT_FAILURE]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -347,14 +311,14 @@ export default handleActions({
         };
     },
 
-    [DELETE_CLIENTGROUP_PENDING]: (state, action) => {
+    [DELETE_CLIENT_PENDING]: (state, action) => {
         return {
             ...state,
             pending: true,
             error: false
         };
     },
-    [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
+    [DELETE_CLIENT_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -364,7 +328,7 @@ export default handleActions({
             dialogType: ''   
         };
     },
-    [DELETE_CLIENTGROUP_FAILURE]: (state, action) => {
+    [DELETE_CLIENT_FAILURE]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -373,22 +337,15 @@ export default handleActions({
         };
     },
 
-    [CHG_CLIENTGROUP_PARAM]: (state, action) => {
+    [CHG_CLIENT_PARAM]: (state, action) => {
         const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
             selectedItem: newSelectedItem
         }
     },
-
-    [CHG_CLIENTGROUP_SELECT]: (state, action) => {
-        return {
-            ...state,
-            [action.payload.name]: action.payload.value
-        }
-    },
-
-    [SET_CLIENTGROUP_SELECTED]: (state, action) => {
+    
+    [SET_CLIENT_SELECTED]: (state, action) => {
         return {
             ...state,
             selectedItem: action.payload.selectedItem
