@@ -27,6 +27,8 @@ const CHG_CLIENT_PARAM = 'clientManage/CHG_CLIENT_PARAM';
 
 const SET_CLIENT_SELECTED = 'clientManage/SET_CLIENT_SELECTED';
 
+const CHG_STORE_DATA = 'clientManage/CHG_STORE_DATA';
+
 // ...
 const initialState = {
     pending: false,
@@ -46,7 +48,7 @@ const initialState = {
     },
 
     selectedItem: {
-        grpId: '',
+        clientId: '',
         grpNm: '',
         comment: '',
         clientConfigId: '',
@@ -66,6 +68,7 @@ const initialState = {
     dialogType: '',
 
     selected: [],
+    tabValue: -1
 };
 
 export const showDialog = (param) => dispatch => {
@@ -203,6 +206,13 @@ export const setSelectedItem = (param) => dispatch => {
 export const changeParamValue = (param) => dispatch => {
     return dispatch({
         type: CHG_CLIENT_PARAM,
+        payload: param
+    });
+};
+
+export const changeStoreData = (param) => dispatch => {
+    return dispatch({
+        type: CHG_STORE_DATA,
         payload: param
     });
 };
@@ -350,7 +360,14 @@ export default handleActions({
             ...state,
             selectedItem: action.payload.selectedItem
         }
-    }
+    },
+
+    [CHG_STORE_DATA]: (state, action) => {
+        return {
+            ...state,
+            [action.payload.name]: action.payload.value
+        }
+    },
 
 
 }, initialState);

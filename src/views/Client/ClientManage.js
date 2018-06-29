@@ -12,7 +12,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedListParam, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
 
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 import GrPageHeader from "../../containers/GrContent/GrPageHeader";
@@ -32,7 +32,8 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
-import Search from '@material-ui/icons/Search';
+import SearchIcon from '@material-ui/icons/Search';
+import DescIcon from '@material-ui/icons/Description';
 
 import Checkbox from "@material-ui/core/Checkbox";
 
@@ -145,6 +146,9 @@ const tableCellClass = css({
   cursor: "pointer"
 }).toString();
 
+const toolIconClass = css({
+  height: '16px !important',
+}).toString();
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -156,36 +160,38 @@ class ClientManageHead extends Component {
   };
 
   static columnData = [
-    { id: "clientStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
-    { id: "clientId", isOrder: true, numeric: false, disablePadding: true, label: "단말아이디" },
-    { id: "clientSetup", isOrder: true, numeric: false, disablePadding: true, label: "#" },
-    { id: "clientName", isOrder: true, numeric: false, disablePadding: true, label: "단말이름" },
-    { id: "loginId", isOrder: true, numeric: false, disablePadding: true, label: "접속자" },
+    { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
+    { id: 'clientId', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
+    { id: 'clientView', isOrder: false, numeric: false, disablePadding: true, label: <DescIcon className={toolIconClass} /> },
+    { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
+    { id: 'loginId', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
     {
-      id: "clientGroupName", isOrder: true, 
+      id: 'clientGroupName', isOrder: true, 
       numeric: false,
       disablePadding: true,
-      label: "단말그룹"
+      label: '단말그룹'
     },
-    { id: "regDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" }
+    { id: 'regDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' }
   ];
 
   render() {
+
     const {
       onSelectAllClick,
       orderDir,
       orderColumn,
-      numSelected,
-      rowCount
+      selectedData,
+      listData
     } = this.props;
 
+    const checkSelection = arrayContainsArray(selectedData, listData.map(x => x.clientId));
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" className={tableHeadCellClass}>
+          <TableCell padding="checkbox" className={tableHeadCellClass} >
             <Checkbox
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={numSelected === rowCount && rowCount > 0}
+              indeterminate={checkSelection === 50}
+              checked={checkSelection === 100}
               onChange={onSelectAllClick}
             />
           </TableCell>
@@ -332,59 +338,6 @@ class ClientManage extends Component {
     this.fetchData(this.state.page, this.state.rowsPerPage, orderBy, order);
   };
 
-  handleSelectAllClick = (event, checked) => {
-    if (checked) {
-      this.setState({ selected: this.state.data.map(n => n.clientId) });
-      return;
-    }
-    this.setState({ selected: [] });
-  };
-
-  handleInfoClick = (event, clientId, clientGroupId) => {
-
-    event.stopPropagation();
-
-    this.setState({
-      clientDialogOpen: true,
-      selectedClientId: clientId,
-      selectedClientGroupId: clientGroupId,
-    });
-
-    // grRequestPromise("/gpms/readClientInfo", {
-    //   clientId: id
-    // }).then(res => {
-    //     const clientInfos = res.data;
-    //     this.setState({
-    //       clientDialogOpen: true,
-    //       clientInfos: clientInfos
-    //     });
-    // });
-  };
-
-  handleClick = (event, id) => {
-    //event.preventDefault();
-    event.stopPropagation();
-
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-
-    this.setState({ selected: newSelected });
-  };
-
   // .................................................
 
   // Events...
@@ -448,6 +401,61 @@ class ClientManage extends Component {
     });
   };
 
+  handleRowClick = (event, id) => {
+    const { ClientManageActions, ClientManageProps } = this.props;
+    const { selected : preSelected } = ClientManageProps;
+    const selectedIndex = preSelected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(preSelected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(preSelected.slice(1));
+    } else if (selectedIndex === preSelected.length - 1) {
+      newSelected = newSelected.concat(preSelected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        preSelected.slice(0, selectedIndex),
+        preSelected.slice(selectedIndex + 1)
+      );
+    }
+
+    ClientManageActions.changeStoreData({
+      name: 'selected',
+      value: newSelected
+    });
+  };
+
+  handleInfoClick = (event, clientId, clientGroupId) => {
+    event.stopPropagation();
+    const { ClientManageActions, ClientManageProps } = this.props;
+    const selectedItem = ClientManageProps.listData.find(function(element) {
+      return element.clientId == clientId;
+    });
+
+    ClientManageActions.showDialog({
+      selectedItem: Object.assign({}, selectedItem),
+      dialogType: ClientDialog.TYPE_VIEW,
+      dialogOpen: true
+    });
+  };
+
+  handleSelectAllClick = (event, checked) => {
+    console.log('checked : ', checked);
+    const { ClientManageActions, ClientManageProps } = this.props;
+    const newSelected = ClientManageProps.listData.map(n => n.clientId)
+    ClientManageActions.changeStoreData({
+      name: 'selected',
+      value: newSelected
+    });
+
+    // if (checked) {
+    //   this.setState({ selected: this.state.data.map(n => n.clientId) });
+    //   return;
+    // }
+    // this.setState({ selected: [] });
+  };
+
   handleChangeGroupSelect = (event, property) => {
     console.log(' handleChangeGroupSelect : ', property);
   };
@@ -503,7 +511,7 @@ class ClientManage extends Component {
               color="primary"
               onClick={() => this.handleSelectBtnClick({page: 0})}
             >
-              <Search className={leftIconClass} />
+              <SearchIcon className={leftIconClass} />
               조회
             </Button>
           </form>
@@ -511,12 +519,12 @@ class ClientManage extends Component {
             <div className={tableContainerClass}>
               <Table className={tableClass}>
                 <ClientManageHead
-                  numSelected={ClientManageProps.selected.length}
                   onSelectAllClick={this.handleSelectAllClick}
                   orderDir={ClientManageProps.listParam.orderDir}
                   orderColumn={ClientManageProps.listParam.orderColumn}
                   onRequestSort={this.handleRequestSort}
-                  rowCount={ClientManageProps.listData.length}
+                  selectedData={ClientManageProps.selected}
+                  listData={ClientManageProps.listData}
                 />
                 <TableBody>
                   {ClientManageProps.listData
@@ -526,7 +534,7 @@ class ClientManage extends Component {
                         <TableRow
                           className={tableRowClass}
                           hover
-                          onClick={event => this.handleClick(event, n.clientId)}
+                          onClick={event => this.handleRowClick(event, n.clientId)}
                           role="checkbox"
                           aria-checked={isSelected}
                           tabIndex={-1}
@@ -548,8 +556,10 @@ class ClientManage extends Component {
                           <TableCell className={tableCellClass}>
                             {n.clientId}
                           </TableCell>
-                          <TableCell className={tableCellClass} onClick={event => this.handleInfoClick(event, n.clientId, n.clientGroupId)}>
-                            #
+                          <TableCell className={tableCellClass} 
+                            onClick={event => this.handleInfoClick(event, n.clientId, n.clientGroupId)}
+                          >
+                            <DescIcon className={toolIconClass} />
                           </TableCell>
                           <TableCell className={tableCellClass}>
                             {n.clientName}
@@ -561,7 +571,7 @@ class ClientManage extends Component {
                             {n.clientGroupName}
                           </TableCell>
                           <TableCell className={tableCellClass}>
-                            {n.regDate}
+                            {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
                           </TableCell>
                         </TableRow>
                       );
