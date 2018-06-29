@@ -35,15 +35,20 @@ const tabContainerClass = css({
 //  ## Dialog ########## ########## ########## ########## ##########
 //
 class ClientDialog extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      tabValue: 0,
-    };
+  static TYPE_ADD = 'ADD';
+  static TYPE_VIEW = 'VIEW';
+  static TYPE_EDIT = 'EDIT';
 
-    this.handleClose = this.handleClose.bind(this);
-  }
+  // constructor(props) {
+  //   super(props);
+
+  //   this.state = {
+  //     tabValue: 0,
+  //   };
+
+  //   this.handleClose = this.handleClose.bind(this);
+  // }
 
   handleClose = (event) => {
     this.props.ClientManageActions.closeDialog({
@@ -60,12 +65,12 @@ class ClientDialog extends Component {
   render() {
 
     const { ClientManageProps } = this.props;
-    const { dialogType } = ClientManageProps;
+    const { dialogType, tabValue } = ClientManageProps;
 
-    const { onClose, clientId, clientGroupId, ...other } = this.props;
-    const { tabValue } = this.state;
+    //const { onClose, clientId, clientGroupId, ...other } = this.props;
+    //const { tabValue } = this.state;
 
-    if (clientId !== "") {
+    if (ClientManageProps.selectedItem !== "") {
 
       return (
         <Dialog open={ClientManageProps.dialogOpen}>
@@ -85,6 +90,7 @@ class ClientDialog extends Component {
               <Tab label="기타" />
             </Tabs>
           </AppBar>
+
           <DialogActions>
             <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
           </DialogActions>
