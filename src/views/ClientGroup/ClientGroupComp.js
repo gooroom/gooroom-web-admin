@@ -88,7 +88,7 @@ const leftIconClass = css({
 
 
 const tableClass = css({
-  minWidth: "700px !important"
+  minWidth: "100% !important"
 }).toString();
 
 const tableHeadCellClass = css({
@@ -195,6 +195,11 @@ class ClientGroupManage extends Component {
     this.state = {
       loading: true,
     };
+  }
+
+  componentDidMount() {
+    console.log("componentDidMount");
+    this.handleSelectBtnClick({page:0});
   }
 
   // .................................................
@@ -352,23 +357,6 @@ class ClientGroupManage extends Component {
                       <TableCell className={tableCellClass}>
                         {n.clientCount}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
-                        {n.desktopConfigNm}
-                      </TableCell>
-                      <TableCell className={tableCellClass}>
-                        {n.clientConfigNm}
-                      </TableCell>
-                      <TableCell className={tableCellClass}>
-                        {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
-                      </TableCell>
-                      <TableCell className={tableCellClass}>
-                        <Button variant='fab' color='secondary' aria-label='edit' className={actButtonClass} onClick={event => this.handleEditClick(event, n.grpId)}>
-                          <BuildIcon className={toolIconClass} />
-                        </Button>
-                        <Button variant='fab' color='secondary' aria-label='delete' className={actButtonClass} onClick={event => this.handleDeleteClick(event, n.grpId)}>
-                          <DeleteIcon className={toolIconClass} />
-                        </Button>
-                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -389,7 +377,8 @@ class ClientGroupManage extends Component {
             component='div'
             count={ClientGroupProps.listParam.rowsFiltered}
             rowsPerPage={ClientGroupProps.listParam.rowsPerPage}
-            rowsPerPageOptions={ClientGroupProps.listParam.rowsPerPageOptions}
+            rowsPerPageOptions={[]}
+            labelDisplayedRows={() => {return ''}}
             page={ClientGroupProps.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'

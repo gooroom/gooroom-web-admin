@@ -10,6 +10,8 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import Dashboard from "../Dashboard/";
 // Client - client management
+import ClientMasterManage from "../../views/Client/ClientMasterManage";
+
 import ClientManage from "../../views/Client/ClientManage";
 import ClientGroupManage from "../../views/ClientGroup/ClientGroupManage";
 
