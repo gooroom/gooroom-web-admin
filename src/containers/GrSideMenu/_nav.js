@@ -7,6 +7,11 @@ export default {
       level: 1,
       children: [
         {
+          name: '통합관리',
+          url: '/clients/clientmastermanage',
+          icon: 'icon-wrench',
+          level: 2,
+        }, {
           name: '등록관리',
           url: '/clients/clientmanage',
           icon: 'icon-wrench',

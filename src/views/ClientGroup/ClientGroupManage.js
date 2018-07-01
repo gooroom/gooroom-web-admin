@@ -37,10 +37,9 @@ import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import ClientGroupDialog from './ClientGroupDialog';
-import ClientGroupSelect from '../Options/ClientGroupSelect';
 import ClientGroupInform from './ClientGroupInform';
 
-import ClientStatusSelect from '../Options/ClientStatusSelect';
+import ClientGroupComp from './ClientGroupComp';
 
 
 //
@@ -138,6 +137,12 @@ const toolIconClass = css({
 }).toString();
 
 
+
+
+const tempClass = css({
+  width: '300px !important',
+  border: '1px solid red'
+}).toString();
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -347,20 +352,6 @@ class ClientGroupManage extends Component {
               />
             </FormControl>
 
-            <FormControl className={formControlClass} autoComplete="off">
-              <InputLabel htmlFor="client-group">단말그룹</InputLabel>
-              <ClientGroupSelect 
-                onChangeSelect={this.handleChangeGroupSelect}
-              />
-            </FormControl>
-            <FormControl className={formControlClass} autoComplete="off">
-              <InputLabel htmlFor="client-status">단말상태</InputLabel>
-              <ClientStatusSelect 
-                onChangeSelect={this.handleChangeClientStatusSelect}
-              />
-            </FormControl>
-
-
             <Button
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
@@ -461,6 +452,9 @@ class ClientGroupManage extends Component {
         <ClientGroupInform />
         <ClientGroupDialog />
         <GrConfirm />
+        <div className={tempClass}>
+        <ClientGroupComp />
+        </div>
       </React.Fragment>
 
 

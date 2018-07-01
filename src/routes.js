@@ -7,6 +7,7 @@ const routes = {
   '/master/server': '서버정보설정',
   
   '/clients': '단말관리',
+  '/clients/clientmastermanage': '통합관리',
   '/clients/clientmanage': '등록관리',
   '/clients/clientgroupmanage': '그룹관리',
   '/package/packagemanage': '패키지관리',
