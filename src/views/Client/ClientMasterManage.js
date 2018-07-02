@@ -27,6 +27,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
@@ -44,6 +46,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 // option components
 import ClientGroupSelect from '../Options/ClientGroupSelect';
 import ClientStatusSelect from '../Options/ClientStatusSelect';
+
+
+
+import ClientGroupComp from '../ClientGroup/ClientGroupComp';
 
 
 //
@@ -131,6 +137,11 @@ const tableCellClass = css({
 
 const toolIconClass = css({
   height: '16px !important',
+}).toString();
+
+const compInPaperClass = css({
+  marginLeft: 10, 
+  marginRight: 10
 }).toString();
 
 //
@@ -274,86 +285,15 @@ class ClientMasterManage extends Component {
 
           </form>
 
-            <div className={tableContainerClass}>
-              <Table className={tableClass}>
-                <TableBody>
-                  {ClientManageProps.listData
-                    .map(n => {
-                      const isSelected = this.isSelected(n.clientId);
-                      return (
-                        <TableRow
-                          className={tableRowClass}
-                          hover
-                          onClick={event => this.handleRowClick(event, n.clientId)}
-                          role="checkbox"
-                          aria-checked={isSelected}
-                          tabIndex={-1}
-                          key={n.clientId}
-                          selected={isSelected}
-                        >
-                          <TableCell
-                            padding="checkbox"
-                            className={tableCellClass}
-                          >
-                            <Checkbox
-                              checked={isSelected}
-                              className={tableCellClass}
-                            />
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientStatus}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientId}
-                          </TableCell>
-                          <TableCell className={tableCellClass} 
-                            onClick={event => this.handleInfoClick(event, n.clientId, n.clientGroupId)}
-                          >
-                            <DescIcon className={toolIconClass} />
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientName}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.loginId}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientGroupName}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+          <Grid container spacing={24}>
+            <Grid item xs={4}>
+            <Paper className={compInPaperClass}><ClientGroupComp /></Paper>
+            </Grid>
+            <Grid item xs>
+              <Paper></Paper>
+            </Grid>
+          </Grid>
 
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 32 * emptyRows }}>
-                      <TableCell
-                        colSpan={ClientManageHead.columnData.length + 1}
-                        className={tableCellClass}
-                      />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-
-            <TablePagination
-              component='div'
-              count={ClientManageProps.listParam.rowsFiltered}
-              rowsPerPage={ClientManageProps.listParam.rowsPerPage}
-              rowsPerPageOptions={ClientManageProps.listParam.rowsPerPageOptions}
-              page={ClientManageProps.listParam.page}
-              backIconButtonProps={{
-                'aria-label': 'Previous Page'
-              }}
-              nextIconButtonProps={{
-                'aria-label': 'Next Page'
-              }}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
         </GrPane>
         <ClientDialog
           clientId={this.state.selectedClientId}
