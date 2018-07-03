@@ -12,7 +12,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedListParam, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
 
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 
@@ -26,6 +26,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+
+import Checkbox from "@material-ui/core/Checkbox";
 
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
@@ -46,47 +48,10 @@ import ClientStatusSelect from '../Options/ClientStatusSelect';
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
 //
-const theme = createMuiTheme();
 
 //
 //  ## Style ########## ########## ########## ########## ########## 
 //
-const contentClass = css({
-  height: "100% !important"
-}).toString();
-
-const pageContentClass = css({
-  paddingTop: "14px !important"
-}).toString();
-
-const formClass = css({
-  marginBottom: "6px !important",
-    display: "flex"
-}).toString();
-
-const formControlClass = css({
-  minWidth: "100px !important",
-    marginRight: "15px !important",
-    flexGrow: 1
-}).toString();
-
-const formEmptyControlClass = css({
-  flexGrow: "6 !important"
-}).toString();
-
-const textFieldClass = css({
-  marginTop: "3px !important"
-}).toString();
-
-const buttonClass = css({
-  margin: theme.spacing.unit + " !important"
-}).toString();
-
-const leftIconClass = css({
-  marginRight: theme.spacing.unit + " !important"
-}).toString();
-
-
 const tableClass = css({
   minWidth: "100% !important"
 }).toString();
@@ -153,11 +118,25 @@ class ClientGroupManageHead extends Component {
   ];
 
   render() {
-    const { orderDir, orderColumn } = this.props;
+    const { 
+      onSelectAllClick,
+      orderDir,
+      orderColumn,
+      selectedData,
+      listData
+    } = this.props;
 
+    const checkSelection = arrayContainsArray(selectedData, listData.map(x => x.grpId));
     return (
       <TableHead>
         <TableRow>
+          <TableCell padding="checkbox" className={tableHeadCellClass} >
+            <Checkbox
+              indeterminate={checkSelection === 50}
+              checked={checkSelection === 100}
+              onChange={onSelectAllClick}
+            />
+          </TableCell>
           {ClientGroupManageHead.columnData.map(column => {
             return (
               <TableCell
@@ -221,11 +200,26 @@ class ClientGroupManage extends Component {
 
   handleRowClick = (event, id) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const selectedItem = ClientGroupProps.listData.find(function(element) {
-      return element.grpId == id;
-    });
-    ClientGroupActions.showClientGroupInform({
-      viewItem: Object.assign({}, selectedItem),
+    const { selected : preSelected } = ClientGroupProps;
+    const selectedIndex = preSelected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(preSelected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(preSelected.slice(1));
+    } else if (selectedIndex === preSelected.length - 1) {
+      newSelected = newSelected.concat(preSelected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        preSelected.slice(0, selectedIndex),
+        preSelected.slice(selectedIndex + 1)
+      );
+    }
+
+    ClientGroupActions.changeStoreData({
+      name: 'selected',
+      value: newSelected
     });
   };
 
@@ -239,7 +233,11 @@ class ClientGroupManage extends Component {
     ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {rowsPerPage: event.target.value}));
   };
 
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
+  //isSelected = id => this.state.selected.indexOf(id) !== -1;
+  isSelected = id => {
+    const { ClientGroupProps } = this.props;
+    return ClientGroupProps.selected.indexOf(id) !== -1;
+  }
   // .................................................
 
   // add
@@ -335,21 +333,36 @@ class ClientGroupManage extends Component {
           {/* data area */}
           <div className={tableContainerClass}>
             <Table className={tableClass}>
-
               <ClientGroupManageHead
+                onSelectAllClick={this.handleSelectAllClick}
                 orderDir={ClientGroupProps.listParam.orderDir}
                 orderColumn={ClientGroupProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
+                selectedData={ClientGroupProps.selected}
+                listData={ClientGroupProps.listData}
               />
               <TableBody>
               {ClientGroupProps.listData.map(n => {
+                  const isSelected = this.isSelected(n.grpId);
                   return (
                     <TableRow
                       className={tableRowClass}
                       hover
                       onClick={event => this.handleRowClick(event, n.grpId)}
+                      role="checkbox"
+                      aria-checked={isSelected}
                       key={n.grpId}
+                      selected={isSelected}
                     >
+                      <TableCell
+                        padding="checkbox"
+                        className={tableCellClass}
+                      >
+                        <Checkbox
+                          checked={isSelected}
+                          className={tableCellClass}
+                        />
+                      </TableCell>
                       <TableCell className={tableCellClass}>
                         {n.grpNm}
                       </TableCell>

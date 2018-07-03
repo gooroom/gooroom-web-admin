@@ -373,7 +373,7 @@ class ClientManage extends Component {
 
   isSelected = id => {
     
-    const { ClientManageActions, ClientManageProps } = this.props;
+    const { ClientManageProps } = this.props;
     return ClientManageProps.selected.indexOf(id) !== -1;
   }
 

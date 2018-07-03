@@ -29,7 +29,7 @@ const SHOW_CLIENTGROUP_DIALOG = 'groupManage/SHOW_CLIENTGROUP_DIALOG';
 const CLOSE_CLIENTGROUP_DIALOG = 'groupManage/CLOSE_CLIENTGROUP_DIALOG';
 
 const CHG_CLIENTGROUP_PARAM = 'groupManage/CHG_CLIENTGROUP_PARAM';
-const CHG_CLIENTGROUP_SELECT = 'groupManage/CHG_CLIENTGROUP_SELECT';
+const CHG_STORE_DATA = 'groupManage/CHG_STORE_DATA';
 
 const SET_CLIENTGROUP_SELECTED = 'groupManage/SET_CLIENTGROUP_SELECTED';
 
@@ -74,7 +74,9 @@ const initialState = {
 
     informOpen: false,
     dialogOpen: false,
-    dialogType: ''   
+    dialogType: '',
+    
+    selected: []
 };
 
 export const showDialog = (param) => dispatch => {
@@ -236,10 +238,18 @@ export const changeParamValue = (param) => dispatch => {
 
 export const changeSelectValue = (param) => dispatch => {
     return dispatch({
-        type: CHG_CLIENTGROUP_SELECT,
+        type: CHG_STORE_DATA,
         payload: param
     });
 };
+
+export const changeStoreData = (param) => dispatch => {
+    return dispatch({
+        type: CHG_STORE_DATA,
+        payload: param
+    });
+};
+
 
 export default handleActions({
 
@@ -381,7 +391,7 @@ export default handleActions({
         }
     },
 
-    [CHG_CLIENTGROUP_SELECT]: (state, action) => {
+    [CHG_STORE_DATA]: (state, action) => {
         return {
             ...state,
             [action.payload.name]: action.payload.value
