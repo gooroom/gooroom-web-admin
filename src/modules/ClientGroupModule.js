@@ -33,11 +33,24 @@ const CHG_STORE_DATA = 'groupManage/CHG_STORE_DATA';
 
 const SET_CLIENTGROUP_SELECTED = 'groupManage/SET_CLIENTGROUP_SELECTED';
 
+const SET_INITIAL_STORE = 'groupManage/SET_INITIAL_STORE';
+
 // ...
 const initialState = {
     pending: false,
     error: false,
     resultMsg: '',
+
+    initParam: {
+        keyword: '',
+        orderDir: 'desc',
+        orderColumn: 'chGrpNm',
+        page: 0,
+        rowsPerPage: 10,
+        rowsPerPageOptions: [2, 5, 10, 25],
+        rowsTotal: 0,
+        rowsFiltered: 0
+    },
 
     listData: [],
     listParam: {
@@ -251,6 +264,16 @@ export const changeStoreData = (param) => dispatch => {
 };
 
 
+export const setInitialize = (param) => dispatch => {
+    //console.log('setInitialize...');
+    return dispatch({
+        type: SET_INITIAL_STORE,
+        payload: param
+    });
+};
+
+
+
 export default handleActions({
 
     [GET_LIST_PENDING]: (state, action) => {
@@ -403,6 +426,12 @@ export default handleActions({
             ...state,
             selectedItem: action.payload.selectedItem
         }
+    },
+
+    [SET_INITIAL_STORE]: (state, action) => {
+        let newInitialState = initialState;
+        newInitialState.listParam = state.initParam;
+        return initialState
     }
 
 

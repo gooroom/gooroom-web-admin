@@ -49,64 +49,10 @@ import ClientStatusSelect from '../Options/ClientStatusSelect';
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
 //
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      // light: will be calculated from palette.primary.main,
-      main: '#ff4400',
-      // dark: will be calculated from palette.primary.main,
-      // contrastText: will be calculated to contast with palette.primary.main
-    },
-    secondary: {
-      light: '#0066ff',
-      main: '#0044ff',
-      // dark: will be calculated from palette.secondary.main,
-      contrastText: '#ffcc00',
-    },
-    // error: will us the default color
-  },
-});
-
 
 //
 //  ## Style ########## ########## ########## ########## ########## 
 //
-const contentClass = css({
-  height: "100% !important"
-}).toString();
-
-const pageContentClass = css({
-  paddingTop: "14px !important"
-}).toString();
-
-const formClass = css({
-  marginBottom: "6px !important",
-    display: "flex"
-}).toString();
-
-const formControlClass = css({
-  minWidth: "100px !important",
-    marginRight: "15px !important",
-    flexGrow: 1
-}).toString();
-
-const formEmptyControlClass = css({
-  flexGrow: "6 !important"
-}).toString();
-
-const textFieldClass = css({
-  marginTop: "3px !important"
-}).toString();
-
-const buttonClass = css({
-  margin: theme.spacing.unit + " !important"
-}).toString();
-
-const leftIconClass = css({
-  marginRight: theme.spacing.unit + " !important"
-}).toString();
-
-
 const tableClass = css({
   minWidth: "700px !important"
 }).toString();
@@ -161,7 +107,6 @@ class ClientManageHead extends Component {
 
   static columnData = [
     { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'clientId', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
     { id: 'clientView', isOrder: false, numeric: false, disablePadding: true, label: <DescIcon className={toolIconClass} /> },
     { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
     { id: 'loginId', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
@@ -234,6 +179,60 @@ class ClientManage extends Component {
   }
 
   componentDidMount() {
+    const { ClientManageActions, ClientManageProps } = this.props;
+    ClientManageActions.setInitialize();
+    ClientManageActions.readClientListForInit(getMergedListParam(ClientManageProps.listParam, {page:0}));
+  }
+
+  fetchData(page, rowsPerPage, orderBy, order) {
+
+    this.setState({
+      page: page,
+      rowsPerPage: rowsPerPage,
+      orderBy: orderBy,
+      order: order
+    });
+
+    grRequestPromise("/gpms/readGrClientList", {
+      searchKey: this.state.keyword,
+      clientType: this.state.clientStatus,
+      groupId: this.state.clientGroup,
+
+      start: page * rowsPerPage,
+      length: rowsPerPage,
+      orderColumn: orderBy,
+      orderDir: order,
+    }).then(res => {
+        const listData = [];
+        res.data.forEach(d => {
+          const obj = {
+            clientStatus: d.clientStatus,
+            clientId: d.clientId,
+            clientName: d.clientName,
+            loginId: d.loginId,
+            clientGroupId: d.clientGroupId,
+            clientGroupName: d.clientGroupName,
+            regDate: d.regDate
+          };
+          listData.push(obj);
+        });
+        this.setState({
+          data: listData,
+          selected: [],
+          loading: false,
+          rowsTotal: parseInt(res.recordsTotal, 10),
+          rowsFiltered: parseInt(res.recordsFiltered, 10),
+        });
+    }, res => {
+      this.setState({
+        data: [],
+        selected: [],
+        loading: false,
+        rowsTotal: 0,
+        rowsFiltered: 0,
+      });
+    });
+
   }
 
   // .................................................
@@ -246,39 +245,6 @@ class ClientManage extends Component {
     }
     ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
-
-  // .................................................
-
-  // Events...
-  handleChangeSelect = event => {
-    
-    this.setState({ [event.target.name]: event.target.value });
-  };
-
-  // .................................................
-  handleClientDialogClose = value => {
-    this.setState({ 
-      clientInfos: value, 
-      clientDialogOpen: false 
-    });
-  };
-
-
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
 
   isSelected = id => {
     
@@ -296,7 +262,7 @@ class ClientManage extends Component {
     ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {rowsPerPage: event.target.value}));
   };
 
-  handleSelectBtnClick = (param) => {
+  loadInitData = (param) => {
     const { ClientManageActions, ClientManageProps } = this.props;
     ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, param));
   };
@@ -374,154 +340,90 @@ class ClientManage extends Component {
 
   render() {
 
-    //const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
     const { ClientManageProps } = this.props;
-    //const emptyRows = rowsPerPage - data.length;
     const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
 
 
     return (
-      <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} />
-        <GrPane>
 
-          {/* data option area */}
-          <form className={formClass}>
-            <FormControl className={formControlClass} autoComplete="off">
-              <InputLabel htmlFor="client-status">단말상태</InputLabel>
-              <ClientStatusSelect
-                onChangeSelect={this.handleChangeClientStatusSelect}
-              />
-            </FormControl>
-
-            <FormControl className={formControlClass} autoComplete="off">
-              <InputLabel htmlFor="client-group">단말그룹</InputLabel>
-              <ClientGroupSelect  
-                onChangeSelect={this.handleChangeGroupSelect}
-              />
-            </FormControl>
-
-            <FormControl className={formControlClass} autoComplete="off">
-              <TextField
-                id='keyword'
-                label='검색어'
-                className={textFieldClass}
-                value={ClientManageProps.listParam.keyword}
-                onChange={this.handleKeywordChange('keyword')}
-                margin='dense'
-              />
-            </FormControl>
-
-            <div className={formEmptyControlClass} />
-
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant="raised"
-              color="primary"
-              onClick={() => this.handleSelectBtnClick({page: 0})}
-            >
-              <SearchIcon className={leftIconClass} />
-              조회
-            </Button>
-          </form>
-
-            <div className={tableContainerClass}>
-              <Table className={tableClass}>
-                <ClientManageHead
-                  onSelectAllClick={this.handleSelectAllClick}
-                  orderDir={ClientManageProps.listParam.orderDir}
-                  orderColumn={ClientManageProps.listParam.orderColumn}
-                  onRequestSort={this.handleRequestSort}
-                  selectedData={ClientManageProps.selected}
-                  listData={ClientManageProps.listData}
-                />
-                <TableBody>
-                  {ClientManageProps.listData
-                    .map(n => {
-                      const isSelected = this.isSelected(n.clientId);
-                      return (
-                        <TableRow
-                          className={tableRowClass}
-                          hover
-                          onClick={event => this.handleRowClick(event, n.clientId)}
-                          role="checkbox"
-                          aria-checked={isSelected}
-                          tabIndex={-1}
-                          key={n.clientId}
-                          selected={isSelected}
-                        >
-                          <TableCell
-                            padding="checkbox"
-                            className={tableCellClass}
-                          >
-                            <Checkbox
-                              checked={isSelected}
-                              className={tableCellClass}
-                            />
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientStatus}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientId}
-                          </TableCell>
-                          <TableCell className={tableCellClass} 
-                            onClick={event => this.handleInfoClick(event, n.clientId, n.clientGroupId)}
-                          >
-                            <DescIcon className={toolIconClass} />
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientName}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.loginId}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientGroupName}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 32 * emptyRows }}>
-                      <TableCell
-                        colSpan={ClientManageHead.columnData.length + 1}
+      <div className={tableContainerClass}>
+        <Table className={tableClass}>
+          <ClientManageHead
+            onSelectAllClick={this.handleSelectAllClick}
+            orderDir={ClientManageProps.listParam.orderDir}
+            orderColumn={ClientManageProps.listParam.orderColumn}
+            onRequestSort={this.handleRequestSort}
+            selectedData={ClientManageProps.selected}
+            listData={ClientManageProps.listData}
+          />
+          <TableBody>
+            {ClientManageProps.listData
+              .map(n => {
+                const isSelected = this.isSelected(n.clientId);
+                return (
+                  <TableRow
+                    className={tableRowClass}
+                    hover
+                    onClick={event => this.handleRowClick(event, n.clientId)}
+                    role="checkbox"
+                    aria-checked={isSelected}
+                    tabIndex={-1}
+                    key={n.clientId}
+                    selected={isSelected}
+                  >
+                    <TableCell
+                      padding="checkbox"
+                      className={tableCellClass}
+                    >
+                      <Checkbox
+                        checked={isSelected}
                         className={tableCellClass}
                       />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                    </TableCell>
+                    <TableCell className={tableCellClass}>
+                      {n.clientStatus}
+                    </TableCell>
+                    <TableCell className={tableCellClass} 
+                      onClick={event => this.handleInfoClick(event, n.clientId, n.clientGroupId)}
+                    >
+                      <DescIcon className={toolIconClass} />
+                    </TableCell>
+                    <TableCell className={tableCellClass}>
+                      {n.clientName}
+                    </TableCell>
+                    <TableCell className={tableCellClass}>
+                      {n.loginId}
+                    </TableCell>
+                    <TableCell className={tableCellClass}>
+                      {n.clientGroupName}
+                    </TableCell>
+                    <TableCell className={tableCellClass}>
+                      {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
 
-            <TablePagination
-              component='div'
-              count={ClientManageProps.listParam.rowsFiltered}
-              rowsPerPage={ClientManageProps.listParam.rowsPerPage}
-              rowsPerPageOptions={ClientManageProps.listParam.rowsPerPageOptions}
-              page={ClientManageProps.listParam.page}
-              backIconButtonProps={{
-                'aria-label': 'Previous Page'
-              }}
-              nextIconButtonProps={{
-                'aria-label': 'Next Page'
-              }}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
-        </GrPane>
-        <ClientDialog
-          clientId={this.state.selectedClientId}
-          clientGroupId={this.state.selectedClientGroupId}
-          open={this.state.clientDialogOpen}
-          onClose={this.handleClientDialogClose}
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 32 * emptyRows }}>
+                <TableCell
+                  colSpan={ClientManageHead.columnData.length + 1}
+                  className={tableCellClass}
+                />
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        <TablePagination
+          component='div'
+          count={ClientManageProps.listParam.rowsFiltered}
+          rowsPerPage={ClientManageProps.listParam.rowsPerPage}
+          rowsPerPageOptions={ClientManageProps.listParam.rowsPerPageOptions}
+          page={ClientManageProps.listParam.page}
+          onChangePage={this.handleChangePage}
+          onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
-      </React.Fragment>
-      
+    </div>
     );
   }
 }
