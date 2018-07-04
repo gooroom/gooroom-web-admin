@@ -28,6 +28,7 @@ const CHG_CLIENT_PARAM = 'clientManage/CHG_CLIENT_PARAM';
 const SET_CLIENT_SELECTED = 'clientManage/SET_CLIENT_SELECTED';
 
 const CHG_STORE_DATA = 'clientManage/CHG_STORE_DATA';
+const SET_INITIAL_STORE = 'clientManage/SET_INITIAL_STORE';
 
 // ...
 const initialState = {
@@ -35,8 +36,23 @@ const initialState = {
     error: false,
     resultMsg: '',
 
+    initParam: {
+        clientType: 'ALL',
+        groupId: '',
+        keyword: '',
+        orderDir: 'desc',
+        orderColumn: 'chGrpNm',
+        page: 0,
+        rowsPerPage: 10,
+        rowsPerPageOptions: [2, 5, 10, 25],
+        rowsTotal: 0,
+        rowsFiltered: 0
+    },
+
     listData: [],
     listParam: {
+        clientType: 'ALL',
+        groupId: '',
         keyword: '',
         orderDir: 'desc',
         orderColumn: 'chGrpNm',
@@ -90,7 +106,40 @@ export const closeDialog = (param) => dispatch => {
 export const readClientList = (param) => dispatch => {
 
     const resetParam = {
-        keyword: param.keyword,
+        clientType: param.clientType,
+        groupId: param.groupId,
+        searchKey: param.keyword,
+        page: param.page,
+        start: param.page * param.rowsPerPage,
+        length: param.rowsPerPage,
+        orderColumn: param.orderColumn,
+        orderDir: param.orderDir
+    };
+
+    console.log('readClientList initialState : ', initialState);
+
+    dispatch({type: GET_LIST_PENDING});
+    return requestPostAPI('readClientListPaged', resetParam).then(
+        (response) => {
+            dispatch({
+                type: GET_LIST_SUCCESS,
+                payload: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: GET_LIST_FAILURE,
+            payload: error
+        });
+    });
+};
+
+export const readClientListForInit = (param) => dispatch => {
+
+    const resetParam = {
+        clientType: 'ALL',
+        groupId: '',
+        searchKey: '',
         page: param.page,
         start: param.page * param.rowsPerPage,
         length: param.rowsPerPage,
@@ -112,7 +161,7 @@ export const readClientList = (param) => dispatch => {
             payload: error
         });
     });
-};
+}
 
 export const showClientGroupInform = (param) => dispatch => {
     return dispatch({
@@ -217,6 +266,14 @@ export const changeStoreData = (param) => dispatch => {
     });
 };
 
+export const setInitialize = (param) => dispatch => {
+    return dispatch({
+        type: SET_INITIAL_STORE,
+        payload: param
+    });
+};
+
+
 export default handleActions({
 
     [GET_LIST_PENDING]: (state, action) => {
@@ -229,8 +286,15 @@ export default handleActions({
     [GET_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
 
-        let tempListParam = state.listParam;
-        Object.assign(tempListParam, {
+        // let tempListParam = state.listParam;
+        // Object.assign(tempListParam, {
+        //     rowsFiltered: parseInt(recordsFiltered, 10),
+        //     rowsTotal: parseInt(recordsTotal, 10),
+        //     page: parseInt(draw, 10),
+        //     rowsPerPage: parseInt(rowLength, 10),
+        // });
+
+        const newListParam = getMergedListParam(state.listParam, {
             rowsFiltered: parseInt(recordsFiltered, 10),
             rowsTotal: parseInt(recordsTotal, 10),
             page: parseInt(draw, 10),
@@ -242,7 +306,7 @@ export default handleActions({
             pending: false,
             error: false,
             listData: data,
-            listParam: tempListParam
+            listParam: newListParam
         };
     },
     [GET_LIST_FAILURE]: (state, action) => {
@@ -369,6 +433,11 @@ export default handleActions({
         }
     },
 
+    [SET_INITIAL_STORE]: (state, action) => {
+        let newInitialState = initialState;
+        newInitialState.listParam = state.initParam;
+        return newInitialState;
+    }
 
 }, initialState);
 

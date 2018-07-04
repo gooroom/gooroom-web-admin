@@ -49,7 +49,9 @@ import ClientStatusSelect from '../Options/ClientStatusSelect';
 
 
 
+import ClientManageComp from '../Client/ClientManageComp';
 import ClientGroupComp from '../ClientGroup/ClientGroupComp';
+import Card from "@material-ui/core/Card";
 
 
 //
@@ -237,6 +239,16 @@ class ClientMasterManage extends Component {
     });
   };
 
+  handleChangeGroupSelected = (param) => {
+    const { ClientGroupProps, ClientManageProps, ClientManageActions } = this.props;
+
+    console.log(' handleChangeGroupSelected : ', ClientGroupProps.selected);
+    console.log(' handleChangeGroupSelected : ', param);
+
+    console.log('ClientManageActions: ',ClientManageActions);
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {groupId: param.join(',')}));
+  };
+
   handleChangeGroupSelect = (event, property) => {
     console.log(' handleChangeGroupSelect : ', property);
   };
@@ -256,51 +268,58 @@ class ClientMasterManage extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
-
-          {/* data option area */}
           <form className={formClass}>
+          <Button
+            className={classNames(buttonClass, formControlClass)}
+            variant="outlined" color="primary"
+            onClick={() => this.handleSelectBtnClick({page: 0})}
+          >그룹등록</Button>
+          <Button
+            className={classNames(buttonClass, formControlClass)}
+            variant="outlined" color="primary"
+            onClick={() => this.handleSelectBtnClick({page: 0})}
+          >그룹삭제</Button>
+          <Button
+            className={classNames(buttonClass, formControlClass)}
+            variant="outlined" color="primary"
+            onClick={() => this.handleSelectBtnClick({page: 0})}
+          >그룹정책변경</Button>
 
-            <FormControl className={formControlClass} autoComplete="off">
-              <TextField
-                id='keyword'
-                label='검색어'
-                className={textFieldClass}
-                value={ClientManageProps.listParam.keyword}
-                onChange={this.handleKeywordChange('keyword')}
-                margin='dense'
-              />
-            </FormControl>
+          <div className={formEmptyControlClass} />
 
-            <div className={formEmptyControlClass} />
-
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant="raised"
-              color="primary"
-              onClick={() => this.handleSelectBtnClick({page: 0})}
-            >
-              <SearchIcon className={leftIconClass} />
-              조회
-            </Button>
-
+          <Button
+            className={classNames(buttonClass, formControlClass)}
+            variant="outlined" color="primary"
+            onClick={() => this.handleSelectBtnClick({page: 0})}
+          ><SearchIcon className={leftIconClass} />조회</Button>
+          <Button
+            className={classNames(buttonClass, formControlClass)}
+            variant="outlined" color="primary"
+            onClick={() => this.handleSelectBtnClick({page: 0})}
+          ><SearchIcon className={leftIconClass} />조회</Button>
+          <Button
+            className={classNames(buttonClass, formControlClass)}
+            variant="outlined" color="primary"
+            onClick={() => this.handleSelectBtnClick({page: 0})}
+          ><SearchIcon className={leftIconClass} />조회</Button>
           </form>
-
-          <Grid container spacing={24}>
-            <Grid item xs={4}>
-            <Paper className={compInPaperClass}><ClientGroupComp /></Paper>
+          <Grid container spacing={24} style={{border:"1px solid red",minWidth:"990px"}}>
+            <Grid item xs={4} sm={3}>
+              <Card style={{minWidth:"240px"}}>
+                <ClientGroupComp 
+                  onChangeGroupSelected={this.handleChangeGroupSelected}
+                />
+              </Card>
             </Grid>
             <Grid item xs>
-              <Paper></Paper>
+              <Card style={{minWidth:"710px"}}>
+              <ClientManageComp 
+                  onChangeClientSelected={this.handleChangeGroupSelected}
+                />
+              </Card>
             </Grid>
           </Grid>
-
         </GrPane>
-        <ClientDialog
-          clientId={this.state.selectedClientId}
-          clientGroupId={this.state.selectedClientGroupId}
-          open={this.state.clientDialogOpen}
-          onClose={this.handleClientDialogClose}
-        />
       </React.Fragment>
       
     );
@@ -308,7 +327,8 @@ class ClientMasterManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientManageProps: state.ClientManageModule
+  ClientManageProps: state.ClientManageModule,
+  ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
