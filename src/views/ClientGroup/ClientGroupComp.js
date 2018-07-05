@@ -168,11 +168,13 @@ class ClientGroupManage extends Component {
         name: 'selected',
         value: newSelected
       });
+      this.props.onChangeGroupSelected(newSelected);
     } else {
       ClientGroupActions.changeStoreData({
         name: 'selected',
         value: []
       });
+      this.props.onChangeGroupSelected([]);
     }
   };
 
@@ -200,7 +202,11 @@ class ClientGroupManage extends Component {
       value: newSelected
     });
 
-    this.props.onChangeGroupSelected(newSelected);
+    const selectedItem = ClientGroupProps.listData.find(function(element) {
+      return element.grpId == id;
+    });
+
+    this.props.onChangeGroupSelected(newSelected, selectedItem);
   };
 
   handleChangePage = (event, page) => {

@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientManageActions from '../../modules/ClientManageModule';
+import * as ClientGroupActions from '../../modules/ClientGroupModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -51,6 +52,9 @@ import ClientStatusSelect from '../Options/ClientStatusSelect';
 
 import ClientManageComp from '../Client/ClientManageComp';
 import ClientGroupComp from '../ClientGroup/ClientGroupComp';
+
+import ClientGroupInform from '../ClientGroup/ClientGroupInform';
+
 import Card from "@material-ui/core/Card";
 
 
@@ -76,9 +80,9 @@ const formClass = css({
 }).toString();
 
 const formControlClass = css({
-  minWidth: "100px !important",
-    marginRight: "15px !important",
-    flexGrow: 1
+  minWidth: "33px !important",
+  marginRight: "15px !important",
+  flexGrow: 1
 }).toString();
 
 const formEmptyControlClass = css({
@@ -90,7 +94,8 @@ const textFieldClass = css({
 }).toString();
 
 const buttonClass = css({
-  margin: theme.spacing.unit + " !important"
+  height: "min-content",
+  padding: "0px !important"
 }).toString();
 
 const leftIconClass = css({
@@ -160,100 +165,33 @@ class ClientMasterManage extends Component {
 
   // .................................................
 
-  isSelected = id => {
-    
-    const { ClientManageActions, ClientManageProps } = this.props;
-    return ClientManageProps.selected.indexOf(id) !== -1;
-  }
-
-  handleChangePage = (event, page) => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {page: page}));
-  };
-
-  handleChangeRowsPerPage = event => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {rowsPerPage: event.target.value}));
-  };
-
   handleSelectBtnClick = (param) => {
     const { ClientManageActions, ClientManageProps } = this.props;
     ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, param));
   };
 
-  handleKeywordChange = name => event => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    const newParam = getMergedListParam(ClientManageProps.listParam, {keyword: event.target.value});
-    ClientManageActions.changeParamValue({
-      name: 'listParam',
-      value: newParam
-    });
-  };
+  handleChangeClientGroupSelected = (selectedGroupIdArray, selectedGroupObj='') => {
 
-  handleRowClick = (event, id) => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    const { selected : preSelected } = ClientManageProps;
-    const selectedIndex = preSelected.indexOf(id);
-    let newSelected = [];
+    console.log('selectedGroupIdArray... ', selectedGroupIdArray);
+    console.log('selectedGroupObj... ', selectedGroupObj);
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(preSelected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(preSelected.slice(1));
-    } else if (selectedIndex === preSelected.length - 1) {
-      newSelected = newSelected.concat(preSelected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        preSelected.slice(0, selectedIndex),
-        preSelected.slice(selectedIndex + 1)
-      );
+    const { ClientGroupProps, ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {groupId: selectedGroupIdArray.join(','), page:0}));
+
+    if(selectedGroupObj !== '') {
+      console.log(selectedGroupObj);
+      ClientGroupActions.showClientGroupInform({
+        viewItem: Object.assign({}, selectedGroupObj),
+      });
     }
-
-    ClientManageActions.changeStoreData({
-      name: 'selected',
-      value: newSelected
-    });
   };
 
-  handleInfoClick = (event, clientId, clientGroupId) => {
-    event.stopPropagation();
-    const { ClientManageActions, ClientManageProps } = this.props;
-    const selectedItem = ClientManageProps.listData.find(function(element) {
-      return element.clientId == clientId;
-    });
+  handleChangeClientSelected = (param) => {
 
-    ClientManageActions.showDialog({
-      selectedItem: Object.assign({}, selectedItem),
-      dialogType: ClientDialog.TYPE_VIEW,
-      dialogOpen: true
-    });
-  };
+    console.log('ClientMasterManage - handleChangeClientSelected --|| ');
 
-  handleSelectAllClick = (event, checked) => {
-    console.log('checked : ', checked);
-    const { ClientManageActions, ClientManageProps } = this.props;
-    const newSelected = ClientManageProps.listData.map(n => n.clientId)
-    ClientManageActions.changeStoreData({
-      name: 'selected',
-      value: newSelected
-    });
-  };
-
-  handleChangeGroupSelected = (param) => {
     const { ClientGroupProps, ClientManageProps, ClientManageActions } = this.props;
-
-    console.log(' handleChangeGroupSelected : ', ClientGroupProps.selected);
-    console.log(' handleChangeGroupSelected : ', param);
-
-    console.log('ClientManageActions: ',ClientManageActions);
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {groupId: param.join(',')}));
-  };
-
-  handleChangeGroupSelect = (event, property) => {
-    console.log(' handleChangeGroupSelect : ', property);
-  };
-  handleChangeClientStatusSelect = (event, property) => {
-    console.log(' handleChangeClientStatusSelect : ', property);
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {groupId: param.join(','), page:0}));
   };
 
   render() {
@@ -307,18 +245,19 @@ class ClientMasterManage extends Component {
             <Grid item xs={4} sm={3}>
               <Card style={{minWidth:"240px"}}>
                 <ClientGroupComp 
-                  onChangeGroupSelected={this.handleChangeGroupSelected}
+                  onChangeGroupSelected={this.handleChangeClientGroupSelected}
                 />
               </Card>
             </Grid>
             <Grid item xs>
               <Card style={{minWidth:"710px"}}>
               <ClientManageComp 
-                  onChangeClientSelected={this.handleChangeGroupSelected}
+                  onChangeClientSelected={this.handleChangeClientSelected}
                 />
               </Card>
             </Grid>
           </Grid>
+          <ClientGroupInform />
         </GrPane>
       </React.Fragment>
       
@@ -333,6 +272,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
+  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

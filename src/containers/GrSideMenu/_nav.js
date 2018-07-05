@@ -34,7 +34,7 @@ export default {
         },
       ]
     }, {
-      name: '단말설정',
+      name: '단말설정(NEW)',
       url: '/clientconfig',
       icon: 'icon-screen-desktop',
       level: 1,
@@ -47,6 +47,38 @@ export default {
         }, {
           name: '단말프로파일',
           url: '/clientconfig/profileset',
+          icon: 'icon-notebook',
+          level: 2,
+        }
+      ]
+    },
+    {
+      name: '단말설정',
+      url: '/clientconfig',
+      icon: 'icon-screen-desktop',
+      level: 1,
+      children: [
+        {
+          name: '데스크톱환경???',
+          url: '/clientconfig/desktop',
+          icon: 'icon-wrench',
+          level: 2,
+        },
+        {
+          name: '업데이트서버설정???',
+          url: '/clientconfig/update',
+          icon: 'icon-folder',
+          level: 2,
+        },
+        {
+          name: 'HOSTS설정???',
+          url: '/clientconfig/host',
+          icon: 'icon-layers',
+          level: 2,
+        },
+        {
+          name: '단말정책설정',
+          url: '/clientconfig/setting',
           icon: 'icon-notebook',
           level: 2,
         }
