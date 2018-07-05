@@ -293,7 +293,7 @@ class ClientManage extends Component {
 
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {rowsPerPage: event.target.value}));
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {rowsPerPage: event.target.value, page:0}));
   };
 
   handleSelectBtnClick = (param) => {
