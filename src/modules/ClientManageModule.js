@@ -22,11 +22,10 @@ const DELETE_CLIENT_FAILURE = 'clientManage/DELETE_CLIENT_FAILURE';
 
 const SHOW_CLIENT_INFORM = 'clientManage/SHOW_CLIENT_INFORM';
 const SHOW_CLIENT_DIALOG = 'clientManage/SHOW_CLIENT_DIALOG';
-const CLOSE_CLIENT_DIALOG = 'clientManage/CLOSE_CLIENT_DIALOG';
-const CHG_CLIENT_PARAM = 'clientManage/CHG_CLIENT_PARAM';
+
+// const CHG_CLIENT_PARAM = 'clientManage/CHG_CLIENT_PARAM';
 
 const SET_CLIENT_SELECTED = 'clientManage/SET_CLIENT_SELECTED';
-
 const CHG_STORE_DATA = 'clientManage/CHG_STORE_DATA';
 const SET_INITIAL_STORE = 'clientManage/SET_INITIAL_STORE';
 
@@ -96,8 +95,8 @@ export const showDialog = (param) => dispatch => {
 
 export const closeDialog = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_CLIENT_DIALOG,
-        payload: param
+        type: CHG_STORE_DATA,
+        payload: {name:"dialogOpen",value:false}
     });
 };
 
@@ -163,13 +162,19 @@ export const readClientListForInit = (param) => dispatch => {
     });
 }
 
-export const showClientGroupInform = (param) => dispatch => {
+export const showClientManageInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENT_INFORM,
         payload: param
     });
 };
 
+export const closeClientManageInform = (param) => dispatch => {
+    return dispatch({
+        type: CHG_STORE_DATA,
+        payload: {name:"informOpen",value:false}
+    });
+};
 
 // create (add)
 export const createClientGroupData = (param) => dispatch => {
@@ -252,12 +257,12 @@ export const setSelectedItem = (param) => dispatch => {
     });
 };
 
-export const changeParamValue = (param) => dispatch => {
-    return dispatch({
-        type: CHG_CLIENT_PARAM,
-        payload: param
-    });
-};
+// export const changeParamValue = (param) => dispatch => {
+//     return dispatch({
+//         type: CHG_CLIENT_PARAM,
+//         payload: param
+//     });
+// };
 
 export const changeStoreData = (param) => dispatch => {
     return dispatch({
@@ -332,12 +337,6 @@ export default handleActions({
             dialogType: action.payload.dialogType,
         };
     },
-    [CLOSE_CLIENT_DIALOG]: (state, action) => {
-        return {
-            ...state,
-            dialogOpen: action.payload.dialogOpen
-        }
-    },
 
     [CREATE_CLIENT_PENDING]: (state, action) => {
         return {
@@ -411,13 +410,13 @@ export default handleActions({
         };
     },
 
-    [CHG_CLIENT_PARAM]: (state, action) => {
-        const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
-        return {
-            ...state,
-            selectedItem: newSelectedItem
-        }
-    },
+    // [CHG_CLIENT_PARAM]: (state, action) => {
+    //     const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
+    //     return {
+    //         ...state,
+    //         selectedItem: newSelectedItem
+    //     }
+    // },
     
     [SET_CLIENT_SELECTED]: (state, action) => {
         return {

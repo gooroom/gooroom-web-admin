@@ -107,7 +107,6 @@ class ClientManageHead extends Component {
 
   static columnData = [
     { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'clientView', isOrder: false, numeric: false, disablePadding: true, label: <DescIcon className={toolIconClass} /> },
     { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
     { id: 'loginId', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
     {
@@ -184,57 +183,6 @@ class ClientManage extends Component {
     ClientManageActions.readClientListForInit(getMergedListParam(ClientManageProps.listParam, {page:0}));
   }
 
-  fetchData(page, rowsPerPage, orderBy, order) {
-
-    this.setState({
-      page: page,
-      rowsPerPage: rowsPerPage,
-      orderBy: orderBy,
-      order: order
-    });
-
-    grRequestPromise("/gpms/readGrClientList", {
-      searchKey: this.state.keyword,
-      clientType: this.state.clientStatus,
-      groupId: this.state.clientGroup,
-
-      start: page * rowsPerPage,
-      length: rowsPerPage,
-      orderColumn: orderBy,
-      orderDir: order,
-    }).then(res => {
-        const listData = [];
-        res.data.forEach(d => {
-          const obj = {
-            clientStatus: d.clientStatus,
-            clientId: d.clientId,
-            clientName: d.clientName,
-            loginId: d.loginId,
-            clientGroupId: d.clientGroupId,
-            clientGroupName: d.clientGroupName,
-            regDate: d.regDate
-          };
-          listData.push(obj);
-        });
-        this.setState({
-          data: listData,
-          selected: [],
-          loading: false,
-          rowsTotal: parseInt(res.recordsTotal, 10),
-          rowsFiltered: parseInt(res.recordsFiltered, 10),
-        });
-    }, res => {
-      this.setState({
-        data: [],
-        selected: [],
-        loading: false,
-        rowsTotal: 0,
-        rowsFiltered: 0,
-      });
-    });
-
-  }
-
   // .................................................
   handleRequestSort = (event, property) => {
 
@@ -299,20 +247,12 @@ class ClientManage extends Component {
       name: 'selected',
       value: newSelected
     });
-  };
 
-  handleInfoClick = (event, clientId, clientGroupId) => {
-    event.stopPropagation();
-    const { ClientManageActions, ClientManageProps } = this.props;
     const selectedItem = ClientManageProps.listData.find(function(element) {
-      return element.clientId == clientId;
+      return element.clientId == id;
     });
 
-    ClientManageActions.showDialog({
-      selectedItem: Object.assign({}, selectedItem),
-      dialogType: ClientDialog.TYPE_VIEW,
-      dialogOpen: true
-    });
+    this.props.onChangeClientSelected(selectedItem);
   };
 
   handleSelectAllClick = (event, checked) => {
@@ -382,11 +322,6 @@ class ClientManage extends Component {
                     </TableCell>
                     <TableCell className={tableCellClass}>
                       {n.clientStatus}
-                    </TableCell>
-                    <TableCell className={tableCellClass} 
-                      onClick={event => this.handleInfoClick(event, n.clientId, n.clientGroupId)}
-                    >
-                      <DescIcon className={toolIconClass} />
                     </TableCell>
                     <TableCell className={tableCellClass}>
                       {n.clientName}

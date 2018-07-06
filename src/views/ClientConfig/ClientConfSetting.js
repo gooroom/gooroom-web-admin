@@ -210,6 +210,7 @@ class ClientConfSetting extends Component {
     const selectedItem = ClientConfSettingProps.listData.find(function(element) {
       return element.objId == id;
     });
+    console.log('selectedItem : ', selectedItem);
     ClientConfSettingActions.showDialog({
       selectedItem: Object.assign({}, selectedItem),
       dialogType: ClientConfSettingDialog.TYPE_VIEW,

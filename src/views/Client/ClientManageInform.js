@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
 
-import * as ClientGroupActions from '../../modules/ClientGroupModule';
+import * as ClientManageActions from '../../modules/ClientManageModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import Grid from '@material-ui/core/Grid';
@@ -69,35 +69,28 @@ const pos = css({
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientGroupInform extends Component {
+class ClientManageInform extends Component {
 
   // .................................................
-  handleRequestSort = (event, property) => {
-
-    const { ClientGroupProps, ClientGroupActions } = this.props;
-    let orderDir = "desc";
-    if (ClientGroupProps.listParam.orderColumn === property && ClientGroupProps.listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-    ClientGroupActions.readJobTargetList(getMergedListParam(ClientGroupProps.targetListParam, {orderColumn: property, orderDir: orderDir}));
-  };
 
   render() {
 
-    const { ClientGroupProps } = this.props;
+    const { ClientManageProps } = this.props;
     const bull = <span className={bullet}>•</span>;
+
+    console.log('ClientManageProps.viewItem : ', ClientManageProps.viewItem);
 
     return (
       <div className={componentClass}>
-      {(ClientGroupProps.informOpen) &&
+      {(ClientManageProps.informOpen) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(ClientGroupProps.viewItem) ? ClientGroupProps.viewItem.grpNm : ''}
-            subheader={ClientGroupProps.viewItem.grpId + ', ' + formatDateToSimple(ClientGroupProps.viewItem.regDate, 'YYYY-MM-DD')}
+            title={(ClientManageProps.viewItem) ? ClientManageProps.viewItem.clientName : ''}
+            subheader={ClientManageProps.viewItem.clientId + ', ' + formatDateToSimple(ClientManageProps.viewItem.regDate, 'YYYY-MM-DD')}
           />
           <CardContent className={contentClass}>
             <Typography component="pre">
-              "{ClientGroupProps.viewItem.comment}"
+              {ClientManageProps.viewItem.clientStatus}
             </Typography>
           </CardContent>
           <Divider />
@@ -128,13 +121,13 @@ class ClientGroupInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule
+  ClientManageProps: state.ClientManageModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientGroupInform);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientManageInform);
 

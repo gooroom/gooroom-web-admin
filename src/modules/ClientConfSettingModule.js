@@ -22,7 +22,7 @@ const DELETE_CONFSETTING_FAILURE = 'clientConfSetting/DELETE_CONFSETTING_FAILURE
 
 const SHOW_CONFSETTING_DIALOG = 'clientConfSetting/SHOW_CONFSETTING_DIALOG';
 const CLOSE_CONFSETTING_DIALOG = 'clientConfSetting/CLOSE_CONFSETTING_DIALOG';
-const CHG_CONFSETTING_PARAM = 'clientConfSetting/CHG_CONFSETTING_PARAM';
+const CHG_SELECTED_DATA = 'clientConfSetting/CHG_SELECTED_DATA';
 
 const CONFSETTING_COMMON_PENDING = 'clientConfSetting/CONFSETTING_COMMON_PENDING';
 const CONFSETTING_COMMON_FAILURE = 'clientConfSetting/CONFSETTING_COMMON_FAILURE';
@@ -47,6 +47,7 @@ const initialState = {
 
     selectedItem: {
         objId: '',
+        objNm: '',
         osProtect: false,
         validDate: '',
         expireDate: '',
@@ -56,6 +57,7 @@ const initialState = {
 
     dialogOpen: false,
     dialogType: '',
+
 };
 
 export const showDialog = (param) => dispatch => {
@@ -99,9 +101,9 @@ export const readClientConfSettingList = (param) => dispatch => {
     });
 };
 
-export const changeParamValue = (param) => dispatch => {
+export const changeSelectedItemValue = (param) => dispatch => {
     return dispatch({
-        type: CHG_CONFSETTING_PARAM,
+        type: CHG_SELECTED_DATA,
         payload: param
     });
 };
@@ -244,7 +246,7 @@ export default handleActions({
             dialogOpen: action.payload.dialogOpen
         }
     },
-    [CHG_CONFSETTING_PARAM]: (state, action) => {
+    [CHG_SELECTED_DATA]: (state, action) => {
         const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,

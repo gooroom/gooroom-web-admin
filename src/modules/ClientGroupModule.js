@@ -26,13 +26,10 @@ const DELETE_CLIENTGROUP_FAILURE = 'groupManage/DELETE_CLIENTGROUP_FAILURE';
 
 const SHOW_CLIENTGROUP_INFORM = 'groupManage/SHOW_CLIENTGROUP_INFORM';
 const SHOW_CLIENTGROUP_DIALOG = 'groupManage/SHOW_CLIENTGROUP_DIALOG';
-const CLOSE_CLIENTGROUP_DIALOG = 'groupManage/CLOSE_CLIENTGROUP_DIALOG';
 
-const CHG_CLIENTGROUP_PARAM = 'groupManage/CHG_CLIENTGROUP_PARAM';
+const CHG_SELECTED_DATA = 'groupManage/CHG_SELECTED_DATA';
 const CHG_STORE_DATA = 'groupManage/CHG_STORE_DATA';
-
 const SET_CLIENTGROUP_SELECTED = 'groupManage/SET_CLIENTGROUP_SELECTED';
-
 const SET_INITIAL_STORE = 'groupManage/SET_INITIAL_STORE';
 
 // ...
@@ -101,8 +98,8 @@ export const showDialog = (param) => dispatch => {
 
 export const closeDialog = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_CLIENTGROUP_DIALOG,
-        payload: param
+        type: CHG_STORE_DATA,
+        payload: {name:"dialogOpen",value:false}
     });
 };
 
@@ -157,6 +154,13 @@ export const showClientGroupInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTGROUP_INFORM,
         payload: param
+    });
+};
+
+export const closeClientGroupInform = (param) => dispatch => {
+    return dispatch({
+        type: CHG_STORE_DATA,
+        payload: {name:"informOpen",value:false}
     });
 };
 
@@ -242,9 +246,9 @@ export const setSelectedItem = (param) => dispatch => {
     });
 };
 
-export const changeParamValue = (param) => dispatch => {
+export const changeSelectedItemValue = (param) => dispatch => {
     return dispatch({
-        type: CHG_CLIENTGROUP_PARAM,
+        type: CHG_SELECTED_DATA,
         payload: param
     });
 };
@@ -327,12 +331,6 @@ export default handleActions({
             dialogType: action.payload.dialogType,
         };
     },
-    [CLOSE_CLIENTGROUP_DIALOG]: (state, action) => {
-        return {
-            ...state,
-            dialogOpen: action.payload.dialogOpen
-        }
-    },
 
     [CREATE_CLIENTGROUP_PENDING]: (state, action) => {
         return {
@@ -406,14 +404,13 @@ export default handleActions({
         };
     },
 
-    [CHG_CLIENTGROUP_PARAM]: (state, action) => {
+    [CHG_SELECTED_DATA]: (state, action) => {
         const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
             selectedItem: newSelectedItem
         }
     },
-
     [CHG_STORE_DATA]: (state, action) => {
         return {
             ...state,

@@ -189,7 +189,6 @@ class ClientProfileSetDialog extends Component {
                     <TextField  
                         id="profileNm"
                         label="프로파일 이름"
-                        color="secondary"
                         value={(ClientProfileSetProps.selectedItem) ? ClientProfileSetProps.selectedItem.profileNm : ''}
                         onChange={this.handleChange("profileNm")}
                         className={classNames(fullWidthClass)}

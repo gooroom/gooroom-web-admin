@@ -278,7 +278,7 @@ class ClientGroupManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const { ClientGroupProps, ClientGroupActions, GrConfirmActions } = this.props;
     const selectedItem = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
@@ -314,10 +314,11 @@ class ClientGroupManage extends Component {
   handleKeywordChange = name => event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
     const newParam = getMergedListParam(ClientGroupProps.listParam, {keyword: event.target.value});
-    ClientGroupActions.changeParamValue({
-      name: 'listParam',
-      value: newParam
-    });
+    // ClientGroupActions.changeParamValue({
+    //   name: 'listParam',
+    //   value: newParam
+    // });
+    ClientGroupActions.changeStoreData({name: 'listParam', value: newParam});
   }
 
   // .................................................

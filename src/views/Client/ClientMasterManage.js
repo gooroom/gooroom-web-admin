@@ -36,6 +36,7 @@ import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import DescIcon from '@material-ui/icons/Description';
 
 import Checkbox from "@material-ui/core/Checkbox";
@@ -51,8 +52,9 @@ import ClientStatusSelect from '../Options/ClientStatusSelect';
 
 
 import ClientManageComp from '../Client/ClientManageComp';
-import ClientGroupComp from '../ClientGroup/ClientGroupComp';
+import ClientManageInform from '../Client/ClientManageInform';
 
+import ClientGroupComp from '../ClientGroup/ClientGroupComp';
 import ClientGroupInform from '../ClientGroup/ClientGroupInform';
 
 import Card from "@material-ui/core/Card";
@@ -171,33 +173,39 @@ class ClientMasterManage extends Component {
   };
 
   handleChangeClientGroupSelected = (selectedGroupIdArray, selectedGroupObj='') => {
-
-    console.log('selectedGroupIdArray... ', selectedGroupIdArray);
-    console.log('selectedGroupObj... ', selectedGroupObj);
-
+    // console.log('selectedGroupIdArray... ', selectedGroupIdArray);
+    // console.log('selectedGroupObj... ', selectedGroupObj);
     const { ClientGroupProps, ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
+    // select clients in groups.
     ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {groupId: selectedGroupIdArray.join(','), page:0}));
-
+    // show group info.
     if(selectedGroupObj !== '') {
-      console.log(selectedGroupObj);
+      // console.log(selectedGroupObj);
+      ClientManageActions.closeClientManageInform({informOpen:false});
       ClientGroupActions.showClientGroupInform({
         viewItem: Object.assign({}, selectedGroupObj),
       });
     }
   };
 
-  handleChangeClientSelected = (param) => {
-
+  handleChangeClientSelected = (selectedClientObj='') => {
     console.log('ClientMasterManage - handleChangeClientSelected --|| ');
-
-    const { ClientGroupProps, ClientManageProps, ClientManageActions } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {groupId: param.join(','), page:0}));
+    console.log('ClientMasterManage - selectedClientObj - ', selectedClientObj);
+    const { ClientManageActions, ClientGroupActions } = this.props;
+    // show client info.
+    if(selectedClientObj !== '') {
+      console.log(selectedClientObj);
+      ClientGroupActions.closeClientGroupInform({informOpen:false});
+      ClientManageActions.showClientManageInform({
+        viewItem: Object.assign({}, selectedClientObj),
+      });
+    }
   };
 
   render() {
 
     //const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
-    const { ClientManageProps } = this.props;
+    const { ClientGroupProps, ClientManageProps } = this.props;
     //const emptyRows = rowsPerPage - data.length;
     const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
 
@@ -229,7 +237,7 @@ class ClientMasterManage extends Component {
             className={classNames(buttonClass, formControlClass)}
             variant="outlined" color="primary"
             onClick={() => this.handleSelectBtnClick({page: 0})}
-          ><SearchIcon className={leftIconClass} />조회</Button>
+          ><GetAppIcon className={leftIconClass} />조회</Button>
           <Button
             className={classNames(buttonClass, formControlClass)}
             variant="outlined" color="primary"
@@ -241,29 +249,44 @@ class ClientMasterManage extends Component {
             onClick={() => this.handleSelectBtnClick({page: 0})}
           ><SearchIcon className={leftIconClass} />조회</Button>
           </form>
-          <Grid container spacing={24} style={{border:"1px solid red",minWidth:"990px"}}>
+          <Grid container spacing={24} style={{border:"0px solid red",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
-              <Card style={{minWidth:"240px"}}>
+              <Card style={{minWidth:"240px",boxShadow:"2px 2px 8px blue"}}>
                 <ClientGroupComp 
                   onChangeGroupSelected={this.handleChangeClientGroupSelected}
                 />
               </Card>
             </Grid>
             <Grid item xs>
-              <Card style={{minWidth:"710px"}}>
+              <Card style={{minWidth:"710px",boxShadow:"2px 2px 8px green"}}>
               <ClientManageComp 
                   onChangeClientSelected={this.handleChangeClientSelected}
                 />
               </Card>
             </Grid>
           </Grid>
-          <ClientGroupInform />
+          <Grid container spacing={24} style={{marginTop:"0px",minWidth:"990px"}}>
+            <Grid item xs={4} sm={3}>
+              {(ClientGroupProps.informOpen) &&
+              <GetAppIcon className={leftIconClass} />
+              }
+            </Grid>
+            <Grid item xs style={{textAlign:"right"}}>
+              {(ClientManageProps.informOpen) &&
+              <GetAppIcon className={leftIconClass} />
+              }
+            </Grid>
+          </Grid>
+          <ClientGroupInform compShadow="2px 2px 8px blue" />
+          <ClientManageInform compShadow="2px 2px 8px green" />
         </GrPane>
       </React.Fragment>
       
     );
   }
 }
+
+
 
 const mapStateToProps = (state) => ({
   ClientManageProps: state.ClientManageModule,
