@@ -49,9 +49,6 @@ const initialState = {
         objId: '',
         objNm: '',
         osProtect: false,
-        validDate: '',
-        expireDate: '',
-        ipRange: '',
         comment: ''
     },
 

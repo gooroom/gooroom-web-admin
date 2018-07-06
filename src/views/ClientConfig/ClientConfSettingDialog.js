@@ -27,6 +27,15 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import IconButton from '@material-ui/core/IconButton';
+import CommentIcon from '@material-ui/icons/Comment';
+
+import Radio from '@material-ui/core/Radio';
+
 //
 //  ## Style ########## ########## ########## ########## ##########
 //
@@ -37,7 +46,7 @@ const styles = theme => ({
       backgroundColor: theme.palette.background.paper,
     },
   });
-  
+
 const containerClass = css({
     margin: "0px 30px !important",
     minHeight: 300,
@@ -118,7 +127,7 @@ class ClientConfSettingDialog extends Component {
         }
     }
 
-    handleKeyGenerate = () => {
+    handleAddNtp = () => {
         this.props.ClientConfSettingActions.generateClientConfSetting();
     }
 
@@ -137,6 +146,9 @@ class ClientConfSettingDialog extends Component {
         }
 
         const selectedItem = ClientConfSettingProps.selectedItem;
+
+        console.log('selectedItem : ', selectedItem);
+
         let pollingTime = '';
         let useHypervisor = false;
         let ntpAddrSelected = '';
@@ -176,31 +188,70 @@ class ClientConfSettingDialog extends Component {
                         className={classNames(fullWidthClass, itemRowClass)}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
                     />
-                    <TextField
-                        id="mrPollingTime"
-                        label="에이전트폴링주기(초)"
-                        value={(pollingTime !== '') ? pollingTime : '-'}
-                        onChange={this.handleValueChange("mrPollingTime")}
-                        className={classNames(fullWidthClass, itemRowClass)}
-                        disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
-                    />
                     {(dialogType === ClientConfSettingDialog.TYPE_VIEW) &&
-                        <TextField
-                            label="운영체제 보호"
-                            value={(useHypervisor) ? '구동' : '중단'}
-                            className={classNames(fullWidthClass, itemRowClass)}
-                            disabled
-                        />
+                        <Grid container spacing={24}>
+                            <Grid item xs={6} sm={6}>
+                                <TextField
+                                    id="mrPollingTime"
+                                    label="에이전트폴링주기(초)"
+                                    value={(pollingTime !== '') ? pollingTime : ''}
+                                    onChange={this.handleValueChange("mrPollingTime")}
+                                    className={classNames(fullWidthClass, itemRowClass)}
+                                    disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
+                                />
+                            </Grid>
+                            <Grid item xs={6} sm={6}>
+                                <TextField
+                                    label="운영체제 보호"
+                                    value={(useHypervisor) ? '구동' : '중단'}
+                                    className={classNames(fullWidthClass, itemRowClass)}
+                                    disabled
+                                />
+                            </Grid>
+                        </Grid>
                     }
                     {(dialogType === ClientConfSettingDialog.TYPE_EDIT || dialogType === ClientConfSettingDialog.TYPE_ADD) &&
-                        <div style={{marginTop:"10px"}}>
-                        <FormLabel style={{marginRight:"50px"}}>운영체제 보호</FormLabel>
-                        <FormControlLabel
-                            control={
-                            <Switch onChange={this.handleValueChange('osProtect')} value="osProtect" />
-                            }
-                            label={(useHypervisor) ? '구동' : '중단'}
-                        />
+                        <div>
+                            <TextField
+                                id="mrPollingTime"
+                                label="에이전트폴링주기(초)"
+                                value={(pollingTime !== '') ? pollingTime : ''}
+                                onChange={this.handleValueChange("mrPollingTime")}
+                                className={classNames(fullWidthClass, itemRowClass)}
+                            />
+                            <div style={{marginTop:"10px"}}>
+                                <FormLabel style={{marginRight:"50px"}}>운영체제 보호</FormLabel>
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('osProtect')} value="osProtect" />
+                                    }
+                                    label={(useHypervisor) ? '구동' : '중단'}
+                                />
+                            </div>
+                            <div style={{marginTop:"10px"}}>
+                                <FormLabel style={{marginRight:"20px"}}>NTP 서버로 사용할 주소정보</FormLabel>
+                                <Button onClick={this.handleAddNtp} variant="outlined" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
+                                <List>
+                                {ntpAddr.map(value => (
+                                    <ListItem style={{paddingTop:"0px", paddingBottom:"0px"}}
+                                    key={value}
+                                    role={undefined}
+                                    dense
+                                    button
+                                    
+                                    
+                                    >
+                                    <Radio
+                                        
+                                        
+                                        value={value}
+                                        name="radio-button-demo"
+                                    />
+                                    <ListItemText primary={`Line item ${value + 1}`} />
+                                    </ListItem>
+                                ))}
+                                </List>
+                            </div>
                         </div>
                     }
                 </form>
