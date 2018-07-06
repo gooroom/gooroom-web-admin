@@ -47,8 +47,8 @@ class ClientGroupDialog extends Component {
         });
     }
 
-    handleChange = name => event => {
-        this.props.ClientGroupActions.changeParamValue({
+    handleValueChange = name => event => {
+        this.props.ClientGroupActions.changeSelectedItemValue({
             name: name,
             value: event.target.value
         });
@@ -110,7 +110,7 @@ class ClientGroupDialog extends Component {
                         id="grpNm"
                         label="단말그룹이름"
                         value={(ClientGroupProps.selectedItem) ? ClientGroupProps.selectedItem.grpNm : ''}
-                        onChange={this.handleChange('grpNm')}
+                        onChange={this.handleValueChange('grpNm')}
                         margin="normal"
                         className={fullWidthClass}
                     />
@@ -119,7 +119,7 @@ class ClientGroupDialog extends Component {
                         id="comment"
                         label="단말그룹설명"
                         value={(ClientGroupProps.selectedItem) ? ClientGroupProps.selectedItem.comment : ''}
-                        onChange={this.handleChange('comment')}
+                        onChange={this.handleValueChange('comment')}
                         margin="normal"
                         className={fullWidthClass}
                     />

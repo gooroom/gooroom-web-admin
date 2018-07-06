@@ -304,10 +304,11 @@ class ClientManage extends Component {
   handleKeywordChange = name => event => {
     const { ClientManageActions, ClientManageProps } = this.props;
     const newParam = getMergedListParam(ClientManageProps.listParam, {keyword: event.target.value});
-    ClientManageActions.changeParamValue({
-      name: 'listParam',
-      value: newParam
-    });
+    // ClientManageActions.changeParamValue({
+    //   name: 'listParam',
+    //   value: newParam
+    // });
+    ClientManageActions.changeStoreData({name: 'listParam', value: newParam});
   };
 
   handleRowClick = (event, id) => {

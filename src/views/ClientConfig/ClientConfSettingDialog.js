@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
+import { withStyles } from '@material-ui/core/styles';
+
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
@@ -24,9 +26,18 @@ import Add from "@material-ui/icons/Add";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
+
 //
 //  ## Style ########## ########## ########## ########## ##########
 //
+const styles = theme => ({
+    root: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+    },
+  });
+  
 const containerClass = css({
     margin: "0px 30px !important",
     minHeight: 300,
@@ -67,10 +78,10 @@ class ClientConfSettingDialog extends Component {
         });
     }
 
-    handleChange = name => event => {
-        this.props.ClientConfSettingActions.changeParamValue({
+    handleValueChange = name => event => {
+        this.props.ClientConfSettingActions.changeSelectedItemValue({
             name: name,
-            value: event.target.value
+            value: event.target.checked
         });
     }
 
@@ -125,6 +136,25 @@ class ClientConfSettingDialog extends Component {
             title = "단말정책설정 수정";
         }
 
+        const selectedItem = ClientConfSettingProps.selectedItem;
+        let pollingTime = '';
+        let useHypervisor = false;
+        let ntpAddrSelected = '';
+        let ntpAddr = new Array();
+        if(selectedItem && selectedItem.propList && selectedItem.propList.length > 0) {
+            selectedItem.propList.forEach(function(e) {
+                if(e.propNm == 'AGENTPOLLINGTIME') {
+                    pollingTime = e.propValue;
+                } else if(e.propNm == 'USEHYPERVISOR') {
+                    useHypervisor = (e.propValue =="true");
+                } else if(e.propNm == 'NTPSELECTADDRESS') {
+                    ntpAddrSelected = e.propValue;
+                } else if(e.propNm == 'NTPADDRESSES') {
+                    ntpAddr.push(e.propValue);
+                } 
+            });
+        }
+
         return (
             <Dialog open={ClientConfSettingProps.dialogOpen}>
                 <DialogTitle>{title}</DialogTitle>
@@ -133,126 +163,49 @@ class ClientConfSettingDialog extends Component {
                     <TextField
                         id="objNm"
                         label="이름"
-                        margin="normal"
                         value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.objNm : ''}
-                        onChange={this.handleChange("objNm")}
+                        onChange={this.handleValueChange("objNm")}
                         className={fullWidthClass}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
                     />
                     <TextField
                         id="comment"
                         label="설명"
-                        margin="normal"
                         value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.comment : ''}
-                        onChange={this.handleChange("comment")}
-                        className={fullWidthClass}
+                        onChange={this.handleValueChange("comment")}
+                        className={classNames(fullWidthClass, itemRowClass)}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
                     />
                     <TextField
                         id="mrPollingTime"
                         label="에이전트폴링주기(초)"
-                        margin="normal"
-                        value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.mrPollingTime : ''}
-                        onChange={this.handleChange("mrPollingTime")}
-                        className={fullWidthClass}
+                        value={(pollingTime !== '') ? pollingTime : '-'}
+                        onChange={this.handleValueChange("mrPollingTime")}
+                        className={classNames(fullWidthClass, itemRowClass)}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
                     />
-                    <FormControlLabel
-                        control={<Switch
-                            checked={ClientConfSettingProps.selectedItem.osProtect}
-                            onChange={this.handleChange('osProtect')}
-                            value="osProtect"
-                        />}
-                        label="Antoine Llorca"
-                    />
-
-                    <Grid container spacing={16}>
-                        <Grid item xs={8}>
-                            <TextField
-                                id="regKeyNo"
-                                label="등록키"
-                                value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.regKeyNo: ''}
-                                onChange={this.handleChange("regKeyNo")}
-                                margin="normal"
-                                className={fullWidthClass}
-                                disabled
-                            />
-                        </Grid>
-                        <Grid item xs={4} className={keyCreateBtnClass}>
-                           <Button
-                            variant="raised"
-                            color="secondary"
-                            onClick={() => {
-                                this.handleKeyGenerate();
-                            }}
-                            style={{display: dialogType === ClientConfSettingDialog.TYPE_ADD ? 'block' : 'none' }}
-                            ><Add />키생성
-                            </Button>
-                        </Grid>
-                  </Grid>
-
-                    <Grid container spacing={16}>
-                        <Grid item xs={6}>
+                    {(dialogType === ClientConfSettingDialog.TYPE_VIEW) &&
                         <TextField
-                            id="validDate"
-                            label="유효날짜"
-                            type="date"
-                            margin="normal"
-                            value={(ClientConfSettingProps.selectedItem) ? formatDateToSimple(ClientConfSettingProps.selectedItem.validDate, 'YYYY-MM-DD') : ''}
-                            onChange={this.handleChange("validDate")}
-                            className={fullWidthClass}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
+                            label="운영체제 보호"
+                            value={(useHypervisor) ? '구동' : '중단'}
+                            className={classNames(fullWidthClass, itemRowClass)}
+                            disabled
                         />
-                        </Grid>
-                        <Grid item xs={6}>
-                        <TextField
-                            id="date"
-                            label="인증서만료날짜"
-                            type="date"
-                            margin="normal"
-                            value={(ClientConfSettingProps.selectedItem) ? formatDateToSimple(ClientConfSettingProps.selectedItem.expireDate, 'YYYY-MM-DD') : ''}
-                            onChange={this.handleChange("expireDate")}
-                            className={fullWidthClass}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
+                    }
+                    {(dialogType === ClientConfSettingDialog.TYPE_EDIT || dialogType === ClientConfSettingDialog.TYPE_ADD) &&
+                        <div style={{marginTop:"10px"}}>
+                        <FormLabel style={{marginRight:"50px"}}>운영체제 보호</FormLabel>
+                        <FormControlLabel
+                            control={
+                            <Switch onChange={this.handleValueChange('osProtect')} value="osProtect" />
+                            }
+                            label={(useHypervisor) ? '구동' : '중단'}
                         />
-                        </Grid>
-                    </Grid>
-
-                    <TextField
-                        id="ipRange"
-                        label="유효 IP 범위"
-                        value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.ipRange : ''}
-                        onChange={this.handleChange("ipRange")}
-                        margin="normal"
-                        className={fullWidthClass}
-                        disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
-                    />
-                    <FormLabel disabled={true}>
-                        <i>여러개인 경우 콤마(.) 로 구분, 또는 "-" 로 영역 설정 가능합니다.</i>
-                    </FormLabel><br />
-                    <FormLabel disabled={true}>
-                        <i>(샘플) "127.0.0.1, 169.0.0.1" 또는 "127.0.0.1 - 127.0.0.10"</i>
-                    </FormLabel>
-                    <TextField
-                        id="comment"
-                        label="설명"
-                        margin="normal"
-                        value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.comment : ''}
-                        onChange={this.handleChange("comment")}
-                        className={fullWidthClass}
-                        disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
-                    />
-
+                        </div>
+                    }
                 </form>
 
                 <DialogActions>
-                    
                 {(dialogType === ClientConfSettingDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
                 }
@@ -260,7 +213,6 @@ class ClientConfSettingDialog extends Component {
                     <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
-
                 </DialogActions>
             </Dialog>
         );
@@ -277,5 +229,5 @@ const mapDispatchToProps = (dispatch) => ({
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSettingDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ClientConfSettingDialog));
 
