@@ -70,7 +70,11 @@ const itemRowClass = css({
     marginTop: "10px !important"
 }).toString();
 
-
+const bullet = css({
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  }).toString();
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -88,16 +92,36 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleValueChange = name => event => {
-        this.props.ClientConfSettingActions.changeSelectedItemValue({
-            name: name,
-            value: event.target.checked
-        });
+        console.log('name : ', name);
+        console.log('event : ', event);
+        console.log('event.target : ', event.target);
+        console.log('event.target.type : ', event.target.type);
+        console.log('event.target.value : ', event.target.value);
+        console.log('event.target.checked : ', event.target.checked);
+        if(event.target.type === 'checkbox') {
+            this.props.ClientConfSettingActions.changeSelectedItemValue({
+                name: name,
+                value: event.target.checked
+            });
+        } else {
+            this.props.ClientConfSettingActions.changeSelectedItemValue({
+                name: name,
+                value: event.target.value
+            });
+        }
     }
 
     handleCreateData = (event) => {
         const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-        ClientConfSettingActions.createClientConfSettingData(ClientConfSettingProps.selectedItem)
-            .then(() => {
+        ClientConfSettingActions.createClientConfSettingData({
+            'objName': 'test007',
+            'objComment': 'test0077777777777',
+            'AGENTPOLLINGTIME': '77',
+            'USEHYPERVISOR': true,
+            'NTPADDRESSES': ['1.7.0.0', '2.7.0.0', '3.7.0.0'],
+            'NTPSELECTADDRESS': '3.7.0.0',
+            'isDefault': false
+        }).then(() => {
                 ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
                 this.handleClose();
         }, (res) => {
@@ -134,38 +158,53 @@ class ClientConfSettingDialog extends Component {
     render() {
 
         const { ClientConfSettingProps } = this.props;
-        const { dialogType } = ClientConfSettingProps;
+        const { dialogType, selectedItem } = ClientConfSettingProps;
+        
         let title = "";
+        let pollingTime = '';
+        let useHypervisor = false;
+        let ntpAddrSelected = '';
+        let ntpAddr = new Array();
+
+        const bull = <span className={bullet}>•</span>;
 
         if(dialogType === ClientConfSettingDialog.TYPE_ADD) {
             title = "단말정책설정 등록";
         } else if(dialogType === ClientConfSettingDialog.TYPE_VIEW) {
             title = "단말정책설정 정보";
+            if(selectedItem && selectedItem.propList && selectedItem.propList.length > 0) {
+                selectedItem.propList.forEach(function(e) {
+                    if(e.propNm == 'AGENTPOLLINGTIME') {
+                        pollingTime = e.propValue;
+                    } else if(e.propNm == 'USEHYPERVISOR') {
+                        useHypervisor = (e.propValue =="true");
+                    } else if(e.propNm == 'NTPSELECTADDRESS') {
+                        ntpAddrSelected = e.propValue;
+                    } else if(e.propNm == 'NTPADDRESSES') {
+                        ntpAddr.push(e.propValue);
+                    } 
+                });
+            }
+
         } else if(dialogType === ClientConfSettingDialog.TYPE_EDIT) {
             title = "단말정책설정 수정";
+
+            if(selectedItem && selectedItem.propList && selectedItem.propList.length > 0) {
+                selectedItem.propList.forEach(function(e) {
+                    if(e.propNm == 'AGENTPOLLINGTIME') {
+                        pollingTime = e.propValue;
+                    } else if(e.propNm == 'USEHYPERVISOR') {
+                        useHypervisor = (e.propValue =="true");
+                    } else if(e.propNm == 'NTPSELECTADDRESS') {
+                        ntpAddrSelected = e.propValue;
+                    } else if(e.propNm == 'NTPADDRESSES') {
+                        ntpAddr.push(e.propValue);
+                    } 
+                });
+            }
+    
         }
 
-        const selectedItem = ClientConfSettingProps.selectedItem;
-
-        console.log('selectedItem : ', selectedItem);
-
-        let pollingTime = '';
-        let useHypervisor = false;
-        let ntpAddrSelected = '';
-        let ntpAddr = new Array();
-        if(selectedItem && selectedItem.propList && selectedItem.propList.length > 0) {
-            selectedItem.propList.forEach(function(e) {
-                if(e.propNm == 'AGENTPOLLINGTIME') {
-                    pollingTime = e.propValue;
-                } else if(e.propNm == 'USEHYPERVISOR') {
-                    useHypervisor = (e.propValue =="true");
-                } else if(e.propNm == 'NTPSELECTADDRESS') {
-                    ntpAddrSelected = e.propValue;
-                } else if(e.propNm == 'NTPADDRESSES') {
-                    ntpAddr.push(e.propValue);
-                } 
-            });
-        }
 
         return (
             <Dialog open={ClientConfSettingProps.dialogOpen}>
@@ -192,10 +231,10 @@ class ClientConfSettingDialog extends Component {
                         <Grid container spacing={24}>
                             <Grid item xs={6} sm={6}>
                                 <TextField
-                                    id="mrPollingTime"
+                                    id="pollingTime"
                                     label="에이전트폴링주기(초)"
-                                    value={(pollingTime !== '') ? pollingTime : ''}
-                                    onChange={this.handleValueChange("mrPollingTime")}
+                                    value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.pollingTime : ''}
+                                    onChange={this.handleValueChange("pollingTime")}
                                     className={classNames(fullWidthClass, itemRowClass)}
                                     disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
                                 />
@@ -213,23 +252,25 @@ class ClientConfSettingDialog extends Component {
                     {(dialogType === ClientConfSettingDialog.TYPE_EDIT || dialogType === ClientConfSettingDialog.TYPE_ADD) &&
                         <div>
                             <TextField
-                                id="mrPollingTime"
+                                id="pollingTime"
                                 label="에이전트폴링주기(초)"
-                                value={(pollingTime !== '') ? pollingTime : ''}
-                                onChange={this.handleValueChange("mrPollingTime")}
+                                value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.pollingTime : ''}
+                                onChange={this.handleValueChange("pollingTime")}
                                 className={classNames(fullWidthClass, itemRowClass)}
                             />
                             <div style={{marginTop:"10px"}}>
-                                <FormLabel style={{marginRight:"50px"}}>운영체제 보호</FormLabel>
+                                <FormLabel style={{marginRight:"50px"}}>{bull} 운영체제 보호</FormLabel>
                                 <FormControlLabel
                                     control={
-                                    <Switch onChange={this.handleValueChange('osProtect')} value="osProtect" />
+                                    <Switch onChange={this.handleValueChange('osProtect')} 
+                                        checked={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.osProtect : false}
+                                        color="primary" />
                                     }
                                     label={(useHypervisor) ? '구동' : '중단'}
                                 />
                             </div>
                             <div style={{marginTop:"10px"}}>
-                                <FormLabel style={{marginRight:"20px"}}>NTP 서버로 사용할 주소정보</FormLabel>
+                                <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
                                 <Button onClick={this.handleAddNtp} variant="outlined" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
                                 <List>
                                 {ntpAddr.map(value => (

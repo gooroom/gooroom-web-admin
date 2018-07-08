@@ -194,11 +194,10 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     ClientConfSettingActions.showDialog({
       selectedItem: {
-        objId: '',
-        validDate: (new Date()).setMonth((new Date()).getMonth() + 1),
-        expireDate: (new Date()).setMonth((new Date()).getMonth() + 1),
-        ipRange: '',
-        comment: '' 
+        objNm: '',
+        comment: '',
+        pollingTime: '',
+        osProtect: false,
       },
       dialogType: ClientConfSettingDialog.TYPE_ADD,
       dialogOpen: true

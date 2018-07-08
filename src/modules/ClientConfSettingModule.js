@@ -99,6 +99,7 @@ export const readClientConfSettingList = (param) => dispatch => {
 };
 
 export const changeSelectedItemValue = (param) => dispatch => {
+    console.log('changeSelectedItemValue : ', param);
     return dispatch({
         type: CHG_SELECTED_DATA,
         payload: param
@@ -134,7 +135,7 @@ export const generateClientConfSetting = (param) => dispatch => {
 // create (add)
 export const createClientConfSettingData = (param) => dispatch => {
     dispatch({type: CREATE_CONFSETTING_PENDING});
-    return requestPostAPI('createConfSettingData', param).then(
+    return requestPostAPI('createClientConf', param).then(
         (response) => {
             try {
                 if(response.data.status.result === 'success') {

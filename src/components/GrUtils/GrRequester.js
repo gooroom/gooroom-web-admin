@@ -26,7 +26,7 @@ export function grRequestPromise(url, param) {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       transformRequest: [
         function(data, headers) {
-          return qs.stringify(data);
+          return qs.stringify(data, {arrayFormat:'brackets'});
         }
       ],
       data: param,
@@ -80,7 +80,7 @@ export function requestPostAPI(url, param, headers) {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       transformRequest: [
         function(data, headers) {
-          return qs.stringify(data);
+          return qs.stringify(data, {arrayFormat:'brackets'});
         }
       ],
       data: param,
