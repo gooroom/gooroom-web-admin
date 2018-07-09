@@ -87,7 +87,7 @@ class ClientConfigComp extends Component {
             단말정책설정
           </Typography>
           <Typography variant="headline" component="h2">
-            {ClientGroupProps.viewItem.clientConfigNm}
+            {ClientGroupProps.selectedItem.clientConfigNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
           {bull}이 정책에 대한 설명을 보여주는 곳

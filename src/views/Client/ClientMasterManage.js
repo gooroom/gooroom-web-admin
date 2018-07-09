@@ -183,7 +183,7 @@ class ClientMasterManage extends Component {
       // console.log(selectedGroupObj);
       ClientManageActions.closeClientManageInform({informOpen:false});
       ClientGroupActions.showClientGroupInform({
-        viewItem: Object.assign({}, selectedGroupObj),
+        selectedItem: Object.assign({}, selectedGroupObj),
       });
     }
   };

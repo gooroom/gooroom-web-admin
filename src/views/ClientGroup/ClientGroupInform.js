@@ -76,19 +76,23 @@ class ClientGroupInform extends Component {
   render() {
 
     const { ClientGroupProps } = this.props;
+    const { selectedItem } = ClientGroupProps;
+    
     const bull = <span className={bullet}>•</span>;
+
+//    console.log('group inform render ClientGroupProps : ', ClientGroupProps);
 
     return (
       <div className={componentClass}>
       {(ClientGroupProps.informOpen) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(ClientGroupProps.viewItem) ? ClientGroupProps.viewItem.grpNm : ''}
-            subheader={ClientGroupProps.viewItem.grpId + ', ' + formatDateToSimple(ClientGroupProps.viewItem.regDate, 'YYYY-MM-DD')}
+            title={(selectedItem) ? selectedItem.grpNm : ''}
+            subheader={selectedItem.grpId + ', ' + formatDateToSimple(selectedItem.regDate, 'YYYY-MM-DD')}
           />
           <CardContent className={contentClass}>
             <Typography component="pre">
-              "{ClientGroupProps.viewItem.comment}"
+              "{selectedItem.comment}"
             </Typography>
           </CardContent>
           <Divider />

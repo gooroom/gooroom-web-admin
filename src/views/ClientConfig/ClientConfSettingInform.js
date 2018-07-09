@@ -102,15 +102,12 @@ class ClientConfSettingInform extends Component {
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
                   <TableCell numeric>{selectedItem.pollingTime}</TableCell>
-                  <TableCell component="th" scope="row"></TableCell>
                   <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
                   <TableCell numeric>{(selectedItem.useHypervisor) ? '구동' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
-
                   <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
                   <TableCell numeric>{(selectedItem.selectedNtpIndex > -1) ? selectedItem.ntpAddress[selectedItem.selectedNtpIndex] : ''}</TableCell>
-                  <TableCell component="th" scope="row"></TableCell>
                   <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
                   <TableCell numeric>{selectedItem.ntpAddress.map(function(prop, index) {
                       return <span key={index}>{prop}<br/></span>;
