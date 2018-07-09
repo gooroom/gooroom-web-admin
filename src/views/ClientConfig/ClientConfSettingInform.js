@@ -10,8 +10,7 @@ import { connect } from 'react-redux';
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
 
-import * as ClientGroupActions from '../../modules/ClientGroupModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -23,11 +22,15 @@ import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
 
-
 import ClientConfigComp from '../Rules/ClientConfigComp';
 import ClientHostsComp from '../Rules/ClientHostsComp';
 import DesktopConfigComp from '../Rules/DesktopConfigComp';
 import ClientUpdateServerComp from '../Rules/ClientUpdateServerComp';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 
 
 //
@@ -69,46 +72,54 @@ const pos = css({
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientGroupInform extends Component {
+class ClientConfSettingInform extends Component {
 
   // .................................................
 
   render() {
 
-    const { ClientGroupProps } = this.props;
+    const { ClientConfSettingProps } = this.props;
+    const { selectedItem } = ClientConfSettingProps;
     const bull = <span className={bullet}>•</span>;
 
     return (
       <div className={componentClass}>
-      {(ClientGroupProps.informOpen) &&
+      {(ClientConfSettingProps.informOpen) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(ClientGroupProps.viewItem) ? ClientGroupProps.viewItem.grpNm : ''}
-            subheader={ClientGroupProps.viewItem.grpId + ', ' + formatDateToSimple(ClientGroupProps.viewItem.regDate, 'YYYY-MM-DD')}
+            title={(selectedItem) ? selectedItem.objNm : ''}
+            subheader={selectedItem.objId + ', ' + formatDateToSimple(selectedItem.modDate, 'YYYY-MM-DD')}
           />
           <CardContent className={contentClass}>
             <Typography component="pre">
-              "{ClientGroupProps.viewItem.comment}"
+              "{selectedItem.comment}"
             </Typography>
+            
+            <Divider />
+            <br />
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
+                  <TableCell numeric>{selectedItem.pollingTime}</TableCell>
+                  <TableCell component="th" scope="row"></TableCell>
+                  <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
+                  <TableCell numeric>{(selectedItem.useHypervisor) ? '구동' : '중단'}</TableCell>
+                </TableRow>
+                <TableRow>
+
+                  <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
+                  <TableCell numeric>{(selectedItem.selectedNtpIndex > -1) ? selectedItem.ntpAddress[selectedItem.selectedNtpIndex] : ''}</TableCell>
+                  <TableCell component="th" scope="row"></TableCell>
+                  <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
+                  <TableCell numeric>{selectedItem.ntpAddress.map(function(prop, index) {
+                      return <span key={index}>{prop}<br/></span>;
+                  })}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+
           </CardContent>
-          <Divider />
-          
-          <Grid container spacing={8}>
-            <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientConfigComp />
-            </Grid>
-            <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <DesktopConfigComp />
-            </Grid>
-          </Grid>
-          <Grid container spacing={8}>
-            <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientHostsComp />
-            </Grid>
-            <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientUpdateServerComp />
-            </Grid>
-          </Grid>
         </Card>
       }
       </div>
@@ -119,13 +130,12 @@ class ClientGroupInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule
+  ClientConfSettingProps: state.ClientConfSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientGroupInform);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSettingInform);
 

@@ -17,6 +17,7 @@ import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
+import ClientConfSettingInform from './ClientConfSettingInform';
 import GrPane from '../../containers/GrContent/GrPane';
 
 import Table from '@material-ui/core/Table';
@@ -130,7 +131,7 @@ class ClientConfSettingHead extends Component {
   };
 
   static columnData = [
-    { id: 'chConfGubun', isOrder: true, numeric: false, disablePadding: true, label: '구분' },
+    { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
     { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '정책이름' },
     { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: '정책아이디' },
     { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: '수정자' },
@@ -191,17 +192,55 @@ class ClientConfSetting extends Component {
   };
   
   handleCreateButton = () => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
+    const { ClientConfSettingActions } = this.props;
     ClientConfSettingActions.showDialog({
       selectedItem: {
+        objId: '',
         objNm: '',
         comment: '',
+        useHypervisor: false,
         pollingTime: '',
-        osProtect: false,
+        selectedNtpIndex: -1,
+        ntpAddress: ['']
       },
-      dialogType: ClientConfSettingDialog.TYPE_ADD,
-      dialogOpen: true
+      dialogType: ClientConfSettingDialog.TYPE_ADD
     });
+  }
+
+  setParameterForView = (param) => {
+    let pollingTime = '';
+    let useHypervisor = false;
+    let selectedNtpIndex = -1;
+    let ntpAddrSelected = '';
+    let ntpAddress = [];
+    param.propList.forEach(function(e) {
+      if(e.propNm == 'AGENTPOLLINGTIME') {
+        pollingTime = e.propValue;
+      } else if(e.propNm == 'USEHYPERVISOR') {
+        useHypervisor = (e.propValue == "true");
+      } else if(e.propNm == 'NTPSELECTADDRESS') {
+        ntpAddrSelected = e.propValue;
+      } else if(e.propNm == 'NTPADDRESSES') {
+        ntpAddress.push(e.propValue);
+      }
+    });
+    ntpAddress.forEach(function(e, i) {
+      if(ntpAddrSelected == e) {
+        selectedNtpIndex = i;
+      }
+    });
+
+    return {
+      objId: param.objId,
+      objNm: param.objNm,
+      comment: param.comment,
+      modDate: param.modDate,
+      useHypervisor: useHypervisor,
+      pollingTime: pollingTime,
+      selectedNtpIndex: selectedNtpIndex,
+      ntpAddress: ntpAddress
+    };
+
   }
   
   handleRowClick = (event, id) => {
@@ -210,11 +249,16 @@ class ClientConfSetting extends Component {
       return element.objId == id;
     });
     
+    const viewItem = this.setParameterForView(selectedItem);
     ClientConfSettingActions.showDialog({
-      selectedItem: Object.assign({}, selectedItem),
+      selectedItem: viewItem,
       dialogType: ClientConfSettingDialog.TYPE_VIEW,
-      dialogOpen: true
     });
+
+    ClientConfSettingActions.showInform({
+      selectedItem: viewItem  
+    });
+    
   };
 
   handleEditClick = (event, id) => {
@@ -223,10 +267,10 @@ class ClientConfSetting extends Component {
     const selectedItem = ClientConfSettingProps.listData.find(function(element) {
       return element.objId == id;
     });
+
     ClientConfSettingActions.showDialog({
-      selectedItem: Object.assign({}, selectedItem),
+      selectedItem: this.setParameterForView(selectedItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT,
-      dialogOpen: true
     });
   };
 
@@ -234,22 +278,24 @@ class ClientConfSetting extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientConfSettingProps, ClientConfSettingActions, GrConfirmActions } = this.props;
+
     const selectedItem = ClientConfSettingProps.listData.find(function(element) {
       return element.objId == id;
     });
-    ClientConfSettingActions.changeParamValue({
-      name: 'objId',
-      value: selectedItem.objId
+
+    ClientConfSettingActions.setSelectedItemObj({
+      selectedItem: selectedItem
     });
     const re = GrConfirmActions.showConfirm({
-      confirmTitle: '단말등록키 삭제',
-      confirmMsg: '단말등록키(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmTitle: '단말정책정보 삭제',
+      confirmMsg: '단말정책정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true
     });
   };
   handleDeleteConfirmResult = (confirmValue) => {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+
     if(confirmValue) {
       ClientConfSettingActions.deleteClientConfSettingData({
         objId: ClientConfSettingProps.selectedItem.objId
@@ -287,7 +333,7 @@ class ClientConfSetting extends Component {
   handleKeywordChange = name => event => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     const newParam = getMergedListParam(ClientConfSettingProps.listParam, {keyword: event.target.value});
-    ClientConfSettingActions.changeParamValue({
+    ClientConfSettingActions.changeStoreData({
       name: 'listParam',
       value: newParam
     });
@@ -415,6 +461,7 @@ class ClientConfSetting extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
+        <ClientConfSettingInform />
         <ClientConfSettingDialog />
         <GrConfirm />
       </React.Fragment>

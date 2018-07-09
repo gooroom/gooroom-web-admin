@@ -42,13 +42,11 @@ class ClientGroupDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.ClientGroupActions.closeDialog({
-            dialogOpen: false
-        });
+        this.props.ClientGroupActions.closeDialog();
     }
 
     handleValueChange = name => event => {
-        this.props.ClientGroupActions.changeSelectedItemValue({
+        this.props.ClientGroupActions.setSelectedItemValue({
             name: name,
             value: event.target.value
         });

@@ -27,9 +27,10 @@ const DELETE_CLIENTGROUP_FAILURE = 'groupManage/DELETE_CLIENTGROUP_FAILURE';
 const SHOW_CLIENTGROUP_INFORM = 'groupManage/SHOW_CLIENTGROUP_INFORM';
 const SHOW_CLIENTGROUP_DIALOG = 'groupManage/SHOW_CLIENTGROUP_DIALOG';
 
-const CHG_SELECTED_DATA = 'groupManage/CHG_SELECTED_DATA';
+const SET_SELECTED_OBJ = 'groupManage/SET_SELECTED_OBJ';
+const SET_SELECTED_VALUE = 'groupManage/SET_SELECTED_VALUE';
+
 const CHG_STORE_DATA = 'groupManage/CHG_STORE_DATA';
-const SET_CLIENTGROUP_SELECTED = 'groupManage/SET_CLIENTGROUP_SELECTED';
 const SET_INITIAL_STORE = 'groupManage/SET_INITIAL_STORE';
 
 // ...
@@ -96,7 +97,7 @@ export const showDialog = (param) => dispatch => {
     });
 };
 
-export const closeDialog = (param) => dispatch => {
+export const closeDialog = () => dispatch => {
     return dispatch({
         type: CHG_STORE_DATA,
         payload: {name:"dialogOpen",value:false}
@@ -239,23 +240,16 @@ export const deleteClientGroupData = (param) => dispatch => {
     });
 };
 
-export const setSelectedItem = (param) => dispatch => {
+export const setSelectedItemObj = (param) => dispatch => {
     return dispatch({
-        type: SET_CLIENTGROUP_SELECTED,
+        type: SET_SELECTED_OBJ,
         payload: param
     });
 };
 
-export const changeSelectedItemValue = (param) => dispatch => {
+export const setSelectedItemValue = (param) => dispatch => {
     return dispatch({
-        type: CHG_SELECTED_DATA,
-        payload: param
-    });
-};
-
-export const changeSelectValue = (param) => dispatch => {
-    return dispatch({
-        type: CHG_STORE_DATA,
+        type: SET_SELECTED_VALUE,
         payload: param
     });
 };
@@ -319,7 +313,7 @@ export default handleActions({
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
         return {
             ...state,
-            viewItem: action.payload.viewItem,
+            viewItem: action.payload.selectedItem,
             informOpen: true
         };
     },
@@ -327,7 +321,7 @@ export default handleActions({
         return {
             ...state,
             selectedItem: action.payload.selectedItem,
-            dialogOpen: action.payload.dialogOpen,
+            dialogOpen: true,
             dialogType: action.payload.dialogType,
         };
     },
@@ -404,7 +398,7 @@ export default handleActions({
         };
     },
 
-    [CHG_SELECTED_DATA]: (state, action) => {
+    [SET_SELECTED_VALUE]: (state, action) => {
         const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
@@ -418,7 +412,7 @@ export default handleActions({
         }
     },
 
-    [SET_CLIENTGROUP_SELECTED]: (state, action) => {
+    [SET_SELECTED_OBJ]: (state, action) => {
         return {
             ...state,
             selectedItem: action.payload.selectedItem
