@@ -33,6 +33,8 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
+import Input from '@material-ui/core/Input';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import Radio from '@material-ui/core/Radio';
 
@@ -86,42 +88,41 @@ class ClientConfSettingDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.ClientConfSettingActions.closeDialog({
-            dialogOpen: false
-        });
+        this.props.ClientConfSettingActions.closeDialog();
     }
 
     handleValueChange = name => event => {
-        console.log('name : ', name);
-        console.log('event : ', event);
-        console.log('event.target : ', event.target);
-        console.log('event.target.type : ', event.target.type);
-        console.log('event.target.value : ', event.target.value);
-        console.log('event.target.checked : ', event.target.checked);
         if(event.target.type === 'checkbox') {
-            this.props.ClientConfSettingActions.changeSelectedItemValue({
+            this.props.ClientConfSettingActions.setSelectedItemValue({
                 name: name,
                 value: event.target.checked
             });
         } else {
-            this.props.ClientConfSettingActions.changeSelectedItemValue({
+            this.props.ClientConfSettingActions.setSelectedItemValue({
                 name: name,
                 value: event.target.value
             });
         }
     }
 
+    handleNtpValueChange = index => event => {
+        this.props.ClientConfSettingActions.setSelectedNtpValue({
+            index: index,
+            value: event.target.value
+        });
+    }
+
+    handleChangeSelectedNtp = (name, index) => event => {
+        this.props.ClientConfSettingActions.setSelectedItemValue({
+            name: name,
+            value: index
+        });
+    }
+
     handleCreateData = (event) => {
         const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-        ClientConfSettingActions.createClientConfSettingData({
-            'objName': 'test007',
-            'objComment': 'test0077777777777',
-            'AGENTPOLLINGTIME': '77',
-            'USEHYPERVISOR': true,
-            'NTPADDRESSES': ['1.7.0.0', '2.7.0.0', '3.7.0.0'],
-            'NTPSELECTADDRESS': '3.7.0.0',
-            'isDefault': false
-        }).then(() => {
+        ClientConfSettingActions.createClientConfSettingData(ClientConfSettingProps.selectedItem)
+        .then(() => {
                 ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
                 this.handleClose();
         }, (res) => {
@@ -152,59 +153,30 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleAddNtp = () => {
-        this.props.ClientConfSettingActions.generateClientConfSetting();
+        const { ClientConfSettingActions } = this.props;
+        ClientConfSettingActions.addNtpAddress();
+    }
+
+    handleDeleteNtp = index => event => {
+        const { ClientConfSettingActions } = this.props;
+        ClientConfSettingActions.deleteNtpAddress(index);
     }
 
     render() {
 
         const { ClientConfSettingProps } = this.props;
         const { dialogType, selectedItem } = ClientConfSettingProps;
-        
-        let title = "";
-        let pollingTime = '';
-        let useHypervisor = false;
-        let ntpAddrSelected = '';
-        let ntpAddr = new Array();
 
+        let title = "";
         const bull = <span className={bullet}>•</span>;
 
         if(dialogType === ClientConfSettingDialog.TYPE_ADD) {
             title = "단말정책설정 등록";
         } else if(dialogType === ClientConfSettingDialog.TYPE_VIEW) {
             title = "단말정책설정 정보";
-            if(selectedItem && selectedItem.propList && selectedItem.propList.length > 0) {
-                selectedItem.propList.forEach(function(e) {
-                    if(e.propNm == 'AGENTPOLLINGTIME') {
-                        pollingTime = e.propValue;
-                    } else if(e.propNm == 'USEHYPERVISOR') {
-                        useHypervisor = (e.propValue =="true");
-                    } else if(e.propNm == 'NTPSELECTADDRESS') {
-                        ntpAddrSelected = e.propValue;
-                    } else if(e.propNm == 'NTPADDRESSES') {
-                        ntpAddr.push(e.propValue);
-                    } 
-                });
-            }
-
         } else if(dialogType === ClientConfSettingDialog.TYPE_EDIT) {
             title = "단말정책설정 수정";
-
-            if(selectedItem && selectedItem.propList && selectedItem.propList.length > 0) {
-                selectedItem.propList.forEach(function(e) {
-                    if(e.propNm == 'AGENTPOLLINGTIME') {
-                        pollingTime = e.propValue;
-                    } else if(e.propNm == 'USEHYPERVISOR') {
-                        useHypervisor = (e.propValue =="true");
-                    } else if(e.propNm == 'NTPSELECTADDRESS') {
-                        ntpAddrSelected = e.propValue;
-                    } else if(e.propNm == 'NTPADDRESSES') {
-                        ntpAddr.push(e.propValue);
-                    } 
-                });
-            }
-    
         }
-
 
         return (
             <Dialog open={ClientConfSettingProps.dialogOpen}>
@@ -214,7 +186,7 @@ class ClientConfSettingDialog extends Component {
                     <TextField
                         id="objNm"
                         label="이름"
-                        value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.objNm : ''}
+                        value={(selectedItem) ? selectedItem.objNm : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={fullWidthClass}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
@@ -222,39 +194,52 @@ class ClientConfSettingDialog extends Component {
                     <TextField
                         id="comment"
                         label="설명"
-                        value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.comment : ''}
+                        value={(selectedItem) ? selectedItem.comment : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(fullWidthClass, itemRowClass)}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
                     />
                     {(dialogType === ClientConfSettingDialog.TYPE_VIEW) &&
-                        <Grid container spacing={24}>
-                            <Grid item xs={6} sm={6}>
-                                <TextField
-                                    id="pollingTime"
-                                    label="에이전트폴링주기(초)"
-                                    value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.pollingTime : ''}
-                                    onChange={this.handleValueChange("pollingTime")}
-                                    className={classNames(fullWidthClass, itemRowClass)}
-                                    disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
-                                />
+                        <div>
+                            <Grid container spacing={24}>
+                                <Grid item xs={6} sm={6}>
+                                    <TextField
+                                        label="에이전트폴링주기(초)"
+                                        value={(selectedItem) ? selectedItem.pollingTime : ''}
+                                        className={classNames(fullWidthClass, itemRowClass)}
+                                        disabled
+                                    />
+                                </Grid>
+                                <Grid item xs={6} sm={6}>
+                                    <TextField
+                                        label="운영체제 보호"
+                                        value={(selectedItem.useHypervisor) ? '구동' : '중단'}
+                                        className={classNames(fullWidthClass, itemRowClass)}
+                                        disabled
+                                    />
+                                </Grid> 
                             </Grid>
-                            <Grid item xs={6} sm={6}>
-                                <TextField
-                                    label="운영체제 보호"
-                                    value={(useHypervisor) ? '구동' : '중단'}
-                                    className={classNames(fullWidthClass, itemRowClass)}
-                                    disabled
-                                />
-                            </Grid>
-                        </Grid>
+                            <TextField
+                                label="선택된 NTP 서버 주소"
+                                value={(selectedItem.selectedNtpIndex > -1) ? selectedItem.ntpAddress[selectedItem.selectedNtpIndex] : ''}
+                                className={classNames(fullWidthClass, itemRowClass)}
+                                disabled
+                            />
+                            <TextField
+                                label="NTP 서버로 사용할 주소정보"
+                                multiline
+                                value={(selectedItem.ntpAddress.length > 0) ? selectedItem.ntpAddress.join('\n') : ''}
+                                className={classNames(fullWidthClass, itemRowClass)}
+                                disabled
+                            />
+                        </div>                        
                     }
                     {(dialogType === ClientConfSettingDialog.TYPE_EDIT || dialogType === ClientConfSettingDialog.TYPE_ADD) &&
                         <div>
                             <TextField
                                 id="pollingTime"
                                 label="에이전트폴링주기(초)"
-                                value={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.pollingTime : ''}
+                                value={(selectedItem) ? selectedItem.pollingTime : ''}
                                 onChange={this.handleValueChange("pollingTime")}
                                 className={classNames(fullWidthClass, itemRowClass)}
                             />
@@ -262,33 +247,29 @@ class ClientConfSettingDialog extends Component {
                                 <FormLabel style={{marginRight:"50px"}}>{bull} 운영체제 보호</FormLabel>
                                 <FormControlLabel
                                     control={
-                                    <Switch onChange={this.handleValueChange('osProtect')} 
-                                        checked={(ClientConfSettingProps.selectedItem) ? ClientConfSettingProps.selectedItem.osProtect : false}
+                                    <Switch onChange={this.handleValueChange('useHypervisor')} 
+                                        checked={(selectedItem) ? selectedItem.useHypervisor : false}
                                         color="primary" />
                                     }
-                                    label={(useHypervisor) ? '구동' : '중단'}
+                                    label={(selectedItem.useHypervisor) ? '구동' : '중단'}
                                 />
                             </div>
                             <div style={{marginTop:"10px"}}>
                                 <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
                                 <Button onClick={this.handleAddNtp} variant="outlined" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
                                 <List>
-                                {ntpAddr.map(value => (
-                                    <ListItem style={{paddingTop:"0px", paddingBottom:"0px"}}
-                                    key={value}
-                                    role={undefined}
-                                    dense
-                                    button
-                                    
-                                    
-                                    >
-                                    <Radio
-                                        
-                                        
-                                        value={value}
-                                        name="radio-button-demo"
-                                    />
-                                    <ListItemText primary={`Line item ${value + 1}`} />
+                                {selectedItem.ntpAddress && selectedItem.ntpAddress.length > 0 && selectedItem.ntpAddress.map((value, index) => (
+                                    <ListItem style={{paddingTop:"0px", paddingBottom:"0px"}} key={index} >
+                                        <Radio value={index.toString()} name="radio-button-demo" 
+                                            checked={selectedItem.selectedNtpIndex != -1 && selectedItem.selectedNtpIndex === index}
+                                            onChange={this.handleChangeSelectedNtp('selectedNtpIndex', index)}
+                                        />
+                                        <Input value={value} onChange={this.handleNtpValueChange(index)} style={{width:"100%"}} />
+                                        <ListItemSecondaryAction>
+                                            <IconButton onClick={this.handleDeleteNtp(index)} aria-label="NtpDelete">
+                                            <DeleteForeverIcon />
+                                            </IconButton>
+                                        </ListItemSecondaryAction>
                                     </ListItem>
                                 ))}
                                 </List>

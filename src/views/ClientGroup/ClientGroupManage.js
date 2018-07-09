@@ -230,7 +230,7 @@ class ClientGroupManage extends Component {
       return element.grpId == id;
     });
     ClientGroupActions.showClientGroupInform({
-      viewItem: Object.assign({}, selectedItem),
+      selectedItem: Object.assign({}, selectedItem),
     });
   };
 
@@ -270,8 +270,7 @@ class ClientGroupManage extends Component {
     });
     ClientGroupActions.showDialog({
       selectedItem: Object.assign({}, selectedItem),
-      dialogType: ClientGroupDialog.TYPE_EDIT,
-      dialogOpen: true
+      dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
 
@@ -282,7 +281,7 @@ class ClientGroupManage extends Component {
     const selectedItem = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
-    ClientGroupActions.setSelectedItem({
+    ClientGroupActions.setSelectedItemObj({
       selectedItem: selectedItem
     });
     const re = GrConfirmActions.showConfirm({
@@ -314,10 +313,6 @@ class ClientGroupManage extends Component {
   handleKeywordChange = name => event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
     const newParam = getMergedListParam(ClientGroupProps.listParam, {keyword: event.target.value});
-    // ClientGroupActions.changeParamValue({
-    //   name: 'listParam',
-    //   value: newParam
-    // });
     ClientGroupActions.changeStoreData({name: 'listParam', value: newParam});
   }
 
