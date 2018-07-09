@@ -87,7 +87,7 @@ class ClientUpdateServerComp extends Component {
             업데이트서버설정
           </Typography>
           <Typography variant="headline" component="h2">
-            {ClientGroupProps.viewItem.updateServerConfigNm}
+            {ClientGroupProps.selectedItem.updateServerConfigNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
           {bull}이 정책에 대한 설명을 보여주는 곳

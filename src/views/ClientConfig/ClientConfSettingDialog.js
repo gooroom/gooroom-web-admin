@@ -93,12 +93,12 @@ class ClientConfSettingDialog extends Component {
 
     handleValueChange = name => event => {
         if(event.target.type === 'checkbox') {
-            this.props.ClientConfSettingActions.setSelectedItemValue({
+            this.props.ClientConfSettingActions.setEditingItemValue({
                 name: name,
                 value: event.target.checked
             });
         } else {
-            this.props.ClientConfSettingActions.setSelectedItemValue({
+            this.props.ClientConfSettingActions.setEditingItemValue({
                 name: name,
                 value: event.target.value
             });
@@ -113,7 +113,7 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleChangeSelectedNtp = (name, index) => event => {
-        this.props.ClientConfSettingActions.setSelectedItemValue({
+        this.props.ClientConfSettingActions.setEditingItemValue({
             name: name,
             value: index
         });
@@ -121,7 +121,7 @@ class ClientConfSettingDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-        ClientConfSettingActions.createClientConfSettingData(ClientConfSettingProps.selectedItem)
+        ClientConfSettingActions.createClientConfSettingData(ClientConfSettingProps.editingItem)
         .then(() => {
                 ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
                 this.handleClose();
@@ -142,7 +142,7 @@ class ClientConfSettingDialog extends Component {
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
             const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-            ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.selectedItem)
+            ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.editingItem)
                 .then((res) => {
                 ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
                 this.handleClose();
@@ -165,7 +165,7 @@ class ClientConfSettingDialog extends Component {
     render() {
 
         const { ClientConfSettingProps } = this.props;
-        const { dialogType, selectedItem } = ClientConfSettingProps;
+        const { dialogType, editingItem } = ClientConfSettingProps;
 
         let title = "";
         const bull = <span className={bullet}>•</span>;
@@ -186,7 +186,7 @@ class ClientConfSettingDialog extends Component {
                     <TextField
                         id="objNm"
                         label="이름"
-                        value={(selectedItem) ? selectedItem.objNm : ''}
+                        value={(editingItem) ? editingItem.objNm : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={fullWidthClass}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
@@ -194,7 +194,7 @@ class ClientConfSettingDialog extends Component {
                     <TextField
                         id="comment"
                         label="설명"
-                        value={(selectedItem) ? selectedItem.comment : ''}
+                        value={(editingItem) ? editingItem.comment : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(fullWidthClass, itemRowClass)}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
@@ -205,7 +205,7 @@ class ClientConfSettingDialog extends Component {
                                 <Grid item xs={6} sm={6}>
                                     <TextField
                                         label="에이전트폴링주기(초)"
-                                        value={(selectedItem) ? selectedItem.pollingTime : ''}
+                                        value={(editingItem) ? editingItem.pollingTime : ''}
                                         className={classNames(fullWidthClass, itemRowClass)}
                                         disabled
                                     />
@@ -213,7 +213,7 @@ class ClientConfSettingDialog extends Component {
                                 <Grid item xs={6} sm={6}>
                                     <TextField
                                         label="운영체제 보호"
-                                        value={(selectedItem.useHypervisor) ? '구동' : '중단'}
+                                        value={(editingItem.useHypervisor) ? '구동' : '중단'}
                                         className={classNames(fullWidthClass, itemRowClass)}
                                         disabled
                                     />
@@ -221,14 +221,14 @@ class ClientConfSettingDialog extends Component {
                             </Grid>
                             <TextField
                                 label="선택된 NTP 서버 주소"
-                                value={(selectedItem.selectedNtpIndex > -1) ? selectedItem.ntpAddress[selectedItem.selectedNtpIndex] : ''}
+                                value={(editingItem.selectedNtpIndex > -1) ? editingItem.ntpAddress[editingItem.selectedNtpIndex] : ''}
                                 className={classNames(fullWidthClass, itemRowClass)}
                                 disabled
                             />
                             <TextField
                                 label="NTP 서버로 사용할 주소정보"
                                 multiline
-                                value={(selectedItem.ntpAddress.length > 0) ? selectedItem.ntpAddress.join('\n') : ''}
+                                value={(editingItem.ntpAddress.length > 0) ? editingItem.ntpAddress.join('\n') : ''}
                                 className={classNames(fullWidthClass, itemRowClass)}
                                 disabled
                             />
@@ -239,7 +239,7 @@ class ClientConfSettingDialog extends Component {
                             <TextField
                                 id="pollingTime"
                                 label="에이전트폴링주기(초)"
-                                value={(selectedItem) ? selectedItem.pollingTime : ''}
+                                value={(editingItem) ? editingItem.pollingTime : ''}
                                 onChange={this.handleValueChange("pollingTime")}
                                 className={classNames(fullWidthClass, itemRowClass)}
                             />
@@ -248,20 +248,20 @@ class ClientConfSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('useHypervisor')} 
-                                        checked={(selectedItem) ? selectedItem.useHypervisor : false}
+                                        checked={(editingItem) ? editingItem.useHypervisor : false}
                                         color="primary" />
                                     }
-                                    label={(selectedItem.useHypervisor) ? '구동' : '중단'}
+                                    label={(editingItem.useHypervisor) ? '구동' : '중단'}
                                 />
                             </div>
                             <div style={{marginTop:"10px"}}>
                                 <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
                                 <Button onClick={this.handleAddNtp} variant="outlined" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
                                 <List>
-                                {selectedItem.ntpAddress && selectedItem.ntpAddress.length > 0 && selectedItem.ntpAddress.map((value, index) => (
+                                {editingItem.ntpAddress && editingItem.ntpAddress.length > 0 && editingItem.ntpAddress.map((value, index) => (
                                     <ListItem style={{paddingTop:"0px", paddingBottom:"0px"}} key={index} >
                                         <Radio value={index.toString()} name="radio-button-demo" 
-                                            checked={selectedItem.selectedNtpIndex != -1 && selectedItem.selectedNtpIndex === index}
+                                            checked={editingItem.selectedNtpIndex != -1 && editingItem.selectedNtpIndex === index}
                                             onChange={this.handleChangeSelectedNtp('selectedNtpIndex', index)}
                                         />
                                         <Input value={value} onChange={this.handleNtpValueChange(index)} style={{width:"100%"}} />

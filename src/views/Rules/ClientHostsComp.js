@@ -87,7 +87,7 @@ class ClientHostsComp extends Component {
             Hosts설정
           </Typography>
           <Typography variant="headline" component="h2">
-            {ClientGroupProps.viewItem.hostNameConfigNm}
+            {ClientGroupProps.selectedItem.hostNameConfigNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
           {bull}이 정책에 대한 설명을 보여주는 곳

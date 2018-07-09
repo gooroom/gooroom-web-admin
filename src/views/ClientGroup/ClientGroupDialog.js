@@ -46,7 +46,7 @@ class ClientGroupDialog extends Component {
     }
 
     handleValueChange = name => event => {
-        this.props.ClientGroupActions.setSelectedItemValue({
+        this.props.ClientGroupActions.setEditingItemValue({
             name: name,
             value: event.target.value
         });
@@ -54,7 +54,7 @@ class ClientGroupDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientGroupProps, ClientGroupActions } = this.props;
-        ClientGroupActions.createClientGroupData(ClientGroupProps.selectedItem)
+        ClientGroupActions.createClientGroupData(ClientGroupProps.editingItem)
             .then(() => {
                 ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
                 this.handleClose();
@@ -75,7 +75,7 @@ class ClientGroupDialog extends Component {
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions } = this.props;
-            ClientGroupActions.editClientGroupData(ClientGroupProps.selectedItem)
+            ClientGroupActions.editClientGroupData(ClientGroupProps.editingItem)
                 .then((res) => {
                     ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
                     this.handleClose();
@@ -88,7 +88,7 @@ class ClientGroupDialog extends Component {
     render() {
 
         const { ClientGroupProps } = this.props;
-        const { dialogType } = ClientGroupProps;
+        const { dialogType, editingItem } = ClientGroupProps;
 
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
@@ -107,7 +107,7 @@ class ClientGroupDialog extends Component {
                     <TextField
                         id="grpNm"
                         label="단말그룹이름"
-                        value={(ClientGroupProps.selectedItem) ? ClientGroupProps.selectedItem.grpNm : ''}
+                        value={(editingItem) ? editingItem.grpNm : ''}
                         onChange={this.handleValueChange('grpNm')}
                         margin="normal"
                         className={fullWidthClass}
@@ -116,7 +116,7 @@ class ClientGroupDialog extends Component {
                     <TextField
                         id="comment"
                         label="단말그룹설명"
-                        value={(ClientGroupProps.selectedItem) ? ClientGroupProps.selectedItem.comment : ''}
+                        value={(editingItem) ? editingItem.comment : ''}
                         onChange={this.handleValueChange('comment')}
                         margin="normal"
                         className={fullWidthClass}

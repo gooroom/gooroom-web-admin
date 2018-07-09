@@ -215,14 +215,6 @@ class ClientGroupManage extends Component {
     }
     ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
-  
-  handleSelectAllClick = (event, checked) => {
-    if (checked) {
-      this.setState({ selected: this.state.data.map(n => n.grpId) });
-      return;
-    }
-    this.setState({ selected: [] });
-  };
 
   handleRowClick = (event, id) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
@@ -256,8 +248,7 @@ class ClientGroupManage extends Component {
         clientConfigId: '',
         isDefault: ''
       },
-      dialogType: ClientGroupDialog.TYPE_ADD,
-      dialogOpen: true
+      dialogType: ClientGroupDialog.TYPE_ADD
     });
   }
 
@@ -448,9 +439,6 @@ class ClientGroupManage extends Component {
         <ClientGroupInform />
         <ClientGroupDialog />
         <GrConfirm />
-        <div className={tempClass}>
-        <ClientGroupComp />
-        </div>
       </React.Fragment>
 
 

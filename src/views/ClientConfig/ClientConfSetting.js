@@ -250,11 +250,16 @@ class ClientConfSetting extends Component {
     });
     
     const viewItem = this.setParameterForView(selectedItem);
-    ClientConfSettingActions.showDialog({
-      selectedItem: viewItem,
-      dialogType: ClientConfSettingDialog.TYPE_VIEW,
-    });
 
+    // choice one from two views.
+
+    // 1. popup dialog
+    // ClientConfSettingActions.showDialog({
+    //   selectedItem: viewItem,
+    //   dialogType: ClientConfSettingDialog.TYPE_VIEW,
+    // });
+
+    // 2. view detail content
     ClientConfSettingActions.showInform({
       selectedItem: viewItem  
     });
@@ -284,7 +289,7 @@ class ClientConfSetting extends Component {
     });
 
     ClientConfSettingActions.setSelectedItemObj({
-      selectedItem: selectedItem
+      selectedItem: Object.assign(ClientConfSettingProps.selectedItem, selectedItem)
     });
     const re = GrConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
