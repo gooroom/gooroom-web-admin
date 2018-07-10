@@ -65,7 +65,7 @@ export default {
           level: 2,
         },
         {
-          name: '업데이트서버설정???',
+          name: '업데이트서버설정',
           url: '/clientconfig/update',
           icon: 'icon-folder',
           level: 2,
