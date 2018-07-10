@@ -4,6 +4,7 @@ import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
 
+
 const GET_LIST_SUCCESS = 'groupManage/GET_LIST_SUCCESS';
 const GET_LISTALL_SUCCESS = 'groupManage/GET_LISTALL_SUCCESS';
 const CREATE_CLIENTGROUP_SUCCESS = 'groupManage/CREATE_CLIENTGROUP_SUCCESS';
@@ -267,7 +268,7 @@ export default handleActions({
             ...state,
             pending: false,
             error: true,
-            resultMsg: action.payload.data.status.message
+            resultMsg: action.payload
         };
     },
 

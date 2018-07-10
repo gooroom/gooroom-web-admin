@@ -175,12 +175,14 @@ class ClientMasterManage extends Component {
   handleChangeClientGroupSelected = (selectedGroupIdArray, selectedGroupObj='') => {
     // console.log('selectedGroupIdArray... ', selectedGroupIdArray);
     // console.log('selectedGroupObj... ', selectedGroupObj);
+
     const { ClientGroupProps, ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
+    
     // select clients in groups.
     ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {groupId: selectedGroupIdArray.join(','), page:0}));
     // show group info.
     if(selectedGroupObj !== '') {
-      // console.log(selectedGroupObj);
+
       ClientManageActions.closeClientManageInform({informOpen:false});
       ClientGroupActions.showClientGroupInform({
         selectedItem: Object.assign({}, selectedGroupObj),

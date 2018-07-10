@@ -115,7 +115,6 @@ class ClientConfSettingInform extends Component {
   }
 }
 
-
 const mapStateToProps = (state) => ({
   ClientConfSettingProps: state.ClientConfSettingModule
 });
@@ -125,4 +124,46 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSettingInform);
+
+export const setParameterForView = (param) => {
+
+  console.log('param : ', param);
+
+  let pollingTime = '';
+  let useHypervisor = false;
+  let selectedNtpIndex = -1;
+  let ntpAddrSelected = '';
+  let ntpAddress = [];
+  
+  param.propList.forEach(function(e) {
+    if(e.propNm == 'AGENTPOLLINGTIME') {
+      pollingTime = e.propValue;
+    } else if(e.propNm == 'USEHYPERVISOR') {
+      useHypervisor = (e.propValue == "true");
+    } else if(e.propNm == 'NTPSELECTADDRESS') {
+      ntpAddrSelected = e.propValue;
+    } else if(e.propNm == 'NTPADDRESSES') {
+      ntpAddress.push(e.propValue);
+    }
+  });
+  ntpAddress.forEach(function(e, i) {
+    if(ntpAddrSelected == e) {
+      selectedNtpIndex = i;
+    }
+  });
+
+  return {
+    objId: param.objId,
+    objNm: param.objNm,
+    comment: param.comment,
+    modDate: param.modDate,
+    useHypervisor: useHypervisor,
+    pollingTime: pollingTime,
+    selectedNtpIndex: selectedNtpIndex,
+    ntpAddress: ntpAddress
+  };
+
+};
+
+
 

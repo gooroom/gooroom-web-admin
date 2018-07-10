@@ -84,5 +84,31 @@ export default {
         }
       ]
     },
+    {
+      name: '사용자정책관리',
+      url: '/userconfig',
+      icon: 'icon-screen-desktop',
+      level: 1,
+      children: [
+        {
+          name: '매체제어정책관리',
+          url: '/userconfig/media',
+          icon: 'icon-wrench',
+          level: 2,
+        },
+        {
+          name: '브라우저제어정책관리??',
+          url: '/userconfig/browser',
+          icon: 'icon-folder',
+          level: 2,
+        },
+        {
+          name: '단말보안정책관리??',
+          url: '/userconfig/security',
+          icon: 'icon-layers',
+          level: 2,
+        },
+      ]
+    }
   ]
 };

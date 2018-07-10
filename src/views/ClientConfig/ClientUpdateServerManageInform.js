@@ -72,8 +72,6 @@ class ClientUpdateServerInform extends Component {
     const { selectedItem } = ClientUpdateServerProps;
     const bull = <span className={bullet}>•</span>;
 
-    console.log('selectedItem : ', selectedItem);
-
     return (
       <div className={componentClass}>
       {(ClientUpdateServerProps.informOpen) &&
