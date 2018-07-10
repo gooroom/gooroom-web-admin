@@ -3,24 +3,20 @@ import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
 
-const GET_CONFIG_LIST_SUCCESS = 'clientConfig/GET_LIST_SUCCESS';
-const CREATE_CONFIG_SUCCESS = 'clientConfig/CREATE_CONFIG_SUCCESS';
-const EDIT_CONFIG_SUCCESS = 'clientConfig/EDIT_CONFIG_SUCCESS';
-const DELETE_CONFIG_SUCCESS = 'clientConfig/DELETE_CONFIG_SUCCESS';
+const GET_UPDATESERVER_LIST_SUCCESS = 'clientUpdateServer/GET_LIST_SUCCESS';
+const CREATE_UPDATESERVER_SUCCESS = 'clientUpdateServer/CREATE_UPDATESERVER_SUCCESS';
+const EDIT_UPDATESERVER_SUCCESS = 'clientUpdateServer/EDIT_UPDATESERVER_SUCCESS';
+const DELETE_UPDATESERVER_SUCCESS = 'clientUpdateServer/DELETE_UPDATESERVER_SUCCESS';
 
-const SHOW_CONFIG_INFORM = 'clientConfig/SHOW_CONFIG_INFORM';
-const SHOW_CONFIG_DIALOG = 'clientConfig/SHOW_CONFIG_DIALOG';
-const CHG_STORE_DATA = 'clientConfig/CHG_STORE_DATA';
+const SHOW_UPDATESERVER_INFORM = 'clientUpdateServer/SHOW_UPDATESERVER_INFORM';
+const SHOW_UPDATESERVER_DIALOG = 'clientUpdateServer/SHOW_UPDATESERVER_DIALOG';
+const CHG_STORE_DATA = 'clientUpdateServer/CHG_STORE_DATA';
 
-const SET_SELECTED_OBJ = 'clientConfig/SET_SELECTED_OBJ';
-const SET_EDITING_ITEM_VALUE = 'clientConfig/SET_EDITING_ITEM_VALUE';
-const SET_SELECTED_NTP_VALUE = 'clientConfig/SET_SELECTED_NTP_VALUE';
+const SET_SELECTED_OBJ = 'clientUpdateServer/SET_SELECTED_OBJ';
+const SET_EDITING_ITEM_VALUE = 'clientUpdateServer/SET_EDITING_ITEM_VALUE';
 
-const ADD_NTPADDRESS_ITEM = 'clientConfig/ADD_NTPADDRESS_ITEM';
-const DELETE_NTPADDRESS_ITEM = 'clientConfig/DELETE_NTPADDRESS_ITEM';
-
-const COMMON_PENDING = 'clientConfig/COMMON_PENDING';
-const COMMON_FAILURE = 'clientConfig/COMMON_FAILURE';
+const COMMON_PENDING = 'clientUpdateServer/COMMON_PENDING';
+const COMMON_FAILURE = 'clientUpdateServer/COMMON_FAILURE';
 
 // ...
 const initialState = {
@@ -44,10 +40,9 @@ const initialState = {
         objId: '',
         objNm: '',
         comment: '',
-        useHypervisor: false,
-        pollingTime: '',
-        selectedNtpIndex: -1,
-        ntpAddress: ['']
+        mainos: '',
+        extos: '',
+        priorities: ''
     },
 
     informOpen: false,
@@ -58,7 +53,7 @@ const initialState = {
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
-        type: SHOW_CONFIG_DIALOG,
+        type: SHOW_UPDATESERVER_DIALOG,
         payload: param
     });
 };
@@ -72,7 +67,7 @@ export const closeDialog = () => dispatch => {
 
 export const showInform = (param) => dispatch => {
     return dispatch({
-        type: SHOW_CONFIG_INFORM,
+        type: SHOW_UPDATESERVER_INFORM,
         payload: param
     });
 };
@@ -84,21 +79,8 @@ export const closeInform = () => dispatch => {
     });
 };
 
-export const addNtpAddress = () => dispatch => {
-    return dispatch({
-        type: ADD_NTPADDRESS_ITEM
-    });
-}
-
-export const deleteNtpAddress = (index) => dispatch => {
-    return dispatch({
-        type: DELETE_NTPADDRESS_ITEM,
-        payload: {index:index}
-    });
-}
-
 // ...
-export const readClientConfSettingList = (param) => dispatch => {
+export const readClientUpdateServerList = (param) => dispatch => {
     const resetParam = {
         keyword: param.keyword,
         page: param.page,
@@ -109,10 +91,10 @@ export const readClientConfSettingList = (param) => dispatch => {
     };
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientConfListPaged', resetParam).then(
+    return requestPostAPI('readUpdateServerConfListPaged', resetParam).then(
         (response) => {
             dispatch({
-                type: GET_CONFIG_LIST_SUCCESS,
+                type: GET_UPDATESERVER_LIST_SUCCESS,
                 payload: response
             });
         }
@@ -138,13 +120,6 @@ export const setEditingItemValue = (param) => dispatch => {
     });
 };
 
-export const setSelectedNtpValue = (param) => dispatch => {
-    return dispatch({
-        type: SET_SELECTED_NTP_VALUE,
-        payload: param
-    });
-};
-
 export const changeStoreData = (param) => dispatch => {
     return dispatch({
         type: CHG_STORE_DATA,
@@ -157,22 +132,21 @@ const makeParameter = (param) => {
         objId: param.objId,
         objName: param.objNm,
         objComment: param.comment,
-        AGENTPOLLINGTIME: param.pollingTime,
-        USEHYPERVISOR: param.useHypervisor,
-        NTPSELECTADDRESS: (param.selectedNtpIndex > -1) ? param.ntpAddress[param.selectedNtpIndex] : '',
-        NTPADDRESSES: param.ntpAddress
+        MAINOS: param.mainos,
+        EXTOS: param.extos,
+        PRIORITIES: param.priorities,
     };
 }
 
 // create (add)
-export const createClientConfSettingData = (param) => dispatch => {
+export const createClientUpdateServerData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClientConf', makeParameter(param)).then(
+    return requestPostAPI('createUpdateServerConf', makeParameter(param)).then(
         (response) => {
             try {
                 if(response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_CONFIG_SUCCESS,
+                        type: CREATE_UPDATESERVER_SUCCESS,
                         payload: response
                     });
                 }    
@@ -193,12 +167,12 @@ export const createClientConfSettingData = (param) => dispatch => {
 };
 
 // edit
-export const editClientConfSettingData = (param) => dispatch => {
+export const editClientUpdateServerData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateClientConf', makeParameter(param)).then(
+    return requestPostAPI('updateUpdateServerConf', makeParameter(param)).then(
         (response) => {
             dispatch({
-                type: EDIT_CONFIG_SUCCESS,
+                type: EDIT_UPDATESERVER_SUCCESS,
                 payload: response
             });
         }
@@ -211,12 +185,12 @@ export const editClientConfSettingData = (param) => dispatch => {
 };
 
 // delete
-export const deleteClientConfSettingData = (param) => dispatch => {
+export const deleteClientUpdateServerData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteClientConf', param).then(
+    return requestPostAPI('deleteUpdateServerConf', param).then(
         (response) => {
             dispatch({
-                type: DELETE_CONFIG_SUCCESS,
+                type: DELETE_UPDATESERVER_SUCCESS,
                 payload: response
             });
         }
@@ -231,7 +205,7 @@ export const deleteClientConfSettingData = (param) => dispatch => {
 
 export default handleActions({
 
-    [GET_CONFIG_LIST_SUCCESS]: (state, action) => {
+    [GET_UPDATESERVER_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
         let tempListParam = state.listParam;
         Object.assign(tempListParam, {
@@ -249,7 +223,7 @@ export default handleActions({
             listParam: tempListParam
         };
     },  
-    [SHOW_CONFIG_DIALOG]: (state, action) => {
+    [SHOW_UPDATESERVER_DIALOG]: (state, action) => {
         // console.log('action : ', action);
         // console.log('state : ', state);
         // ///////// const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
@@ -260,7 +234,7 @@ export default handleActions({
             dialogType: action.payload.dialogType,
         };
     },
-    [SHOW_CONFIG_INFORM]: (state, action) => {
+    [SHOW_UPDATESERVER_INFORM]: (state, action) => {
         return {
             ...state,
             selectedItem: action.payload.selectedItem,
@@ -280,57 +254,21 @@ export default handleActions({
             editingItem: newEditingItem
         }
     },
-    [SET_SELECTED_NTP_VALUE]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress[action.payload.index] = action.payload.value;
-        const newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
-    },
     [CHG_STORE_DATA]: (state, action) => {
         return {
             ...state,
             [action.payload.name]: action.payload.value
         }
     },
-    [ADD_NTPADDRESS_ITEM]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress.push('');
-        const newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
-    },
-    [DELETE_NTPADDRESS_ITEM]: (state, action) => {
-        
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress.splice(action.payload.index, 1);
-        let newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
 
-        // changed selected ntp addres index
-        if(state.editingItem.selectedNtpIndex == action.payload.index) {
-            newEditingItem = getMergedListParam(newEditingItem, {'selectedNtpIndex': -1});
-        } else if(state.editingItem.selectedNtpIndex > action.payload.index) {
-            newEditingItem = getMergedListParam(newEditingItem, {'selectedNtpIndex': (state.editingItem.selectedNtpIndex - 1)});
-        }
-
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
-    },
-
-    [CREATE_CONFIG_SUCCESS]: (state, action) => {
+    [CREATE_UPDATESERVER_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
             error: false,
         };
     },
-    [EDIT_CONFIG_SUCCESS]: (state, action) => {
+    [EDIT_UPDATESERVER_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -340,7 +278,7 @@ export default handleActions({
             dialogType: ''
         };
     },
-    [DELETE_CONFIG_SUCCESS]: (state, action) => {
+    [DELETE_UPDATESERVER_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
