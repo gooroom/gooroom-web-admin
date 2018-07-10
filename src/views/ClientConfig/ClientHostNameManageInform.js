@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 
-import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
+import * as ClientHostNameActions from '../../modules/ClientHostNameModule';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -62,19 +62,21 @@ const pos = css({
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientConfSettingInform extends Component {
+class ClientHostNameInform extends Component {
 
   // .................................................
 
   render() {
 
-    const { ClientConfSettingProps } = this.props;
-    const { selectedItem } = ClientConfSettingProps;
+    const { ClientHostNameProps } = this.props;
+    const { selectedItem } = ClientHostNameProps;
     const bull = <span className={bullet}>•</span>;
+
+    console.log('selectedItem : ', selectedItem);
 
     return (
       <div className={componentClass}>
-      {(ClientConfSettingProps.informOpen) &&
+      {(ClientHostNameProps.informOpen) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedItem) ? selectedItem.objNm : ''}
@@ -90,18 +92,8 @@ class ClientConfSettingInform extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
-                  <TableCell numeric>{selectedItem.pollingTime}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
-                  <TableCell numeric>{(selectedItem.useHypervisor) ? '구동' : '중단'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
-                  <TableCell numeric>{(selectedItem.selectedNtpIndex > -1) ? selectedItem.ntpAddress[selectedItem.selectedNtpIndex] : ''}</TableCell>
-                  <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
-                  <TableCell numeric>{selectedItem.ntpAddress.map(function(prop, index) {
-                      return <span key={index}>{prop}<br/></span>;
-                  })}</TableCell>
+                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.hosts}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -117,12 +109,12 @@ class ClientConfSettingInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientConfSettingProps: state.ClientConfSettingModule
+  ClientHostNameProps: state.ClientHostNameModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch)
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSettingInform);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameInform);
 
