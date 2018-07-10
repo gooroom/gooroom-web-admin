@@ -19,6 +19,7 @@ import ClientRegKey from "../../views/ClientConfig/ClientRegKey";
 import ClientProfileSet from "../../views/ClientConfig/ClientProfileSet";
 
 import ClientConfSetting from "../../views/ClientConfig/ClientConfSetting";
+import ClientHostNameManage from "../../views/ClientConfig/ClientHostNameManage";
 
 import JobManage from "../../views/Job/JobManage";
 import PackageManage from '../../views/Package/PackageManage';
@@ -84,6 +85,11 @@ class GrRouters extends Component {
             path="/clientconfig/setting"
             name="ClientConfSetting"
             component={ClientConfSetting}
+          />
+          <Route
+            path="/clientconfig/host"
+            name="ClientHostNameManage"
+            component={ClientHostNameManage}
           />
           <Route
             path="/jobs/jobmanage"

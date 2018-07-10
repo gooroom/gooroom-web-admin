@@ -71,7 +71,7 @@ export default {
           level: 2,
         },
         {
-          name: 'HOSTS설정???',
+          name: 'HOSTS설정',
           url: '/clientconfig/host',
           icon: 'icon-layers',
           level: 2,

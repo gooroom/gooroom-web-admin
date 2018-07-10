@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import { css } from "glamor";
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -8,10 +9,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
-
-import { css } from "glamor";
-
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -22,7 +19,6 @@ import TextField from "@material-ui/core/TextField";
 
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
-import Add from "@material-ui/icons/Add";
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
@@ -30,9 +26,7 @@ import Switch from '@material-ui/core/Switch';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
 import Input from '@material-ui/core/Input';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
@@ -133,8 +127,8 @@ class ClientConfSettingDialog extends Component {
     handleEditData = (event) => {
         const { GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
-            confirmTitle: '단말등록키 수정',
-            confirmMsg: '단말등록키를 수정하시겠습니까?',
+            confirmTitle: '단말정책정보 수정',
+            confirmMsg: '단말정책정보를 수정하시겠습니까?',
             confirmOpen: true,
             handleConfirmResult: this.handleEditConfirmResult
           });
