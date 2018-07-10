@@ -12,6 +12,8 @@ import CommonOptionModule from './CommonOptionModule';
 import ClientHostNameModule from './ClientHostNameModule';
 import ClientUpdateServerModule from './ClientUpdateServerModule';
 
+import ClientMasterManageModule from './ClientMasterManageModule';
+
 
 export default combineReducers({
 
@@ -21,6 +23,8 @@ export default combineReducers({
 
     ClientHostNameModule,
     ClientUpdateServerModule,
+
+    ClientMasterManageModule,
     
     ClientManageModule,
     ClientGroupModule, 

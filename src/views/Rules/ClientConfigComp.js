@@ -6,7 +6,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from '../../modules/ClientGroupModule';
+import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
+
+import { setParameterForView } from '../ClientConfig/ClientConfSettingInform';
 
 import { css } from 'glamor';
 
@@ -15,20 +18,15 @@ import { getMergedListParam, arrayContainsArray } from '../../components/GrUtils
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-
-import Checkbox from "@material-ui/core/Checkbox";
 
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 
 
 //
@@ -71,13 +69,27 @@ class ClientConfigComp extends Component {
   }
 
   componentDidMount() {
+    
+    const { ClientGroupProps, ClientConfSettingActions } = this.props;
+    ClientConfSettingActions.getClientConfSetting({
+      objId: ClientGroupProps.selectedItem.clientConfigId
+    });
+  }
+
+  showDetailRule = (event) => {
+
+    const { ClientGroupProps, ClientConfSettingActions } = this.props;
+    ClientConfSettingActions.getClientConfSetting({
+      objId: ClientGroupProps.selectedItem.clientConfigId
+    });
   }
 
   // .................................................
   render() {
 
-    const { ClientGroupProps } = this.props;
+    const { ClientGroupProps, ClientConfSettingProps } = this.props;
     const bull = <span className={bullet}>•</span>;
+    const viewItem = ClientConfSettingProps.editingItem;
 
     return (
 
@@ -89,12 +101,35 @@ class ClientConfigComp extends Component {
           <Typography variant="headline" component="h2">
             {ClientGroupProps.selectedItem.clientConfigNm}
           </Typography>
-          <Typography className={pos} color="textSecondary">
-          {bull}이 정책에 대한 설명을 보여주는 곳
-          </Typography>
+          <Divider />
+            <br />
+          {(viewItem) &&
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
+                  <TableCell numeric>{viewItem.pollingTime}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
+                  <TableCell numeric>{(viewItem.useHypervisor) ? '구동' : '중단'}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
+                  <TableCell numeric>{(viewItem.selectedNtpIndex > -1) ? viewItem.ntpAddress[viewItem.selectedNtpIndex] : ''}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
+                  <TableCell numeric>{viewItem.ntpAddress.map(function(prop, index) {
+                      return <span key={index}>{prop}<br/></span>;
+                  })}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          }
         </CardContent>
         <CardActions>
-          <Button size="small">상세보기</Button>
+          <Button onClick={this.showDetailRule} size="small">상세보기</Button>
         </CardActions>
       </Card>
     );
@@ -102,11 +137,13 @@ class ClientConfigComp extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule
+  ClientGroupProps: state.ClientGroupModule,
+  ClientConfSettingProps: state.ClientConfSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

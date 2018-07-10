@@ -13,6 +13,8 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
 
+import { setParameterForView } from './ClientConfSettingInform';
+
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
 
@@ -207,41 +209,41 @@ class ClientConfSetting extends Component {
     });
   }
 
-  setParameterForView = (param) => {
-    let pollingTime = '';
-    let useHypervisor = false;
-    let selectedNtpIndex = -1;
-    let ntpAddrSelected = '';
-    let ntpAddress = [];
-    param.propList.forEach(function(e) {
-      if(e.propNm == 'AGENTPOLLINGTIME') {
-        pollingTime = e.propValue;
-      } else if(e.propNm == 'USEHYPERVISOR') {
-        useHypervisor = (e.propValue == "true");
-      } else if(e.propNm == 'NTPSELECTADDRESS') {
-        ntpAddrSelected = e.propValue;
-      } else if(e.propNm == 'NTPADDRESSES') {
-        ntpAddress.push(e.propValue);
-      }
-    });
-    ntpAddress.forEach(function(e, i) {
-      if(ntpAddrSelected == e) {
-        selectedNtpIndex = i;
-      }
-    });
+  // setParameterForView = (param) => {
+  //   let pollingTime = '';
+  //   let useHypervisor = false;
+  //   let selectedNtpIndex = -1;
+  //   let ntpAddrSelected = '';
+  //   let ntpAddress = [];
+  //   param.propList.forEach(function(e) {
+  //     if(e.propNm == 'AGENTPOLLINGTIME') {
+  //       pollingTime = e.propValue;
+  //     } else if(e.propNm == 'USEHYPERVISOR') {
+  //       useHypervisor = (e.propValue == "true");
+  //     } else if(e.propNm == 'NTPSELECTADDRESS') {
+  //       ntpAddrSelected = e.propValue;
+  //     } else if(e.propNm == 'NTPADDRESSES') {
+  //       ntpAddress.push(e.propValue);
+  //     }
+  //   });
+  //   ntpAddress.forEach(function(e, i) {
+  //     if(ntpAddrSelected == e) {
+  //       selectedNtpIndex = i;
+  //     }
+  //   });
 
-    return {
-      objId: param.objId,
-      objNm: param.objNm,
-      comment: param.comment,
-      modDate: param.modDate,
-      useHypervisor: useHypervisor,
-      pollingTime: pollingTime,
-      selectedNtpIndex: selectedNtpIndex,
-      ntpAddress: ntpAddress
-    };
+  //   return {
+  //     objId: param.objId,
+  //     objNm: param.objNm,
+  //     comment: param.comment,
+  //     modDate: param.modDate,
+  //     useHypervisor: useHypervisor,
+  //     pollingTime: pollingTime,
+  //     selectedNtpIndex: selectedNtpIndex,
+  //     ntpAddress: ntpAddress
+  //   };
 
-  }
+  // }
   
   handleRowClick = (event, id) => {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
@@ -249,7 +251,7 @@ class ClientConfSetting extends Component {
       return element.objId == id;
     });
     
-    const viewItem = this.setParameterForView(selectedItem);
+    const viewItem = setParameterForView(selectedItem);
 
     // choice one from two views.
 
@@ -274,7 +276,7 @@ class ClientConfSetting extends Component {
     });
 
     ClientConfSettingActions.showDialog({
-      selectedItem: this.setParameterForView(selectedItem),
+      selectedItem: setParameterForView(selectedItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT,
     });
   };

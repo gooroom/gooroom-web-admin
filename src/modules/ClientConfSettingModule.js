@@ -2,8 +2,10 @@ import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
+import { setParameterForView } from '../views/ClientConfig/ClientConfSettingInform';
 
 const GET_CONFSETTING_LIST_SUCCESS = 'clientConfSetting/GET_LIST_SUCCESS';
+const GET_CONFSETTING_SUCCESS = 'clientConfSetting/GET_CONFSETTING_SUCCESS';
 const CREATE_CONFSETTING_SUCCESS = 'clientConfSetting/CREATE_CONFSETTING_SUCCESS';
 const EDIT_CONFSETTING_SUCCESS = 'clientConfSetting/EDIT_CONFSETTING_SUCCESS';
 const DELETE_CONFSETTING_SUCCESS = 'clientConfSetting/DELETE_CONFSETTING_SUCCESS';
@@ -113,6 +115,23 @@ export const readClientConfSettingList = (param) => dispatch => {
         (response) => {
             dispatch({
                 type: GET_CONFSETTING_LIST_SUCCESS,
+                payload: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            payload: error
+        });
+    });
+};
+
+export const getClientConfSetting = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readClientConf', param).then(
+        (response) => {
+            dispatch({
+                type: GET_CONFSETTING_SUCCESS,
                 payload: response
             });
         }
@@ -248,7 +267,19 @@ export default handleActions({
             listData: data,
             listParam: tempListParam
         };
-    },  
+    }, 
+    [GET_CONFSETTING_SUCCESS]: (state, action) => {
+        const { data } = action.payload.data;
+
+        console.log('data[0] : ', data[0]);
+
+        return {
+            ...state,
+            pending: false,
+            error: false,
+            editingItem: Object.assign({}, setParameterForView(data[0])),
+        };
+    },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
         // console.log('action : ', action);
         // console.log('state : ', state);
@@ -358,11 +389,12 @@ export default handleActions({
         };
     },
     [COMMON_FAILURE]: (state, action) => {
+        console.log('COMMON_FAILURE action : ', action);
         return {
             ...state,
             pending: false,
             error: true,
-            resultMsg: action.payload.data.status.message
+            //resultMsg: action.payload.data.status.message
         };
     },
 

@@ -77,10 +77,6 @@ class ClientGroupInform extends Component {
 
     const { ClientGroupProps } = this.props;
     const { selectedItem } = ClientGroupProps;
-    
-    const bull = <span className={bullet}>•</span>;
-
-//    console.log('group inform render ClientGroupProps : ', ClientGroupProps);
 
     return (
       <div className={componentClass}>
@@ -97,19 +93,19 @@ class ClientGroupInform extends Component {
           </CardContent>
           <Divider />
           
-          <Grid container spacing={8}>
-            <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientConfigComp />
+          <Grid container spacing={16}>
+            <Grid item xs={12} sm={6} className={cardContainerClass}>
+              <ClientConfigComp objId={selectedItem.clientConfigId} />
             </Grid>
-            <Grid item xs={6} sm={6} className={cardContainerClass}>
+            <Grid item xs={12} sm={6} className={cardContainerClass}>
               <DesktopConfigComp />
             </Grid>
           </Grid>
-          <Grid container spacing={8}>
-            <Grid item xs={6} sm={6} className={cardContainerClass}>
+          <Grid container spacing={16}>
+            <Grid item xs={12} sm={6} className={cardContainerClass}>
               <ClientHostsComp />
             </Grid>
-            <Grid item xs={6} sm={6} className={cardContainerClass}>
+            <Grid item xs={12} sm={6} className={cardContainerClass}>
               <ClientUpdateServerComp />
             </Grid>
           </Grid>
