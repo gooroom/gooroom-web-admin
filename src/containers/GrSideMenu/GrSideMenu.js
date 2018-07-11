@@ -218,7 +218,6 @@ class GrSideMenu extends React.Component {
       return items.map((item, index) => menuType(item, index));
     };
 
-    //console.log("-GrSideMenu.render-------------------------");
     return (
       <Drawer
         classes={{ paper: menuContainerClass }}

@@ -66,7 +66,7 @@ export function grRequestPromise(url, param) {
       }
       })
       .catch(function(error) {
-        console.log(error);
+
       });
   });
 };

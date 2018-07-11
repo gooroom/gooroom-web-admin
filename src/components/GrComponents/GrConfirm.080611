@@ -18,7 +18,6 @@ class GrConfirm extends Component {
   }
 
   handleClose = (selectValue) => {
-    console.log('GrConfirm : handleClose -> ' + selectValue);
     this.setState({ open: false });
   };
 

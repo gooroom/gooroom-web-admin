@@ -23,7 +23,6 @@ class GrAlert extends Component {
 
   handleClose = () => {
 
-    console.log(this);
     this.setState({ open: false });
   };
 

@@ -4,30 +4,28 @@ import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
 
-const GET_LIST_PENDING = 'clientManage/GET_LIST_PENDING';
-const GET_LIST_SUCCESS = 'clientManage/GET_LIST_SUCCESS';
-const GET_LIST_FAILURE = 'clientManage/GET_LIST_FAILURE';
+const GET_LIST_PENDING = 'clientManageComp/GET_LIST_PENDING';
+const GET_LIST_SUCCESS = 'clientManageComp/GET_LIST_SUCCESS';
+const GET_LIST_FAILURE = 'clientManageComp/GET_LIST_FAILURE';
 
-const CREATE_CLIENT_PENDING = 'clientManage/CREATE_CLIENT_PENDING';
-const CREATE_CLIENT_SUCCESS = 'clientManage/CREATE_CLIENT_SUCCESS';
-const CREATE_CLIENT_FAILURE = 'clientManage/CREATE_CLIENT_FAILURE';
+const CREATE_CLIENT_PENDING = 'clientManageComp/CREATE_CLIENT_PENDING';
+const CREATE_CLIENT_SUCCESS = 'clientManageComp/CREATE_CLIENT_SUCCESS';
+const CREATE_CLIENT_FAILURE = 'clientManageComp/CREATE_CLIENT_FAILURE';
 
-const EDIT_CLIENT_PENDING = 'clientManage/EDIT_CLIENT_PENDING';
-const EDIT_CLIENT_SUCCESS = 'clientManage/EDIT_CLIENT_SUCCESS';
-const EDIT_CLIENT_FAILURE = 'clientManage/EDIT_CLIENT_FAILURE';
+const EDIT_CLIENT_PENDING = 'clientManageComp/EDIT_CLIENT_PENDING';
+const EDIT_CLIENT_SUCCESS = 'clientManageComp/EDIT_CLIENT_SUCCESS';
+const EDIT_CLIENT_FAILURE = 'clientManageComp/EDIT_CLIENT_FAILURE';
 
-const DELETE_CLIENT_PENDING = 'clientManage/DELETE_CLIENT_PENDING';
-const DELETE_CLIENT_SUCCESS = 'clientManage/DELETE_CLIENT_SUCCESS';
-const DELETE_CLIENT_FAILURE = 'clientManage/DELETE_CLIENT_FAILURE';
+const DELETE_CLIENT_PENDING = 'clientManageComp/DELETE_CLIENT_PENDING';
+const DELETE_CLIENT_SUCCESS = 'clientManageComp/DELETE_CLIENT_SUCCESS';
+const DELETE_CLIENT_FAILURE = 'clientManageComp/DELETE_CLIENT_FAILURE';
 
-const SHOW_CLIENT_INFORM = 'clientManage/SHOW_CLIENT_INFORM';
-const SHOW_CLIENT_DIALOG = 'clientManage/SHOW_CLIENT_DIALOG';
+const SHOW_CLIENT_INFORM = 'clientManageComp/SHOW_CLIENT_INFORM';
+const SHOW_CLIENT_DIALOG = 'clientManageComp/SHOW_CLIENT_DIALOG';
 
-// const CHG_CLIENT_PARAM = 'clientManage/CHG_CLIENT_PARAM';
-
-const SET_CLIENT_SELECTED = 'clientManage/SET_CLIENT_SELECTED';
-const CHG_STORE_DATA = 'clientManage/CHG_STORE_DATA';
-const SET_INITIAL_STORE = 'clientManage/SET_INITIAL_STORE';
+const SET_CLIENT_SELECTED = 'clientManageComp/SET_CLIENT_SELECTED';
+const CHG_STORE_DATA = 'clientManageComp/CHG_STORE_DATA';
+const SET_INITIAL_STORE = 'clientManageComp/SET_INITIAL_STORE';
 
 // ...
 const initialState = {
@@ -105,12 +103,14 @@ export const readClientList = (param) => dispatch => {
         orderColumn: param.orderColumn,
         orderDir: param.orderDir
     };
+    const compId = param.compId;
 
     dispatch({type: GET_LIST_PENDING});
     return requestPostAPI('readClientListPaged', resetParam).then(
         (response) => {
             dispatch({
                 type: GET_LIST_SUCCESS,
+                compId: compId,
                 payload: response
             });
         }
@@ -122,6 +122,34 @@ export const readClientList = (param) => dispatch => {
     });
 };
 
+// export const readClientListForInit = (param) => dispatch => {
+
+//     const resetParam = {
+//         clientType: 'ALL',
+//         groupId: '',
+//         searchKey: '',
+//         page: param.page,
+//         start: param.page * param.rowsPerPage,
+//         length: param.rowsPerPage,
+//         orderColumn: param.orderColumn,
+//         orderDir: param.orderDir
+//     };
+
+//     dispatch({type: GET_LIST_PENDING});
+//     return requestPostAPI('readClientListPaged', resetParam).then(
+//         (response) => {
+//             dispatch({
+//                 type: GET_LIST_SUCCESS,
+//                 payload: response
+//             });
+//         }
+//     ).catch(error => {
+//         dispatch({
+//             type: GET_LIST_FAILURE,
+//             payload: error
+//         });
+//     });
+// }
 
 export const showClientManageInform = (param) => dispatch => {
     return dispatch({
@@ -252,8 +280,35 @@ export default handleActions({
     [GET_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
 
+        let listName = 'listData';
+        let listParamName = 'listParam';
+        let selectedName = 'listParam';
+        let newListParam = {};
 
-        const newListParam = getMergedListParam(state.listParam, {
+        if(action.compId && action.compId != '') {
+
+            listName = action.compId + '__listData';
+            listParamName = action.compId + '__listParam';
+            selectedName = action.compId + '__selected';
+            if(draw > 0) {
+                newListParam = state[action.compId + '__listParam'];
+            } else {
+                newListParam = {
+                    keyword: '',
+                    orderDir: 'desc',
+                    orderColumn: 'chGrpNm',
+                    page: 0,
+                    rowsPerPage: 10,
+                    rowsPerPageOptions: [2, 5, 10, 25],
+                    rowsTotal: 0,
+                    rowsFiltered: 0
+                };
+            }            
+        } else {
+            newListParam = state.listParam;
+        }
+
+        Object.assign(newListParam, {
             rowsFiltered: parseInt(recordsFiltered, 10),
             rowsTotal: parseInt(recordsTotal, 10),
             page: parseInt(draw, 10),
@@ -264,8 +319,9 @@ export default handleActions({
             ...state,
             pending: false,
             error: false,
-            listData: data,
-            listParam: newListParam
+            [listName]: data,
+            [listParamName]: newListParam,
+            [selectedName]: (state[selectedName]) ? state[selectedName] : []
         };
     },
     [GET_LIST_FAILURE]: (state, action) => {

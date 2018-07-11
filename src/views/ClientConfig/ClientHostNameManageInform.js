@@ -72,8 +72,6 @@ class ClientHostNameInform extends Component {
     const { selectedItem } = ClientHostNameProps;
     const bull = <span className={bullet}>•</span>;
 
-    console.log('selectedItem : ', selectedItem);
-
     return (
       <div className={componentClass}>
       {(ClientHostNameProps.informOpen) &&

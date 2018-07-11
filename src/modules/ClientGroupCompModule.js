@@ -5,23 +5,23 @@ import { requestPostAPI } from '../components/GrUtils/GrRequester';
 import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
 
 
-const GET_LIST_SUCCESS = 'groupManage/GET_LIST_SUCCESS';
-const GET_LISTALL_SUCCESS = 'groupManage/GET_LISTALL_SUCCESS';
-const CREATE_CLIENTGROUP_SUCCESS = 'groupManage/CREATE_CLIENTGROUP_SUCCESS';
-const EDIT_CLIENTGROUP_SUCCESS = 'groupManage/EDIT_CLIENTGROUP_SUCCESS';
-const DELETE_CLIENTGROUP_SUCCESS = 'groupManage/DELETE_CLIENTGROUP_SUCCESS';
+const GET_LIST_SUCCESS = 'groupComp/GET_LIST_SUCCESS';
+const GET_LISTALL_SUCCESS = 'groupComp/GET_LISTALL_SUCCESS';
+const CREATE_CLIENTGROUP_SUCCESS = 'groupComp/CREATE_CLIENTGROUP_SUCCESS';
+const EDIT_CLIENTGROUP_SUCCESS = 'groupComp/EDIT_CLIENTGROUP_SUCCESS';
+const DELETE_CLIENTGROUP_SUCCESS = 'groupComp/DELETE_CLIENTGROUP_SUCCESS';
 
-const SHOW_CLIENTGROUP_INFORM = 'groupManage/SHOW_CLIENTGROUP_INFORM';
-const SHOW_CLIENTGROUP_DIALOG = 'groupManage/SHOW_CLIENTGROUP_DIALOG';
+const SHOW_CLIENTGROUP_INFORM = 'groupComp/SHOW_CLIENTGROUP_INFORM';
+const SHOW_CLIENTGROUP_DIALOG = 'groupComp/SHOW_CLIENTGROUP_DIALOG';
 
-const SET_SELECTED_OBJ = 'groupManage/SET_SELECTED_OBJ';
-const SET_EDITING_ITEM_VALUE = 'groupManage/SET_EDITING_ITEM_VALUE';
+const SET_SELECTED_OBJ = 'groupComp/SET_SELECTED_OBJ';
+const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
 
-const CHG_STORE_DATA = 'groupManage/CHG_STORE_DATA';
-const SET_INITIAL_STORE = 'groupManage/SET_INITIAL_STORE';
+const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
+const SET_INITIAL_STORE = 'groupComp/SET_INITIAL_STORE';
 
-const COMMON_PENDING = 'groupManage/COMMON_PENDING';
-const COMMON_FAILURE = 'groupManage/COMMON_FAILURE';
+const COMMON_PENDING = 'groupComp/COMMON_PENDING';
+const COMMON_FAILURE = 'groupComp/COMMON_FAILURE';
 
 
 // ...
@@ -51,11 +51,6 @@ const initialState = {
         rowsPerPageOptions: [2, 5, 10, 25],
         rowsTotal: 0,
         rowsFiltered: 0
-    },
-    listDataForSelect: [],
-    selectedClientGroup: {
-        grpId: '',
-        grpNm: ''
     },
 
     selectedItem: {
@@ -98,12 +93,14 @@ export const readClientGroupList = (param) => dispatch => {
         orderColumn: param.orderColumn,
         orderDir: param.orderDir
     };
+    const compId = param.compId;
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientGroupListPaged', resetParam).then(
         (response) => {
             dispatch({
                 type: GET_LIST_SUCCESS,
+                compId: compId,
                 payload: response
             });
         }
@@ -273,10 +270,37 @@ export default handleActions({
     },
 
     [GET_LIST_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.payload.data;
+        
+        const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
 
-        let tempListParam = state.listParam;
-        Object.assign(tempListParam, {
+        let listName = 'listData';
+        let listParamName = 'listParam';
+        let selectedName = 'listParam';
+        let newListParam = {};
+
+        if(action.compId && action.compId != '') {
+            listName = action.compId + '__listData';
+            listParamName = action.compId + '__listParam';
+            selectedName = action.compId + '__selected';
+            if(draw > 0) {
+                newListParam = state[action.compId + '__listParam'];
+            } else {
+                newListParam = {
+                    keyword: '',
+                    orderDir: 'desc',
+                    orderColumn: 'chGrpNm',
+                    page: 0,
+                    rowsPerPage: 10,
+                    rowsPerPageOptions: [2, 5, 10, 25],
+                    rowsTotal: 0,
+                    rowsFiltered: 0
+                };
+            }            
+        } else {
+            newListParam = state.listParam;
+        }
+
+        Object.assign(newListParam, {
             rowsFiltered: parseInt(recordsFiltered, 10),
             rowsTotal: parseInt(recordsTotal, 10),
             page: parseInt(draw, 10),
@@ -287,13 +311,14 @@ export default handleActions({
             ...state,
             pending: false,
             error: false,
-            listData: data,
-            listParam: tempListParam
+            [listName]: data,
+            [listParamName]: newListParam,
+            [selectedName]: (state[selectedName]) ? state[selectedName] : []
         };
     },
 
     [GET_LISTALL_SUCCESS]: (state, action) => {
-        return { ...state, pending: false, error: false, listDataForSelect: action.payload.data.data };
+        return { ...state, pending: false, error: false };
     },
 
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
@@ -370,8 +395,5 @@ export default handleActions({
         return initialState
     }
 
-
 }, initialState);
-
-
 

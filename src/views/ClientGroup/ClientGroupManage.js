@@ -213,7 +213,10 @@ class ClientGroupManage extends Component {
     if (ClientGroupProps.listParam.orderColumn === property && ClientGroupProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {
+      orderColumn: property, 
+      orderDir: orderDir
+    }));
   };
 
   handleRowClick = (event, id) => {
@@ -228,12 +231,17 @@ class ClientGroupManage extends Component {
 
   handleChangePage = (event, page) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {page: page}));
+    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {
+      page: page
+    }));
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {rowsPerPage: event.target.value}));
+    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {
+      rowsPerPage: event.target.value,
+      page: 0
+    }));
   };
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
@@ -282,7 +290,6 @@ class ClientGroupManage extends Component {
       confirmOpen: true
     });
   };
-
   handleDeleteConfirmResult = (confirmValue) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
     if(confirmValue) {
@@ -309,10 +316,10 @@ class ClientGroupManage extends Component {
 
   // .................................................
   handleChangeGroupSelect = (event, property) => {
-    console.log(' handleChangeGroupSelect : ', property);
+
   };
   handleChangeClientStatusSelect = (event, property) => {
-    console.log(' handleChangeClientStatusSelect : ', property);
+
   };
 
   render() {
@@ -343,7 +350,9 @@ class ClientGroupManage extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='primary'
-              onClick={() => this.handleSelectBtnClick({page: 0})}
+              onClick={() => this.handleSelectBtnClick({
+                page: 0
+              })}
             >
               <Search className={leftIconClass} />
               조회

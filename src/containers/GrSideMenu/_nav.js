@@ -109,6 +109,20 @@ export default {
           level: 2,
         },
       ]
+    },
+    {
+      name: '테스트',
+      url: '/test',
+      icon: 'icon-screen-desktop',
+      level: 1,
+      children: [
+        {
+          name: '컴포넌트테스트',
+          url: '/test/components',
+          icon: 'icon-wrench',
+          level: 2,
+        }
+      ]
     }
   ]
 };

@@ -127,8 +127,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSettingInf
 
 export const setParameterForView = (param) => {
 
-  console.log('param : ', param);
-
   let pollingTime = '';
   let useHypervisor = false;
   let selectedNtpIndex = -1;

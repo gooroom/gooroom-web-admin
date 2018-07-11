@@ -120,7 +120,7 @@ class ClientConfSettingDialog extends Component {
                 ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
                 this.handleClose();
         }, (res) => {
-            // console.log('error...', res);
+
         })
     }
 
@@ -141,7 +141,7 @@ class ClientConfSettingDialog extends Component {
                 ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
                 this.handleClose();
             }, (res) => {
-                //console.log('error...', res);
+
             })
         }
     }

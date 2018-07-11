@@ -161,7 +161,6 @@ class JobInform extends Component {
   render() {
 
     const { classes, jobManageModule } = this.props;
-    console.log('JobInform-render jobManageModule >> ', jobManageModule);
 
     const emptyRows = jobManageModule.targetListParam.rowsPerPage - jobManageModule.targetListData.length;
 

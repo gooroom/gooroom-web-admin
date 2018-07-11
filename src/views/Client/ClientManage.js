@@ -244,7 +244,10 @@ class ClientManage extends Component {
     if (ClientManageProps.listParam.orderColumn === property && ClientManageProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
+      orderColumn: property, 
+      orderDir: orderDir
+    }));
   };
 
   // .................................................
@@ -288,12 +291,17 @@ class ClientManage extends Component {
 
   handleChangePage = (event, page) => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {page: page}));
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
+      page: page
+    }));
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {rowsPerPage: event.target.value, page:0}));
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
+      rowsPerPage: event.target.value, 
+      page:0
+    }));
   };
 
   handleSelectBtnClick = (param) => {
@@ -367,10 +375,8 @@ class ClientManage extends Component {
   };
 
   handleChangeGroupSelect = (event, property) => {
-    console.log(' handleChangeGroupSelect : ', property);
   };
   handleChangeClientStatusSelect = (event, property) => {
-    console.log(' handleChangeClientStatusSelect : ', property);
   };
 
   render() {
@@ -419,7 +425,9 @@ class ClientManage extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant="raised"
               color="primary"
-              onClick={() => this.handleSelectBtnClick({page: 0})}
+              onClick={() => this.handleSelectBtnClick({
+                page: 0
+              })}
             >
               <SearchIcon className={leftIconClass} />
               조회

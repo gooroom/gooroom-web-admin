@@ -78,8 +78,6 @@ class ClientManageInform extends Component {
     const { ClientManageProps } = this.props;
     const bull = <span className={bullet}>•</span>;
 
-    console.log('ClientManageProps.viewItem : ', ClientManageProps.viewItem);
-
     return (
       <div className={componentClass}>
       {(ClientManageProps.informOpen) &&

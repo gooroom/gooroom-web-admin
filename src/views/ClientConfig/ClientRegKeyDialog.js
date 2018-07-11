@@ -79,7 +79,7 @@ class ClientRegKeyDialog extends Component {
                 ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
                 this.handleClose();
         }, (res) => {
-            // console.log('error...', res);
+
         })
     }
 
@@ -100,7 +100,7 @@ class ClientRegKeyDialog extends Component {
                 ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
                 this.handleClose();
             }, (res) => {
-                //console.log('error...', res);
+
             })
         }
     }

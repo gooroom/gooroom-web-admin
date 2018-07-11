@@ -261,7 +261,6 @@ class UserManage extends Component {
   handleInfoClick = (event, clientId, clientGroupId) => {
 
     event.stopPropagation();
-    console.log("handleCellClick .. " + clientId);
     this.setState({
       clientDialogOpen: true,
       selectedClientId: clientId,
@@ -272,7 +271,6 @@ class UserManage extends Component {
   
   handleClick = (event, id) => {
 
-    console.log("handleClick .. " + id);
     this.setState({ 
       selectedUserId: id
     });

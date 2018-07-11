@@ -102,10 +102,6 @@ class GrClientSelector extends Component {
     const currentIndex = checkedClient.indexOf(value);
     const newChecked = [...checkedClient];
 
-    // console.log('GrClientSelector.handleClientCheckToggle - value : ', value);
-    // console.log('GrClientSelector.handleClientCheckToggle - event.target.checked : ', event.target.checked);
-    // console.log('GrClientSelector.handleClientCheckToggle - newChecked[1] : ', newChecked);
-
     if (currentIndex === -1 && event.target.checked) {
       newChecked.push(value);
     } else if(currentIndex !== -1 && !event.target.checked) {
@@ -113,7 +109,6 @@ class GrClientSelector extends Component {
     } else {
       // 
     }
-    // console.log('GrClientSelector.handleClientCheckToggle - newChecked[2] : ', newChecked);
 
     if(this.props.handleClientSelect && this.props.selectorType === 'multiple') {
       this.props.handleClientSelect(newChecked);

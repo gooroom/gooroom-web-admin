@@ -59,7 +59,7 @@ class ClientGroupDialog extends Component {
                 ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
                 this.handleClose();
         }, (res) => {
-            // console.log('error...', res);
+
         })
     }
 
@@ -80,7 +80,7 @@ class ClientGroupDialog extends Component {
                     ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
                     this.handleClose();
             }, (res) => {
-                //console.log('error...', res);
+
             })
         }
     }

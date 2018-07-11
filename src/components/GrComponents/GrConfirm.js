@@ -42,7 +42,6 @@ class GrConfirm extends Component {
   };
 
   render() {
-    //console.log("GrConfirm.... ", this.props);
     const {grConfirmModule} = this.props;
 
     return (
