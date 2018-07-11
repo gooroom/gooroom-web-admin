@@ -105,7 +105,7 @@ class ClientUpdateServerManageDialog extends Component {
                 ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps.listParam);
                 this.handleClose();
         }, (res) => {
-            // console.log('error...', res);
+
         })
     }
 
@@ -126,7 +126,7 @@ class ClientUpdateServerManageDialog extends Component {
                 ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps.listParam);
                 this.handleClose();
             }, (res) => {
-                //console.log('error...', res);
+
             })
         }
     }

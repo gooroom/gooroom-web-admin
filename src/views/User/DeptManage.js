@@ -75,7 +75,6 @@ class DeptManage extends Component {
       deptName: node.title,
       deptId: node.key
     });
-    console.log("..... DeptManage handleSelectDept... " + node.title + ", " + node.key);
   }
 
   render() {

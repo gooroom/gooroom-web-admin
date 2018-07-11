@@ -203,8 +203,6 @@ class JobManage extends Component {
       return element.jobNo == id;
     });
 
-    console.log('selectedItem', selectedItem);
-
     this.props.JobManageActions.showJobInform({
       selectedItem: selectedItem,
     });

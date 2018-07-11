@@ -13,7 +13,7 @@ class SimpleOption extends Component {
     render() {
 
         const statusOptions = this.props.statusOption.map((x) => (<option value={x.id} key={x.id}>{x.value}</option>));
-console.log(statusOptions);
+
         return (
             <div className="grOptionBar">
                 <Row>

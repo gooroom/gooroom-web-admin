@@ -271,8 +271,6 @@ export default handleActions({
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
         const { data } = action.payload.data;
 
-        console.log('data[0] : ', data[0]);
-
         return {
             ...state,
             pending: false,
@@ -281,9 +279,7 @@ export default handleActions({
         };
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
-        // console.log('action : ', action);
-        // console.log('state : ', state);
-        // ///////// const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
+
         return {
             ...state,
             editingItem: Object.assign({}, action.payload.selectedItem),
@@ -389,7 +385,6 @@ export default handleActions({
         };
     },
     [COMMON_FAILURE]: (state, action) => {
-        console.log('COMMON_FAILURE action : ', action);
         return {
             ...state,
             pending: false,

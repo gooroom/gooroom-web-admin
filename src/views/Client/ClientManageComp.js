@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientManageActions from '../../modules/ClientManageModule';
+import * as ClientManageCompActions from '../../modules/ClientManageCompModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -128,7 +128,11 @@ class ClientManageHead extends Component {
       listData
     } = this.props;
 
-    const checkSelection = arrayContainsArray(selectedData, listData.map(x => x.clientId));
+    let checkSelection = 0;
+    if(listData && listData.length > 0) {
+      checkSelection = arrayContainsArray(selectedData, listData.map(x => x.clientId));
+    }
+
     return (
       <TableHead>
         <TableRow>
@@ -178,55 +182,82 @@ class ClientManage extends Component {
   }
 
   componentDidMount() {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.setInitialize();
-    ClientManageActions.readClientListForInit(getMergedListParam(ClientManageProps.listParam, {page:0}));
+    const { ClientManageCompActions, ClientManageCompProps } = this.props;
+    // ClientManageCompActions.setInitialize();
+    // ClientManageCompActions.readClientListForInit(getMergedListParam(ClientManageCompProps.listParam, {page:0}));
+    ClientManageCompActions.readClientList(getMergedListParam(ClientManageCompProps.listParam, {
+      page:0,
+      compId: this.props.compId
+    }));
   }
 
   // .................................................
   handleRequestSort = (event, property) => {
 
-    const { ClientManageActions, ClientManageProps } = this.props;
+    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
+    const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam } = ClientManageCompProps;
+
     let orderDir = "desc";
-    if (ClientManageProps.listParam.orderColumn === property && ClientManageProps.listParam.orderDir === "desc") {
+    if (compListParam.orderColumn === property && compListParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientManageCompActions.readClientList(getMergedListParam(compListParam, {
+      orderColumn: property, 
+      orderDir: orderDir,
+      compId: this.props.compId
+    }));
   };
 
   isSelected = id => {
-    
-    const { ClientManageProps } = this.props;
-    return ClientManageProps.selected.indexOf(id) !== -1;
+    const { ClientManageCompProps, compId } = this.props;
+    const { [compId + '__selected'] : compSelected } = ClientManageCompProps;
+    return compSelected.indexOf(id) !== -1;
   }
 
   handleChangePage = (event, page) => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {page: page}));
+    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
+    const { [compId + '__listParam'] : compListParam } = ClientManageCompProps;
+
+    ClientManageCompActions.readClientList(getMergedListParam(compListParam, {
+      page: page,
+      compId: this.props.compId
+    }));
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {rowsPerPage: event.target.value, page:0}));
+    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
+    const { [compId + '__listParam'] : compListParam } = ClientManageCompProps;
+
+    ClientManageCompActions.readClientList(getMergedListParam(compListParam, {
+      rowsPerPage: event.target.value, 
+      page:0,
+      compId: this.props.compId
+    }));
   };
 
-  loadInitData = (param) => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, param));
-  };
+  // loadInitData = (param) => {
+  //   const { ClientManageCompActions, ClientManageCompProps } = this.props;
+  //   ClientManageCompActions.readClientList(getMergedListParam(ClientManageCompProps.listParam, param));
+  // };
 
   handleKeywordChange = name => event => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    const newParam = getMergedListParam(ClientManageProps.listParam, {keyword: event.target.value});
-    ClientManageActions.changeParamValue({
-      name: 'listParam',
+    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
+    const { [compId + '__listParam'] : compListParam } = ClientManageCompProps;
+
+    const newParam = getMergedListParam(compListParam, {
+      keyword: event.target.value,
+      page:0,
+      compId: this.props.compId
+    });
+    ClientManageCompActions.changeStoreData({
+      name: compId + '__listParam',
       value: newParam
     });
   };
 
   handleRowClick = (event, id) => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    const { selected : preSelected } = ClientManageProps;
+    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
+    const { [compId + '__selected'] : preSelected } = ClientManageCompProps;
     const selectedIndex = preSelected.indexOf(id);
     let newSelected = [];
 
@@ -243,46 +274,46 @@ class ClientManage extends Component {
       );
     }
 
-    ClientManageActions.changeStoreData({
-      name: 'selected',
+    ClientManageCompActions.changeStoreData({
+      name: compId + '__selected',
       value: newSelected
     });
 
-    const selectedItem = ClientManageProps.listData.find(function(element) {
+    const selectedItem = ClientManageCompProps[compId + '__listData'].find(function(element) {
       return element.clientId == id;
     });
 
-    this.props.onChangeClientSelected(selectedItem);
-  };
-
-  handleSelectAllClick = (event, checked) => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    if(checked) {
-      const newSelected = ClientManageProps.listData.map(n => n.clientId)
-      ClientManageActions.changeStoreData({
-        name: 'selected',
-        value: newSelected
-      });
-    } else {
-      ClientManageActions.changeStoreData({
-        name: 'selected',
-        value: []
-      });
+    if(this.props.onChangeClientSelected) {
+      this.props.onChangeClientSelected(compId, newSelected, selectedItem);
     }
   };
 
-  handleChangeGroupSelect = (event, property) => {
-    console.log(' handleChangeGroupSelect : ', property);
-  };
-  handleChangeClientStatusSelect = (event, property) => {
-    console.log(' handleChangeClientStatusSelect : ', property);
+  handleSelectAllClick = (event, checked) => {
+    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
+    const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam } = ClientManageCompProps;
+
+    if(checked) {
+      const newSelected = compListData.map(n => n.clientId)
+      ClientManageCompActions.changeStoreData({
+        name: compId + '__selected',
+        value: newSelected
+      });
+      this.props.onChangeClientSelected(compId, newSelected);
+    } else {
+      ClientManageCompActions.changeStoreData({
+        name: compId + '__selected',
+        value: []
+      });
+      this.props.onChangeClientSelected(compId, []);
+    }
   };
 
   render() {
 
-    const { ClientManageProps } = this.props;
-    const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
+    const { ClientManageCompProps, compId } = this.props;
+    const emptyRows = 0;// = ClientManageCompProps.listParam.rowsPerPage - ClientManageCompProps.listData.length;
 
+    const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam, [compId + '__selected'] : compSelected } = ClientManageCompProps;
 
     return (
 
@@ -290,14 +321,14 @@ class ClientManage extends Component {
         <Table className={tableClass}>
           <ClientManageHead
             onSelectAllClick={this.handleSelectAllClick}
-            orderDir={ClientManageProps.listParam.orderDir}
-            orderColumn={ClientManageProps.listParam.orderColumn}
+            orderDir={compListParam && compListParam.orderDir}
+            orderColumn={compListParam && compListParam.orderColumn}
             onRequestSort={this.handleRequestSort}
-            selectedData={ClientManageProps.selected}
-            listData={ClientManageProps.listData}
+            selectedData={compSelected}
+            listData={compListData}
           />
           <TableBody>
-            {ClientManageProps.listData
+            {compListData && compListData
               .map(n => {
                 const isSelected = this.isSelected(n.clientId);
                 return (
@@ -349,27 +380,29 @@ class ClientManage extends Component {
             )}
           </TableBody>
         </Table>
-        <TablePagination
-          component='div'
-          count={ClientManageProps.listParam.rowsFiltered}
-          rowsPerPage={ClientManageProps.listParam.rowsPerPage}
-          rowsPerPageOptions={ClientManageProps.listParam.rowsPerPageOptions}
-          page={ClientManageProps.listParam.page}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleChangeRowsPerPage}
-        />
+        {compListParam && 
+          <TablePagination
+            component='div'
+            count={compListParam && compListParam.rowsFiltered}
+            rowsPerPage={compListParam && compListParam.rowsPerPage}
+            rowsPerPageOptions={compListParam && compListParam.rowsPerPageOptions}
+            page={compListParam && compListParam.page}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+        }
     </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  ClientManageProps: state.ClientManageModule
+  ClientManageCompProps: state.ClientManageCompModule
 });
 
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
+  ClientManageCompActions: bindActionCreators(ClientManageCompActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

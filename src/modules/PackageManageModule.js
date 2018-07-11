@@ -86,7 +86,6 @@ export const showJobInform222 = (param) => dispatch => {
 
 export const showJobInform = (param) => dispatch => {
 
-    console.log('--------------------- list param : ', param);
     const resetParam = {
         jobNo: param.selectedItem.jobNo,
         page: 0,
@@ -100,7 +99,7 @@ export const showJobInform = (param) => dispatch => {
         type: SHOW_JOBINFORM_DATA,
         payload: param
     });
-    console.log('--------------------- list');
+
     dispatch({type: GET_TARGET_LIST_PENDING});
     return requestPostAPI('readClientListInJob', resetParam).then(
         (response) => {

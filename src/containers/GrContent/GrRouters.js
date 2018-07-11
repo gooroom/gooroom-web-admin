@@ -28,6 +28,11 @@ import PackageManage from '../../views/Package/PackageManage';
 import DeptManage from "../../views/User/DeptManage";
 import UserManage from "../../views/User/UserManage";
 
+
+
+import ComponentTests from "../../views/Test/ComponentTests";
+
+
 const rootClass = css({
   transition: "left 0.25s, right 0.25s, width 0.25s",
   position: "relative",
@@ -121,6 +126,11 @@ class GrRouters extends Component {
             path="/user/usermanage"
             name="UserManage"
             component={UserManage}
+          />
+          <Route
+            path="/test/components"
+            name="ComponentTests"
+            component={ComponentTests}
           />
         </Switch>
       </div>

@@ -73,7 +73,7 @@ class ClientProfileSetDialog extends Component {
             ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
             this.handleClose();
         }, (res) => {
-            // console.log('error...', res);
+
         })
     }
 
@@ -94,7 +94,7 @@ class ClientProfileSetDialog extends Component {
                 ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
                 this.handleClose();
             }, (res) => {
-                //  ('error...', res);
+
             })
         }
     }
@@ -120,7 +120,7 @@ class ClientProfileSetDialog extends Component {
                 this.props.ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
                 this.handleClose();
             }, (res) => {
-                //console.log('error...', res);
+
             });
         }
     }

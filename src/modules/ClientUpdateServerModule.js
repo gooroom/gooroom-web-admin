@@ -224,9 +224,7 @@ export default handleActions({
         };
     },  
     [SHOW_UPDATESERVER_DIALOG]: (state, action) => {
-        // console.log('action : ', action);
-        // console.log('state : ', state);
-        // ///////// const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
+
         return {
             ...state,
             editingItem: Object.assign({}, action.payload.selectedItem),

@@ -142,8 +142,6 @@ class GrTreeList extends Component {
   }
 
   handleClickNode(listItem, index) {
-    // console.log("handleClickNode... " + listItem.key + ", " + index);
-    // console.log("handleClickNode..expandedListItems. " + this.state.expandedListItems);
     if (listItem.children) {
       // fetch children data
       // request to server if children array is empty.
@@ -268,7 +266,7 @@ class GrTreeList extends Component {
   }
 
   handleChange = nodeKey => event => {
-    // console.log("[handleChange] ... " + nodeKey + " -> " + event.target.checked);
+
     const { checked, imperfect, treeData } = this.state;
 
     let newChecked = checked;
@@ -343,7 +341,7 @@ class GrTreeList extends Component {
 
     // JSX: array of listItems
     const listItemsJSX = listItemsModified.map((listItem, i) => {
-      //console.log(listItem);
+
       if (listItem._shouldRender) {
         return (
           <GrTreeItem

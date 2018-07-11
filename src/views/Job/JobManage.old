@@ -351,7 +351,7 @@ class JobManage extends Component {
   handleCellClick = (event, id) => {
     //event.preventDefault();
     event.stopPropagation();
-    console.log("handleCellClick .. " + id);
+
     this.setState({
       detailOpen: true,
     });
@@ -360,7 +360,7 @@ class JobManage extends Component {
   handleClick = (event, id) => {
     //event.preventDefault();
     event.stopPropagation();
-    console.log("handleClick .. " + id);
+
     const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
@@ -403,7 +403,7 @@ class JobManage extends Component {
 
   // .................................................
   handleDetailClose = value => {
-    console.log("handleDetailClose...");
+
     this.setState({ selectedValue: value, detailOpen: false });
   };
 
@@ -411,8 +411,6 @@ class JobManage extends Component {
 
     const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
     const emptyRows = rowsPerPage - data.length;
-
-    console.log(JobManageHead.getColumnData().length);
 
     return (
       <React.Fragment>

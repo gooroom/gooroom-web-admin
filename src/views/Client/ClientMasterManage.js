@@ -172,14 +172,16 @@ class ClientMasterManage extends Component {
     ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, param));
   };
 
-  handleChangeClientGroupSelected = (selectedGroupIdArray, selectedGroupObj='') => {
-    // console.log('selectedGroupIdArray... ', selectedGroupIdArray);
-    // console.log('selectedGroupObj... ', selectedGroupObj);
+  handleChangeClientGroupSelected = (compId, selectedGroupIdArray, selectedGroupObj='') => {
 
     const { ClientGroupProps, ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
     
     // select clients in groups.
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {groupId: selectedGroupIdArray.join(','), page:0}));
+    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
+      groupId: selectedGroupIdArray.join(','), 
+      page:0,
+      compId: 'masterClient'
+    }));
     // show group info.
     if(selectedGroupObj !== '') {
 
@@ -191,12 +193,11 @@ class ClientMasterManage extends Component {
   };
 
   handleChangeClientSelected = (selectedClientObj='') => {
-    console.log('ClientMasterManage - handleChangeClientSelected --|| ');
-    console.log('ClientMasterManage - selectedClientObj - ', selectedClientObj);
+
     const { ClientManageActions, ClientGroupActions } = this.props;
     // show client info.
     if(selectedClientObj !== '') {
-      console.log(selectedClientObj);
+
       ClientGroupActions.closeClientGroupInform({informOpen:false});
       ClientManageActions.showClientManageInform({
         viewItem: Object.assign({}, selectedClientObj),
@@ -254,14 +255,14 @@ class ClientMasterManage extends Component {
           <Grid container spacing={24} style={{border:"0px solid red",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
               <Card style={{minWidth:"240px",boxShadow:"2px 2px 8px blue"}}>
-                <ClientGroupComp 
+                <ClientGroupComp compId='masterGroup'
                   onChangeGroupSelected={this.handleChangeClientGroupSelected}
                 />
               </Card>
             </Grid>
             <Grid item xs>
               <Card style={{minWidth:"710px",boxShadow:"2px 2px 8px green"}}>
-              <ClientManageComp 
+              <ClientManageComp compId='masterClient'
                   onChangeClientSelected={this.handleChangeClientSelected}
                 />
               </Card>

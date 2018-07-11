@@ -120,7 +120,7 @@ class ClientHostNameManageDialog extends Component {
                 ClientHostNameActions.readClientHostNameList(ClientHostNameProps.listParam);
                 this.handleClose();
         }, (res) => {
-            // console.log('error...', res);
+
         })
     }
 
@@ -141,7 +141,7 @@ class ClientHostNameManageDialog extends Component {
                 ClientHostNameActions.readClientHostNameList(ClientHostNameProps.listParam);
                 this.handleClose();
             }, (res) => {
-                //console.log('error...', res);
+
             })
         }
     }
