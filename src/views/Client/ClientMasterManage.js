@@ -5,8 +5,9 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientManageActions from '../../modules/ClientManageModule';
-import * as ClientGroupActions from '../../modules/ClientGroupModule';
+import * as ClientMasterManageActions from '../../modules/ClientMasterManageModule';
+import * as ClientManageCompActions from '../../modules/ClientManageCompModule';
+import * as ClientGroupCompActions from '../../modules/ClientGroupCompModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -168,50 +169,65 @@ class ClientMasterManage extends Component {
   // .................................................
 
   handleSelectBtnClick = (param) => {
-    const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, param));
+    const { ClientManageCompActions, ClientManageCompProps } = this.props;
+    ClientManageCompActions.readClientList(getMergedListParam(ClientManageCompProps.listParam, param));
   };
 
-  handleChangeClientGroupSelected = (compId, selectedGroupIdArray, selectedGroupObj='') => {
 
-    const { ClientGroupProps, ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
-    
+  // Select Group Item
+  handleChangeClientGroupSelected = (selectedGroupObj='', selectedGroupIdArray) => {
+
+    const { ClientMasterManageProps, ClientMasterManageActions } = this.props;
+    const { ClientGroupCompProps, ClientGroupCompActions } = this.props;
+    const { ClientManageCompProps, ClientManageCompActions } = this.props;
     // select clients in groups.
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
+    const { clientManageCompId } = ClientMasterManageProps;
+
+    ClientManageCompActions.readClientList(getMergedListParam(ClientManageCompProps.listParam, {
       groupId: selectedGroupIdArray.join(','), 
       page:0,
-      compId: 'masterClient'
+      compId: clientManageCompId
     }));
     // show group info.
     if(selectedGroupObj !== '') {
-
-      ClientManageActions.closeClientManageInform({informOpen:false});
-      ClientGroupActions.showClientGroupInform({
-        selectedItem: Object.assign({}, selectedGroupObj),
+      
+      ClientMasterManageActions.closeClientManageInform();
+      ClientGroupCompActions.setSelectedItemObj({
+        compId: ClientMasterManageProps.clientGroupCompId,
+        selectedItem: selectedGroupObj
       });
+      ClientMasterManageActions.showClientGroupInform();
+
     }
   };
 
-  handleChangeClientSelected = (selectedClientObj='') => {
+  // Select Client Item
+  handleChangeClientSelected = (selectedClientObj='', selectedClientIdArray) => {
 
-    const { ClientManageActions, ClientGroupActions } = this.props;
+    const { ClientMasterManageProps, ClientMasterManageActions } = this.props;
+    const { ClientManageCompProps, ClientManageCompActions } = this.props;
+
     // show client info.
     if(selectedClientObj !== '') {
 
-      ClientGroupActions.closeClientGroupInform({informOpen:false});
-      ClientManageActions.showClientManageInform({
-        viewItem: Object.assign({}, selectedClientObj),
+      ClientMasterManageActions.closeClientGroupInform();
+      ClientManageCompActions.setSelectedItemObj({
+        compId: ClientMasterManageProps.clientManageCompId,
+        selectedItem: selectedClientObj
       });
+      ClientMasterManageActions.showClientManageInform();
+
     }
   };
 
   render() {
 
-    //const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
-    const { ClientGroupProps, ClientManageProps } = this.props;
-    //const emptyRows = rowsPerPage - data.length;
-    const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
+    const { ClientMasterManageProps, ClientGroupCompProps, ClientManageCompProps } = this.props;
+    const emptyRows = 0;// = ClientManageCompProps.listParam.rowsPerPage - ClientManageCompProps.listData.length;
 
+    const { isGroupInformOpen, isClientInformOpen } = ClientMasterManageProps;
+    const selectedGroupItem = ClientGroupCompProps[ClientMasterManageProps.clientGroupCompId + '__selectedItem'];
+    const selectedClientItem = ClientManageCompProps[ClientMasterManageProps.clientManageCompId + '__selectedItem'];
 
     return (
       <React.Fragment>
@@ -255,14 +271,14 @@ class ClientMasterManage extends Component {
           <Grid container spacing={24} style={{border:"0px solid red",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
               <Card style={{minWidth:"240px",boxShadow:"2px 2px 8px blue"}}>
-                <ClientGroupComp compId='masterGroup'
+                <ClientGroupComp compId={ClientMasterManageProps.clientGroupCompId}
                   onChangeGroupSelected={this.handleChangeClientGroupSelected}
                 />
               </Card>
             </Grid>
             <Grid item xs>
               <Card style={{minWidth:"710px",boxShadow:"2px 2px 8px green"}}>
-              <ClientManageComp compId='masterClient'
+              <ClientManageComp compId={ClientMasterManageProps.clientManageCompId}
                   onChangeClientSelected={this.handleChangeClientSelected}
                 />
               </Card>
@@ -270,18 +286,28 @@ class ClientMasterManage extends Component {
           </Grid>
           <Grid container spacing={24} style={{marginTop:"0px",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
-              {(ClientGroupProps.informOpen) &&
+              {(isGroupInformOpen) &&
               <GetAppIcon className={leftIconClass} />
               }
             </Grid>
             <Grid item xs style={{textAlign:"right"}}>
-              {(ClientManageProps.informOpen) &&
+              {(ClientManageCompProps.informOpen) &&
               <GetAppIcon className={leftIconClass} />
               }
             </Grid>
           </Grid>
-          <ClientGroupInform compShadow="2px 2px 8px blue" />
-          <ClientManageInform compShadow="2px 2px 8px green" />
+          
+          <ClientGroupInform 
+            isOpen={isGroupInformOpen} 
+            selectedItem={selectedGroupItem}
+            compShadow="2px 2px 8px blue" 
+          />
+          <ClientManageInform 
+            isOpen={isClientInformOpen}
+            selectedItem={selectedClientItem}
+            compShadow="2px 2px 8px green" 
+          />
+          
         </GrPane>
       </React.Fragment>
       
@@ -289,16 +315,16 @@ class ClientMasterManage extends Component {
   }
 }
 
-
-
 const mapStateToProps = (state) => ({
-  ClientManageProps: state.ClientManageModule,
-  ClientGroupProps: state.ClientGroupModule
+  ClientMasterManageProps: state.ClientMasterManageModule,
+  ClientManageCompProps: state.ClientManageCompModule,
+  ClientGroupCompProps: state.ClientGroupCompModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
-  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  ClientMasterManageActions: bindActionCreators(ClientMasterManageActions, dispatch),
+  ClientManageCompActions: bindActionCreators(ClientManageCompActions, dispatch),
+  ClientGroupCompActions: bindActionCreators(ClientGroupCompActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

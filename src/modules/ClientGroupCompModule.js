@@ -4,6 +4,8 @@ import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
 
+const COMMON_PENDING = 'groupComp/COMMON_PENDING';
+const COMMON_FAILURE = 'groupComp/COMMON_FAILURE';
 
 const GET_LIST_SUCCESS = 'groupComp/GET_LIST_SUCCESS';
 const GET_LISTALL_SUCCESS = 'groupComp/GET_LISTALL_SUCCESS';
@@ -19,9 +21,6 @@ const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
 
 const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
 const SET_INITIAL_STORE = 'groupComp/SET_INITIAL_STORE';
-
-const COMMON_PENDING = 'groupComp/COMMON_PENDING';
-const COMMON_FAILURE = 'groupComp/COMMON_FAILURE';
 
 
 // ...
@@ -220,8 +219,10 @@ export const deleteClientGroupData = (param) => dispatch => {
 };
 
 export const setSelectedItemObj = (param) => dispatch => {
+    const compId = param.compId;
     return dispatch({
         type: SET_SELECTED_OBJ,
+        compId: compId,
         payload: param
     });
 };
@@ -383,9 +384,15 @@ export default handleActions({
     },
 
     [SET_SELECTED_OBJ]: (state, action) => {
+
+        let selectedItem = 'selectedItem';
+        if(action.compId && action.compId != '') {
+            selectedItem = action.compId + '__selectedItem';
+        }
+
         return {
             ...state,
-            selectedItem: action.payload.selectedItem
+            [selectedItem]: action.payload.selectedItem
         }
     },
 

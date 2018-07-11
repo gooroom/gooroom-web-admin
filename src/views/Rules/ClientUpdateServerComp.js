@@ -76,7 +76,7 @@ class ClientUpdateServerComp extends Component {
   // .................................................
   render() {
 
-    const { ClientGroupProps } = this.props;
+    const { ClientGroupProps, objId, objNm } = this.props;
     const bull = <span className={bullet}>•</span>;
 
     return (
@@ -87,10 +87,10 @@ class ClientUpdateServerComp extends Component {
             업데이트서버설정
           </Typography>
           <Typography variant="headline" component="h2">
-            {ClientGroupProps.selectedItem.updateServerConfigNm}
+            {objNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
-          {bull}이 정책에 대한 설명을 보여주는 곳
+          {bull}이 정책에 대한 설명을 보여주는 곳 - {objId}
           </Typography>
         </CardContent>
         <CardActions>

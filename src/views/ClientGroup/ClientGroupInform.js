@@ -71,16 +71,22 @@ const pos = css({
 //
 class ClientGroupInform extends Component {
 
+  componentWillUpdate(nextProps, nextState) {
+    console.log(' -- componentWillUpdate --');
+
+    const selectedItem = nextProps.selectedItem;
+    console.log(' selectedItem : ', selectedItem);
+  }
+
   // .................................................
 
   render() {
 
-    const { ClientGroupProps } = this.props;
-    const { selectedItem } = ClientGroupProps;
+    const { isOpen, selectedItem } = this.props;
 
     return (
       <div className={componentClass}>
-      {(ClientGroupProps.informOpen) &&
+      {(isOpen) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedItem) ? selectedItem.grpNm : ''}
@@ -95,18 +101,30 @@ class ClientGroupInform extends Component {
           
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientConfigComp objId={selectedItem.clientConfigId} />
+              <ClientConfigComp 
+                objId={selectedItem.clientConfigId} 
+                objNm={selectedItem.clientConfigNm} 
+              />
             </Grid>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <DesktopConfigComp />
+              <DesktopConfigComp 
+                objId={selectedItem.desktopConfigId} 
+                objNm={selectedItem.desktopConfigNm} 
+              />
             </Grid>
           </Grid>
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientHostsComp />
+              <ClientHostsComp 
+                objId={selectedItem.hostNameConfigId} 
+                objNm={selectedItem.hostNameConfigNm} 
+              />
             </Grid>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientUpdateServerComp />
+              <ClientUpdateServerComp 
+                objId={selectedItem.updateServerConfigId} 
+                objNm={selectedItem.updateServerConfigNm} 
+              />
             </Grid>
           </Grid>
         </Card>
