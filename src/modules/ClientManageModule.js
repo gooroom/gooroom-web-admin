@@ -4,21 +4,15 @@ import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
 
-const GET_LIST_PENDING = 'clientManage/GET_LIST_PENDING';
+const COMMON_PENDING = 'clientManageComp/COMMON_PENDING';
+const COMMON_FAILURE = 'clientManageComp/COMMON_FAILURE';
+
 const GET_LIST_SUCCESS = 'clientManage/GET_LIST_SUCCESS';
-const GET_LIST_FAILURE = 'clientManage/GET_LIST_FAILURE';
-
-const CREATE_CLIENT_PENDING = 'clientManage/CREATE_CLIENT_PENDING';
 const CREATE_CLIENT_SUCCESS = 'clientManage/CREATE_CLIENT_SUCCESS';
-const CREATE_CLIENT_FAILURE = 'clientManage/CREATE_CLIENT_FAILURE';
-
-const EDIT_CLIENT_PENDING = 'clientManage/EDIT_CLIENT_PENDING';
 const EDIT_CLIENT_SUCCESS = 'clientManage/EDIT_CLIENT_SUCCESS';
-const EDIT_CLIENT_FAILURE = 'clientManage/EDIT_CLIENT_FAILURE';
-
-const DELETE_CLIENT_PENDING = 'clientManage/DELETE_CLIENT_PENDING';
 const DELETE_CLIENT_SUCCESS = 'clientManage/DELETE_CLIENT_SUCCESS';
-const DELETE_CLIENT_FAILURE = 'clientManage/DELETE_CLIENT_FAILURE';
+
+const GET_CLIENT_INFORM = 'clientManage/GET_CLIENT_INFORM';
 
 const SHOW_CLIENT_INFORM = 'clientManage/SHOW_CLIENT_INFORM';
 const SHOW_CLIENT_DIALOG = 'clientManage/SHOW_CLIENT_DIALOG';
@@ -70,6 +64,10 @@ const initialState = {
         isDefault: ''
     },
 
+    selectedClientItem: {
+
+    },
+
     informOpen: false,
     dialogOpen: false,
     dialogType: '',
@@ -106,7 +104,7 @@ export const readClientList = (param) => dispatch => {
         orderDir: param.orderDir
     };
 
-    dispatch({type: GET_LIST_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientListPaged', resetParam).then(
         (response) => {
             dispatch({
@@ -116,7 +114,25 @@ export const readClientList = (param) => dispatch => {
         }
     ).catch(error => {
         dispatch({
-            type: GET_LIST_FAILURE,
+            type: COMMON_FAILURE,
+            payload: error
+        });
+    });
+};
+
+export const getClientInform = (param) => dispatch => {
+
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readClientListPaged', param).then(
+        (response) => {
+            dispatch({
+                type: GET_CLIENT_INFORM,
+                payload: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
             payload: error
         });
     });
@@ -139,7 +155,7 @@ export const closeClientManageInform = (param) => dispatch => {
 
 // create (add)
 export const createClientGroupData = (param) => dispatch => {
-    dispatch({type: CREATE_CLIENT_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('createClientGroup', {
         groupName: param.grpNm,
         groupComment: param.comment,
@@ -154,14 +170,14 @@ export const createClientGroupData = (param) => dispatch => {
                 });
             } else {
                 dispatch({
-                    type: CREATE_CLIENT_FAILURE,
+                    type: COMMON_FAILURE,
                     payload: response
                 });
             }
         }
     ).catch(error => {
         dispatch({
-            type: CREATE_CLIENT_FAILURE,
+            type: COMMON_FAILURE,
             payload: error
         });
     });
@@ -169,7 +185,7 @@ export const createClientGroupData = (param) => dispatch => {
 
 // edit
 export const editClientGroupData = (param) => dispatch => {
-    dispatch({type: EDIT_CLIENT_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateClientGroup', {
         groupId: param.grpId,
         groupName: param.grpNm,
@@ -187,7 +203,7 @@ export const editClientGroupData = (param) => dispatch => {
         }
     ).catch(error => {
         dispatch({
-            type: EDIT_CLIENT_FAILURE,
+            type: COMMON_FAILURE,
             payload: error
         });
     });
@@ -195,7 +211,7 @@ export const editClientGroupData = (param) => dispatch => {
 
 // delete
 export const deleteClientGroupData = (param) => dispatch => {
-    dispatch({type: DELETE_CLIENT_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteClientGroup', param).then(
         (response) => {
             dispatch({
@@ -205,7 +221,7 @@ export const deleteClientGroupData = (param) => dispatch => {
         }
     ).catch(error => {
         dispatch({
-            type: DELETE_CLIENT_FAILURE,
+            type: COMMON_FAILURE,
             payload: error
         });
     });
@@ -242,13 +258,22 @@ export const setInitialize = (param) => dispatch => {
 
 export default handleActions({
 
-    [GET_LIST_PENDING]: (state, action) => {
+    [COMMON_PENDING]: (state, action) => {
         return {
             ...state,
             pending: true,
             error: false
         };
     },
+    [COMMON_FAILURE]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: true,
+            resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
+        };
+    },
+
     [GET_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
 
@@ -268,13 +293,6 @@ export default handleActions({
             listParam: newListParam
         };
     },
-    [GET_LIST_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true
-        };
-    },
 
     [SHOW_CLIENT_INFORM]: (state, action) => {
         return {
@@ -292,13 +310,6 @@ export default handleActions({
         };
     },
 
-    [CREATE_CLIENT_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
-    },
     [CREATE_CLIENT_SUCCESS]: (state, action) => {
         return {
             ...state,
@@ -306,22 +317,7 @@ export default handleActions({
             error: false,
         };
     },
-    [CREATE_CLIENT_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true,
-            resultMsg: action.payload.data.status.message
-        };
-    },
 
-    [EDIT_CLIENT_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
-    },
     [EDIT_CLIENT_SUCCESS]: (state, action) => {
         return {
             ...state,
@@ -329,22 +325,7 @@ export default handleActions({
             error: false,
         };
     },
-    [EDIT_CLIENT_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true,
-            resultMsg: action.payload.data.status.message
-        };
-    },
 
-    [DELETE_CLIENT_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
-    },
     [DELETE_CLIENT_SUCCESS]: (state, action) => {
         return {
             ...state,
@@ -353,14 +334,6 @@ export default handleActions({
             informOpen: false,
             dialogOpen: false,
             dialogType: ''   
-        };
-    },
-    [DELETE_CLIENT_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true,
-            resultMsg: action.payload.data.status.message
         };
     },
 

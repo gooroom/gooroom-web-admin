@@ -222,7 +222,7 @@ class ClientGroupComp extends Component {
     });
 
     if(this.props.onChangeGroupSelected) {
-      this.props.onChangeGroupSelected(compId, newSelected, selectedItem);
+      this.props.onChangeGroupSelected(selectedItem, newSelected);
     }    
   };
 

@@ -87,7 +87,7 @@ class ClientConfigComp extends Component {
   // .................................................
   render() {
 
-    const { ClientGroupProps, ClientConfSettingProps } = this.props;
+    const { ClientGroupProps, ClientConfSettingProps, objId, objNm } = this.props;
     const bull = <span className={bullet}>•</span>;
     const viewItem = ClientConfSettingProps.editingItem;
 
@@ -99,7 +99,10 @@ class ClientConfigComp extends Component {
             단말정책설정
           </Typography>
           <Typography variant="headline" component="h2">
-            {ClientGroupProps.selectedItem.clientConfigNm}
+            {objNm}
+          </Typography>
+          <Typography className={pos} color="textSecondary">
+            {bull}이 정책에 대한 설명을 보여주는 곳 - {objId}
           </Typography>
           <Divider />
             <br />

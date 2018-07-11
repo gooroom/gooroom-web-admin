@@ -446,6 +446,10 @@ class ClientGroupManage extends Component {
 
         </GrPane>
         <ClientGroupInform />
+        <ClientGroupInform 
+            isOpen={ClientGroupProps.informOpen} 
+            selectedItem={ClientGroupProps.selectedItem}
+          />
         <ClientGroupDialog />
         <GrConfirm />
       </React.Fragment>
@@ -455,11 +459,9 @@ class ClientGroupManage extends Component {
   }
 }
 
-
 const mapStateToProps = (state) => ({
   ClientGroupProps: state.ClientGroupModule
 });
-
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),

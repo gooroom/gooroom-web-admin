@@ -284,7 +284,7 @@ class ClientManage extends Component {
     });
 
     if(this.props.onChangeClientSelected) {
-      this.props.onChangeClientSelected(compId, newSelected, selectedItem);
+      this.props.onChangeClientSelected(selectedItem, newSelected);
     }
   };
 

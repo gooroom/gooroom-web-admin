@@ -71,42 +71,63 @@ const pos = css({
 //
 class ClientManageInform extends Component {
 
+  componentWillUpdate(nextProps, nextState) {
+
+    const selectedItem = nextProps.selectedItem;
+    console.log(' ClientManageInform componentWillUpdate selectedItem : ', selectedItem);
+  }
+
   // .................................................
 
   render() {
 
     const { ClientManageProps } = this.props;
+    const { isOpen, selectedClientItem :selectedItem } = this.props;
     const bull = <span className={bullet}>•</span>;
+
+    console.log(' ClientManageInform render selectedItem : ', selectedItem);
 
     return (
       <div className={componentClass}>
-      {(ClientManageProps.informOpen) &&
+      {(isOpen && selectedItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(ClientManageProps.viewItem) ? ClientManageProps.viewItem.clientName : ''}
-            subheader={ClientManageProps.viewItem.clientId + ', ' + formatDateToSimple(ClientManageProps.viewItem.regDate, 'YYYY-MM-DD')}
+            title={(selectedItem) ? selectedItem.clientName : ''}
+            subheader={selectedItem.clientId + ', ' + formatDateToSimple(selectedItem.regDate, 'YYYY-MM-DD')}
           />
           <CardContent className={contentClass}>
             <Typography component="pre">
-              {ClientManageProps.viewItem.clientStatus}
+              {selectedItem.clientStatus}
             </Typography>
           </CardContent>
           <Divider />
           
           <Grid container spacing={8}>
             <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientConfigComp />
+              <ClientConfigComp 
+                objId={selectedItem.clientConfigId} 
+                objNm={selectedItem.clientConfigNm} 
+              />
             </Grid>
             <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <DesktopConfigComp />
+              <DesktopConfigComp 
+                objId={selectedItem.desktopConfigId} 
+                objNm={selectedItem.desktopConfigNm} 
+              />
             </Grid>
           </Grid>
           <Grid container spacing={8}>
             <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientHostsComp />
+              <ClientHostsComp 
+                objId={selectedItem.hostNameConfigId} 
+                objNm={selectedItem.hostNameConfigNm} 
+              />
             </Grid>
             <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientUpdateServerComp />
+              <ClientUpdateServerComp 
+                objId={selectedItem.updateServerConfigId} 
+                objNm={selectedItem.updateServerConfigNm} 
+              />
             </Grid>
           </Grid>
         </Card>
