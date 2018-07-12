@@ -4,6 +4,9 @@ import { requestPostAPI } from '../components/GrUtils/GrRequester';
 import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
 import { setParameterForView } from '../views/ClientConfig/ClientConfSettingInform';
 
+const COMMON_PENDING = 'clientConfSetting/COMMON_PENDING';
+const COMMON_FAILURE = 'clientConfSetting/COMMON_FAILURE';
+
 const GET_CONFSETTING_LIST_SUCCESS = 'clientConfSetting/GET_LIST_SUCCESS';
 const GET_CONFSETTING_SUCCESS = 'clientConfSetting/GET_CONFSETTING_SUCCESS';
 const CREATE_CONFSETTING_SUCCESS = 'clientConfSetting/CREATE_CONFSETTING_SUCCESS';
@@ -12,17 +15,16 @@ const DELETE_CONFSETTING_SUCCESS = 'clientConfSetting/DELETE_CONFSETTING_SUCCESS
 
 const SHOW_CONFSETTING_INFORM = 'clientConfSetting/SHOW_CONFSETTING_INFORM';
 const SHOW_CONFSETTING_DIALOG = 'clientConfSetting/SHOW_CONFSETTING_DIALOG';
-const CHG_STORE_DATA = 'clientConfSetting/CHG_STORE_DATA';
 
 const SET_SELECTED_OBJ = 'clientConfSetting/SET_SELECTED_OBJ';
 const SET_EDITING_ITEM_VALUE = 'clientConfSetting/SET_EDITING_ITEM_VALUE';
-const SET_SELECTED_NTP_VALUE = 'clientConfSetting/SET_SELECTED_NTP_VALUE';
 
+const CHG_STORE_DATA = 'clientConfSetting/CHG_STORE_DATA';
+
+const SET_SELECTED_NTP_VALUE = 'clientConfSetting/SET_SELECTED_NTP_VALUE';
 const ADD_NTPADDRESS_ITEM = 'clientConfSetting/ADD_NTPADDRESS_ITEM';
 const DELETE_NTPADDRESS_ITEM = 'clientConfSetting/DELETE_NTPADDRESS_ITEM';
 
-const COMMON_PENDING = 'clientConfSetting/COMMON_PENDING';
-const COMMON_FAILURE = 'clientConfSetting/COMMON_FAILURE';
 
 // ...
 const initialState = {
@@ -86,20 +88,6 @@ export const closeInform = () => dispatch => {
     });
 };
 
-export const addNtpAddress = () => dispatch => {
-    return dispatch({
-        type: ADD_NTPADDRESS_ITEM
-    });
-}
-
-export const deleteNtpAddress = (index) => dispatch => {
-    return dispatch({
-        type: DELETE_NTPADDRESS_ITEM,
-        payload: {index:index}
-    });
-}
-
-// ...
 export const readClientConfSettingList = (param) => dispatch => {
     const resetParam = {
         keyword: param.keyword,
@@ -157,13 +145,6 @@ export const setEditingItemValue = (param) => dispatch => {
     });
 };
 
-export const setSelectedNtpValue = (param) => dispatch => {
-    return dispatch({
-        type: SET_SELECTED_NTP_VALUE,
-        payload: param
-    });
-};
-
 export const changeStoreData = (param) => dispatch => {
     return dispatch({
         type: CHG_STORE_DATA,
@@ -189,7 +170,7 @@ export const createClientConfSettingData = (param) => dispatch => {
     return requestPostAPI('createClientConf', makeParameter(param)).then(
         (response) => {
             try {
-                if(response.data.status.result === 'success') {
+                if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
                         type: CREATE_CONFSETTING_SUCCESS,
                         payload: response
@@ -208,7 +189,6 @@ export const createClientConfSettingData = (param) => dispatch => {
             payload: error
         });
     });
-
 };
 
 // edit
@@ -247,13 +227,49 @@ export const deleteClientConfSettingData = (param) => dispatch => {
     });
 };
 
+export const addNtpAddress = () => dispatch => {
+    return dispatch({
+        type: ADD_NTPADDRESS_ITEM
+    });
+}
+
+export const deleteNtpAddress = (index) => dispatch => {
+    return dispatch({
+        type: DELETE_NTPADDRESS_ITEM,
+        payload: {index:index}
+    });
+}
+
+export const setSelectedNtpValue = (param) => dispatch => {
+    return dispatch({
+        type: SET_SELECTED_NTP_VALUE,
+        payload: param
+    });
+};
+
 
 export default handleActions({
 
+    [COMMON_PENDING]: (state, action) => {
+        return {
+            ...state,
+            pending: true,
+            error: false
+        };
+    },
+    [COMMON_FAILURE]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: true,
+            resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
+        };
+    },
+
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-        let tempListParam = state.listParam;
-        Object.assign(tempListParam, {
+        let newListParam = state.listParam;
+        Object.assign(newListParam, {
             rowsFiltered: parseInt(recordsFiltered, 10),
             rowsTotal: parseInt(recordsTotal, 10),
             page: parseInt(draw, 10),
@@ -265,7 +281,7 @@ export default handleActions({
             pending: false,
             error: false,
             listData: data,
-            listParam: tempListParam
+            listParam: newListParam
         };
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
@@ -279,7 +295,6 @@ export default handleActions({
         };
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
-
         return {
             ...state,
             editingItem: Object.assign({}, action.payload.selectedItem),
@@ -291,7 +306,7 @@ export default handleActions({
         return {
             ...state,
             selectedItem: action.payload.selectedItem,
-            informOpen: true,
+            informOpen: true
         };
     },
     [SET_SELECTED_OBJ]: (state, action) => {
@@ -307,49 +322,12 @@ export default handleActions({
             editingItem: newEditingItem
         }
     },
-    [SET_SELECTED_NTP_VALUE]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress[action.payload.index] = action.payload.value;
-        const newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
-    },
     [CHG_STORE_DATA]: (state, action) => {
         return {
             ...state,
             [action.payload.name]: action.payload.value
         }
     },
-    [ADD_NTPADDRESS_ITEM]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress.push('');
-        const newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
-    },
-    [DELETE_NTPADDRESS_ITEM]: (state, action) => {
-        
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress.splice(action.payload.index, 1);
-        let newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
-
-        // changed selected ntp addres index
-        if(state.editingItem.selectedNtpIndex == action.payload.index) {
-            newEditingItem = getMergedListParam(newEditingItem, {'selectedNtpIndex': -1});
-        } else if(state.editingItem.selectedNtpIndex > action.payload.index) {
-            newEditingItem = getMergedListParam(newEditingItem, {'selectedNtpIndex': (state.editingItem.selectedNtpIndex - 1)});
-        }
-
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
-    },
-
     [CREATE_CONFSETTING_SUCCESS]: (state, action) => {
         return {
             ...state,
@@ -377,20 +355,38 @@ export default handleActions({
             dialogType: ''
         };
     },
-    [COMMON_PENDING]: (state, action) => {
+    [SET_SELECTED_NTP_VALUE]: (state, action) => {
+        let newNtpAddress = state.editingItem.ntpAddress;
+        newNtpAddress[action.payload.index] = action.payload.value;
+        const newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
         return {
             ...state,
-            pending: true,
-            error: false
-        };
+            editingItem: newEditingItem
+        }
     },
-    [COMMON_FAILURE]: (state, action) => {
+    [ADD_NTPADDRESS_ITEM]: (state, action) => {
+        let newNtpAddress = state.editingItem.ntpAddress;
+        newNtpAddress.push('');
+        const newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
         return {
             ...state,
-            pending: false,
-            error: true,
-            //resultMsg: action.payload.data.status.message
-        };
+            editingItem: newEditingItem
+        }
+    },
+    [DELETE_NTPADDRESS_ITEM]: (state, action) => {
+        let newNtpAddress = state.editingItem.ntpAddress;
+        newNtpAddress.splice(action.payload.index, 1);
+        let newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
+        // changed selected ntp addres index
+        if(state.editingItem.selectedNtpIndex == action.payload.index) {
+            newEditingItem = getMergedListParam(newEditingItem, {'selectedNtpIndex': -1});
+        } else if(state.editingItem.selectedNtpIndex > action.payload.index) {
+            newEditingItem = getMergedListParam(newEditingItem, {'selectedNtpIndex': (state.editingItem.selectedNtpIndex - 1)});
+        }
+        return {
+            ...state,
+            editingItem: newEditingItem
+        }
     },
 
 }, initialState);

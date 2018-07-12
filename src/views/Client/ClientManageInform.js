@@ -74,7 +74,7 @@ class ClientManageInform extends Component {
   componentWillUpdate(nextProps, nextState) {
 
     const selectedItem = nextProps.selectedItem;
-    console.log(' ClientManageInform componentWillUpdate selectedItem : ', selectedItem);
+//console.log(' ClientManageInform componentWillUpdate selectedItem : ', selectedItem);
   }
 
   // .................................................
@@ -85,7 +85,7 @@ class ClientManageInform extends Component {
     const { isOpen, selectedClientItem :selectedItem } = this.props;
     const bull = <span className={bullet}>•</span>;
 
-    console.log(' ClientManageInform render selectedItem : ', selectedItem);
+//console.log(' ClientManageInform render selectedItem : ', selectedItem);
 
     return (
       <div className={componentClass}>

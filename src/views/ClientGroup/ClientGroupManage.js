@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '../../modules/ClientGroupModule';
+import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -215,7 +215,8 @@ class ClientGroupManage extends Component {
     }
     ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {
       orderColumn: property, 
-      orderDir: orderDir
+      orderDir: orderDir,
+      compId: ''
     }));
   };
 
@@ -232,7 +233,8 @@ class ClientGroupManage extends Component {
   handleChangePage = (event, page) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
     ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {
-      page: page
+      page: page,
+      compId: ''
     }));
   };
 
@@ -240,7 +242,8 @@ class ClientGroupManage extends Component {
     const { ClientGroupActions, ClientGroupProps } = this.props;
     ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {
       rowsPerPage: event.target.value,
-      page: 0
+      page: 0,
+      compId: ''
     }));
   };
 
@@ -310,7 +313,10 @@ class ClientGroupManage extends Component {
   
   handleKeywordChange = name => event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    const newParam = getMergedListParam(ClientGroupProps.listParam, {keyword: event.target.value});
+    const newParam = getMergedListParam(ClientGroupProps.listParam, {
+      keyword: event.target.value,
+      compId: ''
+    });
     ClientGroupActions.changeStoreData({name: 'listParam', value: newParam});
   }
 
@@ -351,7 +357,8 @@ class ClientGroupManage extends Component {
               variant='raised'
               color='primary'
               onClick={() => this.handleSelectBtnClick({
-                page: 0
+                page: 0,
+                compId: ''
               })}
             >
               <Search className={leftIconClass} />
@@ -460,7 +467,7 @@ class ClientGroupManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule
+  ClientGroupProps: state.ClientGroupCompModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

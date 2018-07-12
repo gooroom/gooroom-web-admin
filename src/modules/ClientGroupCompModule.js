@@ -20,7 +20,6 @@ const SET_SELECTED_OBJ = 'groupComp/SET_SELECTED_OBJ';
 const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
 
 const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
-const SET_INITIAL_STORE = 'groupComp/SET_INITIAL_STORE';
 
 
 // ...
@@ -29,17 +28,6 @@ const initialState = {
     error: false,
     resultMsg: '',
 
-    initParam: {
-        keyword: '',
-        orderDir: 'desc',
-        orderColumn: 'chGrpNm',
-        page: 0,
-        rowsPerPage: 10,
-        rowsPerPageOptions: [2, 5, 10, 25],
-        rowsTotal: 0,
-        rowsFiltered: 0
-    },
-
     listData: [],
     listParam: {
         keyword: '',
@@ -47,7 +35,7 @@ const initialState = {
         orderColumn: 'chGrpNm',
         page: 0,
         rowsPerPage: 10,
-        rowsPerPageOptions: [2, 5, 10, 25],
+        rowsPerPageOptions: [5, 10, 25],
         rowsTotal: 0,
         rowsFiltered: 0
     },
@@ -81,9 +69,21 @@ export const closeDialog = () => dispatch => {
     });
 };
 
-// ...
-export const readClientGroupList = (param) => dispatch => {
+export const showClientGroupInform = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_CLIENTGROUP_INFORM,
+        payload: param
+    });
+};
 
+export const closeClientGroupInform = (param) => dispatch => {
+    return dispatch({
+        type: CHG_STORE_DATA,
+        payload: {name:"informOpen",value:false}
+    });
+};
+
+export const readClientGroupList = (param) => dispatch => {
     const resetParam = {
         keyword: param.keyword,
         page: param.page,
@@ -112,7 +112,6 @@ export const readClientGroupList = (param) => dispatch => {
 };
 
 export const readClientGroupListAll = (param) => dispatch => {
-
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientGroupList', {}).then(
         (response) => {
@@ -129,20 +128,28 @@ export const readClientGroupListAll = (param) => dispatch => {
     });
 };
 
-export const showClientGroupInform = (param) => dispatch => {
+export const setSelectedItemObj = (param) => dispatch => {
+    const compId = param.compId;
     return dispatch({
-        type: SHOW_CLIENTGROUP_INFORM,
+        type: SET_SELECTED_OBJ,
+        compId: compId,
         payload: param
     });
 };
 
-export const closeClientGroupInform = (param) => dispatch => {
+export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
-        type: CHG_STORE_DATA,
-        payload: {name:"informOpen",value:false}
+        type: SET_EDITING_ITEM_VALUE,
+        payload: param
     });
 };
 
+export const changeStoreData = (param) => dispatch => {
+    return dispatch({
+        type: CHG_STORE_DATA,
+        payload: param
+    });
+};
 
 // create (add)
 export const createClientGroupData = (param) => dispatch => {
@@ -154,12 +161,14 @@ export const createClientGroupData = (param) => dispatch => {
         isDefault: param.isDefault
     }).then(
         (response) => {
-            if(response.data.status.result && response.data.status.result === 'success') {
-                dispatch({
-                    type: CREATE_CLIENTGROUP_SUCCESS,
-                    payload: response
-                });
-            } else {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: CREATE_CLIENTGROUP_SUCCESS,
+                        payload: response
+                    });
+                }
+            } catch(ex) {
                 dispatch({
                     type: COMMON_FAILURE,
                     payload: response
@@ -218,39 +227,6 @@ export const deleteClientGroupData = (param) => dispatch => {
     });
 };
 
-export const setSelectedItemObj = (param) => dispatch => {
-    const compId = param.compId;
-    return dispatch({
-        type: SET_SELECTED_OBJ,
-        compId: compId,
-        payload: param
-    });
-};
-
-export const setEditingItemValue = (param) => dispatch => {
-    return dispatch({
-        type: SET_EDITING_ITEM_VALUE,
-        payload: param
-    });
-};
-
-export const changeStoreData = (param) => dispatch => {
-    return dispatch({
-        type: CHG_STORE_DATA,
-        payload: param
-    });
-};
-
-
-export const setInitialize = (param) => dispatch => {
-
-    return dispatch({
-        type: SET_INITIAL_STORE,
-        payload: param
-    });
-};
-
-
 
 export default handleActions({
 
@@ -266,13 +242,13 @@ export default handleActions({
             ...state,
             pending: false,
             error: true,
-            resultMsg: action.payload
+            resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
         };
     },
 
     [GET_LIST_SUCCESS]: (state, action) => {
         
-        const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
+        const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.payload.data;
 
         let listName = 'listData';
         let listParamName = 'listParam';
@@ -317,16 +293,11 @@ export default handleActions({
             [selectedName]: (state[selectedName]) ? state[selectedName] : []
         };
     },
-
     [GET_LISTALL_SUCCESS]: (state, action) => {
-        return { ...state, pending: false, error: false };
-    },
-
-    [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
-        return {
-            ...state,
-            selectedItem: action.payload.selectedItem,
-            informOpen: true
+        return { 
+            ...state, 
+            pending: false, 
+            error: false 
         };
     },
     [SHOW_CLIENTGROUP_DIALOG]: (state, action) => {
@@ -337,7 +308,36 @@ export default handleActions({
             dialogType: action.payload.dialogType,
         };
     },
-
+    [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
+        return {
+            ...state,
+            selectedItem: action.payload.selectedItem,
+            informOpen: true
+        };
+    },
+    [SET_SELECTED_OBJ]: (state, action) => {
+        let selectedItem = 'selectedItem';
+        if(action.compId && action.compId != '') {
+            selectedItem = action.compId + '__selectedItem';
+        }
+        return {
+            ...state,
+            [selectedItem]: action.payload.selectedItem
+        }
+    },
+    [SET_EDITING_ITEM_VALUE]: (state, action) => {
+        const newEditingItem = getMergedListParam(state.editingItem, {[action.payload.name]: action.payload.value});
+        return {
+            ...state,
+            editingItem: newEditingItem
+        }
+    },
+    [CHG_STORE_DATA]: (state, action) => {
+        return {
+            ...state,
+            [action.payload.name]: action.payload.value
+        }
+    },
     [CREATE_CLIENTGROUP_SUCCESS]: (state, action) => {
         return {
             ...state,
@@ -345,7 +345,6 @@ export default handleActions({
             error: false,
         };
     },
-
     [EDIT_CLIENTGROUP_SUCCESS]: (state, action) => {
         return {
             ...state,
@@ -356,7 +355,6 @@ export default handleActions({
             dialogType: ''
         };
     },
-
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
         return {
             ...state,
@@ -367,40 +365,6 @@ export default handleActions({
             dialogType: ''
         };
     },
-
-    [SET_EDITING_ITEM_VALUE]: (state, action) => {
-        const newEditingItem = getMergedListParam(state.editingItem, {[action.payload.name]: action.payload.value});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
-    },
-
-    [CHG_STORE_DATA]: (state, action) => {
-        return {
-            ...state,
-            [action.payload.name]: action.payload.value
-        }
-    },
-
-    [SET_SELECTED_OBJ]: (state, action) => {
-
-        let selectedItem = 'selectedItem';
-        if(action.compId && action.compId != '') {
-            selectedItem = action.compId + '__selectedItem';
-        }
-
-        return {
-            ...state,
-            [selectedItem]: action.payload.selectedItem
-        }
-    },
-
-    [SET_INITIAL_STORE]: (state, action) => {
-        let newInitialState = initialState;
-        newInitialState.listParam = state.initParam;
-        return initialState
-    }
 
 }, initialState);
 
