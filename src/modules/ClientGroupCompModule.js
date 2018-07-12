@@ -268,7 +268,7 @@ export default handleActions({
                     orderColumn: 'chGrpNm',
                     page: 0,
                     rowsPerPage: 10,
-                    rowsPerPageOptions: [2, 5, 10, 25],
+                    rowsPerPageOptions: [5, 10, 25],
                     rowsTotal: 0,
                     rowsFiltered: 0
                 };

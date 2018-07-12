@@ -148,13 +148,10 @@ class ClientGroupComp extends Component {
   componentDidMount() {
 
     const { ClientGroupCompActions, ClientGroupCompProps } = this.props;
-    //ClientGroupCompActions.setInitialize();
     ClientGroupCompActions.readClientGroupList(getMergedListParam(ClientGroupCompProps.listParam, {
       page:0,
       compId: this.props.compId
     }));
-
-    //this.loadInitData({page:0});
   }
 
   // .................................................

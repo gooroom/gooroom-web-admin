@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientManageActions from '../../modules/ClientManageModule';
+import * as ClientManageActions from '../../modules/ClientManageCompModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -246,7 +246,8 @@ class ClientManage extends Component {
     }
     ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
       orderColumn: property, 
-      orderDir: orderDir
+      orderDir: orderDir,
+      compId: ''
     }));
   };
 
@@ -292,7 +293,8 @@ class ClientManage extends Component {
   handleChangePage = (event, page) => {
     const { ClientManageActions, ClientManageProps } = this.props;
     ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
-      page: page
+      page: page,
+      compId: ''
     }));
   };
 
@@ -300,7 +302,8 @@ class ClientManage extends Component {
     const { ClientManageActions, ClientManageProps } = this.props;
     ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
       rowsPerPage: event.target.value, 
-      page:0
+      page:0,
+      compId: ''
     }));
   };
 
@@ -311,11 +314,10 @@ class ClientManage extends Component {
 
   handleKeywordChange = name => event => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    const newParam = getMergedListParam(ClientManageProps.listParam, {keyword: event.target.value});
-    // ClientManageActions.changeParamValue({
-    //   name: 'listParam',
-    //   value: newParam
-    // });
+    const newParam = getMergedListParam(ClientManageProps.listParam, {
+      keyword: event.target.value,
+      compId: ''
+    });
     ClientManageActions.changeStoreData({name: 'listParam', value: newParam});
   };
 
@@ -340,7 +342,8 @@ class ClientManage extends Component {
 
     ClientManageActions.changeStoreData({
       name: 'selected',
-      value: newSelected
+      value: newSelected,
+      compId: ''
     });
   };
 
@@ -354,7 +357,8 @@ class ClientManage extends Component {
     ClientManageActions.showDialog({
       selectedItem: Object.assign({}, selectedItem),
       dialogType: ClientDialog.TYPE_VIEW,
-      dialogOpen: true
+      dialogOpen: true,
+      compId: ''
     });
   };
 
@@ -364,12 +368,14 @@ class ClientManage extends Component {
       const newSelected = ClientManageProps.listData.map(n => n.clientId)
       ClientManageActions.changeStoreData({
         name: 'selected',
-        value: newSelected
+        value: newSelected,
+        compId: ''
       });
     } else {
       ClientManageActions.changeStoreData({
         name: 'selected',
-        value: []
+        value: [],
+        compId: ''
       });
     }
   };
@@ -426,7 +432,8 @@ class ClientManage extends Component {
               variant="raised"
               color="primary"
               onClick={() => this.handleSelectBtnClick({
-                page: 0
+                page: 0,
+                compId: ''
               })}
             >
               <SearchIcon className={leftIconClass} />
@@ -536,7 +543,7 @@ class ClientManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientManageProps: state.ClientManageModule
+  ClientManageProps: state.ClientManageCompModule
 });
 
 

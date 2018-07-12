@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
 
-import * as ClientManageActions from '../../modules/ClientManageModule';
+import * as ClientManageActions from '../../modules/ClientManageCompModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import Grid from '@material-ui/core/Grid';
@@ -140,7 +140,7 @@ class ClientManageInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientManageProps: state.ClientManageModule
+  ClientManageProps: state.ClientManageCompModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

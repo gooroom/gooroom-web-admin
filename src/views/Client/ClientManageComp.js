@@ -183,8 +183,7 @@ class ClientManage extends Component {
 
   componentDidMount() {
     const { ClientManageCompActions, ClientManageCompProps } = this.props;
-    // ClientManageCompActions.setInitialize();
-    // ClientManageCompActions.readClientListForInit(getMergedListParam(ClientManageCompProps.listParam, {page:0}));
+
     ClientManageCompActions.readClientList(getMergedListParam(ClientManageCompProps.listParam, {
       page:0,
       compId: this.props.compId
