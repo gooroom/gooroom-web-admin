@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
 
-import * as ClientGroupActions from '../../modules/ClientGroupModule';
+import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import Grid from '@material-ui/core/Grid';
@@ -72,10 +72,10 @@ const pos = css({
 class ClientGroupInform extends Component {
 
   componentWillUpdate(nextProps, nextState) {
-    console.log(' -- componentWillUpdate --');
+//console.log(' -- componentWillUpdate --');
 
     const selectedItem = nextProps.selectedItem;
-    console.log(' selectedItem : ', selectedItem);
+//console.log(' selectedItem : ', selectedItem);
   }
 
   // .................................................
@@ -137,7 +137,7 @@ class ClientGroupInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule
+  ClientGroupProps: state.ClientGroupCompModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

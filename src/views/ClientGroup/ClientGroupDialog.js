@@ -7,7 +7,7 @@ import { css } from "glamor";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '../../modules/ClientGroupModule';
+import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -138,7 +138,7 @@ class ClientGroupDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientGroupProps: state.ClientGroupModule
+    ClientGroupProps: state.ClientGroupCompModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

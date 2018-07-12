@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '../../modules/ClientGroupModule';
+import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
 import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
@@ -76,6 +76,10 @@ class ClientConfigComp extends Component {
     });
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    console.log('[ClientConfigComp] componentWillUpdate : ', nextProps);
+  }
+
   showDetailRule = (event) => {
 
     const { ClientGroupProps, ClientConfSettingActions } = this.props;
@@ -86,6 +90,8 @@ class ClientConfigComp extends Component {
 
   // .................................................
   render() {
+
+    console.log('[ClientConfigComp] render...');
 
     const { ClientGroupProps, ClientConfSettingProps, objId, objNm } = this.props;
     const bull = <span className={bullet}>•</span>;
@@ -140,7 +146,7 @@ class ClientConfigComp extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule,
+  ClientGroupProps: state.ClientGroupCompModule,
   ClientConfSettingProps: state.ClientConfSettingModule
 });
 
