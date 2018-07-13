@@ -10,7 +10,7 @@ import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { css } from 'glamor';
 
-import { getMergedListParam, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';

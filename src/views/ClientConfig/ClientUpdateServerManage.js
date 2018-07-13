@@ -11,7 +11,7 @@ import * as GrConfirmActions from '../../modules/GrConfirmModule';
 import { createMuiTheme } from '@material-ui/core/styles';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
 
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
@@ -188,7 +188,7 @@ class ClientUpdateServerManage extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedListParam(ClientUpdateServerProps.listParam, param));
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, param));
   };
   
   handleCreateButton = () => {
@@ -303,13 +303,13 @@ class ClientUpdateServerManage extends Component {
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedListParam(ClientUpdateServerProps.listParam, {page: page}));
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedListParam(ClientUpdateServerProps.listParam, {rowsPerPage: event.target.value}));
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
@@ -319,14 +319,14 @@ class ClientUpdateServerManage extends Component {
     if (ClientUpdateServerProps.listParam.orderColumn === property && ClientUpdateServerProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedListParam(ClientUpdateServerProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
   // .................................................
 
   // .................................................
   handleKeywordChange = name => event => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    const newParam = getMergedListParam(ClientUpdateServerProps.listParam, {keyword: event.target.value});
+    const newParam = getMergedObject(ClientUpdateServerProps.listParam, {keyword: event.target.value});
     ClientUpdateServerActions.changeStoreData({
       name: 'listParam',
       value: newParam

@@ -2,7 +2,7 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
-import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
 
 const COMMON_PENDING = 'clientManageComp/COMMON_PENDING';
 const COMMON_FAILURE = 'clientManageComp/COMMON_FAILURE';

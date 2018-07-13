@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -155,7 +155,7 @@ class JobInform extends Component {
     if (jobManageModule.listParam.orderColumn === property && jobManageModule.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    JobManageActions.readJobTargetList(getMergedListParam(jobManageModule.targetListParam, {orderColumn: property, orderDir: orderDir}));
+    JobManageActions.readJobTargetList(getMergedObject(jobManageModule.targetListParam, {orderColumn: property, orderDir: orderDir}));
   };
 
   render() {

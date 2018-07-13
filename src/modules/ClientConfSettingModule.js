@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
-import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
 import { setParameterForView } from '../views/ClientConfig/ClientConfSettingInform';
 
 const COMMON_PENDING = 'clientConfSetting/COMMON_PENDING';
@@ -316,7 +316,7 @@ export default handleActions({
         }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
-        const newEditingItem = getMergedListParam(state.editingItem, {[action.payload.name]: action.payload.value});
+        const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
             editingItem: newEditingItem
@@ -358,7 +358,7 @@ export default handleActions({
     [SET_SELECTED_NTP_VALUE]: (state, action) => {
         let newNtpAddress = state.editingItem.ntpAddress;
         newNtpAddress[action.payload.index] = action.payload.value;
-        const newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
+        const newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
         return {
             ...state,
             editingItem: newEditingItem
@@ -367,7 +367,7 @@ export default handleActions({
     [ADD_NTPADDRESS_ITEM]: (state, action) => {
         let newNtpAddress = state.editingItem.ntpAddress;
         newNtpAddress.push('');
-        const newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
+        const newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
         return {
             ...state,
             editingItem: newEditingItem
@@ -376,12 +376,12 @@ export default handleActions({
     [DELETE_NTPADDRESS_ITEM]: (state, action) => {
         let newNtpAddress = state.editingItem.ntpAddress;
         newNtpAddress.splice(action.payload.index, 1);
-        let newEditingItem = getMergedListParam(state.editingItem, {'ntpAddress': newNtpAddress});
+        let newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
         // changed selected ntp addres index
         if(state.editingItem.selectedNtpIndex == action.payload.index) {
-            newEditingItem = getMergedListParam(newEditingItem, {'selectedNtpIndex': -1});
+            newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': -1});
         } else if(state.editingItem.selectedNtpIndex > action.payload.index) {
-            newEditingItem = getMergedListParam(newEditingItem, {'selectedNtpIndex': (state.editingItem.selectedNtpIndex - 1)});
+            newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': (state.editingItem.selectedNtpIndex - 1)});
         }
         return {
             ...state,

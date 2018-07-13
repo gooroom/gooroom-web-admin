@@ -12,7 +12,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
 
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 import GrPageHeader from "../../containers/GrContent/GrPageHeader";
@@ -233,29 +233,22 @@ class ClientManage extends Component {
     };
   }
 
-  componentDidMount() {
-  }
-
   // .................................................
   handleRequestSort = (event, property) => {
-
     const { ClientManageActions, ClientManageProps } = this.props;
     let orderDir = "desc";
     if (ClientManageProps.listParam.orderColumn === property && ClientManageProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
+    ClientManageActions.readClientList(getMergedObject(ClientManageProps.listParam, {
       orderColumn: property, 
       orderDir: orderDir,
       compId: ''
     }));
   };
 
-  // .................................................
-
   // Events...
   handleChangeSelect = event => {
-    
     this.setState({ [event.target.name]: event.target.value });
   };
 
@@ -267,19 +260,6 @@ class ClientManage extends Component {
     });
   };
 
-
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
-  // .................................................
   // .................................................
   // .................................................
   // .................................................
@@ -292,7 +272,7 @@ class ClientManage extends Component {
 
   handleChangePage = (event, page) => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
+    ClientManageActions.readClientList(getMergedObject(ClientManageProps.listParam, {
       page: page,
       compId: ''
     }));
@@ -300,23 +280,25 @@ class ClientManage extends Component {
 
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, {
+    ClientManageActions.readClientList(getMergedObject(ClientManageProps.listParam, {
       rowsPerPage: event.target.value, 
       page:0,
       compId: ''
     }));
   };
 
-  handleSelectBtnClick = (param) => {
+  handleSelectBtnClick = () => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(getMergedListParam(ClientManageProps.listParam, param));
+    ClientManageActions.readClientList(getMergedObject(ClientManageProps.listParam, {
+      page: 0,
+      compId: ''
+    }));
   };
 
   handleKeywordChange = name => event => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    const newParam = getMergedListParam(ClientManageProps.listParam, {
+    const newParam = getMergedObject(ClientManageProps.listParam, {
       keyword: event.target.value,
-      compId: ''
     });
     ClientManageActions.changeStoreData({name: 'listParam', value: newParam});
   };
@@ -381,8 +363,19 @@ class ClientManage extends Component {
   };
 
   handleChangeGroupSelect = (event, property) => {
+    const { ClientManageActions, ClientManageProps } = this.props;
+    const newParam = getMergedObject(ClientManageProps.listParam, {
+      groupId: property
+    });
+    ClientManageActions.changeStoreData({name: 'listParam', value: newParam});
   };
+
   handleChangeClientStatusSelect = (event, property) => {
+    const { ClientManageActions, ClientManageProps } = this.props;
+    const newParam = getMergedObject(ClientManageProps.listParam, {
+      clientType: property
+    });
+    ClientManageActions.changeStoreData({name: 'listParam', value: newParam});
   };
 
   render() {
@@ -431,10 +424,7 @@ class ClientManage extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant="raised"
               color="primary"
-              onClick={() => this.handleSelectBtnClick({
-                page: 0,
-                compId: ''
-              })}
+              onClick={() => this.handleSelectBtnClick()}
             >
               <SearchIcon className={leftIconClass} />
               조회
@@ -543,7 +533,8 @@ class ClientManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientManageProps: state.ClientManageCompModule
+  ClientManageProps: state.ClientManageCompModule,
+  CommonOptionProps: state.CommonOptionModule
 });
 
 

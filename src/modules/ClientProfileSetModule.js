@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
-import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
 
 const GET_PROFILESET_LIST_PENDING = 'clientProfileSet/GET_LIST_PENDING';
 const GET_PROFILESET_LIST_SUCCESS = 'clientProfileSet/GET_LIST_SUCCESS';
@@ -278,7 +278,7 @@ export default handleActions({
         }
     },
     [CHG_PROFILESET_PARAM]: (state, action) => {
-        const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
+        const newSelectedItem = getMergedObject(state.selectedItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
             selectedItem: newSelectedItem

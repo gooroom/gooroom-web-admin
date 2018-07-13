@@ -12,7 +12,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
 
 import { grRequestPromise } from "../../components/GrUtils/GrRequester";
 import GrPageHeader from "../../containers/GrContent/GrPageHeader";
@@ -182,11 +182,12 @@ class ClientManage extends Component {
   }
 
   componentDidMount() {
-    const { ClientManageCompActions, ClientManageCompProps } = this.props;
+    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
+    const { [compId + '__listParam'] : compListParam } = ClientManageCompProps;
 
-    ClientManageCompActions.readClientList(getMergedListParam(ClientManageCompProps.listParam, {
+    ClientManageCompActions.readClientList(getMergedObject((compListParam) ? compListParam : ClientManageCompProps.listParam, {
       page:0,
-      compId: this.props.compId
+      compId: compId
     }));
   }
 
@@ -194,16 +195,16 @@ class ClientManage extends Component {
   handleRequestSort = (event, property) => {
 
     const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
-    const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam } = ClientManageCompProps;
+    const { [compId + '__listParam'] : compListParam } = ClientManageCompProps;
 
     let orderDir = "desc";
     if (compListParam.orderColumn === property && compListParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientManageCompActions.readClientList(getMergedListParam(compListParam, {
+    ClientManageCompActions.readClientList(getMergedObject(compListParam, {
       orderColumn: property, 
       orderDir: orderDir,
-      compId: this.props.compId
+      compId: compId
     }));
   };
 
@@ -217,7 +218,7 @@ class ClientManage extends Component {
     const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
     const { [compId + '__listParam'] : compListParam } = ClientManageCompProps;
 
-    ClientManageCompActions.readClientList(getMergedListParam(compListParam, {
+    ClientManageCompActions.readClientList(getMergedObject(compListParam, {
       page: page,
       compId: this.props.compId
     }));
@@ -227,7 +228,7 @@ class ClientManage extends Component {
     const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
     const { [compId + '__listParam'] : compListParam } = ClientManageCompProps;
 
-    ClientManageCompActions.readClientList(getMergedListParam(compListParam, {
+    ClientManageCompActions.readClientList(getMergedObject(compListParam, {
       rowsPerPage: event.target.value, 
       page:0,
       compId: this.props.compId
@@ -236,14 +237,14 @@ class ClientManage extends Component {
 
   // loadInitData = (param) => {
   //   const { ClientManageCompActions, ClientManageCompProps } = this.props;
-  //   ClientManageCompActions.readClientList(getMergedListParam(ClientManageCompProps.listParam, param));
+  //   ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, param));
   // };
 
   handleKeywordChange = name => event => {
     const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
     const { [compId + '__listParam'] : compListParam } = ClientManageCompProps;
 
-    const newParam = getMergedListParam(compListParam, {
+    const newParam = getMergedObject(compListParam, {
       keyword: event.target.value,
       page:0,
       compId: this.props.compId
