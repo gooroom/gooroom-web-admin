@@ -11,7 +11,7 @@ import * as GrConfirmActions from '../../modules/GrConfirmModule';
 import { createMuiTheme } from '@material-ui/core/styles';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
 
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
@@ -188,7 +188,7 @@ class ClientHostNameManage extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(getMergedListParam(ClientHostNameProps.listParam, param));
+    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, param));
   };
   
   handleCreateButton = () => {
@@ -295,13 +295,13 @@ class ClientHostNameManage extends Component {
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(getMergedListParam(ClientHostNameProps.listParam, {page: page}));
+    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(getMergedListParam(ClientHostNameProps.listParam, {rowsPerPage: event.target.value}));
+    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
@@ -311,14 +311,14 @@ class ClientHostNameManage extends Component {
     if (ClientHostNameProps.listParam.orderColumn === property && ClientHostNameProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientHostNameActions.readClientHostNameList(getMergedListParam(ClientHostNameProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
   // .................................................
 
   // .................................................
   handleKeywordChange = name => event => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    const newParam = getMergedListParam(ClientHostNameProps.listParam, {keyword: event.target.value});
+    const newParam = getMergedObject(ClientHostNameProps.listParam, {keyword: event.target.value});
     ClientHostNameActions.changeStoreData({
       name: 'listParam',
       value: newParam

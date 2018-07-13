@@ -11,7 +11,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
 
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 import GrConfirm from '../../components/GrComponents/GrConfirm';
@@ -186,7 +186,7 @@ class ClientRegKey extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    ClientRegKeyActions.readClientRegkeyList(getMergedListParam(ClientRegKeyProps.listParam, param));
+    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, param));
   };
   
   handleCreateButton = () => {
@@ -262,13 +262,13 @@ class ClientRegKey extends Component {
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
     const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    ClientRegKeyActions.readClientRegkeyList(getMergedListParam(ClientRegKeyProps.listParam, {page: page}));
+    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    ClientRegKeyActions.readClientRegkeyList(getMergedListParam(ClientRegKeyProps.listParam, {rowsPerPage: event.target.value}));
+    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
@@ -278,14 +278,14 @@ class ClientRegKey extends Component {
     if (ClientRegKeyProps.listParam.orderColumn === property && ClientRegKeyProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientRegKeyActions.readClientRegkeyList(getMergedListParam(ClientRegKeyProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
   // .................................................
 
   // .................................................
   handleKeywordChange = name => event => {
     const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    const newParam = getMergedListParam(ClientRegKeyProps.listParam, {keyword: event.target.value});
+    const newParam = getMergedObject(ClientRegKeyProps.listParam, {keyword: event.target.value});
     ClientRegKeyActions.changeParamValue({
       name: 'listParam',
       value: newParam

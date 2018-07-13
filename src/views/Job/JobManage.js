@@ -12,7 +12,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
 
 import GrPageHeader from "../../containers/GrContent/GrPageHeader";
 import GrConfirm from '../../components/GrComponents/GrConfirm';
@@ -195,7 +195,7 @@ class JobManage extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { JobManageActions, jobManageModule } = this.props;
-    JobManageActions.readJobManageList(getMergedListParam(jobManageModule.listParam, param));
+    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, param));
   };
 
   handleRowClick = (event, id) => {
@@ -213,14 +213,14 @@ class JobManage extends Component {
   handleChangePage = (event, page) => {
 
     const { JobManageActions, jobManageModule } = this.props;
-    JobManageActions.readJobManageList(getMergedListParam(jobManageModule.listParam, {page: page}));
+    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = (event) => {
 
     const { JobManageActions, jobManageModule } = this.props;
-    JobManageActions.readJobManageList(getMergedListParam(jobManageModule.listParam, {rowsPerPage: event.target.value}));
+    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {rowsPerPage: event.target.value}));
   };
 
   // .................................................
@@ -231,7 +231,7 @@ class JobManage extends Component {
     if (jobManageModule.listParam.orderColumn === property && jobManageModule.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    JobManageActions.readJobManageList(getMergedListParam(jobManageModule.listParam, {orderColumn: property, orderDir: orderDir}));
+    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {orderColumn: property, orderDir: orderDir}));
   };
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
@@ -242,7 +242,7 @@ class JobManage extends Component {
 
     const { JobManageActions, jobManageModule } = this.props;
     const paramName = event.target.name;
-    const newParam = getMergedListParam(jobManageModule.listParam, {[paramName]: event.target.value});
+    const newParam = getMergedObject(jobManageModule.listParam, {[paramName]: event.target.value});
     JobManageActions.changeParamValue({
       name: 'listParam',
       value: newParam
@@ -252,7 +252,7 @@ class JobManage extends Component {
   handleKeywordChange = name => event => {
 
     const { JobManageActions, jobManageModule } = this.props;
-    const newParam = getMergedListParam(jobManageModule.listParam, {keyword: event.target.value});
+    const newParam = getMergedObject(jobManageModule.listParam, {keyword: event.target.value});
     JobManageActions.changeParamValue({
       name: 'listParam',
       value: newParam

@@ -13,7 +13,7 @@ import { setParameterForView } from '../ClientConfig/ClientConfSettingInform';
 
 import { css } from 'glamor';
 
-import { getMergedListParam, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -68,34 +68,22 @@ class ClientConfigComp extends Component {
     };
   }
 
-  componentDidMount() {
-    
-    const { ClientGroupProps, ClientConfSettingActions } = this.props;
-    ClientConfSettingActions.getClientConfSetting({
-      objId: ClientGroupProps.selectedItem.clientConfigId
-    });
-  }
-
-  componentWillUpdate(nextProps, nextState) {
-    console.log('[ClientConfigComp] componentWillUpdate : ', nextProps);
-  }
-
   showDetailRule = (event) => {
-
-    const { ClientGroupProps, ClientConfSettingActions } = this.props;
-    ClientConfSettingActions.getClientConfSetting({
-      objId: ClientGroupProps.selectedItem.clientConfigId
-    });
+    // const { ClientGroupProps, ClientConfSettingActions, objId, objNm } = this.props;
+    // ClientConfSettingActions.getClientConfSetting({
+    //   objId: objId
+    // });
   }
 
   // .................................................
   render() {
-
-    console.log('[ClientConfigComp] render...');
-
     const { ClientGroupProps, ClientConfSettingProps, objId, objNm } = this.props;
     const bull = <span className={bullet}>•</span>;
     const viewItem = ClientConfSettingProps.editingItem;
+
+    // console.log('[ClientConfigComp] render...   ClientGroupProps : ', ClientGroupProps);
+    // console.log('[ClientConfigComp] render...   objId : ', objId);
+    console.log('[ClientConfigComp] render...   viewItem : ', viewItem);
 
     return (
 

@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
-import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
 
 const GET_HOSTNAME_LIST_SUCCESS = 'clientHostName/GET_LIST_SUCCESS';
 const CREATE_HOSTNAME_SUCCESS = 'clientHostName/CREATE_HOSTNAME_SUCCESS';
@@ -242,7 +242,7 @@ export default handleActions({
         }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
-        const newEditingItem = getMergedListParam(state.editingItem, {[action.payload.name]: action.payload.value});
+        const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
             editingItem: newEditingItem

@@ -6,11 +6,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupCompActions from '../../modules/ClientGroupCompModule';
+import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { css } from 'glamor';
 
-import { getMergedListParam, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -148,7 +149,7 @@ class ClientGroupComp extends Component {
   componentDidMount() {
 
     const { ClientGroupCompActions, ClientGroupCompProps } = this.props;
-    ClientGroupCompActions.readClientGroupList(getMergedListParam(ClientGroupCompProps.listParam, {
+    ClientGroupCompActions.readClientGroupList(getMergedObject(ClientGroupCompProps.listParam, {
       page:0,
       compId: this.props.compId
     }));
@@ -163,7 +164,7 @@ class ClientGroupComp extends Component {
     if (compListParam.orderColumn === property && compListParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupCompActions.readClientGroupList(getMergedListParam(compListParam, {
+    ClientGroupCompActions.readClientGroupList(getMergedObject(compListParam, {
       orderColumn: property, 
       orderDir: orderDir,
       compId: this.props.compId
@@ -191,7 +192,7 @@ class ClientGroupComp extends Component {
   };
 
   handleRowClick = (event, id) => {
-    const { ClientGroupCompProps, ClientGroupCompActions, compId } = this.props;
+    const { ClientGroupCompProps, ClientGroupCompActions, ClientConfSettingActions, compId } = this.props;
     const { [compId + '__selected'] : preSelected } = ClientGroupCompProps;
     const selectedIndex = preSelected.indexOf(id);
     let newSelected = [];
@@ -227,7 +228,7 @@ class ClientGroupComp extends Component {
     const { ClientGroupCompActions, ClientGroupCompProps, compId } = this.props;
     const { [compId + '__listParam'] : compListParam } = ClientGroupCompProps;
 
-    ClientGroupCompActions.readClientGroupList(getMergedListParam(compListParam, {
+    ClientGroupCompActions.readClientGroupList(getMergedObject(compListParam, {
       page: page, 
       compId: this.props.compId
     }));
@@ -237,7 +238,7 @@ class ClientGroupComp extends Component {
     const { ClientGroupCompActions, ClientGroupCompProps, compId } = this.props;
     const { [compId + '__listParam'] : compListParam } = ClientGroupCompProps;
 
-    ClientGroupCompActions.readClientGroupList(getMergedListParam(compListParam, {
+    ClientGroupCompActions.readClientGroupList(getMergedObject(compListParam, {
       rowsPerPage: event.target.value,
       page:0,
       compId: this.props.compId
@@ -253,7 +254,7 @@ class ClientGroupComp extends Component {
 
   // loadInitData = (param) => {
   //   const { ClientGroupCompActions, ClientGroupCompProps } = this.props;
-  //   ClientGroupCompActions.readClientGroupList(getMergedListParam(ClientGroupCompProps.listParam, param));
+  //   ClientGroupCompActions.readClientGroupList(getMergedObject(ClientGroupCompProps.listParam, param));
   // };
 
   // .................................................
@@ -350,6 +351,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupCompActions: bindActionCreators(ClientGroupCompActions, dispatch),
+  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

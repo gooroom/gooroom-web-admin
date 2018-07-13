@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
-import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
 
 const GET_UPDATESERVER_LIST_SUCCESS = 'clientUpdateServer/GET_LIST_SUCCESS';
 const CREATE_UPDATESERVER_SUCCESS = 'clientUpdateServer/CREATE_UPDATESERVER_SUCCESS';
@@ -246,7 +246,7 @@ export default handleActions({
         }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
-        const newEditingItem = getMergedListParam(state.editingItem, {[action.payload.name]: action.payload.value});
+        const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
             editingItem: newEditingItem

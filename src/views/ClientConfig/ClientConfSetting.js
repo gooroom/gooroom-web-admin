@@ -11,7 +11,7 @@ import * as GrConfirmActions from '../../modules/GrConfirmModule';
 import { createMuiTheme } from '@material-ui/core/styles';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
 
 import { setParameterForView } from './ClientConfSettingInform';
 
@@ -190,7 +190,7 @@ class ClientConfSetting extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedListParam(ClientConfSettingProps.listParam, param));
+    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, param));
   };
   
   handleCreateButton = () => {
@@ -316,13 +316,13 @@ class ClientConfSetting extends Component {
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedListParam(ClientConfSettingProps.listParam, {page: page}));
+    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedListParam(ClientConfSettingProps.listParam, {rowsPerPage: event.target.value}));
+    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
@@ -332,14 +332,14 @@ class ClientConfSetting extends Component {
     if (ClientConfSettingProps.listParam.orderColumn === property && ClientConfSettingProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientConfSettingActions.readClientConfSettingList(getMergedListParam(ClientConfSettingProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
   // .................................................
 
   // .................................................
   handleKeywordChange = name => event => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    const newParam = getMergedListParam(ClientConfSettingProps.listParam, {keyword: event.target.value});
+    const newParam = getMergedObject(ClientConfSettingProps.listParam, {keyword: event.target.value});
     ClientConfSettingActions.changeStoreData({
       name: 'listParam',
       value: newParam

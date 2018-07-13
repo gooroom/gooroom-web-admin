@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
-import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
 
 const GET_REGKEY_LIST_PENDING = 'clientRegKey/GET_LIST_PENDING';
 const GET_REGKEY_LIST_SUCCESS = 'clientRegKey/GET_LIST_SUCCESS';
@@ -244,14 +244,14 @@ export default handleActions({
         }
     },
     [CHG_REGKEY_PARAM]: (state, action) => {
-        const newSelectedItem = getMergedListParam(state.selectedItem, {[action.payload.name]: action.payload.value});
+        const newSelectedItem = getMergedObject(state.selectedItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
             selectedItem: newSelectedItem
         }
     },
     [CREATE_REGKEY_NEWKEY]: (state, action) => {
-        const newSelectedItem = getMergedListParam(state.selectedItem, {regKeyNo: action.payload.key});
+        const newSelectedItem = getMergedObject(state.selectedItem, {regKeyNo: action.payload.key});
         return {
             ...state,
             selectedItem: newSelectedItem

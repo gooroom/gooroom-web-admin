@@ -36,7 +36,9 @@ class ClientGroupSelect extends Component {
         grpNm: event.target.name
       }
     });
-    this.props.onChangeSelect(event, event.target.value);
+    if(this.props.onChangeSelect) {
+      this.props.onChangeSelect(event, event.target.value);
+    }    
   };
 
   render() {

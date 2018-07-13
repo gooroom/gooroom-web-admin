@@ -1,8 +1,12 @@
 
-export const getMergedListParam = (source, param) => {
-    let tempListParam = source;
-    Object.assign(tempListParam, param);
-    return tempListParam;
+export const getMergedObject = (source, param) => {
+    let tempSource = source;
+    if(source) {
+        Object.assign(tempSource, param);
+    } else {
+        Object.assign({}, param);
+    }
+    return tempSource;
 };
 
 /**

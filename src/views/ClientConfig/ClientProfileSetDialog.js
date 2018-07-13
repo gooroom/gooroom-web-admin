@@ -10,7 +10,7 @@ import * as GrConfirmActions from '../../modules/GrConfirmModule';
 import { css } from "glamor";
 
 import GrClientSelector from '../../components/GrComponents/GrClientSelector';
-import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
@@ -114,7 +114,7 @@ class ClientProfileSetDialog extends Component {
             const { ClientProfileSetProps } = this.props;
             const targetClientIds = (ClientProfileSetProps.selectedItem.targetClientIdArray).map((v) => (v.clientId)).join(',');
             const targetGroupIds = (ClientProfileSetProps.selectedItem.targetGroupIdArray).map((v) => (v.grpId)).join(',');
-            const newSelectedItem = getMergedListParam(ClientProfileSetProps.selectedItem, {targetClientIds: targetClientIds, targetGroupIds: targetGroupIds});
+            const newSelectedItem = getMergedObject(ClientProfileSetProps.selectedItem, {targetClientIds: targetClientIds, targetGroupIds: targetGroupIds});
             this.props.ClientProfileSetActions.createClientProfileSetJob(newSelectedItem)
                 .then((res) => {
                 this.props.ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);

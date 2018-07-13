@@ -2,7 +2,7 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
-import { getMergedListParam } from '../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
 
 const COMMON_PENDING = 'groupComp/COMMON_PENDING';
 const COMMON_FAILURE = 'groupComp/COMMON_FAILURE';
@@ -326,7 +326,7 @@ export default handleActions({
         }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
-        const newEditingItem = getMergedListParam(state.editingItem, {[action.payload.name]: action.payload.value});
+        const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
             editingItem: newEditingItem

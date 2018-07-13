@@ -6,13 +6,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
+import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedListParam } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
 
 import GrPageHeader from '../../containers/GrContent/GrPageHeader';
 
@@ -38,9 +39,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import ClientGroupDialog from './ClientGroupDialog';
 import ClientGroupInform from './ClientGroupInform';
-
-import ClientGroupComp from './ClientGroupComp';
-
 
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
@@ -213,7 +211,7 @@ class ClientGroupManage extends Component {
     if (ClientGroupProps.listParam.orderColumn === property && ClientGroupProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       orderColumn: property, 
       orderDir: orderDir,
       compId: ''
@@ -221,18 +219,23 @@ class ClientGroupManage extends Component {
   };
 
   handleRowClick = (event, id) => {
-    const { ClientGroupProps, ClientGroupActions } = this.props;
-    const selectedItem = ClientGroupProps.listData.find(function(element) {
+    const { ClientGroupProps, ClientGroupActions, ClientConfSettingActions } = this.props;
+    const selectedGroupObj = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
+
     ClientGroupActions.showClientGroupInform({
-      selectedItem: Object.assign({}, selectedItem),
+      selectedItem: Object.assign({}, selectedGroupObj),
+    });
+
+    ClientConfSettingActions.getClientConfSetting({
+      objId: selectedGroupObj.clientConfigId
     });
   };
 
   handleChangePage = (event, page) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       page: page,
       compId: ''
     }));
@@ -240,7 +243,7 @@ class ClientGroupManage extends Component {
 
   handleChangeRowsPerPage = event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       rowsPerPage: event.target.value,
       page: 0,
       compId: ''
@@ -308,12 +311,12 @@ class ClientGroupManage extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedListParam(ClientGroupProps.listParam, param));
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, param));
   };
   
   handleKeywordChange = name => event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    const newParam = getMergedListParam(ClientGroupProps.listParam, {
+    const newParam = getMergedObject(ClientGroupProps.listParam, {
       keyword: event.target.value,
       compId: ''
     });
@@ -452,7 +455,6 @@ class ClientGroupManage extends Component {
           />
 
         </GrPane>
-        <ClientGroupInform />
         <ClientGroupInform 
             isOpen={ClientGroupProps.informOpen} 
             selectedItem={ClientGroupProps.selectedItem}
@@ -472,6 +474,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
