@@ -115,11 +115,13 @@ export const readClientConfSettingList = (param) => dispatch => {
 };
 
 export const getClientConfSetting = (param) => dispatch => {
+    const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientConf', param).then(
         (response) => {
             dispatch({
                 type: GET_CONFSETTING_SUCCESS,
+                compId: compId,
                 payload: response
             });
         }
@@ -132,8 +134,10 @@ export const getClientConfSetting = (param) => dispatch => {
 };
 
 export const setSelectedItemObj = (param) => dispatch => {
+    const compId = param.compId;
     return dispatch({
         type: SET_SELECTED_OBJ,
+        compId: compId,
         payload: param
     });
 };
@@ -268,7 +272,34 @@ export default handleActions({
 
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-        let newListParam = state.listParam;
+        
+        let listName = 'listData';
+        let listParamName = 'listParam';
+        let selectedName = 'listParam';
+        let newListParam = {};
+
+        if(action.compId && action.compId != '') {
+            listName = action.compId + '__listData';
+            listParamName = action.compId + '__listParam';
+            selectedName = action.compId + '__selected';
+            if(draw > 0) {
+                newListParam = state[action.compId + '__listParam'];
+            } else {
+                newListParam = {
+                    keyword: '',
+                    orderDir: 'desc',
+                    orderColumn: 'chGrpNm',
+                    page: 0,
+                    rowsPerPage: 10,
+                    rowsPerPageOptions: [5, 10, 25],
+                    rowsTotal: 0,
+                    rowsFiltered: 0
+                };
+            }            
+        } else {
+            newListParam = state.listParam;
+        }
+
         Object.assign(newListParam, {
             rowsFiltered: parseInt(recordsFiltered, 10),
             rowsTotal: parseInt(recordsTotal, 10),
@@ -280,19 +311,34 @@ export default handleActions({
             ...state,
             pending: false,
             error: false,
-            listData: data,
-            listParam: newListParam
+            [listName]: data,
+            [listParamName]: newListParam,
+            [selectedName]: (state[selectedName]) ? state[selectedName] : []
         };
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
+        let editingItem = 'editingItem';
+        if(action.compId && action.compId != '') {
+            editingItem = action.compId + '__editingItem';
+        }
         const { data } = action.payload.data;
 
-        return {
-            ...state,
-            pending: false,
-            error: false,
-            editingItem: Object.assign({}, setParameterForView(data[0])),
-        };
+        if(data && data.length > 0) {
+            return {
+                ...state,
+                pending: false,
+                error: false,
+                [editingItem]: Object.assign({}, setParameterForView(data[0]))
+            };
+        } else {
+            return {
+                ...state,
+                pending: false,
+                error: false,
+                [editingItem]: {objNm: '', objId: '', comment: ''}
+            };
+        }
+
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
         return {
@@ -310,9 +356,13 @@ export default handleActions({
         };
     },
     [SET_SELECTED_OBJ]: (state, action) => {
+        let selectedItem = 'selectedItem';
+        if(action.compId && action.compId != '') {
+            selectedItem = action.compId + '__selectedItem';
+        }
         return {
             ...state,
-            selectedItem: action.payload.selectedItem
+            [selectedItem]: action.payload.selectedItem
         }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {

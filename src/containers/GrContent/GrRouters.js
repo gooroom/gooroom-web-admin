@@ -68,12 +68,12 @@ class GrRouters extends Component {
             component={ClientManage}
           />
           <Route
-            path="/clients/clientmastermanage"
+            path="/clients/clientmastermanage/:grMenuId"
             name="ClientMasterManage"
             component={ClientMasterManage}
           />
-          <Route
-            path="/clients/clientgroupmanage"
+          <Route 
+            path="/clients/clientgroupmanage/:grMenuId"
             name="ClientGroupManage"
             component={ClientGroupManage}
           />
