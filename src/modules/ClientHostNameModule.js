@@ -4,6 +4,7 @@ import { requestPostAPI } from '../components/GrUtils/GrRequester';
 import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
 
 const GET_HOSTNAME_LIST_SUCCESS = 'clientHostName/GET_LIST_SUCCESS';
+const GET_HOSTNAME_SUCCESS = 'clientHostName/GET_HOSTNAME_SUCCESS';
 const CREATE_HOSTNAME_SUCCESS = 'clientHostName/CREATE_HOSTNAME_SUCCESS';
 const EDIT_HOSTNAME_SUCCESS = 'clientHostName/EDIT_HOSTNAME_SUCCESS';
 const DELETE_HOSTNAME_SUCCESS = 'clientHostName/DELETE_HOSTNAME_SUCCESS';
@@ -93,6 +94,25 @@ export const readClientHostNameList = (param) => dispatch => {
         (response) => {
             dispatch({
                 type: GET_HOSTNAME_LIST_SUCCESS,
+                payload: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            payload: error
+        });
+    });
+};
+
+export const getClientHostName = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readHostNameConf', param).then(
+        (response) => {
+            dispatch({
+                type: GET_HOSTNAME_SUCCESS,
+                compId: compId,
                 payload: response
             });
         }
@@ -201,6 +221,22 @@ export const deleteClientHostNameData = (param) => dispatch => {
 
 export default handleActions({
 
+    [COMMON_PENDING]: (state, action) => {
+        return {
+            ...state,
+            pending: true,
+            error: false
+        };
+    },
+    [COMMON_FAILURE]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: true,
+            resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
+        };
+    },
+
     [GET_HOSTNAME_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
         let tempListParam = state.listParam;
@@ -219,6 +255,28 @@ export default handleActions({
             listParam: tempListParam
         };
     },  
+    [GET_HOSTNAME_SUCCESS]: (state, action) => {
+        let editingItem = 'editingItem';
+        if(action.compId && action.compId != '') {
+            editingItem = action.compId + '__editingItem';
+        }
+        const { data } = action.payload.data;
+        if(data && data.length > 0) {
+            return {
+                ...state,
+                pending: false,
+                error: false,
+                [editingItem]: Object.assign({}, setParameterForView(data[0]))
+            };
+        } else {
+            return {
+                ...state,
+                pending: false,
+                error: false,
+                [editingItem]: {objNm: '', objId: '', comment: ''}
+            };
+        }
+    },
     [SHOW_HOSTNAME_DIALOG]: (state, action) => {
 
         return {
@@ -281,22 +339,7 @@ export default handleActions({
             dialogOpen: false,
             dialogType: ''
         };
-    },
-    [COMMON_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
-    },
-    [COMMON_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true,
-            resultMsg: action.payload.data.status.message
-        };
-    },
+    }
 
 }, initialState);
 

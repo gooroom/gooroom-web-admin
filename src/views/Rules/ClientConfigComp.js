@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import classNames from 'classnames';
+import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -8,10 +10,6 @@ import { connect } from 'react-redux';
 import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
 import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
-
-import { setParameterForView } from '../ClientConfig/ClientConfSettingInform';
-
-import { css } from 'glamor';
 
 import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
 
@@ -68,39 +66,27 @@ class ClientConfigComp extends Component {
     };
   }
 
-  showDetailRule = (event) => {
-    // const { ClientGroupProps, ClientConfSettingActions, objId, objNm } = this.props;
-    // ClientConfSettingActions.getClientConfSetting({
-    //   objId: objId
-    // });
-  }
-
   // .................................................
   render() {
-    const { ClientGroupProps, ClientConfSettingProps, objId, objNm } = this.props;
+    const { ClientConfSettingProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const viewItem = ClientConfSettingProps.editingItem;
-
-    // console.log('[ClientConfigComp] render...   ClientGroupProps : ', ClientGroupProps);
-    // console.log('[ClientConfigComp] render...   objId : ', objId);
-    console.log('[ClientConfigComp] render...   viewItem : ', viewItem);
+    const { [compId + '__editingItem'] : viewItem } = ClientConfSettingProps;
 
     return (
 
       <Card className={card}>
-        <CardContent>
+        {(viewItem) && <CardContent>
           <Typography className={title} color="textSecondary">
             단말정책설정
           </Typography>
           <Typography variant="headline" component="h2">
-            {objNm}
+            {viewItem.objNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
-            {bull}이 정책에 대한 설명을 보여주는 곳 - {objId}
+            {(viewItem.comment != '') ? '"' + viewItem.comment + '"' : ''}
           </Typography>
           <Divider />
-            <br />
-          {(viewItem) &&
+          {(viewItem && viewItem.objId != '') &&
             <Table>
               <TableBody>
                 <TableRow>
@@ -125,9 +111,7 @@ class ClientConfigComp extends Component {
             </Table>
           }
         </CardContent>
-        <CardActions>
-          <Button onClick={this.showDetailRule} size="small">상세보기</Button>
-        </CardActions>
+        }
       </Card>
     );
   }

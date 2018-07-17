@@ -82,7 +82,7 @@ class ClientGroupInform extends Component {
 
   render() {
 
-    const { isOpen, selectedItem } = this.props;
+    const { compId, isOpen, selectedItem } = this.props;
 
     return (
       <div className={componentClass}>
@@ -101,13 +101,15 @@ class ClientGroupInform extends Component {
           
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientConfigComp 
+              <ClientConfigComp
+                compId={'A_' + compId}
                 objId={selectedItem.clientConfigId} 
                 objNm={selectedItem.clientConfigNm} 
               />
             </Grid>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
               <DesktopConfigComp 
+                compId={'B_' + compId}
                 objId={selectedItem.desktopConfigId} 
                 objNm={selectedItem.desktopConfigNm} 
               />
@@ -115,13 +117,15 @@ class ClientGroupInform extends Component {
           </Grid>
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientHostsComp 
+              <ClientHostsComp
+                compId={'C_' + compId}
                 objId={selectedItem.hostNameConfigId} 
                 objNm={selectedItem.hostNameConfigNm} 
               />
             </Grid>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientUpdateServerComp 
+              <ClientUpdateServerComp
+                compId={'D_' + compId}
                 objId={selectedItem.updateServerConfigId} 
                 objNm={selectedItem.updateServerConfigNm} 
               />

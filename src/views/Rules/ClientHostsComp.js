@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import classNames from 'classnames';
+import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
+import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
-
-import { css } from 'glamor';
 
 import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
 
@@ -70,32 +71,38 @@ class ClientHostsComp extends Component {
     };
   }
 
-  componentDidMount() {
-  }
-
   // .................................................
   render() {
-
-    const { ClientGroupProps, objId, objNm } = this.props;
+    const { ClientConfSettingProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
+    const { [compId + '__editingItem'] : viewItem } = ClientConfSettingProps;
 
     return (
 
       <Card className={card}>
-        <CardContent>
+        {(viewItem) && <CardContent>
           <Typography className={title} color="textSecondary">
             Hosts설정
           </Typography>
           <Typography variant="headline" component="h2">
-            {objNm}
+            {viewItem.objNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
-          {bull}이 정책에 대한 설명을 보여주는 곳 - {objId}
+            {(viewItem.comment != '') ? '"' + viewItem.comment + '"' : ''}
           </Typography>
+          <Divider />
+          {(viewItem && viewItem.objId != '') &&
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.hosts}</pre></TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          }
         </CardContent>
-        <CardActions>
-          <Button size="small">상세보기</Button>
-        </CardActions>
+      }
       </Card>
     );
   }

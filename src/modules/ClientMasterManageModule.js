@@ -9,9 +9,6 @@ const initialState = {
     error: false,
     resultMsg: '',
 
-    clientManageCompId: 'masterClientComp',
-    clientGroupCompId: 'masterClientGroupComp',
-
     isClientInformOpen: false,
     isGroupInformOpen: false,
 

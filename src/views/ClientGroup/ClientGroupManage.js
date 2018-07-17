@@ -220,6 +220,7 @@ class ClientGroupManage extends Component {
 
   handleRowClick = (event, id) => {
     const { ClientGroupProps, ClientGroupActions, ClientConfSettingActions } = this.props;
+
     const selectedGroupObj = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
@@ -229,6 +230,7 @@ class ClientGroupManage extends Component {
     });
 
     ClientConfSettingActions.getClientConfSetting({
+      compId: this.props.match.params.grMenuId,
       objId: selectedGroupObj.clientConfigId
     });
   };
@@ -455,7 +457,8 @@ class ClientGroupManage extends Component {
           />
 
         </GrPane>
-        <ClientGroupInform 
+        <ClientGroupInform
+            compId={this.props.match.params.grMenuId} 
             isOpen={ClientGroupProps.informOpen} 
             selectedItem={ClientGroupProps.selectedItem}
           />

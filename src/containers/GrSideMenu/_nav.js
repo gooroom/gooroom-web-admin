@@ -8,7 +8,7 @@ export default {
       children: [
         {
           name: '통합관리',
-          url: '/clients/clientmastermanage',
+          url: '/clients/clientmastermanage/GRM0101',
           icon: 'icon-wrench',
           level: 2,
         }, {
@@ -18,7 +18,7 @@ export default {
           level: 2,
         }, {
           name: '그룹관리',
-          url: '/clients/clientgroupmanage',
+          url: '/clients/clientgroupmanage/GRM0103',
           icon: 'icon-folder',
           level: 2,
         }, {

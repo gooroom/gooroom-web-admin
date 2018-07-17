@@ -7,6 +7,9 @@ import { connect } from 'react-redux';
 
 import * as ClientGroupCompActions from '../../modules/ClientGroupCompModule';
 import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
+import * as ClientHostNameActions from '../../modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from '../../modules/ClientUpdateServerModule';
+
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { css } from 'glamor';
@@ -221,7 +224,26 @@ class ClientGroupComp extends Component {
 
     if(this.props.onChangeGroupSelected) {
       this.props.onChangeGroupSelected(selectedItem, newSelected);
-    }    
+    }
+
+    console.log('[ClientGroupComp] selectedItem.clientConfigId : ', selectedItem.clientConfigId);
+
+    // '단말정책설정' : 정책 정보 변경
+    ClientConfSettingActions.getClientConfSetting({
+      compId: 'A_' + compId,
+      objId: selectedItem.clientConfigId
+    });   
+
+    ClientHostNameActions.getClientConfSetting({
+      compId: 'A_' + compId,
+      objId: selectedItem.clientConfigId
+    });   
+
+    ClientUpdateServerActions.getClientConfSetting({
+      compId: 'A_' + compId,
+      objId: selectedItem.clientConfigId
+    });   
+
   };
 
   handleChangePage = (event, page) => {
@@ -263,6 +285,8 @@ class ClientGroupComp extends Component {
 
     const { ClientGroupCompProps, compId } = this.props;
     const emptyRows = 0;// = ClientGroupCompProps.listParam.rowsPerPage - ClientGroupCompProps.listData.length;
+
+    console.log('clientGroupComp compId : ', compId);
 
     const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam, [compId + '__selected'] : compSelected } = ClientGroupCompProps;
 
@@ -351,7 +375,11 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupCompActions: bindActionCreators(ClientGroupCompActions, dispatch),
+
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+  
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

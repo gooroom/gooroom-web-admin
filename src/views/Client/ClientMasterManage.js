@@ -181,27 +181,30 @@ class ClientMasterManage extends Component {
     const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
     const { ClientGroupCompProps, ClientGroupCompActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
-    // select clients in groups.
-    const { clientManageCompId } = ClientMasterManageProps;
 
     ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, {
       groupId: selectedGroupIdArray.join(','), 
       page:0,
-      compId: clientManageCompId
+      compId: this.props.match.params.grMenuId
     }));
 
     // show group info.
     if(selectedGroupObj !== '') {
       ClientMasterManageActions.closeClientManageInform();
       ClientGroupCompActions.setSelectedItemObj({
-        compId: ClientMasterManageProps.clientGroupCompId,
+        compId: this.props.match.params.grMenuId,
         selectedItem: selectedGroupObj
       });
 
-      ClientConfSettingActions.getClientConfSetting({
-        objId: selectedGroupObj.clientConfigId
-      });
-      
+     
+      // 아래 코드는 그룹 콤프에서 하는게 맞을듯
+      // // '단말정책설정' : 정책 정보 변경
+      // ClientConfSettingActions.getClientConfSetting({
+      //   compId: this.props.match.params.grMenuId,
+      //   objId: selectedGroupObj.clientConfigId
+      // });
+
+      // Show inform
       ClientMasterManageActions.showClientGroupInform();
 
     }
@@ -218,7 +221,7 @@ class ClientMasterManage extends Component {
 
       ClientMasterManageActions.closeClientGroupInform();
       ClientManageCompActions.setSelectedItemObj({
-        compId: ClientMasterManageProps.clientManageCompId,
+        compId: this.props.match.params.grMenuId,
         selectedItem: selectedClientObj
       });
       ClientMasterManageActions.showClientManageInform();
@@ -232,8 +235,8 @@ class ClientMasterManage extends Component {
     const emptyRows = 0;// = ClientManageCompProps.listParam.rowsPerPage - ClientManageCompProps.listData.length;
 
     const { isGroupInformOpen, isClientInformOpen } = ClientMasterManageProps;
-    const selectedGroupItem = ClientGroupCompProps[ClientMasterManageProps.clientGroupCompId + '__selectedItem'];
-    const selectedClientItem = ClientManageCompProps[ClientMasterManageProps.clientManageCompId + '__selectedItem'];
+    const selectedGroupItem = ClientGroupCompProps[this.props.match.params.grMenuId + '__selectedItem'];
+    const selectedClientItem = ClientManageCompProps[this.props.match.params.grMenuId + '__selectedItem'];
 
     // console.log('selectedGroupItem : ', selectedGroupItem);
 
@@ -279,14 +282,15 @@ class ClientMasterManage extends Component {
           <Grid container spacing={24} style={{border:"0px solid red",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
               <Card style={{minWidth:"240px",boxShadow:"2px 2px 8px blue"}}>
-                <ClientGroupComp compId={ClientMasterManageProps.clientGroupCompId}
+                <ClientGroupComp 
+                  compId={this.props.match.params.grMenuId}
                   onChangeGroupSelected={this.handleChangeClientGroupSelected}
                 />
               </Card>
             </Grid>
             <Grid item xs>
               <Card style={{minWidth:"710px",boxShadow:"2px 2px 8px green"}}>
-              <ClientManageComp compId={ClientMasterManageProps.clientManageCompId}
+              <ClientManageComp compId={this.props.match.params.grMenuId}
                   onChangeClientSelected={this.handleChangeClientSelected}
                 />
               </Card>
@@ -305,7 +309,8 @@ class ClientMasterManage extends Component {
             </Grid>
           </Grid>
           
-          <ClientGroupInform 
+          <ClientGroupInform
+            compId={this.props.match.params.grMenuId}
             isOpen={isGroupInformOpen} 
             selectedItem={selectedGroupItem}
             compShadow="2px 2px 8px blue" 
