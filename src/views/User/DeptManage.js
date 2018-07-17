@@ -16,12 +16,11 @@ import GrPane from "../../containers/GrContent/GrPane";
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 
-import Card, {
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions
-} from "@material-ui/core/Card";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
 
 //
 //  ## Style ########## ########## ########## ########## ##########
@@ -92,7 +91,7 @@ class DeptManage extends Component {
                 <GrTreeList
                   useFolderIcons={true}
                   listHeight="24px"
-                  url="https://gpms.gooroom.kr/gpms/readChildrenDeptList"
+                  url="readChildrenDeptList"
                   paramKeyName="deptCd"
                   rootKeyValue="000000000"
                   keyName="key"
