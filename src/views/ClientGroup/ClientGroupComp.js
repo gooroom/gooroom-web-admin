@@ -231,8 +231,6 @@ class ClientGroupComp extends Component {
       this.props.onChangeGroupSelected(selectedItem, newSelected);
     }
 
-    console.log('[ClientGroupComp] selectedItem : ', selectedItem);
-
     // '단말정책설정' : 정책 정보 변경
     ClientConfSettingActions.getClientConfSetting({
       compId: ClientConfSettingProps.compHeaderName + compId,
@@ -298,9 +296,6 @@ class ClientGroupComp extends Component {
 
     const { ClientGroupCompProps, compId } = this.props;
     const emptyRows = 0;// = ClientGroupCompProps.listParam.rowsPerPage - ClientGroupCompProps.listData.length;
-
-    console.log('clientGroupComp compId : ', compId);
-
     const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam, [compId + '__selected'] : compSelected } = ClientGroupCompProps;
 
     return (

@@ -108,7 +108,6 @@ export const readClientHostNameList = (param) => dispatch => {
 };
 
 export const getClientHostName = (param) => dispatch => {
-    console.log('>>> getClientHostName .... param : ', param);
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readHostNameConf', param).then(
