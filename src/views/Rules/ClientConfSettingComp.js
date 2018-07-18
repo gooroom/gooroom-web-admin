@@ -57,7 +57,7 @@ const pos = css({
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientConfigComp extends Component {
+class ClientConfSettingComp extends Component {
   constructor(props) {
     super(props);
 
@@ -128,6 +128,6 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientConfigComp);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSettingComp);
 
 

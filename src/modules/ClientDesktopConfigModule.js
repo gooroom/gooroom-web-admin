@@ -22,7 +22,6 @@ const COMMON_FAILURE = 'clientDesktopConfig/COMMON_FAILURE';
 
 // ...
 const initialState = {
-    compHeaderName: 'DC_COMP_',
     pending: false,
     error: false,
     resultMsg: '',

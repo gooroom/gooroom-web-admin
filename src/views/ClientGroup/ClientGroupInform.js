@@ -22,7 +22,7 @@ import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
 
-import ClientConfigComp from '../Rules/ClientConfigComp';
+import ClientConfSettingComp from '../Rules/ClientConfSettingComp';
 import ClientHostNameComp from '../Rules/ClientHostNameComp';
 import DesktopConfigComp from '../Rules/DesktopConfigComp';
 import ClientUpdateServerComp from '../Rules/ClientUpdateServerComp';
@@ -73,15 +73,15 @@ class ClientGroupInform extends Component {
           
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientConfigComp
-                compId={ClientConfSettingProps.compHeaderName + compId}
+              <ClientConfSettingComp
+                compId={compId}
                 objId={selectedItem.clientConfigId} 
                 objNm={selectedItem.clientConfigNm} 
               />
             </Grid>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
               <DesktopConfigComp 
-                compId={ClientDesktopConfigProps.compHeaderName + compId}
+                compId={compId}
                 objId={selectedItem.desktopConfigId} 
                 objNm={selectedItem.desktopConfigNm} 
               />
@@ -90,14 +90,14 @@ class ClientGroupInform extends Component {
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
               <ClientHostNameComp
-                compId={ClientHostNameProps.compHeaderName + compId}
+                compId={compId}
                 objId={selectedItem.hostNameConfigId} 
                 objNm={selectedItem.hostNameConfigNm} 
               />
             </Grid>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
               <ClientUpdateServerComp
-                compId={ClientUpdateServerProps.compHeaderName + compId}
+                compId={compId}
                 objId={selectedItem.updateServerConfigId} 
                 objNm={selectedItem.updateServerConfigNm} 
               />

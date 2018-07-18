@@ -22,7 +22,6 @@ const COMMON_FAILURE = 'clientHostName/COMMON_FAILURE';
 
 // ...
 const initialState = {
-    compHeaderName: 'HN_COMP_',
     pending: false,
     error: false,
     resultMsg: '',

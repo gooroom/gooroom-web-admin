@@ -24,7 +24,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 
-import ClientConfigComp from '../Rules/ClientConfigComp';
+import ClientConfSettingComp from '../Rules/ClientConfSettingComp';
 import ClientHostNameComp from '../Rules/ClientHostNameComp';
 import DesktopConfigComp from '../Rules/DesktopConfigComp';
 import ClientUpdateServerComp from '../Rules/ClientUpdateServerComp';
@@ -104,7 +104,7 @@ class ClientManageInform extends Component {
           
           <Grid container spacing={8}>
             <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientConfigComp 
+              <ClientConfSettingComp 
                 objId={selectedItem.clientConfigId} 
                 objNm={selectedItem.clientConfigNm} 
               />

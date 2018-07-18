@@ -28,7 +28,6 @@ const DELETE_NTPADDRESS_ITEM = 'clientConfSetting/DELETE_NTPADDRESS_ITEM';
 
 // ...
 const initialState = {
-    compHeaderName: 'CC_COMP_',
     pending: false,
     error: false,
     resultMsg: '',

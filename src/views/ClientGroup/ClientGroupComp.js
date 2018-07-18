@@ -233,25 +233,25 @@ class ClientGroupComp extends Component {
 
     // '단말정책설정' : 정책 정보 변경
     ClientConfSettingActions.getClientConfSetting({
-      compId: ClientConfSettingProps.compHeaderName + compId,
+      compId: compId,
       objId: selectedItem.clientConfigId
     });   
 
     // 'Hosts설정' : 정책 정보 변경
     ClientHostNameActions.getClientHostName({
-      compId: ClientHostNameProps.compHeaderName + compId,
+      compId: compId,
       objId: selectedItem.hostNameConfigId
     });   
 
     // '업데이트서버설정' : 정책 정보 변경
     ClientUpdateServerActions.getClientUpdateServer({
-      compId: ClientUpdateServerProps.compHeaderName + compId,
+      compId: compId,
       objId: selectedItem.updateServerConfigId
     });   
 
     // '데스크톱 정보설정' : 정책 정보 변경
     ClientDesktopConfigActions.getClientDesktopConfig({
-      compId: ClientDesktopConfigProps.compHeaderName + compId,
+      compId: compId,
       desktopConfId: selectedItem.desktopConfigId
     });   
 
