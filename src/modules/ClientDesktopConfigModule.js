@@ -2,33 +2,27 @@ import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
-import { setParameterForView } from '../views/ClientConfig/ClientConfSettingInform';
+import { setParameterForView } from '../views/ClientConfig/ClientHostNameManageInform';
 
-const COMMON_PENDING = 'clientConfSetting/COMMON_PENDING';
-const COMMON_FAILURE = 'clientConfSetting/COMMON_FAILURE';
+const GET_DESKTOP_LIST_SUCCESS = 'clientDesktopConfig/GET_LIST_SUCCESS';
+const GET_DESKTOP_SUCCESS = 'clientDesktopConfig/GET_DESKTOP_SUCCESS';
+const CREATE_DESKTOP_SUCCESS = 'clientDesktopConfig/CREATE_DESKTOP_SUCCESS';
+const EDIT_DESKTOP_SUCCESS = 'clientDesktopConfig/EDIT_DESKTOP_SUCCESS';
+const DELETE_DESKTOP_SUCCESS = 'clientDesktopConfig/DELETE_DESKTOP_SUCCESS';
 
-const GET_CONFSETTING_LIST_SUCCESS = 'clientConfSetting/GET_LIST_SUCCESS';
-const GET_CONFSETTING_SUCCESS = 'clientConfSetting/GET_CONFSETTING_SUCCESS';
-const CREATE_CONFSETTING_SUCCESS = 'clientConfSetting/CREATE_CONFSETTING_SUCCESS';
-const EDIT_CONFSETTING_SUCCESS = 'clientConfSetting/EDIT_CONFSETTING_SUCCESS';
-const DELETE_CONFSETTING_SUCCESS = 'clientConfSetting/DELETE_CONFSETTING_SUCCESS';
+const SHOW_DESKTOP_INFORM = 'clientDesktopConfig/SHOW_DESKTOP_INFORM';
+const SHOW_DESKTOP_DIALOG = 'clientDesktopConfig/SHOW_DESKTOP_DIALOG';
+const CHG_STORE_DATA = 'clientDesktopConfig/CHG_STORE_DATA';
 
-const SHOW_CONFSETTING_INFORM = 'clientConfSetting/SHOW_CONFSETTING_INFORM';
-const SHOW_CONFSETTING_DIALOG = 'clientConfSetting/SHOW_CONFSETTING_DIALOG';
+const SET_SELECTED_OBJ = 'clientDesktopConfig/SET_SELECTED_OBJ';
+const SET_EDITING_ITEM_VALUE = 'clientDesktopConfig/SET_EDITING_ITEM_VALUE';
 
-const SET_SELECTED_OBJ = 'clientConfSetting/SET_SELECTED_OBJ';
-const SET_EDITING_ITEM_VALUE = 'clientConfSetting/SET_EDITING_ITEM_VALUE';
-
-const CHG_STORE_DATA = 'clientConfSetting/CHG_STORE_DATA';
-
-const SET_SELECTED_NTP_VALUE = 'clientConfSetting/SET_SELECTED_NTP_VALUE';
-const ADD_NTPADDRESS_ITEM = 'clientConfSetting/ADD_NTPADDRESS_ITEM';
-const DELETE_NTPADDRESS_ITEM = 'clientConfSetting/DELETE_NTPADDRESS_ITEM';
-
+const COMMON_PENDING = 'clientDesktopConfig/COMMON_PENDING';
+const COMMON_FAILURE = 'clientDesktopConfig/COMMON_FAILURE';
 
 // ...
 const initialState = {
-    compHeaderName: 'CC_COMP_',
+    compHeaderName: 'DC_COMP_',
     pending: false,
     error: false,
     resultMsg: '',
@@ -49,20 +43,18 @@ const initialState = {
         objId: '',
         objNm: '',
         comment: '',
-        useHypervisor: false,
-        pollingTime: '',
-        selectedNtpIndex: -1,
-        ntpAddress: ['']
+        hosts: '',
     },
 
     informOpen: false,
     dialogOpen: false,
     dialogType: '',
+
 };
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
-        type: SHOW_CONFSETTING_DIALOG,
+        type: SHOW_DESKTOP_DIALOG,
         payload: param
     });
 };
@@ -76,7 +68,7 @@ export const closeDialog = () => dispatch => {
 
 export const showInform = (param) => dispatch => {
     return dispatch({
-        type: SHOW_CONFSETTING_INFORM,
+        type: SHOW_DESKTOP_INFORM,
         payload: param
     });
 };
@@ -88,7 +80,8 @@ export const closeInform = () => dispatch => {
     });
 };
 
-export const readClientConfSettingList = (param) => dispatch => {
+// ...
+export const readClientDesktopConfigList = (param) => dispatch => {
     const resetParam = {
         keyword: param.keyword,
         page: param.page,
@@ -99,10 +92,10 @@ export const readClientConfSettingList = (param) => dispatch => {
     };
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientConfListPaged', resetParam).then(
+    return requestPostAPI('readDesktopConfList', resetParam).then(
         (response) => {
             dispatch({
-                type: GET_CONFSETTING_LIST_SUCCESS,
+                type: GET_DESKTOP_LIST_SUCCESS,
                 payload: response
             });
         }
@@ -114,13 +107,14 @@ export const readClientConfSettingList = (param) => dispatch => {
     });
 };
 
-export const getClientConfSetting = (param) => dispatch => {
+export const getClientDesktopConfig = (param) => dispatch => {
+    console.log('>>> getClientDesktopConfig .... param : ', param);
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientConf', param).then(
+    return requestPostAPI('readDesktopConf', param).then(
         (response) => {
             dispatch({
-                type: GET_CONFSETTING_SUCCESS,
+                type: GET_DESKTOP_SUCCESS,
                 compId: compId,
                 payload: response
             });
@@ -134,10 +128,8 @@ export const getClientConfSetting = (param) => dispatch => {
 };
 
 export const setSelectedItemObj = (param) => dispatch => {
-    const compId = param.compId;
     return dispatch({
         type: SET_SELECTED_OBJ,
-        compId: compId,
         payload: param
     });
 };
@@ -161,22 +153,19 @@ const makeParameter = (param) => {
         objId: param.objId,
         objName: param.objNm,
         objComment: param.comment,
-        AGENTPOLLINGTIME: param.pollingTime,
-        USEHYPERVISOR: param.useHypervisor,
-        NTPSELECTADDRESS: (param.selectedNtpIndex > -1) ? param.ntpAddress[param.selectedNtpIndex] : '',
-        NTPADDRESSES: param.ntpAddress
+        HOSTS: param.hosts
     };
 }
 
 // create (add)
-export const createClientConfSettingData = (param) => dispatch => {
+export const createClientHostNameData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClientConf', makeParameter(param)).then(
+    return requestPostAPI('createHostNameConf', makeParameter(param)).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
+                if(response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_CONFSETTING_SUCCESS,
+                        type: CREATE_DESKTOP_SUCCESS,
                         payload: response
                     });
                 }    
@@ -193,15 +182,16 @@ export const createClientConfSettingData = (param) => dispatch => {
             payload: error
         });
     });
+
 };
 
 // edit
-export const editClientConfSettingData = (param) => dispatch => {
+export const editClientHostNameData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateClientConf', makeParameter(param)).then(
+    return requestPostAPI('updateHostNameConf', makeParameter(param)).then(
         (response) => {
             dispatch({
-                type: EDIT_CONFSETTING_SUCCESS,
+                type: EDIT_DESKTOP_SUCCESS,
                 payload: response
             });
         }
@@ -214,12 +204,12 @@ export const editClientConfSettingData = (param) => dispatch => {
 };
 
 // delete
-export const deleteClientConfSettingData = (param) => dispatch => {
+export const deleteClientHostNameData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteClientConf', param).then(
+    return requestPostAPI('deleteHostNameConf', param).then(
         (response) => {
             dispatch({
-                type: DELETE_CONFSETTING_SUCCESS,
+                type: DELETE_DESKTOP_SUCCESS,
                 payload: response
             });
         }
@@ -228,26 +218,6 @@ export const deleteClientConfSettingData = (param) => dispatch => {
             type: COMMON_FAILURE,
             payload: error
         });
-    });
-};
-
-export const addNtpAddress = () => dispatch => {
-    return dispatch({
-        type: ADD_NTPADDRESS_ITEM
-    });
-}
-
-export const deleteNtpAddress = (index) => dispatch => {
-    return dispatch({
-        type: DELETE_NTPADDRESS_ITEM,
-        payload: {index:index}
-    });
-}
-
-export const setSelectedNtpValue = (param) => dispatch => {
-    return dispatch({
-        type: SET_SELECTED_NTP_VALUE,
-        payload: param
     });
 };
 
@@ -270,37 +240,10 @@ export default handleActions({
         };
     },
 
-    [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
+    [GET_DESKTOP_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-        
-        let listName = 'listData';
-        let listParamName = 'listParam';
-        let selectedName = 'listParam';
-        let newListParam = {};
-
-        if(action.compId && action.compId != '') {
-            listName = action.compId + '__listData';
-            listParamName = action.compId + '__listParam';
-            selectedName = action.compId + '__selected';
-            if(draw > 0) {
-                newListParam = state[action.compId + '__listParam'];
-            } else {
-                newListParam = {
-                    keyword: '',
-                    orderDir: 'desc',
-                    orderColumn: 'chGrpNm',
-                    page: 0,
-                    rowsPerPage: 10,
-                    rowsPerPageOptions: [5, 10, 25],
-                    rowsTotal: 0,
-                    rowsFiltered: 0
-                };
-            }            
-        } else {
-            newListParam = state.listParam;
-        }
-
-        Object.assign(newListParam, {
+        let tempListParam = state.listParam;
+        Object.assign(tempListParam, {
             rowsFiltered: parseInt(recordsFiltered, 10),
             rowsTotal: parseInt(recordsTotal, 10),
             page: parseInt(draw, 10),
@@ -311,26 +254,23 @@ export default handleActions({
             ...state,
             pending: false,
             error: false,
-            [listName]: data,
-            [listParamName]: newListParam,
-            [selectedName]: (state[selectedName]) ? state[selectedName] : []
+            listData: data,
+            listParam: tempListParam
         };
-    }, 
-    [GET_CONFSETTING_SUCCESS]: (state, action) => {
+    },  
+    [GET_DESKTOP_SUCCESS]: (state, action) => {
         let editingItem = 'editingItem';
         if(action.compId && action.compId != '') {
             editingItem = action.compId + '__editingItem';
         }
         const { data } = action.payload.data;
-
-        console.log('[GET_CONFSETTING_SUCCESS] data : ', data);
-
+        
         if(data && data.length > 0) {
             return {
                 ...state,
                 pending: false,
                 error: false,
-                [editingItem]: Object.assign({}, setParameterForView(data[0]))
+                [editingItem]: Object.assign({}, data[0])
             };
         } else {
             return {
@@ -340,9 +280,9 @@ export default handleActions({
                 [editingItem]: {objNm: '', objId: '', comment: ''}
             };
         }
-
     },
-    [SHOW_CONFSETTING_DIALOG]: (state, action) => {
+    [SHOW_DESKTOP_DIALOG]: (state, action) => {
+
         return {
             ...state,
             editingItem: Object.assign({}, action.payload.selectedItem),
@@ -350,21 +290,17 @@ export default handleActions({
             dialogType: action.payload.dialogType,
         };
     },
-    [SHOW_CONFSETTING_INFORM]: (state, action) => {
+    [SHOW_DESKTOP_INFORM]: (state, action) => {
         return {
             ...state,
             selectedItem: action.payload.selectedItem,
-            informOpen: true
+            informOpen: true,
         };
     },
     [SET_SELECTED_OBJ]: (state, action) => {
-        let selectedItem = 'selectedItem';
-        if(action.compId && action.compId != '') {
-            selectedItem = action.compId + '__selectedItem';
-        }
         return {
             ...state,
-            [selectedItem]: action.payload.selectedItem
+            selectedItem: action.payload.selectedItem
         }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
@@ -380,24 +316,15 @@ export default handleActions({
             [action.payload.name]: action.payload.value
         }
     },
-    [CREATE_CONFSETTING_SUCCESS]: (state, action) => {
+
+    [CREATE_DESKTOP_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
             error: false,
         };
     },
-    [EDIT_CONFSETTING_SUCCESS]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: false,
-            informOpen: false,
-            dialogOpen: false,
-            dialogType: ''
-        };
-    },
-    [DELETE_CONFSETTING_SUCCESS]: (state, action) => {
+    [EDIT_DESKTOP_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -407,39 +334,16 @@ export default handleActions({
             dialogType: ''
         };
     },
-    [SET_SELECTED_NTP_VALUE]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress[action.payload.index] = action.payload.value;
-        const newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
+    [DELETE_DESKTOP_SUCCESS]: (state, action) => {
         return {
             ...state,
-            editingItem: newEditingItem
-        }
-    },
-    [ADD_NTPADDRESS_ITEM]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress.push('');
-        const newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
-    },
-    [DELETE_NTPADDRESS_ITEM]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress.splice(action.payload.index, 1);
-        let newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
-        // changed selected ntp addres index
-        if(state.editingItem.selectedNtpIndex == action.payload.index) {
-            newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': -1});
-        } else if(state.editingItem.selectedNtpIndex > action.payload.index) {
-            newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': (state.editingItem.selectedNtpIndex - 1)});
-        }
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
-    },
+            pending: false,
+            error: false,
+            informOpen: false,
+            dialogOpen: false,
+            dialogType: ''
+        };
+    }
 
 }, initialState);
 

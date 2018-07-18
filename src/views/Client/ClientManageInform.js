@@ -25,7 +25,7 @@ import Button from '@material-ui/core/Button';
 
 
 import ClientConfigComp from '../Rules/ClientConfigComp';
-import ClientHostsComp from '../Rules/ClientHostsComp';
+import ClientHostNameComp from '../Rules/ClientHostNameComp';
 import DesktopConfigComp from '../Rules/DesktopConfigComp';
 import ClientUpdateServerComp from '../Rules/ClientUpdateServerComp';
 
@@ -118,7 +118,7 @@ class ClientManageInform extends Component {
           </Grid>
           <Grid container spacing={8}>
             <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientHostsComp 
+              <ClientHostNameComp 
                 objId={selectedItem.hostNameConfigId} 
                 objNm={selectedItem.hostNameConfigNm} 
               />

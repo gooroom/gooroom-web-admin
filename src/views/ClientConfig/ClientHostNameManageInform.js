@@ -116,3 +116,22 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameInform);
 
+export const setParameterForView = (param) => {
+
+  let hosts = '';
+  
+  param.propList.forEach(function(e) {
+    if(e.propNm == 'HOSTS') {
+      hosts = e.propValue;
+    }
+  });
+
+  return {
+    objId: param.objId,
+    objNm: param.objNm,
+    comment: param.comment,
+    modDate: param.modDate,
+    hosts: hosts
+  };
+
+};

@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
 
-import * as ClientUpdateServerActions from '../../modules/ClientUpdateServerModule';
+import * as ClientDesktopConfigActions from '../../modules/ClientDesktopConfigModule';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -62,19 +62,19 @@ const pos = css({
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientUpdateServerInform extends Component {
+class ClientDesktopConfigInform extends Component {
 
   // .................................................
 
   render() {
 
-    const { ClientUpdateServerProps } = this.props;
-    const { selectedItem } = ClientUpdateServerProps;
+    const { ClientHostNameProps } = this.props;
+    const { selectedItem } = ClientHostNameProps;
     const bull = <span className={bullet}>•</span>;
 
     return (
       <div className={componentClass}>
-      {(ClientUpdateServerProps.informOpen) &&
+      {(ClientHostNameProps.informOpen) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedItem) ? selectedItem.objNm : ''}
@@ -90,22 +90,12 @@ class ClientUpdateServerInform extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} 주 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.mainos}</pre></TableCell>
+                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.hosts}</pre></TableCell>
                 </TableRow>
-
-                <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} 기반 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.extos}</pre></TableCell>
-                </TableRow>
-
-                <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} gooroom.pref</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.priorities}</pre></TableCell>
-                </TableRow>
-
               </TableBody>
             </Table>
+
           </CardContent>
         </Card>
       }
@@ -117,40 +107,31 @@ class ClientUpdateServerInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientUpdateServerProps: state.ClientUpdateServerModule
+  ClientDesktopConfigProps: state.ClientDesktopConfigModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch)
+  ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientUpdateServerInform);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientDesktopConfigInform);
 
-export const setParameterForView = (param) => {
+// export const setParameterForView = (param) => {
 
-  let mainos = '';
-  let extos = '';
-  let priorities = '';
+//   let hosts = '';
   
-  param.propList.forEach(function(e) {
-    if(e.propNm == 'MAINOS') {
-      mainos = e.propValue;
-    } else if(e.propNm == 'EXTOS') {
-      extos = e.propValue;
-    } else if(e.propNm == 'PRIORITIES') {
-      priorities = e.propValue;
-    }
-  });
+//   param.propList.forEach(function(e) {
+//     if(e.propNm == 'HOSTS') {
+//       hosts = e.propValue;
+//     }
+//   });
 
-  return {
-    objId: param.objId,
-    objNm: param.objNm,
-    comment: param.comment,
-    modDate: param.modDate,
-    mainos: mainos,
-    extos: extos,
-    priorities: priorities
-  };
+//   return {
+//     objId: param.objId,
+//     objNm: param.objNm,
+//     comment: param.comment,
+//     modDate: param.modDate,
+//     confInfo: param.confInfo
+//   };
 
-};
-
+// };

@@ -2,8 +2,10 @@ import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
+import { setParameterForView } from '../views/ClientConfig/ClientUpdateServerManageInform';
 
 const GET_UPDATESERVER_LIST_SUCCESS = 'clientUpdateServer/GET_LIST_SUCCESS';
+const GET_UPDATESERVER_SUCCESS = 'clientUpdateServer/GET_UPDATESERVER_SUCCESS';
 const CREATE_UPDATESERVER_SUCCESS = 'clientUpdateServer/CREATE_UPDATESERVER_SUCCESS';
 const EDIT_UPDATESERVER_SUCCESS = 'clientUpdateServer/EDIT_UPDATESERVER_SUCCESS';
 const DELETE_UPDATESERVER_SUCCESS = 'clientUpdateServer/DELETE_UPDATESERVER_SUCCESS';
@@ -20,6 +22,7 @@ const COMMON_FAILURE = 'clientUpdateServer/COMMON_FAILURE';
 
 // ...
 const initialState = {
+    compHeaderName: 'US_COMP_',
     pending: false,
     error: false,
     resultMsg: '',
@@ -95,6 +98,25 @@ export const readClientUpdateServerList = (param) => dispatch => {
         (response) => {
             dispatch({
                 type: GET_UPDATESERVER_LIST_SUCCESS,
+                payload: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            payload: error
+        });
+    });
+};
+
+export const getClientUpdateServer = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readUpdateServerConf', param).then(
+        (response) => {
+            dispatch({
+                type: GET_UPDATESERVER_SUCCESS,
+                compId: compId,
                 payload: response
             });
         }
@@ -205,6 +227,22 @@ export const deleteClientUpdateServerData = (param) => dispatch => {
 
 export default handleActions({
 
+    [COMMON_PENDING]: (state, action) => {
+        return {
+            ...state,
+            pending: true,
+            error: false
+        };
+    },
+    [COMMON_FAILURE]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: true,
+            resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
+        };
+    },
+
     [GET_UPDATESERVER_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
         let tempListParam = state.listParam;
@@ -222,7 +260,30 @@ export default handleActions({
             listData: data,
             listParam: tempListParam
         };
-    },  
+    },
+    [GET_UPDATESERVER_SUCCESS]: (state, action) => {
+        let editingItem = 'editingItem';
+        if(action.compId && action.compId != '') {
+            editingItem = action.compId + '__editingItem';
+        }
+        const { data } = action.payload.data;
+        
+        if(data && data.length > 0) {
+            return {
+                ...state,
+                pending: false,
+                error: false,
+                [editingItem]: Object.assign({}, setParameterForView(data[0]))
+            };
+        } else {
+            return {
+                ...state,
+                pending: false,
+                error: false,
+                [editingItem]: {objNm: '', objId: '', comment: ''}
+            };
+        }
+    },
     [SHOW_UPDATESERVER_DIALOG]: (state, action) => {
 
         return {
@@ -285,22 +346,7 @@ export default handleActions({
             dialogOpen: false,
             dialogType: ''
         };
-    },
-    [COMMON_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
-    },
-    [COMMON_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true,
-            resultMsg: action.payload.data.status.message
-        };
-    },
+    }
 
 }, initialState);
 
