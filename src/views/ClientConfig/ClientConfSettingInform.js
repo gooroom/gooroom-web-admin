@@ -162,6 +162,3 @@ export const setParameterForView = (param) => {
   };
 
 };
-
-
-

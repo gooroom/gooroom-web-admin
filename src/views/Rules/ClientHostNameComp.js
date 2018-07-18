@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
-import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
@@ -30,7 +29,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
 import Button from '@material-ui/core/Button';
-
+import Divider from '@material-ui/core/Divider';
 
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
@@ -62,7 +61,7 @@ const pos = css({
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientHostsComp extends Component {
+class ClientHostNameComp extends Component {
   constructor(props) {
     super(props);
 
@@ -73,9 +72,9 @@ class ClientHostsComp extends Component {
 
   // .................................................
   render() {
-    const { ClientConfSettingProps, compId } = this.props;
+    const { ClientHostNameProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const { [compId + '__editingItem'] : viewItem } = ClientConfSettingProps;
+    const { [compId + '__editingItem'] : viewItem } = ClientHostNameProps;
 
     return (
 
@@ -110,7 +109,8 @@ class ClientHostsComp extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule
+  ClientGroupProps: state.ClientGroupCompModule,
+  ClientHostNameProps: state.ClientHostNameModule
 });
 
 
@@ -119,6 +119,6 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientHostsComp);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameComp);
 
 

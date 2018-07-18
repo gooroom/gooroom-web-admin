@@ -25,7 +25,7 @@ import Button from '@material-ui/core/Button';
 
 
 import ClientConfigComp from '../Rules/ClientConfigComp';
-import ClientHostsComp from '../Rules/ClientHostsComp';
+import ClientHostNameComp from '../Rules/ClientHostNameComp';
 import DesktopConfigComp from '../Rules/DesktopConfigComp';
 import ClientUpdateServerComp from '../Rules/ClientUpdateServerComp';
 
@@ -82,7 +82,9 @@ class ClientGroupInform extends Component {
 
   render() {
 
-    const { compId, isOpen, selectedItem } = this.props;
+    const { compId, ClientGroupCompProps } = this.props;
+    const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
+    const { isOpen, selectedItem } = this.props;
 
     return (
       <div className={componentClass}>
@@ -102,14 +104,14 @@ class ClientGroupInform extends Component {
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
               <ClientConfigComp
-                compId={'A_' + compId}
+                compId={ClientConfSettingProps.compHeaderName + compId}
                 objId={selectedItem.clientConfigId} 
                 objNm={selectedItem.clientConfigNm} 
               />
             </Grid>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
               <DesktopConfigComp 
-                compId={'B_' + compId}
+                compId={ClientDesktopConfigProps.compHeaderName + compId}
                 objId={selectedItem.desktopConfigId} 
                 objNm={selectedItem.desktopConfigNm} 
               />
@@ -117,15 +119,15 @@ class ClientGroupInform extends Component {
           </Grid>
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientHostsComp
-                compId={'C_' + compId}
+              <ClientHostNameComp
+                compId={ClientHostNameProps.compHeaderName + compId}
                 objId={selectedItem.hostNameConfigId} 
                 objNm={selectedItem.hostNameConfigNm} 
               />
             </Grid>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
               <ClientUpdateServerComp
-                compId={'D_' + compId}
+                compId={ClientUpdateServerProps.compHeaderName + compId}
                 objId={selectedItem.updateServerConfigId} 
                 objNm={selectedItem.updateServerConfigNm} 
               />
@@ -141,7 +143,11 @@ class ClientGroupInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule
+  ClientGroupProps: state.ClientGroupCompModule,
+  ClientConfSettingProps: state.ClientConfSettingModule,
+  ClientHostNameProps: state.ClientHostNameModule,
+  ClientUpdateServerProps: state.ClientUpdateServerModule,
+  ClientDesktopConfigProps: state.ClientDesktopConfigModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

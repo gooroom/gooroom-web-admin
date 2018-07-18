@@ -2,6 +2,7 @@ import { handleActions } from 'redux-actions';
 import { requestPostAPI } from '../components/GrUtils/GrRequester';
 
 import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
+import { setParameterForView } from '../views/ClientConfig/ClientHostNameManageInform';
 
 const GET_HOSTNAME_LIST_SUCCESS = 'clientHostName/GET_LIST_SUCCESS';
 const GET_HOSTNAME_SUCCESS = 'clientHostName/GET_HOSTNAME_SUCCESS';
@@ -21,6 +22,7 @@ const COMMON_FAILURE = 'clientHostName/COMMON_FAILURE';
 
 // ...
 const initialState = {
+    compHeaderName: 'HN_COMP_',
     pending: false,
     error: false,
     resultMsg: '',
@@ -106,6 +108,7 @@ export const readClientHostNameList = (param) => dispatch => {
 };
 
 export const getClientHostName = (param) => dispatch => {
+    console.log('>>> getClientHostName .... param : ', param);
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readHostNameConf', param).then(
@@ -261,6 +264,7 @@ export default handleActions({
             editingItem = action.compId + '__editingItem';
         }
         const { data } = action.payload.data;
+        
         if(data && data.length > 0) {
             return {
                 ...state,

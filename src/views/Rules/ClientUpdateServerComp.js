@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import classNames from 'classnames';
+import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
-
-import { css } from 'glamor';
 
 import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
 
@@ -29,7 +29,7 @@ import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
 import Button from '@material-ui/core/Button';
-
+import Divider from '@material-ui/core/Divider';
 
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
@@ -70,32 +70,47 @@ class ClientUpdateServerComp extends Component {
     };
   }
 
-  componentDidMount() {
-  }
-
   // .................................................
   render() {
 
-    const { ClientGroupProps, objId, objNm } = this.props;
+    const { ClientUpdateServerProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
+    const { [compId + '__editingItem'] : viewItem } = ClientUpdateServerProps;
 
     return (
 
       <Card className={card}>
-        <CardContent>
+        {(viewItem) && <CardContent>
           <Typography className={title} color="textSecondary">
             업데이트서버설정
           </Typography>
           <Typography variant="headline" component="h2">
-            {objNm}
+            {viewItem.objNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
-          {bull}이 정책에 대한 설명을 보여주는 곳 - {objId}
+            {(viewItem.comment != '') ? '"' + viewItem.comment + '"' : ''}
           </Typography>
+          <Divider />
+          {(viewItem && viewItem.objId != '') &&
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 주 OS 정보</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.mainos}</pre></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 기반 OS 정보</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.extos}</pre></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} gooroom.pref</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.priorities}</pre></TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          }
         </CardContent>
-        <CardActions>
-          <Button size="small">상세보기</Button>
-        </CardActions>
+      }
       </Card>
     );
   }
@@ -103,7 +118,8 @@ class ClientUpdateServerComp extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule
+  ClientGroupProps: state.ClientGroupCompModule,
+  ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 

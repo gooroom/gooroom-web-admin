@@ -9,6 +9,7 @@ import * as ClientGroupCompActions from '../../modules/ClientGroupCompModule';
 import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
 import * as ClientHostNameActions from '../../modules/ClientHostNameModule';
 import * as ClientUpdateServerActions from '../../modules/ClientUpdateServerModule';
+import * as ClientDesktopConfigActions from '../../modules/ClientDesktopConfigModule';
 
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
@@ -195,7 +196,11 @@ class ClientGroupComp extends Component {
   };
 
   handleRowClick = (event, id) => {
-    const { ClientGroupCompProps, ClientGroupCompActions, ClientConfSettingActions, compId } = this.props;
+
+    const { compId, ClientGroupCompProps } = this.props;
+    const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
+    const { ClientGroupCompActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+     
     const { [compId + '__selected'] : preSelected } = ClientGroupCompProps;
     const selectedIndex = preSelected.indexOf(id);
     let newSelected = [];
@@ -226,22 +231,30 @@ class ClientGroupComp extends Component {
       this.props.onChangeGroupSelected(selectedItem, newSelected);
     }
 
-    console.log('[ClientGroupComp] selectedItem.clientConfigId : ', selectedItem.clientConfigId);
+    console.log('[ClientGroupComp] selectedItem : ', selectedItem);
 
     // '단말정책설정' : 정책 정보 변경
     ClientConfSettingActions.getClientConfSetting({
-      compId: 'A_' + compId,
+      compId: ClientConfSettingProps.compHeaderName + compId,
       objId: selectedItem.clientConfigId
     });   
 
-    ClientHostNameActions.getClientConfSetting({
-      compId: 'A_' + compId,
-      objId: selectedItem.clientConfigId
+    // 'Hosts설정' : 정책 정보 변경
+    ClientHostNameActions.getClientHostName({
+      compId: ClientHostNameProps.compHeaderName + compId,
+      objId: selectedItem.hostNameConfigId
     });   
 
-    ClientUpdateServerActions.getClientConfSetting({
-      compId: 'A_' + compId,
-      objId: selectedItem.clientConfigId
+    // '업데이트서버설정' : 정책 정보 변경
+    ClientUpdateServerActions.getClientUpdateServer({
+      compId: ClientUpdateServerProps.compHeaderName + compId,
+      objId: selectedItem.updateServerConfigId
+    });   
+
+    // '데스크톱 정보설정' : 정책 정보 변경
+    ClientDesktopConfigActions.getClientDesktopConfig({
+      compId: ClientDesktopConfigProps.compHeaderName + compId,
+      desktopConfId: selectedItem.desktopConfigId
     });   
 
   };
@@ -369,7 +382,11 @@ class ClientGroupComp extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupCompProps: state.ClientGroupCompModule
+  ClientGroupCompProps: state.ClientGroupCompModule,
+  ClientConfSettingProps: state.ClientConfSettingModule,
+  ClientHostNameProps: state.ClientHostNameModule,
+  ClientUpdateServerProps: state.ClientUpdateServerModule,
+  ClientDesktopConfigProps: state.ClientDesktopConfigModule
 });
 
 
@@ -379,6 +396,7 @@ const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
   ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+  ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch),
   
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });

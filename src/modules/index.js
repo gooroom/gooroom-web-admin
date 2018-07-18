@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 
 import ClientRegKeyModule from './ClientRegKeyModule';
 import ClientProfileSetModule from './ClientProfileSetModule';
-import ClientConfSettingModule from './ClientConfSettingModule';
 
 import ClientGroupCompModule from './ClientGroupCompModule';
 
@@ -12,6 +11,8 @@ import JobManageModule from './JobManageModule';
 import GrConfirmModule from './GrConfirmModule';
 import CommonOptionModule from './CommonOptionModule';
 
+import ClientConfSettingModule from './ClientConfSettingModule';
+import ClientDesktopConfigModule from './ClientDesktopConfigModule';
 import ClientHostNameModule from './ClientHostNameModule';
 import ClientUpdateServerModule from './ClientUpdateServerModule';
 
@@ -22,8 +23,9 @@ export default combineReducers({
 
     ClientRegKeyModule, 
     ClientProfileSetModule,
-    ClientConfSettingModule,
 
+    ClientConfSettingModule,
+    ClientDesktopConfigModule,
     ClientHostNameModule,
     ClientUpdateServerModule,
 
