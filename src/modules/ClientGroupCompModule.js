@@ -70,8 +70,10 @@ export const closeDialog = () => dispatch => {
 };
 
 export const showClientGroupInform = (param) => dispatch => {
+    const compId = param.compId;
     return dispatch({
         type: SHOW_CLIENTGROUP_INFORM,
+        compId: compId,
         payload: param
     });
 };
@@ -309,9 +311,16 @@ export default handleActions({
         };
     },
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
+        let selectedItem = 'selectedItem';
+        if(action.compId && action.compId != '') {
+            selectedItem = action.compId + '__selectedItem';
+        }
+
+        console.log(' >>>> ' + selectedItem + ' : ', action.payload);
+
         return {
             ...state,
-            selectedItem: action.payload.selectedItem,
+            [selectedItem]: action.payload.selectedItem,
             informOpen: true
         };
     },

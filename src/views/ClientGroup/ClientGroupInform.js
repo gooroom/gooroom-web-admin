@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
 
 import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
@@ -22,7 +21,6 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
-
 
 import ClientConfigComp from '../Rules/ClientConfigComp';
 import ClientHostNameComp from '../Rules/ClientHostNameComp';
@@ -46,49 +44,21 @@ const cardContainerClass = css({
 }).toString();
 
 
-const title = css({
-  marginBottom: 16,
-  fontSize: 14,
-}).toString();
-
-const card = css({
-  minWidth: 275,
-}).toString();
-
-const bullet = css({
-  display: 'inline-block',
-  margin: '0 2px',
-  transform: 'scale(0.8)',
-}).toString();
-
-const pos = css({
-  marginBottom: 12,
-}).toString();
-
-
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientGroupInform extends Component {
 
-  componentWillUpdate(nextProps, nextState) {
-//console.log(' -- componentWillUpdate --');
-
-    const selectedItem = nextProps.selectedItem;
-//console.log(' selectedItem : ', selectedItem);
-  }
-
-  // .................................................
-
   render() {
 
     const { compId, ClientGroupCompProps } = this.props;
     const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
-    const { isOpen, selectedItem } = this.props;
+    const { isOpen } = this.props;
+    const { [compId + '__selectedItem'] : selectedItem } = ClientGroupCompProps;
 
     return (
       <div className={componentClass}>
-      {(isOpen) &&
+      {(isOpen && selectedItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedItem) ? selectedItem.grpNm : ''}
@@ -143,7 +113,7 @@ class ClientGroupInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule,
+  ClientGroupCompProps: state.ClientGroupCompModule,
   ClientConfSettingProps: state.ClientConfSettingModule,
   ClientHostNameProps: state.ClientHostNameModule,
   ClientUpdateServerProps: state.ClientUpdateServerModule,

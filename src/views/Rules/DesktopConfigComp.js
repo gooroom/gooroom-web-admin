@@ -76,8 +76,6 @@ class DesktopConfigComp extends Component {
     const bull = <span className={bullet}>•</span>;
     const { [compId + '__editingItem'] : viewItem } = ClientDesktopConfigProps;
 
-    console.log('DDDDDD viewItem : ', viewItem);
-
     return (
 
       <Card className={card}>

@@ -323,8 +323,6 @@ export default handleActions({
         }
         const { data } = action.payload.data;
 
-        console.log('[GET_CONFSETTING_SUCCESS] data : ', data);
-
         if(data && data.length > 0) {
             return {
                 ...state,

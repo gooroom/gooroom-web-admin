@@ -5,8 +5,12 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
+import * as ClientGroupCompActions from '../../modules/ClientGroupCompModule';
 import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
+import * as ClientHostNameActions from '../../modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from '../../modules/ClientUpdateServerModule';
+import * as ClientDesktopConfigActions from '../../modules/ClientDesktopConfigModule';
+
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -206,12 +210,12 @@ class ClientGroupManage extends Component {
 
   // .................................................
   handleRequestSort = (event, property) => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
+    const { ClientGroupCompActions, ClientGroupProps } = this.props;
     let orderDir = "desc";
     if (ClientGroupProps.listParam.orderColumn === property && ClientGroupProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
+    ClientGroupCompActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       orderColumn: property, 
       orderDir: orderDir,
       compId: ''
@@ -219,33 +223,62 @@ class ClientGroupManage extends Component {
   };
 
   handleRowClick = (event, id) => {
-    const { ClientGroupProps, ClientGroupActions, ClientConfSettingActions } = this.props;
+    const { ClientGroupProps, ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
+    const { ClientGroupCompActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+
+    const compId = this.props.match.params.grMenuId;
 
     const selectedGroupObj = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
 
-    ClientGroupActions.showClientGroupInform({
+    ClientGroupCompActions.showClientGroupInform({
+      compId: compId,
       selectedItem: Object.assign({}, selectedGroupObj),
     });
 
     ClientConfSettingActions.getClientConfSetting({
-      compId: this.props.match.params.grMenuId,
+      compId: compId,
       objId: selectedGroupObj.clientConfigId
     });
+    
+    // '단말정책설정' : 정책 정보 변경
+    ClientConfSettingActions.getClientConfSetting({
+      compId: ClientConfSettingProps.compHeaderName + compId,
+      objId: selectedGroupObj.clientConfigId
+    });   
+
+    // 'Hosts설정' : 정책 정보 변경
+    ClientHostNameActions.getClientHostName({
+      compId: ClientHostNameProps.compHeaderName + compId,
+      objId: selectedGroupObj.hostNameConfigId
+    });   
+
+    // '업데이트서버설정' : 정책 정보 변경
+    ClientUpdateServerActions.getClientUpdateServer({
+      compId: ClientUpdateServerProps.compHeaderName + compId,
+      objId: selectedGroupObj.updateServerConfigId
+    });   
+
+    // '데스크톱 정보설정' : 정책 정보 변경
+    ClientDesktopConfigActions.getClientDesktopConfig({
+      compId: ClientDesktopConfigProps.compHeaderName + compId,
+      desktopConfId: selectedGroupObj.desktopConfigId
+    });   
+
   };
 
   handleChangePage = (event, page) => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
+    const { ClientGroupCompActions, ClientGroupProps } = this.props;
+    ClientGroupCompActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       page: page,
       compId: ''
     }));
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
+    const { ClientGroupCompActions, ClientGroupProps } = this.props;
+    ClientGroupCompActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       rowsPerPage: event.target.value,
       page: 0,
       compId: ''
@@ -257,7 +290,7 @@ class ClientGroupManage extends Component {
 
   // add
   handleCreateButton = () => {
-    this.props.ClientGroupActions.showDialog({
+    this.props.ClientGroupCompActions.showDialog({
       selectedItem: {
         grpNm: '',
         comment: '',
@@ -271,11 +304,11 @@ class ClientGroupManage extends Component {
   // edit
   handleEditClick = (event, id) => {
     event.stopPropagation();
-    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const { ClientGroupProps, ClientGroupCompActions } = this.props;
     const selectedItem = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
-    ClientGroupActions.showDialog({
+    ClientGroupCompActions.showDialog({
       selectedItem: Object.assign({}, selectedItem),
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
@@ -284,11 +317,12 @@ class ClientGroupManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientGroupProps, ClientGroupActions, GrConfirmActions } = this.props;
+    const { ClientGroupProps, ClientGroupCompActions, GrConfirmActions } = this.props;
     const selectedItem = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
-    ClientGroupActions.setSelectedItemObj({
+    ClientGroupCompActions.setSelectedItemObj({
+      compId: this.props.match.params.grMenuId,
       selectedItem: selectedItem
     });
     const re = GrConfirmActions.showConfirm({
@@ -299,12 +333,12 @@ class ClientGroupManage extends Component {
     });
   };
   handleDeleteConfirmResult = (confirmValue) => {
-    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const { ClientGroupProps, ClientGroupCompActions } = this.props;
     if(confirmValue) {
-      ClientGroupActions.deleteClientGroupData({
+      ClientGroupCompActions.deleteClientGroupData({
         groupId: ClientGroupProps.selectedItem.grpId
       }).then(() => {
-        ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
+        ClientGroupCompActions.readClientGroupList(ClientGroupProps.listParam);
         }, () => {
         });
     }
@@ -312,17 +346,17 @@ class ClientGroupManage extends Component {
 
   // .................................................
   handleSelectBtnClick = (param) => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, param));
+    const { ClientGroupCompActions, ClientGroupProps } = this.props;
+    ClientGroupCompActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, param));
   };
   
   handleKeywordChange = name => event => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
+    const { ClientGroupCompActions, ClientGroupProps } = this.props;
     const newParam = getMergedObject(ClientGroupProps.listParam, {
       keyword: event.target.value,
       compId: ''
     });
-    ClientGroupActions.changeStoreData({name: 'listParam', value: newParam});
+    ClientGroupCompActions.changeStoreData({name: 'listParam', value: newParam});
   }
 
   // .................................................
@@ -472,12 +506,21 @@ class ClientGroupManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule
+  ClientGroupProps: state.ClientGroupCompModule,
+  ClientConfSettingProps: state.ClientConfSettingModule,
+  ClientHostNameProps: state.ClientHostNameModule,
+  ClientUpdateServerProps: state.ClientUpdateServerModule,
+  ClientDesktopConfigProps: state.ClientDesktopConfigModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  ClientGroupCompActions: bindActionCreators(ClientGroupCompActions, dispatch),
+  
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+  ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch),
+
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

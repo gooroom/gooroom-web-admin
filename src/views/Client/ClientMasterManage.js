@@ -196,17 +196,8 @@ class ClientMasterManage extends Component {
         selectedItem: selectedGroupObj
       });
 
-     
-      // 아래 코드는 그룹 콤프에서 하는게 맞을듯
-      // // '단말정책설정' : 정책 정보 변경
-      // ClientConfSettingActions.getClientConfSetting({
-      //   compId: this.props.match.params.grMenuId,
-      //   objId: selectedGroupObj.clientConfigId
-      // });
-
       // Show inform
       ClientMasterManageActions.showClientGroupInform();
-
     }
   };
 

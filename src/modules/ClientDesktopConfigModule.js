@@ -108,7 +108,6 @@ export const readClientDesktopConfigList = (param) => dispatch => {
 };
 
 export const getClientDesktopConfig = (param) => dispatch => {
-    console.log('>>> getClientDesktopConfig .... param : ', param);
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readDesktopConf', param).then(
