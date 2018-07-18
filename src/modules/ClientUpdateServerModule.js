@@ -22,7 +22,6 @@ const COMMON_FAILURE = 'clientUpdateServer/COMMON_FAILURE';
 
 // ...
 const initialState = {
-    compHeaderName: 'US_COMP_',
     pending: false,
     error: false,
     resultMsg: '',
