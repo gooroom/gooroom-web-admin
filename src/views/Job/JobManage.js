@@ -5,18 +5,18 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as JobManageActions from '../../modules/JobManageModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as JobManageActions from '/modules/JobManageModule';
+import * as GrConfirmActions from '/modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from '/components/GrUtils/GrDates';
+import { getMergedObject } from '/components/GrUtils/GrCommonUtils';
 
-import GrPageHeader from "../../containers/GrContent/GrPageHeader";
-import GrConfirm from '../../components/GrComponents/GrConfirm';
-import GrPane from '../../containers/GrContent/GrPane';
+import GrPageHeader from "/containers/GrContent/GrPageHeader";
+import GrConfirm from '/components/GrComponents/GrConfirm';
+import GrPane from '/containers/GrContent/GrPane';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';

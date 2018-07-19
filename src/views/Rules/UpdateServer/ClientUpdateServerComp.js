@@ -7,10 +7,10 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientGroupActions from '/modules/ClientGroupModule';
+import * as GrConfirmActions from '/modules/GrConfirmModule';
 
-import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray } from '/components/GrUtils/GrCommonUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -61,7 +61,7 @@ const pos = css({
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientHostNameComp extends Component {
+class ClientUpdateServerComp extends Component {
   constructor(props) {
     super(props);
 
@@ -72,16 +72,17 @@ class ClientHostNameComp extends Component {
 
   // .................................................
   render() {
-    const { ClientHostNameProps, compId } = this.props;
+
+    const { ClientUpdateServerProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const { [compId + '__editingItem'] : viewItem } = ClientHostNameProps;
+    const { [compId + '__editingItem'] : viewItem } = ClientUpdateServerProps;
 
     return (
 
       <Card className={card}>
         {(viewItem) && <CardContent>
           <Typography className={title} color="textSecondary">
-            Hosts설정
+            업데이트서버설정
           </Typography>
           <Typography variant="headline" component="h2">
             {viewItem.objNm}
@@ -94,8 +95,16 @@ class ClientHostNameComp extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.hosts}</pre></TableCell>
+                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 주 OS 정보</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.mainos}</pre></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 기반 OS 정보</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.extos}</pre></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} gooroom.pref</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.priorities}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -109,8 +118,8 @@ class ClientHostNameComp extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule,
-  ClientHostNameProps: state.ClientHostNameModule
+  ClientGroupProps: state.ClientGroupModule,
+  ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 
@@ -119,6 +128,6 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameComp);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientUpdateServerComp);
 
 

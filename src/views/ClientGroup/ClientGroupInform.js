@@ -7,10 +7,10 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
+import { formatDateToSimple } from '/components/GrUtils/GrDates';
 
-import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientGroupActions from '/modules/ClientGroupModule';
+import * as GrConfirmActions from '/modules/GrConfirmModule';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -22,10 +22,10 @@ import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
 
-import ClientConfSettingComp from '../Rules/ClientConfSettingComp';
-import ClientHostNameComp from '../Rules/ClientHostNameComp';
+import ClientConfSettingComp from '../Rules/ClientConf/ClientConfSettingComp';
+import ClientHostNameComp from '../Rules/HostName/ClientHostNameComp';
 import DesktopConfigComp from '../Rules/DesktopConfigComp';
-import ClientUpdateServerComp from '../Rules/ClientUpdateServerComp';
+import ClientUpdateServerComp from '../Rules/UpdateServer/ClientUpdateServerComp';
 
 
 //
@@ -113,7 +113,7 @@ class ClientGroupInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupCompProps: state.ClientGroupCompModule,
+  ClientGroupCompProps: state.ClientGroupModule,
   ClientConfSettingProps: state.ClientConfSettingModule,
   ClientHostNameProps: state.ClientHostNameModule,
   ClientUpdateServerProps: state.ClientUpdateServerModule,

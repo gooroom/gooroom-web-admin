@@ -4,13 +4,13 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientProfileSetActions from '../../modules/ClientProfileSetModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientProfileSetActions from '/modules/ClientProfileSetModule';
+import * as GrConfirmActions from '/modules/GrConfirmModule';
 
 import { css } from "glamor";
 
-import GrClientSelector from '../../components/GrComponents/GrClientSelector';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
+import GrClientSelector from '/components/GrComponents/GrClientSelector';
+import { getMergedObject } from '/components/GrUtils/GrCommonUtils';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";

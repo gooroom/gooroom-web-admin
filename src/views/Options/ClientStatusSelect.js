@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as CommonOptionActions from '../../modules/CommonOptionModule';
+import * as CommonOptionActions from '/modules/CommonOptionModule';
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";

@@ -6,7 +6,7 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
+import * as ClientGroupActions from '../../modules/ClientGroupModule';
 import * as GrConfirmActions from '../../modules/GrConfirmModule';
 
 import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
@@ -115,7 +115,7 @@ class DesktopConfigComp extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule,
+  ClientGroupProps: state.ClientGroupModule,
   ClientDesktopConfigProps: state.ClientDesktopConfigModule
 });
 
