@@ -18,9 +18,9 @@ import ClientGroupManage from "../../views/ClientGroup/ClientGroupManage";
 import ClientRegKey from "../../views/ClientConfig/ClientRegKey";
 import ClientProfileSet from "../../views/ClientConfig/ClientProfileSet";
 
-import ClientConfSetting from "../../views/ClientConfig/ClientConfSetting";
-import ClientHostNameManage from "../../views/ClientConfig/ClientHostNameManage";
-import ClientUpdateServerManage from "../../views/ClientConfig/ClientUpdateServerManage";
+import ClientConfSetting from "../../views/Rules/ClientConf/ClientConfSetting";
+import ClientHostNameManage from "../../views/Rules/HostName/ClientHostNameManage";
+import ClientUpdateServerManage from "../../views/Rules/UpdateServer/ClientUpdateServerManage";
 
 import JobManage from "../../views/Job/JobManage";
 import PackageManage from '../../views/Package/PackageManage';

@@ -7,11 +7,11 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from '/components/GrUtils/GrDates';
+import { getMergedObject } from '/components/GrUtils/GrCommonUtils';
 
-import * as ClientManageActions from '../../modules/ClientManageCompModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientManageActions from '/modules/ClientManageCompModule';
+import * as GrConfirmActions from '/modules/GrConfirmModule';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -24,7 +24,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 
-import ClientConfSettingComp from '../Rules/ClientConfSettingComp';
+import ClientConfSettingComp from '../Rules/ClientConf/ClientConfSettingComp';
 import ClientHostNameComp from '../Rules/ClientHostNameComp';
 import DesktopConfigComp from '../Rules/DesktopConfigComp';
 import ClientUpdateServerComp from '../Rules/ClientUpdateServerComp';

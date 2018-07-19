@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import ClientRegKeyModule from './ClientRegKeyModule';
 import ClientProfileSetModule from './ClientProfileSetModule';
 
-import ClientGroupCompModule from './ClientGroupCompModule';
+import ClientGroupModule from './ClientGroupModule';
 
 import ClientManageCompModule from './ClientManageCompModule';
 
@@ -32,7 +32,7 @@ export default combineReducers({
     ClientMasterManageModule,
     
     ClientManageCompModule,
-    ClientGroupCompModule,
+    ClientGroupModule,
 
     JobManageModule, 
     

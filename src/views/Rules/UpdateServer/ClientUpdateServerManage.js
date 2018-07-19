@@ -5,20 +5,20 @@ import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientHostNameActions from '../../modules/ClientHostNameModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientUpdateServerActions from '/modules/ClientUpdateServerModule';
+import * as GrConfirmActions from '/modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from '/components/GrUtils/GrDates';
+import { getMergedObject } from '/components/GrUtils/GrCommonUtils';
 
-import GrPageHeader from '../../containers/GrContent/GrPageHeader';
-import GrConfirm from '../../components/GrComponents/GrConfirm';
+import GrPageHeader from '/containers/GrContent/GrPageHeader';
+import GrConfirm from '/components/GrComponents/GrConfirm';
 
-import ClientHostNameManageDialog from './ClientHostNameManageDialog';
-import ClientHostNameManageInform from './ClientHostNameManageInform';
-import GrPane from '../../containers/GrContent/GrPane';
+import ClientUpdateServerManageDialog from './ClientUpdateServerManageDialog';
+import ClientUpdateServerManageInform from './ClientUpdateServerManageInform';
+import GrPane from '/containers/GrContent/GrPane';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -124,7 +124,7 @@ const toolIconClass = css({
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
-class ClientHostNameHead extends Component {
+class ClientUpdateServerHead extends Component {
 
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
@@ -145,7 +145,7 @@ class ClientHostNameHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          {ClientHostNameHead.columnData.map(column => {
+          {ClientUpdateServerHead.columnData.map(column => {
             return (
               <TableCell
                 className={tableCellClass}
@@ -175,7 +175,7 @@ class ClientHostNameHead extends Component {
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientHostNameManage extends Component {
+class ClientUpdateServerManage extends Component {
 
   constructor(props) {
     super(props);
@@ -187,13 +187,13 @@ class ClientHostNameManage extends Component {
 
   // .................................................
   handleSelectBtnClick = (param) => {
-    const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, param));
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, param));
   };
   
   handleCreateButton = () => {
-    const { ClientHostNameActions } = this.props;
-    ClientHostNameActions.showDialog({
+    const { ClientUpdateServerActions } = this.props;
+    ClientUpdateServerActions.showDialog({
       selectedItem: {
         objId: '',
         objNm: '',
@@ -203,15 +203,21 @@ class ClientHostNameManage extends Component {
         selectedNtpIndex: -1,
         ntpAddress: ['']
       },
-      dialogType: ClientHostNameManageDialog.TYPE_ADD
+      dialogType: ClientUpdateServerManageDialog.TYPE_ADD
     });
   }
 
   setParameterForView = (param) => {
-    let hosts = '';
+    let mainos = '';
+    let extos = '';
+    let priorities = '';
     param.propList.forEach(function(e) {
-      if(e.propNm == 'HOSTS') {
-        hosts = e.propValue;
+      if(e.propNm == 'MAINOS') {
+        mainos = e.propValue;
+      } else if(e.propNm == 'EXTOS') {
+        extos = e.propValue;
+      } else if(e.propNm == 'PRIORITIES') {
+        priorities = e.propValue;
       }
     });
 
@@ -220,13 +226,15 @@ class ClientHostNameManage extends Component {
       objNm: param.objNm,
       comment: param.comment,
       modDate: param.modDate,
-      hosts: hosts
+      mainos: mainos,
+      extos: extos,
+      priorities: priorities
     };
   }
   
   handleRowClick = (event, id) => {
-    const { ClientHostNameProps, ClientHostNameActions } = this.props;
-    const selectedItem = ClientHostNameProps.listData.find(function(element) {
+    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+    const selectedItem = ClientUpdateServerProps.listData.find(function(element) {
       return element.objId == id;
     });
     
@@ -235,13 +243,13 @@ class ClientHostNameManage extends Component {
     // choice one from two views.
 
     // 1. popup dialog
-    // ClientHostNameActions.showDialog({
+    // ClientUpdateServerActions.showDialog({
     //   selectedItem: viewItem,
-    //   dialogType: ClientHostNameManageDialog.TYPE_VIEW,
+    //   dialogType: ClientUpdateServerManageDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    ClientHostNameActions.showInform({
+    ClientUpdateServerActions.showInform({
       selectedItem: viewItem  
     });
     
@@ -249,44 +257,44 @@ class ClientHostNameManage extends Component {
 
   handleEditClick = (event, id) => {
     //event.stopPropagation();
-    const { ClientHostNameProps, ClientHostNameActions } = this.props;
-    const selectedItem = ClientHostNameProps.listData.find(function(element) {
+    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+    const selectedItem = ClientUpdateServerProps.listData.find(function(element) {
       return element.objId == id;
     });
 
-    ClientHostNameActions.showDialog({
+    ClientUpdateServerActions.showDialog({
       selectedItem: this.setParameterForView(selectedItem),
-      dialogType: ClientHostNameManageDialog.TYPE_EDIT,
+      dialogType: ClientUpdateServerManageDialog.TYPE_EDIT,
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientHostNameProps, ClientHostNameActions, GrConfirmActions } = this.props;
+    const { ClientUpdateServerProps, ClientUpdateServerActions, GrConfirmActions } = this.props;
 
-    const selectedItem = ClientHostNameProps.listData.find(function(element) {
+    const selectedItem = ClientUpdateServerProps.listData.find(function(element) {
       return element.objId == id;
     });
 
-    ClientHostNameActions.setSelectedItemObj({
-      selectedItem: Object.assign(ClientHostNameProps.selectedItem, selectedItem)
+    ClientUpdateServerActions.setSelectedItemObj({
+      selectedItem: Object.assign(ClientUpdateServerProps.selectedItem, selectedItem)
     });
     const re = GrConfirmActions.showConfirm({
-      confirmTitle: 'Hosts 정보 삭제',
-      confirmMsg: 'Hosts 정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmTitle: '업데이트서버 정보 삭제',
+      confirmMsg: '업데이트서버 정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true
     });
   };
   handleDeleteConfirmResult = (confirmValue) => {
-    const { ClientHostNameProps, ClientHostNameActions } = this.props;
+    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
 
     if(confirmValue) {
-      ClientHostNameActions.deleteClientHostNameData({
-        objId: ClientHostNameProps.selectedItem.objId
+      ClientUpdateServerActions.deleteClientUpdateServerData({
+        objId: ClientUpdateServerProps.selectedItem.objId
       }).then(() => {
-        ClientHostNameActions.readClientHostNameList(ClientHostNameProps.listParam);
+        ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps.listParam);
         }, () => {
       });
     }
@@ -294,32 +302,32 @@ class ClientHostNameManage extends Component {
 
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-    const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {page: page}));
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
-    const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {rowsPerPage: event.target.value}));
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
   handleRequestSort = (event, property) => {
-    const { ClientHostNameProps, ClientHostNameActions } = this.props;
+    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
     let orderDir = "desc";
-    if (ClientHostNameProps.listParam.orderColumn === property && ClientHostNameProps.listParam.orderDir === "desc") {
+    if (ClientUpdateServerProps.listParam.orderColumn === property && ClientUpdateServerProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
   // .................................................
 
   // .................................................
   handleKeywordChange = name => event => {
-    const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    const newParam = getMergedObject(ClientHostNameProps.listParam, {keyword: event.target.value});
-    ClientHostNameActions.changeStoreData({
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    const newParam = getMergedObject(ClientUpdateServerProps.listParam, {keyword: event.target.value});
+    ClientUpdateServerActions.changeStoreData({
       name: 'listParam',
       value: newParam
     });
@@ -327,8 +335,8 @@ class ClientHostNameManage extends Component {
 
   render() {
 
-    const { ClientHostNameProps } = this.props;
-    const emptyRows = ClientHostNameProps.listParam.rowsPerPage - ClientHostNameProps.listData.length;
+    const { ClientUpdateServerProps } = this.props;
+    const emptyRows = ClientUpdateServerProps.listParam.rowsPerPage - ClientUpdateServerProps.listData.length;
 
     return (
       <React.Fragment>
@@ -374,14 +382,14 @@ class ClientHostNameManage extends Component {
           <div className={tableContainerClass}>
             <Table className={tableClass}>
 
-              <ClientHostNameHead
-                orderDir={ClientHostNameProps.listParam.orderDir}
-                orderColumn={ClientHostNameProps.listParam.orderColumn}
+              <ClientUpdateServerHead
+                orderDir={ClientUpdateServerProps.listParam.orderDir}
+                orderColumn={ClientUpdateServerProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
               />
 
               <TableBody>
-                {ClientHostNameProps.listData.map(n => {
+                {ClientUpdateServerProps.listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -420,7 +428,7 @@ class ClientHostNameManage extends Component {
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
-                      colSpan={ClientHostNameHead.columnData.length + 1}
+                      colSpan={ClientUpdateServerHead.columnData.length + 1}
                       className={tableCellClass}
                     />
                   </TableRow>
@@ -431,10 +439,10 @@ class ClientHostNameManage extends Component {
 
           <TablePagination
             component='div'
-            count={ClientHostNameProps.listParam.rowsFiltered}
-            rowsPerPage={ClientHostNameProps.listParam.rowsPerPage}
-            rowsPerPageOptions={ClientHostNameProps.listParam.rowsPerPageOptions}
-            page={ClientHostNameProps.listParam.page}
+            count={ClientUpdateServerProps.listParam.rowsFiltered}
+            rowsPerPage={ClientUpdateServerProps.listParam.rowsPerPage}
+            rowsPerPageOptions={ClientUpdateServerProps.listParam.rowsPerPageOptions}
+            page={ClientUpdateServerProps.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -447,8 +455,8 @@ class ClientHostNameManage extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientHostNameManageInform />
-        <ClientHostNameManageDialog />
+        <ClientUpdateServerManageInform />
+        <ClientUpdateServerManageDialog />
         <GrConfirm />
       </React.Fragment>
     );
@@ -456,12 +464,12 @@ class ClientHostNameManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientHostNameProps: state.ClientHostNameModule
+  ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameManage);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientUpdateServerManage);

@@ -7,29 +7,25 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientGroupActions from '/modules/ClientGroupModule';
+import * as ClientConfSettingActions from '/modules/ClientConfSettingModule';
+import * as GrConfirmActions from '/modules/GrConfirmModule';
 
-import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray } from '/components/GrUtils/GrCommonUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-
-import Checkbox from "@material-ui/core/Checkbox";
 
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+
 
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
@@ -61,7 +57,7 @@ const pos = css({
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientUpdateServerComp extends Component {
+class ClientConfSettingComp extends Component {
   constructor(props) {
     super(props);
 
@@ -72,17 +68,16 @@ class ClientUpdateServerComp extends Component {
 
   // .................................................
   render() {
-
-    const { ClientUpdateServerProps, compId } = this.props;
+    const { ClientConfSettingProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const { [compId + '__editingItem'] : viewItem } = ClientUpdateServerProps;
+    const { [compId + '__editingItem'] : viewItem } = ClientConfSettingProps;
 
     return (
 
       <Card className={card}>
         {(viewItem) && <CardContent>
           <Typography className={title} color="textSecondary">
-            업데이트서버설정
+            단말정책설정
           </Typography>
           <Typography variant="headline" component="h2">
             {viewItem.objNm}
@@ -95,39 +90,44 @@ class ClientUpdateServerComp extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 주 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.mainos}</pre></TableCell>
+                  <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
+                  <TableCell numeric>{viewItem.pollingTime}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 기반 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.extos}</pre></TableCell>
+                    <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
+                  <TableCell numeric>{(viewItem.useHypervisor) ? '구동' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} gooroom.pref</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.priorities}</pre></TableCell>
+                  <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
+                  <TableCell numeric>{(viewItem.selectedNtpIndex > -1) ? viewItem.ntpAddress[viewItem.selectedNtpIndex] : ''}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
+                  <TableCell numeric>{viewItem.ntpAddress.map(function(prop, index) {
+                      return <span key={index}>{prop}<br/></span>;
+                  })}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           }
         </CardContent>
-      }
+        }
       </Card>
     );
   }
 }
 
-
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule,
-  ClientUpdateServerProps: state.ClientUpdateServerModule
+  ClientGroupProps: state.ClientGroupModule,
+  ClientConfSettingProps: state.ClientConfSettingModule
 });
-
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientUpdateServerComp);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSettingComp);
 
 

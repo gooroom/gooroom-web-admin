@@ -5,22 +5,20 @@ import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientHostNameActions from '/modules/ClientHostNameModule';
+import * as GrConfirmActions from '/modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from '/components/GrUtils/GrDates';
+import { getMergedObject } from '/components/GrUtils/GrCommonUtils';
 
-import { setParameterForView } from './ClientConfSettingInform';
+import GrPageHeader from '/containers/GrContent/GrPageHeader';
+import GrConfirm from '/components/GrComponents/GrConfirm';
 
-import GrPageHeader from '../../containers/GrContent/GrPageHeader';
-import GrConfirm from '../../components/GrComponents/GrConfirm';
-
-import ClientConfSettingDialog from './ClientConfSettingDialog';
-import ClientConfSettingInform from './ClientConfSettingInform';
-import GrPane from '../../containers/GrContent/GrPane';
+import ClientHostNameManageDialog from './ClientHostNameManageDialog';
+import ClientHostNameManageInform from './ClientHostNameManageInform';
+import GrPane from '/containers/GrContent/GrPane';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -126,7 +124,7 @@ const toolIconClass = css({
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
-class ClientConfSettingHead extends Component {
+class ClientHostNameHead extends Component {
 
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
@@ -147,7 +145,7 @@ class ClientConfSettingHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          {ClientConfSettingHead.columnData.map(column => {
+          {ClientHostNameHead.columnData.map(column => {
             return (
               <TableCell
                 className={tableCellClass}
@@ -177,7 +175,7 @@ class ClientConfSettingHead extends Component {
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientConfSetting extends Component {
+class ClientHostNameManage extends Component {
 
   constructor(props) {
     super(props);
@@ -189,13 +187,13 @@ class ClientConfSetting extends Component {
 
   // .................................................
   handleSelectBtnClick = (param) => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, param));
+    const { ClientHostNameActions, ClientHostNameProps } = this.props;
+    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, param));
   };
   
   handleCreateButton = () => {
-    const { ClientConfSettingActions } = this.props;
-    ClientConfSettingActions.showDialog({
+    const { ClientHostNameActions } = this.props;
+    ClientHostNameActions.showDialog({
       selectedItem: {
         objId: '',
         objNm: '',
@@ -205,64 +203,45 @@ class ClientConfSetting extends Component {
         selectedNtpIndex: -1,
         ntpAddress: ['']
       },
-      dialogType: ClientConfSettingDialog.TYPE_ADD
+      dialogType: ClientHostNameManageDialog.TYPE_ADD
     });
   }
 
-  // setParameterForView = (param) => {
-  //   let pollingTime = '';
-  //   let useHypervisor = false;
-  //   let selectedNtpIndex = -1;
-  //   let ntpAddrSelected = '';
-  //   let ntpAddress = [];
-  //   param.propList.forEach(function(e) {
-  //     if(e.propNm == 'AGENTPOLLINGTIME') {
-  //       pollingTime = e.propValue;
-  //     } else if(e.propNm == 'USEHYPERVISOR') {
-  //       useHypervisor = (e.propValue == "true");
-  //     } else if(e.propNm == 'NTPSELECTADDRESS') {
-  //       ntpAddrSelected = e.propValue;
-  //     } else if(e.propNm == 'NTPADDRESSES') {
-  //       ntpAddress.push(e.propValue);
-  //     }
-  //   });
-  //   ntpAddress.forEach(function(e, i) {
-  //     if(ntpAddrSelected == e) {
-  //       selectedNtpIndex = i;
-  //     }
-  //   });
+  setParameterForView = (param) => {
+    let hosts = '';
+    param.propList.forEach(function(e) {
+      if(e.propNm == 'HOSTS') {
+        hosts = e.propValue;
+      }
+    });
 
-  //   return {
-  //     objId: param.objId,
-  //     objNm: param.objNm,
-  //     comment: param.comment,
-  //     modDate: param.modDate,
-  //     useHypervisor: useHypervisor,
-  //     pollingTime: pollingTime,
-  //     selectedNtpIndex: selectedNtpIndex,
-  //     ntpAddress: ntpAddress
-  //   };
-
-  // }
+    return {
+      objId: param.objId,
+      objNm: param.objNm,
+      comment: param.comment,
+      modDate: param.modDate,
+      hosts: hosts
+    };
+  }
   
   handleRowClick = (event, id) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const selectedItem = ClientConfSettingProps.listData.find(function(element) {
+    const { ClientHostNameProps, ClientHostNameActions } = this.props;
+    const selectedItem = ClientHostNameProps.listData.find(function(element) {
       return element.objId == id;
     });
     
-    const viewItem = setParameterForView(selectedItem);
+    const viewItem = this.setParameterForView(selectedItem);
 
     // choice one from two views.
 
     // 1. popup dialog
-    // ClientConfSettingActions.showDialog({
+    // ClientHostNameActions.showDialog({
     //   selectedItem: viewItem,
-    //   dialogType: ClientConfSettingDialog.TYPE_VIEW,
+    //   dialogType: ClientHostNameManageDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    ClientConfSettingActions.showInform({
+    ClientHostNameActions.showInform({
       selectedItem: viewItem  
     });
     
@@ -270,44 +249,44 @@ class ClientConfSetting extends Component {
 
   handleEditClick = (event, id) => {
     //event.stopPropagation();
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const selectedItem = ClientConfSettingProps.listData.find(function(element) {
+    const { ClientHostNameProps, ClientHostNameActions } = this.props;
+    const selectedItem = ClientHostNameProps.listData.find(function(element) {
       return element.objId == id;
     });
 
-    ClientConfSettingActions.showDialog({
-      selectedItem: setParameterForView(selectedItem),
-      dialogType: ClientConfSettingDialog.TYPE_EDIT,
+    ClientHostNameActions.showDialog({
+      selectedItem: this.setParameterForView(selectedItem),
+      dialogType: ClientHostNameManageDialog.TYPE_EDIT,
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientConfSettingProps, ClientConfSettingActions, GrConfirmActions } = this.props;
+    const { ClientHostNameProps, ClientHostNameActions, GrConfirmActions } = this.props;
 
-    const selectedItem = ClientConfSettingProps.listData.find(function(element) {
+    const selectedItem = ClientHostNameProps.listData.find(function(element) {
       return element.objId == id;
     });
 
-    ClientConfSettingActions.setSelectedItemObj({
-      selectedItem: Object.assign(ClientConfSettingProps.selectedItem, selectedItem)
+    ClientHostNameActions.setSelectedItemObj({
+      selectedItem: Object.assign(ClientHostNameProps.selectedItem, selectedItem)
     });
     const re = GrConfirmActions.showConfirm({
-      confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmTitle: 'Hosts 정보 삭제',
+      confirmMsg: 'Hosts 정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true
     });
   };
   handleDeleteConfirmResult = (confirmValue) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+    const { ClientHostNameProps, ClientHostNameActions } = this.props;
 
     if(confirmValue) {
-      ClientConfSettingActions.deleteClientConfSettingData({
-        objId: ClientConfSettingProps.selectedItem.objId
+      ClientHostNameActions.deleteClientHostNameData({
+        objId: ClientHostNameProps.selectedItem.objId
       }).then(() => {
-        ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
+        ClientHostNameActions.readClientHostNameList(ClientHostNameProps.listParam);
         }, () => {
       });
     }
@@ -315,32 +294,32 @@ class ClientConfSetting extends Component {
 
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {page: page}));
+    const { ClientHostNameActions, ClientHostNameProps } = this.props;
+    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {rowsPerPage: event.target.value}));
+    const { ClientHostNameActions, ClientHostNameProps } = this.props;
+    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
   handleRequestSort = (event, property) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+    const { ClientHostNameProps, ClientHostNameActions } = this.props;
     let orderDir = "desc";
-    if (ClientConfSettingProps.listParam.orderColumn === property && ClientConfSettingProps.listParam.orderDir === "desc") {
+    if (ClientHostNameProps.listParam.orderColumn === property && ClientHostNameProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
   // .................................................
 
   // .................................................
   handleKeywordChange = name => event => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    const newParam = getMergedObject(ClientConfSettingProps.listParam, {keyword: event.target.value});
-    ClientConfSettingActions.changeStoreData({
+    const { ClientHostNameActions, ClientHostNameProps } = this.props;
+    const newParam = getMergedObject(ClientHostNameProps.listParam, {keyword: event.target.value});
+    ClientHostNameActions.changeStoreData({
       name: 'listParam',
       value: newParam
     });
@@ -348,8 +327,8 @@ class ClientConfSetting extends Component {
 
   render() {
 
-    const { ClientConfSettingProps } = this.props;
-    const emptyRows = ClientConfSettingProps.listParam.rowsPerPage - ClientConfSettingProps.listData.length;
+    const { ClientHostNameProps } = this.props;
+    const emptyRows = ClientHostNameProps.listParam.rowsPerPage - ClientHostNameProps.listData.length;
 
     return (
       <React.Fragment>
@@ -395,14 +374,14 @@ class ClientConfSetting extends Component {
           <div className={tableContainerClass}>
             <Table className={tableClass}>
 
-              <ClientConfSettingHead
-                orderDir={ClientConfSettingProps.listParam.orderDir}
-                orderColumn={ClientConfSettingProps.listParam.orderColumn}
+              <ClientHostNameHead
+                orderDir={ClientHostNameProps.listParam.orderDir}
+                orderColumn={ClientHostNameProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
               />
 
               <TableBody>
-                {ClientConfSettingProps.listData.map(n => {
+                {ClientHostNameProps.listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -441,7 +420,7 @@ class ClientConfSetting extends Component {
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
-                      colSpan={ClientConfSettingHead.columnData.length + 1}
+                      colSpan={ClientHostNameHead.columnData.length + 1}
                       className={tableCellClass}
                     />
                   </TableRow>
@@ -452,10 +431,10 @@ class ClientConfSetting extends Component {
 
           <TablePagination
             component='div'
-            count={ClientConfSettingProps.listParam.rowsFiltered}
-            rowsPerPage={ClientConfSettingProps.listParam.rowsPerPage}
-            rowsPerPageOptions={ClientConfSettingProps.listParam.rowsPerPageOptions}
-            page={ClientConfSettingProps.listParam.page}
+            count={ClientHostNameProps.listParam.rowsFiltered}
+            rowsPerPage={ClientHostNameProps.listParam.rowsPerPage}
+            rowsPerPageOptions={ClientHostNameProps.listParam.rowsPerPageOptions}
+            page={ClientHostNameProps.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -468,8 +447,8 @@ class ClientConfSetting extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientConfSettingInform />
-        <ClientConfSettingDialog />
+        <ClientHostNameManageInform />
+        <ClientHostNameManageDialog />
         <GrConfirm />
       </React.Fragment>
     );
@@ -477,12 +456,12 @@ class ClientConfSetting extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientConfSettingProps: state.ClientConfSettingModule
+  ClientHostNameProps: state.ClientHostNameModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSetting);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameManage);

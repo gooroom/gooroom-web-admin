@@ -6,9 +6,9 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
+import { formatDateToSimple } from '/components/GrUtils/GrDates';
 
-import * as ClientHostNameActions from '../../modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from '/modules/ClientUpdateServerModule';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -62,19 +62,19 @@ const pos = css({
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientHostNameInform extends Component {
+class ClientUpdateServerInform extends Component {
 
   // .................................................
 
   render() {
 
-    const { ClientHostNameProps } = this.props;
-    const { selectedItem } = ClientHostNameProps;
+    const { ClientUpdateServerProps } = this.props;
+    const { selectedItem } = ClientUpdateServerProps;
     const bull = <span className={bullet}>•</span>;
 
     return (
       <div className={componentClass}>
-      {(ClientHostNameProps.informOpen) &&
+      {(ClientUpdateServerProps.informOpen) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedItem) ? selectedItem.objNm : ''}
@@ -90,12 +90,22 @@ class ClientHostNameInform extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.hosts}</pre></TableCell>
+                  <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} 주 OS 정보</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.mainos}</pre></TableCell>
                 </TableRow>
+
+                <TableRow>
+                  <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} 기반 OS 정보</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.extos}</pre></TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} gooroom.pref</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.priorities}</pre></TableCell>
+                </TableRow>
+
               </TableBody>
             </Table>
-
           </CardContent>
         </Card>
       }
@@ -107,22 +117,28 @@ class ClientHostNameInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientHostNameProps: state.ClientHostNameModule
+  ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameInform);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientUpdateServerInform);
 
 export const setParameterForView = (param) => {
 
-  let hosts = '';
+  let mainos = '';
+  let extos = '';
+  let priorities = '';
   
   param.propList.forEach(function(e) {
-    if(e.propNm == 'HOSTS') {
-      hosts = e.propValue;
+    if(e.propNm == 'MAINOS') {
+      mainos = e.propValue;
+    } else if(e.propNm == 'EXTOS') {
+      extos = e.propValue;
+    } else if(e.propNm == 'PRIORITIES') {
+      priorities = e.propValue;
     }
   });
 
@@ -131,7 +147,10 @@ export const setParameterForView = (param) => {
     objNm: param.objNm,
     comment: param.comment,
     modDate: param.modDate,
-    hosts: hosts
+    mainos: mainos,
+    extos: extos,
+    priorities: priorities
   };
 
 };
+
