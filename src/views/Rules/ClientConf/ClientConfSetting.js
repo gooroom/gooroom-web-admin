@@ -208,42 +208,6 @@ class ClientConfSetting extends Component {
       dialogType: ClientConfSettingDialog.TYPE_ADD
     });
   }
-
-  // setParameterForView = (param) => {
-  //   let pollingTime = '';
-  //   let useHypervisor = false;
-  //   let selectedNtpIndex = -1;
-  //   let ntpAddrSelected = '';
-  //   let ntpAddress = [];
-  //   param.propList.forEach(function(e) {
-  //     if(e.propNm == 'AGENTPOLLINGTIME') {
-  //       pollingTime = e.propValue;
-  //     } else if(e.propNm == 'USEHYPERVISOR') {
-  //       useHypervisor = (e.propValue == "true");
-  //     } else if(e.propNm == 'NTPSELECTADDRESS') {
-  //       ntpAddrSelected = e.propValue;
-  //     } else if(e.propNm == 'NTPADDRESSES') {
-  //       ntpAddress.push(e.propValue);
-  //     }
-  //   });
-  //   ntpAddress.forEach(function(e, i) {
-  //     if(ntpAddrSelected == e) {
-  //       selectedNtpIndex = i;
-  //     }
-  //   });
-
-  //   return {
-  //     objId: param.objId,
-  //     objNm: param.objNm,
-  //     comment: param.comment,
-  //     modDate: param.modDate,
-  //     useHypervisor: useHypervisor,
-  //     pollingTime: pollingTime,
-  //     selectedNtpIndex: selectedNtpIndex,
-  //     ntpAddress: ntpAddress
-  //   };
-
-  // }
   
   handleRowClick = (event, id) => {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
@@ -268,7 +232,7 @@ class ClientConfSetting extends Component {
     
   };
 
-  handleEditClick = (event, id) => {
+  handleEditClick = (event, id) => { 
     //event.stopPropagation();
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
     const selectedItem = ClientConfSettingProps.listData.find(function(element) {
@@ -276,6 +240,7 @@ class ClientConfSetting extends Component {
     });
 
     ClientConfSettingActions.showDialog({
+      compId: '',
       selectedItem: setParameterForView(selectedItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT,
     });

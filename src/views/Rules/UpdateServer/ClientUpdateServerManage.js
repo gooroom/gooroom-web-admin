@@ -263,6 +263,7 @@ class ClientUpdateServerManage extends Component {
     });
 
     ClientUpdateServerActions.showDialog({
+      compId: '',
       selectedItem: this.setParameterForView(selectedItem),
       dialogType: ClientUpdateServerManageDialog.TYPE_EDIT,
     });

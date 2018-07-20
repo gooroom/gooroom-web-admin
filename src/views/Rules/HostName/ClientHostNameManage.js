@@ -255,6 +255,7 @@ class ClientHostNameManage extends Component {
     });
 
     ClientHostNameActions.showDialog({
+      compId: '',
       selectedItem: this.setParameterForView(selectedItem),
       dialogType: ClientHostNameManageDialog.TYPE_EDIT,
     });

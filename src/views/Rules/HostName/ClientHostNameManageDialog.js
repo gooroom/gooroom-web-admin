@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
+import GrConfirm from 'components/GrComponents/GrConfirm';
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -138,7 +140,18 @@ class ClientHostNameManageDialog extends Component {
             const { ClientHostNameProps, ClientHostNameActions } = this.props;
             ClientHostNameActions.editClientHostNameData(ClientHostNameProps.editingItem)
                 .then((res) => {
-                ClientHostNameActions.readClientHostNameList(ClientHostNameProps.listParam);
+
+                    const { editingCompId, [editingCompId + '__selectedItem'] : selectedItem } = ClientHostNameProps;
+                    if(editingCompId && editingCompId != '') {
+                        ClientHostNameActions.getClientHostName({
+                            compId: editingCompId,
+                            objId: selectedItem.objId
+                        });
+                    } else {
+                        // update list 
+                        ClientHostNameActions.readClientHostNameList(ClientHostNameProps.listParam);
+                    }
+
                 this.handleClose();
             }, (res) => {
 
@@ -224,6 +237,7 @@ class ClientHostNameManageDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
                 </DialogActions>
+                <GrConfirm />
             </Dialog>
         );
     }

@@ -66,19 +66,19 @@ export default {
         },
         {
           name: '업데이트서버설정',
-          url: '/clientconfig/update',
+          url: '/clientconfig/update/GRM0302',
           icon: 'icon-folder',
           level: 2,
         },
         {
           name: 'HOSTS설정',
-          url: '/clientconfig/host',
+          url: '/clientconfig/host/GRM0303',
           icon: 'icon-layers',
           level: 2,
         },
         {
           name: '단말정책설정',
-          url: '/clientconfig/setting',
+          url: '/clientconfig/setting/GRM0304',
           icon: 'icon-notebook',
           level: 2,
         }

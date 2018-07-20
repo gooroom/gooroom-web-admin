@@ -8,7 +8,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
+
+import ClientUpdateServerDialog from './ClientUpdateServerManageDialog';
 
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
@@ -28,8 +31,13 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from '@material-ui/core/Grid';
+
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+
 
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
@@ -58,6 +66,11 @@ const pos = css({
   marginBottom: 12,
 }).toString();
 
+const grNarrowButton = css({
+  paddingTop: '2px !important',
+  paddingBottom: '2px !important'
+}).toString();
+
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
@@ -70,20 +83,45 @@ class ClientUpdateServerComp extends Component {
     };
   }
 
+  handleEditBtnClick = (param) => {
+
+    const { ClientUpdateServerActions, ClientUpdateServerProps, compId } = this.props;
+    const { [compId + '__selectedItem'] : viewItem } = ClientUpdateServerProps;
+
+    ClientUpdateServerActions.showDialog({
+      compId: compId,
+      selectedItem: viewItem,
+      dialogType: ClientUpdateServerDialog.TYPE_EDIT,
+    });
+
+  };
+
   // .................................................
   render() {
 
     const { ClientUpdateServerProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const { [compId + '__editingItem'] : viewItem } = ClientUpdateServerProps;
+    const { [compId + '__selectedItem'] : viewItem } = ClientUpdateServerProps;
 
     return (
-
+      <React.Fragment>
       <Card className={card}>
         {(viewItem) && <CardContent>
-          <Typography className={title} color="textSecondary">
-            업데이트서버설정
-          </Typography>
+
+          <Grid container spacing={24}>
+            <Grid item xs={6}>
+              <Typography className={title} style={{backgroundColor:"lightBlue",color:"white",fontWeight:"bold"}}>
+                업데이트서버설정
+              </Typography>
+            </Grid>
+            <Grid item xs={6} style={{textAlign:"right"}}>
+              <Button
+                className={grNarrowButton}
+                variant="outlined" color="primary"
+                onClick={() => this.handleEditBtnClick(viewItem.objId)}
+              ><SettingsApplicationsIcon />수정</Button>
+            </Grid>
+          </Grid>
           <Typography variant="headline" component="h2">
             {viewItem.objNm}
           </Typography>
@@ -112,6 +150,8 @@ class ClientUpdateServerComp extends Component {
         </CardContent>
       }
       </Card>
+      <ClientUpdateServerDialog />
+      </React.Fragment>
     );
   }
 }
@@ -125,6 +165,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

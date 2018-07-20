@@ -174,7 +174,6 @@ class ClientMasterManage extends Component {
     ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, param));
   };
 
-
   // Select Group Item
   handleChangeClientGroupSelected = (selectedGroupObj='', selectedGroupIdArray) => {
 
