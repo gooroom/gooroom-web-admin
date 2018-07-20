@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 
-import { requestPostAPI } from '../components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 const GET_CLIENTGROUP_LIST_PENDING = 'clientSelector/GET_CLIENTGROUP_LIST_PENDING';
 const GET_CLIENTGROUP_LIST_SUCCESS = 'clientSelector/GET_CLIENTGROUP_LIST_SUCCESS';

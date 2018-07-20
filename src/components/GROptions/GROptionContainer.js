@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 //import {Form, FormGroup, Row, Col, Input, InputGroup, InputGroupAddon, Button, Label, Card, CardBody} from 'reactstrap';
 
-import GrButton from '../../components/GrOptions/GrButton';
+import GrButton from 'components/GrOptions/GrButton';
 
 import Select from 'material-ui/Select';
 

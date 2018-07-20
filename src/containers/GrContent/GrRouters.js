@@ -3,34 +3,34 @@ import PropTypes from "prop-types";
 
 import { css } from "glamor";
 
-import { grLayout } from "../../templates/default/GrLayout";
-import { grColor } from "../../templates/default/GrColors";
+import { grLayout } from "templates/default/GrLayout";
+import { grColor } from "templates/default/GrColors";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import Dashboard from "../Dashboard/";
 // Client - client management
-import ClientMasterManage from "../../views/Client/ClientMasterManage";
+import ClientMasterManage from "views/Client/ClientMasterManage";
 
-import ClientManage from "../../views/Client/ClientManage";
-import ClientGroupManage from "../../views/ClientGroup/ClientGroupManage";
+import ClientManage from "views/Client/ClientManage";
+import ClientGroupManage from "views/ClientGroup/ClientGroupManage";
 
-import ClientRegKey from "../../views/ClientConfig/ClientRegKey";
-import ClientProfileSet from "../../views/ClientConfig/ClientProfileSet";
+import ClientRegKey from "views/ClientConfig/ClientRegKey";
+import ClientProfileSet from "views/ClientConfig/ClientProfileSet";
 
-import ClientConfSetting from "../../views/Rules/ClientConf/ClientConfSetting";
-import ClientHostNameManage from "../../views/Rules/HostName/ClientHostNameManage";
-import ClientUpdateServerManage from "../../views/Rules/UpdateServer/ClientUpdateServerManage";
+import ClientConfSetting from "views/Rules/ClientConf/ClientConfSetting";
+import ClientHostNameManage from "views/Rules/HostName/ClientHostNameManage";
+import ClientUpdateServerManage from "views/Rules/UpdateServer/ClientUpdateServerManage";
 
-import JobManage from "../../views/Job/JobManage";
-import PackageManage from '../../views/Package/PackageManage';
+import JobManage from "views/Job/JobManage";
+import PackageManage from 'views/Package/PackageManage';
 
-import DeptManage from "../../views/User/DeptManage";
-import UserManage from "../../views/User/UserManage";
+import DeptManage from "views/User/DeptManage";
+import UserManage from "views/User/UserManage";
 
 
 
-import ComponentTests from "../../views/Test/ComponentTests";
+import ComponentTests from "views/Test/ComponentTests";
 
 
 const rootClass = css({

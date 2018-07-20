@@ -6,9 +6,9 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from '/components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
-import * as ClientHostNameActions from '/modules/ClientHostNameModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';

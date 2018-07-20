@@ -1,8 +1,8 @@
 
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from '../components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
 const GET_CLIENTGROUPITEMS_PENDING = 'commonOption/GET_CLIENTGROUPITEMS_PENDING';
 const GET_CLIENTGROUPITEMS_SUCCESS = 'commonOption/GET_CLIENTGROUPITEMS_SUCCESS';

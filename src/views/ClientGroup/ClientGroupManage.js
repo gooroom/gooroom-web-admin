@@ -5,24 +5,24 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '/modules/ClientGroupModule';
-import * as ClientConfSettingActions from '/modules/ClientConfSettingModule';
-import * as ClientHostNameActions from '/modules/ClientHostNameModule';
-import * as ClientUpdateServerActions from '/modules/ClientUpdateServerModule';
-import * as ClientDesktopConfigActions from '/modules/ClientDesktopConfigModule';
+import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
-import * as GrConfirmActions from '/modules/GrConfirmModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import { formatDateToSimple } from '/components/GrUtils/GrDates';
-import { getMergedObject } from '/components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
-import GrPageHeader from '/containers/GrContent/GrPageHeader';
+import GrPageHeader from 'containers/GrContent/GrPageHeader';
 
-import GrPane from '/containers/GrContent/GrPane';
-import GrConfirm from '/components/GrComponents/GrConfirm';
+import GrPane from 'containers/GrContent/GrPane';
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';

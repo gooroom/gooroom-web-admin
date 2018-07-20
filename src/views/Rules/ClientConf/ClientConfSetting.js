@@ -5,22 +5,22 @@ import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientConfSettingActions from '/modules/ClientConfSettingModule';
-import * as GrConfirmActions from '/modules/GrConfirmModule';
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 
-import { formatDateToSimple } from '/components/GrUtils/GrDates';
-import { getMergedObject } from '/components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
 import { setParameterForView } from './ClientConfSettingInform';
 
-import GrPageHeader from '/containers/GrContent/GrPageHeader';
-import GrConfirm from '/components/GrComponents/GrConfirm';
+import GrPageHeader from 'containers/GrContent/GrPageHeader';
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
 import ClientConfSettingInform from './ClientConfSettingInform';
-import GrPane from '/containers/GrContent/GrPane';
+import GrPane from 'containers/GrContent/GrPane';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';

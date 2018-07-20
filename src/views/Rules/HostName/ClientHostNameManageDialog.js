@@ -7,8 +7,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientHostNameActions from '/modules/ClientHostNameModule';
-import * as GrConfirmActions from '/modules/GrConfirmModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";

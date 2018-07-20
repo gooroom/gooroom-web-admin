@@ -13,6 +13,10 @@ const SRC_DIR = path.resolve(__dirname, 'src');
 module.exports = (env = {}) => {
   return {
 
+    resolve: {
+      modules: [path.resolve(__dirname, 'src'), 'node_modules']
+    },
+
     entry: {
       index: [SRC_DIR + '/index.js']
     },

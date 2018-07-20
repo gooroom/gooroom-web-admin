@@ -1,8 +1,8 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from '../components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
-import { setParameterForView } from '../views/ClientConfig/ClientConfSettingInform';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { setParameterForView } from 'views/Rules/ClientConf/ClientConfSettingInform';
 
 const COMMON_PENDING = 'clientConfSetting/COMMON_PENDING';
 const COMMON_FAILURE = 'clientConfSetting/COMMON_FAILURE';

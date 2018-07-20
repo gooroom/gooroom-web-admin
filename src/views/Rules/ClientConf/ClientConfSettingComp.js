@@ -7,11 +7,11 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '/modules/ClientGroupModule';
-import * as ClientConfSettingActions from '/modules/ClientConfSettingModule';
-import * as GrConfirmActions from '/modules/GrConfirmModule';
+import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { getMergedObject, arrayContainsArray } from '/components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
