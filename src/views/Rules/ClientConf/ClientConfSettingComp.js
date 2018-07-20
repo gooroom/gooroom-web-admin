@@ -11,6 +11,8 @@ import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
+import ClientConfSettingDialog from './ClientConfSettingDialog';
+
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 import Table from '@material-ui/core/Table';
@@ -23,8 +25,12 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from '@material-ui/core/Grid';
+
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 
 //
@@ -54,6 +60,11 @@ const pos = css({
   marginBottom: 12,
 }).toString();
 
+const grNarrowButton = css({
+  paddingTop: '2px !important',
+  paddingBottom: '2px !important'
+}).toString();
+
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
@@ -66,19 +77,43 @@ class ClientConfSettingComp extends Component {
     };
   }
 
+  handleEditBtnClick = (param) => {
+
+    const { ClientConfSettingActions, ClientConfSettingProps, compId } = this.props;
+    const { [compId + '__selectedItem'] : viewItem } = ClientConfSettingProps;
+
+    ClientConfSettingActions.showDialog({
+      compId: compId,
+      selectedItem: viewItem,
+      dialogType: ClientConfSettingDialog.TYPE_EDIT,
+    });
+
+  };
+
   // .................................................
   render() {
     const { ClientConfSettingProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const { [compId + '__editingItem'] : viewItem } = ClientConfSettingProps;
+    const { [compId + '__selectedItem'] : viewItem } = ClientConfSettingProps;
 
     return (
-
+      <React.Fragment>
       <Card className={card}>
         {(viewItem) && <CardContent>
-          <Typography className={title} color="textSecondary">
-            단말정책설정
-          </Typography>
+          <Grid container spacing={24}>
+            <Grid item xs={6}>
+              <Typography className={title} style={{backgroundColor:"lightBlue",color:"white",fontWeight:"bold"}}>
+                단말정책설정
+              </Typography>
+            </Grid>
+            <Grid item xs={6} style={{textAlign:"right"}}>
+              <Button
+                className={grNarrowButton}
+                variant="outlined" color="primary"
+                onClick={() => this.handleEditBtnClick(viewItem.objId)}
+              ><SettingsApplicationsIcon />수정</Button>
+            </Grid>
+          </Grid>
           <Typography variant="headline" component="h2">
             {viewItem.objNm}
           </Typography>
@@ -113,6 +148,8 @@ class ClientConfSettingComp extends Component {
         </CardContent>
         }
       </Card>
+      <ClientConfSettingDialog />
+      </React.Fragment>
     );
   }
 }

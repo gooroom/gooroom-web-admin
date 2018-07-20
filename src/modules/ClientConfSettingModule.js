@@ -318,7 +318,7 @@ export default handleActions({
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
         let editingItem = 'editingItem';
         if(action.compId && action.compId != '') {
-            editingItem = action.compId + '__editingItem';
+            editingItem = action.compId + '__selectedItem';
         }
         const { data } = action.payload.data;
 
@@ -343,6 +343,7 @@ export default handleActions({
         return {
             ...state,
             editingItem: Object.assign({}, action.payload.selectedItem),
+            editingCompId: action.payload.compId,
             dialogOpen: true,
             dialogType: action.payload.dialogType,
         };

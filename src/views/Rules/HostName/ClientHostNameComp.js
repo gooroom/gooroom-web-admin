@@ -8,7 +8,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
+
+import ClientHostNameDialog from './ClientHostNameManageDialog';
 
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
@@ -28,8 +31,12 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from '@material-ui/core/Grid';
+
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
@@ -58,6 +65,11 @@ const pos = css({
   marginBottom: 12,
 }).toString();
 
+const grNarrowButton = css({
+  paddingTop: '2px !important',
+  paddingBottom: '2px !important'
+}).toString();
+
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
@@ -70,19 +82,50 @@ class ClientHostNameComp extends Component {
     };
   }
 
+  handleEditBtnClick = (param) => {
+    // const { ClientManageCompActions, ClientManageCompProps } = this.props;
+    // ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, param));
+  };
+
+  handleEditBtnClick = (param) => {
+
+    const { ClientHostNameActions, ClientHostNameProps, compId } = this.props;
+    const { [compId + '__selectedItem'] : viewItem } = ClientHostNameProps;
+
+    ClientHostNameActions.showDialog({
+      compId: compId,
+      selectedItem: viewItem,
+      dialogType: ClientHostNameDialog.TYPE_EDIT,
+    });
+
+  };
+
   // .................................................
   render() {
     const { ClientHostNameProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const { [compId + '__editingItem'] : viewItem } = ClientHostNameProps;
+    const { [compId + '__selectedItem'] : viewItem } = ClientHostNameProps;
 
     return (
 
+      <React.Fragment>
       <Card className={card}>
         {(viewItem) && <CardContent>
-          <Typography className={title} color="textSecondary">
-            Hosts설정
-          </Typography>
+
+          <Grid container spacing={24}>
+            <Grid item xs={6}>
+              <Typography className={title} style={{backgroundColor:"lightBlue",color:"white",fontWeight:"bold"}}>
+                Hosts설정
+              </Typography>
+            </Grid>
+            <Grid item xs={6} style={{textAlign:"right"}}>
+              <Button
+                className={grNarrowButton}
+                variant="outlined" color="primary"
+                onClick={() => this.handleEditBtnClick(viewItem.objId)}
+              ><SettingsApplicationsIcon />수정</Button>
+            </Grid>
+          </Grid>
           <Typography variant="headline" component="h2">
             {viewItem.objNm}
           </Typography>
@@ -103,6 +146,8 @@ class ClientHostNameComp extends Component {
         </CardContent>
       }
       </Card>
+      <ClientHostNameDialog />
+      </React.Fragment>
     );
   }
 }
@@ -116,6 +161,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
