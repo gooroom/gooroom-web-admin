@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
-import PropTypes from "prop-types";
-import classNames from "classnames";
+import PropTypes from 'prop-types';
+
+import classNames from 'classnames';
 import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
+
+import ClientHostNameDialog from './ClientHostNameManageDialog';
 
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
@@ -27,8 +31,12 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from '@material-ui/core/Grid';
+
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
@@ -57,10 +65,15 @@ const pos = css({
   marginBottom: 12,
 }).toString();
 
+const grNarrowButton = css({
+  paddingTop: '2px !important',
+  paddingBottom: '2px !important'
+}).toString();
+
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class DesktopConfigComp extends Component {
+class ClientHostNameComp extends Component {
   constructor(props) {
     super(props);
 
@@ -69,39 +82,63 @@ class DesktopConfigComp extends Component {
     };
   }
 
+  handleEditBtnClick = (param) => {
+    // const { ClientManageCompActions, ClientManageCompProps } = this.props;
+    // ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, param));
+  };
+
+  handleEditBtnClick = (param) => {
+
+    const { ClientHostNameActions, ClientHostNameProps, compId } = this.props;
+    const { [compId + '__selectedItem'] : viewItem } = ClientHostNameProps;
+
+    ClientHostNameActions.showDialog({
+      compId: compId,
+      selectedItem: viewItem,
+      dialogType: ClientHostNameDialog.TYPE_EDIT,
+    });
+
+  };
+
   // .................................................
   render() {
-
-    const { ClientDesktopConfigProps, compId } = this.props;
+    const { ClientHostNameProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const { [compId + '__editingItem'] : viewItem } = ClientDesktopConfigProps;
+    const { [compId + '__selectedItem'] : viewItem } = ClientHostNameProps;
 
     return (
 
+      <React.Fragment>
       <Card className={card}>
         {(viewItem) && <CardContent>
-          <Typography className={title} color="textSecondary">
-            데스크톱환경
-          </Typography>
+
+          <Grid container spacing={24}>
+            <Grid item xs={6}>
+              <Typography className={title} style={{backgroundColor:"lightBlue",color:"white",fontWeight:"bold"}}>
+                Hosts설정
+              </Typography>
+            </Grid>
+            <Grid item xs={6} style={{textAlign:"right"}}>
+              <Button
+                className={grNarrowButton}
+                variant="outlined" color="primary"
+                onClick={() => this.handleEditBtnClick(viewItem.objId)}
+              ><SettingsApplicationsIcon />수정</Button>
+            </Grid>
+          </Grid>
           <Typography variant="headline" component="h2">
-            {viewItem.confNm}
+            {viewItem.objNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
-            {(viewItem.themeNm && viewItem.themeNm != '') ? '"' + viewItem.themeNm + '"' : ''}
+            {(viewItem.comment != '') ? '"' + viewItem.comment + '"' : ''}
           </Typography>
           <Divider />
           {(viewItem && viewItem.objId != '') &&
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell >{bull} 데스크톱환경 정보</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell style={{fontSize:"17px"}}>
-                    <pre style={{width:"64%", height:"135px", overflow:"auto"}}>
-                    {viewItem.confInfo}
-                    </pre>
-                  </TableCell>
+                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.hosts}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -109,6 +146,8 @@ class DesktopConfigComp extends Component {
         </CardContent>
       }
       </Card>
+      <ClientHostNameDialog />
+      </React.Fragment>
     );
   }
 }
@@ -116,15 +155,16 @@ class DesktopConfigComp extends Component {
 
 const mapStateToProps = (state) => ({
   ClientGroupProps: state.ClientGroupModule,
-  ClientDesktopConfigProps: state.ClientDesktopConfigModule
+  ClientHostNameProps: state.ClientHostNameModule
 });
 
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DesktopConfigComp);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameComp);
 
 

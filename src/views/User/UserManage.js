@@ -4,32 +4,32 @@ import classNames from "classnames";
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";
 
-import { grLayout } from "../../templates/default/GrLayout";
-import { grColor } from "../../templates/default/GrColors";
-import { grRequestPromise } from "../../components/GrUtils/GrRequester";
-import GrPageHeader from "../../containers/GrContent/GrPageHeader";
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
-import UserManageDialog from "../User/UserManageDialog";
-import GrPane from "../../containers/GrContent/GrPane";
+import { grLayout } from "templates/default/GrLayout";
+import { grColor } from "templates/default/GrColors";
+import { grRequestPromise } from "components/GrUtils/GrRequester";
+import GrPageHeader from "containers/GrContent/GrPageHeader";
+
+import UserManageDialog from "views/User/UserManageDialog";
+import GrPane from "containers/GrContent/GrPane";
 
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 
-import Card, {
-  CardHeader,
-  CardMedia,
-  CardContent,
-  CardActions
-} from "@material-ui/core/Card";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
 
-import Table, {
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel
-} from "@material-ui/core/Table";
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
@@ -37,7 +37,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 import Add from "@material-ui/icons/Add";
-
+import Checkbox from "@material-ui/core/Checkbox";
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
 //
@@ -151,6 +151,10 @@ class UserManageHead extends Component {
     return (
       <TableHead>
         <TableRow>
+        <TableCell padding="checkbox" className={tableHeadCellClass} >
+            <Checkbox
+            />
+          </TableCell>
           {UserManageHead.columnData.map(column => {
             return (
               <TableCell
@@ -213,7 +217,7 @@ class UserManage extends Component {
       order: order
     });
 
-    grRequestPromise("https://gpms.gooroom.kr/gpms/readUserList", {
+    grRequestPromise("readUserList", {
       searchKey: this.state.keyword,
 
       start: page * rowsPerPage,
@@ -379,6 +383,14 @@ class UserManage extends Component {
                   key={n.userId}
                   selected={isSelected}
                 >
+                <TableCell
+                  padding="checkbox"
+                  className={tableCellClass}
+                >
+                <Checkbox
+                    className={tableCellClass}
+                  />
+                </TableCell>
                   <TableCell className={tableCellClass}>
                     {n.userId}
                   </TableCell>
@@ -389,10 +401,10 @@ class UserManage extends Component {
                     {n.status}
                   </TableCell>
                   <TableCell className={tableCellClass}>
-                    {n.lastLoginDt}
+                    {formatDateToSimple(n.lastLoginDt, 'YYYY-MM-DD')}                    
                   </TableCell>
                   <TableCell className={tableCellClass}>
-                    {n.regDate}
+                    {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}                    
                   </TableCell>
                 </TableRow>
               );
@@ -412,8 +424,8 @@ class UserManage extends Component {
 
     <TablePagination
       component="div"
-      count={rowsFiltered}
-      rowsPerPage={rowsPerPage}
+      count="462"
+      rowsPerPage="10"
       page={page}
       backIconButtonProps={{
         "aria-label": "Previous Page"

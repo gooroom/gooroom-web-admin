@@ -5,18 +5,18 @@ import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
-import GrPageHeader from '../../containers/GrContent/GrPageHeader';
-import GrConfirm from '../../components/GrComponents/GrConfirm';
+import GrPageHeader from 'containers/GrContent/GrPageHeader';
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import GrPane from '../../containers/GrContent/GrPane';
+import GrPane from 'containers/GrContent/GrPane';
 
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';

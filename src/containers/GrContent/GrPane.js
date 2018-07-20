@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import { css } from "glamor";
-import { grLayout } from "../../templates/default/GrLayout";
-import { grColor } from "../../templates/default/GrColors";
+import { grLayout } from "templates/default/GrLayout";
+import { grColor } from "templates/default/GrColors";
 import { createMuiTheme } from '@material-ui/core/styles';
 
 import Paper from "@material-ui/core/Paper";

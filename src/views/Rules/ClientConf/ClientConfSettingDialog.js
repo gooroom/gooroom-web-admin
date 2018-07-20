@@ -7,8 +7,10 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
+
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -138,7 +140,23 @@ class ClientConfSettingDialog extends Component {
             const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
             ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.editingItem)
                 .then((res) => {
-                ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
+                    const { editingCompId, [editingCompId + '__selectedItem'] : selectedItem } = ClientConfSettingProps;
+                    if(editingCompId || editingCompId == '') {
+                        // update list 
+                        ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
+                    }
+                    // change selected objects
+                    ClientConfSettingProps.keys().map(obj => {
+                        console.log('obj > ', obj);    
+                    });
+                  
+
+                    ClientConfSettingActions.getClientConfSetting({
+                        compId: editingCompId,
+                        objId: selectedItem.objId
+                    });
+
+
                 this.handleClose();
             }, (res) => {
 
@@ -281,6 +299,7 @@ class ClientConfSettingDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
                 </DialogActions>
+                <GrConfirm />
             </Dialog>
         );
     }

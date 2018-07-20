@@ -5,18 +5,18 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientManageCompActions from '../../modules/ClientManageCompModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientManageCompActions from 'modules/ClientManageCompModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
-import { grRequestPromise } from "../../components/GrUtils/GrRequester";
-import GrPageHeader from "../../containers/GrContent/GrPageHeader";
-import GrPane from '../../containers/GrContent/GrPane';
+import { grRequestPromise } from "components/GrUtils/GrRequester";
+import GrPageHeader from "containers/GrContent/GrPageHeader";
+import GrPane from 'containers/GrContent/GrPane';
 
 import ClientDialog from "./ClientDialog";
 

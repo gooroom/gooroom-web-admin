@@ -7,11 +7,10 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
-import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -23,11 +22,10 @@ import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
 
-
-import ClientConfigComp from '../Rules/ClientConfigComp';
-import ClientHostsComp from '../Rules/ClientHostsComp';
-import DesktopConfigComp from '../Rules/DesktopConfigComp';
-import ClientUpdateServerComp from '../Rules/ClientUpdateServerComp';
+import ClientConfSettingComp from 'views/Rules/ClientConf/ClientConfSettingComp';
+import ClientHostNameComp from 'views/Rules/HostName/ClientHostNameComp';
+import DesktopConfigComp from 'views/Rules/DesktopConfigComp';
+import ClientUpdateServerComp from 'views/Rules/UpdateServer/ClientUpdateServerComp';
 
 
 //
@@ -46,47 +44,21 @@ const cardContainerClass = css({
 }).toString();
 
 
-const title = css({
-  marginBottom: 16,
-  fontSize: 14,
-}).toString();
-
-const card = css({
-  minWidth: 275,
-}).toString();
-
-const bullet = css({
-  display: 'inline-block',
-  margin: '0 2px',
-  transform: 'scale(0.8)',
-}).toString();
-
-const pos = css({
-  marginBottom: 12,
-}).toString();
-
-
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientGroupInform extends Component {
 
-  componentWillUpdate(nextProps, nextState) {
-//console.log(' -- componentWillUpdate --');
-
-    const selectedItem = nextProps.selectedItem;
-//console.log(' selectedItem : ', selectedItem);
-  }
-
-  // .................................................
-
   render() {
 
-    const { isOpen, selectedItem } = this.props;
+    const { compId, ClientGroupCompProps } = this.props;
+    const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
+    const { isOpen } = this.props;
+    const { [compId + '__selectedItem'] : selectedItem } = ClientGroupCompProps;
 
     return (
       <div className={componentClass}>
-      {(isOpen) &&
+      {(isOpen && selectedItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedItem) ? selectedItem.grpNm : ''}
@@ -101,13 +73,15 @@ class ClientGroupInform extends Component {
           
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientConfigComp 
+              <ClientConfSettingComp
+                compId={compId}
                 objId={selectedItem.clientConfigId} 
                 objNm={selectedItem.clientConfigNm} 
               />
             </Grid>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
               <DesktopConfigComp 
+                compId={compId}
                 objId={selectedItem.desktopConfigId} 
                 objNm={selectedItem.desktopConfigNm} 
               />
@@ -115,13 +89,15 @@ class ClientGroupInform extends Component {
           </Grid>
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientHostsComp 
+              <ClientHostNameComp
+                compId={compId}
                 objId={selectedItem.hostNameConfigId} 
                 objNm={selectedItem.hostNameConfigNm} 
               />
             </Grid>
             <Grid item xs={12} sm={6} className={cardContainerClass}>
-              <ClientUpdateServerComp 
+              <ClientUpdateServerComp
+                compId={compId}
                 objId={selectedItem.updateServerConfigId} 
                 objNm={selectedItem.updateServerConfigNm} 
               />
@@ -137,7 +113,11 @@ class ClientGroupInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule
+  ClientGroupCompProps: state.ClientGroupModule,
+  ClientConfSettingProps: state.ClientConfSettingModule,
+  ClientHostNameProps: state.ClientHostNameModule,
+  ClientUpdateServerProps: state.ClientUpdateServerModule,
+  ClientDesktopConfigProps: state.ClientDesktopConfigModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

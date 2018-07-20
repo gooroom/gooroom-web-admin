@@ -5,13 +5,17 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupCompActions from '../../modules/ClientGroupCompModule';
-import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
+
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { css } from 'glamor';
 
-import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -148,8 +152,8 @@ class ClientGroupComp extends Component {
 
   componentDidMount() {
 
-    const { ClientGroupCompActions, ClientGroupCompProps } = this.props;
-    ClientGroupCompActions.readClientGroupList(getMergedObject(ClientGroupCompProps.listParam, {
+    const { ClientGroupActions, ClientGroupCompProps } = this.props;
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupCompProps.listParam, {
       page:0,
       compId: this.props.compId
     }));
@@ -157,14 +161,14 @@ class ClientGroupComp extends Component {
 
   // .................................................
   handleRequestSort = (event, property) => {
-    const { ClientGroupCompActions, ClientGroupCompProps, compId } = this.props;
+    const { ClientGroupActions, ClientGroupCompProps, compId } = this.props;
     const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam } = ClientGroupCompProps;
 
     let orderDir = "desc";
     if (compListParam.orderColumn === property && compListParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupCompActions.readClientGroupList(getMergedObject(compListParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(compListParam, {
       orderColumn: property, 
       orderDir: orderDir,
       compId: this.props.compId
@@ -172,18 +176,18 @@ class ClientGroupComp extends Component {
   };
   
   handleSelectAllClick = (event, checked) => {
-    const { ClientGroupCompActions, ClientGroupCompProps, compId } = this.props;
+    const { ClientGroupActions, ClientGroupCompProps, compId } = this.props;
     const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam } = ClientGroupCompProps;
 
     if(checked) {
       const newSelected = compListData.map(n => n.grpId)
-      ClientGroupCompActions.changeStoreData({
+      ClientGroupActions.changeStoreData({
         name: compId + '__selected',
         value: newSelected
       });
       this.props.onChangeGroupSelected(compId, newSelected);
     } else {
-      ClientGroupCompActions.changeStoreData({
+      ClientGroupActions.changeStoreData({
         name: compId + '__selected',
         value: []
       });
@@ -192,7 +196,11 @@ class ClientGroupComp extends Component {
   };
 
   handleRowClick = (event, id) => {
-    const { ClientGroupCompProps, ClientGroupCompActions, ClientConfSettingActions, compId } = this.props;
+
+    const { compId, ClientGroupCompProps } = this.props;
+    const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
+    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+     
     const { [compId + '__selected'] : preSelected } = ClientGroupCompProps;
     const selectedIndex = preSelected.indexOf(id);
     let newSelected = [];
@@ -210,7 +218,7 @@ class ClientGroupComp extends Component {
       );
     }
 
-    ClientGroupCompActions.changeStoreData({
+    ClientGroupActions.changeStoreData({
       name: compId + '__selected',
       value: newSelected
     });
@@ -221,24 +229,49 @@ class ClientGroupComp extends Component {
 
     if(this.props.onChangeGroupSelected) {
       this.props.onChangeGroupSelected(selectedItem, newSelected);
-    }    
+    }
+
+    // '단말정책설정' : 정책 정보 변경
+    ClientConfSettingActions.getClientConfSetting({
+      compId: compId,
+      objId: selectedItem.clientConfigId
+    });   
+
+    // 'Hosts설정' : 정책 정보 변경
+    ClientHostNameActions.getClientHostName({
+      compId: compId,
+      objId: selectedItem.hostNameConfigId
+    });   
+
+    // '업데이트서버설정' : 정책 정보 변경
+    ClientUpdateServerActions.getClientUpdateServer({
+      compId: compId,
+      objId: selectedItem.updateServerConfigId
+    });   
+
+    // '데스크톱 정보설정' : 정책 정보 변경
+    ClientDesktopConfigActions.getClientDesktopConfig({
+      compId: compId,
+      desktopConfId: selectedItem.desktopConfigId
+    });   
+
   };
 
   handleChangePage = (event, page) => {
-    const { ClientGroupCompActions, ClientGroupCompProps, compId } = this.props;
+    const { ClientGroupActions, ClientGroupCompProps, compId } = this.props;
     const { [compId + '__listParam'] : compListParam } = ClientGroupCompProps;
 
-    ClientGroupCompActions.readClientGroupList(getMergedObject(compListParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(compListParam, {
       page: page, 
       compId: this.props.compId
     }));
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientGroupCompActions, ClientGroupCompProps, compId } = this.props;
+    const { ClientGroupActions, ClientGroupCompProps, compId } = this.props;
     const { [compId + '__listParam'] : compListParam } = ClientGroupCompProps;
 
-    ClientGroupCompActions.readClientGroupList(getMergedObject(compListParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(compListParam, {
       rowsPerPage: event.target.value,
       page:0,
       compId: this.props.compId
@@ -253,8 +286,8 @@ class ClientGroupComp extends Component {
   }
 
   // loadInitData = (param) => {
-  //   const { ClientGroupCompActions, ClientGroupCompProps } = this.props;
-  //   ClientGroupCompActions.readClientGroupList(getMergedObject(ClientGroupCompProps.listParam, param));
+  //   const { ClientGroupActions, ClientGroupCompProps } = this.props;
+  //   ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupCompProps.listParam, param));
   // };
 
   // .................................................
@@ -263,7 +296,6 @@ class ClientGroupComp extends Component {
 
     const { ClientGroupCompProps, compId } = this.props;
     const emptyRows = 0;// = ClientGroupCompProps.listParam.rowsPerPage - ClientGroupCompProps.listData.length;
-
     const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam, [compId + '__selected'] : compSelected } = ClientGroupCompProps;
 
     return (
@@ -345,13 +377,22 @@ class ClientGroupComp extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupCompProps: state.ClientGroupCompModule
+  ClientGroupCompProps: state.ClientGroupModule,
+  ClientConfSettingProps: state.ClientConfSettingModule,
+  ClientHostNameProps: state.ClientHostNameModule,
+  ClientUpdateServerProps: state.ClientUpdateServerModule,
+  ClientDesktopConfigProps: state.ClientDesktopConfigModule
 });
 
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientGroupCompActions: bindActionCreators(ClientGroupCompActions, dispatch),
+  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+  ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch),
+  
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

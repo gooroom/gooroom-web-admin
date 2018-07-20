@@ -8,7 +8,7 @@ export default {
       children: [
         {
           name: '통합관리',
-          url: '/clients/clientmastermanage',
+          url: '/clients/clientmastermanage/GRM0101',
           icon: 'icon-wrench',
           level: 2,
         }, {
@@ -18,7 +18,7 @@ export default {
           level: 2,
         }, {
           name: '그룹관리',
-          url: '/clients/clientgroupmanage',
+          url: '/clients/clientgroupmanage/GRM0103',
           icon: 'icon-folder',
           level: 2,
         }, {
@@ -66,19 +66,19 @@ export default {
         },
         {
           name: '업데이트서버설정',
-          url: '/clientconfig/update',
+          url: '/clientconfig/update/GRM0302',
           icon: 'icon-folder',
           level: 2,
         },
         {
           name: 'HOSTS설정',
-          url: '/clientconfig/host',
+          url: '/clientconfig/host/GRM0303',
           icon: 'icon-layers',
           level: 2,
         },
         {
           name: '단말정책설정',
-          url: '/clientconfig/setting',
+          url: '/clientconfig/setting/GRM0304',
           icon: 'icon-notebook',
           level: 2,
         }
@@ -105,6 +105,32 @@ export default {
         {
           name: '단말보안정책관리??',
           url: '/userconfig/security',
+          icon: 'icon-layers',
+          level: 2,
+        },
+      ]
+    },
+    {
+      name: '사용자관리',
+      url: '/user',
+      icon: 'icon-screen-desktop',
+      level: 1,
+      children: [
+        {
+          name: '조직관리',
+          url: '/user/deptmanage',
+          icon: 'icon-wrench',
+          level: 2,
+        },
+        {
+          name: '사용자계정관리',
+          url: '/user/usermanage',
+          icon: 'icon-folder',
+          level: 2,
+        },
+        {
+          name: '사용자롤관리',
+          url: '/user/role',
           icon: 'icon-layers',
           level: 2,
         },

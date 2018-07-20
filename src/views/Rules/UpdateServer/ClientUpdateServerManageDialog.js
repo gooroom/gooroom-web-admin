@@ -7,8 +7,10 @@ import { withStyles } from '@material-ui/core/styles';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientUpdateServerActions from '../../modules/ClientUpdateServerModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
+
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -123,7 +125,18 @@ class ClientUpdateServerManageDialog extends Component {
             const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
             ClientUpdateServerActions.editClientUpdateServerData(ClientUpdateServerProps.editingItem)
                 .then((res) => {
-                ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps.listParam);
+
+                    const { editingCompId, [editingCompId + '__selectedItem'] : selectedItem } = ClientUpdateServerProps;
+                    if(editingCompId && editingCompId != '') {
+                        ClientUpdateServerActions.getClientUpdateServer({
+                            compId: editingCompId,
+                            objId: selectedItem.objId
+                        });
+                    } else {
+                        // update list 
+                        ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps.listParam);
+                    }
+
                 this.handleClose();
             }, (res) => {
 
@@ -237,6 +250,7 @@ class ClientUpdateServerManageDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
                 </DialogActions>
+                <GrConfirm />
             </Dialog>
         );
     }

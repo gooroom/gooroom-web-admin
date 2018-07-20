@@ -22,7 +22,7 @@ export function grRequestPromise(url, param) {
   return new Promise((resolve, reject) => {
     axios({
       method: "post",
-      url: "https://gpms.gooroom.kr" + url,
+      url: GPMS_URL + url,
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       transformRequest: [
         function(data, headers) {

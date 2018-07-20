@@ -2,23 +2,22 @@ import { handleActions } from 'redux-actions';
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { setParameterForView } from 'views/Rules/HostName/ClientHostNameManageInform';
 
-const GET_HOSTNAME_LIST_SUCCESS = 'clientHostName/GET_LIST_SUCCESS';
-const GET_HOSTNAME_SUCCESS = 'clientHostName/GET_HOSTNAME_SUCCESS';
-const CREATE_HOSTNAME_SUCCESS = 'clientHostName/CREATE_HOSTNAME_SUCCESS';
-const EDIT_HOSTNAME_SUCCESS = 'clientHostName/EDIT_HOSTNAME_SUCCESS';
-const DELETE_HOSTNAME_SUCCESS = 'clientHostName/DELETE_HOSTNAME_SUCCESS';
+const GET_DESKTOP_LIST_SUCCESS = 'clientDesktopConfig/GET_LIST_SUCCESS';
+const GET_DESKTOP_SUCCESS = 'clientDesktopConfig/GET_DESKTOP_SUCCESS';
+const CREATE_DESKTOP_SUCCESS = 'clientDesktopConfig/CREATE_DESKTOP_SUCCESS';
+const EDIT_DESKTOP_SUCCESS = 'clientDesktopConfig/EDIT_DESKTOP_SUCCESS';
+const DELETE_DESKTOP_SUCCESS = 'clientDesktopConfig/DELETE_DESKTOP_SUCCESS';
 
-const SHOW_HOSTNAME_INFORM = 'clientHostName/SHOW_HOSTNAME_INFORM';
-const SHOW_HOSTNAME_DIALOG = 'clientHostName/SHOW_HOSTNAME_DIALOG';
-const CHG_STORE_DATA = 'clientHostName/CHG_STORE_DATA';
+const SHOW_DESKTOP_INFORM = 'clientDesktopConfig/SHOW_DESKTOP_INFORM';
+const SHOW_DESKTOP_DIALOG = 'clientDesktopConfig/SHOW_DESKTOP_DIALOG';
+const CHG_STORE_DATA = 'clientDesktopConfig/CHG_STORE_DATA';
 
-const SET_SELECTED_OBJ = 'clientHostName/SET_SELECTED_OBJ';
-const SET_EDITING_ITEM_VALUE = 'clientHostName/SET_EDITING_ITEM_VALUE';
+const SET_SELECTED_OBJ = 'clientDesktopConfig/SET_SELECTED_OBJ';
+const SET_EDITING_ITEM_VALUE = 'clientDesktopConfig/SET_EDITING_ITEM_VALUE';
 
-const COMMON_PENDING = 'clientHostName/COMMON_PENDING';
-const COMMON_FAILURE = 'clientHostName/COMMON_FAILURE';
+const COMMON_PENDING = 'clientDesktopConfig/COMMON_PENDING';
+const COMMON_FAILURE = 'clientDesktopConfig/COMMON_FAILURE';
 
 // ...
 const initialState = {
@@ -53,7 +52,7 @@ const initialState = {
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
-        type: SHOW_HOSTNAME_DIALOG,
+        type: SHOW_DESKTOP_DIALOG,
         payload: param
     });
 };
@@ -67,7 +66,7 @@ export const closeDialog = () => dispatch => {
 
 export const showInform = (param) => dispatch => {
     return dispatch({
-        type: SHOW_HOSTNAME_INFORM,
+        type: SHOW_DESKTOP_INFORM,
         payload: param
     });
 };
@@ -80,7 +79,7 @@ export const closeInform = () => dispatch => {
 };
 
 // ...
-export const readClientHostNameList = (param) => dispatch => {
+export const readClientDesktopConfigList = (param) => dispatch => {
     const resetParam = {
         keyword: param.keyword,
         page: param.page,
@@ -91,10 +90,10 @@ export const readClientHostNameList = (param) => dispatch => {
     };
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readHostNameConfListPaged', resetParam).then(
+    return requestPostAPI('readDesktopConfList', resetParam).then(
         (response) => {
             dispatch({
-                type: GET_HOSTNAME_LIST_SUCCESS,
+                type: GET_DESKTOP_LIST_SUCCESS,
                 payload: response
             });
         }
@@ -106,13 +105,13 @@ export const readClientHostNameList = (param) => dispatch => {
     });
 };
 
-export const getClientHostName = (param) => dispatch => {
+export const getClientDesktopConfig = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readHostNameConf', param).then(
+    return requestPostAPI('readDesktopConf', param).then(
         (response) => {
             dispatch({
-                type: GET_HOSTNAME_SUCCESS,
+                type: GET_DESKTOP_SUCCESS,
                 compId: compId,
                 payload: response
             });
@@ -163,7 +162,7 @@ export const createClientHostNameData = (param) => dispatch => {
             try {
                 if(response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_HOSTNAME_SUCCESS,
+                        type: CREATE_DESKTOP_SUCCESS,
                         payload: response
                     });
                 }    
@@ -189,7 +188,7 @@ export const editClientHostNameData = (param) => dispatch => {
     return requestPostAPI('updateHostNameConf', makeParameter(param)).then(
         (response) => {
             dispatch({
-                type: EDIT_HOSTNAME_SUCCESS,
+                type: EDIT_DESKTOP_SUCCESS,
                 payload: response
             });
         }
@@ -207,7 +206,7 @@ export const deleteClientHostNameData = (param) => dispatch => {
     return requestPostAPI('deleteHostNameConf', param).then(
         (response) => {
             dispatch({
-                type: DELETE_HOSTNAME_SUCCESS,
+                type: DELETE_DESKTOP_SUCCESS,
                 payload: response
             });
         }
@@ -238,7 +237,7 @@ export default handleActions({
         };
     },
 
-    [GET_HOSTNAME_LIST_SUCCESS]: (state, action) => {
+    [GET_DESKTOP_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
         let tempListParam = state.listParam;
         Object.assign(tempListParam, {
@@ -256,10 +255,10 @@ export default handleActions({
             listParam: tempListParam
         };
     },  
-    [GET_HOSTNAME_SUCCESS]: (state, action) => {
+    [GET_DESKTOP_SUCCESS]: (state, action) => {
         let editingItem = 'editingItem';
         if(action.compId && action.compId != '') {
-            editingItem = action.compId + '__selectedItem';
+            editingItem = action.compId + '__editingItem';
         }
         const { data } = action.payload.data;
         
@@ -268,7 +267,7 @@ export default handleActions({
                 ...state,
                 pending: false,
                 error: false,
-                [editingItem]: Object.assign({}, setParameterForView(data[0]))
+                [editingItem]: Object.assign({}, data[0])
             };
         } else {
             return {
@@ -279,17 +278,16 @@ export default handleActions({
             };
         }
     },
-    [SHOW_HOSTNAME_DIALOG]: (state, action) => {
+    [SHOW_DESKTOP_DIALOG]: (state, action) => {
 
         return {
             ...state,
             editingItem: Object.assign({}, action.payload.selectedItem),
-            editingCompId: action.payload.compId,
             dialogOpen: true,
             dialogType: action.payload.dialogType,
         };
     },
-    [SHOW_HOSTNAME_INFORM]: (state, action) => {
+    [SHOW_DESKTOP_INFORM]: (state, action) => {
         return {
             ...state,
             selectedItem: action.payload.selectedItem,
@@ -316,14 +314,14 @@ export default handleActions({
         }
     },
 
-    [CREATE_HOSTNAME_SUCCESS]: (state, action) => {
+    [CREATE_DESKTOP_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
             error: false,
         };
     },
-    [EDIT_HOSTNAME_SUCCESS]: (state, action) => {
+    [EDIT_DESKTOP_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -333,7 +331,7 @@ export default handleActions({
             dialogType: ''
         };
     },
-    [DELETE_HOSTNAME_SUCCESS]: (state, action) => {
+    [DELETE_DESKTOP_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
