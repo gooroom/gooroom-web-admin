@@ -313,7 +313,7 @@ class ClientMasterManage extends Component {
           <ClientManageInform 
             isOpen={isClientInformOpen}
             selectedItem={selectedClientItem}
-            compShadow="2px 2px 8px green" 
+            compShadow="2px 2px 8px green"
           />
           
         </GrPane>
