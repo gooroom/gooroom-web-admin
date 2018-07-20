@@ -5,21 +5,21 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientMasterManageActions from '../../modules/ClientMasterManageModule';
-import * as ClientManageCompActions from '../../modules/ClientManageCompModule';
-import * as ClientGroupCompActions from '../../modules/ClientGroupCompModule';
-import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientMasterManageActions from 'modules/ClientMasterManageModule';
+import * as ClientManageCompActions from 'modules/ClientManageCompModule';
+import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
-import { grRequestPromise } from "../../components/GrUtils/GrRequester";
-import GrPageHeader from "../../containers/GrContent/GrPageHeader";
-import GrPane from '../../containers/GrContent/GrPane';
+import { grRequestPromise } from "components/GrUtils/GrRequester";
+import GrPageHeader from "containers/GrContent/GrPageHeader";
+import GrPane from 'containers/GrContent/GrPane';
 
 import ClientDialog from "./ClientDialog";
 
@@ -174,36 +174,29 @@ class ClientMasterManage extends Component {
     ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, param));
   };
 
-
   // Select Group Item
   handleChangeClientGroupSelected = (selectedGroupObj='', selectedGroupIdArray) => {
 
     const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
-    const { ClientGroupCompProps, ClientGroupCompActions } = this.props;
+    const { ClientGroupCompProps, ClientGroupActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
-    // select clients in groups.
-    const { clientManageCompId } = ClientMasterManageProps;
 
     ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, {
       groupId: selectedGroupIdArray.join(','), 
       page:0,
-      compId: clientManageCompId
+      compId: this.props.match.params.grMenuId
     }));
 
     // show group info.
     if(selectedGroupObj !== '') {
       ClientMasterManageActions.closeClientManageInform();
-      ClientGroupCompActions.setSelectedItemObj({
-        compId: ClientMasterManageProps.clientGroupCompId,
+      ClientGroupActions.setSelectedItemObj({
+        compId: this.props.match.params.grMenuId,
         selectedItem: selectedGroupObj
       });
 
-      ClientConfSettingActions.getClientConfSetting({
-        objId: selectedGroupObj.clientConfigId
-      });
-      
+      // Show inform
       ClientMasterManageActions.showClientGroupInform();
-
     }
   };
 
@@ -218,7 +211,7 @@ class ClientMasterManage extends Component {
 
       ClientMasterManageActions.closeClientGroupInform();
       ClientManageCompActions.setSelectedItemObj({
-        compId: ClientMasterManageProps.clientManageCompId,
+        compId: this.props.match.params.grMenuId,
         selectedItem: selectedClientObj
       });
       ClientMasterManageActions.showClientManageInform();
@@ -232,8 +225,8 @@ class ClientMasterManage extends Component {
     const emptyRows = 0;// = ClientManageCompProps.listParam.rowsPerPage - ClientManageCompProps.listData.length;
 
     const { isGroupInformOpen, isClientInformOpen } = ClientMasterManageProps;
-    const selectedGroupItem = ClientGroupCompProps[ClientMasterManageProps.clientGroupCompId + '__selectedItem'];
-    const selectedClientItem = ClientManageCompProps[ClientMasterManageProps.clientManageCompId + '__selectedItem'];
+    const selectedGroupItem = ClientGroupCompProps[this.props.match.params.grMenuId + '__selectedItem'];
+    const selectedClientItem = ClientManageCompProps[this.props.match.params.grMenuId + '__selectedItem'];
 
     // console.log('selectedGroupItem : ', selectedGroupItem);
 
@@ -279,14 +272,15 @@ class ClientMasterManage extends Component {
           <Grid container spacing={24} style={{border:"0px solid red",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
               <Card style={{minWidth:"240px",boxShadow:"2px 2px 8px blue"}}>
-                <ClientGroupComp compId={ClientMasterManageProps.clientGroupCompId}
+                <ClientGroupComp 
+                  compId={this.props.match.params.grMenuId}
                   onChangeGroupSelected={this.handleChangeClientGroupSelected}
                 />
               </Card>
             </Grid>
             <Grid item xs>
               <Card style={{minWidth:"710px",boxShadow:"2px 2px 8px green"}}>
-              <ClientManageComp compId={ClientMasterManageProps.clientManageCompId}
+              <ClientManageComp compId={this.props.match.params.grMenuId}
                   onChangeClientSelected={this.handleChangeClientSelected}
                 />
               </Card>
@@ -305,7 +299,8 @@ class ClientMasterManage extends Component {
             </Grid>
           </Grid>
           
-          <ClientGroupInform 
+          <ClientGroupInform
+            compId={this.props.match.params.grMenuId}
             isOpen={isGroupInformOpen} 
             selectedItem={selectedGroupItem}
             compShadow="2px 2px 8px blue" 
@@ -326,13 +321,13 @@ class ClientMasterManage extends Component {
 const mapStateToProps = (state) => ({
   ClientMasterManageProps: state.ClientMasterManageModule,
   ClientManageCompProps: state.ClientManageCompModule,
-  ClientGroupCompProps: state.ClientGroupCompModule
+  ClientGroupCompProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
   ClientMasterManageActions: bindActionCreators(ClientMasterManageActions, dispatch),
   ClientManageCompActions: bindActionCreators(ClientManageCompActions, dispatch),
-  ClientGroupCompActions: bindActionCreators(ClientGroupCompActions, dispatch),
+  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });

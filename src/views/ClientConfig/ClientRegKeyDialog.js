@@ -4,12 +4,12 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientRegKeyActions from '../../modules/ClientRegKeyModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientRegKeyActions from 'modules/ClientRegKeyModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { css } from "glamor";
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "NODE_PATH": "./src",
   "scripts": {
     "build": "webpack -p --progress",
     "start": "webpack-dev-server --progress --color --inline --env.dev",

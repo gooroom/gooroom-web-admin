@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import { grRequestPromise } from "../../components/GrUtils/GrRequester";
+import { grRequestPromise } from "components/GrUtils/GrRequester";
 
 import ListSubheader from "@material-ui/core/ListSubheader";
 

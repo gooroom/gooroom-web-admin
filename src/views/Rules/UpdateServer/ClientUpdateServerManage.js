@@ -5,22 +5,20 @@ import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
-import { setParameterForView } from './ClientConfSettingInform';
+import GrPageHeader from 'containers/GrContent/GrPageHeader';
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import GrPageHeader from '../../containers/GrContent/GrPageHeader';
-import GrConfirm from '../../components/GrComponents/GrConfirm';
-
-import ClientConfSettingDialog from './ClientConfSettingDialog';
-import ClientConfSettingInform from './ClientConfSettingInform';
-import GrPane from '../../containers/GrContent/GrPane';
+import ClientUpdateServerManageDialog from './ClientUpdateServerManageDialog';
+import ClientUpdateServerManageInform from './ClientUpdateServerManageInform';
+import GrPane from 'containers/GrContent/GrPane';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -126,7 +124,7 @@ const toolIconClass = css({
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
-class ClientConfSettingHead extends Component {
+class ClientUpdateServerHead extends Component {
 
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
@@ -147,7 +145,7 @@ class ClientConfSettingHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          {ClientConfSettingHead.columnData.map(column => {
+          {ClientUpdateServerHead.columnData.map(column => {
             return (
               <TableCell
                 className={tableCellClass}
@@ -177,7 +175,7 @@ class ClientConfSettingHead extends Component {
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientConfSetting extends Component {
+class ClientUpdateServerManage extends Component {
 
   constructor(props) {
     super(props);
@@ -189,13 +187,13 @@ class ClientConfSetting extends Component {
 
   // .................................................
   handleSelectBtnClick = (param) => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, param));
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, param));
   };
   
   handleCreateButton = () => {
-    const { ClientConfSettingActions } = this.props;
-    ClientConfSettingActions.showDialog({
+    const { ClientUpdateServerActions } = this.props;
+    ClientUpdateServerActions.showDialog({
       selectedItem: {
         objId: '',
         objNm: '',
@@ -205,64 +203,53 @@ class ClientConfSetting extends Component {
         selectedNtpIndex: -1,
         ntpAddress: ['']
       },
-      dialogType: ClientConfSettingDialog.TYPE_ADD
+      dialogType: ClientUpdateServerManageDialog.TYPE_ADD
     });
   }
 
-  // setParameterForView = (param) => {
-  //   let pollingTime = '';
-  //   let useHypervisor = false;
-  //   let selectedNtpIndex = -1;
-  //   let ntpAddrSelected = '';
-  //   let ntpAddress = [];
-  //   param.propList.forEach(function(e) {
-  //     if(e.propNm == 'AGENTPOLLINGTIME') {
-  //       pollingTime = e.propValue;
-  //     } else if(e.propNm == 'USEHYPERVISOR') {
-  //       useHypervisor = (e.propValue == "true");
-  //     } else if(e.propNm == 'NTPSELECTADDRESS') {
-  //       ntpAddrSelected = e.propValue;
-  //     } else if(e.propNm == 'NTPADDRESSES') {
-  //       ntpAddress.push(e.propValue);
-  //     }
-  //   });
-  //   ntpAddress.forEach(function(e, i) {
-  //     if(ntpAddrSelected == e) {
-  //       selectedNtpIndex = i;
-  //     }
-  //   });
+  setParameterForView = (param) => {
+    let mainos = '';
+    let extos = '';
+    let priorities = '';
+    param.propList.forEach(function(e) {
+      if(e.propNm == 'MAINOS') {
+        mainos = e.propValue;
+      } else if(e.propNm == 'EXTOS') {
+        extos = e.propValue;
+      } else if(e.propNm == 'PRIORITIES') {
+        priorities = e.propValue;
+      }
+    });
 
-  //   return {
-  //     objId: param.objId,
-  //     objNm: param.objNm,
-  //     comment: param.comment,
-  //     modDate: param.modDate,
-  //     useHypervisor: useHypervisor,
-  //     pollingTime: pollingTime,
-  //     selectedNtpIndex: selectedNtpIndex,
-  //     ntpAddress: ntpAddress
-  //   };
-
-  // }
+    return {
+      objId: param.objId,
+      objNm: param.objNm,
+      comment: param.comment,
+      modDate: param.modDate,
+      mainos: mainos,
+      extos: extos,
+      priorities: priorities
+    };
+  }
   
   handleRowClick = (event, id) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const selectedItem = ClientConfSettingProps.listData.find(function(element) {
+    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+    const selectedItem = ClientUpdateServerProps.listData.find(function(element) {
       return element.objId == id;
     });
     
-    const viewItem = setParameterForView(selectedItem);
+    const viewItem = this.setParameterForView(selectedItem);
 
     // choice one from two views.
 
     // 1. popup dialog
-    // ClientConfSettingActions.showDialog({
+    // ClientUpdateServerActions.showDialog({
     //   selectedItem: viewItem,
-    //   dialogType: ClientConfSettingDialog.TYPE_VIEW,
+    //   dialogType: ClientUpdateServerManageDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    ClientConfSettingActions.showInform({
+    ClientUpdateServerActions.showInform({
       selectedItem: viewItem  
     });
     
@@ -270,44 +257,45 @@ class ClientConfSetting extends Component {
 
   handleEditClick = (event, id) => {
     //event.stopPropagation();
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const selectedItem = ClientConfSettingProps.listData.find(function(element) {
+    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+    const selectedItem = ClientUpdateServerProps.listData.find(function(element) {
       return element.objId == id;
     });
 
-    ClientConfSettingActions.showDialog({
-      selectedItem: setParameterForView(selectedItem),
-      dialogType: ClientConfSettingDialog.TYPE_EDIT,
+    ClientUpdateServerActions.showDialog({
+      compId: '',
+      selectedItem: this.setParameterForView(selectedItem),
+      dialogType: ClientUpdateServerManageDialog.TYPE_EDIT,
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientConfSettingProps, ClientConfSettingActions, GrConfirmActions } = this.props;
+    const { ClientUpdateServerProps, ClientUpdateServerActions, GrConfirmActions } = this.props;
 
-    const selectedItem = ClientConfSettingProps.listData.find(function(element) {
+    const selectedItem = ClientUpdateServerProps.listData.find(function(element) {
       return element.objId == id;
     });
 
-    ClientConfSettingActions.setSelectedItemObj({
-      selectedItem: Object.assign(ClientConfSettingProps.selectedItem, selectedItem)
+    ClientUpdateServerActions.setSelectedItemObj({
+      selectedItem: Object.assign(ClientUpdateServerProps.selectedItem, selectedItem)
     });
     const re = GrConfirmActions.showConfirm({
-      confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmTitle: '업데이트서버 정보 삭제',
+      confirmMsg: '업데이트서버 정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true
     });
   };
   handleDeleteConfirmResult = (confirmValue) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
 
     if(confirmValue) {
-      ClientConfSettingActions.deleteClientConfSettingData({
-        objId: ClientConfSettingProps.selectedItem.objId
+      ClientUpdateServerActions.deleteClientUpdateServerData({
+        objId: ClientUpdateServerProps.selectedItem.objId
       }).then(() => {
-        ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
+        ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps.listParam);
         }, () => {
       });
     }
@@ -315,32 +303,32 @@ class ClientConfSetting extends Component {
 
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {page: page}));
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {rowsPerPage: event.target.value}));
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {rowsPerPage: event.target.value}));
   };
   
   // .................................................
   handleRequestSort = (event, property) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
     let orderDir = "desc";
-    if (ClientConfSettingProps.listParam.orderColumn === property && ClientConfSettingProps.listParam.orderDir === "desc") {
+    if (ClientUpdateServerProps.listParam.orderColumn === property && ClientUpdateServerProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
   // .................................................
 
   // .................................................
   handleKeywordChange = name => event => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    const newParam = getMergedObject(ClientConfSettingProps.listParam, {keyword: event.target.value});
-    ClientConfSettingActions.changeStoreData({
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    const newParam = getMergedObject(ClientUpdateServerProps.listParam, {keyword: event.target.value});
+    ClientUpdateServerActions.changeStoreData({
       name: 'listParam',
       value: newParam
     });
@@ -348,8 +336,8 @@ class ClientConfSetting extends Component {
 
   render() {
 
-    const { ClientConfSettingProps } = this.props;
-    const emptyRows = ClientConfSettingProps.listParam.rowsPerPage - ClientConfSettingProps.listData.length;
+    const { ClientUpdateServerProps } = this.props;
+    const emptyRows = ClientUpdateServerProps.listParam.rowsPerPage - ClientUpdateServerProps.listData.length;
 
     return (
       <React.Fragment>
@@ -395,14 +383,14 @@ class ClientConfSetting extends Component {
           <div className={tableContainerClass}>
             <Table className={tableClass}>
 
-              <ClientConfSettingHead
-                orderDir={ClientConfSettingProps.listParam.orderDir}
-                orderColumn={ClientConfSettingProps.listParam.orderColumn}
+              <ClientUpdateServerHead
+                orderDir={ClientUpdateServerProps.listParam.orderDir}
+                orderColumn={ClientUpdateServerProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
               />
 
               <TableBody>
-                {ClientConfSettingProps.listData.map(n => {
+                {ClientUpdateServerProps.listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -441,7 +429,7 @@ class ClientConfSetting extends Component {
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
-                      colSpan={ClientConfSettingHead.columnData.length + 1}
+                      colSpan={ClientUpdateServerHead.columnData.length + 1}
                       className={tableCellClass}
                     />
                   </TableRow>
@@ -452,10 +440,10 @@ class ClientConfSetting extends Component {
 
           <TablePagination
             component='div'
-            count={ClientConfSettingProps.listParam.rowsFiltered}
-            rowsPerPage={ClientConfSettingProps.listParam.rowsPerPage}
-            rowsPerPageOptions={ClientConfSettingProps.listParam.rowsPerPageOptions}
-            page={ClientConfSettingProps.listParam.page}
+            count={ClientUpdateServerProps.listParam.rowsFiltered}
+            rowsPerPage={ClientUpdateServerProps.listParam.rowsPerPage}
+            rowsPerPageOptions={ClientUpdateServerProps.listParam.rowsPerPageOptions}
+            page={ClientUpdateServerProps.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -468,8 +456,8 @@ class ClientConfSetting extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientConfSettingInform />
-        <ClientConfSettingDialog />
+        <ClientUpdateServerManageInform />
+        <ClientUpdateServerManageDialog />
         <GrConfirm />
       </React.Fragment>
     );
@@ -477,12 +465,12 @@ class ClientConfSetting extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientConfSettingProps: state.ClientConfSettingModule
+  ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSetting);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientUpdateServerManage);

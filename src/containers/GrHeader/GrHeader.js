@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { css } from "glamor";
 
-import { grLayout } from "../../templates/default/GrLayout";
-import { grColors } from "../../templates/default/GrColors";
+import { grLayout } from "templates/default/GrLayout";
+import { grColors } from "templates/default/GrColors";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";

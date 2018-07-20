@@ -6,9 +6,9 @@ import { css } from 'glamor';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-import { grLayout } from "../../templates/default/GrLayout";
-import { grColor } from "../../templates/default/GrColors";
-import GrAlert from "../../components/GrComponents/GrAlert";
+import { grLayout } from "templates/default/GrLayout";
+import { grColor } from "templates/default/GrColors";
+import GrAlert from "components/GrComponents/GrAlert";
 
 import GrHeader from "../GrHeader/";
 import GrFooter from "../GrFooter/";

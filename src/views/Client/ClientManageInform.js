@@ -7,11 +7,11 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
-import * as ClientManageActions from '../../modules/ClientManageCompModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientManageActions from 'modules/ClientManageCompModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -24,10 +24,10 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 
-import ClientConfigComp from '../Rules/ClientConfigComp';
-import ClientHostsComp from '../Rules/ClientHostsComp';
-import DesktopConfigComp from '../Rules/DesktopConfigComp';
-import ClientUpdateServerComp from '../Rules/ClientUpdateServerComp';
+import ClientConfSettingComp from 'views/Rules/ClientConf/ClientConfSettingComp';
+import ClientHostNameComp from 'views/Rules/HostName/ClientHostNameComp';
+import DesktopConfigComp from 'views/Rules/DesktopConfigComp';
+import ClientUpdateServerComp from 'views/Rules/UpdateServer/ClientUpdateServerComp';
 
 
 //
@@ -104,7 +104,7 @@ class ClientManageInform extends Component {
           
           <Grid container spacing={8}>
             <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientConfigComp 
+              <ClientConfSettingComp 
                 objId={selectedItem.clientConfigId} 
                 objNm={selectedItem.clientConfigNm} 
               />
@@ -118,7 +118,7 @@ class ClientManageInform extends Component {
           </Grid>
           <Grid container spacing={8}>
             <Grid item xs={6} sm={6} className={cardContainerClass}>
-              <ClientHostsComp 
+              <ClientHostNameComp 
                 objId={selectedItem.hostNameConfigId} 
                 objNm={selectedItem.hostNameConfigNm} 
               />

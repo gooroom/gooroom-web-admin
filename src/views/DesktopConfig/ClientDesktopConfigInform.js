@@ -6,9 +6,9 @@ import { css } from 'glamor';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
-import * as ClientHostNameActions from '../../modules/ClientHostNameModule';
+import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -62,7 +62,7 @@ const pos = css({
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientHostNameInform extends Component {
+class ClientDesktopConfigInform extends Component {
 
   // .................................................
 
@@ -107,12 +107,31 @@ class ClientHostNameInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientHostNameProps: state.ClientHostNameModule
+  ClientDesktopConfigProps: state.ClientDesktopConfigModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
+  ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameInform);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientDesktopConfigInform);
 
+// export const setParameterForView = (param) => {
+
+//   let hosts = '';
+  
+//   param.propList.forEach(function(e) {
+//     if(e.propNm == 'HOSTS') {
+//       hosts = e.propValue;
+//     }
+//   });
+
+//   return {
+//     objId: param.objId,
+//     objNm: param.objNm,
+//     comment: param.comment,
+//     modDate: param.modDate,
+//     confInfo: param.confInfo
+//   };
+
+// };

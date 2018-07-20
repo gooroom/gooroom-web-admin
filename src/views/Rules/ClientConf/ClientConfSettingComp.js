@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import classNames from 'classnames';
+import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
-import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { setParameterForView } from '../ClientConfig/ClientConfSettingInform';
+import ClientConfSettingDialog from './ClientConfSettingDialog';
 
-import { css } from 'glamor';
-
-import { getMergedObject, arrayContainsArray } from '../../components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -25,8 +25,12 @@ import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from '@material-ui/core/Grid';
+
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 
 //
@@ -56,10 +60,15 @@ const pos = css({
   marginBottom: 12,
 }).toString();
 
+const grNarrowButton = css({
+  paddingTop: '2px !important',
+  paddingBottom: '2px !important'
+}).toString();
+
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientConfigComp extends Component {
+class ClientConfSettingComp extends Component {
   constructor(props) {
     super(props);
 
@@ -68,39 +77,51 @@ class ClientConfigComp extends Component {
     };
   }
 
-  showDetailRule = (event) => {
-    // const { ClientGroupProps, ClientConfSettingActions, objId, objNm } = this.props;
-    // ClientConfSettingActions.getClientConfSetting({
-    //   objId: objId
-    // });
-  }
+  handleEditBtnClick = (param) => {
+
+    const { ClientConfSettingActions, ClientConfSettingProps, compId } = this.props;
+    const { [compId + '__selectedItem'] : viewItem } = ClientConfSettingProps;
+
+    ClientConfSettingActions.showDialog({
+      compId: compId,
+      selectedItem: viewItem,
+      dialogType: ClientConfSettingDialog.TYPE_EDIT,
+    });
+
+  };
 
   // .................................................
   render() {
-    const { ClientGroupProps, ClientConfSettingProps, objId, objNm } = this.props;
+    const { ClientConfSettingProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const viewItem = ClientConfSettingProps.editingItem;
-
-    // console.log('[ClientConfigComp] render...   ClientGroupProps : ', ClientGroupProps);
-    // console.log('[ClientConfigComp] render...   objId : ', objId);
-    console.log('[ClientConfigComp] render...   viewItem : ', viewItem);
+    const { [compId + '__selectedItem'] : viewItem } = ClientConfSettingProps;
 
     return (
-
+      <React.Fragment>
       <Card className={card}>
-        <CardContent>
-          <Typography className={title} color="textSecondary">
-            단말정책설정
-          </Typography>
+        {(viewItem) && <CardContent>
+          <Grid container spacing={24}>
+            <Grid item xs={6}>
+              <Typography className={title} style={{backgroundColor:"lightBlue",color:"white",fontWeight:"bold"}}>
+                단말정책설정
+              </Typography>
+            </Grid>
+            <Grid item xs={6} style={{textAlign:"right"}}>
+              <Button
+                className={grNarrowButton}
+                variant="outlined" color="primary"
+                onClick={() => this.handleEditBtnClick(viewItem.objId)}
+              ><SettingsApplicationsIcon />수정</Button>
+            </Grid>
+          </Grid>
           <Typography variant="headline" component="h2">
-            {objNm}
+            {viewItem.objNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
-            {bull}이 정책에 대한 설명을 보여주는 곳 - {objId}
+            {(viewItem.comment != '') ? '"' + viewItem.comment + '"' : ''}
           </Typography>
           <Divider />
-            <br />
-          {(viewItem) &&
+          {(viewItem && viewItem.objId != '') &&
             <Table>
               <TableBody>
                 <TableRow>
@@ -125,16 +146,16 @@ class ClientConfigComp extends Component {
             </Table>
           }
         </CardContent>
-        <CardActions>
-          <Button onClick={this.showDetailRule} size="small">상세보기</Button>
-        </CardActions>
+        }
       </Card>
+      <ClientConfSettingDialog />
+      </React.Fragment>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule,
+  ClientGroupProps: state.ClientGroupModule,
   ClientConfSettingProps: state.ClientConfSettingModule
 });
 
@@ -144,6 +165,6 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientConfigComp);
+export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSettingComp);
 
 

@@ -5,20 +5,24 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '../../modules/ClientGroupCompModule';
-import * as ClientConfSettingActions from '../../modules/ClientConfSettingModule';
-import * as GrConfirmActions from '../../modules/GrConfirmModule';
+import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
+
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import { formatDateToSimple } from '../../components/GrUtils/GrDates';
-import { getMergedObject } from '../../components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
-import GrPageHeader from '../../containers/GrContent/GrPageHeader';
+import GrPageHeader from 'containers/GrContent/GrPageHeader';
 
-import GrPane from '../../containers/GrContent/GrPane';
-import GrConfirm from '../../components/GrComponents/GrConfirm';
+import GrPane from 'containers/GrContent/GrPane';
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -219,18 +223,49 @@ class ClientGroupManage extends Component {
   };
 
   handleRowClick = (event, id) => {
-    const { ClientGroupProps, ClientGroupActions, ClientConfSettingActions } = this.props;
+    const { ClientGroupProps, ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
+    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+
+    const compId = this.props.match.params.grMenuId;
+
     const selectedGroupObj = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
 
     ClientGroupActions.showClientGroupInform({
+      compId: compId,
       selectedItem: Object.assign({}, selectedGroupObj),
     });
 
     ClientConfSettingActions.getClientConfSetting({
+      compId: compId,
       objId: selectedGroupObj.clientConfigId
     });
+    
+    // '단말정책설정' : 정책 정보 변경
+    ClientConfSettingActions.getClientConfSetting({
+      compId: compId,
+      objId: selectedGroupObj.clientConfigId
+    });   
+
+    // 'Hosts설정' : 정책 정보 변경
+    ClientHostNameActions.getClientHostName({
+      compId: compId,
+      objId: selectedGroupObj.hostNameConfigId
+    });   
+
+    // '업데이트서버설정' : 정책 정보 변경
+    ClientUpdateServerActions.getClientUpdateServer({
+      compId: compId,
+      objId: selectedGroupObj.updateServerConfigId
+    });   
+
+    // '데스크톱 정보설정' : 정책 정보 변경
+    ClientDesktopConfigActions.getClientDesktopConfig({
+      compId: compId,
+      desktopConfId: selectedGroupObj.desktopConfigId
+    });   
+
   };
 
   handleChangePage = (event, page) => {
@@ -287,6 +322,7 @@ class ClientGroupManage extends Component {
       return element.grpId == id;
     });
     ClientGroupActions.setSelectedItemObj({
+      compId: this.props.match.params.grMenuId,
       selectedItem: selectedItem
     });
     const re = GrConfirmActions.showConfirm({
@@ -455,7 +491,8 @@ class ClientGroupManage extends Component {
           />
 
         </GrPane>
-        <ClientGroupInform 
+        <ClientGroupInform
+            compId={this.props.match.params.grMenuId} 
             isOpen={ClientGroupProps.informOpen} 
             selectedItem={ClientGroupProps.selectedItem}
           />
@@ -469,12 +506,21 @@ class ClientGroupManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupCompModule
+  ClientGroupProps: state.ClientGroupModule,
+  ClientConfSettingProps: state.ClientConfSettingModule,
+  ClientHostNameProps: state.ClientHostNameModule,
+  ClientUpdateServerProps: state.ClientUpdateServerModule,
+  ClientDesktopConfigProps: state.ClientDesktopConfigModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
+  
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+  ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch),
+
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

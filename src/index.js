@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import './scss/main.scss'
 
 // Containers
-import GrFull from './containers/GrFull/'
+import GrFull from 'containers/GrFull/'
 
 ReactDOM.render(
   <Provider store={store}>

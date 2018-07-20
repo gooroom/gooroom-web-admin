@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 
 import { css } from "glamor";
 
-import { grLayout } from "../../templates/default/GrLayout";
-import { grColor } from "../../templates/default/GrColors";
+import { grLayout } from "templates/default/GrLayout";
+import { grColor } from "templates/default/GrColors";
 
 const rootClass = css({
   transition: "left 0.25s, right 0.25s, width 0.25s",
