@@ -1,8 +1,8 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from '../components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
-import { setParameterForView } from '../views/ClientConfig/ClientUpdateServerManageInform';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { setParameterForView } from 'views/Rules/UpdateServer/ClientUpdateServerManageInform';
 
 const GET_UPDATESERVER_LIST_SUCCESS = 'clientUpdateServer/GET_LIST_SUCCESS';
 const GET_UPDATESERVER_SUCCESS = 'clientUpdateServer/GET_UPDATESERVER_SUCCESS';

@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from '../components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
 const GET_REGKEY_LIST_PENDING = 'clientRegKey/GET_LIST_PENDING';
 const GET_REGKEY_LIST_SUCCESS = 'clientRegKey/GET_LIST_SUCCESS';

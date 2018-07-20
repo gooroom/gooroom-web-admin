@@ -5,20 +5,20 @@ import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientUpdateServerActions from '/modules/ClientUpdateServerModule';
-import * as GrConfirmActions from '/modules/GrConfirmModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 
-import { formatDateToSimple } from '/components/GrUtils/GrDates';
-import { getMergedObject } from '/components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
-import GrPageHeader from '/containers/GrContent/GrPageHeader';
-import GrConfirm from '/components/GrComponents/GrConfirm';
+import GrPageHeader from 'containers/GrContent/GrPageHeader';
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import ClientUpdateServerManageDialog from './ClientUpdateServerManageDialog';
 import ClientUpdateServerManageInform from './ClientUpdateServerManageInform';
-import GrPane from '/containers/GrContent/GrPane';
+import GrPane from 'containers/GrContent/GrPane';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';

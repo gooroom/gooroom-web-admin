@@ -4,15 +4,15 @@ import classNames from "classnames";
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";
 
-import { formatDateToSimple } from '/components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
-import { grLayout } from "./templates/default/GrLayout";
-import { grColor } from "/templates/default/GrColors";
+import { grLayout } from "templates/default/GrLayout";
+import { grColor } from "templates/default/GrColors";
 import { grRequestPromise } from "components/GrUtils/GrRequester";
-import GrPageHeader from "/containers/GrContent/GrPageHeader";
+import GrPageHeader from "containers/GrContent/GrPageHeader";
 
-import UserManageDialog from "../User/UserManageDialog";
-import GrPane from "/containers/GrContent/GrPane";
+import UserManageDialog from "views/User/UserManageDialog";
+import GrPane from "containers/GrContent/GrPane";
 
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";

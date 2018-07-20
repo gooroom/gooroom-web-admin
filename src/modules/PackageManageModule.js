@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from '../components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 const GET_CLIENT_LIST_PENDING = 'clientManage/GET_LIST_PENDING';
 const GET_CLIENT_LIST_SUCCESS = 'clientManage/GET_LIST_SUCCESS';

@@ -1,8 +1,8 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from '../components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
-import { setParameterForView } from '../views/ClientConfig/ClientHostNameManageInform';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { setParameterForView } from 'views/Rules/HostName/ClientHostNameManageInform';
 
 const GET_HOSTNAME_LIST_SUCCESS = 'clientHostName/GET_LIST_SUCCESS';
 const GET_HOSTNAME_SUCCESS = 'clientHostName/GET_HOSTNAME_SUCCESS';

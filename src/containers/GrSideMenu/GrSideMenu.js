@@ -5,8 +5,8 @@ import { css } from 'glamor';
 
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 
-import { grLayout } from "../../templates/default/GrLayout";
-import { grColors } from "../../templates/default/GrColors";
+import { grLayout } from "templates/default/GrLayout";
+import { grColors } from "templates/default/GrColors";
 
 import Drawer from "@material-ui/core/Drawer";
 

@@ -1,8 +1,8 @@
 
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from '../components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
 const COMMON_PENDING = 'groupComp/COMMON_PENDING';
 const COMMON_FAILURE = 'groupComp/COMMON_FAILURE';

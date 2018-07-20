@@ -7,8 +7,8 @@ import { css } from "glamor";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from '/modules/ClientGroupModule';
-import * as GrConfirmActions from '/modules/GrConfirmModule';
+import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";

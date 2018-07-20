@@ -5,13 +5,13 @@ import PropTypes from "prop-types";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from '/components/GrUtils/GrDates';
-import { getMergedObject } from '/components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import * as JobManageActions from '/modules/JobManageModule';
-import * as GrConfirmActions from '/modules/GrConfirmModule';
+import * as JobManageActions from 'modules/JobManageModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import classnames from 'classnames';
 

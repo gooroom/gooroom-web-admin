@@ -1,8 +1,7 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from '../components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-import { getMergedObject } from '../components/GrUtils/GrCommonUtils';
-import { setParameterForView } from '../views/ClientConfig/ClientHostNameManageInform';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
 const GET_DESKTOP_LIST_SUCCESS = 'clientDesktopConfig/GET_LIST_SUCCESS';
 const GET_DESKTOP_SUCCESS = 'clientDesktopConfig/GET_DESKTOP_SUCCESS';
