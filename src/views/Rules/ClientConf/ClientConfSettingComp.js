@@ -78,23 +78,30 @@ class ClientConfSettingComp extends Component {
   }
 
   handleEditBtnClick = (param) => {
-
     const { ClientConfSettingActions, ClientConfSettingProps, compId } = this.props;
-    const { [compId + '__selectedItem'] : viewItem } = ClientConfSettingProps;
+    const viewItem = ClientConfSettingProps.viewItems.find(function(element) {
+      return element._COMPID_ == compId;
+    });
 
     ClientConfSettingActions.showDialog({
       compId: compId,
       selectedItem: viewItem,
       dialogType: ClientConfSettingDialog.TYPE_EDIT,
     });
-
   };
 
   // .................................................
   render() {
-    const { ClientConfSettingProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const { [compId + '__selectedItem'] : viewItem } = ClientConfSettingProps;
+    const { ClientConfSettingProps, compId } = this.props;
+    const { viewItems } = ClientConfSettingProps;
+
+    let viewItem = null;
+    if(viewItems) {
+      viewItem = viewItems.find(function(element) {
+        return element._COMPID_ == compId;
+      });
+    }
 
     return (
       <React.Fragment>

@@ -316,8 +316,6 @@ export default handleActions({
             selectedItem = action.compId + '__selectedItem';
         }
 
-        console.log(' >>>> ' + selectedItem + ' : ', action.payload);
-
         return {
             ...state,
             [selectedItem]: action.payload.selectedItem,
