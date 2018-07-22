@@ -140,21 +140,47 @@ class ClientConfSettingDialog extends Component {
             const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
             ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.editingItem)
                 .then((res) => {
-                    const { editingCompId, [editingCompId + '__selectedItem'] : selectedItem } = ClientConfSettingProps;
+
+                    const { editingCompId, selectedItem } = ClientConfSettingProps;
+                    let nowSelectedItem = null;
+
+                    console.log('editingCompId > ', editingCompId);    
+
                     if(editingCompId || editingCompId == '') {
+                        nowSelectedItem = selectedItem;
                         // update list 
                         ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
+                    } else {
+                        const { viewItems } = ClientConfSettingProps;
+                        nowSelectedItem = viewItems.find((element) => {
+                            return element._COMPID_ == editingCompId;
+                        });
                     }
-                    // change selected objects
-                    ClientConfSettingProps.keys().map(obj => {
-                        console.log('obj > ', obj);    
-                    });
-                  
+
+
+
+
+                    //  else {
+                    //     ClientConfSettingActions.getClientConfSetting({
+                    //         compId: editingCompId,
+                    //         objId: selectedItem.objId
+                    //     });
+                    // }
 
                     ClientConfSettingActions.getClientConfSetting({
                         compId: editingCompId,
-                        objId: selectedItem.objId
+                        objId: nowSelectedItem.objId
                     });
+
+                    // change selected objects
+                    // ClientConfSettingProps.keys().map(obj => {
+                    //     console.log('obj > ', obj);    
+                    // });
+
+                    // ClientConfSettingActions.getClientConfSetting({
+                    //     compId: editingCompId,
+                    //     objId: selectedItem.objId
+                    // });
 
 
                 this.handleClose();

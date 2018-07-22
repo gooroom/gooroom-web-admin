@@ -84,24 +84,30 @@ class ClientUpdateServerComp extends Component {
   }
 
   handleEditBtnClick = (param) => {
-
     const { ClientUpdateServerActions, ClientUpdateServerProps, compId } = this.props;
-    const { [compId + '__selectedItem'] : viewItem } = ClientUpdateServerProps;
+    const viewItem = ClientUpdateServerProps.viewItems.find(function(element) {
+      return element._COMPID_ == compId;
+    });
 
     ClientUpdateServerActions.showDialog({
       compId: compId,
       selectedItem: viewItem,
       dialogType: ClientUpdateServerDialog.TYPE_EDIT,
     });
-
   };
 
   // .................................................
   render() {
-
-    const { ClientUpdateServerProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const { [compId + '__selectedItem'] : viewItem } = ClientUpdateServerProps;
+    const { ClientUpdateServerProps, compId } = this.props;
+    const { viewItems } = ClientUpdateServerProps;
+
+    let viewItem = null;
+    if(viewItems) {
+      viewItem = viewItems.find(function(element) {
+        return element._COMPID_ == compId;
+      });
+    }
 
     return (
       <React.Fragment>

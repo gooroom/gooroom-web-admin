@@ -261,25 +261,32 @@ export default handleActions({
         };
     },
     [GET_UPDATESERVER_SUCCESS]: (state, action) => {
-        let editingItem = 'editingItem';
+        let COMP_ID = '';
         if(action.compId && action.compId != '') {
-            editingItem = action.compId + '__selectedItem';
+            COMP_ID = action.compId;
         }
         const { data } = action.payload.data;
-        
+        let oldViewItems = [];
+        if(state.viewItems) {
+            oldViewItems = state.viewItems.filter((element) => {
+                return element._COMPID_ != COMP_ID;
+            });
+        }
+        oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
+
         if(data && data.length > 0) {
             return {
                 ...state,
                 pending: false,
                 error: false,
-                [editingItem]: Object.assign({}, setParameterForView(data[0]))
+                viewItems: oldViewItems
             };
         } else {
             return {
                 ...state,
                 pending: false,
                 error: false,
-                [editingItem]: {objNm: '', objId: '', comment: ''}
+                viewItems: oldViewItems
             };
         }
     },

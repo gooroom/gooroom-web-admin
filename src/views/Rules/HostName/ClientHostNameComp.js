@@ -83,28 +83,30 @@ class ClientHostNameComp extends Component {
   }
 
   handleEditBtnClick = (param) => {
-    // const { ClientManageCompActions, ClientManageCompProps } = this.props;
-    // ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, param));
-  };
-
-  handleEditBtnClick = (param) => {
-
     const { ClientHostNameActions, ClientHostNameProps, compId } = this.props;
-    const { [compId + '__selectedItem'] : viewItem } = ClientHostNameProps;
+    const viewItem = ClientHostNameProps.viewItems.find(function(element) {
+      return element._COMPID_ == compId;
+    });
 
     ClientHostNameActions.showDialog({
       compId: compId,
       selectedItem: viewItem,
       dialogType: ClientHostNameDialog.TYPE_EDIT,
     });
-
   };
 
   // .................................................
   render() {
-    const { ClientHostNameProps, compId } = this.props;
     const bull = <span className={bullet}>•</span>;
-    const { [compId + '__selectedItem'] : viewItem } = ClientHostNameProps;
+    const { ClientHostNameProps, compId } = this.props;
+    const { viewItems } = ClientHostNameProps;
+
+    let viewItem = null;
+    if(viewItems) {
+      viewItem = viewItems.find(function(element) {
+        return element._COMPID_ == compId;
+      });
+    }
 
     return (
 
