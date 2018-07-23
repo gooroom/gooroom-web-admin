@@ -63,7 +63,7 @@ class GrRouters extends Component {
           <Route exact path="/" name="Home" component={Dashboard} />
           <Route path="/dashboard" name="Dashboard" component={Dashboard} />
           <Route
-            path="/clients/clientmanage"
+            path="/clients/clientmanage/:grMenuId"
             name="ClientManage"
             component={ClientManage}
           />
@@ -78,57 +78,57 @@ class GrRouters extends Component {
             component={ClientGroupManage}
           />
           <Route
-            path="/clientconfig/regkey"
+            path="/clientconfig/regkey/:grMenuId"
             name="ClientRegKey"
             component={ClientRegKey}
           />
           <Route
-            path="/clientconfig/profileset"
+            path="/clientconfig/profileset/:grMenuId"
             name="ClientProfileSet"
             component={ClientProfileSet}
           />
           <Route
-            path="/clientconfig/setting"
+            path="/clientconfig/setting/:grMenuId"
             name="ClientConfSetting"
             component={ClientConfSetting}
           />
           <Route
-            path="/clientconfig/host"
+            path="/clientconfig/host/:grMenuId"
             name="ClientHostNameManage"
             component={ClientHostNameManage}
           />
           <Route
-            path="/clientconfig/update"
+            path="/clientconfig/update/:grMenuId"
             name="ClientUpdateServerManage"
             component={ClientUpdateServerManage}
           />
           <Route
-            path="/jobs/jobmanage"
+            path="/jobs/jobmanage/:grMenuId"
             name="JobManage"
             component={JobManage}
           />
           <Route
-            path="/user/department"
+            path="/user/department/:grMenuId"
             name="DeptManage"
             component={DeptManage}
           />
           <Route
-            path="/package/packagemanage"
+            path="/package/packagemanage/:grMenuId"
             name="PackageManage"
             component={PackageManage}
           />
           <Route
-            path="/user/deptmanage"
+            path="/user/deptmanage/:grMenuId"
             name="DeptManage"
             component={DeptManage}
           />
           <Route
-            path="/user/usermanage"
+            path="/user/usermanage/:grMenuId"
             name="UserManage"
             component={UserManage}
           />
           <Route
-            path="/test/components"
+            path="/test/components/:grMenuId"
             name="ComponentTests"
             component={ComponentTests}
           />
