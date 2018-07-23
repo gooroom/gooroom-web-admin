@@ -267,12 +267,30 @@ export default handleActions({
         }
         const { data } = action.payload.data;
         let oldViewItems = [];
+
         if(state.viewItems) {
-            oldViewItems = state.viewItems.filter((element) => {
-                return element._COMPID_ != COMP_ID;
+            oldViewItems = state.viewItems;
+            // 같은 콤프가 있는지 검사를 위한 사전 검사
+            const hasEqualsCompId = oldViewItems.filter((element) => {
+                return element._COMPID_ == COMP_ID;
             });
+
+            if(!(hasEqualsCompId && hasEqualsCompId.length > 0)) {
+                // 새로 등록
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
+            }
+
+            oldViewItems = oldViewItems.map((element) => {
+                if(element.objId == data[0].objId) {
+                    return Object.assign({}, {'_COMPID_': element._COMPID_}, setParameterForView(data[0]));
+                } else {
+                    return element;
+                }
+            });
+
+        } else {
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
         }
-        oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
 
         if(data && data.length > 0) {
             return {

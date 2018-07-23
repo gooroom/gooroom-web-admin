@@ -144,9 +144,7 @@ class ClientConfSettingDialog extends Component {
                     const { editingCompId, selectedItem } = ClientConfSettingProps;
                     let nowSelectedItem = null;
 
-                    console.log('editingCompId > ', editingCompId);    
-
-                    if(editingCompId || editingCompId == '') {
+                    if((typeof editingCompId) == 'undefined' || editingCompId == '') {
                         nowSelectedItem = selectedItem;
                         // update list 
                         ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
@@ -157,31 +155,10 @@ class ClientConfSettingDialog extends Component {
                         });
                     }
 
-
-
-
-                    //  else {
-                    //     ClientConfSettingActions.getClientConfSetting({
-                    //         compId: editingCompId,
-                    //         objId: selectedItem.objId
-                    //     });
-                    // }
-
                     ClientConfSettingActions.getClientConfSetting({
                         compId: editingCompId,
                         objId: nowSelectedItem.objId
                     });
-
-                    // change selected objects
-                    // ClientConfSettingProps.keys().map(obj => {
-                    //     console.log('obj > ', obj);    
-                    // });
-
-                    // ClientConfSettingActions.getClientConfSetting({
-                    //     compId: editingCompId,
-                    //     objId: selectedItem.objId
-                    // });
-
 
                 this.handleClose();
             }, (res) => {

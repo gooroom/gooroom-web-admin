@@ -141,16 +141,24 @@ class ClientHostNameManageDialog extends Component {
             ClientHostNameActions.editClientHostNameData(ClientHostNameProps.editingItem)
                 .then((res) => {
 
-                    const { editingCompId, [editingCompId + '__selectedItem'] : selectedItem } = ClientHostNameProps;
-                    if(editingCompId && editingCompId != '') {
-                        ClientHostNameActions.getClientHostName({
-                            compId: editingCompId,
-                            objId: selectedItem.objId
-                        });
-                    } else {
+                    const { editingCompId, selectedItem } = ClientHostNameProps;
+                    let nowSelectedItem = null;
+
+                    if((typeof editingCompId) == 'undefined' || editingCompId == '') {
+                        nowSelectedItem = selectedItem;
                         // update list 
                         ClientHostNameActions.readClientHostNameList(ClientHostNameProps.listParam);
+                    } else {
+                        const { viewItems } = ClientHostNameProps;
+                        nowSelectedItem = viewItems.find((element) => {
+                            return element._COMPID_ == editingCompId;
+                        });
                     }
+
+                    ClientHostNameActions.getClientHostName({
+                        compId: editingCompId,
+                        objId: nowSelectedItem.objId
+                    });
 
                 this.handleClose();
             }, (res) => {
