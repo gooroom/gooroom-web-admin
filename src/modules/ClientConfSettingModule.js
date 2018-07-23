@@ -323,44 +323,28 @@ export default handleActions({
         const { data } = action.payload.data;
         let oldViewItems = [];
         if(state.viewItems) {
-            
             oldViewItems = state.viewItems;
-            
-            const hasViewItems = state.viewItems.filter((element) => {
+            // 같은 콤프가 있는지 검사를 위한 사전 검사
+            const hasEqualsCompId = oldViewItems.filter((element) => {
                 return element._COMPID_ == COMP_ID;
             });
 
-            console.log('............................. oldViewItems : ', oldViewItems);
-            console.log('............................. hasViewItems : ', hasViewItems);
-
-            if(hasViewItems && hasViewItems.length > 0) {
-
-                oldViewItems = state.viewItems.map((element) => {
-
-                    console.log('element._COMPID_ : ', element._COMPID_);
-                    console.log('COMP_ID : ', COMP_ID);
-    
-                    if(element._COMPID_ == COMP_ID) {
-                        return Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0]));
-                    } else {
-                        console.log('element.objId : ', element.objId);
-                        console.log('data[0].objId : ', data);
-    
-                        if(element.objId != data[0].objId) {
-                            return element;
-                        } else {
-                            return Object.assign({}, {'_COMPID_': element._COMPID_}, setParameterForView(data[0]))
-                        }
-                    }
-
-                });
-            } else {
+            if(!(hasEqualsCompId && hasEqualsCompId.length > 0)) {
+                // 새로 등록
                 oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
             }
+
+            oldViewItems = oldViewItems.map((element) => {
+                if(element.objId == data[0].objId) {
+                    return Object.assign({}, {'_COMPID_': element._COMPID_}, setParameterForView(data[0]));
+                } else {
+                    return element;
+                }
+            });
+
         } else {
             oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
         }
-        //oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
 
         if(data && data.length > 0) {
             return {

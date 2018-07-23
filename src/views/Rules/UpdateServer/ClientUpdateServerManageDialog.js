@@ -126,16 +126,24 @@ class ClientUpdateServerManageDialog extends Component {
             ClientUpdateServerActions.editClientUpdateServerData(ClientUpdateServerProps.editingItem)
                 .then((res) => {
 
-                    const { editingCompId, [editingCompId + '__selectedItem'] : selectedItem } = ClientUpdateServerProps;
-                    if(editingCompId && editingCompId != '') {
-                        ClientUpdateServerActions.getClientUpdateServer({
-                            compId: editingCompId,
-                            objId: selectedItem.objId
-                        });
-                    } else {
+                    const { editingCompId, selectedItem } = ClientUpdateServerProps;
+                    let nowSelectedItem = null;
+
+                    if((typeof editingCompId) == 'undefined' || editingCompId == '') {
+                        nowSelectedItem = selectedItem;
                         // update list 
                         ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps.listParam);
+                    } else {
+                        const { viewItems } = ClientUpdateServerProps;
+                        nowSelectedItem = viewItems.find((element) => {
+                            return element._COMPID_ == editingCompId;
+                        });
                     }
+
+                    ClientUpdateServerActions.getClientUpdateServer({
+                        compId: editingCompId,
+                        objId: nowSelectedItem.objId
+                    });
 
                 this.handleClose();
             }, (res) => {
