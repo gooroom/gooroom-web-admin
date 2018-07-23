@@ -116,7 +116,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientDesktopConfigInform);
 
-// export const setParameterForView = (param) => {
+// export const createViewObject = (param) => {
 
 //   let hosts = '';
   

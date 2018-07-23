@@ -257,6 +257,7 @@ export default handleActions({
         let selectedName = 'listParam';
         let newListParam = {};
 
+        // 컴포넌트로 작업하는 경우
         if(action.compId && action.compId != '') {
             listName = action.compId + '__listData';
             listParamName = action.compId + '__listParam';

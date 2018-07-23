@@ -27,34 +27,36 @@ class GrConfirm extends Component {
   };
 
   handleCancel = () => {
-    this.props.GrConfirmActions.closeConfirm({
+    const { GrConfirmActions } = this.props;
+    GrConfirmActions.closeConfirm({
       confirmResult: false,
       confirmOpen: false
     });
   };
 
   handleOk = () => {
-    this.props.grConfirmModule.handleConfirmResult(true);
-    this.props.GrConfirmActions.closeConfirm({
+    const { GrConfirmActions, GrConfirmProps } = this.props;
+    GrConfirmProps.handleConfirmResult(true, GrConfirmProps.confirmObject);
+    GrConfirmActions.closeConfirm({
       confirmResult: true,
       confirmOpen: false
     });
   };
 
   render() {
-    const {grConfirmModule} = this.props;
+    const { GrConfirmProps } = this.props;
 
     return (
        <Dialog
           onClose={this.handleClose}
-          open={grConfirmModule.confirmOpen}
+          open={GrConfirmProps.confirmOpen}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{grConfirmModule.confirmTitle}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">{GrConfirmProps.confirmTitle}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              {grConfirmModule.confirmMsg}
+              {GrConfirmProps.confirmMsg}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -71,7 +73,7 @@ class GrConfirm extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  grConfirmModule: state.GrConfirmModule,
+  GrConfirmProps: state.GrConfirmModule,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -72,17 +72,22 @@ class ClientConfSettingInform extends Component {
     const { selectedItem } = ClientConfSettingProps;
     const bull = <span className={bullet}>•</span>;
 
+    const selectedViewItem = createViewObject(selectedItem);
+
+    // console.log('###########1# ', selectedItem);
+    // console.log('###########2# ', selectedViewItem);
+
     return (
       <div className={componentClass}>
       {(ClientConfSettingProps.informOpen) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(selectedItem) ? selectedItem.objNm : ''}
-            subheader={selectedItem.objId + ', ' + formatDateToSimple(selectedItem.modDate, 'YYYY-MM-DD')}
+            title={(selectedViewItem) ? selectedViewItem.objNm : ''}
+            subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
           />
           <CardContent className={contentClass}>
             <Typography component="pre">
-              "{selectedItem.comment}"
+              "{selectedViewItem.comment}"
             </Typography>
             
             <Divider />
@@ -91,15 +96,15 @@ class ClientConfSettingInform extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
-                  <TableCell numeric>{selectedItem.pollingTime}</TableCell>
+                  <TableCell numeric>{selectedViewItem.pollingTime}</TableCell>
                   <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
-                  <TableCell numeric>{(selectedItem.useHypervisor) ? '구동' : '중단'}</TableCell>
+                  <TableCell numeric>{(selectedViewItem.useHypervisor) ? '구동' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
-                  <TableCell numeric>{(selectedItem.selectedNtpIndex > -1) ? selectedItem.ntpAddress[selectedItem.selectedNtpIndex] : ''}</TableCell>
+                  <TableCell numeric>{(selectedViewItem.selectedNtpIndex > -1) ? selectedViewItem.ntpAddress[selectedViewItem.selectedNtpIndex] : ''}</TableCell>
                   <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
-                  <TableCell numeric>{selectedItem.ntpAddress.map(function(prop, index) {
+                  <TableCell numeric>{selectedViewItem.ntpAddress.map(function(prop, index) {
                       return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
                 </TableRow>
@@ -125,40 +130,46 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSettingInform);
 
-export const setParameterForView = (param) => {
+export const createViewObject = (param) => {
 
-  let pollingTime = '';
-  let useHypervisor = false;
-  let selectedNtpIndex = -1;
-  let ntpAddrSelected = '';
-  let ntpAddress = [];
+  if(param) {
+    let pollingTime = '';
+    let useHypervisor = false;
+    let selectedNtpIndex = -1;
+    let ntpAddrSelected = '';
+    let ntpAddress = [];
+    
+    param.propList.forEach(function(e) {
+      if(e.propNm == 'AGENTPOLLINGTIME') {
+        pollingTime = e.propValue;
+      } else if(e.propNm == 'USEHYPERVISOR') {
+        useHypervisor = (e.propValue == "true");
+      } else if(e.propNm == 'NTPSELECTADDRESS') {
+        ntpAddrSelected = e.propValue;
+      } else if(e.propNm == 'NTPADDRESSES') {
+        ntpAddress.push(e.propValue);
+      }
+    });
+    ntpAddress.forEach(function(e, i) {
+      if(ntpAddrSelected == e) {
+        selectedNtpIndex = i;
+      }
+    });
   
-  param.propList.forEach(function(e) {
-    if(e.propNm == 'AGENTPOLLINGTIME') {
-      pollingTime = e.propValue;
-    } else if(e.propNm == 'USEHYPERVISOR') {
-      useHypervisor = (e.propValue == "true");
-    } else if(e.propNm == 'NTPSELECTADDRESS') {
-      ntpAddrSelected = e.propValue;
-    } else if(e.propNm == 'NTPADDRESSES') {
-      ntpAddress.push(e.propValue);
-    }
-  });
-  ntpAddress.forEach(function(e, i) {
-    if(ntpAddrSelected == e) {
-      selectedNtpIndex = i;
-    }
-  });
+    return {
+      objId: param.objId,
+      objNm: param.objNm,
+      comment: param.comment,
+      modDate: param.modDate,
+      useHypervisor: useHypervisor,
+      pollingTime: pollingTime,
+      selectedNtpIndex: selectedNtpIndex,
+      ntpAddress: ntpAddress
+    };
+  
+  } else {
+    return param;
+  }
 
-  return {
-    objId: param.objId,
-    objNm: param.objNm,
-    comment: param.comment,
-    modDate: param.modDate,
-    useHypervisor: useHypervisor,
-    pollingTime: pollingTime,
-    selectedNtpIndex: selectedNtpIndex,
-    ntpAddress: ntpAddress
-  };
 
 };

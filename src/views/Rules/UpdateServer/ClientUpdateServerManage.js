@@ -207,7 +207,7 @@ class ClientUpdateServerManage extends Component {
     });
   }
 
-  setParameterForView = (param) => {
+  createViewObject = (param) => {
     let mainos = '';
     let extos = '';
     let priorities = '';
@@ -238,7 +238,7 @@ class ClientUpdateServerManage extends Component {
       return element.objId == id;
     });
     
-    const viewItem = this.setParameterForView(selectedItem);
+    const viewItem = this.createViewObject(selectedItem);
 
     // choice one from two views.
 
@@ -264,7 +264,7 @@ class ClientUpdateServerManage extends Component {
 
     ClientUpdateServerActions.showDialog({
       compId: '',
-      selectedItem: this.setParameterForView(selectedItem),
+      selectedItem: this.createViewObject(selectedItem),
       dialogType: ClientUpdateServerManageDialog.TYPE_EDIT,
     });
   };
@@ -359,7 +359,7 @@ class ClientUpdateServerManage extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='primary'
-              onClick={ () => this.handleSelectBtnClick({pageNo: 0}) }
+              onClick={ () => this.handleSelectBtnClick({page: 0}) }
             >
               <Search className={leftIconClass} />
               조회

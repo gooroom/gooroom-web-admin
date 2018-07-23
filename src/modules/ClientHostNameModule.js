@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions';
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { setParameterForView } from 'views/Rules/HostName/ClientHostNameManageInform';
+import { createViewObject } from 'views/Rules/HostName/ClientHostNameManageInform';
 
 const GET_HOSTNAME_LIST_SUCCESS = 'clientHostName/GET_LIST_SUCCESS';
 const GET_HOSTNAME_SUCCESS = 'clientHostName/GET_HOSTNAME_SUCCESS';
@@ -273,19 +273,19 @@ export default handleActions({
 
             if(!(hasEqualsCompId && hasEqualsCompId.length > 0)) {
                 // 새로 등록
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, createViewObject(data[0])));
             }
 
             oldViewItems = oldViewItems.map((element) => {
                 if(element.objId == data[0].objId) {
-                    return Object.assign({}, {'_COMPID_': element._COMPID_}, setParameterForView(data[0]));
+                    return Object.assign({}, {'_COMPID_': element._COMPID_}, createViewObject(data[0]));
                 } else {
                     return element;
                 }
             });
 
         } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, createViewObject(data[0])));
         }
 
         if(data && data.length > 0) {
