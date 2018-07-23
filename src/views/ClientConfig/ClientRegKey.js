@@ -317,7 +317,7 @@ class ClientRegKey extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='primary'
-              onClick={ () => this.handleSelectBtnClick({pageNo: 0}) }
+              onClick={ () => this.handleSelectBtnClick({page: 0}) }
             >
               <Search className={leftIconClass} />
               조회

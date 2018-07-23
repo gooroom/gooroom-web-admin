@@ -24,7 +24,8 @@ const initialState = {
     confirmMsg: '',
     handleConfirmResult: () => {},
     confirmOpen: false,
-    confirmResult: false
+    confirmResult: false,
+    confirmObject: null
 };
 
 
@@ -36,7 +37,8 @@ export default handleActions({
             confirmTitle: action.payload.confirmTitle,
             confirmMsg: action.payload.confirmMsg,
             handleConfirmResult: action.payload.handleConfirmResult,
-            confirmOpen: action.payload.confirmOpen
+            confirmOpen: action.payload.confirmOpen,
+            confirmObject: (action.payload.confirmObject) ? action.payload.confirmObject : null
         };
     },
     [CLOSE_CONFIRM]: (state, action) => {

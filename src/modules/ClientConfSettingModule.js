@@ -2,7 +2,6 @@ import { handleActions } from 'redux-actions';
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { setParameterForView } from 'views/Rules/ClientConf/ClientConfSettingInform';
 
 const COMMON_PENDING = 'clientConfSetting/COMMON_PENDING';
 const COMMON_FAILURE = 'clientConfSetting/COMMON_FAILURE';
@@ -32,8 +31,9 @@ const initialState = {
     error: false,
     resultMsg: '',
 
-    listData: [],
-    listParam: {
+    defaultOrderDir: 'desc',
+    defaultOrderColumn: 'chConfId',
+    defaultListParam: {
         keyword: '',
         orderDir: 'desc',
         orderColumn: 'chConfId',
@@ -42,16 +42,6 @@ const initialState = {
         rowsPerPageOptions: [5, 10, 25],
         rowsTotal: 0,
         rowsFiltered: 0
-    },
-
-    selectedItem: {
-        objId: '',
-        objNm: '',
-        comment: '',
-        useHypervisor: false,
-        pollingTime: '',
-        selectedNtpIndex: -1,
-        ntpAddress: ['']
     },
 
     informOpen: false,
@@ -88,6 +78,9 @@ export const closeInform = () => dispatch => {
 };
 
 export const readClientConfSettingList = (param) => dispatch => {
+
+    console.log('readClientConfSettingList param : ', param);
+
     const resetParam = {
         keyword: param.keyword,
         page: param.page,
@@ -102,6 +95,7 @@ export const readClientConfSettingList = (param) => dispatch => {
         (response) => {
             dispatch({
                 type: GET_CONFSETTING_LIST_SUCCESS,
+                compId: param.compId,
                 payload: response
             });
         }
@@ -151,6 +145,7 @@ export const setEditingItemValue = (param) => dispatch => {
 export const changeStoreData = (param) => dispatch => {
     return dispatch({
         type: CHG_STORE_DATA,
+        compId: param.compId,
         payload: param
     });
 };
@@ -270,50 +265,146 @@ export default handleActions({
     },
 
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-        
-        let listName = 'listData';
-        let listParamName = 'listParam';
-        let selectedName = 'listParam';
-        let newListParam = {};
 
+        let COMP_ID = '';
         if(action.compId && action.compId != '') {
-            listName = action.compId + '__listData';
-            listParamName = action.compId + '__listParam';
-            selectedName = action.compId + '__selected';
-            if(draw > 0) {
-                newListParam = state[action.compId + '__listParam'];
-            } else {
-                newListParam = {
-                    keyword: '',
-                    orderDir: 'desc',
-                    orderColumn: 'chGrpNm',
-                    page: 0,
-                    rowsPerPage: 10,
-                    rowsPerPageOptions: [5, 10, 25],
-                    rowsTotal: 0,
-                    rowsFiltered: 0
-                };
-            }            
-        } else {
-            newListParam = state.listParam;
+            COMP_ID = action.compId;
         }
 
-        Object.assign(newListParam, {
-            rowsFiltered: parseInt(recordsFiltered, 10),
-            rowsTotal: parseInt(recordsTotal, 10),
-            page: parseInt(draw, 10),
-            rowsPerPage: parseInt(rowLength, 10),
-        });
+        const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
+        
+        let oldViewItems = [];
+        let newListParam = {};
+
+        if(state.viewItems) {
+
+            oldViewItems = state.viewItems;
+            // 같은 콤프가 있는지 검사를 위한 사전 검사
+            const viewItem = oldViewItems.find((element) => {
+                return element._COMPID_ == COMP_ID;
+            });
+
+            if(viewItem) {
+
+                Object.assign(viewItem, {
+                    'listData': data,
+                    'listParam': Object.assign({}, viewItem.listParam, {
+                        rowsFiltered: parseInt(recordsFiltered, 10),
+                        rowsTotal: parseInt(recordsTotal, 10),
+                        page: parseInt(draw, 10),
+                        rowsPerPage: parseInt(rowLength, 10)
+                    })
+                });
+
+            } else {
+
+                // 현재 콤프아이디로 데이타 없음. -> 추가 함
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                    'listData': data,
+                    'listParam': {
+                        keyword: '',
+                        orderDir: 'desc',
+                        orderColumn: 'chGrpNm',
+                        rowsPerPageOptions: [5, 10, 25],
+                        rowsFiltered: parseInt(recordsFiltered, 10),
+                        rowsTotal: parseInt(recordsTotal, 10),
+                        page: parseInt(draw, 10),
+                        rowsPerPage: parseInt(rowLength, 10)
+                    }
+                }));
+
+            }
+
+
+            // if(draw > 0) {
+            //     newListParam = state[action.compId + '__listParam'];
+            // } else {
+            //     newListParam = {
+            //         keyword: '',
+            //         orderDir: 'desc',
+            //         orderColumn: 'chGrpNm',
+            //         page: 0,
+            //         rowsPerPage: 10,
+            //         rowsPerPageOptions: [5, 10, 25],
+            //         rowsTotal: 0,
+            //         rowsFiltered: 0
+            //     };
+            // }            
+
+            // oldViewItems = oldViewItems.map((element) => {
+            //     if(element.objId == data[0].objId) {
+            //         return Object.assign({}, {'_COMPID_': element._COMPID_}, data[0]);
+            //     } else {
+            //         return element;
+            //     }
+            // });
+
+        } else {
+
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                'listData': data,
+                'listParam': Object.assign({}, state.defaultListParam, {
+                    rowsFiltered: parseInt(recordsFiltered, 10),
+                    rowsTotal: parseInt(recordsTotal, 10),
+                    page: parseInt(draw, 10),
+                    rowsPerPage: parseInt(rowLength, 10)
+                })
+            }));
+
+        }
+        
+
+        // const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
+        
+        // let listName = 'listData';
+        // let listParamName = 'listParam';
+        // let selectedName = 'listParam';
+        // let newListParam = {};
+
+        // if(action.compId && action.compId != '') {
+        //     listName = action.compId + '__listData';
+        //     listParamName = action.compId + '__listParam';
+        //     selectedName = action.compId + '__selected';
+        //     if(draw > 0) {
+        //         newListParam = state[action.compId + '__listParam'];
+        //     } else {
+        //         newListParam = {
+        //             keyword: '',
+        //             orderDir: 'desc',
+        //             orderColumn: 'chGrpNm',
+        //             page: 0,
+        //             rowsPerPage: 10,
+        //             rowsPerPageOptions: [5, 10, 25],
+        //             rowsTotal: 0,
+        //             rowsFiltered: 0
+        //         };
+        //     }            
+        // } else {
+        //     newListParam = state.listParam;
+        // }
+
+        // Object.assign(newListParam, {
+        //     rowsFiltered: parseInt(recordsFiltered, 10),
+        //     rowsTotal: parseInt(recordsTotal, 10),
+        //     page: parseInt(draw, 10),
+        //     rowsPerPage: parseInt(rowLength, 10),
+        // });
+
+        // console.log('listName : ', listName);
+        // console.log('listParamName : ', listParamName);
+        // console.log('selectedName : ', selectedName);
 
         return {
             ...state,
             pending: false,
             error: false,
-            [listName]: data,
-            [listParamName]: newListParam,
-            [selectedName]: (state[selectedName]) ? state[selectedName] : []
+            viewItems: oldViewItems
         };
+
+        // [listName]: data,
+        // [listParamName]: newListParam,
+        // [selectedName]: (state[selectedName]) ? state[selectedName] : []
+
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
         let COMP_ID = '';
@@ -331,19 +422,19 @@ export default handleActions({
 
             if(!(hasEqualsCompId && hasEqualsCompId.length > 0)) {
                 // 새로 등록
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, data[0]));
             }
 
             oldViewItems = oldViewItems.map((element) => {
                 if(element.objId == data[0].objId) {
-                    return Object.assign({}, {'_COMPID_': element._COMPID_}, setParameterForView(data[0]));
+                    return Object.assign({}, {'_COMPID_': element._COMPID_}, data[0]);
                 } else {
                     return element;
                 }
             });
 
         } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, setParameterForView(data[0])));
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, data[0]));
         }
 
         if(data && data.length > 0) {
@@ -396,9 +487,38 @@ export default handleActions({
         }
     },
     [CHG_STORE_DATA]: (state, action) => {
+
+        let COMP_ID = '';
+        if(action.compId && action.compId != '') {
+            COMP_ID = action.compId;
+        }
+
+        let oldViewItems = [];
+        if(state.viewItems) {
+            oldViewItems = state.viewItems;
+            const viewItem = oldViewItems.find((element) => {
+                return element._COMPID_ == COMP_ID;
+            });
+            
+            if(viewItem) {
+                Object.assign(viewItem, {
+                    [action.payload.name]: action.payload.value
+                });
+            } else {
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                    [action.payload.name]: action.payload.value
+                }));
+            }
+
+        } else {
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                [action.payload.name]: action.payload.value
+            }));
+        }
+
         return {
             ...state,
-            [action.payload.name]: action.payload.value
+            viewItems: oldViewItems
         }
     },
     [CREATE_CONFSETTING_SUCCESS]: (state, action) => {

@@ -13,8 +13,6 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
-import { setParameterForView } from './ClientConfSettingInform';
-
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
@@ -190,7 +188,21 @@ class ClientConfSetting extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, param));
+    const menuCompId = this.props.match.params.grMenuId;
+
+    let viewItem = null;
+    if(ClientConfSettingProps.viewItems) {
+      viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
+
+
+    ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
+      page: 0,
+      compId: this.props.match.params.grMenuId
+    }));
   };
   
   handleCreateButton = () => {
@@ -211,37 +223,58 @@ class ClientConfSetting extends Component {
   
   handleRowClick = (event, id) => {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const selectedItem = ClientConfSettingProps.listData.find(function(element) {
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientConfSettingProps.viewItems) {
+      viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listData = (viewItem) ? viewItem.listData : [];
+
+
+    const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
-    
-    const viewItem = setParameterForView(selectedItem);
 
     // choice one from two views.
 
     // 1. popup dialog
     // ClientConfSettingActions.showDialog({
-    //   selectedItem: viewItem,
+    //   selectedItem: viewObject,
     //   dialogType: ClientConfSettingDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     ClientConfSettingActions.showInform({
-      selectedItem: viewItem  
+      selectedItem: selectedItem  
     });
     
   };
 
   handleEditClick = (event, id) => { 
-    //event.stopPropagation();
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const selectedItem = ClientConfSettingProps.listData.find(function(element) {
+    const menuCompId = this.props.match.params.grMenuId;
+
+    
+    let viewItem = null;
+    if(ClientConfSettingProps.viewItems) {
+      viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listData = (viewItem) ? viewItem.listData : [];
+
+
+    const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
 
     ClientConfSettingActions.showDialog({
-      compId: '',
-      selectedItem: setParameterForView(selectedItem),
+      compId: this.props.match.params.grMenuId,
+      selectedItem: selectedItem,
       dialogType: ClientConfSettingDialog.TYPE_EDIT,
     });
   };
@@ -250,29 +283,52 @@ class ClientConfSetting extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientConfSettingProps, ClientConfSettingActions, GrConfirmActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
 
-    const selectedItem = ClientConfSettingProps.listData.find(function(element) {
+
+    let viewItem = null;
+    if(ClientConfSettingProps.viewItems) {
+      viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listData = (viewItem) ? viewItem.listData : [];
+
+
+    const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
 
-    ClientConfSettingActions.setSelectedItemObj({
-      selectedItem: Object.assign(ClientConfSettingProps.selectedItem, selectedItem)
-    });
+    // ClientConfSettingActions.setSelectedItemObj({
+    //   selectedItem: Object.assign(ClientConfSettingProps.selectedItem, selectedItem)
+    // });
     const re = GrConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
       confirmMsg: '단말정책정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true
+      confirmOpen: true,
+      confirmObject: selectedItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue) => {
+  handleDeleteConfirmResult = (confirmValue, paramObject) => {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientConfSettingProps.viewItems) {
+      viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
+
 
     if(confirmValue) {
       ClientConfSettingActions.deleteClientConfSettingData({
-        objId: ClientConfSettingProps.selectedItem.objId
+        objId: paramObject.objId
       }).then(() => {
-        ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
+        ClientConfSettingActions.readClientConfSettingList(listParam);
         }, () => {
       });
     }
@@ -281,40 +337,113 @@ class ClientConfSetting extends Component {
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {page: page}));
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientConfSettingProps.viewItems) {
+      viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
+
+
+    ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
+      page: page,
+      compId: this.props.match.params.grMenuId
+    }));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {rowsPerPage: event.target.value}));
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientConfSettingProps.viewItems) {
+      viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
+
+
+    ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
+      rowsPerPage: event.target.value,
+      compId: this.props.match.params.grMenuId
+    }));
   };
   
   // .................................................
   handleRequestSort = (event, property) => {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientConfSettingProps.viewItems) {
+      viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
+
+
     let orderDir = "desc";
-    if (ClientConfSettingProps.listParam.orderColumn === property && ClientConfSettingProps.listParam.orderDir === "desc") {
+    if (listParam.orderColumn === property && listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {orderColumn: property, orderDir: orderDir}));
+
+    ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
+      orderColumn: property, 
+      orderDir: orderDir,
+      compId: this.props.match.params.grMenuId
+    }));
   };
   // .................................................
 
   // .................................................
   handleKeywordChange = name => event => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    const newParam = getMergedObject(ClientConfSettingProps.listParam, {keyword: event.target.value});
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientConfSettingProps.viewItems) {
+      viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
+
+    
+    const newParam = getMergedObject(listParam, {keyword: event.target.value});
     ClientConfSettingActions.changeStoreData({
       name: 'listParam',
-      value: newParam
+      value: newParam,
+      compId: this.props.match.params.grMenuId
     });
   }
 
   render() {
 
     const { ClientConfSettingProps } = this.props;
-    const emptyRows = ClientConfSettingProps.listParam.rowsPerPage - ClientConfSettingProps.listData.length;
+    const menuCompId = this.props.match.params.grMenuId;
+    const emptyRows = 0;//ClientConfSettingProps.listParam.rowsPerPage - ClientConfSettingProps.listData.length;
+
+    let viewItem = null;
+    if(ClientConfSettingProps.viewItems) {
+      viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+
+    const listData = (viewItem) ? viewItem.listData : [];
+    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
+    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientConfSettingProps.defaultListParam.orderDir;
+    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientConfSettingProps.defaultListParam.orderColumn;
 
     return (
       <React.Fragment>
@@ -336,7 +465,7 @@ class ClientConfSetting extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='primary'
-              onClick={ () => this.handleSelectBtnClick({pageNo: 0}) }
+              onClick={ () => this.handleSelectBtnClick() }
             >
               <Search className={leftIconClass} />
               조회
@@ -361,13 +490,13 @@ class ClientConfSetting extends Component {
             <Table className={tableClass}>
 
               <ClientConfSettingHead
-                orderDir={ClientConfSettingProps.listParam.orderDir}
-                orderColumn={ClientConfSettingProps.listParam.orderColumn}
+                orderDir={orderDir}
+                orderColumn={orderColumn}
                 onRequestSort={this.handleRequestSort}
               />
 
               <TableBody>
-                {ClientConfSettingProps.listData.map(n => {
+                {listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -417,10 +546,10 @@ class ClientConfSetting extends Component {
 
           <TablePagination
             component='div'
-            count={ClientConfSettingProps.listParam.rowsFiltered}
-            rowsPerPage={ClientConfSettingProps.listParam.rowsPerPage}
-            rowsPerPageOptions={ClientConfSettingProps.listParam.rowsPerPageOptions}
-            page={ClientConfSettingProps.listParam.page}
+            count={listParam.rowsFiltered}
+            rowsPerPage={listParam.rowsPerPage}
+            rowsPerPageOptions={listParam.rowsPerPageOptions}
+            page={listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}

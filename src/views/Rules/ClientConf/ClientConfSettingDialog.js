@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
+import { createViewObject } from './ClientConfSettingInform';
+
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -126,38 +128,72 @@ class ClientConfSettingDialog extends Component {
         })
     }
 
-    handleEditData = (event) => {
-        const { GrConfirmActions } = this.props;
+    handleEditData = (event, id) => {
+        const { ClientConfSettingProps, GrConfirmActions } = this.props;
+
+
+        // let viewItem = null;
+        // if(ClientConfSettingProps.viewItems) {
+        //   viewItem = ClientConfSettingProps.viewItems.find((element) => {
+        //     return element._COMPID_ == ClientConfSettingProps.editingCompId
+        //   });
+        // }
+        // const listData = (viewItem) ? viewItem.listData : [];
+    
+    
+        // const selectedItem = listData.find(function(element) {
+        //   return element.objId == id;
+        // });
+
+        console.log('Edit... editingItem : ', ClientConfSettingProps.editingItem);
+
         const re = GrConfirmActions.showConfirm({
             confirmTitle: '단말정책정보 수정',
             confirmMsg: '단말정책정보를 수정하시겠습니까?',
+            handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            handleConfirmResult: this.handleEditConfirmResult
+            confirmObject: ClientConfSettingProps.editingItem
           });
     }
-    handleEditConfirmResult = (confirmValue) => {
+    handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+
             ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.editingItem)
                 .then((res) => {
 
-                    const { editingCompId, selectedItem } = ClientConfSettingProps;
-                    let nowSelectedItem = null;
+                    const { editingCompId } = ClientConfSettingProps;
+
+                    // let nowSelectedItem = null;
+
+                    console.log('Edit... editingCompId : ', editingCompId);
+                    console.log('Edit... this.props : ', this.props);
+
 
                     if((typeof editingCompId) == 'undefined' || editingCompId == '') {
-                        nowSelectedItem = selectedItem;
-                        // update list 
-                        ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
+                        // nowSelectedItem = selectedItem;
+
+
+                        let tempItem = null;
+                        if(ClientConfSettingProps.viewItems) {
+                            tempItem = ClientConfSettingProps.viewItems.find((element) => {
+                            return element._COMPID_ == editingCompId
+                          });
+                        }
+                        const listParam = (tempItem) ? tempItem.listParam : ClientConfSettingProps.defaultListParam;
+
+
+                        ClientConfSettingActions.readClientConfSettingList(listParam);
                     } else {
-                        const { viewItems } = ClientConfSettingProps;
-                        nowSelectedItem = viewItems.find((element) => {
-                            return element._COMPID_ == editingCompId;
-                        });
+                        // const { viewItems } = ClientConfSettingProps;
+                        // nowSelectedItem = viewItems.find((element) => {
+                        //     return element._COMPID_ == editingCompId;
+                        // });
                     }
 
                     ClientConfSettingActions.getClientConfSetting({
                         compId: editingCompId,
-                        objId: nowSelectedItem.objId
+                        objId: paramObject.objId
                     });
 
                 this.handleClose();
@@ -182,6 +218,8 @@ class ClientConfSettingDialog extends Component {
         const { ClientConfSettingProps } = this.props;
         const { dialogType, editingItem } = ClientConfSettingProps;
 
+        const editingViewItem = createViewObject(editingItem);
+
         let title = "";
         const bull = <span className={bullet}>•</span>;
 
@@ -201,7 +239,7 @@ class ClientConfSettingDialog extends Component {
                     <TextField
                         id="objNm"
                         label="이름"
-                        value={(editingItem) ? editingItem.objNm : ''}
+                        value={(editingViewItem) ? editingViewItem.objNm : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={fullWidthClass}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
@@ -209,7 +247,7 @@ class ClientConfSettingDialog extends Component {
                     <TextField
                         id="comment"
                         label="설명"
-                        value={(editingItem) ? editingItem.comment : ''}
+                        value={(editingViewItem) ? editingViewItem.comment : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(fullWidthClass, itemRowClass)}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
@@ -220,7 +258,7 @@ class ClientConfSettingDialog extends Component {
                                 <Grid item xs={6} sm={6}>
                                     <TextField
                                         label="에이전트폴링주기(초)"
-                                        value={(editingItem) ? editingItem.pollingTime : ''}
+                                        value={(editingViewItem) ? editingViewItem.pollingTime : ''}
                                         className={classNames(fullWidthClass, itemRowClass)}
                                         disabled
                                     />
@@ -228,7 +266,7 @@ class ClientConfSettingDialog extends Component {
                                 <Grid item xs={6} sm={6}>
                                     <TextField
                                         label="운영체제 보호"
-                                        value={(editingItem.useHypervisor) ? '구동' : '중단'}
+                                        value={(editingViewItem.useHypervisor) ? '구동' : '중단'}
                                         className={classNames(fullWidthClass, itemRowClass)}
                                         disabled
                                     />
@@ -236,14 +274,14 @@ class ClientConfSettingDialog extends Component {
                             </Grid>
                             <TextField
                                 label="선택된 NTP 서버 주소"
-                                value={(editingItem.selectedNtpIndex > -1) ? editingItem.ntpAddress[editingItem.selectedNtpIndex] : ''}
+                                value={(editingViewItem.selectedNtpIndex > -1) ? editingViewItem.ntpAddress[editingViewItem.selectedNtpIndex] : ''}
                                 className={classNames(fullWidthClass, itemRowClass)}
                                 disabled
                             />
                             <TextField
                                 label="NTP 서버로 사용할 주소정보"
                                 multiline
-                                value={(editingItem.ntpAddress.length > 0) ? editingItem.ntpAddress.join('\n') : ''}
+                                value={(editingViewItem.ntpAddress.length > 0) ? editingViewItem.ntpAddress.join('\n') : ''}
                                 className={classNames(fullWidthClass, itemRowClass)}
                                 disabled
                             />
@@ -254,7 +292,7 @@ class ClientConfSettingDialog extends Component {
                             <TextField
                                 id="pollingTime"
                                 label="에이전트폴링주기(초)"
-                                value={(editingItem) ? editingItem.pollingTime : ''}
+                                value={(editingViewItem) ? editingViewItem.pollingTime : ''}
                                 onChange={this.handleValueChange("pollingTime")}
                                 className={classNames(fullWidthClass, itemRowClass)}
                             />
@@ -263,20 +301,20 @@ class ClientConfSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('useHypervisor')} 
-                                        checked={(editingItem) ? editingItem.useHypervisor : false}
+                                        checked={(editingViewItem) ? editingViewItem.useHypervisor : false}
                                         color="primary" />
                                     }
-                                    label={(editingItem.useHypervisor) ? '구동' : '중단'}
+                                    label={(editingViewItem.useHypervisor) ? '구동' : '중단'}
                                 />
                             </div>
                             <div style={{marginTop:"10px"}}>
                                 <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
                                 <Button onClick={this.handleAddNtp} variant="outlined" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
                                 <List>
-                                {editingItem.ntpAddress && editingItem.ntpAddress.length > 0 && editingItem.ntpAddress.map((value, index) => (
+                                {editingViewItem.ntpAddress && editingViewItem.ntpAddress.length > 0 && editingViewItem.ntpAddress.map((value, index) => (
                                     <ListItem style={{paddingTop:"0px", paddingBottom:"0px"}} key={index} >
                                         <Radio value={index.toString()} name="radio-button-demo" 
-                                            checked={editingItem.selectedNtpIndex != -1 && editingItem.selectedNtpIndex === index}
+                                            checked={editingViewItem.selectedNtpIndex != -1 && editingViewItem.selectedNtpIndex === index}
                                             onChange={this.handleChangeSelectedNtp('selectedNtpIndex', index)}
                                         />
                                         <Input value={value} onChange={this.handleNtpValueChange(index)} style={{width:"100%"}} />

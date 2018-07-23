@@ -207,7 +207,7 @@ class ClientHostNameManage extends Component {
     });
   }
 
-  setParameterForView = (param) => {
+  createViewObject = (param) => {
     let hosts = '';
     param.propList.forEach(function(e) {
       if(e.propNm == 'HOSTS') {
@@ -230,7 +230,7 @@ class ClientHostNameManage extends Component {
       return element.objId == id;
     });
     
-    const viewItem = this.setParameterForView(selectedItem);
+    const viewItem = this.createViewObject(selectedItem);
 
     // choice one from two views.
 
@@ -256,7 +256,7 @@ class ClientHostNameManage extends Component {
 
     ClientHostNameActions.showDialog({
       compId: '',
-      selectedItem: this.setParameterForView(selectedItem),
+      selectedItem: this.createViewObject(selectedItem),
       dialogType: ClientHostNameManageDialog.TYPE_EDIT,
     });
   };
@@ -351,7 +351,7 @@ class ClientHostNameManage extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='primary'
-              onClick={ () => this.handleSelectBtnClick({pageNo: 0}) }
+              onClick={ () => this.handleSelectBtnClick({page: 0}) }
             >
               <Search className={leftIconClass} />
               조회

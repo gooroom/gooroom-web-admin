@@ -126,7 +126,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(ClientUpdateServerInform);
 
-export const setParameterForView = (param) => {
+export const createViewObject = (param) => {
 
   let mainos = '';
   let extos = '';
