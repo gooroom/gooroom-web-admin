@@ -12,6 +12,7 @@ import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientHostNameDialog from './ClientHostNameManageDialog';
+import { createViewObject } from './ClientHostNameManageInform';
 
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
@@ -90,7 +91,7 @@ class ClientHostNameComp extends Component {
 
     ClientHostNameActions.showDialog({
       compId: compId,
-      selectedItem: viewItem,
+      selectedItem: createViewObject(viewItem.selectedItem),
       dialogType: ClientHostNameDialog.TYPE_EDIT,
     });
   };
@@ -101,18 +102,21 @@ class ClientHostNameComp extends Component {
     const { ClientHostNameProps, compId } = this.props;
     const { viewItems } = ClientHostNameProps;
 
-    let viewItem = null;
+    let viewCompItem = null;
     if(viewItems) {
-      viewItem = viewItems.find(function(element) {
-        return element._COMPID_ == compId;
+      const viewItem = viewItems.find((element) => {
+        return element._COMPID_ === compId;
       });
+      if(viewItem) {
+        viewCompItem = createViewObject(viewItem.selectedItem);
+      }
     }
 
     return (
 
       <React.Fragment>
       <Card className={card}>
-        {(viewItem) && <CardContent>
+        {(viewCompItem) && <CardContent>
 
           <Grid container spacing={24}>
             <Grid item xs={6}>
@@ -124,23 +128,23 @@ class ClientHostNameComp extends Component {
               <Button
                 className={grNarrowButton}
                 variant="outlined" color="primary"
-                onClick={() => this.handleEditBtnClick(viewItem.objId)}
+                onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
               ><SettingsApplicationsIcon />수정</Button>
             </Grid>
           </Grid>
           <Typography variant="headline" component="h2">
-            {viewItem.objNm}
+            {viewCompItem.objNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
-            {(viewItem.comment != '') ? '"' + viewItem.comment + '"' : ''}
+            {(viewCompItem.comment != '') ? '"' + viewCompItem.comment + '"' : ''}
           </Typography>
           <Divider />
-          {(viewItem && viewItem.objId != '') &&
+          {(viewCompItem && viewCompItem.objId != '') &&
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.hosts}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewCompItem.hosts}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>

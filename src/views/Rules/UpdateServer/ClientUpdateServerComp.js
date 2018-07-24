@@ -12,6 +12,7 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientUpdateServerDialog from './ClientUpdateServerManageDialog';
+import { createViewObject } from './ClientUpdateServerManageInform';
 
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
@@ -91,7 +92,7 @@ class ClientUpdateServerComp extends Component {
 
     ClientUpdateServerActions.showDialog({
       compId: compId,
-      selectedItem: viewItem,
+      selectedItem: createViewObject(viewItem.selectedItem),
       dialogType: ClientUpdateServerDialog.TYPE_EDIT,
     });
   };
@@ -102,17 +103,20 @@ class ClientUpdateServerComp extends Component {
     const { ClientUpdateServerProps, compId } = this.props;
     const { viewItems } = ClientUpdateServerProps;
 
-    let viewItem = null;
+    let viewCompItem = null;
     if(viewItems) {
-      viewItem = viewItems.find(function(element) {
-        return element._COMPID_ == compId;
+      const viewItem = viewItems.find((element) => {
+        return element._COMPID_ === compId;
       });
+      if(viewItem) {
+        viewCompItem = createViewObject(viewItem.selectedItem);
+      }
     }
 
     return (
       <React.Fragment>
       <Card className={card}>
-        {(viewItem) && <CardContent>
+        {(viewCompItem) && <CardContent>
 
           <Grid container spacing={24}>
             <Grid item xs={6}>
@@ -124,31 +128,31 @@ class ClientUpdateServerComp extends Component {
               <Button
                 className={grNarrowButton}
                 variant="outlined" color="primary"
-                onClick={() => this.handleEditBtnClick(viewItem.objId)}
+                onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
               ><SettingsApplicationsIcon />수정</Button>
             </Grid>
           </Grid>
           <Typography variant="headline" component="h2">
-            {viewItem.objNm}
+            {viewCompItem.objNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
-            {(viewItem.comment != '') ? '"' + viewItem.comment + '"' : ''}
+            {(viewCompItem.comment != '') ? '"' + viewCompItem.comment + '"' : ''}
           </Typography>
           <Divider />
-          {(viewItem && viewItem.objId != '') &&
+          {(viewCompItem && viewCompItem.objId != '') &&
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 주 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.mainos}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewCompItem.mainos}</pre></TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 기반 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.extos}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewCompItem.extos}</pre></TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} gooroom.pref</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewItem.priorities}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{viewCompItem.priorities}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>

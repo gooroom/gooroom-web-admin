@@ -15,9 +15,9 @@ const DELETE_CONFSETTING_SUCCESS = 'clientConfSetting/DELETE_CONFSETTING_SUCCESS
 const SHOW_CONFSETTING_INFORM = 'clientConfSetting/SHOW_CONFSETTING_INFORM';
 const SHOW_CONFSETTING_DIALOG = 'clientConfSetting/SHOW_CONFSETTING_DIALOG';
 
-const SET_SELECTED_OBJ = 'clientConfSetting/SET_SELECTED_OBJ';
 const SET_EDITING_ITEM_VALUE = 'clientConfSetting/SET_EDITING_ITEM_VALUE';
 
+const CHG_VIEWITEM_DATA = 'clientConfSetting/CHG_VIEWITEM_DATA';
 const CHG_STORE_DATA = 'clientConfSetting/CHG_STORE_DATA';
 
 const SET_SELECTED_NTP_VALUE = 'clientConfSetting/SET_SELECTED_NTP_VALUE';
@@ -79,8 +79,6 @@ export const closeInform = () => dispatch => {
 
 export const readClientConfSettingList = (param) => dispatch => {
 
-    console.log('readClientConfSettingList param : ', param);
-
     const resetParam = {
         keyword: param.keyword,
         page: param.page,
@@ -126,15 +124,6 @@ export const getClientConfSetting = (param) => dispatch => {
     });
 };
 
-export const setSelectedItemObj = (param) => dispatch => {
-    const compId = param.compId;
-    return dispatch({
-        type: SET_SELECTED_OBJ,
-        compId: compId,
-        payload: param
-    });
-};
-
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,
@@ -144,8 +133,7 @@ export const setEditingItemValue = (param) => dispatch => {
 
 export const changeStoreData = (param) => dispatch => {
     return dispatch({
-        type: CHG_STORE_DATA,
-        compId: param.compId,
+        type: CHG_VIEWITEM_DATA,
         payload: param
     });
 };
@@ -274,12 +262,9 @@ export default handleActions({
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
         
         let oldViewItems = [];
-        let newListParam = {};
-
         if(state.viewItems) {
 
             oldViewItems = state.viewItems;
-            // 같은 콤프가 있는지 검사를 위한 사전 검사
             const viewItem = oldViewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
@@ -304,7 +289,7 @@ export default handleActions({
                     'listParam': {
                         keyword: '',
                         orderDir: 'desc',
-                        orderColumn: 'chGrpNm',
+                        orderColumn: 'chConfId',
                         rowsPerPageOptions: [5, 10, 25],
                         rowsFiltered: parseInt(recordsFiltered, 10),
                         rowsTotal: parseInt(recordsTotal, 10),
@@ -314,31 +299,6 @@ export default handleActions({
                 }));
 
             }
-
-
-            // if(draw > 0) {
-            //     newListParam = state[action.compId + '__listParam'];
-            // } else {
-            //     newListParam = {
-            //         keyword: '',
-            //         orderDir: 'desc',
-            //         orderColumn: 'chGrpNm',
-            //         page: 0,
-            //         rowsPerPage: 10,
-            //         rowsPerPageOptions: [5, 10, 25],
-            //         rowsTotal: 0,
-            //         rowsFiltered: 0
-            //     };
-            // }            
-
-            // oldViewItems = oldViewItems.map((element) => {
-            //     if(element.objId == data[0].objId) {
-            //         return Object.assign({}, {'_COMPID_': element._COMPID_}, data[0]);
-            //     } else {
-            //         return element;
-            //     }
-            // });
-
         } else {
 
             oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
@@ -352,47 +312,6 @@ export default handleActions({
             }));
 
         }
-        
-
-        // const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-        
-        // let listName = 'listData';
-        // let listParamName = 'listParam';
-        // let selectedName = 'listParam';
-        // let newListParam = {};
-
-        // if(action.compId && action.compId != '') {
-        //     listName = action.compId + '__listData';
-        //     listParamName = action.compId + '__listParam';
-        //     selectedName = action.compId + '__selected';
-        //     if(draw > 0) {
-        //         newListParam = state[action.compId + '__listParam'];
-        //     } else {
-        //         newListParam = {
-        //             keyword: '',
-        //             orderDir: 'desc',
-        //             orderColumn: 'chGrpNm',
-        //             page: 0,
-        //             rowsPerPage: 10,
-        //             rowsPerPageOptions: [5, 10, 25],
-        //             rowsTotal: 0,
-        //             rowsFiltered: 0
-        //         };
-        //     }            
-        // } else {
-        //     newListParam = state.listParam;
-        // }
-
-        // Object.assign(newListParam, {
-        //     rowsFiltered: parseInt(recordsFiltered, 10),
-        //     rowsTotal: parseInt(recordsTotal, 10),
-        //     page: parseInt(draw, 10),
-        //     rowsPerPage: parseInt(rowLength, 10),
-        // });
-
-        // console.log('listName : ', listName);
-        // console.log('listParamName : ', listParamName);
-        // console.log('selectedName : ', selectedName);
 
         return {
             ...state,
@@ -400,11 +319,6 @@ export default handleActions({
             error: false,
             viewItems: oldViewItems
         };
-
-        // [listName]: data,
-        // [listParamName]: newListParam,
-        // [selectedName]: (state[selectedName]) ? state[selectedName] : []
-
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
         let COMP_ID = '';
@@ -415,26 +329,27 @@ export default handleActions({
         let oldViewItems = [];
         if(state.viewItems) {
             oldViewItems = state.viewItems;
-            // 같은 콤프가 있는지 검사를 위한 사전 검사
-            const hasEqualsCompId = oldViewItems.filter((element) => {
+            
+            const viewItem = oldViewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
 
-            if(!(hasEqualsCompId && hasEqualsCompId.length > 0)) {
-                // 새로 등록
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, data[0]));
+            // 이전에 해당 콤프정보가 없으면 신규로 등록
+            if(!viewItem) {
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
             }
 
+            // 같은 오브젝트를 가지고 있는 콤프정보들을 모두 변경 한다.
             oldViewItems = oldViewItems.map((element) => {
-                if(element.objId == data[0].objId) {
-                    return Object.assign({}, {'_COMPID_': element._COMPID_}, data[0]);
+                if(element.selectedItem && (element.selectedItem.objId == data[0].objId)) {
+                    return Object.assign(element, {'selectedItem': data[0]});
                 } else {
                     return element;
                 }
             });
 
         } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, data[0]));
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
         }
 
         if(data && data.length > 0) {
@@ -463,21 +378,35 @@ export default handleActions({
         };
     },
     [SHOW_CONFSETTING_INFORM]: (state, action) => {
+
+        const COMP_ID = action.payload.compId;
+
+        let oldViewItems = [];
+        if(state.viewItems) {
+            oldViewItems = state.viewItems;
+            const viewItem = oldViewItems.find((element) => {
+                return element._COMPID_ == COMP_ID;
+            });
+            if(viewItem) {
+                Object.assign(viewItem, {
+                    'selectedItem': action.payload.selectedItem
+                });
+            } else {
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                    'selectedItem': action.payload.selectedItem
+                }));
+            }
+        } else {
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                'selectedItem': action.payload.selectedItem
+            }));
+        }
+
         return {
             ...state,
-            selectedItem: action.payload.selectedItem,
+            viewItems: oldViewItems,
             informOpen: true
         };
-    },
-    [SET_SELECTED_OBJ]: (state, action) => {
-        let selectedItem = 'selectedItem';
-        if(action.compId && action.compId != '') {
-            selectedItem = action.compId + '__selectedItem';
-        }
-        return {
-            ...state,
-            [selectedItem]: action.payload.selectedItem
-        }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
@@ -487,11 +416,14 @@ export default handleActions({
         }
     },
     [CHG_STORE_DATA]: (state, action) => {
-
-        let COMP_ID = '';
-        if(action.compId && action.compId != '') {
-            COMP_ID = action.compId;
+        return {
+            ...state,
+            [action.payload.name]: action.payload.value
         }
+    },
+    [CHG_VIEWITEM_DATA]: (state, action) => {
+
+        const COMP_ID = action.payload.compId;
 
         let oldViewItems = [];
         if(state.viewItems) {

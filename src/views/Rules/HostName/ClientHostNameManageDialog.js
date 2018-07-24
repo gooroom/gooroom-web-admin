@@ -12,6 +12,8 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
+import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -101,63 +103,65 @@ class ClientHostNameManageDialog extends Component {
         }
     }
 
-    handleNtpValueChange = index => event => {
-        this.props.ClientHostNameActions.setSelectedNtpValue({
-            index: index,
-            value: event.target.value
-        });
-    }
-
-    handleChangeSelectedNtp = (name, index) => event => {
-        this.props.ClientHostNameActions.setEditingItemValue({
-            name: name,
-            value: index
-        });
-    }
-
     handleCreateData = (event) => {
-        const { ClientHostNameProps, ClientHostNameActions } = this.props;
-        ClientHostNameActions.createClientHostNameData(ClientHostNameProps.editingItem)
-        .then(() => {
-                ClientHostNameActions.readClientHostNameList(ClientHostNameProps.listParam);
-                this.handleClose();
-        }, (res) => {
-
-        })
+        const { ClientHostNameProps, GrConfirmActions } = this.props;
+        const re = GrConfirmActions.showConfirm({
+            confirmTitle: 'Hosts 정보 등록',
+            confirmMsg: 'Hosts 정보를 등록하시겠습니까?',
+            handleConfirmResult: this.handleCreateConfirmResult,
+            confirmOpen: true,
+            confirmObject: ClientHostNameProps.editingItem
+        });
+    }
+    handleCreateConfirmResult = (confirmValue, paramObject) => {
+        if(confirmValue) {
+            const { ClientHostNameProps, ClientHostNameActions } = this.props;
+            ClientHostNameActions.createClientHostNameData(ClientHostNameProps.editingItem)
+                .then((res) => {
+                    const { viewItems } = ClientHostNameProps;
+                    if(viewItems) {
+                        viewItems.forEach((element) => {
+                            if(element && element.listParam) {
+                                ClientHostNameActions.readClientHostNameList(getMergedObject(element.listParam, {
+                                    compId: element._COMPID_
+                                }));
+                            }
+                        });
+                    }
+                    this.handleClose();
+                }, (res) => {
+            })
+        }
     }
 
     handleEditData = (event) => {
-        const { GrConfirmActions } = this.props;
+        const { ClientHostNameProps, GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
             confirmTitle: 'Hosts 정보 수정',
             confirmMsg: 'Hosts 정보를 수정하시겠습니까?',
+            handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            handleConfirmResult: this.handleEditConfirmResult
+            confirmObject: ClientHostNameProps.editingItem
           });
     }
-    handleEditConfirmResult = (confirmValue) => {
+    handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientHostNameProps, ClientHostNameActions } = this.props;
             ClientHostNameActions.editClientHostNameData(ClientHostNameProps.editingItem)
                 .then((res) => {
 
-                    const { editingCompId, selectedItem } = ClientHostNameProps;
-                    let nowSelectedItem = null;
-
-                    if((typeof editingCompId) == 'undefined' || editingCompId == '') {
-                        nowSelectedItem = selectedItem;
-                        // update list 
-                        ClientHostNameActions.readClientHostNameList(ClientHostNameProps.listParam);
-                    } else {
-                        const { viewItems } = ClientHostNameProps;
-                        nowSelectedItem = viewItems.find((element) => {
-                            return element._COMPID_ == editingCompId;
-                        });
-                    }
+                    const { editingCompId, viewItems } = ClientHostNameProps;
+                    viewItems.forEach((element) => {
+                        if(element && element.listParam) {
+                            ClientHostNameActions.readClientHostNameList(getMergedObject(element.listParam, {
+                                compId: element._COMPID_
+                            }));
+                        }
+                    });
 
                     ClientHostNameActions.getClientHostName({
                         compId: editingCompId,
-                        objId: nowSelectedItem.objId
+                        objId: paramObject.objId
                     });
 
                 this.handleClose();
@@ -167,20 +171,12 @@ class ClientHostNameManageDialog extends Component {
         }
     }
 
-    handleAddNtp = () => {
-        const { ClientHostNameActions } = this.props;
-        ClientHostNameActions.addNtpAddress();
-    }
-
-    handleDeleteNtp = index => event => {
-        const { ClientHostNameActions } = this.props;
-        ClientHostNameActions.deleteNtpAddress(index);
-    }
-
     render() {
 
         const { ClientHostNameProps } = this.props;
         const { dialogType, editingItem } = ClientHostNameProps;
+
+        const editingViewItem = editingItem;
 
         let title = "";
         const bull = <span className={bullet}>•</span>;
@@ -200,14 +196,14 @@ class ClientHostNameManageDialog extends Component {
 
                     <TextField
                         label="이름"
-                        value={(editingItem) ? editingItem.objNm : ''}
+                        value={(editingViewItem) ? editingViewItem.objNm : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={fullWidthClass}
                         disabled={(dialogType === ClientHostNameManageDialog.TYPE_VIEW)}
                     />
                     <TextField
                         label="설명"
-                        value={(editingItem) ? editingItem.comment : ''}
+                        value={(editingViewItem) ? editingViewItem.comment : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(fullWidthClass, itemRowClass)}
                         disabled={(dialogType === ClientHostNameManageDialog.TYPE_VIEW)}
@@ -217,7 +213,7 @@ class ClientHostNameManageDialog extends Component {
                             <TextField
                                 label="Hosts 정보"
                                 multiline
-                                value={(editingItem.hosts) ? editingItem.hosts : ''}
+                                value={(editingViewItem.hosts) ? editingViewItem.hosts : ''}
                                 className={classNames(fullWidthClass, itemRowClass)}
                                 disabled
                             />
@@ -228,7 +224,7 @@ class ClientHostNameManageDialog extends Component {
                             <TextField
                                 label="Hosts 정보"
                                 multiline
-                                value={(editingItem.hosts) ? editingItem.hosts : ''}
+                                value={(editingViewItem.hosts) ? editingViewItem.hosts : ''}
                                 onChange={this.handleValueChange("hosts")}
                                 className={classNames(fullWidthClass, itemRowClass)}
                             />

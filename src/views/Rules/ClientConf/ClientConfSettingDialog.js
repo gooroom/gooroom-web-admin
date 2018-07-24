@@ -10,9 +10,9 @@ import { connect } from 'react-redux';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { createViewObject } from './ClientConfSettingInform';
-
 import GrConfirm from 'components/GrComponents/GrConfirm';
+
+import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -118,35 +118,38 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-        ClientConfSettingActions.createClientConfSettingData(ClientConfSettingProps.editingItem)
-        .then(() => {
-                ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
-                this.handleClose();
-        }, (res) => {
-
-        })
+        const { ClientConfSettingProps, GrConfirmActions } = this.props;
+        const re = GrConfirmActions.showConfirm({
+            confirmTitle: '단말정책정보 등록',
+            confirmMsg: '단말정책정보를 등록하시겠습니까?',
+            handleConfirmResult: this.handleCreateConfirmResult,
+            confirmOpen: true,
+            confirmObject: ClientConfSettingProps.editingItem
+        });
+    }
+    handleCreateConfirmResult = (confirmValue, paramObject) => {
+        if(confirmValue) {
+            const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+            ClientConfSettingActions.createClientConfSettingData(ClientConfSettingProps.editingItem)
+                .then((res) => {
+                    const { viewItems } = ClientConfSettingProps;
+                    if(viewItems) {
+                        viewItems.forEach((element) => {
+                            if(element && element.listParam) {
+                                ClientConfSettingActions.readClientConfSettingList(getMergedObject(element.listParam, {
+                                    compId: element._COMPID_
+                                }));
+                            }
+                        });
+                    }
+                    this.handleClose();
+                }, (res) => {
+            })
+        }
     }
 
     handleEditData = (event, id) => {
         const { ClientConfSettingProps, GrConfirmActions } = this.props;
-
-
-        // let viewItem = null;
-        // if(ClientConfSettingProps.viewItems) {
-        //   viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        //     return element._COMPID_ == ClientConfSettingProps.editingCompId
-        //   });
-        // }
-        // const listData = (viewItem) ? viewItem.listData : [];
-    
-    
-        // const selectedItem = listData.find(function(element) {
-        //   return element.objId == id;
-        // });
-
-        console.log('Edit... editingItem : ', ClientConfSettingProps.editingItem);
-
         const re = GrConfirmActions.showConfirm({
             confirmTitle: '단말정책정보 수정',
             confirmMsg: '단말정책정보를 수정하시겠습니까?',
@@ -162,34 +165,14 @@ class ClientConfSettingDialog extends Component {
             ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.editingItem)
                 .then((res) => {
 
-                    const { editingCompId } = ClientConfSettingProps;
-
-                    // let nowSelectedItem = null;
-
-                    console.log('Edit... editingCompId : ', editingCompId);
-                    console.log('Edit... this.props : ', this.props);
-
-
-                    if((typeof editingCompId) == 'undefined' || editingCompId == '') {
-                        // nowSelectedItem = selectedItem;
-
-
-                        let tempItem = null;
-                        if(ClientConfSettingProps.viewItems) {
-                            tempItem = ClientConfSettingProps.viewItems.find((element) => {
-                            return element._COMPID_ == editingCompId
-                          });
+                    const { editingCompId, viewItems } = ClientConfSettingProps;
+                    viewItems.forEach((element) => {
+                        if(element && element.listParam) {
+                            ClientConfSettingActions.readClientConfSettingList(getMergedObject(element.listParam, {
+                                compId: element._COMPID_
+                            }));
                         }
-                        const listParam = (tempItem) ? tempItem.listParam : ClientConfSettingProps.defaultListParam;
-
-
-                        ClientConfSettingActions.readClientConfSettingList(listParam);
-                    } else {
-                        // const { viewItems } = ClientConfSettingProps;
-                        // nowSelectedItem = viewItems.find((element) => {
-                        //     return element._COMPID_ == editingCompId;
-                        // });
-                    }
+                    });
 
                     ClientConfSettingActions.getClientConfSetting({
                         compId: editingCompId,
@@ -218,7 +201,7 @@ class ClientConfSettingDialog extends Component {
         const { ClientConfSettingProps } = this.props;
         const { dialogType, editingItem } = ClientConfSettingProps;
 
-        const editingViewItem = createViewObject(editingItem);
+        const editingViewItem = editingItem;
 
         let title = "";
         const bull = <span className={bullet}>•</span>;

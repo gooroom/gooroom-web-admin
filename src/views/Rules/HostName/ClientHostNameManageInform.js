@@ -68,21 +68,31 @@ class ClientHostNameInform extends Component {
 
   render() {
 
-    const { ClientHostNameProps } = this.props;
-    const { selectedItem } = ClientHostNameProps;
     const bull = <span className={bullet}>•</span>;
+    const { ClientHostNameProps, compId } = this.props;
+    const { viewItems } = ClientHostNameProps;
+
+    let selectedViewItem = null;
+    if(viewItems) {
+      const viewItem = viewItems.find(function(element) {
+        return element._COMPID_ == compId;
+      });
+      if(viewItem) {
+        selectedViewItem = createViewObject(viewItem.selectedItem);
+      }
+    }
 
     return (
       <div className={componentClass}>
-      {(ClientHostNameProps.informOpen) &&
+      {(ClientHostNameProps.informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(selectedItem) ? selectedItem.objNm : ''}
-            subheader={selectedItem.objId + ', ' + formatDateToSimple(selectedItem.modDate, 'YYYY-MM-DD')}
+            title={(selectedViewItem) ? selectedViewItem.objNm : ''}
+            subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
           />
           <CardContent className={contentClass}>
             <Typography component="pre">
-              "{selectedItem.comment}"
+              "{selectedViewItem.comment}"
             </Typography>
             
             <Divider />
@@ -91,7 +101,7 @@ class ClientHostNameInform extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.hosts}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.hosts}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -118,20 +128,26 @@ export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameInform
 
 export const createViewObject = (param) => {
 
-  let hosts = '';
-  
-  param.propList.forEach(function(e) {
-    if(e.propNm == 'HOSTS') {
-      hosts = e.propValue;
-    }
-  });
+  if(param) {
 
-  return {
-    objId: param.objId,
-    objNm: param.objNm,
-    comment: param.comment,
-    modDate: param.modDate,
-    hosts: hosts
-  };
+    let hosts = '';
+  
+    param.propList.forEach(function(e) {
+      if(e.propNm == 'HOSTS') {
+        hosts = e.propValue;
+      }
+    });
+  
+    return {
+      objId: param.objId,
+      objNm: param.objNm,
+      comment: param.comment,
+      modDate: param.modDate,
+      hosts: hosts
+    };
+  
+  } else {
+    return param;
+  }
 
 };

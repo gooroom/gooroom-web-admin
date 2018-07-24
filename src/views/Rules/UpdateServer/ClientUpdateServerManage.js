@@ -13,6 +13,8 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
+import { createViewObject } from './ClientUpdateServerManageInform';
+
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
@@ -188,7 +190,22 @@ class ClientUpdateServerManage extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, param));
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientUpdateServerProps.viewItems) {
+      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
+
+
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(listParam, {
+      page: 0,
+      compId: menuCompId
+    }));
   };
   
   handleCreateButton = () => {
@@ -198,47 +215,31 @@ class ClientUpdateServerManage extends Component {
         objId: '',
         objNm: '',
         comment: '',
-        useHypervisor: false,
-        pollingTime: '',
-        selectedNtpIndex: -1,
-        ntpAddress: ['']
+        mainos: '',
+        extos: '',
+        priorities: ''
       },
       dialogType: ClientUpdateServerManageDialog.TYPE_ADD
     });
   }
 
-  createViewObject = (param) => {
-    let mainos = '';
-    let extos = '';
-    let priorities = '';
-    param.propList.forEach(function(e) {
-      if(e.propNm == 'MAINOS') {
-        mainos = e.propValue;
-      } else if(e.propNm == 'EXTOS') {
-        extos = e.propValue;
-      } else if(e.propNm == 'PRIORITIES') {
-        priorities = e.propValue;
-      }
-    });
-
-    return {
-      objId: param.objId,
-      objNm: param.objNm,
-      comment: param.comment,
-      modDate: param.modDate,
-      mainos: mainos,
-      extos: extos,
-      priorities: priorities
-    };
-  }
-  
   handleRowClick = (event, id) => {
     const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
-    const selectedItem = ClientUpdateServerProps.listData.find(function(element) {
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientUpdateServerProps.viewItems) {
+      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listData = (viewItem) ? viewItem.listData : [];
+
+
+    const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
-    
-    const viewItem = this.createViewObject(selectedItem);
 
     // choice one from two views.
 
@@ -250,21 +251,33 @@ class ClientUpdateServerManage extends Component {
 
     // 2. view detail content
     ClientUpdateServerActions.showInform({
-      selectedItem: viewItem  
+      compId: menuCompId,
+      selectedItem: selectedItem
     });
     
   };
 
   handleEditClick = (event, id) => {
-    //event.stopPropagation();
     const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
-    const selectedItem = ClientUpdateServerProps.listData.find(function(element) {
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientUpdateServerProps.viewItems) {
+      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listData = (viewItem) ? viewItem.listData : [];
+
+
+    const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
 
     ClientUpdateServerActions.showDialog({
-      compId: '',
-      selectedItem: this.createViewObject(selectedItem),
+      compId: menuCompId,
+      selectedItem: createViewObject(selectedItem),
       dialogType: ClientUpdateServerManageDialog.TYPE_EDIT,
     });
   };
@@ -273,71 +286,163 @@ class ClientUpdateServerManage extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientUpdateServerProps, ClientUpdateServerActions, GrConfirmActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
 
-    const selectedItem = ClientUpdateServerProps.listData.find(function(element) {
+
+    let viewItem = null;
+    if(ClientUpdateServerProps.viewItems) {
+      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listData = (viewItem) ? viewItem.listData : [];
+
+
+    const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
 
-    ClientUpdateServerActions.setSelectedItemObj({
-      selectedItem: Object.assign(ClientUpdateServerProps.selectedItem, selectedItem)
-    });
     const re = GrConfirmActions.showConfirm({
       confirmTitle: '업데이트서버 정보 삭제',
       confirmMsg: '업데이트서버 정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true
+      confirmOpen: true,
+      confirmObject: selectedItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue) => {
-    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+  handleDeleteConfirmResult = (confirmValue, paramObject) => {
 
     if(confirmValue) {
+      const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+
       ClientUpdateServerActions.deleteClientUpdateServerData({
-        objId: ClientUpdateServerProps.selectedItem.objId
+        objId: paramObject.objId
       }).then(() => {
-        ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps.listParam);
-        }, () => {
+
+        const { editingCompId, viewItems } = ClientUpdateServerProps;
+        viewItems.forEach((element) => {
+          if(element && element.listParam) {
+            ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(element.listParam, {
+              compId: element._COMPID_
+            }));
+          }
+        });
+
+      }, () => {
       });
+
     }
   };
 
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {page: page}));
+    const menuCompId = this.props.match.params.grMenuId;
+
+    let viewItem = null;
+    if(ClientUpdateServerProps.viewItems) {
+      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
+
+    
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(listParam, {
+      page: page,
+      compId: menuCompId
+    }));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {rowsPerPage: event.target.value}));
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientUpdateServerProps.viewItems) {
+      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
+
+
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(listParam, {
+      rowsPerPage: event.target.value,
+      compId: menuCompId
+    }));
   };
   
   // .................................................
   handleRequestSort = (event, property) => {
     const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientUpdateServerProps.viewItems) {
+      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
+
+
     let orderDir = "desc";
-    if (ClientUpdateServerProps.listParam.orderColumn === property && ClientUpdateServerProps.listParam.orderDir === "desc") {
+    if (listParam.orderColumn === property && listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(ClientUpdateServerProps.listParam, {orderColumn: property, orderDir: orderDir}));
+
+    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(listParam, {
+      orderColumn: property, 
+      orderDir: orderDir,
+      compId: menuCompId
+    }));
   };
   // .................................................
 
   // .................................................
   handleKeywordChange = name => event => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    const newParam = getMergedObject(ClientUpdateServerProps.listParam, {keyword: event.target.value});
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientUpdateServerProps.viewItems) {
+      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
+
+
+    const newParam = getMergedObject(listParam, {keyword: event.target.value});
     ClientUpdateServerActions.changeStoreData({
       name: 'listParam',
-      value: newParam
+      value: newParam,
+      compId: menuCompId
     });
   }
 
   render() {
 
     const { ClientUpdateServerProps } = this.props;
-    const emptyRows = ClientUpdateServerProps.listParam.rowsPerPage - ClientUpdateServerProps.listData.length;
+    const menuCompId = this.props.match.params.grMenuId;
+    const emptyRows = 0;//ClientUpdateServerProps.listParam.rowsPerPage - ClientUpdateServerProps.listData.length;
+
+    let viewItem = null;
+    if(ClientUpdateServerProps.viewItems) {
+      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId;
+      });
+    }
+
+    const listData = (viewItem) ? viewItem.listData : [];
+    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
+    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientUpdateServerProps.defaultListParam.orderDir;
+    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientUpdateServerProps.defaultListParam.orderColumn;
 
     return (
       <React.Fragment>
@@ -359,7 +464,7 @@ class ClientUpdateServerManage extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='primary'
-              onClick={ () => this.handleSelectBtnClick({page: 0}) }
+              onClick={ () => this.handleSelectBtnClick() }
             >
               <Search className={leftIconClass} />
               조회
@@ -384,13 +489,13 @@ class ClientUpdateServerManage extends Component {
             <Table className={tableClass}>
 
               <ClientUpdateServerHead
-                orderDir={ClientUpdateServerProps.listParam.orderDir}
-                orderColumn={ClientUpdateServerProps.listParam.orderColumn}
+                orderDir={orderDir}
+                orderColumn={orderColumn}
                 onRequestSort={this.handleRequestSort}
               />
 
               <TableBody>
-                {ClientUpdateServerProps.listData.map(n => {
+                {listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -440,10 +545,10 @@ class ClientUpdateServerManage extends Component {
 
           <TablePagination
             component='div'
-            count={ClientUpdateServerProps.listParam.rowsFiltered}
-            rowsPerPage={ClientUpdateServerProps.listParam.rowsPerPage}
-            rowsPerPageOptions={ClientUpdateServerProps.listParam.rowsPerPageOptions}
-            page={ClientUpdateServerProps.listParam.page}
+            count={listParam.rowsFiltered}
+            rowsPerPage={listParam.rowsPerPage}
+            rowsPerPageOptions={listParam.rowsPerPageOptions}
+            page={listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -456,7 +561,7 @@ class ClientUpdateServerManage extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientUpdateServerManageInform />
+        <ClientUpdateServerManageInform compId={menuCompId} />
         <ClientUpdateServerManageDialog />
         <GrConfirm />
       </React.Fragment>

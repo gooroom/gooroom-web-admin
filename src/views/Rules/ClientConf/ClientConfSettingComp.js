@@ -12,6 +12,7 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
+import { createViewObject } from './ClientConfSettingInform';
 
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
@@ -85,7 +86,7 @@ class ClientConfSettingComp extends Component {
 
     ClientConfSettingActions.showDialog({
       compId: compId,
-      selectedItem: viewItem,
+      selectedItem: createViewObject(viewItem.selectedItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT,
     });
   };
@@ -96,17 +97,20 @@ class ClientConfSettingComp extends Component {
     const { ClientConfSettingProps, compId } = this.props;
     const { viewItems } = ClientConfSettingProps;
 
-    let viewItem = null;
+    let viewCompItem = null;
     if(viewItems) {
-      viewItem = viewItems.find(function(element) {
-        return element._COMPID_ == compId;
+      const viewItem = viewItems.find((element) => {
+        return element._COMPID_ === compId;
       });
+      if(viewItem) {
+        viewCompItem = createViewObject(viewItem.selectedItem);
+      }
     }
 
     return (
       <React.Fragment>
       <Card className={card}>
-        {(viewItem) && <CardContent>
+        {(viewCompItem) && <CardContent>
           <Grid container spacing={24}>
             <Grid item xs={6}>
               <Typography className={title} style={{backgroundColor:"lightBlue",color:"white",fontWeight:"bold"}}>
@@ -117,35 +121,35 @@ class ClientConfSettingComp extends Component {
               <Button
                 className={grNarrowButton}
                 variant="outlined" color="primary"
-                onClick={() => this.handleEditBtnClick(viewItem.objId)}
+                onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
               ><SettingsApplicationsIcon />수정</Button>
             </Grid>
           </Grid>
           <Typography variant="headline" component="h2">
-            {viewItem.objNm}
+            {viewCompItem.objNm}
           </Typography>
           <Typography className={pos} color="textSecondary">
-            {(viewItem.comment != '') ? '"' + viewItem.comment + '"' : ''}
+            {(viewCompItem.comment != '') ? '"' + viewCompItem.comment + '"' : ''}
           </Typography>
           <Divider />
-          {(viewItem && viewItem.objId != '') &&
+          {(viewCompItem && viewCompItem.objId != '') &&
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
-                  <TableCell numeric>{viewItem.pollingTime}</TableCell>
+                  <TableCell numeric>{viewCompItem.pollingTime}</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
-                  <TableCell numeric>{(viewItem.useHypervisor) ? '구동' : '중단'}</TableCell>
+                  <TableCell numeric>{(viewCompItem.useHypervisor) ? '구동' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
-                  <TableCell numeric>{(viewItem.selectedNtpIndex > -1) ? viewItem.ntpAddress[viewItem.selectedNtpIndex] : ''}</TableCell>
+                  <TableCell numeric>{(viewCompItem.selectedNtpIndex > -1) ? viewCompItem.ntpAddress[viewCompItem.selectedNtpIndex] : ''}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
-                  <TableCell numeric>{viewItem.ntpAddress.map(function(prop, index) {
+                  <TableCell numeric>{viewCompItem.ntpAddress.map(function(prop, index) {
                       return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
                 </TableRow>
