@@ -13,6 +13,8 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
+import { createViewObject } from './ClientHostNameManageInform';
+
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
@@ -188,7 +190,23 @@ class ClientHostNameManage extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, param));
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientHostNameProps.viewItems) {
+      viewItem = ClientHostNameProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
+
+
+    ClientHostNameActions.readClientHostNameList(getMergedObject(listParam, {
+      page: 0,
+      compId: menuCompId
+    }));
+
   };
   
   handleCreateButton = () => {
@@ -198,39 +216,29 @@ class ClientHostNameManage extends Component {
         objId: '',
         objNm: '',
         comment: '',
-        useHypervisor: false,
-        pollingTime: '',
-        selectedNtpIndex: -1,
-        ntpAddress: ['']
+        hosts: ''
       },
       dialogType: ClientHostNameManageDialog.TYPE_ADD
     });
   }
-
-  createViewObject = (param) => {
-    let hosts = '';
-    param.propList.forEach(function(e) {
-      if(e.propNm == 'HOSTS') {
-        hosts = e.propValue;
-      }
-    });
-
-    return {
-      objId: param.objId,
-      objNm: param.objNm,
-      comment: param.comment,
-      modDate: param.modDate,
-      hosts: hosts
-    };
-  }
   
   handleRowClick = (event, id) => {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
-    const selectedItem = ClientHostNameProps.listData.find(function(element) {
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientHostNameProps.viewItems) {
+      viewItem = ClientHostNameProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listData = (viewItem) ? viewItem.listData : [];
+
+
+    const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
-    
-    const viewItem = this.createViewObject(selectedItem);
 
     // choice one from two views.
 
@@ -242,21 +250,33 @@ class ClientHostNameManage extends Component {
 
     // 2. view detail content
     ClientHostNameActions.showInform({
-      selectedItem: viewItem  
+      compId: menuCompId,
+      selectedItem: selectedItem
     });
     
   };
 
   handleEditClick = (event, id) => {
-    //event.stopPropagation();
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
-    const selectedItem = ClientHostNameProps.listData.find(function(element) {
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientHostNameProps.viewItems) {
+      viewItem = ClientHostNameProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listData = (viewItem) ? viewItem.listData : [];
+
+
+    const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
 
     ClientHostNameActions.showDialog({
-      compId: '',
-      selectedItem: this.createViewObject(selectedItem),
+      compId: menuCompId,
+      selectedItem: createViewObject(selectedItem),
       dialogType: ClientHostNameManageDialog.TYPE_EDIT,
     });
   };
@@ -265,30 +285,49 @@ class ClientHostNameManage extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientHostNameProps, ClientHostNameActions, GrConfirmActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
 
-    const selectedItem = ClientHostNameProps.listData.find(function(element) {
+
+    let viewItem = null;
+    if(ClientHostNameProps.viewItems) {
+      viewItem = ClientHostNameProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listData = (viewItem) ? viewItem.listData : [];
+
+
+    const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
 
-    ClientHostNameActions.setSelectedItemObj({
-      selectedItem: Object.assign(ClientHostNameProps.selectedItem, selectedItem)
-    });
     const re = GrConfirmActions.showConfirm({
       confirmTitle: 'Hosts 정보 삭제',
       confirmMsg: 'Hosts 정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true
+      confirmOpen: true,
+      confirmObject: selectedItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue) => {
-    const { ClientHostNameProps, ClientHostNameActions } = this.props;
+  handleDeleteConfirmResult = (confirmValue, paramObject) => {
 
     if(confirmValue) {
+      const { ClientHostNameProps, ClientHostNameActions } = this.props;
+
       ClientHostNameActions.deleteClientHostNameData({
-        objId: ClientHostNameProps.selectedItem.objId
+        objId: paramObject.objId
       }).then(() => {
-        ClientHostNameActions.readClientHostNameList(ClientHostNameProps.listParam);
-        }, () => {
+
+        const { editingCompId, viewItems } = ClientHostNameProps;
+        viewItems.forEach((element) => {
+          if(element && element.listParam) {
+            ClientHostNameActions.readClientHostNameList(getMergedObject(element.listParam, {
+              compId: element._COMPID_
+            }));
+          }
+        });
+
+      }, () => {
       });
     }
   };
@@ -296,40 +335,112 @@ class ClientHostNameManage extends Component {
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {page: page}));
+    const menuCompId = this.props.match.params.grMenuId;
+
+    let viewItem = null;
+    if(ClientHostNameProps.viewItems) {
+      viewItem = ClientHostNameProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
+
+    
+    ClientHostNameActions.readClientHostNameList(getMergedObject(listParam, {
+      page: page,
+      compId: menuCompId
+    }));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {rowsPerPage: event.target.value}));
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientHostNameProps.viewItems) {
+      viewItem = ClientHostNameProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
+
+
+    ClientHostNameActions.readClientHostNameList(getMergedObject(listParam, {
+      rowsPerPage: event.target.value,
+      compId: menuCompId
+    }));
   };
   
   // .................................................
   handleRequestSort = (event, property) => {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientHostNameProps.viewItems) {
+      viewItem = ClientHostNameProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
+
+
     let orderDir = "desc";
-    if (ClientHostNameProps.listParam.orderColumn === property && ClientHostNameProps.listParam.orderDir === "desc") {
+    if (listParam.orderColumn === property && listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientHostNameActions.readClientHostNameList(getMergedObject(ClientHostNameProps.listParam, {orderColumn: property, orderDir: orderDir}));
+
+    ClientHostNameActions.readClientHostNameList(getMergedObject(listParam, {
+      orderColumn: property, 
+      orderDir: orderDir,
+      compId: menuCompId
+    }));
   };
   // .................................................
 
   // .................................................
   handleKeywordChange = name => event => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    const newParam = getMergedObject(ClientHostNameProps.listParam, {keyword: event.target.value});
+    const menuCompId = this.props.match.params.grMenuId;
+
+
+    let viewItem = null;
+    if(ClientHostNameProps.viewItems) {
+      viewItem = ClientHostNameProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId
+      });
+    }
+    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
+
+
+    const newParam = getMergedObject(listParam, {keyword: event.target.value});
     ClientHostNameActions.changeStoreData({
       name: 'listParam',
-      value: newParam
+      value: newParam,
+      compId: menuCompId
     });
   }
 
   render() {
 
     const { ClientHostNameProps } = this.props;
-    const emptyRows = ClientHostNameProps.listParam.rowsPerPage - ClientHostNameProps.listData.length;
+    const menuCompId = this.props.match.params.grMenuId;
+    const emptyRows = 0;//ClientHostNameProps.listParam.rowsPerPage - ClientHostNameProps.listData.length;
+
+    let viewItem = null;
+    if(ClientHostNameProps.viewItems) {
+      viewItem = ClientHostNameProps.viewItems.find((element) => {
+        return element._COMPID_ == menuCompId;
+      });
+    }
+
+    const listData = (viewItem) ? viewItem.listData : [];
+    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
+    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientHostNameProps.defaultListParam.orderDir;
+    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientHostNameProps.defaultListParam.orderColumn;
 
     return (
       <React.Fragment>
@@ -351,7 +462,7 @@ class ClientHostNameManage extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant='raised'
               color='primary'
-              onClick={ () => this.handleSelectBtnClick({page: 0}) }
+              onClick={ () => this.handleSelectBtnClick() }
             >
               <Search className={leftIconClass} />
               조회
@@ -376,13 +487,13 @@ class ClientHostNameManage extends Component {
             <Table className={tableClass}>
 
               <ClientHostNameHead
-                orderDir={ClientHostNameProps.listParam.orderDir}
-                orderColumn={ClientHostNameProps.listParam.orderColumn}
+                orderDir={orderDir}
+                orderColumn={orderColumn}
                 onRequestSort={this.handleRequestSort}
               />
 
               <TableBody>
-                {ClientHostNameProps.listData.map(n => {
+                {listData.map(n => {
                   return (
                     <TableRow
                       className={tableRowClass}
@@ -432,10 +543,10 @@ class ClientHostNameManage extends Component {
 
           <TablePagination
             component='div'
-            count={ClientHostNameProps.listParam.rowsFiltered}
-            rowsPerPage={ClientHostNameProps.listParam.rowsPerPage}
-            rowsPerPageOptions={ClientHostNameProps.listParam.rowsPerPageOptions}
-            page={ClientHostNameProps.listParam.page}
+            count={listParam.rowsFiltered}
+            rowsPerPage={listParam.rowsPerPage}
+            rowsPerPageOptions={listParam.rowsPerPageOptions}
+            page={listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -448,7 +559,7 @@ class ClientHostNameManage extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientHostNameManageInform />
+        <ClientHostNameManageInform compId={menuCompId} />
         <ClientHostNameManageDialog />
         <GrConfirm />
       </React.Fragment>

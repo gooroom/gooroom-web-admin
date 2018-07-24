@@ -77,6 +77,12 @@ export default {
           level: 2,
         },
         {
+          name: '(NEW)HOSTS설정',
+          url: '/clientconfig/host/GRM9303',
+          icon: 'icon-layers',
+          level: 2,
+        },
+        {
           name: '단말정책설정',
           url: '/clientconfig/setting/GRM0304',
           icon: 'icon-notebook',

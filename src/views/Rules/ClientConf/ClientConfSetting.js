@@ -13,6 +13,8 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
+import { createViewObject } from './ClientConfSettingInform';
+
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
@@ -190,6 +192,7 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
+
     let viewItem = null;
     if(ClientConfSettingProps.viewItems) {
       viewItem = ClientConfSettingProps.viewItems.find((element) => {
@@ -201,7 +204,7 @@ class ClientConfSetting extends Component {
 
     ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
       page: 0,
-      compId: this.props.match.params.grMenuId
+      compId: menuCompId
     }));
   };
   
@@ -249,7 +252,8 @@ class ClientConfSetting extends Component {
 
     // 2. view detail content
     ClientConfSettingActions.showInform({
-      selectedItem: selectedItem  
+      compId: menuCompId,
+      selectedItem: selectedItem
     });
     
   };
@@ -273,8 +277,8 @@ class ClientConfSetting extends Component {
     });
 
     ClientConfSettingActions.showDialog({
-      compId: this.props.match.params.grMenuId,
-      selectedItem: selectedItem,
+      compId: menuCompId,
+      selectedItem: createViewObject(selectedItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT,
     });
   };
@@ -299,9 +303,6 @@ class ClientConfSetting extends Component {
       return element.objId == id;
     });
 
-    // ClientConfSettingActions.setSelectedItemObj({
-    //   selectedItem: Object.assign(ClientConfSettingProps.selectedItem, selectedItem)
-    // });
     const re = GrConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
       confirmMsg: '단말정책정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
@@ -311,25 +312,25 @@ class ClientConfSetting extends Component {
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-
-    let viewItem = null;
-    if(ClientConfSettingProps.viewItems) {
-      viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
-
 
     if(confirmValue) {
+      const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+
       ClientConfSettingActions.deleteClientConfSettingData({
         objId: paramObject.objId
-      }).then(() => {
-        ClientConfSettingActions.readClientConfSettingList(listParam);
-        }, () => {
+      }).then((res) => {
+
+        const { editingCompId, viewItems } = ClientConfSettingProps;
+        viewItems.forEach((element) => {
+          if(element && element.listParam) {
+            ClientConfSettingActions.readClientConfSettingList(getMergedObject(element.listParam, {
+              compId: element._COMPID_
+            }));
+          }
+        });
+          
+      }, () => {
+        
       });
     }
   };
@@ -351,7 +352,7 @@ class ClientConfSetting extends Component {
 
     ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
       page: page,
-      compId: this.props.match.params.grMenuId
+      compId: menuCompId
     }));
   };
 
@@ -372,7 +373,7 @@ class ClientConfSetting extends Component {
 
     ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
       rowsPerPage: event.target.value,
-      compId: this.props.match.params.grMenuId
+      compId: menuCompId
     }));
   };
   
@@ -399,7 +400,7 @@ class ClientConfSetting extends Component {
     ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
       orderColumn: property, 
       orderDir: orderDir,
-      compId: this.props.match.params.grMenuId
+      compId: menuCompId
     }));
   };
   // .................................................
@@ -423,7 +424,7 @@ class ClientConfSetting extends Component {
     ClientConfSettingActions.changeStoreData({
       name: 'listParam',
       value: newParam,
-      compId: this.props.match.params.grMenuId
+      compId: menuCompId
     });
   }
 
@@ -562,7 +563,7 @@ class ClientConfSetting extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientConfSettingInform />
+        <ClientConfSettingInform compId={menuCompId} />
         <ClientConfSettingDialog />
         <GrConfirm />
       </React.Fragment>

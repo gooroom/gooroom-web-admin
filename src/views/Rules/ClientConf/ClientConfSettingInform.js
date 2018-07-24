@@ -68,18 +68,23 @@ class ClientConfSettingInform extends Component {
 
   render() {
 
-    const { ClientConfSettingProps } = this.props;
-    const { selectedItem } = ClientConfSettingProps;
     const bull = <span className={bullet}>•</span>;
+    const { ClientConfSettingProps, compId } = this.props;
+    const { viewItems } = ClientConfSettingProps;
 
-    const selectedViewItem = createViewObject(selectedItem);
-
-    // console.log('###########1# ', selectedItem);
-    // console.log('###########2# ', selectedViewItem);
+    let selectedViewItem = null;
+    if(viewItems) {
+      const viewItem = viewItems.find(function(element) {
+        return element._COMPID_ == compId;
+      });
+      if(viewItem) {
+        selectedViewItem = createViewObject(viewItem.selectedItem);
+      }
+    }
 
     return (
       <div className={componentClass}>
-      {(ClientConfSettingProps.informOpen) &&
+      {(ClientConfSettingProps.informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.objNm : ''}
@@ -170,6 +175,5 @@ export const createViewObject = (param) => {
   } else {
     return param;
   }
-
 
 };

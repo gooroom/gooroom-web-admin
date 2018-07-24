@@ -12,13 +12,15 @@ const DELETE_UPDATESERVER_SUCCESS = 'clientUpdateServer/DELETE_UPDATESERVER_SUCC
 
 const SHOW_UPDATESERVER_INFORM = 'clientUpdateServer/SHOW_UPDATESERVER_INFORM';
 const SHOW_UPDATESERVER_DIALOG = 'clientUpdateServer/SHOW_UPDATESERVER_DIALOG';
-const CHG_STORE_DATA = 'clientUpdateServer/CHG_STORE_DATA';
 
-const SET_SELECTED_OBJ = 'clientUpdateServer/SET_SELECTED_OBJ';
 const SET_EDITING_ITEM_VALUE = 'clientUpdateServer/SET_EDITING_ITEM_VALUE';
+
+const CHG_VIEWITEM_DATA = 'clientHostName/CHG_VIEWITEM_DATA';
+const CHG_STORE_DATA = 'clientUpdateServer/CHG_STORE_DATA';
 
 const COMMON_PENDING = 'clientUpdateServer/COMMON_PENDING';
 const COMMON_FAILURE = 'clientUpdateServer/COMMON_FAILURE';
+
 
 // ...
 const initialState = {
@@ -26,8 +28,9 @@ const initialState = {
     error: false,
     resultMsg: '',
 
-    listData: [],
-    listParam: {
+    defaultOrderDir: 'desc',
+    defaultOrderColumn: 'chConfId',
+    defaultListParam: {
         keyword: '',
         orderDir: 'desc',
         orderColumn: 'chConfId',
@@ -38,19 +41,9 @@ const initialState = {
         rowsFiltered: 0
     },
 
-    selectedItem: {
-        objId: '',
-        objNm: '',
-        comment: '',
-        mainos: '',
-        extos: '',
-        priorities: ''
-    },
-
     informOpen: false,
     dialogOpen: false,
-    dialogType: '',
-
+    dialogType: ''
 };
 
 export const showDialog = (param) => dispatch => {
@@ -83,6 +76,7 @@ export const closeInform = () => dispatch => {
 
 // ...
 export const readClientUpdateServerList = (param) => dispatch => {
+
     const resetParam = {
         keyword: param.keyword,
         page: param.page,
@@ -97,6 +91,7 @@ export const readClientUpdateServerList = (param) => dispatch => {
         (response) => {
             dispatch({
                 type: GET_UPDATESERVER_LIST_SUCCESS,
+                compId: param.compId,
                 payload: response
             });
         }
@@ -127,13 +122,6 @@ export const getClientUpdateServer = (param) => dispatch => {
     });
 };
 
-export const setSelectedItemObj = (param) => dispatch => {
-    return dispatch({
-        type: SET_SELECTED_OBJ,
-        payload: param
-    });
-};
-
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,
@@ -143,7 +131,7 @@ export const setEditingItemValue = (param) => dispatch => {
 
 export const changeStoreData = (param) => dispatch => {
     return dispatch({
-        type: CHG_STORE_DATA,
+        type: CHG_VIEWITEM_DATA,
         payload: param
     });
 };
@@ -243,21 +231,71 @@ export default handleActions({
     },
 
     [GET_UPDATESERVER_LIST_SUCCESS]: (state, action) => {
+
+        let COMP_ID = '';
+        if(action.compId && action.compId != '') {
+            COMP_ID = action.compId;
+        }
+
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-        let tempListParam = state.listParam;
-        Object.assign(tempListParam, {
-            rowsFiltered: parseInt(recordsFiltered, 10),
-            rowsTotal: parseInt(recordsTotal, 10),
-            page: parseInt(draw, 10),
-            rowsPerPage: parseInt(rowLength, 10),
-        });
+        
+        let oldViewItems = [];
+        if(state.viewItems) {
+
+            oldViewItems = state.viewItems;
+            const viewItem = oldViewItems.find((element) => {
+                return element._COMPID_ == COMP_ID;
+            });
+
+            if(viewItem) {
+
+                Object.assign(viewItem, {
+                    'listData': data,
+                    'listParam': Object.assign({}, viewItem.listParam, {
+                        rowsFiltered: parseInt(recordsFiltered, 10),
+                        rowsTotal: parseInt(recordsTotal, 10),
+                        page: parseInt(draw, 10),
+                        rowsPerPage: parseInt(rowLength, 10)
+                    })
+                });
+
+            } else {
+
+                // 현재 콤프아이디로 데이타 없음. -> 추가 함
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                    'listData': data,
+                    'listParam': {
+                        keyword: '',
+                        orderDir: 'desc',
+                        orderColumn: 'chConfId',
+                        rowsPerPageOptions: [5, 10, 25],
+                        rowsFiltered: parseInt(recordsFiltered, 10),
+                        rowsTotal: parseInt(recordsTotal, 10),
+                        page: parseInt(draw, 10),
+                        rowsPerPage: parseInt(rowLength, 10)
+                    }
+                }));
+
+            }
+        } else {
+
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                'listData': data,
+                'listParam': Object.assign({}, state.defaultListParam, {
+                    rowsFiltered: parseInt(recordsFiltered, 10),
+                    rowsTotal: parseInt(recordsTotal, 10),
+                    page: parseInt(draw, 10),
+                    rowsPerPage: parseInt(rowLength, 10)
+                })
+            }));
+
+        }
 
         return {
             ...state,
             pending: false,
             error: false,
-            listData: data,
-            listParam: tempListParam
+            viewItems: oldViewItems
         };
     },
     [GET_UPDATESERVER_SUCCESS]: (state, action) => {
@@ -270,26 +308,27 @@ export default handleActions({
 
         if(state.viewItems) {
             oldViewItems = state.viewItems;
-            // 같은 콤프가 있는지 검사를 위한 사전 검사
-            const hasEqualsCompId = oldViewItems.filter((element) => {
+
+            const viewItem = oldViewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
 
-            if(!(hasEqualsCompId && hasEqualsCompId.length > 0)) {
-                // 새로 등록
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, createViewObject(data[0])));
+            // 이전에 해당 콤프정보가 없으면 신규로 등록
+            if(!viewItem) {
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
             }
 
+            // 같은 오브젝트를 가지고 있는 콤프정보들을 모두 변경 한다.
             oldViewItems = oldViewItems.map((element) => {
-                if(element.objId == data[0].objId) {
-                    return Object.assign({}, {'_COMPID_': element._COMPID_}, createViewObject(data[0]));
+                if(element.selectedItem && (element.selectedItem.objId == data[0].objId)) {
+                    return Object.assign(element, {'selectedItem': data[0]});
                 } else {
                     return element;
                 }
             });
 
         } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, createViewObject(data[0])));
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
         }
 
         if(data && data.length > 0) {
@@ -319,17 +358,35 @@ export default handleActions({
         };
     },
     [SHOW_UPDATESERVER_INFORM]: (state, action) => {
+
+        const COMP_ID = action.payload.compId;
+
+        let oldViewItems = [];
+        if(state.viewItems) {
+            oldViewItems = state.viewItems;
+            const viewItem = oldViewItems.find((element) => {
+                return element._COMPID_ == COMP_ID;
+            });
+            if(viewItem) {
+                Object.assign(viewItem, {
+                    'selectedItem': action.payload.selectedItem
+                });
+            } else {
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                    'selectedItem': action.payload.selectedItem
+                }));
+            }
+        } else {
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                'selectedItem': action.payload.selectedItem
+            }));
+        }
+
         return {
             ...state,
-            selectedItem: action.payload.selectedItem,
+            viewItems: oldViewItems,
             informOpen: true,
         };
-    },
-    [SET_SELECTED_OBJ]: (state, action) => {
-        return {
-            ...state,
-            selectedItem: action.payload.selectedItem
-        }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
@@ -344,7 +401,39 @@ export default handleActions({
             [action.payload.name]: action.payload.value
         }
     },
+    [CHG_VIEWITEM_DATA]: (state, action) => {
 
+        const COMP_ID = action.payload.compId;
+
+        let oldViewItems = [];
+        if(state.viewItems) {
+            oldViewItems = state.viewItems;
+            const viewItem = oldViewItems.find((element) => {
+                return element._COMPID_ == COMP_ID;
+            });
+            
+            if(viewItem) {
+                Object.assign(viewItem, {
+                    [action.payload.name]: action.payload.value
+                });
+            } else {
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                    [action.payload.name]: action.payload.value
+                }));
+            }
+
+        } else {
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                [action.payload.name]: action.payload.value
+            }));
+        }
+
+        return {
+            ...state,
+            viewItems: oldViewItems
+        }
+    },
+    
     [CREATE_UPDATESERVER_SUCCESS]: (state, action) => {
         return {
             ...state,

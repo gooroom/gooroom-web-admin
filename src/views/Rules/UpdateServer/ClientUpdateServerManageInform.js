@@ -68,21 +68,31 @@ class ClientUpdateServerInform extends Component {
 
   render() {
 
-    const { ClientUpdateServerProps } = this.props;
-    const { selectedItem } = ClientUpdateServerProps;
     const bull = <span className={bullet}>•</span>;
+    const { ClientUpdateServerProps, compId } = this.props;
+    const { viewItems } = ClientUpdateServerProps;
+
+    let selectedViewItem = null;
+    if(viewItems) {
+      const viewItem = viewItems.find(function(element) {
+        return element._COMPID_ == compId;
+      });
+      if(viewItem) {
+        selectedViewItem = createViewObject(viewItem.selectedItem);
+      }
+    }    
 
     return (
       <div className={componentClass}>
-      {(ClientUpdateServerProps.informOpen) &&
+      {(ClientUpdateServerProps.informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(selectedItem) ? selectedItem.objNm : ''}
-            subheader={selectedItem.objId + ', ' + formatDateToSimple(selectedItem.modDate, 'YYYY-MM-DD')}
+            title={(selectedViewItem) ? selectedViewItem.objNm : ''}
+            subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
           />
           <CardContent className={contentClass}>
             <Typography component="pre">
-              "{selectedItem.comment}"
+              "{selectedViewItem.comment}"
             </Typography>
             
             <Divider />
@@ -91,17 +101,17 @@ class ClientUpdateServerInform extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} 주 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.mainos}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.mainos}</pre></TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} 기반 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.extos}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.extos}</pre></TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} gooroom.pref</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.priorities}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.priorities}</pre></TableCell>
                 </TableRow>
 
               </TableBody>
@@ -127,30 +137,36 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(mapStateToProps, mapDispatchToProps)(ClientUpdateServerInform);
 
 export const createViewObject = (param) => {
-
-  let mainos = '';
-  let extos = '';
-  let priorities = '';
   
-  param.propList.forEach(function(e) {
-    if(e.propNm == 'MAINOS') {
-      mainos = e.propValue;
-    } else if(e.propNm == 'EXTOS') {
-      extos = e.propValue;
-    } else if(e.propNm == 'PRIORITIES') {
-      priorities = e.propValue;
-    }
-  });
+  if(param) {
 
-  return {
-    objId: param.objId,
-    objNm: param.objNm,
-    comment: param.comment,
-    modDate: param.modDate,
-    mainos: mainos,
-    extos: extos,
-    priorities: priorities
-  };
+    let mainos = '';
+    let extos = '';
+    let priorities = '';
+    
+    param.propList.forEach(function(e) {
+      if(e.propNm == 'MAINOS') {
+        mainos = e.propValue;
+      } else if(e.propNm == 'EXTOS') {
+        extos = e.propValue;
+      } else if(e.propNm == 'PRIORITIES') {
+        priorities = e.propValue;
+      }
+    });
+
+    return {
+      objId: param.objId,
+      objNm: param.objNm,
+      comment: param.comment,
+      modDate: param.modDate,
+      mainos: mainos,
+      extos: extos,
+      priorities: priorities
+    };
+    
+  } else {
+    return param;
+  }
 
 };
 
