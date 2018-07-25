@@ -41,12 +41,12 @@ export default {
       children: [
         {
           name: '단말등록키',
-          url: '/clientconfig/regkey',
+          url: '/clientconfig/regkey/GRM0201',
           icon: 'icon-notebook',
           level: 2,
         }, {
           name: '단말프로파일',
-          url: '/clientconfig/profileset',
+          url: '/clientconfig/profileset/GRM0202',
           icon: 'icon-notebook',
           level: 2,
         }
@@ -98,19 +98,19 @@ export default {
       children: [
         {
           name: '매체제어정책관리',
-          url: '/userconfig/media',
+          url: '/userconfig/media/GRM0401',
           icon: 'icon-wrench',
           level: 2,
         },
         {
           name: '브라우저제어정책관리??',
-          url: '/userconfig/browser',
+          url: '/userconfig/browser/GRM0402',
           icon: 'icon-folder',
           level: 2,
         },
         {
           name: '단말보안정책관리??',
-          url: '/userconfig/security',
+          url: '/userconfig/security/GRM0403',
           icon: 'icon-layers',
           level: 2,
         },
@@ -124,19 +124,19 @@ export default {
       children: [
         {
           name: '조직관리',
-          url: '/user/deptmanage',
+          url: '/user/deptmanage/GRM0501',
           icon: 'icon-wrench',
           level: 2,
         },
         {
           name: '사용자계정관리',
-          url: '/user/usermanage',
+          url: '/user/usermanage/GRM0502',
           icon: 'icon-folder',
           level: 2,
         },
         {
           name: '사용자롤관리',
-          url: '/user/role',
+          url: '/user/role/GRM0503',
           icon: 'icon-layers',
           level: 2,
         },

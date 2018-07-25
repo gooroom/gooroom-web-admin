@@ -494,7 +494,7 @@ class ClientGroupManage extends Component {
         <ClientGroupInform
             compId={this.props.match.params.grMenuId} 
             isOpen={ClientGroupProps.informOpen} 
-            selectedItem={ClientGroupProps.selectedItem}
+            selectedItem={ClientGroupProps.listParam.selectedItem}
           />
         <ClientGroupDialog />
         <GrConfirm />

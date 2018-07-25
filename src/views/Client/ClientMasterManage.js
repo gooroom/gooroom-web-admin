@@ -280,7 +280,7 @@ class ClientMasterManage extends Component {
             </Grid>
             <Grid item xs>
               <Card style={{minWidth:"710px",boxShadow:"2px 2px 8px green"}}>
-              <ClientManageComp compId={this.props.match.params.grMenuId}
+                <ClientManageComp compId={this.props.match.params.grMenuId}
                   onChangeClientSelected={this.handleChangeClientSelected}
                 />
               </Card>
