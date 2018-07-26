@@ -1,10 +1,21 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
+import { css } from "glamor";
+
+import { withStyles } from '@material-ui/core/styles';
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as UserActions from 'modules/UserModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
+
+import GrConfirm from 'components/GrComponents/GrConfirm';
+
+import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { withTheme } from "@material-ui/core/styles";
-
-import { css } from "glamor";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -20,138 +31,220 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import MenuItem from '@material-ui/core/MenuItem';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 //
 //  ## Style ########## ########## ########## ########## ##########
 //
-const theme = createMuiTheme();
+const styles = theme => ({
+    root: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+    },
+  });
+
 const containerClass = css({
     margin: "0px 30px !important",
-    minHeight: 500,
+    minHeight: 300,
     minWidth: 500
-}).toString();
-
-const titleClass = css({
-    backgroundColor: theme.palette.primary
 }).toString();
 
 const fullWidthClass = css({
     width: "100%"
 }).toString();
 
-const ruleContainerClass = css({
-    height: "346px",
-    overflowY: "auto",
-    boxShadow: "none !important"
+const keyCreateBtnClass = css({
+    paddingTop: 24 + " !important"
+}).toString();  
+
+const labelClass = css({
+    height: "25px",
+    marginTop: "10px"
 }).toString();
 
-const ruleContentClass = css({
-    padding: "5px 5px 24px 0px !important",
+const itemRowClass = css({
+    marginTop: "10px !important"
 }).toString();
 
+const bullet = css({
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  }).toString();
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
 class UserManageDialog extends Component {
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            userNm: "",
-            userComment: ""
+    static TYPE_VIEW = 'VIEW';
+    static TYPE_ADD = 'ADD';
+    static TYPE_EDIT = 'EDIT';
+
+    handleClose = (event) => {
+        this.props.UserActions.closeDialog();
+    }
+
+    handleValueChange = name => event => {
+        if(event.target.type === 'checkbox') {
+            this.props.UserActions.setEditingItemValue({
+                name: name,
+                value: event.target.checked
+            });
+        } else {
+            this.props.UserActions.setEditingItemValue({
+                name: name,
+                value: event.target.value
+            });
         }
-
-        this.handleClose = this.handleClose.bind(this);
     }
 
-    handleClose() {
-        this.props.onClose("test");
-    }
 
-    handleChange = name => event => {
-        this.setState({
-          [name]: event.target.value,
+
+
+    handleMouseDownPassword = event => {
+        event.preventDefault();
+    };
+
+    handleClickShowPassword = () => {
+        const { UserProps, UserActions } = this.props;
+        const { editingItem } = UserProps;
+        UserActions.setEditingItemValue({
+            name: 'showPassword',
+            value: !editingItem.showPassword
         });
-      }
+    };
+
+    // 사용자 생성
+    handleCreateData = (event) => {
+        const { UserProps, GrConfirmActions } = this.props;
+        const re = GrConfirmActions.showConfirm({
+            confirmTitle: '사용자정보 등록',
+            confirmMsg: '사용자정보를 등록하시겠습니까?',
+            handleConfirmResult: this.handleCreateConfirmResult,
+            confirmOpen: true,
+            confirmObject: UserProps.editingItem
+        });
+    }
+    handleCreateConfirmResult = (confirmValue, paramObject) => {
+        if(confirmValue) {
+            const { UserProps, UserActions } = this.props;
+            UserActions.createUserData(UserProps.editingItem)
+                .then((res) => {
+                    const { viewItems } = UserProps;
+                    if(viewItems) {
+                        viewItems.forEach((element) => {
+                            if(element && element.listParam) {
+                                UserActions.readUserList(getMergedObject(element.listParam, {
+                                    compId: element._COMPID_
+                                }));
+                            }
+                        });
+                    }
+                    this.handleClose();
+                }, (res) => {
+            })
+        }
+    }
+
 
     render() {
-        const {onClose, ...other} = this.props;
+
+        const { UserProps } = this.props;
+        const { dialogType, editingItem } = UserProps;
+
+        const editingViewItem = editingItem;
+
+        let title = "";
+        const bull = <span className={bullet}>•</span>;
+
+        if(dialogType === UserManageDialog.TYPE_ADD) {
+            title = "사용자 등록";
+        } else if(dialogType === UserManageDialog.TYPE_VIEW) {
+            title = "사용자 정보";
+        } else if(dialogType === UserManageDialog.TYPE_EDIT) {
+            title = "사용자 수정";
+        }
 
         return (
-            <Dialog
-                onClose={this.handleClose}
-                {...other}
-            >
-                <DialogTitle className={titleClass}>사용자등록</DialogTitle>
-
+            <Dialog open={UserProps.dialogOpen}>
+                <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={containerClass}>
 
                     <TextField
-                    id="userNm"
-                    label="사용자이름"
-                    value={this.state.userNm}
-                    onChange={this.handleChange('userNm')}
-                    margin="normal"
-                    className={fullWidthClass}
+                        id="userName"
+                        label="사용자이름"
+                        value={(editingViewItem) ? editingViewItem.userName : ''}
+                        onChange={this.handleValueChange("userName")}
+                        className={fullWidthClass}
+                        disabled={(dialogType === UserManageDialog.TYPE_VIEW)}
                     />
 
                     <TextField
-                    id="userComment"
-                    label="사용자설명"
-                    value={this.state.userComment}
-                    onChange={this.handleChange('userComment')}
-                    margin="normal"
-                    className={fullWidthClass}
+                        id="userId"
+                        label="사용자아이디"
+                        value={(editingViewItem) ? editingViewItem.userId : ''}
+                        onChange={this.handleValueChange("userId")}
+                        className={classNames(fullWidthClass, itemRowClass)}
+                        disabled={(dialogType === UserManageDialog.TYPE_VIEW)}
                     />
 
-                    <Card className={ruleContainerClass}>
-                    <CardContent className={ruleContentClass}>
-                    <Typography component="p">
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-                    This impressive paella is a perfect party dish and a fun meal to cook together with
-                    your guests. Add 1 cup of frozen peas along with the mussels, if you like.
-</Typography>
-                  </CardContent>
-                    
-                    </Card>
-
-                </form>
+                    <FormControl className={classNames(fullWidthClass, itemRowClass)}>
+          <InputLabel htmlFor="adornment-password">Password</InputLabel>
+          <Input
+            id="userPassword"
+            type={(editingViewItem && editingViewItem.showPassword) ? 'text' : 'password'}
+            value={(editingViewItem) ? editingViewItem.userPassword : ''}
+            onChange={this.handleValueChange('userPassword')}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="Toggle password visibility"
+                  onClick={this.handleClickShowPassword}
+                  onMouseDown={this.handleMouseDownPassword}
+                >
+                  {(editingViewItem && editingViewItem.showPassword) ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          </FormControl>
+          </form>
 
                 <DialogActions>
-                    <Button onClick={this.handleClose} color="primary">
-                        닫기
-                    </Button>
+                {(dialogType === UserManageDialog.TYPE_ADD) &&
+                    <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
+                }
+                {(dialogType === UserManageDialog.TYPE_EDIT) &&
+                    <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
+                }
+                <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
                 </DialogActions>
+                <GrConfirm />
             </Dialog>
         );
     }
 
 }
 
-export default withTheme()(UserManageDialog);
+const mapStateToProps = (state) => ({
+    UserProps: state.UserModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    UserActions: bindActionCreators(UserActions, dispatch),
+    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UserManageDialog));
+
 

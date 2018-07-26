@@ -1,27 +1,31 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import * as UserActions from 'modules/UserModule';
+
+import * as GrConfirmActions from 'modules/GrConfirmModule';
+
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from "glamor";
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getMergedObject, arrayContainsArray, getListParam, getListData, getViewItem, getMergedArray } from 'components/GrUtils/GrCommonUtils';
+
 
 import { grLayout } from "templates/default/GrLayout";
 import { grColor } from "templates/default/GrColors";
 import { grRequestPromise } from "components/GrUtils/GrRequester";
+
 import GrPageHeader from "containers/GrContent/GrPageHeader";
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import UserManageDialog from "views/User/UserManageDialog";
+import UserManageInform from "views/User/UserManageInform";
 import GrPane from "containers/GrContent/GrPane";
-
-import Typography from '@material-ui/core/Typography';
-import Grid from "@material-ui/core/Grid";
-
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -38,6 +42,7 @@ import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 import Add from "@material-ui/icons/Add";
 import Checkbox from "@material-ui/core/Checkbox";
+
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
 //
@@ -117,7 +122,6 @@ const tableCellClass = css({
 }).toString();
 
 
-
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
@@ -128,31 +132,35 @@ class UserManageHead extends Component {
   };
 
   static columnData = [
-    { id: "userId", numeric: false, disablePadding: true, label: "아이디" },
-    { id: "userNm", numeric: false, disablePadding: true, label: "사용자이름" },
-    { id: "status", numeric: false, disablePadding: true, label: "상태" },
-    { id: "lastLoginDt", numeric: false, disablePadding: true, label: "최근로그인날짜" },
-    { id: "regDate", numeric: false, disablePadding: true, label: "등록일" }
+    { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
+    { id: "chUserName", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
+    { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
+    { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: "최근로그인날짜" },
+    { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" }
   ];
 
-  static getColumnData() {
-    return UserManageHead.columnData;
-  }
-
   render() {
-    const {
-      onSelectAllClick,
-      order,
-      orderBy,
-      numSelected,
-      rowCount
+    const { 
+      onSelectAllClick, 
+      orderDir, 
+      orderColumn,
+      selectedData,
+      listData 
     } = this.props;
+
+    let checkSelection = 0;
+    if(listData && listData.length > 0) {
+      checkSelection = arrayContainsArray(selectedData, listData.map(x => x.userId));
+    }
 
     return (
       <TableHead>
         <TableRow>
-        <TableCell padding="checkbox" className={tableHeadCellClass} >
+          <TableCell padding="checkbox" className={tableHeadCellClass} >
             <Checkbox
+              indeterminate={checkSelection === 50}
+              checked={checkSelection === 100}
+              onChange={onSelectAllClick}
             />
           </TableCell>
           {UserManageHead.columnData.map(column => {
@@ -160,17 +168,18 @@ class UserManageHead extends Component {
               <TableCell
                 className={tableCellClass}
                 key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? "none" : "default"}
-                sortDirection={orderBy === column.id ? order : false}
+                sortDirection={orderColumn === column.id ? orderDir : false}
               >
-                <TableSortLabel
-                  active={orderBy === column.id}
-                  direction={order}
-                  onClick={this.createSortHandler(column.id)}
-                >
-                  {column.label}
-                </TableSortLabel>
+              {(() => {
+                if(column.isOrder) {
+                  return <TableSortLabel active={orderColumn === column.id}
+                            direction={orderDir}
+                            onClick={this.createSortHandler(column.id)}
+                          >{column.label}</TableSortLabel>
+                } else {
+                  return <p>{column.label}</p>
+                }
+              })()}
               </TableCell>
             );
           }, this)}
@@ -185,117 +194,116 @@ class UserManageHead extends Component {
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class UserManage extends Component {
+
   constructor(props) {
     super(props);
 
     this.state = {
       loading: true,
-      userDialogOpen: false,
-      userInfo: "",
-      selectedUserId: "",
+    }
+  }
 
-      keyword: "",
+  // .................................................
+  handleSelectBtnClick = (param) => {
+    const { UserActions, UserProps } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
 
-      order: "asc",
-      orderBy: "calories",
-      selected: [],
-      data: [],
+    const listParam = getListParam({ props: UserProps, compId: menuCompId });
+    UserActions.readUserList(getMergedObject(listParam, {
       page: 0,
-      rowsPerPage: 5,
-      rowsTotal: 0,
-      rowsFiltered: 0
+      compId: menuCompId
+    }));
+  };
 
+  handleCreateButton = value => {
+    const { UserActions } = this.props;
+    UserActions.showDialog({
+      selectedItem: {
+        userId: '',
+        userName: '',
+        userPassword: '',
+        showPassword: false
+      },
+      dialogType: UserManageDialog.TYPE_ADD
+    });
+  };
+  
+  handleSelectAllClick = (event, checked) => {
+    const { UserProps, UserActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+    
+    const viewItem = getViewItem({ props: UserProps, compId: menuCompId });
+    const newSelected = viewItem.listData.map(n => n.userId);
+    const oldSelected = (viewItem.selected) ? (viewItem.selected) : [];
+
+    UserActions.changeStoreData({
+      name: 'selected',
+      value: getMergedArray(oldSelected, newSelected, checked),
+      compId: menuCompId
+    });
+  };
+  
+  handleRowClick = (event, id) => {
+    const { UserProps, UserActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+
+    const viewItem = getViewItem({ props: UserProps, compId: menuCompId });
+     
+    const { selected : preSelected } = viewItem;
+    let newSelected = [];
+
+    if(preSelected) {
+      const selectedIndex = preSelected.indexOf(id);
+      if (selectedIndex === -1) {
+        newSelected = newSelected.concat(preSelected, id);
+      } else if (selectedIndex === 0) {
+        newSelected = newSelected.concat(preSelected.slice(1));
+      } else if (selectedIndex === preSelected.length - 1) {
+        newSelected = newSelected.concat(preSelected.slice(0, -1));
+      } else if (selectedIndex > 0) {
+        newSelected = newSelected.concat(
+          preSelected.slice(0, selectedIndex),
+          preSelected.slice(selectedIndex + 1)
+        );
+      }
+    } else {
+      newSelected.push(id);
     }
-  }
 
-  fetchData(page, rowsPerPage, orderBy, order) {
-
-    this.setState({
-      page: page,
-      rowsPerPage: rowsPerPage,
-      orderBy: orderBy,
-      order: order
+    UserActions.changeStoreData({
+      name: 'selected',
+      value: newSelected,
+      compId: menuCompId
     });
 
-    grRequestPromise("readUserList", {
-      searchKey: this.state.keyword,
+    // show user info.
+    const selectedItem = viewItem.listData.find(function(element) {
+      return element.userId == id;
+    });
 
-      start: page * rowsPerPage,
-      length: rowsPerPage,
-      orderColumn: orderBy,
-      orderDir: order,
-    }).then(res => {
-        const listData = [];
-        res.data.forEach(d => {
-          listData.push(d);
-        });
-        this.setState({
-          data: listData,
-          selected: [],
-          loading: false,
-          rowsTotal: parseInt(res.recordsTotal, 10),
-          rowsFiltered: parseInt(res.recordsFiltered, 10),
-        });
-    }, res => {
-      this.setState({
-        data: [],
-        selected: [],
-        loading: false,
-        rowsTotal: 0,
-        rowsFiltered: 0,
+    if(selectedItem) {
+      UserActions.showInform({
+        compId: menuCompId,
+        selectedItem: selectedItem
       });
-    });
-  }
-
-
-  
-
-
-  // .................................................
-  handleRequestSort = (event, property) => {
-    const orderBy = property;
-    let order = "desc";
-    if (this.state.orderBy === property && this.state.order === "desc") {
-      order = "asc";
     }
 
-    this.fetchData(this.state.page, this.state.rowsPerPage, orderBy, order);
-  };
-  
-  handleInfoClick = (event, clientId, clientGroupId) => {
 
-    event.stopPropagation();
-    this.setState({
-      clientDialogOpen: true,
-      selectedClientId: clientId,
-      selectedClientGroupId: clientGroupId,
-    });
 
   };
   
-  handleClick = (event, id) => {
 
-    this.setState({ 
-      selectedUserId: id
-    });
 
-  };
+  isSelected = id => {
+    const { UserProps } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+    const viewItem = getViewItem({ props: UserProps, compId: menuCompId });
 
-  handleChangePage = (event, page) => {
-    this.fetchData(page, this.state.rowsPerPage, this.state.orderBy, this.state.order);
-  };
-
-  handleChangeRowsPerPage = event => {
-    this.fetchData(this.state.page, event.target.value, this.state.orderBy, this.state.order);
-  };
+    return (viewItem.selected) ? (viewItem.selected.indexOf(id) !== -1) : false;
+  }
   
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
+  //this.state.selected.indexOf(id) !== -1;
   // .................................................
-
-  // Events...
-  handleChangeKeyword = name => event => {
-    this.setState({ [name]: event.target.value });
-  };
 
   // .................................................
   handleUserDialogClose = value => {
@@ -305,17 +313,92 @@ class UserManage extends Component {
     });
   };
 
-  showClientGroupDialog = value => {
-    this.setState({
-      clientGroupDialogOpen: true 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // 페이지 번호 변경
+  handleChangePage = (event, page) => {
+    const { UserActions, UserProps } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+
+    const listParam = getListParam({ props: UserProps, compId: menuCompId });
+    UserActions.readUserList(getMergedObject(listParam, {
+      page: page,
+      compId: menuCompId
+    }));
+  };
+
+  // 페이지당 레코드수 변경
+  handleChangeRowsPerPage = event => {
+    const { UserActions, UserProps } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+
+    const listParam = getListParam({ props: UserProps, compId: menuCompId });
+    UserActions.readUserList(getMergedObject(listParam, {
+      rowsPerPage: event.target.value,
+      compId: menuCompId
+    }));
+  };
+
+  // .................................................
+  handleRequestSort = (event, property) => {
+    const { UserProps, UserActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+
+    const listParam = getListParam({ props: UserProps, compId: menuCompId });
+    let orderDir = "desc";
+    if (listParam.orderColumn === property && listParam.orderDir === "desc") {
+      orderDir = "asc";
+    }
+
+    UserActions.readUserList(getMergedObject(listParam, {
+      orderColumn: property, 
+      orderDir: orderDir,
+      compId: menuCompId
+    }));
+  };
+
+  // .................................................
+  handleKeywordChange = name => event => {
+    const { UserActions, UserProps } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+
+    const listParam = getListParam({ props: UserProps, compId: menuCompId });
+    UserActions.changeStoreData({
+      name: 'listParam',
+      value: getMergedObject(listParam, {keyword: event.target.value}),
+      compId: menuCompId
     });
   }
-
   
   render() {
 
-    const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered, expanded } = this.state;
-    const emptyRows = rowsPerPage - data.length;
+    const { UserProps } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+    const emptyRows = 0;//UserProps.listParam.rowsPerPage - UserProps.listData.length;
+
+    const viewItem = getViewItem({ props: UserProps, compId: menuCompId });
+
+    const listData = (viewItem) ? viewItem.listData : [];
+    const listParam = (viewItem) ? viewItem.listParam : UserProps.defaultListParam;
+    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : UserProps.defaultListParam.orderDir;
+    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : UserProps.defaultListParam.orderColumn;
+    const selected = (viewItem && viewItem.selected) ? viewItem.selected : [];
 
     return (
       <React.Fragment>
@@ -328,7 +411,7 @@ class UserManage extends Component {
                 label="검색어"
                 className={textFieldClass}
                 value={this.state.keyword}
-                onChange={this.handleChangeKeyword("keyword")}
+                onChange={this.handleKeywordChange("keyword")}
                 margin="dense"
               />
             </FormControl>
@@ -336,9 +419,7 @@ class UserManage extends Component {
               className={classNames(buttonClass, formControlClass)}
               variant="raised"
               color="primary"
-              onClick={() => {
-                this.fetchData(0, this.state.rowsPerPage, this.state.orderBy, this.state.order);
-              }}
+              onClick={() => this.handleSelectBtnClick() }
             >
               <Search className={leftIconClass} />
               조회
@@ -351,7 +432,7 @@ class UserManage extends Component {
               variant="raised"
               color="secondary"
               onClick={() => {
-                this.showClientGroupDialog();
+                this.handleCreateButton();
               }}
             >
               <Add className={leftIconClass} />
@@ -362,93 +443,95 @@ class UserManage extends Component {
           <div className={tableContainerClass}>
             <Table className={tableClass}>
               <UserManageHead
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
                 onSelectAllClick={this.handleSelectAllClick}
+                orderDir={orderDir}
+                orderColumn={orderColumn}
                 onRequestSort={this.handleRequestSort}
-                rowCount={data.length}
+                selectedData={selected}
+                listData={listData}
               />
+
               <TableBody>
-          {data.map(n => {
-              const isSelected = this.isSelected(n.userId);
-              return (
-                <TableRow
-                  className={tableRowClass}
-                  hover
-                  onClick={event => this.handleClick(event, n.userId)}
-                  role="checkbox"
-                  aria-checked={isSelected}
-                  tabIndex={-1}
-                  key={n.userId}
-                  selected={isSelected}
-                >
-                <TableCell
-                  padding="checkbox"
-                  className={tableCellClass}
-                >
-                <Checkbox
-                    className={tableCellClass}
-                  />
-                </TableCell>
-                  <TableCell className={tableCellClass}>
-                    {n.userId}
-                  </TableCell>
-                  <TableCell className={tableCellClass}>
-                    {n.userNm}
-                  </TableCell>
-                  <TableCell className={tableCellClass}>
-                    {n.status}
-                  </TableCell>
-                  <TableCell className={tableCellClass}>
-                    {formatDateToSimple(n.lastLoginDt, 'YYYY-MM-DD')}                    
-                  </TableCell>
-                  <TableCell className={tableCellClass}>
-                    {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}                    
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                {listData.map(n => {
+                  const isSelected = this.isSelected(n.userId);
+                  return (
+                    <TableRow
+                      className={tableRowClass}
+                      hover
+                      onClick={event => this.handleRowClick(event, n.userId)}
+                      role="checkbox"
+                      aria-checked={isSelected}
+                      key={n.userId}
+                      selected={isSelected}
+                    >
+                      <TableCell padding="checkbox" className={tableCellClass} >
+                        <Checkbox checked={isSelected} className={tableCellClass} />
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.userId}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.userNm}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {n.status}
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {formatDateToSimple(n.lastLoginDt, 'YYYY-MM-DD')}                    
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}                    
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
 
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 32 * emptyRows }}>
-              <TableCell
-                colSpan={UserManageHead.getColumnData().length + 1}
-                className={tableCellClass}
-              />
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 32 * emptyRows }}>
+                    <TableCell
+                      colSpan={UserManageHead.columnData.length + 1}
+                      className={tableCellClass}
+                    />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
 
-    <TablePagination
-      component="div"
-      count="462"
-      rowsPerPage="10"
-      page={page}
-      backIconButtonProps={{
-        "aria-label": "Previous Page"
-      }}
-      nextIconButtonProps={{
-        "aria-label": "Next Page"
-      }}
-      onChangePage={this.handleChangePage}
-      onChangeRowsPerPage={this.handleChangeRowsPerPage}
-    />
-
-
+          <TablePagination
+            component="div"
+            count={listParam.rowsFiltered}
+            rowsPerPage={listParam.rowsPerPage}
+            rowsPerPageOptions={listParam.rowsPerPageOptions}
+            page={listParam.page}
+            backIconButtonProps={{
+              'aria-label': 'Previous Page'
+            }}
+            nextIconButtonProps={{
+              'aria-label': 'Next Page'
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
 
         </GrPane>
-
-        <UserManageDialog 
-          open={this.state.userDialogOpen}
-          onClose={this.handleUserDialogClose}
-        />
-
+        <UserManageInform compId={menuCompId} />
+        <UserManageDialog />
+        <GrConfirm />
       </React.Fragment>
     );
   }
 }
 
-export default UserManage;
+const mapStateToProps = (state) => ({
+  UserProps: state.UserModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  UserActions: bindActionCreators(UserActions, dispatch),
+  
+  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserManage);
+

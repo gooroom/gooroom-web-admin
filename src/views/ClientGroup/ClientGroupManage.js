@@ -139,13 +139,6 @@ const toolIconClass = css({
 }).toString();
 
 
-
-
-const tempClass = css({
-  width: '300px !important',
-  border: '1px solid red'
-}).toString();
-
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
@@ -211,6 +204,8 @@ class ClientGroupManage extends Component {
   // .................................................
   handleRequestSort = (event, property) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
+    const compId = this.props.match.params.grMenuId;
+
     let orderDir = "desc";
     if (ClientGroupProps.listParam.orderColumn === property && ClientGroupProps.listParam.orderDir === "desc") {
       orderDir = "asc";
@@ -218,7 +213,7 @@ class ClientGroupManage extends Component {
     ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       orderColumn: property, 
       orderDir: orderDir,
-      compId: ''
+      compId: compId
     }));
   };
 

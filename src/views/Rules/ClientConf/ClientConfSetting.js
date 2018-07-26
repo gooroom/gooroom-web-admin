@@ -11,7 +11,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import { createMuiTheme } from '@material-ui/core/styles';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { getMergedObject, getListParam, getListData, getViewItem } from 'components/GrUtils/GrCommonUtils';
 
 import { createViewObject } from './ClientConfSettingInform';
 
@@ -138,7 +138,7 @@ class ClientConfSettingHead extends Component {
     { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: '정책아이디' },
     { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: '수정자' },
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
   render() {
@@ -192,16 +192,7 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientConfSettingProps.viewItems) {
-      viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
-
-
+    const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
     ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
       page: 0,
       compId: menuCompId
@@ -228,16 +219,7 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientConfSettingProps.viewItems) {
-      viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listData = (viewItem) ? viewItem.listData : [];
-
-
+    const listData = getListData({ props: ClientConfSettingProps, compId: menuCompId });
     const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
@@ -262,16 +244,7 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    
-    let viewItem = null;
-    if(ClientConfSettingProps.viewItems) {
-      viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listData = (viewItem) ? viewItem.listData : [];
-
-
+    const listData = getListData({ props: ClientConfSettingProps, compId: menuCompId });
     const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
@@ -289,16 +262,7 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingProps, ClientConfSettingActions, GrConfirmActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientConfSettingProps.viewItems) {
-      viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listData = (viewItem) ? viewItem.listData : [];
-
-
+    const listData = getListData({ props: ClientConfSettingProps, compId: menuCompId });
     const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
@@ -340,16 +304,7 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientConfSettingProps.viewItems) {
-      viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
-
-
+    const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
     ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
       page: page,
       compId: menuCompId
@@ -361,16 +316,7 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientConfSettingProps.viewItems) {
-      viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
-
-
+    const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
     ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
       rowsPerPage: event.target.value,
       compId: menuCompId
@@ -382,16 +328,7 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientConfSettingProps.viewItems) {
-      viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
-
-
+    const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
     let orderDir = "desc";
     if (listParam.orderColumn === property && listParam.orderDir === "desc") {
       orderDir = "asc";
@@ -410,20 +347,10 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientConfSettingProps.viewItems) {
-      viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
-
-    
-    const newParam = getMergedObject(listParam, {keyword: event.target.value});
+    const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
     ClientConfSettingActions.changeStoreData({
       name: 'listParam',
-      value: newParam,
+      value: getMergedObject(listParam, {keyword: event.target.value}),
       compId: menuCompId
     });
   }
@@ -434,12 +361,10 @@ class ClientConfSetting extends Component {
     const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientConfSettingProps.listParam.rowsPerPage - ClientConfSettingProps.listData.length;
 
-    let viewItem = null;
-    if(ClientConfSettingProps.viewItems) {
-      viewItem = ClientConfSettingProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
+    const viewItem = getViewItem({
+      props: ClientConfSettingProps,
+      compId: menuCompId
+    });
 
     const listData = (viewItem) ? viewItem.listData : [];
     const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;

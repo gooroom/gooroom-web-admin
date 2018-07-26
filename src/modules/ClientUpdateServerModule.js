@@ -4,6 +4,9 @@ import { requestPostAPI } from 'components/GrUtils/GrRequester';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 import { createViewObject } from 'views/Rules/UpdateServer/ClientUpdateServerManageInform';
 
+const COMMON_PENDING = 'clientHostName/COMMON_PENDING';
+const COMMON_FAILURE = 'clientHostName/COMMON_FAILURE';
+
 const GET_UPDATESERVER_LIST_SUCCESS = 'clientUpdateServer/GET_LIST_SUCCESS';
 const GET_UPDATESERVER_SUCCESS = 'clientUpdateServer/GET_UPDATESERVER_SUCCESS';
 const CREATE_UPDATESERVER_SUCCESS = 'clientUpdateServer/CREATE_UPDATESERVER_SUCCESS';
@@ -18,18 +21,12 @@ const SET_EDITING_ITEM_VALUE = 'clientUpdateServer/SET_EDITING_ITEM_VALUE';
 const CHG_VIEWITEM_DATA = 'clientHostName/CHG_VIEWITEM_DATA';
 const CHG_STORE_DATA = 'clientUpdateServer/CHG_STORE_DATA';
 
-const COMMON_PENDING = 'clientUpdateServer/COMMON_PENDING';
-const COMMON_FAILURE = 'clientUpdateServer/COMMON_FAILURE';
-
-
 // ...
 const initialState = {
     pending: false,
     error: false,
     resultMsg: '',
 
-    defaultOrderDir: 'desc',
-    defaultOrderColumn: 'chConfId',
     defaultListParam: {
         keyword: '',
         orderDir: 'desc',

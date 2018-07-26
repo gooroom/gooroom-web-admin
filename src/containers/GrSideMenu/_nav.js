@@ -13,7 +13,7 @@ export default {
           level: 2,
         }, {
           name: '등록관리',
-          url: '/clients/clientmanage',
+          url: '/clients/clientmanage/GRM0102',
           icon: 'icon-wrench',
           level: 2,
         }, {
@@ -22,13 +22,13 @@ export default {
           icon: 'icon-folder',
           level: 2,
         }, {
-          name: '패키지관리',
-          url: '/package/packagemanage',
+          name: '???패키지관리',
+          url: '/package/packagemanage/GRM0104',
           icon: 'icon-layers',
           level: 2,
         }, {
           name: '작업관리',
-          url: '/jobs/jobmanage',
+          url: '/jobs/jobmanage/GRM0105',
           icon: 'icon-notebook',
           level: 2,
         },
@@ -59,7 +59,7 @@ export default {
       level: 1,
       children: [
         {
-          name: '데스크톱환경???',
+          name: '???데스크톱환경',
           url: '/clientconfig/desktop',
           icon: 'icon-wrench',
           level: 2,
@@ -73,12 +73,6 @@ export default {
         {
           name: 'HOSTS설정',
           url: '/clientconfig/host/GRM0303',
-          icon: 'icon-layers',
-          level: 2,
-        },
-        {
-          name: '(NEW)HOSTS설정',
-          url: '/clientconfig/host/GRM9303',
           icon: 'icon-layers',
           level: 2,
         },
@@ -97,19 +91,19 @@ export default {
       level: 1,
       children: [
         {
-          name: '매체제어정책관리',
+          name: '???매체제어정책관리',
           url: '/userconfig/media/GRM0401',
           icon: 'icon-wrench',
           level: 2,
         },
         {
-          name: '브라우저제어정책관리??',
+          name: '???브라우저제어정책관리',
           url: '/userconfig/browser/GRM0402',
           icon: 'icon-folder',
           level: 2,
         },
         {
-          name: '단말보안정책관리??',
+          name: '???단말보안정책관리',
           url: '/userconfig/security/GRM0403',
           icon: 'icon-layers',
           level: 2,
@@ -135,7 +129,7 @@ export default {
           level: 2,
         },
         {
-          name: '사용자롤관리',
+          name: '???사용자롤관리',
           url: '/user/role/GRM0503',
           icon: 'icon-layers',
           level: 2,
@@ -143,13 +137,13 @@ export default {
       ]
     },
     {
-      name: '테스트',
+      name: '???테스트',
       url: '/test',
       icon: 'icon-screen-desktop',
       level: 1,
       children: [
         {
-          name: '컴포넌트테스트',
+          name: '???컴포넌트테스트',
           url: '/test/components',
           icon: 'icon-wrench',
           level: 2,

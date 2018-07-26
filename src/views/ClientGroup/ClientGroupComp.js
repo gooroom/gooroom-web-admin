@@ -323,14 +323,8 @@ class ClientGroupComp extends Component {
                 key={n.grpId}
                 selected={isSelected}
               >
-                <TableCell
-                  padding="checkbox"
-                  className={tableCellClass}
-                >
-                  <Checkbox
-                    checked={isSelected}
-                    className={tableCellClass}
-                  />
+                <TableCell padding="checkbox" className={tableCellClass} >
+                  <Checkbox checked={isSelected} className={tableCellClass} />
                 </TableCell>
                 <TableCell className={tableCellClass}>
                   {n.grpNm}

@@ -4,6 +4,7 @@ import ClientRegKeyModule from './ClientRegKeyModule';
 import ClientProfileSetModule from './ClientProfileSetModule';
 
 import ClientGroupModule from './ClientGroupModule';
+import UserModule from './UserModule';
 
 import ClientManageCompModule from './ClientManageCompModule';
 
@@ -33,6 +34,7 @@ export default combineReducers({
     
     ClientManageCompModule,
     ClientGroupModule,
+    UserModule,
 
     JobManageModule, 
     
