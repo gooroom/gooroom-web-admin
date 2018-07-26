@@ -2,7 +2,9 @@ import { handleActions } from 'redux-actions';
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { createViewObject } from 'views/Rules/HostName/ClientHostNameManageInform';
+
+const COMMON_PENDING = 'clientHostName/COMMON_PENDING';
+const COMMON_FAILURE = 'clientHostName/COMMON_FAILURE';
 
 const GET_HOSTNAME_LIST_SUCCESS = 'clientHostName/GET_LIST_SUCCESS';
 const GET_HOSTNAME_SUCCESS = 'clientHostName/GET_HOSTNAME_SUCCESS';
@@ -18,17 +20,12 @@ const SET_EDITING_ITEM_VALUE = 'clientHostName/SET_EDITING_ITEM_VALUE';
 const CHG_VIEWITEM_DATA = 'clientHostName/CHG_VIEWITEM_DATA';
 const CHG_STORE_DATA = 'clientHostName/CHG_STORE_DATA';
 
-const COMMON_PENDING = 'clientHostName/COMMON_PENDING';
-const COMMON_FAILURE = 'clientHostName/COMMON_FAILURE';
-
 // ...
 const initialState = {
     pending: false,
     error: false,
     resultMsg: '',
 
-    defaultOrderDir: 'desc',
-    defaultOrderColumn: 'chConfId',
     defaultListParam: {
         keyword: '',
         orderDir: 'desc',
@@ -104,13 +101,13 @@ export const readClientHostNameList = (param) => dispatch => {
 };
 
 export const getClientHostName = (param) => dispatch => {
-    const compId = param.compId;
+
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readHostNameConf', param).then(
         (response) => {
             dispatch({
                 type: GET_HOSTNAME_SUCCESS,
-                compId: compId,
+                compId: param.compId,
                 payload: response
             });
         }

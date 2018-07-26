@@ -1,7 +1,8 @@
 import axios from "axios";
 import qs from "qs";
 
-export const GPMS_URL = 'http://localhost:8080/gpms/'; //'https://gpms.gooroom.kr/gpms/';
+export const GPMS_URL = 'http://localhost:8080/gpms/';
+//export const GPMS_URL = 'https://gpms.gooroom.kr/gpms/';
 
 function collection() {
     let data = {};

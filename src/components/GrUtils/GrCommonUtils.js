@@ -38,3 +38,56 @@ export const arrayContainsArray = (superset, subset) => {
     }
 };
 
+
+export const getListParam = (param) => {
+    let viewItem = null;
+    if(param.props.viewItems) {
+      viewItem = param.props.viewItems.find((element) => {
+        return element._COMPID_ == param.compId
+      });
+    }
+    return (viewItem) ? viewItem.listParam : param.props.defaultListParam;
+};
+
+export const getListData = (param) => {
+    let viewItem = null;
+    if(param.props.viewItems) {
+      viewItem = param.props.viewItems.find((element) => {
+        return element._COMPID_ == param.compId
+      });
+    }
+    return (viewItem) ? viewItem.listData : [];
+};
+
+export const getViewItem = (param) => {
+    let viewItem = null;
+    if(param.props.viewItems) {
+      viewItem = param.props.viewItems.find((element) => {
+        return element._COMPID_ == param.compId
+      });
+    }
+    return viewItem;
+};
+
+
+export const getMergedArray = (masterArray, newArray, isImport) => {
+
+    if(isImport) {
+        newArray.forEach((item) => {
+            if(!masterArray.includes(item)) {
+                masterArray.push(item);
+            }
+        });
+    } else {
+        let newMasterArray = [];
+        masterArray.forEach((item) => {
+            if(!newArray.includes(item)) {
+                newMasterArray.push(item);
+            }
+        });
+        masterArray = newMasterArray;
+    }
+
+    return masterArray;
+};
+
