@@ -83,7 +83,7 @@ class DeptManage extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} />
+        <GrPageHeader path={this.props.location.pathname} style={{border: "1px sold red"}} />
         <GrPane>
           <Grid container spacing={24}>
             <Grid item xs={12} sm={5}>
