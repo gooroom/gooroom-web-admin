@@ -10,13 +10,13 @@ import { grLayout } from "templates/default/GrLayout";
 import { grColor } from "templates/default/GrColors";
 import GrAlert from "components/GrComponents/GrAlert";
 
-import GrHeader from "../GrHeader/";
-import GrFooter from "../GrFooter/";
-import GrSideMenu from "../GrSideMenu";
-import GrBreadcrumb from "../GrBreadcrumb/";
+import GrHeader from "containers/GrHeader/";
+import GrFooter from "containers/GrFooter/";
+import GrSideMenu from "containers/GrSideMenu";
+import GrBreadcrumb from "containers/GrBreadcrumb/";
 
-import GrRouters from "../GrContent/";
-import Aside from "../Aside/";
+import GrRouters from "containers/GrContent/";
+import Aside from "containers/Aside/";
 
 
 import red from '@material-ui/core/colors/red';

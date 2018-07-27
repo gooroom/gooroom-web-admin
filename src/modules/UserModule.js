@@ -103,22 +103,22 @@ export const readUserList = (param) => dispatch => {
     });
 };
 
-export const readClientGroupListAll = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientGroupList', {}).then(
-        (response) => {
-            dispatch({
-                type: GET_LISTALL_SUCCESS,
-                payload: response
-            });
-        }
-    ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            payload: error
-        });
-    });
-};
+// export const readClientGroupListAll = (param) => dispatch => {
+//     dispatch({type: COMMON_PENDING});
+//     return requestPostAPI('readClientGroupList', {}).then(
+//         (response) => {
+//             dispatch({
+//                 type: GET_LISTALL_SUCCESS,
+//                 payload: response
+//             });
+//         }
+//     ).catch(error => {
+//         dispatch({
+//             type: COMMON_FAILURE,
+//             payload: error
+//         });
+//     });
+// };
 
 export const getUserData = (param) => dispatch => {
 

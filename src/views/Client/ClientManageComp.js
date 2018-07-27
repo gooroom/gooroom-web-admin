@@ -42,8 +42,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 
 // option components
-import ClientGroupSelect from '../Options/ClientGroupSelect';
-import ClientStatusSelect from '../Options/ClientStatusSelect';
+import ClientGroupSelect from 'views/Options/ClientGroupSelect';
+import ClientStatusSelect from 'views/Options/ClientStatusSelect';
 
 
 //

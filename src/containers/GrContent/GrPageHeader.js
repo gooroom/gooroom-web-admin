@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { css } from 'glamor';
 
-import routes from '../../routes';
+import routes from 'routes';
 import CardHeader from '@material-ui/core/CardHeader';
 
 

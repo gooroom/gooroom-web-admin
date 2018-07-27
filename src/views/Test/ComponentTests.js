@@ -28,8 +28,8 @@ import AddIcon from '@material-ui/icons/Add';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 
-import ClientGroupComp from '../ClientGroup/ClientGroupComp'
-import ClientManageComp from '../Client/ClientManageComp'
+import ClientGroupComp from 'views/ClientGroup/ClientGroupComp'
+import ClientManageComp from 'views/Client/ClientManageComp'
 
 
 
