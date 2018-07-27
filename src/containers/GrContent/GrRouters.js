@@ -8,7 +8,7 @@ import { grColor } from "templates/default/GrColors";
 
 import { Switch, Route, Redirect } from "react-router-dom";
 
-import Dashboard from "../Dashboard/";
+import Dashboard from "containers/Dashboard/";
 // Client - client management
 import ClientMasterManage from "views/Client/ClientMasterManage";
 

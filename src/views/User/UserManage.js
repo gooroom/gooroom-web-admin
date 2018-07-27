@@ -36,12 +36,14 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import TextField from "@material-ui/core/TextField";
+import Checkbox from "@material-ui/core/Checkbox";
 import FormControl from "@material-ui/core/FormControl";
 
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
-import Add from "@material-ui/icons/Add";
-import Checkbox from "@material-ui/core/Checkbox";
+import AddIcon from "@material-ui/icons/Add";
+import BuildIcon from '@material-ui/icons/Build';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
@@ -51,10 +53,6 @@ const theme = createMuiTheme();
 //
 //  ## Style ########## ########## ########## ########## ##########
 //
-const pageContentClass = css({
-  paddingTop: "14px !important"
-}).toString();
-
 const formClass = css({
   marginBottom: "6px !important",
     display: "flex"
@@ -122,6 +120,17 @@ const tableCellClass = css({
 }).toString();
 
 
+const actButtonClass = css({
+  margin: '5px !important',
+  height: '24px !important',
+  minHeight: '24px !important',
+  width: '24px !important',
+}).toString();
+
+const toolIconClass = css({
+height: '16px !important',
+}).toString();
+
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
@@ -136,7 +145,8 @@ class UserManageHead extends Component {
     { id: "chUserName", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
     { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
     { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: "최근로그인날짜" },
-    { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" }
+    { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
   render() {
@@ -302,31 +312,67 @@ class UserManage extends Component {
     return (viewItem.selected) ? (viewItem.selected.indexOf(id) !== -1) : false;
   }
   
-  //this.state.selected.indexOf(id) !== -1;
-  // .................................................
+  handleEditClick = (event, id) => { 
+    const { UserProps, UserActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
 
-  // .................................................
-  handleUserDialogClose = value => {
-    this.setState({ 
-      clientGroupInfo: value, 
-      clientGroupDialogOpen: false 
+    const listData = getListData({ props: UserProps, compId: menuCompId });
+    const selectedItem = listData.find(function(element) {
+      return element.userId == id;
+    });
+
+    console.log('selectedItem : ', selectedItem);
+
+    UserActions.showDialog({
+      compId: menuCompId,
+      selectedItem: {
+        userId: selectedItem.userId,
+        userName: selectedItem.userNm,
+        userPassword: selectedItem.userPasswd
+      },
+      dialogType: UserManageDialog.TYPE_EDIT,
     });
   };
 
+  // delete
+  handleDeleteClick = (event, id) => {
+    event.stopPropagation();
+    const { UserProps, UserActions, GrConfirmActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
 
+    const listData = getListData({ props: UserProps, compId: menuCompId });
+    const selectedItem = listData.find(function(element) {
+      return element.userId == id;
+    });
 
+    const re = GrConfirmActions.showConfirm({
+      confirmTitle: '사용자정보 삭제',
+      confirmMsg: '사용자정보(' + selectedItem.userId + ')를 삭제하시겠습니까?',
+      handleConfirmResult: this.handleDeleteConfirmResult,
+      confirmOpen: true,
+      confirmObject: selectedItem
+    });
+  };
+  handleDeleteConfirmResult = (confirmValue, paramObject) => {
+    if(confirmValue) {
+      const { UserProps, UserActions } = this.props;
 
+      UserActions.deleteUserData({
+        userId: paramObject.userId
+      }).then((res) => {
 
-
-
-
-
-
-
-
-
-
-
+        const { editingCompId, viewItems } = UserProps;
+        viewItems.forEach((element) => {
+          if(element && element.listParam) {
+            UserActions.readUserList(getMergedObject(element.listParam, {
+              compId: element._COMPID_
+            }));
+          }
+        });
+      }, () => {
+      });
+    }
+  };
 
 
 
@@ -435,7 +481,7 @@ class UserManage extends Component {
                 this.handleCreateButton();
               }}
             >
-              <Add className={leftIconClass} />
+              <AddIcon className={leftIconClass} />
               등록
             </Button>
           </form>
@@ -481,6 +527,14 @@ class UserManage extends Component {
                       </TableCell>
                       <TableCell className={tableCellClass}>
                         {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}                    
+                      </TableCell>
+                      <TableCell className={tableCellClass}>
+                        <Button variant='fab' color='secondary' aria-label='edit' className={actButtonClass} onClick={event => this.handleEditClick(event, n.userId)}>
+                          <BuildIcon className={toolIconClass} />
+                        </Button>
+                        <Button variant='fab' color='secondary' aria-label='delete' className={actButtonClass} onClick={event => this.handleDeleteClick(event, n.userId)}>
+                          <DeleteIcon className={toolIconClass} />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );

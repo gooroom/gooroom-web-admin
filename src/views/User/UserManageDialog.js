@@ -124,7 +124,7 @@ class UserManageDialog extends Component {
         });
     };
 
-    // 사용자 생성
+    // 데이타 생성
     handleCreateData = (event) => {
         const { UserProps, GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
@@ -155,6 +155,46 @@ class UserManageDialog extends Component {
             })
         }
     }
+
+    // 데이타 수정
+    handleEditData = (event, id) => {
+        const { UserProps, GrConfirmActions } = this.props;
+        const re = GrConfirmActions.showConfirm({
+            confirmTitle: '사용자정보 수정',
+            confirmMsg: '사용자정보를 수정하시겠습니까?',
+            handleConfirmResult: this.handleEditConfirmResult,
+            confirmOpen: true,
+            confirmObject: UserProps.editingItem
+          });
+    }
+    handleEditConfirmResult = (confirmValue, paramObject) => {
+        if(confirmValue) {
+            const { UserProps, UserActions } = this.props;
+
+            UserActions.editUserData(UserProps.editingItem)
+                .then((res) => {
+
+                    const { editingCompId, viewItems } = UserProps;
+                    viewItems.forEach((element) => {
+                        if(element && element.listParam) {
+                            UserActions.readUserList(getMergedObject(element.listParam, {
+                                compId: element._COMPID_
+                            }));
+                        }
+                    });
+
+                    UserActions.getUserData({
+                        compId: editingCompId,
+                        userId: paramObject.userId
+                    });
+
+                this.handleClose();
+            }, (res) => {
+
+            })
+        }
+    }
+
 
 
     render() {
@@ -195,7 +235,7 @@ class UserManageDialog extends Component {
                         value={(editingViewItem) ? editingViewItem.userId : ''}
                         onChange={this.handleValueChange("userId")}
                         className={classNames(fullWidthClass, itemRowClass)}
-                        disabled={(dialogType === UserManageDialog.TYPE_VIEW)}
+                        disabled={(dialogType === UserManageDialog.TYPE_VIEW || dialogType === UserManageDialog.TYPE_EDIT)}
                     />
 
                     <FormControl className={classNames(fullWidthClass, itemRowClass)}>
