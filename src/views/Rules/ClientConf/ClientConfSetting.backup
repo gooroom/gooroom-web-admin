@@ -22,9 +22,6 @@ import ClientConfSettingDialog from './ClientConfSettingDialog';
 import ClientConfSettingInform from './ClientConfSettingInform';
 import GrPane from 'containers/GrContent/GrPane';
 
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -37,104 +34,93 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 
-import { withStyles } from '@material-ui/core/styles';
-
-const styles = {
-  grTableRow: {
-    height: '32px'
-  },
-};
 
 //
 //  ## Theme override ########## ########## ########## ########## ########## 
 //
-
-// const theme = createMuiTheme();
+const theme = createMuiTheme();
 
 //
 //  ## Style ########## ########## ########## ########## ##########
 //
+const formClass = css({
+  marginBottom: '6px !important',
+    display: 'flex'
+}).toString();
 
-// const formClass = css({
-//   marginBottom: '6px !important',
-//     display: 'flex'
-// }).toString();
+const formControlClass = css({
+  minWidth: '100px !important',
+    marginRight: '15px !important',
+    flexGrow: 1
+}).toString();
 
-// const formControlClass = css({
-//   minWidth: '100px !important',
-//     marginRight: '15px !important',
-//     flexGrow: 1
-// }).toString();
+const formEmptyControlClass = css({
+  flexGrow: '6 !important'
+}).toString();
 
-// const formEmptyControlClass = css({
-//   flexGrow: '6 !important'
-// }).toString();
+const textFieldClass = css({
+  marginTop: '3px !important'
+}).toString();
 
-// const textFieldClass = css({
-//   marginTop: '3px !important'
-// }).toString();
+const buttonClass = css({
+  margin: theme.spacing.unit + ' !important'
+}).toString();
 
-// const buttonClass = css({
-//   margin: theme.spacing.unit + ' !important'
-// }).toString();
+const leftIconClass = css({
+  marginRight: theme.spacing.unit + ' !important'
+}).toString();
 
-// const leftIconClass = css({
-//   marginRight: theme.spacing.unit + ' !important'
-// }).toString();
+const tableClass = css({
+  minWidth: '700px !important'
+}).toString();
 
-// const tableClass = css({
-//   minWidth: '700px !important'
-// }).toString();
+const tableContainerClass = css({
+  overflowX: 'auto',
+  '&::-webkit-scrollbar': {
+    position: 'absolute',
+    height: 10,
+    marginLeft: '-10px',
+    },
+  '&::-webkit-scrollbar-track': {
+    backgroundColor: '#CFD8DC', 
+    },
+  '&::-webkit-scrollbar-thumb': {
+    height: '30px',
+    backgroundColor: '#78909C',
+    backgroundClip: 'content-box',
+    borderColor: 'transparent',
+    borderStyle: 'solid',
+    borderWidth: '1px 1px',
+    }
+}).toString();
 
-// const tableContainerClass = css({
-//   overflowX: 'auto',
-//   '&::-webkit-scrollbar': {
-//     position: 'absolute',
-//     height: 10,
-//     marginLeft: '-10px',
-//     },
-//   '&::-webkit-scrollbar-track': {
-//     backgroundColor: '#CFD8DC', 
-//     },
-//   '&::-webkit-scrollbar-thumb': {
-//     height: '30px',
-//     backgroundColor: '#78909C',
-//     backgroundClip: 'content-box',
-//     borderColor: 'transparent',
-//     borderStyle: 'solid',
-//     borderWidth: '1px 1px',
-//     }
-// }).toString();
+const tableRowClass = css({
+  height: '2em !important'
+}).toString();
 
-// const tableRowClass = css({
-//   height: '2em !important'
-// }).toString();
-
-// const tableCellClass = css({
-//   height: '1em !important',
-//   padding: '0px !important',
-//   cursor: 'pointer'
-// }).toString();
+const tableCellClass = css({
+  height: '1em !important',
+  padding: '0px !important',
+  cursor: 'pointer'
+}).toString();
 
 
-// const actButtonClass = css({
-//     margin: '5px !important',
-//     height: '24px !important',
-//     minHeight: '24px !important',
-//     width: '24px !important',
-// }).toString();
+const actButtonClass = css({
+    margin: '5px !important',
+    height: '24px !important',
+    minHeight: '24px !important',
+    width: '24px !important',
+}).toString();
 
-// const toolIconClass = css({
-//   height: '16px !important',
-// }).toString();
+const toolIconClass = css({
+  height: '16px !important',
+}).toString();
 
 
 //
@@ -164,6 +150,7 @@ class ClientConfSettingHead extends Component {
           {ClientConfSettingHead.columnData.map(column => {
             return (
               <TableCell
+                className={tableCellClass}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -384,60 +371,49 @@ class ClientConfSetting extends Component {
     const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientConfSettingProps.defaultListParam.orderDir;
     const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientConfSettingProps.defaultListParam.orderColumn;
 
-
-
-    console.log('>>>> props : ', this.props);
-
     return (
-      <div>
+      <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
           {/* data option area */}
+          <form className={formClass}>
+            <FormControl className={formControlClass} autoComplete='off'>
+              <TextField
+                id='keyword'
+                label='검색어'
+                className={textFieldClass}
+                value={this.state.keyword}
+                onChange={this.handleKeywordChange('keyword')}
+                margin='dense'
+              />
+            </FormControl>
+            <Button
+              className={classNames(buttonClass, formControlClass)}
+              variant='raised'
+              color='primary'
+              onClick={ () => this.handleSelectBtnClick() }
+            >
+              <Search className={leftIconClass} />
+              조회
+            </Button>
 
-          <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
-            <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
-              <Grid item xs={6}>
-                <TextField
-                  id='keyword'
-                  label='검색어'
-                  value={this.state.keyword}
-                  onChange={this.handleKeywordChange('keyword')}
-                  margin='dense'
-                />
-              </Grid>
+            <div className={formEmptyControlClass} />
 
-              <Grid item xs={6}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={ () => this.handleSelectBtnClick() }
-                >
-                  <Search />
-                  조회
-                </Button>                
-              </Grid>
-            </Grid>
-
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
-              </Button>
-            </Grid>
-          </Grid>
-            
-
+            <Button
+              className={classNames(buttonClass, formControlClass)}
+              variant='raised'
+              color='secondary'
+              onClick={() => {
+                this.handleCreateButton();
+              }}
+            >
+              <AddIcon className={leftIconClass} />
+              등록
+            </Button>
+          </form>
           {/* data area */}
-          <div>
-            <Table>
+          <div className={tableContainerClass}>
+            <Table className={tableClass}>
 
               <ClientConfSettingHead
                 orderDir={orderDir}
@@ -445,47 +421,38 @@ class ClientConfSetting extends Component {
                 onRequestSort={this.handleRequestSort}
               />
 
-              <TableBody className="grTempBackground">
+              <TableBody>
                 {listData.map(n => {
                   return (
                     <TableRow
-                      className={this.props.classes.grTableRow}
+                      className={tableRowClass}
                       hover
                       onClick={event => this.handleRowClick(event, n.objId)}
                       tabIndex={-1}
                       key={n.objId}
                     >
-                      <TableCell >
+                      <TableCell className={tableCellClass}>
                       {n.objId.endsWith('DEFAULT') ? '기본' : '일반'}
                       </TableCell>
-                      <TableCell >
+                      <TableCell className={tableCellClass}>
                       {n.objNm}
                       </TableCell>
-                      <TableCell >
+                      <TableCell className={tableCellClass}>
                       {n.objId}
                       </TableCell>
-                      <TableCell >
+                      <TableCell className={tableCellClass}>
                       {n.modUserId}
                       </TableCell>
-                      <TableCell >
+                      <TableCell className={tableCellClass}>
                         {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
                       </TableCell>
-                      <TableCell >
-
-                        <Button 
-                          color="secondary" 
-                          size="small" 
-                          style={{color:'darkgray',padding:'0px',minWidth:'0px',minHeight:'0px'}}
-                          onClick={event => this.handleEditClick(event, n.objId)}>
-                          <BuildIcon />
+                      <TableCell className={tableCellClass}>
+                        <Button variant='fab' color='secondary' aria-label='edit' className={actButtonClass} onClick={event => this.handleEditClick(event, n.objId)}>
+                          <BuildIcon className={toolIconClass} />
                         </Button>
-
-                        <Button color="secondary" size="small" 
-                        style={{color:'darkgray',padding:'0px',minWidth:'0px',minHeight:'0px'}}
-                          onClick={event => this.handleDeleteClick(event, n.objId)}>
-                          <DeleteIcon />
-                        </Button>                        
-
+                        <Button variant='fab' color='secondary' aria-label='delete' className={actButtonClass} onClick={event => this.handleDeleteClick(event, n.objId)}>
+                          <DeleteIcon className={toolIconClass} />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -495,6 +462,7 @@ class ClientConfSetting extends Component {
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
                       colSpan={ClientConfSettingHead.columnData.length + 1}
+                      className={tableCellClass}
                     />
                   </TableRow>
                 )}
@@ -523,7 +491,7 @@ class ClientConfSetting extends Component {
         <ClientConfSettingInform compId={menuCompId} />
         <ClientConfSettingDialog />
         <GrConfirm />
-      </div>
+      </React.Fragment>
     );
   }
 }
@@ -537,4 +505,4 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ClientConfSetting));
+export default connect(mapStateToProps, mapDispatchToProps)(ClientConfSetting);

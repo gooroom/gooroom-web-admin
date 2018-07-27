@@ -26,6 +26,9 @@ class GrPageHeader extends Component {
     render() {
         const routeName = routes[this.props.path];
 
+        console.log('this.props : ', this.props);
+        console.log('routeName : ', routeName);
+
         return (
             <CardHeader title={routeName} className={rootClass}>
             </CardHeader>
