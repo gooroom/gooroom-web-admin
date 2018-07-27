@@ -228,8 +228,6 @@ class ClientMasterManage extends Component {
     const selectedGroupItem = ClientGroupCompProps[this.props.match.params.grMenuId + '__selectedItem'];
     const selectedClientItem = ClientManageCompProps[this.props.match.params.grMenuId + '__selectedItem'];
 
-    // console.log('selectedGroupItem : ', selectedGroupItem);
-
     return (
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />

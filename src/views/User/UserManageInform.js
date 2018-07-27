@@ -68,15 +68,11 @@ class UserManageInform extends Component {
   // .................................................
 
   render() {
-    console.log('UserManageInform......................');
-
     const bull = <span className={bullet}>•</span>;
     const { UserProps, compId } = this.props;
 
     const viewItem = getViewItem({ props: UserProps, compId: compId });
     const selectedViewItem = (viewItem) ? viewItem.selectedItem : null;
-
-    console.log('selectedViewItem : ', selectedViewItem);
 
     return (
       <div className={componentClass}>
