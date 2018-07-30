@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { css } from "glamor";
-
-import { withStyles } from '@material-ui/core/styles';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -36,45 +33,8 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import Radio from '@material-ui/core/Radio';
 
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const styles = theme => ({
-    root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-  });
-
-const containerClass = css({
-    margin: "0px 30px !important",
-    minHeight: 300,
-    minWidth: 500
-}).toString();
-
-const fullWidthClass = css({
-    width: "100%"
-}).toString();
-
-const keyCreateBtnClass = css({
-    paddingTop: 24 + " !important"
-}).toString();  
-
-const labelClass = css({
-    height: "25px",
-    marginTop: "10px"
-}).toString();
-
-const itemRowClass = css({
-    marginTop: "10px !important"
-}).toString();
-
-const bullet = css({
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  }).toString();
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -197,14 +157,14 @@ class ClientConfSettingDialog extends Component {
     }
 
     render() {
-
+        const { classes } = this.props;
         const { ClientConfSettingProps } = this.props;
         const { dialogType, editingItem } = ClientConfSettingProps;
 
         const editingViewItem = editingItem;
 
         let title = "";
-        const bull = <span className={bullet}>•</span>;
+        const bull = <span className={classes.bullet}>•</span>;
 
         if(dialogType === ClientConfSettingDialog.TYPE_ADD) {
             title = "단말정책설정 등록";
@@ -217,14 +177,14 @@ class ClientConfSettingDialog extends Component {
         return (
             <Dialog open={ClientConfSettingProps.dialogOpen}>
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={containerClass}>
+                <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <TextField
                         id="objNm"
                         label="이름"
                         value={(editingViewItem) ? editingViewItem.objNm : ''}
                         onChange={this.handleValueChange("objNm")}
-                        className={fullWidthClass}
+                        className={classes.fullWidth}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
                     />
                     <TextField
@@ -232,7 +192,7 @@ class ClientConfSettingDialog extends Component {
                         label="설명"
                         value={(editingViewItem) ? editingViewItem.comment : ''}
                         onChange={this.handleValueChange("comment")}
-                        className={classNames(fullWidthClass, itemRowClass)}
+                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
                     />
                     {(dialogType === ClientConfSettingDialog.TYPE_VIEW) &&
@@ -242,7 +202,7 @@ class ClientConfSettingDialog extends Component {
                                     <TextField
                                         label="에이전트폴링주기(초)"
                                         value={(editingViewItem) ? editingViewItem.pollingTime : ''}
-                                        className={classNames(fullWidthClass, itemRowClass)}
+                                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                         disabled
                                     />
                                 </Grid>
@@ -250,7 +210,7 @@ class ClientConfSettingDialog extends Component {
                                     <TextField
                                         label="운영체제 보호"
                                         value={(editingViewItem.useHypervisor) ? '구동' : '중단'}
-                                        className={classNames(fullWidthClass, itemRowClass)}
+                                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                         disabled
                                     />
                                 </Grid> 
@@ -258,14 +218,14 @@ class ClientConfSettingDialog extends Component {
                             <TextField
                                 label="선택된 NTP 서버 주소"
                                 value={(editingViewItem.selectedNtpIndex > -1) ? editingViewItem.ntpAddress[editingViewItem.selectedNtpIndex] : ''}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
                             <TextField
                                 label="NTP 서버로 사용할 주소정보"
                                 multiline
                                 value={(editingViewItem.ntpAddress.length > 0) ? editingViewItem.ntpAddress.join('\n') : ''}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
                         </div>                        
@@ -277,7 +237,7 @@ class ClientConfSettingDialog extends Component {
                                 label="에이전트폴링주기(초)"
                                 value={(editingViewItem) ? editingViewItem.pollingTime : ''}
                                 onChange={this.handleValueChange("pollingTime")}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
                             <div style={{marginTop:"10px"}}>
                                 <FormLabel style={{marginRight:"50px"}}>{bull} 운영체제 보호</FormLabel>
@@ -339,5 +299,5 @@ const mapDispatchToProps = (dispatch) => ({
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ClientConfSettingDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSettingDialog));
 

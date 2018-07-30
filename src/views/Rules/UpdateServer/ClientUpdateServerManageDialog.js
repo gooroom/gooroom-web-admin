@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { css } from "glamor";
-
-import { withStyles } from '@material-ui/core/styles';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -21,45 +18,9 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const styles = theme => ({
-    root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-  });
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-const containerClass = css({
-    margin: "0px 30px !important",
-    minHeight: 300,
-    minWidth: 500
-}).toString();
-
-const fullWidthClass = css({
-    width: "100%"
-}).toString();
-
-const keyCreateBtnClass = css({
-    paddingTop: 24 + " !important"
-}).toString();  
-
-const labelClass = css({
-    height: "25px",
-    marginTop: "10px"
-}).toString();
-
-const itemRowClass = css({
-    marginTop: "10px !important"
-}).toString();
-
-const bullet = css({
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  }).toString();
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -159,15 +120,13 @@ class ClientUpdateServerManageDialog extends Component {
     }
 
     render() {
-
+        const { classes } = this.props;
         const { ClientUpdateServerProps } = this.props;
         const { dialogType, editingItem } = ClientUpdateServerProps;
 
         const editingViewItem = editingItem;
 
         let title = "";
-        const bull = <span className={bullet}>•</span>;
-
         if(dialogType === ClientUpdateServerManageDialog.TYPE_ADD) {
             title = "업데이트서버정책 등록";
         } else if(dialogType === ClientUpdateServerManageDialog.TYPE_VIEW) {
@@ -179,20 +138,20 @@ class ClientUpdateServerManageDialog extends Component {
         return (
             <Dialog open={ClientUpdateServerProps.dialogOpen}>
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={containerClass}>
+                <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <TextField
                         label="이름"
                         value={(editingViewItem) ? editingViewItem.objNm : ''}
                         onChange={this.handleValueChange("objNm")}
-                        className={fullWidthClass}
+                        className={classes.fullWidth}
                         disabled={(dialogType === ClientUpdateServerManageDialog.TYPE_VIEW)}
                     />
                     <TextField
                         label="설명"
                         value={(editingViewItem) ? editingViewItem.comment : ''}
                         onChange={this.handleValueChange("comment")}
-                        className={classNames(fullWidthClass, itemRowClass)}
+                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === ClientUpdateServerManageDialog.TYPE_VIEW)}
                     />
                     {(dialogType === ClientUpdateServerManageDialog.TYPE_VIEW) &&
@@ -201,21 +160,21 @@ class ClientUpdateServerManageDialog extends Component {
                                 label="주 OS 정보"
                                 multiline
                                 value={(editingViewItem.mainos) ? editingViewItem.mainos : ''}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
                             <TextField
                                 label="기반 OS 정보"
                                 multiline
                                 value={(editingViewItem.extos) ? editingViewItem.extos : ''}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
                             <TextField
                                 label="gooroom.pref"
                                 multiline
                                 value={(editingViewItem.priorities) ? editingViewItem.priorities : ''}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
                         </div>                        
@@ -227,21 +186,21 @@ class ClientUpdateServerManageDialog extends Component {
                                 multiline
                                 value={(editingViewItem.mainos) ? editingViewItem.mainos : ''}
                                 onChange={this.handleValueChange("mainos")}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
                             <TextField
                                 label="기반 OS 정보"
                                 multiline
                                 value={(editingViewItem.extos) ? editingViewItem.extos : ''}
                                 onChange={this.handleValueChange("extos")}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
                             <TextField
                                 label="gooroom.pref"
                                 multiline
                                 value={(editingViewItem.priorities) ? editingViewItem.priorities : ''}
                                 onChange={this.handleValueChange("priorities")}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
                         </div>
                     }
@@ -272,5 +231,5 @@ const mapDispatchToProps = (dispatch) => ({
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ClientUpdateServerManageDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientUpdateServerManageDialog));
 

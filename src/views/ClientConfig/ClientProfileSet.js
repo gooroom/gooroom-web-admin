@@ -6,9 +6,6 @@ import { connect } from 'react-redux';
 import * as ClientProfileSetActions from 'modules/ClientProfileSetModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from 'glamor';
-
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
@@ -18,6 +15,8 @@ import GrConfirm from 'components/GrComponents/GrConfirm';
 import ClientProfileSetDialog from './ClientProfileSetDialog';
 import GrPane from 'containers/GrContent/GrPane';
 
+import Grid from '@material-ui/core/Grid';
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -26,7 +25,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
@@ -35,88 +33,8 @@ import BuildIcon from '@material-ui/icons/Build';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
-
-//
-//  ## Theme override ########## ########## ########## ########## ########## 
-//
-const theme = createMuiTheme();
-
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const formClass = css({
-  marginBottom: '6px !important',
-    display: 'flex'
-}).toString();
-
-const formControlClass = css({
-  minWidth: '100px !important',
-    marginRight: '15px !important',
-    flexGrow: 1
-}).toString();
-
-const formEmptyControlClass = css({
-  flexGrow: '6 !important'
-}).toString();
-
-const textFieldClass = css({
-  marginTop: '3px !important'
-}).toString();
-
-const buttonClass = css({
-  margin: theme.spacing.unit + ' !important'
-}).toString();
-
-const leftIconClass = css({
-  marginRight: theme.spacing.unit + ' !important'
-}).toString();
-
-const tableClass = css({
-  minWidth: '700px !important'
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: 'auto',
-  '&::-webkit-scrollbar': {
-    position: 'absolute',
-    height: 10,
-    marginLeft: '-10px',
-    },
-  '&::-webkit-scrollbar-track': {
-    backgroundColor: '#CFD8DC', 
-    },
-  '&::-webkit-scrollbar-thumb': {
-    height: '30px',
-    backgroundColor: '#78909C',
-    backgroundClip: 'content-box',
-    borderColor: 'transparent',
-    borderStyle: 'solid',
-    borderWidth: '1px 1px',
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: '2em !important'
-}).toString();
-
-const tableCellClass = css({
-  height: '1em !important',
-  padding: '0px !important',
-  cursor: 'pointer'
-}).toString();
-
-const actButtonClass = css({
-    margin: '5px !important',
-    height: '24px !important',
-    minHeight: '24px !important',
-    width: '24px !important',
-}).toString();
-
-const toolIconClass = css({
-  height: '16px !important',
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -147,7 +65,6 @@ class ClientProfileSetHead extends Component {
           {ClientProfileSetHead.columnData.map(column => {
             return (
               <TableCell
-                className={tableCellClass}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -315,7 +232,7 @@ class ClientProfileSet extends Component {
   }
 
   render() {
-
+    const { classes } = this.props;
     const { ClientProfileSetProps } = this.props;
     const emptyRows = ClientProfileSetProps.listParam.rowsPerPage - ClientProfileSetProps.listData.length;
 
@@ -324,78 +241,101 @@ class ClientProfileSet extends Component {
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
           {/* data option area */}
-          <form className={formClass}>
-            <FormControl className={formControlClass} autoComplete='off'>
-              <TextField
-                id='keyword'
-                label='검색어'
-                className={textFieldClass}
-                value={ClientProfileSetProps.listParam.keyword}
-                onChange={this.handleKeywordChange('keyword')}
-                margin='dense'
-              />
-            </FormControl>
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant='raised'
-              color='primary'
-              onClick={() => this.handleSelectBtnClick({page: 0})}
-            >
-              <Search className={leftIconClass} />
-              조회
-            </Button>
 
-            <div className={formEmptyControlClass} />
+          <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
+            <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
+              <Grid item xs={6}>
+                <TextField
+                  id='keyword'
+                  label='검색어'
+                  value={ClientProfileSetProps.listParam.keyword}
+                  onChange={this.handleKeywordChange('keyword')}
+                  margin='dense'
+                />
+              </Grid>
 
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant='raised'
-              color='secondary'
-              onClick={() => this.handleCreateButton()}
-            >
-              <AddIcon className={leftIconClass} />
-              등록
-            </Button>
-          </form>
+              <Grid item xs={6}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={ () => this.handleSelectBtnClick({page: 0}) }
+                >
+                  <Search />
+                  조회
+                </Button>
+
+              </Grid>
+            </Grid>
+
+            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  this.handleCreateButton();
+                }}
+              >
+                <AddIcon />
+                등록
+              </Button>
+            </Grid>
+          </Grid>
+
           {/* data area */}
-          <div className={tableContainerClass}>
-            <Table className={tableClass}>
+          <div>
+            <Table>
 
               <ClientProfileSetHead
                 orderDir={ClientProfileSetProps.listParam.orderDir}
                 orderColumn={ClientProfileSetProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
               />
+
               <TableBody>
                 {ClientProfileSetProps.listData.map(n => {
                   return (
                     <TableRow
-                      className={tableRowClass}
+                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.profileNo)}
                       key={n.profileNo}
                     >
-                      <TableCell className={tableCellClass}>{n.profileNo}</TableCell>
-                      <TableCell className={tableCellClass}>{n.profileNm}</TableCell>
-                      <TableCell className={tableCellClass}>{n.clientId}</TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell >{n.profileNo}</TableCell>
+                      <TableCell >{n.profileNm}</TableCell>
+                      <TableCell >{n.clientId}</TableCell>
+                      <TableCell >
                         {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell >
                         {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
-                        <Button variant='fab' color='secondary' aria-label='edit' className={actButtonClass} onClick={event => this.handleEditClick(event, n.profileNo)}>
-                          <BuildIcon className={toolIconClass} />
-                        </Button>
-                        <Button variant='fab' color='secondary' aria-label='delete' className={actButtonClass} onClick={event => this.handleDeleteClick(event, n.profileNo)}>
-                          <DeleteIcon className={toolIconClass} />
-                        </Button>
+                      <TableCell >
+
+                      <Button 
+                        color="secondary" 
+                        size="small" 
+                        className={classes.buttonInTableRow}
+                        onClick={event => this.handleEditClick(event, n.profileNo)}>
+                        <BuildIcon />
+                      </Button>
+
+                      <Button color="secondary" size="small" 
+                        className={classes.buttonInTableRow}
+                        onClick={event => this.handleDeleteClick(event, n.profileNo)}>
+                        <DeleteIcon />
+                      </Button>                        
+
                       </TableCell>
-                      <TableCell className={tableCellClass}>
-                        <Button variant='fab' color='secondary' aria-label='profile' className={actButtonClass} onClick={event => this.handleProfileClick(event, n.profileNo)}>
-                          <AssignmentIcon className={toolIconClass} />
-                        </Button>
+                      <TableCell >
+
+                      <Button color="secondary" size="small" 
+                        className={classes.buttonInTableRow}
+                        onClick={event => this.handleProfileClick(event, n.profileNo)}>
+                        <AssignmentIcon />
+                      </Button>                        
+
                       </TableCell>
                     </TableRow>
                   );
@@ -405,7 +345,7 @@ class ClientProfileSet extends Component {
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
                       colSpan={ClientProfileSetHead.columnData.length + 1}
-                      className={tableCellClass}
+                      
                     />
                   </TableRow>
                 )}
@@ -447,4 +387,4 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientProfileSet);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientProfileSet));

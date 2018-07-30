@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import classNames from "classnames";
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from 'glamor';
 
 import { grRequestPromise } from "components/GrUtils/GrRequester";
 
@@ -19,17 +17,9 @@ import CloseIcon from "@material-ui/icons/ExpandLess";
 import FolderIcon from "@material-ui/icons/Folder";
 import FileIcon from "@material-ui/icons/InsertDriveFile";
 
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const parentNodeClass = css({
-  color: "#686868"
-}).toString();
-
-const childNodeClass = css({
-  color: "#a8a8a8"
-}).toString();
 
 
 class GrTreeList extends Component {
@@ -351,7 +341,7 @@ class GrTreeList extends Component {
             style={Object.assign({}, listItem._styles.root)}
             checked={this.state.checked}
             imperfect={this.state.imperfect}
-            leftIcon={getLeftIcon(listItem, this.props.useFolderIcons)}
+            leftIcon={getLeftIcon(listItem, this.props)}
             rightIcon={
               !listItem.children ? null : expandedListItems.indexOf(i) ===
               -1 ? (
@@ -380,12 +370,12 @@ class GrTreeList extends Component {
       </React.Fragment>
     );
 
-    function getLeftIcon(listItem, useFolderIcons) {
-      if (useFolderIcons) {
+    function getLeftIcon(listItem, localProps) {
+      if (localProps.useFolderIcons) {
         if (listItem.children) {
-          return <FolderIcon className={parentNodeClass} />;
+          return <FolderIcon className={localProps.classes.parentNodeClass} />;
         } else {
-          return <FileIcon className={childNodeClass} />;
+          return <FileIcon className={localProps.classes.childNodeClass} />;
         }
       } else {
         return listItem.icon;
@@ -409,4 +399,4 @@ class GrTreeList extends Component {
   }
 }
 
-export default GrTreeList;
+export default withStyles(GrCommonStyle)(GrTreeList);

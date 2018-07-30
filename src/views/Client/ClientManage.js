@@ -71,14 +71,6 @@ const theme = createMuiTheme({
 //
 //  ## Style ########## ########## ########## ########## ########## 
 //
-const contentClass = css({
-  height: "100% !important"
-}).toString();
-
-const pageContentClass = css({
-  paddingTop: "14px !important"
-}).toString();
-
 const formClass = css({
   marginBottom: "6px !important",
     display: "flex"

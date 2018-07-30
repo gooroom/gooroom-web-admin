@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import classNames from "classnames";
-import { css } from "glamor";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -17,19 +16,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const containerClass = css({
-    margin: "0px 30px !important",
-    minHeight: 300,
-    minWidth: 500
-}).toString();
-
-const fullWidthClass = css({
-    width: "100%"
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -86,7 +74,7 @@ class ClientGroupDialog extends Component {
     }
 
     render() {
-
+        const { classes } = this.props;
         const { ClientGroupProps } = this.props;
         const { dialogType, editingItem } = ClientGroupProps;
 
@@ -102,7 +90,7 @@ class ClientGroupDialog extends Component {
         return (
             <Dialog open={ClientGroupProps.dialogOpen}>
                 <DialogTitle >{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={containerClass}>
+                <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <TextField
                         id="grpNm"
@@ -110,7 +98,7 @@ class ClientGroupDialog extends Component {
                         value={(editingItem) ? editingItem.grpNm : ''}
                         onChange={this.handleValueChange('grpNm')}
                         margin="normal"
-                        className={fullWidthClass}
+                        className={classes.fullWidth}
                     />
 
                     <TextField
@@ -119,7 +107,7 @@ class ClientGroupDialog extends Component {
                         value={(editingItem) ? editingItem.comment : ''}
                         onChange={this.handleValueChange('comment')}
                         margin="normal"
-                        className={fullWidthClass}
+                        className={classes.fullWidth}
                     />
                 </form>
 
@@ -146,7 +134,7 @@ const mapDispatchToProps = (dispatch) => ({
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientGroupDialog);
 
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientGroupDialog));
 
 

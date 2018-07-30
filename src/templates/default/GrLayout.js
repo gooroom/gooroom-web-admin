@@ -4,6 +4,7 @@ import React from 'react';
 export const grLayout = {
 
   headerHeight: "55px",
+  pageHeaderHeight: "19px",
   footerHeight: "34px",
 
   sideMenuHeaderHeight: "40px",

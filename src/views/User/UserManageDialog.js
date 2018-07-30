@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { css } from "glamor";
-
-import { withStyles } from '@material-ui/core/styles';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -20,63 +17,17 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import Typography from '@material-ui/core/Typography';
-
-import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
-import MenuItem from '@material-ui/core/MenuItem';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const styles = theme => ({
-    root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-  });
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-const containerClass = css({
-    margin: "0px 30px !important",
-    minHeight: 300,
-    minWidth: 500
-}).toString();
-
-const fullWidthClass = css({
-    width: "100%"
-}).toString();
-
-const keyCreateBtnClass = css({
-    paddingTop: 24 + " !important"
-}).toString();  
-
-const labelClass = css({
-    height: "25px",
-    marginTop: "10px"
-}).toString();
-
-const itemRowClass = css({
-    marginTop: "10px !important"
-}).toString();
-
-const bullet = css({
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  }).toString();
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -193,17 +144,14 @@ class UserManageDialog extends Component {
     }
 
 
-
     render() {
-
+        const { classes } = this.props;
         const { UserProps } = this.props;
         const { dialogType, editingItem } = UserProps;
 
         const editingViewItem = editingItem;
 
         let title = "";
-        const bull = <span className={bullet}>•</span>;
-
         if(dialogType === UserManageDialog.TYPE_ADD) {
             title = "사용자 등록";
         } else if(dialogType === UserManageDialog.TYPE_VIEW) {
@@ -215,14 +163,14 @@ class UserManageDialog extends Component {
         return (
             <Dialog open={UserProps.dialogOpen}>
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={containerClass}>
+                <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <TextField
                         id="userName"
                         label="사용자이름"
                         value={(editingViewItem) ? editingViewItem.userName : ''}
                         onChange={this.handleValueChange("userName")}
-                        className={fullWidthClass}
+                        className={classes.fullWidth}
                         disabled={(dialogType === UserManageDialog.TYPE_VIEW)}
                     />
 
@@ -231,11 +179,11 @@ class UserManageDialog extends Component {
                         label="사용자아이디"
                         value={(editingViewItem) ? editingViewItem.userId : ''}
                         onChange={this.handleValueChange("userId")}
-                        className={classNames(fullWidthClass, itemRowClass)}
+                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === UserManageDialog.TYPE_VIEW || dialogType === UserManageDialog.TYPE_EDIT)}
                     />
 
-                    <FormControl className={classNames(fullWidthClass, itemRowClass)}>
+                    <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
           <InputLabel htmlFor="adornment-password">Password</InputLabel>
           <Input
             id="userPassword"
@@ -282,6 +230,6 @@ const mapDispatchToProps = (dispatch) => ({
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(UserManageDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserManageDialog));
 
 

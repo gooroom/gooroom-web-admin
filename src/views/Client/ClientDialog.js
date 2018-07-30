@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from "glamor";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -22,14 +20,9 @@ import Tab from "@material-ui/core/Tab";
 import ClientInfoPane from "./ClientInfoPane";
 import ClientRuleInfoPane from "./ClientRuleInfoPane";
 
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const tabContainerClass = css({
-  margin: "0px 30px !important",
-  minHeight: 500,
-  minWidth: 500
-}).toString();
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
+
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -39,16 +32,6 @@ class ClientDialog extends Component {
   static TYPE_ADD = 'ADD';
   static TYPE_VIEW = 'VIEW';
   static TYPE_EDIT = 'EDIT';
-
-  // constructor(props) {
-  //   super(props);
-
-  //   this.state = {
-  //     tabValue: 0,
-  //   };
-
-  //   this.handleClose = this.handleClose.bind(this);
-  // }
 
   handleClose = (event) => {
     this.props.ClientManageActions.closeDialog({
@@ -63,12 +46,9 @@ class ClientDialog extends Component {
   };
 
   render() {
-
+    const { classes } = this.props;
     const { ClientManageProps } = this.props;
     const { dialogType, tabValue } = ClientManageProps;
-
-    //const { onClose, clientId, clientGroupId, ...other } = this.props;
-    //const { tabValue } = this.state;
 
     if (ClientManageProps.selectedItem !== "") {
 
@@ -77,7 +57,7 @@ class ClientDialog extends Component {
 
           <DialogTitle>단말 정보</DialogTitle>
 
-          <div className={tabContainerClass}>
+          <div className={classes.tabContainer}>
             {tabValue === 0 && <ClientInfoPane clientId={clientId}></ClientInfoPane>}
             {tabValue === 1 && <ClientRuleInfoPane clientGroupId={clientGroupId}></ClientRuleInfoPane>}
             {tabValue === 2 && <div clientId={clientId}>ETC DIV</div>}
@@ -119,4 +99,6 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientDialog);
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientDialog));
+

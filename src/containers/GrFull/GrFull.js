@@ -18,26 +18,13 @@ import GrBreadcrumb from "containers/GrBreadcrumb/";
 import GrRouters from "containers/GrContent/";
 import Aside from "containers/Aside/";
 
-
-import red from '@material-ui/core/colors/red';
-
+import teal from '@material-ui/core/colors/teal';
+import amber from '@material-ui/core/colors/amber';
 
 const theme = createMuiTheme({
   palette: {
-    primary: {
-      light: "#819ca9",
-      main: "#546e7a",
-      dark: "#29434e",
-      contrastText: "#fff"
-    },
-    secondary: {
-      light: "#a4a4a4",
-      main: "#757575",
-      dark: "#494949",
-      contrastText: "#fff"
-    }
-  },
-  overrides: {
+    primary: teal,
+    secondary: amber,
   },
 });
 
@@ -48,7 +35,7 @@ const rootClass = css({
 }).toString();
 
 const appBodyClass = css({
-  marginTop: grLayout.headerHeight,
+  marginTop: grLayout.pageHeaderHeight,
     display: "flex",
     flexDirection: "row",
     flexGrow: 1,
@@ -131,25 +118,25 @@ class Full extends Component {
 
     return (
 
-      <React.Fragment>
-      <MuiThemeProvider theme={theme}>
-      <CssBaseline />
-      <div className={rootClass} >
-        <GrHeader toggleDrawer={this.toggleDrawer} />
-        <GrAlert />
-        <div className={appBodyClass}>
-          <GrSideMenu sideOpen={this.state.sideOpen} />
-          <main className={classNames({[mainClass]: !this.state.isMainWide}, {[mainWideClass]: this.state.isMainWide})}>
-            <div>
-            <GrBreadcrumb />
-            <GrRouters />
+      <div>
+        <CssBaseline />
+        <MuiThemeProvider theme={theme}>
+          <div className={rootClass} >
+            <GrHeader toggleDrawer={this.toggleDrawer} />
+            <GrAlert />
+            <div className={appBodyClass}>
+              <GrSideMenu sideOpen={this.state.sideOpen} />
+              <main className={classNames({[mainClass]: !this.state.isMainWide}, {[mainWideClass]: this.state.isMainWide})}>
+                <div>
+                  <GrBreadcrumb />
+                  <GrRouters />
+                </div>
+                <GrFooter />
+              </main>
             </div>
-            <GrFooter />
-            </main>
           </div>
+        </MuiThemeProvider>
       </div>
-      </MuiThemeProvider>
-      </React.Fragment>
 
     );
   }

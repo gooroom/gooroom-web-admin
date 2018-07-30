@@ -14,44 +14,15 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { css } from 'glamor';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
-import { grRequestPromise } from "components/GrUtils/GrRequester";
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
 
-import ClientDialog from "./ClientDialog";
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import DescIcon from '@material-ui/icons/Description';
-
-import Checkbox from "@material-ui/core/Checkbox";
-
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
-
-// option components
-import ClientGroupSelect from 'views/Options/ClientGroupSelect';
-import ClientStatusSelect from 'views/Options/ClientStatusSelect';
-
-
 
 import ClientManageComp from 'views/Client/ClientManageComp';
 import ClientManageInform from 'views/Client/ClientManageInform';
@@ -70,14 +41,6 @@ const theme = createMuiTheme();
 //
 //  ## Style ########## ########## ########## ########## ########## 
 //
-const contentClass = css({
-  height: "100% !important"
-}).toString();
-
-const pageContentClass = css({
-  paddingTop: "14px !important"
-}).toString();
-
 const formClass = css({
   marginBottom: "6px !important",
     display: "flex"
@@ -93,10 +56,6 @@ const formEmptyControlClass = css({
   flexGrow: "6 !important"
 }).toString();
 
-const textFieldClass = css({
-  marginTop: "3px !important"
-}).toString();
-
 const buttonClass = css({
   height: "min-content",
   padding: "0px !important"
@@ -106,54 +65,6 @@ const leftIconClass = css({
   marginRight: theme.spacing.unit + " !important"
 }).toString();
 
-
-const tableClass = css({
-  minWidth: "700px !important"
-}).toString();
-
-const tableHeadCellClass = css({
-  whiteSpace: "nowrap",
-  padding: "0px !important"
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: "auto",
-  "&::-webkit-scrollbar": {
-    position: "absolute",
-    height: 10,
-    marginLeft: "-10px",
-    },
-  "&::-webkit-scrollbar-track": {
-    backgroundColor: "#CFD8DC", 
-    },
-  "&::-webkit-scrollbar-thumb": {
-    height: "30px",
-    backgroundColor: "#78909C",
-    backgroundClip: "content-box",
-    borderColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "1px 1px",
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: "2em !important"
-}).toString();
-
-const tableCellClass = css({
-  height: "1em !important",
-  padding: "0px !important",
-  cursor: "pointer"
-}).toString();
-
-const toolIconClass = css({
-  height: '16px !important',
-}).toString();
-
-const compInPaperClass = css({
-  marginLeft: 10, 
-  marginRight: 10
-}).toString();
 
 //
 //  ## Content ########## ########## ########## ########## ########## 

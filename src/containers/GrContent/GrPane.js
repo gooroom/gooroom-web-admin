@@ -1,21 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { css } from "glamor";
-import { grLayout } from "templates/default/GrLayout";
-import { grColor } from "templates/default/GrColors";
-import { createMuiTheme } from '@material-ui/core/styles';
-
 import Paper from "@material-ui/core/Paper";
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-const theme = createMuiTheme();
-
-const paneClass = css({
-  marginLeft: 20,
-  marginRight: 20,
-  boxShadow: "none !important",
-  backgroundColor: theme.palette.background.default + " !important",
-}).toString();
 
 class GrPane extends Component {
   constructor(props) {
@@ -23,13 +12,14 @@ class GrPane extends Component {
   }
 
   render() {
+    const { classes } = this.props;
 
     return (
-      <Paper className={paneClass}>
+      <Paper className={classes.menuBodyRoot}>
         {this.props.children}
       </Paper>
     );
   }
 }
 
-export default GrPane;
+export default withStyles(GrCommonStyle)(GrPane);

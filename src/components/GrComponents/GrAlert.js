@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from "glamor";
 
 import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';

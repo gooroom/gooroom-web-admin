@@ -85,8 +85,6 @@ class ClientManageInform extends Component {
     const { isOpen, selectedClientItem :selectedItem } = this.props;
     const bull = <span className={bullet}>•</span>;
 
-//console.log(' ClientManageInform render selectedItem : ', selectedItem);
-
     return (
       <div className={componentClass}>
       {(isOpen && selectedItem) &&

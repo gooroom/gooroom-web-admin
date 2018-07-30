@@ -1,21 +1,11 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 
-import { css } from 'glamor';
-
 import routes from 'routes';
 import CardHeader from '@material-ui/core/CardHeader';
 
-
-const rootClass = css({
-    paddingBottom: 0,
-  }).toString();
-  
-const styles = {
-    root: {
-        paddingBottom: 0
-    }
-};
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 class GrPageHeader extends Component {
 
@@ -24,16 +14,14 @@ class GrPageHeader extends Component {
     }
 
     render() {
+        const { classes } = this.props;
         const routeName = routes[this.props.path];
 
-        console.log('this.props : ', this.props);
-        console.log('routeName : ', routeName);
-
         return (
-            <CardHeader title={routeName} className={rootClass}>
+            <CardHeader title={routeName} className={classes.menuHeaderRoot}>GrPageHeader
             </CardHeader>
         )
     }
 }
 
-export default GrPageHeader;
+export default withStyles(GrCommonStyle)(GrPageHeader);
