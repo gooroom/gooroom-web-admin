@@ -7,8 +7,6 @@ import { connect } from 'react-redux';
 import * as ClientRegKeyActions from 'modules/ClientRegKeyModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { css } from "glamor";
-
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -22,32 +20,8 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import Add from "@material-ui/icons/Add";
 
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const containerClass = css({
-    margin: "0px 30px !important",
-    minHeight: 300,
-    minWidth: 500
-}).toString();
-
-const fullWidthClass = css({
-    width: "100%"
-}).toString();
-
-const keyCreateBtnClass = css({
-    paddingTop: 24 + " !important"
-}).toString();
-
-const labelClass = css({
-    height: "25px",
-    marginTop: "10px"
-}).toString();
-
-const itemRowClass = css({
-    marginTop: "10px !important"
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -110,7 +84,7 @@ class ClientRegKeyDialog extends Component {
     }
 
     render() {
-
+        const { classes } = this.props;
         const { ClientRegKeyProps } = this.props;
         const { dialogType } = ClientRegKeyProps;
         let title = "";
@@ -126,7 +100,7 @@ class ClientRegKeyDialog extends Component {
         return (
             <Dialog open={ClientRegKeyProps.dialogOpen}>
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={containerClass}>
+                <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <Grid container spacing={16}>
                         <Grid item xs={8}>
@@ -136,11 +110,11 @@ class ClientRegKeyDialog extends Component {
                                 value={(ClientRegKeyProps.selectedItem) ? ClientRegKeyProps.selectedItem.regKeyNo: ''}
                                 onChange={this.handleChange("regKeyNo")}
                                 margin="normal"
-                                className={fullWidthClass}
+                                className={classes.fullWidth}
                                 disabled
                             />
                         </Grid>
-                        <Grid item xs={4} className={keyCreateBtnClass}>
+                        <Grid item xs={4} className={classes.createButton}>
                            <Button
                             variant="raised"
                             color="secondary"
@@ -162,7 +136,7 @@ class ClientRegKeyDialog extends Component {
                             margin="normal"
                             value={(ClientRegKeyProps.selectedItem) ? formatDateToSimple(ClientRegKeyProps.selectedItem.validDate, 'YYYY-MM-DD') : ''}
                             onChange={this.handleChange("validDate")}
-                            className={fullWidthClass}
+                            className={classes.fullWidth}
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -177,7 +151,7 @@ class ClientRegKeyDialog extends Component {
                             margin="normal"
                             value={(ClientRegKeyProps.selectedItem) ? formatDateToSimple(ClientRegKeyProps.selectedItem.expireDate, 'YYYY-MM-DD') : ''}
                             onChange={this.handleChange("expireDate")}
-                            className={fullWidthClass}
+                            className={classes.fullWidth}
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -192,7 +166,7 @@ class ClientRegKeyDialog extends Component {
                         value={(ClientRegKeyProps.selectedItem) ? ClientRegKeyProps.selectedItem.ipRange : ''}
                         onChange={this.handleChange("ipRange")}
                         margin="normal"
-                        className={fullWidthClass}
+                        className={classes.fullWidth}
                         disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                     />
                     <FormLabel disabled={true}>
@@ -207,7 +181,7 @@ class ClientRegKeyDialog extends Component {
                         margin="normal"
                         value={(ClientRegKeyProps.selectedItem) ? ClientRegKeyProps.selectedItem.comment : ''}
                         onChange={this.handleChange("comment")}
-                        className={fullWidthClass}
+                        className={classes.fullWidth}
                         disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                     />
 
@@ -239,5 +213,5 @@ const mapDispatchToProps = (dispatch) => ({
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientRegKeyDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientRegKeyDialog));
 

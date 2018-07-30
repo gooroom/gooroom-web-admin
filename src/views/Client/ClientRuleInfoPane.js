@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from "glamor";
 
 import { grRequestPromise } from "components/GrUtils/GrRequester";
 
@@ -36,26 +35,6 @@ const theme = createMuiTheme({
     }
   }
 });
-
-const tableClass = css({
-  minWidth: 500
-}).toString();
-
-const tableLabelCellClass = css({
-  height: "1em !important",
-  padding: "5px !important"
-}).toString();
-
-const tableContentCellClass = css({
-  height: "1em !important",
-  padding: "5px !important",
-  fontWeight: "bolder"
-}).toString();
-
-const iconClass = css({
-  marginLeft: "0.5em",
-  marginBottom: "-0.3em"
-}).toString();
 
 
 class ClientRuleInfoPane extends Component {
@@ -107,31 +86,31 @@ class ClientRuleInfoPane extends Component {
 
     return (
 
-      <Table className={tableClass}>
+      <Table>
           <TableBody>
             <TableRow hover>
-              <TableCell className={tableLabelCellClass}>정책이름</TableCell>
-              <TableCell className={tableContentCellClass}>
+              <TableCell>정책이름</TableCell>
+              <TableCell >
                 {this.state.ruleName}
               </TableCell>
-              <TableCell className={tableLabelCellClass}>정책아이디</TableCell>
-              <TableCell className={tableContentCellClass}>
+              <TableCell>정책아이디</TableCell>
+              <TableCell >
                 {this.state.ruleId}
               </TableCell>
             </TableRow>
             <TableRow hover>
-              <TableCell className={tableLabelCellClass}>정책설명</TableCell>
-              <TableCell colSpan={3} className={tableContentCellClass}>
+              <TableCell>정책설명</TableCell>
+              <TableCell colSpan={3} >
                 {this.state.ruleComment}
               </TableCell>
             </TableRow>
             <TableRow hover>
-              <TableCell className={tableLabelCellClass}>Agent Polling</TableCell>
-              <TableCell className={tableContentCellClass}>
+              <TableCell>Agent Polling</TableCell>
+              <TableCell >
                 {this.state.pollingValue}
               </TableCell>
-              <TableCell className={tableLabelCellClass}>운영체제보호</TableCell>
-              <TableCell className={tableContentCellClass}>
+              <TableCell>운영체제보호</TableCell>
+              <TableCell >
                 {this.state.useHyperVisor}
               </TableCell>
             </TableRow>

@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
-
-import { createMuiTheme } from '@material-ui/core/styles';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject, getListParam, getListData, getViewItem } from 'components/GrUtils/GrCommonUtils';
@@ -23,7 +20,6 @@ import ClientConfSettingInform from './ClientConfSettingInform';
 import GrPane from 'containers/GrContent/GrPane';
 
 import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -34,108 +30,15 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
 import { withStyles } from '@material-ui/core/styles';
-
-const styles = {
-  grTableRow: {
-    height: '32px'
-  },
-};
-
-//
-//  ## Theme override ########## ########## ########## ########## ########## 
-//
-
-// const theme = createMuiTheme();
-
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-
-// const formClass = css({
-//   marginBottom: '6px !important',
-//     display: 'flex'
-// }).toString();
-
-// const formControlClass = css({
-//   minWidth: '100px !important',
-//     marginRight: '15px !important',
-//     flexGrow: 1
-// }).toString();
-
-// const formEmptyControlClass = css({
-//   flexGrow: '6 !important'
-// }).toString();
-
-// const textFieldClass = css({
-//   marginTop: '3px !important'
-// }).toString();
-
-// const buttonClass = css({
-//   margin: theme.spacing.unit + ' !important'
-// }).toString();
-
-// const leftIconClass = css({
-//   marginRight: theme.spacing.unit + ' !important'
-// }).toString();
-
-// const tableClass = css({
-//   minWidth: '700px !important'
-// }).toString();
-
-// const tableContainerClass = css({
-//   overflowX: 'auto',
-//   '&::-webkit-scrollbar': {
-//     position: 'absolute',
-//     height: 10,
-//     marginLeft: '-10px',
-//     },
-//   '&::-webkit-scrollbar-track': {
-//     backgroundColor: '#CFD8DC', 
-//     },
-//   '&::-webkit-scrollbar-thumb': {
-//     height: '30px',
-//     backgroundColor: '#78909C',
-//     backgroundClip: 'content-box',
-//     borderColor: 'transparent',
-//     borderStyle: 'solid',
-//     borderWidth: '1px 1px',
-//     }
-// }).toString();
-
-// const tableRowClass = css({
-//   height: '2em !important'
-// }).toString();
-
-// const tableCellClass = css({
-//   height: '1em !important',
-//   padding: '0px !important',
-//   cursor: 'pointer'
-// }).toString();
-
-
-// const actButtonClass = css({
-//     margin: '5px !important',
-//     height: '24px !important',
-//     minHeight: '24px !important',
-//     width: '24px !important',
-// }).toString();
-
-// const toolIconClass = css({
-//   height: '16px !important',
-// }).toString();
-
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -369,7 +272,7 @@ class ClientConfSetting extends Component {
   }
 
   render() {
-
+    const { classes } = this.props;
     const { ClientConfSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientConfSettingProps.listParam.rowsPerPage - ClientConfSettingProps.listData.length;
@@ -383,11 +286,7 @@ class ClientConfSetting extends Component {
     const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
     const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientConfSettingProps.defaultListParam.orderDir;
     const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientConfSettingProps.defaultListParam.orderColumn;
-
-
-
-    console.log('>>>> props : ', this.props);
-
+    
     return (
       <div>
         <GrPageHeader path={this.props.location.pathname} />
@@ -415,7 +314,8 @@ class ClientConfSetting extends Component {
                 >
                   <Search />
                   조회
-                </Button>                
+                </Button>
+
               </Grid>
             </Grid>
 
@@ -445,11 +345,11 @@ class ClientConfSetting extends Component {
                 onRequestSort={this.handleRequestSort}
               />
 
-              <TableBody className="grTempBackground">
+              <TableBody>
                 {listData.map(n => {
                   return (
-                    <TableRow
-                      className={this.props.classes.grTableRow}
+                    <TableRow 
+                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.objId)}
                       tabIndex={-1}
@@ -475,13 +375,13 @@ class ClientConfSetting extends Component {
                         <Button 
                           color="secondary" 
                           size="small" 
-                          style={{color:'darkgray',padding:'0px',minWidth:'0px',minHeight:'0px'}}
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.objId)}>
                           <BuildIcon />
                         </Button>
 
                         <Button color="secondary" size="small" 
-                        style={{color:'darkgray',padding:'0px',minWidth:'0px',minHeight:'0px'}}
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.objId)}>
                           <DeleteIcon />
                         </Button>                        
@@ -537,4 +437,7 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ClientConfSetting));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSetting));
+
+
+

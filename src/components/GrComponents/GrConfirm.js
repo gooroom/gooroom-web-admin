@@ -6,9 +6,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as grConfirmActions from 'modules/GrConfirmModule';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from "glamor";
-
 import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';

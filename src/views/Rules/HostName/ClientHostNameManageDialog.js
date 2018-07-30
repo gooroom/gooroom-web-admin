@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { css } from "glamor";
-
-import { withStyles } from '@material-ui/core/styles';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -21,60 +18,9 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import FormLabel from '@material-ui/core/FormLabel';
-import Grid from '@material-ui/core/Grid';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
-import Radio from '@material-ui/core/Radio';
-
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const styles = theme => ({
-    root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-  });
-
-const containerClass = css({
-    margin: "0px 30px !important",
-    minHeight: 300,
-    minWidth: 500
-}).toString();
-
-const fullWidthClass = css({
-    width: "100%"
-}).toString();
-
-const keyCreateBtnClass = css({
-    paddingTop: 24 + " !important"
-}).toString();  
-
-const labelClass = css({
-    height: "25px",
-    marginTop: "10px"
-}).toString();
-
-const itemRowClass = css({
-    marginTop: "10px !important"
-}).toString();
-
-const bullet = css({
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  }).toString();
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -172,14 +118,14 @@ class ClientHostNameManageDialog extends Component {
     }
 
     render() {
-
+        const { classes } = this.props;
         const { ClientHostNameProps } = this.props;
         const { dialogType, editingItem } = ClientHostNameProps;
 
         const editingViewItem = editingItem;
 
         let title = "";
-        const bull = <span className={bullet}>•</span>;
+        const bull = <span className={classes.bullet}>•</span>;
 
         if(dialogType === ClientHostNameManageDialog.TYPE_ADD) {
             title = "Hosts정책 등록";
@@ -192,20 +138,20 @@ class ClientHostNameManageDialog extends Component {
         return (
             <Dialog open={ClientHostNameProps.dialogOpen}>
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={containerClass}>
+                <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <TextField
                         label="이름"
                         value={(editingViewItem) ? editingViewItem.objNm : ''}
                         onChange={this.handleValueChange("objNm")}
-                        className={fullWidthClass}
+                        className={classes.dialogContainer}
                         disabled={(dialogType === ClientHostNameManageDialog.TYPE_VIEW)}
                     />
                     <TextField
                         label="설명"
                         value={(editingViewItem) ? editingViewItem.comment : ''}
                         onChange={this.handleValueChange("comment")}
-                        className={classNames(fullWidthClass, itemRowClass)}
+                        className={classNames(classes.dialogContainer, classes.dialogItemRow)}
                         disabled={(dialogType === ClientHostNameManageDialog.TYPE_VIEW)}
                     />
                     {(dialogType === ClientHostNameManageDialog.TYPE_VIEW) &&
@@ -214,7 +160,7 @@ class ClientHostNameManageDialog extends Component {
                                 label="Hosts 정보"
                                 multiline
                                 value={(editingViewItem.hosts) ? editingViewItem.hosts : ''}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.dialogContainer, classes.dialogItemRow)}
                                 disabled
                             />
                         </div>                        
@@ -226,7 +172,7 @@ class ClientHostNameManageDialog extends Component {
                                 multiline
                                 value={(editingViewItem.hosts) ? editingViewItem.hosts : ''}
                                 onChange={this.handleValueChange("hosts")}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.dialogContainer, classes.dialogItemRow)}
                             />
                         </div>
                     }
@@ -257,5 +203,5 @@ const mapDispatchToProps = (dispatch) => ({
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(ClientHostNameManageDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientHostNameManageDialog));
 

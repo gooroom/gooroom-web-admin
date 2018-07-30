@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { css } from "glamor";
-
-import { grLayout } from "templates/default/GrLayout";
-import { grColor } from "templates/default/GrColors";
-
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import Dashboard from "containers/Dashboard/";
@@ -28,27 +23,11 @@ import PackageManage from 'views/Package/PackageManage';
 import DeptManage from "views/User/DeptManage";
 import UserManage from "views/User/UserManage";
 
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 import ComponentTests from "views/Test/ComponentTests";
 
-
-const rootClass = css({
-  transition: "left 0.25s, right 0.25s, width 0.25s",
-  position: "relative",
-  flexWrap: "wrap",
-  overflowX: "hidden",
-  overflowY: "auto",
-  marginTop: 0,
-  height:
-    "calc(100vh - " +
-    grLayout.headerHeight +
-    " - " +
-    grLayout.breadcrumbHeight +
-    " - " +
-    grLayout.footerHeight +
-    ")",
-}).toString();
 
 class GrRouters extends Component {
   constructor(props) {
@@ -56,9 +35,10 @@ class GrRouters extends Component {
   }
 
   render() {
+    const { classes } = this.props;
 
     return (
-      <div className={rootClass}>
+      <div className={classes.menuRoot}>
         <Switch>
           <Route exact path="/" name="Home" component={Dashboard} />
           <Route path="/dashboard" name="Dashboard" component={Dashboard} />
@@ -138,4 +118,5 @@ class GrRouters extends Component {
   }
 }
 
-export default GrRouters;
+export default withStyles(GrCommonStyle)(GrRouters);
+

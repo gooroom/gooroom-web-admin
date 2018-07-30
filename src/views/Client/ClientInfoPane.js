@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from "glamor";
 
 import { grRequestPromise } from "components/GrUtils/GrRequester";
 
@@ -15,29 +13,6 @@ import Table, {
 
 import Button from "@material-ui/core/Button";
 import Settings from "@material-ui/icons/Settings";
-
-
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const tableClass = css({
-  minWidth: 500
-}).toString();
-
-const tableLabelCellClass = css({
-  height: "1em !important",
-  padding: "5px !important"
-}).toString();
-
-const tableContentCellClass = css({
-  height: "1em !important",
-  padding: "5px !important",
-  fontWeight: "bolder"
-}).toString();
-
-const iconClass = css({
-  marginLeft: "0.5em",
-}).toString();
 
 
 class ClientInfoPane extends Component {
@@ -83,48 +58,48 @@ class ClientInfoPane extends Component {
 
     return (
 
-      <Table className={tableClass}>
+      <Table >
       <TableBody>
         <TableRow hover>
-          <TableCell className={tableLabelCellClass}>단말아이디</TableCell>
-          <TableCell className={tableContentCellClass}>
+          <TableCell>단말아이디</TableCell>
+          <TableCell >
             {this.state.clientId}
           </TableCell>
-          <TableCell className={tableLabelCellClass}>단말상태</TableCell>
-          <TableCell className={tableContentCellClass}>
+          <TableCell>단말상태</TableCell>
+          <TableCell >
             {this.state.clientStatus}
           </TableCell>
         </TableRow>
         <TableRow hover>
-          <TableCell className={tableLabelCellClass}>단말이름</TableCell>
-          <TableCell className={tableContentCellClass}>
+          <TableCell>단말이름</TableCell>
+          <TableCell >
             {this.state.clientName}
           </TableCell>
-          <TableCell className={tableLabelCellClass}>단말그룹</TableCell>
-          <TableCell className={tableContentCellClass}>
+          <TableCell>단말그룹</TableCell>
+          <TableCell >
             {this.state.clientGroupName}
             <Settings className={iconClass} />
           </TableCell>
         </TableRow>
         <TableRow hover>
-          <TableCell className={tableLabelCellClass}>제품번호</TableCell>
-          <TableCell colSpan={3} className={tableContentCellClass}>
+          <TableCell>제품번호</TableCell>
+          <TableCell colSpan={3} >
             {this.state.prodNo}
           </TableCell>
         </TableRow>
         <TableRow hover>
-          <TableCell className={tableLabelCellClass}>단말아이피</TableCell>
-          <TableCell colSpan={3} className={tableContentCellClass}>
+          <TableCell>단말아이피</TableCell>
+          <TableCell colSpan={3} >
             {this.state.clientIp}
           </TableCell>
         </TableRow>
         <TableRow hover>
-          <TableCell className={tableLabelCellClass}>등록일</TableCell>
-          <TableCell className={tableContentCellClass}>
+          <TableCell>등록일</TableCell>
+          <TableCell >
             {this.state.regDate}
           </TableCell>
-          <TableCell className={tableLabelCellClass}>수정일</TableCell>
-          <TableCell className={tableContentCellClass}>
+          <TableCell>수정일</TableCell>
+          <TableCell >
             {this.state.modDate}
           </TableCell>
         </TableRow>

@@ -9,16 +9,8 @@ import * as UserActions from 'modules/UserModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from "glamor";
-
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject, arrayContainsArray, getListParam, getListData, getViewItem, getMergedArray } from 'components/GrUtils/GrCommonUtils';
-
-
-import { grLayout } from "templates/default/GrLayout";
-import { grColor } from "templates/default/GrColors";
-import { grRequestPromise } from "components/GrUtils/GrRequester";
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -26,6 +18,8 @@ import GrConfirm from 'components/GrComponents/GrConfirm';
 import UserManageDialog from "views/User/UserManageDialog";
 import UserManageInform from "views/User/UserManageInform";
 import GrPane from "containers/GrContent/GrPane";
+
+import Grid from '@material-ui/core/Grid';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -37,7 +31,6 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
-import FormControl from "@material-ui/core/FormControl";
 
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
@@ -45,92 +38,8 @@ import AddIcon from "@material-ui/icons/Add";
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-//
-//  ## Theme override ########## ########## ########## ########## ########## 
-//
-const theme = createMuiTheme();
-
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const formClass = css({
-  marginBottom: "6px !important",
-    display: "flex"
-}).toString();
-
-const formControlClass = css({
-  minWidth: "100px !important",
-    marginRight: "15px !important",
-    flexGrow: 1
-}).toString();
-
-const formEmptyControlClass = css({
-  flexGrow: "6 !important"
-}).toString();
-
-const textFieldClass = css({
-  marginTop: "3px !important"
-}).toString();
-
-const buttonClass = css({
-  margin: theme.spacing.unit + " !important"
-}).toString();
-
-const leftIconClass = css({
-  marginRight: theme.spacing.unit + " !important"
-}).toString();
-
-const tableClass = css({
-  minWidth: "700px !important"
-}).toString();
-
-const tableHeadCellClass = css({
-  whiteSpace: "nowrap",
-  padding: "0px !important"
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: "auto",
-  "&::-webkit-scrollbar": {
-    position: "absolute",
-    height: 10,
-    marginLeft: "-10px",
-    },
-  "&::-webkit-scrollbar-track": {
-    backgroundColor: "#CFD8DC", 
-    },
-  "&::-webkit-scrollbar-thumb": {
-    height: "30px",
-    backgroundColor: "#78909C",
-    backgroundClip: "content-box",
-    borderColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "1px 1px",
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: "2em !important"
-}).toString();
-
-const tableCellClass = css({
-  height: "1em !important",
-  padding: "0px !important",
-  cursor: "pointer"
-}).toString();
-
-
-const actButtonClass = css({
-  margin: '5px !important',
-  height: '24px !important',
-  minHeight: '24px !important',
-  width: '24px !important',
-}).toString();
-
-const toolIconClass = css({
-height: '16px !important',
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
@@ -166,7 +75,7 @@ class UserManageHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" className={tableHeadCellClass} >
+          <TableCell padding="checkbox" >
             <Checkbox
               indeterminate={checkSelection === 50}
               checked={checkSelection === 100}
@@ -176,7 +85,6 @@ class UserManageHead extends Component {
           {UserManageHead.columnData.map(column => {
             return (
               <TableCell
-                className={tableCellClass}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -321,8 +229,6 @@ class UserManage extends Component {
       return element.userId == id;
     });
 
-    console.log('selectedItem : ', selectedItem);
-
     UserActions.showDialog({
       compId: menuCompId,
       selectedItem: {
@@ -433,7 +339,7 @@ class UserManage extends Component {
   }
   
   render() {
-
+    const { classes } = this.props;
     const { UserProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;//UserProps.listParam.rowsPerPage - UserProps.listData.length;
@@ -450,44 +356,47 @@ class UserManage extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
-          <form className={formClass}>
-            <FormControl className={formControlClass} autoComplete="off">
-              <TextField
-                id="keyword"
-                label="검색어"
-                className={textFieldClass}
-                value={this.state.keyword}
-                onChange={this.handleKeywordChange("keyword")}
-                margin="dense"
-              />
-            </FormControl>
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant="raised"
-              color="primary"
-              onClick={() => this.handleSelectBtnClick() }
-            >
-              <Search className={leftIconClass} />
-              조회
-            </Button>
+          <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
+            <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
+              <Grid item xs={6}>
+                <TextField
+                  id="keyword"
+                  label="검색어"
+                  value={this.state.keyword}
+                  onChange={this.handleKeywordChange("keyword")}
+                  margin="dense"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => this.handleSelectBtnClick() }
+                >
+                  <Search />
+                  조회
+                </Button>
+              </Grid>
+            </Grid>
 
-            <div className={formEmptyControlClass} />
+            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  this.handleCreateButton();
+                }}
+              >
+                <AddIcon />
+                등록
+              </Button>
+            </Grid>
+          </Grid>
 
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant="raised"
-              color="secondary"
-              onClick={() => {
-                this.handleCreateButton();
-              }}
-            >
-              <AddIcon className={leftIconClass} />
-              등록
-            </Button>
-          </form>
-
-          <div className={tableContainerClass}>
-            <Table className={tableClass}>
+          <div>
+            <Table>
               <UserManageHead
                 onSelectAllClick={this.handleSelectAllClick}
                 orderDir={orderDir}
@@ -502,7 +411,7 @@ class UserManage extends Component {
                   const isSelected = this.isSelected(n.userId);
                   return (
                     <TableRow
-                      className={tableRowClass}
+                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.userId)}
                       role="checkbox"
@@ -510,31 +419,42 @@ class UserManage extends Component {
                       key={n.userId}
                       selected={isSelected}
                     >
-                      <TableCell padding="checkbox" className={tableCellClass} >
-                        <Checkbox checked={isSelected} className={tableCellClass} />
+                      <TableCell padding="checkbox"  >
+                        <Checkbox checked={isSelected} style={{height: "inherit"}} />
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell >
                         {n.userId}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell >
                         {n.userNm}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell >
                         {n.status}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell >
                         {formatDateToSimple(n.lastLoginDt, 'YYYY-MM-DD')}                    
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell >
                         {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}                    
                       </TableCell>
-                      <TableCell className={tableCellClass}>
-                        <Button variant='fab' color='secondary' aria-label='edit' className={actButtonClass} onClick={event => this.handleEditClick(event, n.userId)}>
-                          <BuildIcon className={toolIconClass} />
+                      <TableCell >
+
+                        <Button 
+                          color="secondary" 
+                          size="small" 
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleEditClick(event, n.userId)}>
+                          <BuildIcon />
                         </Button>
-                        <Button variant='fab' color='secondary' aria-label='delete' className={actButtonClass} onClick={event => this.handleDeleteClick(event, n.userId)}>
-                          <DeleteIcon className={toolIconClass} />
+
+                        <Button 
+                          color="secondary" 
+                          size="small" 
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleDeleteClick(event, n.userId)}>
+                          <DeleteIcon />
                         </Button>
+
                       </TableCell>
                     </TableRow>
                   );
@@ -544,7 +464,6 @@ class UserManage extends Component {
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
                       colSpan={UserManageHead.columnData.length + 1}
-                      className={tableCellClass}
                     />
                   </TableRow>
                 )}
@@ -587,5 +506,5 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserManage);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserManage));
 

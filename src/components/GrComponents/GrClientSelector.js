@@ -4,41 +4,14 @@ import classNames from "classnames";
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from "glamor";
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 
-
-const groupDiv = css({
-  height: "100%",
-  width: "30%",
-  overflow: "auto"
-}).toString();
-
-const clientDiv = css({
-  height: "100%",
-  width: "70%",
-  overflow: "auto"
-}).toString();
-
-const selectItemList = css({
-  paddingTop: "0px !important",
-  paddingBottom: "0px !important"
-}).toString();
-
-const selectItem = css({
-  padding: "5px 0px 5px 0px !important"
-}).toString();
-
-const selectCheck = css({
-  width: "24px !important",
-  height: "24px !important"
-}).toString();
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 class GrClientSelector extends Component {
@@ -143,34 +116,30 @@ class GrClientSelector extends Component {
 
   // RENDER...
   render() {
-    const {groupList, clientList} = this.state;
-    const {selectorType, height} = this.props;
+    const { classes } = this.props;
+    const { groupList, clientList } = this.state;
+    const { selectorType, height } = this.props;
 
-    const temp = {
-      height: height,
-      border: '1px solid gray',
-      display: 'flex'
-    }
     return (
-      <div style={temp}>
-        <div className={groupDiv}>
-        <List className={selectItemList}>
+      <div className={classes.csRoot} style={{height: height}}>
+        <div className={classes.csGroupArea}>
+        <List className={classes.csSelectItemList}>
           {groupList.map(value => (
-            <ListItem key={value.grpId} className={selectItem} dense button onClick={() => this.handleClickGroup(value)}>
+            <ListItem key={value.grpId} className={classes.csSelectItem} dense button onClick={() => this.handleClickGroup(value)}>
               {(selectorType === 'multiple') ?
-                <Checkbox className={selectCheck} onChange={this.handleGroupCheckToggle(value)} /> : ''
+                <Checkbox className={classes.csSelectCheck} onChange={this.handleGroupCheckToggle(value)} /> : ''
               }
               <ListItemText primary={value.grpNm} />
             </ListItem>
           ))}
         </List>
         </div>
-        <div className={clientDiv}>
-          <List className={selectItemList}>
+        <div className={classes.csClientArea}>
+          <List className={classes.csSelectItemList}>
             {clientList.map(value => (
-              <ListItem key={value.clientId} className={selectItem} dense button onClick={() => this.handleClickClient(value)}>
+              <ListItem key={value.clientId} className={classes.csSelectItem} dense button onClick={() => this.handleClickClient(value)}>
               {(selectorType === 'multiple') ?
-                <Checkbox className={selectCheck} onChange={this.handleClientCheckToggle(value)} /> : ''
+                <Checkbox className={classes.csSelectCheck} onChange={this.handleClientCheckToggle(value)} /> : ''
               }
                 <ListItemText primary={value.clientName} />
               </ListItem>
@@ -182,6 +151,5 @@ class GrClientSelector extends Component {
   }
 }
 
-export default GrClientSelector;
-
+export default withStyles(GrCommonStyle)(GrClientSelector);
 

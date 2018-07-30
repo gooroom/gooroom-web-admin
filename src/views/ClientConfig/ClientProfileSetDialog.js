@@ -7,8 +7,6 @@ import { connect } from 'react-redux';
 import * as ClientProfileSetActions from 'modules/ClientProfileSetModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { css } from "glamor";
-
 import GrClientSelector from 'components/GrComponents/GrClientSelector';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
@@ -26,28 +24,8 @@ import TextField from "@material-ui/core/TextField";
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const containerClass = css({
-    margin: "0px 30px !important",
-    minHeight: 300,
-    minWidth: 500
-}).toString();
-
-const fullWidthClass = css({
-    width: "100%"
-}).toString();
-
-const labelClass = css({
-    height: "25px",
-    marginTop: "10px"
-}).toString();
-
-const itemRowClass = css({
-    marginTop: "10px !important"
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -166,6 +144,7 @@ class ClientProfileSetDialog extends Component {
     
 
     render() {
+        const { classes } = this.props;
 
         const { ClientProfileSetProps } = this.props;
         const { dialogType } = ClientProfileSetProps;
@@ -184,14 +163,14 @@ class ClientProfileSetDialog extends Component {
         return (
             <Dialog open={ClientProfileSetProps.dialogOpen}>
                 <DialogTitle >{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={containerClass}>
+                <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <TextField  
                         id="profileNm"
                         label="프로파일 이름"
                         value={(ClientProfileSetProps.selectedItem) ? ClientProfileSetProps.selectedItem.profileNm : ''}
                         onChange={this.handleChange("profileNm")}
-                        className={classNames(fullWidthClass)}
+                        className={classNames(classes.fullWidthfullWidth)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     <TextField
@@ -199,11 +178,11 @@ class ClientProfileSetDialog extends Component {
                         label="프로파일 설명"
                         value={(ClientProfileSetProps.selectedItem) ? ClientProfileSetProps.selectedItem.profileCmt : ''}
                         onChange={this.handleChange("profileCmt")}
-                        className={classNames(fullWidthClass, itemRowClass)}
+                        className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                        <div className={classNames(fullWidthClass, itemRowClass)}>
+                        <div className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}>
                             <FormLabel>기타 패키지 처리방식</FormLabel>
                             <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={ClientProfileSetProps.selectedItem.isRemoval} row>
                                 <FormControlLabel value="true" control={<Radio />} label="삭제함" />
@@ -217,7 +196,7 @@ class ClientProfileSetDialog extends Component {
                             label="레퍼런스 단말"
                             value={(ClientProfileSetProps.selectedItem) ? ClientProfileSetProps.selectedItem.clientNm + ' (' + ClientProfileSetProps.selectedItem.clientId + ')' : ''}
                             onChange={this.handleChange("clientId")}
-                            className={classNames(fullWidthClass, itemRowClass)}
+                            className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
                             disabled
                         />
                     }
@@ -229,9 +208,9 @@ class ClientProfileSetDialog extends Component {
                                 value={(ClientProfileSetProps.selectedItem && ClientProfileSetProps.selectedItem.clientNm) ? ClientProfileSetProps.selectedItem.clientNm + ' (' + ClientProfileSetProps.selectedItem.clientId + ')' : ''}
                                 placeholder="아래 목록에서 단말을 선택하세요."
                                 onChange={this.handleChange("clientId")}
-                                className={classNames(fullWidthClass, itemRowClass)}
+                                className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
                             />
-                            <div className={itemRowClass}>
+                            <div className={classes.profileItemRow}>
                                 <GrClientSelector selectorType='single' 
                                     handleClientSelect={this.handleSelectClient} 
                                     height='220' />
@@ -240,7 +219,7 @@ class ClientProfileSetDialog extends Component {
                     }
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
                         <div>
-                            <div className={labelClass}>
+                            <div className={classes.profileLabel}>
                                 <InputLabel >대상 단말</InputLabel>
                             </div>
                             <GrClientSelector selectorType='multiple' 
@@ -278,5 +257,5 @@ const mapDispatchToProps = (dispatch) => ({
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientProfileSetDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientProfileSetDialog));
 
