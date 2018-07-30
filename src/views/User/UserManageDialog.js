@@ -14,9 +14,6 @@ import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import { withTheme } from "@material-ui/core/styles";
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
