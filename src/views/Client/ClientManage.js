@@ -18,6 +18,8 @@ import { grRequestPromise } from "components/GrUtils/GrRequester";
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
 
+import Grid from '@material-ui/core/Grid';
+
 import ClientDialog from "./ClientDialog";
 
 import Table from '@material-ui/core/Table';
@@ -30,10 +32,15 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
+import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import DescIcon from '@material-ui/icons/Description';
+import Search from '@material-ui/icons/Search';
+import AddIcon from '@material-ui/icons/Add';
+import BuildIcon from '@material-ui/icons/Build';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import Checkbox from "@material-ui/core/Checkbox";
 
@@ -44,6 +51,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 // option components
 import ClientGroupSelect from 'views/Options/ClientGroupSelect';
 import ClientStatusSelect from 'views/Options/ClientStatusSelect';
+
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -180,7 +190,7 @@ class ClientManageHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" className={tableHeadCellClass} >
+          <TableCell padding="checkbox" >
             <Checkbox
               indeterminate={checkSelection === 50}
               checked={checkSelection === 100}
@@ -190,7 +200,6 @@ class ClientManageHead extends Component {
           {ClientManageHead.columnData.map(column => {
             return (
               <TableCell
-                className={tableCellClass}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -371,7 +380,7 @@ class ClientManage extends Component {
   };
 
   render() {
-
+    const { classes } = this.props;
     //const { data, order, orderBy, selected, rowsPerPage, page, rowsTotal, rowsFiltered } = this.state;
     const { ClientManageProps } = this.props;
     //const emptyRows = rowsPerPage - data.length;
@@ -384,44 +393,67 @@ class ClientManage extends Component {
         <GrPane>
 
           {/* data option area */}
-          <form className={formClass}>
-            <FormControl className={formControlClass} autoComplete="off">
-              <InputLabel htmlFor="client-status">단말상태</InputLabel>
-              <ClientStatusSelect
-                onChangeSelect={this.handleChangeClientStatusSelect}
-              />
-            </FormControl>
+          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
-            <FormControl className={formControlClass} autoComplete="off">
-              <InputLabel htmlFor="client-group">단말그룹</InputLabel>
-              <ClientGroupSelect  
-                onChangeSelect={this.handleChangeGroupSelect}
-              />
-            </FormControl>
+              <Grid item xs={3} >
+                <FormControl fullWidth="true">
+                  <InputLabel htmlFor="client-status">단말상태</InputLabel>
+                  <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+                </FormControl>
+              </Grid>
 
-            <FormControl className={formControlClass} autoComplete="off">
-              <TextField
-                id='keyword'
-                label='검색어'
-                className={textFieldClass}
-                value={ClientManageProps.listParam.keyword}
-                onChange={this.handleKeywordChange('keyword')}
-                margin='dense'
-              />
-            </FormControl>
 
-            <div className={formEmptyControlClass} />
+              <Grid item xs={3} >
+                <FormControl fullWidth="true">
+                  <InputLabel htmlFor="client-status">단말그룹</InputLabel>
+                  <ClientGroupSelect onChangeSelect={this.handleChangeGroupSelect} />
+                </FormControl>
+              </Grid>
 
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant="raised"
-              color="primary"
-              onClick={() => this.handleSelectBtnClick()}
-            >
-              <SearchIcon className={leftIconClass} />
-              조회
-            </Button>
-          </form>
+
+              <Grid item xs={3} >
+                <FormControl fullWidth="true">
+                <TextField
+                  id='keyword'
+                  label='검색어'
+                  className={textFieldClass}
+                  value={ClientManageProps.listParam.keyword}
+                  onChange={this.handleKeywordChange('keyword')}
+                />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={3} >
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={ () => this.handleSelectBtnClick() }
+                >
+                  <Search />
+                  조회
+                </Button>
+
+              </Grid>
+            </Grid>
+
+            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  this.handleCreateButton();
+                }}
+              >
+                <AddIcon />
+                등록
+              </Button>
+            </Grid>
+          </Grid>            
+
+          <div style={{margin: "20px 0px"}}/>
 
             <div className={tableContainerClass}>
               <Table className={tableClass}>
@@ -535,5 +567,5 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientManage);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientManage));
 

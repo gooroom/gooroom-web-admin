@@ -11,9 +11,6 @@ import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from 'glamor';
-
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
@@ -33,38 +30,8 @@ import ClientGroupInform from 'views/ClientGroup/ClientGroupInform';
 
 import Card from "@material-ui/core/Card";
 
-
-//
-//  ## Theme override ########## ########## ########## ########## ########## 
-//
-const theme = createMuiTheme();
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const formClass = css({
-  marginBottom: "6px !important",
-    display: "flex"
-}).toString();
-
-const formControlClass = css({
-  minWidth: "33px !important",
-  marginRight: "15px !important",
-  flexGrow: 1
-}).toString();
-
-const formEmptyControlClass = css({
-  flexGrow: "6 !important"
-}).toString();
-
-const buttonClass = css({
-  height: "min-content",
-  padding: "0px !important"
-}).toString();
-
-const leftIconClass = css({
-  marginRight: theme.spacing.unit + " !important"
-}).toString();
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -132,7 +99,7 @@ class ClientMasterManage extends Component {
   };
 
   render() {
-
+    const { classes } = this.props;
     const { ClientMasterManageProps, ClientGroupCompProps, ClientManageCompProps } = this.props;
     const emptyRows = 0;// = ClientManageCompProps.listParam.rowsPerPage - ClientManageCompProps.listData.length;
 
@@ -144,41 +111,32 @@ class ClientMasterManage extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
-          <form className={formClass}>
-          <Button
-            className={classNames(buttonClass, formControlClass)}
-            variant="outlined" color="primary"
-            onClick={() => this.handleSelectBtnClick({page: 0})}
-          >그룹등록</Button>
-          <Button
-            className={classNames(buttonClass, formControlClass)}
-            variant="outlined" color="primary"
-            onClick={() => this.handleSelectBtnClick({page: 0})}
-          >그룹삭제</Button>
-          <Button
-            className={classNames(buttonClass, formControlClass)}
-            variant="outlined" color="primary"
-            onClick={() => this.handleSelectBtnClick({page: 0})}
-          >그룹정책변경</Button>
+          {/* data option area */}
+          <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
+            <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
+              <Grid item xs={6}>
 
-          <div className={formEmptyControlClass} />
+              <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹등록</Button>
+              <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹삭제</Button>
+              <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹정책변경</Button>
 
-          <Button
-            className={classNames(buttonClass, formControlClass)}
-            variant="outlined" color="primary"
-            onClick={() => this.handleSelectBtnClick({page: 0})}
-          ><GetAppIcon className={leftIconClass} />조회</Button>
-          <Button
-            className={classNames(buttonClass, formControlClass)}
-            variant="outlined" color="primary"
-            onClick={() => this.handleSelectBtnClick({page: 0})}
-          ><SearchIcon className={leftIconClass} />조회</Button>
-          <Button
-            className={classNames(buttonClass, formControlClass)}
-            variant="outlined" color="primary"
-            onClick={() => this.handleSelectBtnClick({page: 0})}
-          ><SearchIcon className={leftIconClass} />조회</Button>
-          </form>
+              </Grid>
+
+              <Grid item xs={6}>
+
+              <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
+
+              </Grid>
+            </Grid>
+
+            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
+
+            <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
+            <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
+
+            </Grid>
+          </Grid>
+
           <Grid container spacing={24} style={{border:"0px solid red",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
               <Card style={{minWidth:"240px",boxShadow:"2px 2px 8px blue"}}>
@@ -199,12 +157,12 @@ class ClientMasterManage extends Component {
           <Grid container spacing={24} style={{marginTop:"0px",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
               {(isGroupInformOpen) &&
-              <GetAppIcon className={leftIconClass} />
+              <GetAppIcon />
               }
             </Grid>
             <Grid item xs style={{textAlign:"right"}}>
               {(ClientManageCompProps.informOpen) &&
-              <GetAppIcon className={leftIconClass} />
+              <GetAppIcon />
               }
             </Grid>
           </Grid>
@@ -242,5 +200,5 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientMasterManage);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientMasterManage));
 
