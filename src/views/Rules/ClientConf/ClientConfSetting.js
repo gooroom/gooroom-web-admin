@@ -292,7 +292,6 @@ class ClientConfSetting extends Component {
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
           {/* data option area */}
-
           <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
             <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
               <Grid item xs={6}>
@@ -332,8 +331,7 @@ class ClientConfSetting extends Component {
                 등록
               </Button>
             </Grid>
-          </Grid>
-            
+          </Grid>            
 
           {/* data area */}
           <div>
