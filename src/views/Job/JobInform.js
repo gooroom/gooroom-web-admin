@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-//import classNames from "classnames";
+import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -8,78 +8,24 @@ import { connect } from 'react-redux';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
-import { withStyles } from '@material-ui/core/styles';
-
 import * as JobManageActions from 'modules/JobManageModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
-
-import classnames from 'classnames';
-
-import { css } from 'glamor';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import red from '@material-ui/core/colors/red';
-
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-const styles = theme => ({
-  card: {
-    maxWidth: "100%",
-    marginLeft: "20px",
-    marginRight: "20px",
-  }
-});
-
-const tableClass = css({
-  minWidth: "100px !important"
-}).toString();
-
-const tableHeadCellClass = css({
-  whiteSpace: "nowrap",
-  padding: "0px !important"
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: "auto",
-  "&::-webkit-scrollbar": {
-    position: "absolute",
-    height: 10,
-    marginLeft: "-10px",
-    },
-  "&::-webkit-scrollbar-track": {
-    backgroundColor: "#CFD8DC", 
-    },
-  "&::-webkit-scrollbar-thumb": {
-    height: "30px",
-    backgroundColor: "#78909C",
-    backgroundClip: "content-box",
-    borderColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "1px 1px",
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: "2em !important"
-}).toString();
-
-const tableCellClass = css({
-  height: "1em !important",
-  padding: "0px !important",
-  cursor: "pointer"
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -98,6 +44,7 @@ class JobTargetListHead extends Component {
   ];
 
   render() {
+    const { classes } = this.props;
     const {
       orderDir,
       orderColumn,
@@ -109,7 +56,7 @@ class JobTargetListHead extends Component {
           {JobTargetListHead.columnData.map(column => {
             return (
               <TableCell
-                className={tableCellClass}
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? "none" : "default"}
@@ -137,11 +84,6 @@ class JobTargetListHead extends Component {
 }
 
 
-
-
-
-
-
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
@@ -159,14 +101,14 @@ class JobInform extends Component {
   };
 
   render() {
-
-    const { classes, jobManageModule } = this.props;
+    const { classes } = this.props;
+    const { jobManageModule } = this.props;
 
     const emptyRows = jobManageModule.targetListParam.rowsPerPage - jobManageModule.targetListData.length;
 
     return (
       <div>
-        <Card className={classes.card} >
+        <Card >
           <CardHeader
             title={jobManageModule.selectedItem.jobName}
             subheader={jobManageModule.selectedItem.jobNo + ', ' + formatDateToSimple(jobManageModule.selectedItem.regDate, 'YYYY-MM-DD')}
@@ -181,30 +123,31 @@ class JobInform extends Component {
           </Grid>
           <Grid item xs={12} sm={7}>
           <CardContent>
-          <Table className={tableClass}>
+          <Table >
             <JobTargetListHead
-                orderDir={jobManageModule.targetListParam.orderDir}
-                orderColumn={jobManageModule.targetListParam.orderColumn}
-                onRequestSort={this.handleRequestSort}
+              classes={classes}
+              orderDir={jobManageModule.targetListParam.orderDir}
+              orderColumn={jobManageModule.targetListParam.orderColumn}
+              onRequestSort={this.handleRequestSort}
             />
             <TableBody>
               {jobManageModule.targetListData.map(n => {
                 return (
                   <TableRow
-                    className={tableRowClass}
+                    className={classes.grNormalTableRow}
                     hover
                     key={n.clientId}
                   >
-                    <TableCell className={tableCellClass}>
+                    <TableCell className={classes.grSmallAndClickCell}>
                       {n.clientId}
                     </TableCell>
-                    <TableCell className={tableCellClass}>
+                    <TableCell className={classes.grSmallAndClickCell}>
                       {n.jobStat}
                     </TableCell>
-                    <TableCell className={tableCellClass}>
+                    <TableCell className={classes.grSmallAndClickCell}>
                       {n.grpNm}
                     </TableCell>
-                    <TableCell className={tableCellClass}>
+                    <TableCell className={classes.grSmallAndClickCell}>
                       {n.isOn}
                     </TableCell>
                   </TableRow>
@@ -215,7 +158,7 @@ class JobInform extends Component {
                 <TableRow style={{ height: 32 * emptyRows }}>
                   <TableCell
                     colSpan={JobTargetListHead.columnData.length + 1}
-                    className={tableCellClass}
+                    className={classes.grSmallAndClickCell}
                   />
                 </TableRow>
               )}
@@ -247,5 +190,5 @@ const mapDispatchToProps = (dispatch) => ({
 
 });
 
-export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(JobInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(JobInform));
 

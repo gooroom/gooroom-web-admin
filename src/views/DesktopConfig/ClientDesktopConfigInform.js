@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -16,47 +15,13 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const componentClass = css({
-  marginTop: "20px !important"
-}).toString();
-
-const contentClass = css({
-  paddingTop: "0px !important"
-}).toString();
-
-const cardContainerClass = css({
-  padding: "10px !important"
-}).toString();
-
-
-const title = css({
-  marginBottom: 16,
-  fontSize: 14,
-}).toString();
-
-const card = css({
-  minWidth: 275,
-}).toString();
-
-const bullet = css({
-  display: 'inline-block',
-  margin: '0 2px',
-  transform: 'scale(0.8)',
-}).toString();
-
-const pos = css({
-  marginBottom: 12,
-}).toString();
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -67,20 +32,20 @@ class ClientDesktopConfigInform extends Component {
   // .................................................
 
   render() {
-
+    const { classes } = this.props;
     const { ClientHostNameProps } = this.props;
     const { selectedItem } = ClientHostNameProps;
-    const bull = <span className={bullet}>•</span>;
+    const bull = <span className={classes.bullet}>•</span>;
 
     return (
-      <div className={componentClass}>
+      <div>
       {(ClientHostNameProps.informOpen) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedItem) ? selectedItem.objNm : ''}
             subheader={selectedItem.objId + ', ' + formatDateToSimple(selectedItem.modDate, 'YYYY-MM-DD')}
           />
-          <CardContent className={contentClass}>
+          <CardContent >
             <Typography component="pre">
               "{selectedItem.comment}"
             </Typography>
@@ -114,24 +79,5 @@ const mapDispatchToProps = (dispatch) => ({
   ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientDesktopConfigInform);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientDesktopConfigInform));
 
-// export const createViewObject = (param) => {
-
-//   let hosts = '';
-  
-//   param.propList.forEach(function(e) {
-//     if(e.propNm == 'HOSTS') {
-//       hosts = e.propValue;
-//     }
-//   });
-
-//   return {
-//     objId: param.objId,
-//     objNm: param.objNm,
-//     comment: param.comment,
-//     modDate: param.modDate,
-//     confInfo: param.confInfo
-//   };
-
-// };

@@ -13,8 +13,6 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { css } from 'glamor';
-
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 import Table from '@material-ui/core/Table';
@@ -27,52 +25,8 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import Checkbox from "@material-ui/core/Checkbox";
 
-//
-//  ## Theme override ########## ########## ########## ########## ########## 
-//
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const tableClass = css({
-  minWidth: "100% !important"
-}).toString();
-
-const tableHeadCellClass = css({
-  whiteSpace: "nowrap",
-  padding: "0px !important"
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: "auto",
-  "&::-webkit-scrollbar": {
-    position: "absolute",
-    height: 10,
-    marginLeft: "-10px",
-    },
-  "&::-webkit-scrollbar-track": {
-    backgroundColor: "#CFD8DC", 
-    },
-  "&::-webkit-scrollbar-thumb": {
-    height: "30px",
-    backgroundColor: "#78909C",
-    backgroundClip: "content-box",
-    borderColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "1px 1px",
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: "2em !important"
-}).toString();
-
-const tableCellClass = css({
-  height: "1em !important",
-  padding: "0px !important",
-  cursor: "pointer"
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -89,6 +43,7 @@ class ClientGroupCompHead extends Component {
   ];
 
   render() {
+    const { classes } = this.props;
     const { 
       onSelectAllClick,
       orderDir,
@@ -105,7 +60,7 @@ class ClientGroupCompHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" className={tableHeadCellClass} >
+          <TableCell padding="checkbox" className={classes.grSmallAndHeaderCell} >
             <Checkbox
               indeterminate={checkSelection === 50}
               checked={checkSelection === 100}
@@ -115,7 +70,7 @@ class ClientGroupCompHead extends Component {
           {ClientGroupCompHead.columnData.map(column => {
             return (
               <TableCell
-                className={tableCellClass}
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -293,16 +248,17 @@ class ClientGroupComp extends Component {
   // .................................................
 
   render() {
-
+    const { classes } = this.props;
     const { ClientGroupCompProps, compId } = this.props;
     const emptyRows = 0;// = ClientGroupCompProps.listParam.rowsPerPage - ClientGroupCompProps.listData.length;
     const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam, [compId + '__selected'] : compSelected } = ClientGroupCompProps;
 
     return (
 
-      <div className={tableContainerClass}>
-        <Table className={tableClass}>
+      <div>
+        <Table>
           <ClientGroupCompHead
+            classes={classes}
             onSelectAllClick={this.handleSelectAllClick}
             orderDir={compListParam && compListParam.orderDir}
             orderColumn={compListParam && compListParam.orderColumn}
@@ -315,7 +271,7 @@ class ClientGroupComp extends Component {
             const isSelected = this.isSelected(n.grpId);
             return (
               <TableRow
-                className={tableRowClass}
+                className={classes.grNormalTableRow}
                 hover
                 onClick={event => this.handleRowClick(event, n.grpId)}
                 role="checkbox"
@@ -323,13 +279,13 @@ class ClientGroupComp extends Component {
                 key={n.grpId}
                 selected={isSelected}
               >
-                <TableCell padding="checkbox" className={tableCellClass} >
-                  <Checkbox checked={isSelected} className={tableCellClass} />
+                <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
+                  <Checkbox checked={isSelected} className={classes.grObjInCell} />
                 </TableCell>
-                <TableCell className={tableCellClass}>
+                <TableCell className={classes.grSmallAndClickCell}>
                   {n.grpNm}
                 </TableCell>
-                <TableCell className={tableCellClass}>
+                <TableCell className={classes.grSmallAndClickCell}>
                   {n.clientCount}
                 </TableCell>
               </TableRow>
@@ -340,7 +296,7 @@ class ClientGroupComp extends Component {
             <TableRow style={{ height: 32 * emptyRows }}>
               <TableCell
                 colSpan={ClientGroupCompHead.columnData.length + 1}
-                className={tableCellClass}
+                className={classes.grSmallAndClickCell}
               />
             </TableRow>
           )}
@@ -390,6 +346,6 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientGroupComp);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientGroupComp));
 
 

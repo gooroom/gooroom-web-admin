@@ -20,7 +20,6 @@ import ClientConfSettingInform from './ClientConfSettingInform';
 import GrPane from 'containers/GrContent/GrPane';
 
 import Grid from '@material-ui/core/Grid';
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';

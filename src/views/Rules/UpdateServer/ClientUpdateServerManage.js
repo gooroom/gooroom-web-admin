@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
-
-import { createMuiTheme } from '@material-ui/core/styles';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
@@ -22,6 +19,7 @@ import ClientUpdateServerManageDialog from './ClientUpdateServerManageDialog';
 import ClientUpdateServerManageInform from './ClientUpdateServerManageInform';
 import GrPane from 'containers/GrContent/GrPane';
 
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -31,7 +29,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
@@ -39,89 +36,8 @@ import AddIcon from '@material-ui/icons/Add';
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
-
-//
-//  ## Theme override ########## ########## ########## ########## ########## 
-//
-const theme = createMuiTheme();
-
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const formClass = css({
-  marginBottom: '6px !important',
-    display: 'flex'
-}).toString();
-
-const formControlClass = css({
-  minWidth: '100px !important',
-    marginRight: '15px !important',
-    flexGrow: 1
-}).toString();
-
-const formEmptyControlClass = css({
-  flexGrow: '6 !important'
-}).toString();
-
-const textFieldClass = css({
-  marginTop: '3px !important'
-}).toString();
-
-const buttonClass = css({
-  margin: theme.spacing.unit + ' !important'
-}).toString();
-
-const leftIconClass = css({
-  marginRight: theme.spacing.unit + ' !important'
-}).toString();
-
-const tableClass = css({
-  minWidth: '700px !important'
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: 'auto',
-  '&::-webkit-scrollbar': {
-    position: 'absolute',
-    height: 10,
-    marginLeft: '-10px',
-    },
-  '&::-webkit-scrollbar-track': {
-    backgroundColor: '#CFD8DC', 
-    },
-  '&::-webkit-scrollbar-thumb': {
-    height: '30px',
-    backgroundColor: '#78909C',
-    backgroundClip: 'content-box',
-    borderColor: 'transparent',
-    borderStyle: 'solid',
-    borderWidth: '1px 1px',
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: '2em !important'
-}).toString();
-
-const tableCellClass = css({
-  height: '1em !important',
-  padding: '0px !important',
-  cursor: 'pointer'
-}).toString();
-
-
-const actButtonClass = css({
-    margin: '5px !important',
-    height: '24px !important',
-    minHeight: '24px !important',
-    width: '24px !important',
-}).toString();
-
-const toolIconClass = css({
-  height: '16px !important',
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -142,6 +58,7 @@ class ClientUpdateServerHead extends Component {
   ];
 
   render() {
+    const { classes } = this.props;
     const { orderDir, orderColumn, } = this.props;
 
     return (
@@ -150,7 +67,7 @@ class ClientUpdateServerHead extends Component {
           {ClientUpdateServerHead.columnData.map(column => {
             return (
               <TableCell
-                className={tableCellClass}
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -427,7 +344,7 @@ class ClientUpdateServerManage extends Component {
   }
 
   render() {
-
+    const { classes } = this.props;
     const { ClientUpdateServerProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientUpdateServerProps.listParam.rowsPerPage - ClientUpdateServerProps.listData.length;
@@ -449,46 +366,53 @@ class ClientUpdateServerManage extends Component {
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
           {/* data option area */}
-          <form className={formClass}>
-            <FormControl className={formControlClass} autoComplete='off'>
-              <TextField
-                id='keyword'
-                label='검색어'
-                className={textFieldClass}
-                value={this.state.keyword}
-                onChange={this.handleKeywordChange('keyword')}
-                margin='dense'
-              />
-            </FormControl>
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant='raised'
-              color='primary'
-              onClick={ () => this.handleSelectBtnClick() }
-            >
-              <Search className={leftIconClass} />
-              조회
-            </Button>
+          <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
+            <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
+              <Grid item xs={6}>
+                <TextField
+                  id='keyword'
+                  label='검색어'
+                  value={this.state.keyword}
+                  onChange={this.handleKeywordChange('keyword')}
+                  margin='dense'
+                />
+              </Grid>
 
-            <div className={formEmptyControlClass} />
+              <Grid item xs={6}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={ () => this.handleSelectBtnClick() }
+                >
+                  <Search />
+                  조회
+                </Button>
 
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant='raised'
-              color='secondary'
-              onClick={() => {
-                this.handleCreateButton();
-              }}
-            >
-              <AddIcon className={leftIconClass} />
-              등록
-            </Button>
-          </form>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  this.handleCreateButton();
+                }}
+              >
+                <AddIcon />
+                등록
+              </Button>
+            </Grid>
+          </Grid>            
+
           {/* data area */}
-          <div className={tableContainerClass}>
-            <Table className={tableClass}>
+          <div>
+            <Table>
 
               <ClientUpdateServerHead
+                classes={classes}
                 orderDir={orderDir}
                 orderColumn={orderColumn}
                 onRequestSort={this.handleRequestSort}
@@ -498,33 +422,33 @@ class ClientUpdateServerManage extends Component {
                 {listData.map(n => {
                   return (
                     <TableRow
-                      className={tableRowClass}
+                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.objId)}
                       tabIndex={-1}
                       key={n.objId}
                     >
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                       {n.objId.endsWith('DEFAULT') ? '기본' : '일반'}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                       {n.objNm}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                       {n.objId}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                       {n.modUserId}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
-                        <Button variant='fab' color='secondary' aria-label='edit' className={actButtonClass} onClick={event => this.handleEditClick(event, n.objId)}>
-                          <BuildIcon className={toolIconClass} />
+                      <TableCell className={classes.grSmallAndClickCell}>
+                        <Button variant='fab' color='secondary' aria-label='edit' className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.objId)}>
+                          <BuildIcon />
                         </Button>
-                        <Button variant='fab' color='secondary' aria-label='delete' className={actButtonClass} onClick={event => this.handleDeleteClick(event, n.objId)}>
-                          <DeleteIcon className={toolIconClass} />
+                        <Button variant='fab' color='secondary' aria-label='delete' className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.objId)}>
+                          <DeleteIcon />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -535,7 +459,7 @@ class ClientUpdateServerManage extends Component {
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
                       colSpan={ClientUpdateServerHead.columnData.length + 1}
-                      className={tableCellClass}
+                      className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
                 )}
@@ -578,4 +502,4 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientUpdateServerManage);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientUpdateServerManage));

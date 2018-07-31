@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getViewItem } from 'components/GrUtils/GrCommonUtils';
 
 import * as UserActions from 'modules/UserModule';
@@ -23,42 +21,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const componentClass = css({
-  marginTop: "20px !important"
-}).toString();
-
-const contentClass = css({
-  paddingTop: "0px !important"
-}).toString();
-
-const cardContainerClass = css({
-  padding: "10px !important"
-}).toString();
-
-
-const title = css({
-  marginBottom: 16,
-  fontSize: 14,
-}).toString();
-
-const card = css({
-  minWidth: 275,
-}).toString();
-
-const bullet = css({
-  display: 'inline-block',
-  margin: '0 2px',
-  transform: 'scale(0.8)',
-}).toString();
-
-const pos = css({
-  marginBottom: 12,
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -68,20 +32,21 @@ class UserManageInform extends Component {
   // .................................................
 
   render() {
-    const bull = <span className={bullet}>•</span>;
+    const { classes } = this.props;
     const { UserProps, compId } = this.props;
+    const bull = <span className={classes.bullet}>•</span>;
 
     const viewItem = getViewItem({ props: UserProps, compId: compId });
     const selectedViewItem = (viewItem) ? viewItem.selectedItem : null;
 
     return (
-      <div className={componentClass}>
+      <div >
       {(UserProps.informOpen && selectedViewItem) &&
         <Card>
           <CardHeader
             title="사용자 정보"
           />
-          <CardContent className={contentClass}>
+          <CardContent >
             <Divider />
             <br />
             <Table>
@@ -112,5 +77,5 @@ const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserManageInform);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserManageInform));
 

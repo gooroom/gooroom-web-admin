@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -16,48 +15,13 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const componentClass = css({
-  marginTop: "20px !important"
-}).toString();
-
-const contentClass = css({
-  paddingTop: "0px !important"
-}).toString();
-
-const cardContainerClass = css({
-  padding: "10px !important"
-}).toString();
-
-
-const title = css({
-  marginBottom: 16,
-  fontSize: 14,
-}).toString();
-
-const card = css({
-  minWidth: 275,
-}).toString();
-
-const bullet = css({
-  display: 'inline-block',
-  margin: '0 2px',
-  transform: 'scale(0.8)',
-}).toString();
-
-const pos = css({
-  marginBottom: 12,
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -67,10 +31,10 @@ class ClientHostNameInform extends Component {
   // .................................................
 
   render() {
-
-    const bull = <span className={bullet}>•</span>;
+    const { classes } = this.props;
     const { ClientHostNameProps, compId } = this.props;
     const { viewItems } = ClientHostNameProps;
+    const bull = <span className={classes.bullet}>•</span>;
 
     let selectedViewItem = null;
     if(viewItems) {
@@ -83,14 +47,14 @@ class ClientHostNameInform extends Component {
     }
 
     return (
-      <div className={componentClass}>
+      <div>
       {(ClientHostNameProps.informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.objNm : ''}
             subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
           />
-          <CardContent className={contentClass}>
+          <CardContent>
             <Typography component="pre">
               "{selectedViewItem.comment}"
             </Typography>
@@ -124,7 +88,7 @@ const mapDispatchToProps = (dispatch) => ({
   ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientHostNameInform);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientHostNameInform));
 
 export const createViewObject = (param) => {
 

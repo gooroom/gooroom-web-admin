@@ -8,17 +8,8 @@ import { connect } from 'react-redux';
 import * as ClientManageCompActions from 'modules/ClientManageCompModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from 'glamor';
-
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
-
-import { grRequestPromise } from "components/GrUtils/GrRequester";
-import GrPageHeader from "containers/GrContent/GrPageHeader";
-import GrPane from 'containers/GrContent/GrPane';
-
-import ClientDialog from "./ClientDialog";
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -28,73 +19,11 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
-
-import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
-import DescIcon from '@material-ui/icons/Description';
-
 import Checkbox from "@material-ui/core/Checkbox";
 
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-// option components
-import ClientGroupSelect from 'views/Options/ClientGroupSelect';
-import ClientStatusSelect from 'views/Options/ClientStatusSelect';
-
-
-//
-//  ## Theme override ########## ########## ########## ########## ########## 
-//
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const tableClass = css({
-  minWidth: "700px !important"
-}).toString();
-
-const tableHeadCellClass = css({
-  whiteSpace: "nowrap",
-  padding: "0px !important"
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: "auto",
-  "&::-webkit-scrollbar": {
-    position: "absolute",
-    height: 10,
-    marginLeft: "-10px",
-    },
-  "&::-webkit-scrollbar-track": {
-    backgroundColor: "#CFD8DC", 
-    },
-  "&::-webkit-scrollbar-thumb": {
-    height: "30px",
-    backgroundColor: "#78909C",
-    backgroundClip: "content-box",
-    borderColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "1px 1px",
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: "2em !important"
-}).toString();
-
-const tableCellClass = css({
-  height: "1em !important",
-  padding: "0px !important",
-  cursor: "pointer"
-}).toString();
-
-const toolIconClass = css({
-  height: '16px !important',
-}).toString();
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -119,7 +48,7 @@ class ClientManageHead extends Component {
   ];
 
   render() {
-
+    const { classes } = this.props;
     const {
       onSelectAllClick,
       orderDir,
@@ -136,7 +65,7 @@ class ClientManageHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" className={tableHeadCellClass} >
+          <TableCell padding="checkbox" className={classes.grSmallAndHeaderCell} >
             <Checkbox
               indeterminate={checkSelection === 50}
               checked={checkSelection === 100}
@@ -146,7 +75,7 @@ class ClientManageHead extends Component {
           {ClientManageHead.columnData.map(column => {
             return (
               <TableCell
-                className={tableCellClass}
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -309,7 +238,7 @@ class ClientManage extends Component {
   };
 
   render() {
-
+    const { classes } = this.props;
     const { ClientManageCompProps, compId } = this.props;
     const emptyRows = 0;// = ClientManageCompProps.listParam.rowsPerPage - ClientManageCompProps.listData.length;
 
@@ -317,9 +246,10 @@ class ClientManage extends Component {
 
     return (
 
-      <div className={tableContainerClass}>
-        <Table className={tableClass}>
+      <div>
+        <Table>
           <ClientManageHead
+            classes={classes}
             onSelectAllClick={this.handleSelectAllClick}
             orderDir={compListParam && compListParam.orderDir}
             orderColumn={compListParam && compListParam.orderColumn}
@@ -333,7 +263,7 @@ class ClientManage extends Component {
                 const isSelected = this.isSelected(n.clientId);
                 return (
                   <TableRow
-                    className={tableRowClass}
+                    className={classes.grNormalTableRow}
                     hover
                     onClick={event => this.handleRowClick(event, n.clientId)}
                     role="checkbox"
@@ -344,26 +274,26 @@ class ClientManage extends Component {
                   >
                     <TableCell
                       padding="checkbox"
-                      className={tableCellClass}
+                      className={classes.grSmallAndClickCell}
                     >
                       <Checkbox
                         checked={isSelected}
-                        className={tableCellClass}
+                        className={classes.grObjInCell}
                       />
                     </TableCell>
-                    <TableCell className={tableCellClass}>
+                    <TableCell className={classes.grSmallAndClickCell}>
                       {n.clientStatus}
                     </TableCell>
-                    <TableCell className={tableCellClass}>
+                    <TableCell className={classes.grSmallAndClickCell}>
                       {n.clientName}
                     </TableCell>
-                    <TableCell className={tableCellClass}>
+                    <TableCell className={classes.grSmallAndClickCell}>
                       {n.loginId}
                     </TableCell>
-                    <TableCell className={tableCellClass}>
+                    <TableCell className={classes.grSmallAndClickCell}>
                       {n.clientGroupName}
                     </TableCell>
-                    <TableCell className={tableCellClass}>
+                    <TableCell className={classes.grSmallAndClickCell}>
                       {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
                     </TableCell>
                   </TableRow>
@@ -374,7 +304,7 @@ class ClientManage extends Component {
               <TableRow style={{ height: 32 * emptyRows }}>
                 <TableCell
                   colSpan={ClientManageHead.columnData.length + 1}
-                  className={tableCellClass}
+                  className={classes.grSmallAndClickCell}
                 />
               </TableRow>
             )}
@@ -406,5 +336,5 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientManage);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientManage));
 

@@ -1,16 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
 import classNames from "classnames";
-import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as JobManageActions from 'modules/JobManageModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
-
-import { createMuiTheme } from '@material-ui/core/styles';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
@@ -19,6 +15,7 @@ import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrConfirm from 'components/GrComponents/GrConfirm';
 import GrPane from 'containers/GrContent/GrPane';
 
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -35,90 +32,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 
 import Search from '@material-ui/icons/Search';
-
+import AddIcon from '@material-ui/icons/Add';
 
 import JobInform from './JobInform';
 
-
-
-
-const theme = createMuiTheme();
-
-const contentClass = css({
-  height: "200% !important"
-}).toString();
-
-const pageContentClass = css({
-  paddingTop: "14px !important"
-}).toString();
-
-const formClass = css({
-  marginBottom: "6px !important",
-  display: "flex"
-}).toString();
-
-const formControlClass = css({
-  minWidth: "100px !important",
-    marginRight: "15px !important",
-    flexGrow: 1
-}).toString();
-
-const formEmptyControlClass = css({
-  flexGrow: "6 !important"
-}).toString();
-
-const textFieldClass = css({
-  marginTop: "3px !important"
-}).toString();
-
-const buttonClass = css({
-  margin: theme.spacing.unit + " !important"
-}).toString();
-
-const leftIconClass = css({
-  marginRight: theme.spacing.unit + " !important"
-}).toString();
-
-
-const tableClass = css({
-  minWidth: "700px !important"
-}).toString();
-
-const tableHeadCellClass = css({
-  whiteSpace: "nowrap",
-  padding: "0px !important"
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: "auto",
-  "&::-webkit-scrollbar": {
-    position: "absolute",
-    height: 10,
-    marginLeft: "-10px",
-    },
-  "&::-webkit-scrollbar-track": {
-    backgroundColor: "#CFD8DC", 
-    },
-  "&::-webkit-scrollbar-thumb": {
-    height: "30px",
-    backgroundColor: "#78909C",
-    backgroundClip: "content-box",
-    borderColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "1px 1px",
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: "2em !important"
-}).toString();
-
-const tableCellClass = css({
-  height: "1em !important",
-  padding: "0px !important",
-  cursor: "pointer"
-}).toString();
-
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -142,6 +61,7 @@ class JobManageHead extends Component {
   ];
 
   render() {
+    const { classes } = this.props;
     const {
       orderDir,
       orderColumn,
@@ -153,7 +73,7 @@ class JobManageHead extends Component {
           {JobManageHead.columnData.map(column => {
             return (
               <TableCell
-                className={tableCellClass}
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 numeric={column.numeric}
                 padding={column.disablePadding ? "none" : "default"}
@@ -196,7 +116,10 @@ class JobManage extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { JobManageActions, jobManageModule } = this.props;
-    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, param));
+    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {
+      page: 0,
+      compId: ''
+    }));
   };
 
   handleRowClick = (event, id) => {
@@ -263,7 +186,7 @@ class JobManage extends Component {
 
 
   render() {
-
+    const { classes } = this.props;
     const { jobManageModule, grConfirmModule } = this.props;
     const emptyRows = jobManageModule.listParam.rowsPerPage - jobManageModule.listData.length;
 
@@ -272,49 +195,74 @@ class JobManage extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
+
           {/* data option area */}
-          <form className={formClass}>
-            <FormControl className={formControlClass} autoComplete="off">
-              <InputLabel htmlFor="job-status">작업상태</InputLabel>
-              <Select
-                value={jobManageModule.listParam.jobStatus}
-                onChange={this.handleStatusChange}
-                inputProps={{ name: "jobStatus", id: "job-status" }}
+          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+
+              <Grid item xs={3} >
+                <FormControl fullWidth={true}>
+                  <InputLabel htmlFor="job-status">작업상태</InputLabel>
+                  <Select
+                    value={jobManageModule.listParam.jobStatus}
+                    onChange={this.handleStatusChange}
+                    inputProps={{ name: "jobStatus", id: "job-status" }}
+                  >
+                  {jobManageModule.jobStatusOptionList.map(x => (
+                  <MenuItem value={x.value} key={x.id}>
+                    {x.label}
+                  </MenuItem>
+                  ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={3} >
+                <FormControl fullWidth={true}>
+                <TextField
+                  id='keyword'
+                  label='검색어'
+                  value={jobManageModule.listParam.keyword}
+                  onChange={this.handleKeywordChange('keyword')}
+                />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={3} >
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={ () => this.handleSelectBtnClick() }
+                >
+                  <Search />
+                  조회
+                </Button>
+
+              </Grid>
+            </Grid>
+
+            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  this.handleCreateButton();
+                }}
               >
-              {jobManageModule.jobStatusOptionList.map(x => (
-              <MenuItem value={x.value} key={x.id}>
-                {x.label}
-              </MenuItem>
-              ))}
-              </Select>
-            </FormControl>
-            <FormControl className={formControlClass} autoComplete='off'>
-              <TextField
-                id='keyword'
-                label='검색어'
-                className={textFieldClass}
-                value={jobManageModule.listParam.keyword}
-                onChange={this.handleKeywordChange('keyword')}
-                margin='dense'
-              />
-            </FormControl>
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant='raised'
-              color='primary'
-              onClick={() => this.handleSelectBtnClick({page: 0})}
-            >
-              <Search className={leftIconClass} />
-              조회
-            </Button>
-            <div className={formEmptyControlClass} />
+                <AddIcon />
+                등록
+              </Button>
+            </Grid>
+          </Grid>
 
-          </form>
           {/* data area */}
-          <div className={tableContainerClass}>
-            <Table className={tableClass}>
-
+          <div>
+            <Table>
+            
               <JobManageHead
+                classes={classes}
                 orderDir={jobManageModule.listParam.orderDir}
                 orderColumn={jobManageModule.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
@@ -323,33 +271,33 @@ class JobManage extends Component {
                 {jobManageModule.listData.map(n => {
                   return (
                     <TableRow
-                      className={tableRowClass}
+                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.jobNo)}
                       key={n.jobNo}
                     >
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.jobNo}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.jobName}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.readyCount}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.clientCount}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.errorCount}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.compCount}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.regUserId}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
                       </TableCell>
                     </TableRow>
@@ -360,7 +308,7 @@ class JobManage extends Component {
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
                       colSpan={JobManageHead.columnData.length + 1}
-                      className={tableCellClass}
+                      className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
                 )}
@@ -412,5 +360,5 @@ const mapDispatchToProps = (dispatch) => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(JobManage);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(JobManage));
 

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -22,41 +21,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const componentClass = css({
-  marginTop: "20px !important"
-}).toString();
-
-const contentClass = css({
-  paddingTop: "0px !important"
-}).toString();
-
-const cardContainerClass = css({
-  padding: "10px !important"
-}).toString();
-
-
-const title = css({
-  marginBottom: 16,
-  fontSize: 14,
-}).toString();
-
-const card = css({
-  minWidth: 275,
-}).toString();
-
-const bullet = css({
-  display: 'inline-block',
-  margin: '0 2px',
-  transform: 'scale(0.8)',
-}).toString();
-
-const pos = css({
-  marginBottom: 12,
-}).toString();
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -67,10 +33,10 @@ class ClientUpdateServerInform extends Component {
   // .................................................
 
   render() {
-
-    const bull = <span className={bullet}>•</span>;
+    const { classes } = this.props;
     const { ClientUpdateServerProps, compId } = this.props;
     const { viewItems } = ClientUpdateServerProps;
+    const bull = <span className={classes.bullet}>•</span>;
 
     let selectedViewItem = null;
     if(viewItems) {
@@ -83,14 +49,14 @@ class ClientUpdateServerInform extends Component {
     }    
 
     return (
-      <div className={componentClass}>
+      <div >
       {(ClientUpdateServerProps.informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.objNm : ''}
             subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
           />
-          <CardContent className={contentClass}>
+          <CardContent >
             <Typography component="pre">
               "{selectedViewItem.comment}"
             </Typography>
@@ -134,7 +100,7 @@ const mapDispatchToProps = (dispatch) => ({
   ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientUpdateServerInform);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientUpdateServerInform));
 
 export const createViewObject = (param) => {
   
