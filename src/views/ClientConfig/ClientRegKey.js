@@ -7,9 +7,6 @@ import { connect } from 'react-redux';
 import * as ClientRegKeyActions from 'modules/ClientRegKeyModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from 'glamor';
-
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
@@ -19,6 +16,7 @@ import GrConfirm from 'components/GrComponents/GrConfirm';
 import ClientRegKeyDialog from './ClientRegKeyDialog';
 import GrPane from 'containers/GrContent/GrPane';
 
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -36,88 +34,8 @@ import AddIcon from '@material-ui/icons/Add';
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
-
-//
-//  ## Theme override ########## ########## ########## ########## ########## 
-//
-const theme = createMuiTheme();
-
-//
-//  ## Style ########## ########## ########## ########## ##########
-//
-const formClass = css({
-  marginBottom: '6px !important',
-    display: 'flex'
-}).toString();
-
-const formControlClass = css({
-  minWidth: '100px !important',
-    marginRight: '15px !important',
-    flexGrow: 1
-}).toString();
-
-const formEmptyControlClass = css({
-  flexGrow: '6 !important'
-}).toString();
-
-const textFieldClass = css({
-  marginTop: '3px !important'
-}).toString();
-
-const buttonClass = css({
-  margin: theme.spacing.unit + ' !important'
-}).toString();
-
-const leftIconClass = css({
-  marginRight: theme.spacing.unit + ' !important'
-}).toString();
-
-const tableClass = css({
-  minWidth: '700px !important'
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: 'auto',
-  '&::-webkit-scrollbar': {
-    position: 'absolute',
-    height: 10,
-    marginLeft: '-10px',
-    },
-  '&::-webkit-scrollbar-track': {
-    backgroundColor: '#CFD8DC', 
-    },
-  '&::-webkit-scrollbar-thumb': {
-    height: '30px',
-    backgroundColor: '#78909C',
-    backgroundClip: 'content-box',
-    borderColor: 'transparent',
-    borderStyle: 'solid',
-    borderWidth: '1px 1px',
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: '2em !important'
-}).toString();
-
-const tableCellClass = css({
-  height: '1em !important',
-  padding: '0px !important',
-  cursor: 'pointer'
-}).toString();
-
-
-const actButtonClass = css({
-    margin: '5px !important',
-    height: '24px !important',
-    minHeight: '24px !important',
-    width: '24px !important',
-}).toString();
-
-const toolIconClass = css({
-  height: '16px !important',
-}).toString();
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -138,7 +56,8 @@ class ClientRegKeyHead extends Component {
   ];
 
   render() {
-    const { orderDir, orderColumn, } = this.props;
+    const { classes } = this.props;
+    const { orderDir, orderColumn } = this.props;
 
     return (
       <TableHead>
@@ -146,7 +65,7 @@ class ClientRegKeyHead extends Component {
           {ClientRegKeyHead.columnData.map(column => {
             return (
               <TableCell
-                className={tableCellClass}
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -186,7 +105,10 @@ class ClientRegKey extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, param));
+    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {
+      page: 0,
+      compId: ''
+    }));
   };
   
   handleCreateButton = () => {
@@ -293,7 +215,7 @@ class ClientRegKey extends Component {
   }
 
   render() {
-
+    const { classes } = this.props;
     const { ClientRegKeyProps } = this.props;
     const emptyRows = ClientRegKeyProps.listParam.rowsPerPage - ClientRegKeyProps.listData.length;
 
@@ -301,47 +223,57 @@ class ClientRegKey extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
+
           {/* data option area */}
-          <form className={formClass}>
-            <FormControl className={formControlClass} autoComplete='off'>
-              <TextField
-                id='keyword'
-                label='검색어'
-                className={textFieldClass}
-                value={this.state.keyword}
-                onChange={this.handleKeywordChange('keyword')}
-                margin='dense'
-              />
-            </FormControl>
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant='raised'
-              color='primary'
-              onClick={ () => this.handleSelectBtnClick({page: 0}) }
-            >
-              <Search className={leftIconClass} />
-              조회
-            </Button>
+          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
-            <div className={formEmptyControlClass} />
+              <Grid item xs={3} >
+                <FormControl fullWidth={true}>
+                <TextField
+                  id='keyword'
+                  label='검색어'
+                  value={ClientRegKeyProps.listParam.keyword}
+                  onChange={this.handleKeywordChange('keyword')}
+                />
+                </FormControl>
+              </Grid>
 
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant='raised'
-              color='secondary'
-              onClick={() => {
-                this.handleCreateButton();
-              }}
-            >
-              <AddIcon className={leftIconClass} />
-              등록
-            </Button>
-          </form>
+              <Grid item xs={3} >
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={ () => this.handleSelectBtnClick() }
+                >
+                  <Search />
+                  조회
+                </Button>
+
+              </Grid>
+            </Grid>
+
+            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  this.handleCreateButton();
+                }}
+              >
+                <AddIcon />
+                등록
+              </Button>
+            </Grid>
+          </Grid>
+
           {/* data area */}
-          <div className={tableContainerClass}>
-            <Table className={tableClass}>
+          <div>
+            <Table>
 
               <ClientRegKeyHead
+                classes={classes}
                 orderDir={ClientRegKeyProps.listParam.orderDir}
                 orderColumn={ClientRegKeyProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
@@ -351,30 +283,30 @@ class ClientRegKey extends Component {
                 {ClientRegKeyProps.listData.map(n => {
                   return (
                     <TableRow
-                      className={tableRowClass}
+                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.regKeyNo)}
                       tabIndex={-1}
                       key={n.regKeyNo}
                     >
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.regKeyNo}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {formatDateToSimple(n.validDate, 'YYYY-MM-DD')}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {formatDateToSimple(n.expireDate, 'YYYY-MM-DD')}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
-                        <Button variant='fab' color='secondary' aria-label='edit' className={actButtonClass} onClick={event => this.handleEditClick(event, n.regKeyNo)}>
-                          <BuildIcon className={toolIconClass} />
+                      <TableCell className={classes.grSmallAndClickCell}>
+                        <Button size="small" color="secondary" aria-label="edit" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.regKeyNo)}>
+                          <BuildIcon />
                         </Button>
-                        <Button variant='fab' color='secondary' aria-label='delete' className={actButtonClass} onClick={event => this.handleDeleteClick(event, n.regKeyNo)}>
-                          <DeleteIcon className={toolIconClass} />
+                        <Button size="small" color="secondary" aria-label="delete" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.regKeyNo)}>
+                          <DeleteIcon />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -385,7 +317,7 @@ class ClientRegKey extends Component {
                   <TableRow style={{ height: 32 * emptyRows }}>
                     <TableCell
                       colSpan={ClientRegKeyHead.columnData.length + 1}
-                      className={tableCellClass}
+                      className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
                 )}
@@ -394,7 +326,7 @@ class ClientRegKey extends Component {
           </div>
 
           <TablePagination
-            component='div'
+            component="div"
             count={ClientRegKeyProps.listParam.rowsFiltered}
             rowsPerPage={ClientRegKeyProps.listParam.rowsPerPage}
             rowsPerPageOptions={ClientRegKeyProps.listParam.rowsPerPageOptions}
@@ -427,4 +359,4 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientRegKey);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientRegKey));

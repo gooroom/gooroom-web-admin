@@ -8,13 +8,9 @@ import { connect } from 'react-redux';
 import * as ClientManageActions from 'modules/ClientManageCompModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from 'glamor';
-
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
-import { grRequestPromise } from "components/GrUtils/GrRequester";
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
 
@@ -32,20 +28,13 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
-import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
 import DescIcon from '@material-ui/icons/Description';
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
-import BuildIcon from '@material-ui/icons/Build';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import Checkbox from "@material-ui/core/Checkbox";
-
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 
 // option components
@@ -56,101 +45,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
-//
-//  ## Theme override ########## ########## ########## ########## ########## 
-//
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      // light: will be calculated from palette.primary.main,
-      main: '#ff4400',
-      // dark: will be calculated from palette.primary.main,
-      // contrastText: will be calculated to contast with palette.primary.main
-    },
-    secondary: {
-      light: '#0066ff',
-      main: '#0044ff',
-      // dark: will be calculated from palette.secondary.main,
-      contrastText: '#ffcc00',
-    },
-    // error: will us the default color
-  },
-});
-
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const formClass = css({
-  marginBottom: "6px !important",
-    display: "flex"
-}).toString();
-
-const formControlClass = css({
-  minWidth: "100px !important",
-    marginRight: "15px !important",
-    flexGrow: 1
-}).toString();
-
-const formEmptyControlClass = css({
-  flexGrow: "6 !important"
-}).toString();
-
-const textFieldClass = css({
-  marginTop: "3px !important"
-}).toString();
-
-const buttonClass = css({
-  margin: theme.spacing.unit + " !important"
-}).toString();
-
-const leftIconClass = css({
-  marginRight: theme.spacing.unit + " !important"
-}).toString();
-
-
-const tableClass = css({
-  minWidth: "700px !important"
-}).toString();
-
-const tableHeadCellClass = css({
-  whiteSpace: "nowrap",
-  padding: "0px !important"
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: "auto",
-  "&::-webkit-scrollbar": {
-    position: "absolute",
-    height: 10,
-    marginLeft: "-10px",
-    },
-  "&::-webkit-scrollbar-track": {
-    backgroundColor: "#CFD8DC", 
-    },
-  "&::-webkit-scrollbar-thumb": {
-    height: "30px",
-    backgroundColor: "#78909C",
-    backgroundClip: "content-box",
-    borderColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "1px 1px",
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: "2em !important"
-}).toString();
-
-const tableCellClass = css({
-  height: "1em !important",
-  padding: "0px !important",
-  cursor: "pointer"
-}).toString();
-
-const toolIconClass = css({
-  height: '16px !important',
-}).toString();
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -164,7 +58,7 @@ class ClientManageHead extends Component {
   static columnData = [
     { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
     { id: 'clientId', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'clientView', isOrder: false, numeric: false, disablePadding: true, label: <DescIcon className={toolIconClass} /> },
+    { id: 'clientView', isOrder: false, numeric: false, disablePadding: true, label: <DescIcon /> },
     { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
     { id: 'loginId', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
     {
@@ -177,7 +71,7 @@ class ClientManageHead extends Component {
   ];
 
   render() {
-
+    const { classes } = this.props;
     const {
       onSelectAllClick,
       orderDir,
@@ -190,7 +84,7 @@ class ClientManageHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" >
+          <TableCell padding="checkbox" className={classes.grSmallAndHeaderCell}>
             <Checkbox
               indeterminate={checkSelection === 50}
               checked={checkSelection === 100}
@@ -200,6 +94,7 @@ class ClientManageHead extends Component {
           {ClientManageHead.columnData.map(column => {
             return (
               <TableCell
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -397,27 +292,24 @@ class ClientManage extends Component {
             <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
               <Grid item xs={3} >
-                <FormControl fullWidth="true">
+                <FormControl fullWidth={true}>
                   <InputLabel htmlFor="client-status">단말상태</InputLabel>
                   <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
                 </FormControl>
               </Grid>
 
-
               <Grid item xs={3} >
-                <FormControl fullWidth="true">
+                <FormControl fullWidth={true}>
                   <InputLabel htmlFor="client-status">단말그룹</InputLabel>
                   <ClientGroupSelect onChangeSelect={this.handleChangeGroupSelect} />
                 </FormControl>
               </Grid>
 
-
               <Grid item xs={3} >
-                <FormControl fullWidth="true">
+                <FormControl fullWidth={true}>
                 <TextField
                   id='keyword'
                   label='검색어'
-                  className={textFieldClass}
                   value={ClientManageProps.listParam.keyword}
                   onChange={this.handleKeywordChange('keyword')}
                 />
@@ -451,99 +343,79 @@ class ClientManage extends Component {
                 등록
               </Button>
             </Grid>
-          </Grid>            
+          </Grid>
 
-          <div style={{margin: "20px 0px"}}/>
+          {/* data area */}
+          <div>
+            <Table>
 
-            <div className={tableContainerClass}>
-              <Table className={tableClass}>
-                <ClientManageHead
-                  onSelectAllClick={this.handleSelectAllClick}
-                  orderDir={ClientManageProps.listParam.orderDir}
-                  orderColumn={ClientManageProps.listParam.orderColumn}
-                  onRequestSort={this.handleRequestSort}
-                  selectedData={ClientManageProps.selected}
-                  listData={ClientManageProps.listData}
-                />
-                <TableBody>
-                  {ClientManageProps.listData
-                    .map(n => {
-                      const isSelected = this.isSelected(n.clientId);
-                      return (
-                        <TableRow
-                          className={tableRowClass}
-                          hover
-                          onClick={event => this.handleRowClick(event, n.clientId)}
-                          role="checkbox"
-                          aria-checked={isSelected}
-                          tabIndex={-1}
-                          key={n.clientId}
-                          selected={isSelected}
-                        >
-                          <TableCell
-                            padding="checkbox"
-                            className={tableCellClass}
-                          >
-                            <Checkbox
-                              checked={isSelected}
-                              className={tableCellClass}
-                            />
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientStatus}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientId}
-                          </TableCell>
-                          <TableCell className={tableCellClass} 
-                            onClick={event => this.handleInfoClick(event, n.clientId, n.clientGroupId)}
-                          >
-                            <DescIcon className={toolIconClass} />
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientName}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.loginId}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {n.clientGroupName}
-                          </TableCell>
-                          <TableCell className={tableCellClass}>
-                            {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
+              <ClientManageHead
+                classes={classes}
+                onSelectAllClick={this.handleSelectAllClick}
+                orderDir={ClientManageProps.listParam.orderDir}
+                orderColumn={ClientManageProps.listParam.orderColumn}
+                onRequestSort={this.handleRequestSort}
+                selectedData={ClientManageProps.selected}
+                listData={ClientManageProps.listData}
+              />
 
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 32 * emptyRows }}>
-                      <TableCell
-                        colSpan={ClientManageHead.columnData.length + 1}
-                        className={tableCellClass}
-                      />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+              <TableBody>
+                {ClientManageProps.listData
+                  .map(n => {
+                    const isSelected = this.isSelected(n.clientId);
+                    return (
+                      <TableRow
+                        className={classes.grNormalTableRow}
+                        hover
+                        onClick={event => this.handleRowClick(event, n.clientId)}
+                        role="checkbox"
+                        aria-checked={isSelected}
+                        tabIndex={-1}
+                        key={n.clientId}
+                        selected={isSelected}
+                      >
+                        <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
+                          <Checkbox checked={isSelected} className={classes.grObjInCell} />
+                        </TableCell>
+                        <TableCell className={classes.grSmallAndClickCell} >{n.clientStatus}</TableCell>
+                        <TableCell className={classes.grSmallAndClickCell} >{n.clientId}</TableCell>
+                        <TableCell className={classes.grSmallAndClickCell} onClick={event => this.handleInfoClick(event, n.clientId, n.clientGroupId)} >
+                          <DescIcon className={classes.buttonInTableRow} />
+                        </TableCell>
+                        <TableCell className={classes.grSmallAndClickCell} >{n.clientName}</TableCell>
+                        <TableCell className={classes.grSmallAndClickCell} >{n.loginId}</TableCell>
+                        <TableCell className={classes.grSmallAndClickCell} >{n.clientGroupName}</TableCell>
+                        <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.regDate, 'YYYY-MM-DD')}</TableCell>
+                      </TableRow>
+                    );
+                  })}
 
-            <TablePagination
-              component='div'
-              count={ClientManageProps.listParam.rowsFiltered}
-              rowsPerPage={ClientManageProps.listParam.rowsPerPage}
-              rowsPerPageOptions={ClientManageProps.listParam.rowsPerPageOptions}
-              page={ClientManageProps.listParam.page}
-              backIconButtonProps={{
-                'aria-label': 'Previous Page'
-              }}
-              nextIconButtonProps={{
-                'aria-label': 'Next Page'
-              }}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 32 * emptyRows }}>
+                    <TableCell colSpan={ClientManageHead.columnData.length + 1} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+
+          <TablePagination
+            component='div'
+            count={ClientManageProps.listParam.rowsFiltered}
+            rowsPerPage={ClientManageProps.listParam.rowsPerPage}
+            rowsPerPageOptions={ClientManageProps.listParam.rowsPerPageOptions}
+            page={ClientManageProps.listParam.page}
+            backIconButtonProps={{
+              'aria-label': 'Previous Page'
+            }}
+            nextIconButtonProps={{
+              'aria-label': 'Next Page'
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
         </GrPane>
+
         <ClientDialog
           clientId={this.state.selectedClientId}
           clientGroupId={this.state.selectedClientGroupId}

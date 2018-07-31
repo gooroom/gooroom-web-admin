@@ -2,6 +2,41 @@
 import { grLayout } from "templates/default/GrLayout";
 
 export const GrCommonStyle = theme => ({
+
+
+    // Full page. - main container
+    fullRoot: {
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column"
+    },
+    appBody: {
+        marginTop: grLayout.pageHeaderHeight,
+        display: "flex",
+        flexDirection: "row",
+        flexGrow: 1,
+        overflowX: "hidden",
+    },
+    fullMain: {
+        marginRight: 0,
+        marginLeft: grLayout.sideBarWidth,
+        flex: 1,
+        zIndex: 1200,
+        minWidth: 0,
+        transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
+        display: "block",
+    },
+    fullWideMain: {
+        marginRight: 0,
+        marginLeft: 0,
+        flex: 1,
+        zIndex: 1200,
+        minWidth: 0,
+        transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
+        display: "block",
+    },
+
+
     
     grNormalTableRow: {
         height: '32px',
@@ -204,6 +239,20 @@ export const GrCommonStyle = theme => ({
         minWidth: "0px",
         minHeight: "0px"
     },
+
+    // table, tr, th, td
+    grSmallAndHeaderCell: {
+        paddingLeft: "0px",
+        paddingRight: "0px",
+    },
+    grSmallAndClickCell: {
+        padding: "0px",
+        cursor: "pointer"
+    },
+    grObjInCell: {
+        height: "inherit"
+    }
+
 
 });
 

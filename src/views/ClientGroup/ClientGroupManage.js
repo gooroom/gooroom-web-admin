@@ -13,9 +13,6 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { createMuiTheme } from '@material-ui/core/styles';
-import { css } from 'glamor';
-
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
@@ -24,6 +21,7 @@ import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrPane from 'containers/GrContent/GrPane';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -34,7 +32,6 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search'; 
 import AddIcon from '@material-ui/icons/Add';
@@ -44,99 +41,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ClientGroupDialog from './ClientGroupDialog';
 import ClientGroupInform from './ClientGroupInform';
 
-//
-//  ## Theme override ########## ########## ########## ########## ########## 
-//
-const theme = createMuiTheme();
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const contentClass = css({
-  height: "100% !important"
-}).toString();
-
-const pageContentClass = css({
-  paddingTop: "14px !important"
-}).toString();
-
-const formClass = css({
-  marginBottom: "6px !important",
-    display: "flex"
-}).toString();
-
-const formControlClass = css({
-  minWidth: "100px !important",
-    marginRight: "15px !important",
-    flexGrow: 1
-}).toString();
-
-const formEmptyControlClass = css({
-  flexGrow: "6 !important"
-}).toString();
-
-const textFieldClass = css({
-  marginTop: "3px !important"
-}).toString();
-
-const buttonClass = css({
-  margin: theme.spacing.unit + " !important"
-}).toString();
-
-const leftIconClass = css({
-  marginRight: theme.spacing.unit + " !important"
-}).toString();
-
-
-const tableClass = css({
-  minWidth: "700px !important"
-}).toString();
-
-const tableHeadCellClass = css({
-  whiteSpace: "nowrap",
-  padding: "0px !important"
-}).toString();
-
-const tableContainerClass = css({
-  overflowX: "auto",
-  "&::-webkit-scrollbar": {
-    position: "absolute",
-    height: 10,
-    marginLeft: "-10px",
-    },
-  "&::-webkit-scrollbar-track": {
-    backgroundColor: "#CFD8DC", 
-    },
-  "&::-webkit-scrollbar-thumb": {
-    height: "30px",
-    backgroundColor: "#78909C",
-    backgroundClip: "content-box",
-    borderColor: "transparent",
-    borderStyle: "solid",
-    borderWidth: "1px 1px",
-    }
-}).toString();
-
-const tableRowClass = css({
-  height: "2em !important"
-}).toString();
-
-const tableCellClass = css({
-  height: "1em !important",
-  padding: "0px !important",
-  cursor: "pointer"
-}).toString();
-
-const actButtonClass = css({
-  margin: '5px !important',
-  height: '24px !important',
-  minHeight: '24px !important',
-  width: '24px !important',
-}).toString();
-
-const toolIconClass = css({
-  height: '16px !important',
-}).toString();
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -158,6 +64,7 @@ class ClientGroupManageHead extends Component {
   ];
 
   render() {
+    const { classes } = this.props;
     const { orderDir, orderColumn } = this.props;
 
     return (
@@ -166,7 +73,7 @@ class ClientGroupManageHead extends Component {
           {ClientGroupManageHead.columnData.map(column => {
             return (
               <TableCell
-                className={tableCellClass}
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -342,7 +249,10 @@ class ClientGroupManage extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, param));
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
+      page: 0,
+      compId: ''
+    }));
   };
   
   handleKeywordChange = name => event => {
@@ -363,7 +273,7 @@ class ClientGroupManage extends Component {
   };
 
   render() {
-
+    const { classes } = this.props;
     const { ClientGroupProps } = this.props;
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
 
@@ -374,49 +284,55 @@ class ClientGroupManage extends Component {
         <GrPane>
 
           {/* data option area */}
-          <form className={formClass}>
-            <FormControl className={formControlClass} autoComplete='off'>
-              <TextField
-                id='keyword'
-                label='검색어'
-                className={textFieldClass}
-                value={ClientGroupProps.listParam.keyword}
-                onChange={this.handleKeywordChange('keyword')}
-                margin='dense'
-              />
-            </FormControl>
+          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant='raised'
-              color='primary'
-              onClick={() => this.handleSelectBtnClick({
-                page: 0,
-                compId: ''
-              })}
-            >
-              <Search className={leftIconClass} />
-              조회
-            </Button>
-            <div className={formEmptyControlClass} />
-            <Button
-              className={classNames(buttonClass, formControlClass)}
-              variant="raised"
-              color="secondary"
-              onClick={() => {
-                this.handleCreateButton();
-              }}
-            >
-              <AddIcon className={leftIconClass} />
-              등록
-            </Button>
-          </form>
+              <Grid item xs={3} >
+                <FormControl fullWidth={true}>
+                <TextField
+                  id='keyword'
+                  label='검색어'
+                  value={ClientGroupProps.listParam.keyword}
+                  onChange={this.handleKeywordChange('keyword')}
+                />
+                </FormControl>
+              </Grid>
+
+              <Grid item xs={3} >
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="secondary"
+                  onClick={ () => this.handleSelectBtnClick() }
+                >
+                  <Search />
+                  조회
+                </Button>
+
+              </Grid>
+            </Grid>
+
+            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  this.handleCreateButton();
+                }}
+              >
+                <AddIcon />
+                등록
+              </Button>
+            </Grid>
+          </Grid>
 
           {/* data area */}
-          <div className={tableContainerClass}>
-            <Table className={tableClass}>
+          <div>
+            <Table>
 
               <ClientGroupManageHead
+                classes={classes}
                 orderDir={ClientGroupProps.listParam.orderDir}
                 orderColumn={ClientGroupProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
@@ -425,32 +341,32 @@ class ClientGroupManage extends Component {
               {ClientGroupProps.listData.map(n => {
                   return (
                     <TableRow
-                      className={tableRowClass}
+                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.grpId)}
                       key={n.grpId}
                     >
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.grpNm}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.clientCount}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.desktopConfigNm}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {n.clientConfigNm}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
+                      <TableCell className={classes.grSmallAndClickCell}>
                         {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
                       </TableCell>
-                      <TableCell className={tableCellClass}>
-                        <Button variant='fab' color='secondary' aria-label='edit' className={actButtonClass} onClick={event => this.handleEditClick(event, n.grpId)}>
-                          <BuildIcon className={toolIconClass} />
+                      <TableCell className={classes.grSmallAndClickCell}>
+                        <Button variant='fab' color='secondary' aria-label='edit' className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.grpId)}>
+                          <BuildIcon />
                         </Button>
-                        <Button variant='fab' color='secondary' aria-label='delete' className={actButtonClass} onClick={event => this.handleDeleteClick(event, n.grpId)}>
-                          <DeleteIcon className={toolIconClass} />
+                        <Button variant='fab' color='secondary' aria-label='delete' className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.grpId)}>
+                          <DeleteIcon />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -461,7 +377,7 @@ class ClientGroupManage extends Component {
                 <TableRow style={{ height: 32 * emptyRows }}>
                   <TableCell
                     colSpan={ClientGroupManageHead.columnData.length + 1}
-                    className={tableCellClass}
+                    className={classes.grSmallAndClickCell}
                   />
                 </TableRow>
                 )}
@@ -519,6 +435,6 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientGroupManage);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientGroupManage));
 
 

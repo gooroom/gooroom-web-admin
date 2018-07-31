@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-
 import classNames from "classnames";
-import { css } from 'glamor';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -16,32 +14,16 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-
-import Button from '@material-ui/core/Button';
 
 import ClientConfSettingComp from 'views/Rules/ClientConf/ClientConfSettingComp';
 import ClientHostNameComp from 'views/Rules/HostName/ClientHostNameComp';
 import DesktopConfigComp from 'views/Rules/DesktopConfigComp';
 import ClientUpdateServerComp from 'views/Rules/UpdateServer/ClientUpdateServerComp';
 
-
-//
-//  ## Style ########## ########## ########## ########## ########## 
-//
-const componentClass = css({
-  marginTop: "20px !important"
-}).toString();
-
-const contentClass = css({
-  paddingTop: "0px !important"
-}).toString();
-
-const cardContainerClass = css({
-  padding: "10px !important"
-}).toString();
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
@@ -57,14 +39,14 @@ class ClientGroupInform extends Component {
     const { [compId + '__selectedItem'] : selectedItem } = ClientGroupCompProps;
 
     return (
-      <div className={componentClass}>
+      <div>
       {(isOpen && selectedItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedItem) ? selectedItem.grpNm : ''}
             subheader={selectedItem.grpId + ', ' + formatDateToSimple(selectedItem.regDate, 'YYYY-MM-DD')}
           />
-          <CardContent className={contentClass}>
+          <CardContent>
             <Typography component="pre">
               "{selectedItem.comment}"
             </Typography>
@@ -72,14 +54,14 @@ class ClientGroupInform extends Component {
           <Divider />
           
           <Grid container spacing={16}>
-            <Grid item xs={12} sm={6} className={cardContainerClass}>
+            <Grid item xs={12} sm={6} >
               <ClientConfSettingComp
                 compId={compId}
                 objId={selectedItem.clientConfigId} 
                 objNm={selectedItem.clientConfigNm} 
               />
             </Grid>
-            <Grid item xs={12} sm={6} className={cardContainerClass}>
+            <Grid item xs={12} sm={6} >
               <DesktopConfigComp 
                 compId={compId}
                 objId={selectedItem.desktopConfigId} 
@@ -88,14 +70,14 @@ class ClientGroupInform extends Component {
             </Grid>
           </Grid>
           <Grid container spacing={16}>
-            <Grid item xs={12} sm={6} className={cardContainerClass}>
+            <Grid item xs={12} sm={6} >
               <ClientHostNameComp
                 compId={compId}
                 objId={selectedItem.hostNameConfigId} 
                 objNm={selectedItem.hostNameConfigNm} 
               />
             </Grid>
-            <Grid item xs={12} sm={6} className={cardContainerClass}>
+            <Grid item xs={12} sm={6} >
               <ClientUpdateServerComp
                 compId={compId}
                 objId={selectedItem.updateServerConfigId} 
@@ -125,5 +107,5 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientGroupInform);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientGroupInform));
 
