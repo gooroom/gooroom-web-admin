@@ -18,9 +18,9 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
 
-import ClientConfSettingComp from 'views/Rules/ClientConf/ClientConfSettingComp';
+import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
 import ClientHostNameComp from 'views/Rules/HostName/ClientHostNameComp';
-import DesktopConfigComp from 'views/Rules/DesktopConfigComp';
+import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
 import ClientUpdateServerComp from 'views/Rules/UpdateServer/ClientUpdateServerComp';
 
 import { withStyles } from '@material-ui/core/styles';

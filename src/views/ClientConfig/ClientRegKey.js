@@ -102,8 +102,13 @@ class ClientRegKey extends Component {
     }
   }
 
+  componentDidMount() {
+    this.handleSelectBtnClick();
+  }
+
+
   // .................................................
-  handleSelectBtnClick = (param) => {
+  handleSelectBtnClick = () => {
     const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
     ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {
       page: 0,
@@ -314,7 +319,7 @@ class ClientRegKey extends Component {
                 })}
 
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: 32 * emptyRows }}>
+                  <TableRow >
                     <TableCell
                       colSpan={ClientRegKeyHead.columnData.length + 1}
                       className={classes.grSmallAndClickCell}

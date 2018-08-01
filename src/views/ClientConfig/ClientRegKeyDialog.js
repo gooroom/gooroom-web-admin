@@ -115,15 +115,16 @@ class ClientRegKeyDialog extends Component {
                             />
                         </Grid>
                         <Grid item xs={4} className={classes.createButton}>
-                           <Button
-                            variant="raised"
+                        {(dialogType === ClientRegKeyDialog.TYPE_ADD) && 
+                           <Button size="small"
+                           variant="contained"
                             color="secondary"
                             onClick={() => {
                                 this.handleKeyGenerate();
                             }}
-                            style={{display: dialogType === ClientRegKeyDialog.TYPE_ADD ? 'block' : 'none' }}
                             ><Add />키생성
                             </Button>
+                        }
                         </Grid>
                   </Grid>
 

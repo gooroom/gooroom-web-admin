@@ -301,7 +301,7 @@ class ClientManage extends Component {
               })}
 
             {emptyRows > 0 && (
-              <TableRow style={{ height: 32 * emptyRows }}>
+              <TableRow >
                 <TableCell
                   colSpan={ClientManageHead.columnData.length + 1}
                   className={classes.grSmallAndClickCell}

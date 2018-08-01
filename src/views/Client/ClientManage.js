@@ -129,6 +129,12 @@ class ClientManage extends Component {
     };
   }
 
+  componentDidMount() {
+    this.handleSelectBtnClick();
+  }
+
+
+
   // .................................................
   handleRequestSort = (event, property) => {
     const { ClientManageActions, ClientManageProps } = this.props;
@@ -391,7 +397,7 @@ class ClientManage extends Component {
                   })}
 
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: 32 * emptyRows }}>
+                  <TableRow >
                     <TableCell colSpan={ClientManageHead.columnData.length + 1} />
                   </TableRow>
                 )}

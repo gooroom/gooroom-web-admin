@@ -108,6 +108,10 @@ class ClientGroupManage extends Component {
     };
   }
 
+  componentDidMount() {
+    this.handleSelectBtnClick();
+  }
+
   // .................................................
   handleRequestSort = (event, property) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
@@ -247,7 +251,7 @@ class ClientGroupManage extends Component {
   };
 
   // .................................................
-  handleSelectBtnClick = (param) => {
+  handleSelectBtnClick = () => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
     ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       page: 0,
@@ -285,20 +289,20 @@ class ClientGroupManage extends Component {
 
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
-              <Grid item xs={3} >
+              <Grid item xs={6} >
                 <FormControl fullWidth={true}>
-                <TextField
-                  id='keyword'
-                  label='검색어'
-                  value={ClientGroupProps.listParam.keyword}
-                  onChange={this.handleKeywordChange('keyword')}
-                />
+                  <TextField
+                    id='keyword'
+                    label='검색어'
+                    value={ClientGroupProps.listParam.keyword}
+                    onChange={this.handleKeywordChange('keyword')}
+                  />
                 </FormControl>
               </Grid>
 
-              <Grid item xs={3} >
+              <Grid item xs={6} >
                 <Button
                   size="small"
                   variant="contained"
@@ -312,7 +316,7 @@ class ClientGroupManage extends Component {
               </Grid>
             </Grid>
 
-            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
+            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
               <Button
                 size="small"
                 variant="contained"
@@ -346,26 +350,20 @@ class ClientGroupManage extends Component {
                       onClick={event => this.handleRowClick(event, n.grpId)}
                       key={n.grpId}
                     >
+                      <TableCell className={classes.grSmallAndClickCell}>{n.grpNm}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.clientCount}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.desktopConfigNm}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.clientConfigNm}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.regDate, 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
-                        {n.grpNm}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {n.clientCount}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {n.desktopConfigNm}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {n.clientConfigNm}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        <Button variant='fab' color='secondary' aria-label='edit' className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.grpId)}>
+                        <Button color='secondary' size="small" 
+                          className={classes.buttonInTableRow} 
+                          onClick={event => this.handleEditClick(event, n.grpId)}>
                           <BuildIcon />
                         </Button>
-                        <Button variant='fab' color='secondary' aria-label='delete' className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.grpId)}>
+                        <Button color='secondary' size="small"
+                          className={classes.buttonInTableRow} 
+                          onClick={event => this.handleDeleteClick(event, n.grpId)}>
                           <DeleteIcon />
                         </Button>
                       </TableCell>
@@ -374,7 +372,7 @@ class ClientGroupManage extends Component {
                 })}
 
                 {emptyRows > 0 && (
-                <TableRow style={{ height: 32 * emptyRows }}>
+                <TableRow >
                   <TableCell
                     colSpan={ClientGroupManageHead.columnData.length + 1}
                     className={classes.grSmallAndClickCell}

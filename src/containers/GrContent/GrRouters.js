@@ -13,7 +13,7 @@ import ClientGroupManage from "views/ClientGroup/ClientGroupManage";
 import ClientRegKey from "views/ClientConfig/ClientRegKey";
 import ClientProfileSet from "views/ClientConfig/ClientProfileSet";
 
-import ClientConfSetting from "views/Rules/ClientConf/ClientConfSetting";
+import ClientConfSetting from "views/Rules/ClientConfig/ClientConfSetting";
 import ClientHostNameManage from "views/Rules/HostName/ClientHostNameManage";
 import ClientUpdateServerManage from "views/Rules/UpdateServer/ClientUpdateServerManage";
 

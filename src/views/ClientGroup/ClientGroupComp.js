@@ -293,7 +293,7 @@ class ClientGroupComp extends Component {
           })}
 
           {emptyRows > 0 && (
-            <TableRow style={{ height: 32 * emptyRows }}>
+            <TableRow >
               <TableCell
                 colSpan={ClientGroupCompHead.columnData.length + 1}
                 className={classes.grSmallAndClickCell}

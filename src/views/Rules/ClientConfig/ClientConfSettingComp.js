@@ -19,7 +19,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
+import Typography from '@material-ui/core/Typography';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -76,19 +76,21 @@ class ClientConfSettingComp extends Component {
 
     return (
       <React.Fragment>
-      <Card>
+      <Card elevation={0}>
         {(viewCompItem) && <CardContent>
-          <Grid container spacing={24}>
+          <Grid container>
             <Grid item xs={6}>
-              <Typography >
+              <Typography className={classes.compTitle}>
                 단말정책설정
               </Typography>
             </Grid>
-            <Grid item xs={6} style={{textAlign:"right"}}>
-              <Button
-                variant="outlined" color="primary"
-                onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
-              ><SettingsApplicationsIcon />수정</Button>
+            <Grid item xs={6}>
+              <Grid container justify="flex-end">
+                <Button size="small"
+                  variant="outlined" color="primary"
+                  onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
+                ><SettingsApplicationsIcon />수정</Button>
+              </Grid>
             </Grid>
           </Grid>
           <Typography variant="headline" component="h2">
