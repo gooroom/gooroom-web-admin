@@ -91,20 +91,26 @@ export default {
       level: 1,
       children: [
         {
-          name: '???매체제어정책관리',
-          url: '/userconfig/media/GRM0401',
+          name: '정책통합관리',
+          url: '/userconfig/totalmng/GRM0401',
+          icon: 'icon-wrench',
+          level: 2,
+        },
+        {
+          name: '매체제어정책관리',
+          url: '/userconfig/media/GRM0402',
           icon: 'icon-wrench',
           level: 2,
         },
         {
           name: '???브라우저제어정책관리',
-          url: '/userconfig/browser/GRM0402',
+          url: '/userconfig/browser/GRM0403',
           icon: 'icon-folder',
           level: 2,
         },
         {
           name: '???단말보안정책관리',
-          url: '/userconfig/security/GRM0403',
+          url: '/userconfig/security/GRM0404',
           icon: 'icon-layers',
           level: 2,
         },
