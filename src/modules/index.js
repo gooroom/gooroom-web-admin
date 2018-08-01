@@ -17,6 +17,8 @@ import ClientDesktopConfigModule from './ClientDesktopConfigModule';
 import ClientHostNameModule from './ClientHostNameModule';
 import ClientUpdateServerModule from './ClientUpdateServerModule';
 
+import MediaControlSettingModule from './MediaControlSettingModule';
+
 import ClientMasterManageModule from './ClientMasterManageModule';
 
 
@@ -29,6 +31,8 @@ export default combineReducers({
     ClientDesktopConfigModule,
     ClientHostNameModule,
     ClientUpdateServerModule,
+
+    MediaControlSettingModule,
 
     ClientMasterManageModule,
     
