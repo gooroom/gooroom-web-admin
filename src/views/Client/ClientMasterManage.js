@@ -48,9 +48,8 @@ class ClientMasterManage extends Component {
 
   // .................................................
 
-  handleSelectBtnClick = (param) => {
-    const { ClientManageCompActions, ClientManageCompProps } = this.props;
-    ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, param));
+  handleSelectBtnClick = () => {
+    console.log('ClientMasterManage Buttons................');
   };
 
   // Select Group Item

@@ -113,8 +113,13 @@ class JobManage extends Component {
     };
   }
 
+  componentDidMount() {
+    this.handleSelectBtnClick();
+  }
+
+
   // .................................................
-  handleSelectBtnClick = (param) => {
+  handleSelectBtnClick = () => {
     const { JobManageActions, jobManageModule } = this.props;
     JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {
       page: 0,
@@ -305,7 +310,7 @@ class JobManage extends Component {
                 })}
 
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: 32 * emptyRows }}>
+                  <TableRow >
                     <TableCell
                       colSpan={JobManageHead.columnData.length + 1}
                       className={classes.grSmallAndClickCell}

@@ -102,8 +102,12 @@ class ClientConfSetting extends Component {
     }
   }
 
+  componentDidMount() {
+    this.handleSelectBtnClick();
+  }
+
   // .................................................
-  handleSelectBtnClick = (param) => {
+  handleSelectBtnClick = () => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
@@ -352,21 +356,11 @@ class ClientConfSetting extends Component {
                       tabIndex={-1}
                       key={n.objId}
                     >
-                      <TableCell >
-                      {n.objId.endsWith('DEFAULT') ? '기본' : '일반'}
-                      </TableCell>
-                      <TableCell >
-                      {n.objNm}
-                      </TableCell>
-                      <TableCell >
-                      {n.objId}
-                      </TableCell>
-                      <TableCell >
-                      {n.modUserId}
-                      </TableCell>
-                      <TableCell >
-                        {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
-                      </TableCell>
+                      <TableCell >{n.objId.endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell >{n.objNm}</TableCell>
+                      <TableCell >{n.objId}</TableCell>
+                      <TableCell >{n.modUserId}</TableCell>
+                      <TableCell >{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
                       <TableCell >
 
                         <Button 
@@ -389,7 +383,7 @@ class ClientConfSetting extends Component {
                 })}
 
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: 32 * emptyRows }}>
+                  <TableRow >
                     <TableCell
                       colSpan={ClientConfSettingHead.columnData.length + 1}
                     />

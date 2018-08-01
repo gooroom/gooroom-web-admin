@@ -28,6 +28,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
@@ -38,6 +39,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
+
 
 //
 //  ## Header ########## ########## ########## ########## ########## 
@@ -104,11 +106,15 @@ class ClientUpdateServerManage extends Component {
     }
   }
 
+  componentDidMount() {
+    this.handleSelectBtnClick();
+  }
+
+
   // .................................................
-  handleSelectBtnClick = (param) => {
+  handleSelectBtnClick = () => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
-
 
     let viewItem = null;
     if(ClientUpdateServerProps.viewItems) {
@@ -117,7 +123,6 @@ class ClientUpdateServerManage extends Component {
       });
     }
     const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
-
 
     ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(listParam, {
       page: 0,
@@ -365,17 +370,20 @@ class ClientUpdateServerManage extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
+
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
-            <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
+          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+
               <Grid item xs={6}>
-                <TextField
-                  id='keyword'
-                  label='검색어'
-                  value={this.state.keyword}
-                  onChange={this.handleKeywordChange('keyword')}
-                  margin='dense'
-                />
+                <FormControl fullWidth={true}>
+                  <TextField
+                    id='keyword'
+                    label='검색어'
+                    value={this.state.keyword}
+                    onChange={this.handleKeywordChange('keyword')}
+                  />
+                </FormControl>
               </Grid>
 
               <Grid item xs={6}>
@@ -428,26 +436,16 @@ class ClientUpdateServerManage extends Component {
                       tabIndex={-1}
                       key={n.objId}
                     >
+                      <TableCell className={classes.grSmallAndClickCell}>{n.objId.endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.objNm}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.objId}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.modUserId}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
-                      {n.objId.endsWith('DEFAULT') ? '기본' : '일반'}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                      {n.objNm}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                      {n.objId}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                      {n.modUserId}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        <Button variant='fab' color='secondary' aria-label='edit' className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.objId)}>
+                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.objId)}>
                           <BuildIcon />
                         </Button>
-                        <Button variant='fab' color='secondary' aria-label='delete' className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.objId)}>
+                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.objId)}>
                           <DeleteIcon />
                         </Button>
                       </TableCell>
@@ -456,7 +454,7 @@ class ClientUpdateServerManage extends Component {
                 })}
 
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: 32 * emptyRows }}>
+                  <TableRow >
                     <TableCell
                       colSpan={ClientUpdateServerHead.columnData.length + 1}
                       className={classes.grSmallAndClickCell}

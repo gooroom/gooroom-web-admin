@@ -17,7 +17,12 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from '@material-ui/core/Grid';
+
+import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -44,11 +49,23 @@ class DesktopConfigComp extends Component {
 
     return (
 
-      <Card >
+      <Card elevation={0}>
         {(viewItem) && <CardContent>
-          <Typography color="textSecondary">
-            데스크톱환경
-          </Typography>
+          <Grid container>
+            <Grid item xs={6}>
+              <Typography className={classes.compTitle}>
+                데스크톱환경
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Grid container justify="flex-end">
+                <Button size="small"
+                  variant="outlined" color="primary"
+                  onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
+                ><SettingsApplicationsIcon />수정</Button>
+              </Grid>
+            </Grid>
+          </Grid>
           <Typography variant="headline" component="h2">
             {viewItem.confNm}
           </Typography>

@@ -12,7 +12,6 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import ClientUpdateServerDialog from './ClientUpdateServerManageDialog';
 import { createViewObject } from './ClientUpdateServerManageInform';
 
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -76,20 +75,21 @@ class ClientUpdateServerComp extends Component {
 
     return (
       <React.Fragment>
-      <Card >
+      <Card elevation={0}>
         {(viewCompItem) && <CardContent>
-
-          <Grid container spacing={24}>
+          <Grid container>
             <Grid item xs={6}>
-              <Typography style={{backgroundColor:"lightBlue",color:"white",fontWeight:"bold"}}>
+              <Typography className={classes.compTitle}>
                 업데이트서버설정
               </Typography>
             </Grid>
-            <Grid item xs={6} style={{textAlign:"right"}}>
-              <Button
-                variant="outlined" color="primary"
-                onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
-              ><SettingsApplicationsIcon />수정</Button>
+            <Grid item xs={6}>
+              <Grid container justify="flex-end">
+                <Button size="small"
+                  variant="outlined" color="primary"
+                  onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
+                ><SettingsApplicationsIcon />수정</Button>
+              </Grid>
             </Grid>
           </Grid>
           <Typography variant="headline" component="h2">
@@ -103,16 +103,16 @@ class ClientUpdateServerComp extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 주 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewCompItem.mainos}</pre></TableCell>
+                  <TableCell component="th" scope="row" >{bull} 주 OS 정보</TableCell>
+                  <TableCell><pre>{viewCompItem.mainos}</pre></TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 기반 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewCompItem.extos}</pre></TableCell>
+                  <TableCell component="th" scope="row" >{bull} 기반 OS 정보</TableCell>
+                  <TableCell><pre>{viewCompItem.extos}</pre></TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} gooroom.pref</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewCompItem.priorities}</pre></TableCell>
+                  <TableCell component="th" scope="row" >{bull} gooroom.pref</TableCell>
+                  <TableCell><pre>{viewCompItem.priorities}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>

@@ -155,7 +155,7 @@ class JobInform extends Component {
               })}
 
               {emptyRows > 0 && (
-                <TableRow style={{ height: 32 * emptyRows }}>
+                <TableRow >
                   <TableCell
                     colSpan={JobTargetListHead.columnData.length + 1}
                     className={classes.grSmallAndClickCell}

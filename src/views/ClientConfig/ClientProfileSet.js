@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
@@ -25,6 +26,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
@@ -57,6 +59,7 @@ class ClientProfileSetHead extends Component {
   ];
 
   render() {
+    const { classes } = this.props;
     const { orderDir, orderColumn } = this.props;
 
     return (
@@ -65,6 +68,7 @@ class ClientProfileSetHead extends Component {
           {ClientProfileSetHead.columnData.map(column => {
             return (
               <TableCell
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -101,10 +105,17 @@ class ClientProfileSet extends Component {
     }
   }
 
+  componentDidMount() {
+    this.handleSelectBtnClick();
+  }
+
+
   // .................................................
-  handleSelectBtnClick = (param) => {
+  handleSelectBtnClick = () => {
     const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(getMergedObject(ClientProfileSetProps.listParam, param));
+    ClientProfileSetActions.readClientProfileSetList(getMergedObject(ClientProfileSetProps.listParam, {
+      page: 0
+    }));
   };
   
   handleCreateButton = () => {
@@ -242,16 +253,18 @@ class ClientProfileSet extends Component {
         <GrPane>
           {/* data option area */}
 
-          <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
-            <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
+          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+
               <Grid item xs={6}>
-                <TextField
-                  id='keyword'
-                  label='검색어'
-                  value={ClientProfileSetProps.listParam.keyword}
-                  onChange={this.handleKeywordChange('keyword')}
-                  margin='dense'
-                />
+                <FormControl fullWidth={true}>
+                  <TextField
+                    id='keyword'
+                    label='검색어'
+                    value={ClientProfileSetProps.listParam.keyword}
+                    onChange={this.handleKeywordChange('keyword')}
+                  />
+                </FormControl>
               </Grid>
 
               <Grid item xs={6}>
@@ -259,12 +272,11 @@ class ClientProfileSet extends Component {
                   size="small"
                   variant="contained"
                   color="secondary"
-                  onClick={ () => this.handleSelectBtnClick({page: 0}) }
+                  onClick={ () => this.handleSelectBtnClick() }
                 >
                   <Search />
                   조회
                 </Button>
-
               </Grid>
             </Grid>
 
@@ -288,6 +300,7 @@ class ClientProfileSet extends Component {
             <Table>
 
               <ClientProfileSetHead
+                classes={classes}
                 orderDir={ClientProfileSetProps.listParam.orderDir}
                 orderColumn={ClientProfileSetProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
@@ -302,47 +315,37 @@ class ClientProfileSet extends Component {
                       onClick={event => this.handleRowClick(event, n.profileNo)}
                       key={n.profileNo}
                     >
-                      <TableCell >{n.profileNo}</TableCell>
-                      <TableCell >{n.profileNm}</TableCell>
-                      <TableCell >{n.clientId}</TableCell>
-                      <TableCell >
-                        {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
+                      <TableCell className={classes.grSmallAndClickCell}>{n.profileNo}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.profileNm}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.clientId}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.regDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleEditClick(event, n.profileNo)}>
+                          <BuildIcon />
+                        </Button>
+
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleDeleteClick(event, n.profileNo)}>
+                          <DeleteIcon />
+                        </Button>                        
                       </TableCell>
-                      <TableCell >
-                        {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
-                      </TableCell>
-                      <TableCell >
-
-                      <Button 
-                        color="secondary" 
-                        size="small" 
-                        className={classes.buttonInTableRow}
-                        onClick={event => this.handleEditClick(event, n.profileNo)}>
-                        <BuildIcon />
-                      </Button>
-
-                      <Button color="secondary" size="small" 
-                        className={classes.buttonInTableRow}
-                        onClick={event => this.handleDeleteClick(event, n.profileNo)}>
-                        <DeleteIcon />
-                      </Button>                        
-
-                      </TableCell>
-                      <TableCell >
-
-                      <Button color="secondary" size="small" 
-                        className={classes.buttonInTableRow}
-                        onClick={event => this.handleProfileClick(event, n.profileNo)}>
-                        <AssignmentIcon />
-                      </Button>                        
-
+                      <TableCell className={classes.grSmallAndClickCell}>
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleProfileClick(event, n.profileNo)}>
+                          <AssignmentIcon />
+                        </Button>                        
                       </TableCell>
                     </TableRow>
                   );
                 })}
 
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: 32 * emptyRows }}>
+                  <TableRow >
                     <TableCell
                       colSpan={ClientProfileSetHead.columnData.length + 1}
                       

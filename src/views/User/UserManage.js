@@ -29,6 +29,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+import FormControl from '@material-ui/core/FormControl';
 import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 
@@ -40,6 +41,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
+
+
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
@@ -59,6 +62,7 @@ class UserManageHead extends Component {
   ];
 
   render() {
+    const { classes } = this.props;
     const { 
       onSelectAllClick, 
       orderDir, 
@@ -75,7 +79,7 @@ class UserManageHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox" >
+          <TableCell padding="checkbox" className={classes.grSmallAndHeaderCell}>
             <Checkbox
               indeterminate={checkSelection === 50}
               checked={checkSelection === 100}
@@ -85,6 +89,7 @@ class UserManageHead extends Component {
           {UserManageHead.columnData.map(column => {
             return (
               <TableCell
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -121,8 +126,13 @@ class UserManage extends Component {
     }
   }
 
+  componentDidMount() {
+    this.handleSelectBtnClick();
+  }
+
+
   // .................................................
-  handleSelectBtnClick = (param) => {
+  handleSelectBtnClick = () => {
     const { UserActions, UserProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
@@ -205,11 +215,7 @@ class UserManage extends Component {
         selectedItem: selectedItem
       });
     }
-
-
-
   };
-  
 
 
   isSelected = id => {
@@ -356,16 +362,20 @@ class UserManage extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} />
         <GrPane>
-          <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
-            <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
+
+          {/* data option area */}
+          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+              
               <Grid item xs={6}>
-                <TextField
-                  id="keyword"
-                  label="검색어"
-                  value={this.state.keyword}
-                  onChange={this.handleKeywordChange("keyword")}
-                  margin="dense"
-                />
+                <FormControl fullWidth={true}>
+                  <TextField
+                    id="keyword"
+                    label="검색어"
+                    value={this.state.keyword}
+                    onChange={this.handleKeywordChange("keyword")}
+                  />
+                </FormControl>
               </Grid>
               <Grid item xs={6}>
                 <Button
@@ -395,9 +405,12 @@ class UserManage extends Component {
             </Grid>
           </Grid>
 
+          {/* data area */}
           <div>
             <Table>
+
               <UserManageHead
+                classes={classes}
                 onSelectAllClick={this.handleSelectAllClick}
                 orderDir={orderDir}
                 orderColumn={orderColumn}
@@ -419,37 +432,23 @@ class UserManage extends Component {
                       key={n.userId}
                       selected={isSelected}
                     >
-                      <TableCell padding="checkbox"  >
-                        <Checkbox checked={isSelected} style={{height: "inherit"}} />
+                      <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
+                        <Checkbox checked={isSelected} className={classes.grObjInCell} />
                       </TableCell>
-                      <TableCell >
-                        {n.userId}
-                      </TableCell>
-                      <TableCell >
-                        {n.userNm}
-                      </TableCell>
-                      <TableCell >
-                        {n.status}
-                      </TableCell>
-                      <TableCell >
-                        {formatDateToSimple(n.lastLoginDt, 'YYYY-MM-DD')}                    
-                      </TableCell>
-                      <TableCell >
-                        {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}                    
-                      </TableCell>
-                      <TableCell >
+                      <TableCell className={classes.grSmallAndClickCell}>{n.userId}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.userNm}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.status}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.lastLoginDt, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.regDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>
 
-                        <Button 
-                          color="secondary" 
-                          size="small" 
+                        <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.userId)}>
                           <BuildIcon />
                         </Button>
 
-                        <Button 
-                          color="secondary" 
-                          size="small" 
+                        <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.userId)}>
                           <DeleteIcon />
@@ -461,7 +460,7 @@ class UserManage extends Component {
                 })}
 
                 {emptyRows > 0 && (
-                  <TableRow style={{ height: 32 * emptyRows }}>
+                  <TableRow >
                     <TableCell
                       colSpan={UserManageHead.columnData.length + 1}
                     />
@@ -502,7 +501,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
-  
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

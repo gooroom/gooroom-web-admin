@@ -37,13 +37,6 @@ export const GrCommonStyle = theme => ({
     },
 
 
-    
-    grNormalTableRow: {
-        height: '32px',
-    },
-
-
-
     // PAGE Header (global)
     headerRoot: {
         display: "flex",
@@ -127,6 +120,13 @@ export const GrCommonStyle = theme => ({
     },
     breadcrumbCurrentMenu: {
         color: "red"
+    },
+
+    // Rule Component
+    compTitle: {
+        backgroundColor:"lightBlue",
+        color:"white",
+        fontWeight:"bold"
     },
     
 
@@ -251,8 +251,10 @@ export const GrCommonStyle = theme => ({
     },
     grObjInCell: {
         height: "inherit"
-    }
-
+    },
+    grNormalTableRow: {
+        height: '32px',
+    },
 
 });
 

@@ -76,20 +76,21 @@ class ClientHostNameComp extends Component {
     return (
 
       <React.Fragment>
-      <Card >
+      <Card elevation={0}>
         {(viewCompItem) && <CardContent>
-
-          <Grid container spacing={24}>
+          <Grid container>
             <Grid item xs={6}>
-              <Typography style={{backgroundColor:"lightBlue",color:"white",fontWeight:"bold"}}>
+              <Typography className={classes.compTitle}>
                 Hosts설정
               </Typography>
             </Grid>
-            <Grid item xs={6} style={{textAlign:"right"}}>
-              <Button
-                variant="outlined" color="primary"
-                onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
-              ><SettingsApplicationsIcon />수정</Button>
+            <Grid item xs={6}>
+              <Grid container justify="flex-end">
+                <Button size="small"
+                  variant="outlined" color="primary"
+                  onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
+                ><SettingsApplicationsIcon />수정</Button>
+              </Grid>
             </Grid>
           </Grid>
           <Typography variant="headline" component="h2">
@@ -103,8 +104,8 @@ class ClientHostNameComp extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{viewCompItem.hosts}</pre></TableCell>
+                  <TableCell component="th" scope="row">{bull} Host 정보</TableCell>
+                  <TableCell><pre>{viewCompItem.hosts}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
