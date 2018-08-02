@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -39,24 +39,24 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class ClientConfSettingDialog extends Component {
+class MediaControlSettingDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.ClientConfSettingActions.closeDialog();
+        this.props.MediaControlSettingActions.closeDialog();
     }
 
     handleValueChange = name => event => {
         if(event.target.type === 'checkbox') {
-            this.props.ClientConfSettingActions.setEditingItemValue({
+            this.props.MediaControlSettingActions.setEditingItemValue({
                 name: name,
                 value: event.target.checked
             });
         } else {
-            this.props.ClientConfSettingActions.setEditingItemValue({
+            this.props.MediaControlSettingActions.setEditingItemValue({
                 name: name,
                 value: event.target.value
             });
@@ -64,39 +64,39 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleNtpValueChange = index => event => {
-        this.props.ClientConfSettingActions.setSelectedNtpValue({
+        this.props.MediaControlSettingActions.setSelectedNtpValue({
             index: index,
             value: event.target.value
         });
     }
 
     handleChangeSelectedNtp = (name, index) => event => {
-        this.props.ClientConfSettingActions.setEditingItemValue({
+        this.props.MediaControlSettingActions.setEditingItemValue({
             name: name,
             value: index
         });
     }
 
     handleCreateData = (event) => {
-        const { ClientConfSettingProps, GrConfirmActions } = this.props;
+        const { MediaControlSettingProps, GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
             confirmTitle: '단말정책정보 등록',
             confirmMsg: '단말정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientConfSettingProps.editingItem
+            confirmObject: MediaControlSettingProps.editingItem
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-            ClientConfSettingActions.createClientConfSettingData(ClientConfSettingProps.editingItem)
+            const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
+            MediaControlSettingActions.createMediaControlSettingData(MediaControlSettingProps.editingItem)
                 .then((res) => {
-                    const { viewItems } = ClientConfSettingProps;
+                    const { viewItems } = MediaControlSettingProps;
                     if(viewItems) {
                         viewItems.forEach((element) => {
                             if(element && element.listParam) {
-                                ClientConfSettingActions.readClientConfSettingList(getMergedObject(element.listParam, {
+                                MediaControlSettingActions.readMediaControlSettingList(getMergedObject(element.listParam, {
                                     compId: element._COMPID_
                                 }));
                             }
@@ -109,32 +109,32 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleEditData = (event, id) => {
-        const { ClientConfSettingProps, GrConfirmActions } = this.props;
+        const { MediaControlSettingProps, GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
             confirmTitle: '단말정책정보 수정',
             confirmMsg: '단말정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientConfSettingProps.editingItem
+            confirmObject: MediaControlSettingProps.editingItem
           });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+            const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
 
-            ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.editingItem)
+            MediaControlSettingActions.editMediaControlSettingData(MediaControlSettingProps.editingItem)
                 .then((res) => {
 
-                    const { editingCompId, viewItems } = ClientConfSettingProps;
+                    const { editingCompId, viewItems } = MediaControlSettingProps;
                     viewItems.forEach((element) => {
                         if(element && element.listParam) {
-                            ClientConfSettingActions.readClientConfSettingList(getMergedObject(element.listParam, {
+                            MediaControlSettingActions.readMediaControlSettingList(getMergedObject(element.listParam, {
                                 compId: element._COMPID_
                             }));
                         }
                     });
 
-                    ClientConfSettingActions.getClientConfSetting({
+                    MediaControlSettingActions.getMediaControlSetting({
                         compId: editingCompId,
                         objId: paramObject.objId
                     });
@@ -147,35 +147,35 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleAddNtp = () => {
-        const { ClientConfSettingActions } = this.props;
-        ClientConfSettingActions.addNtpAddress();
+        const { MediaControlSettingActions } = this.props;
+        MediaControlSettingActions.addNtpAddress();
     }
 
     handleDeleteNtp = index => event => {
-        const { ClientConfSettingActions } = this.props;
-        ClientConfSettingActions.deleteNtpAddress(index);
+        const { MediaControlSettingActions } = this.props;
+        MediaControlSettingActions.deleteNtpAddress(index);
     }
 
     render() {
         const { classes } = this.props;
-        const { ClientConfSettingProps } = this.props;
-        const { dialogType, editingItem } = ClientConfSettingProps;
+        const { MediaControlSettingProps } = this.props;
+        const { dialogType, editingItem } = MediaControlSettingProps;
 
         const editingViewItem = editingItem;
 
         let title = "";
         const bull = <span className={classes.bullet}>•</span>;
 
-        if(dialogType === ClientConfSettingDialog.TYPE_ADD) {
+        if(dialogType === MediaControlSettingDialog.TYPE_ADD) {
             title = "단말정책설정 등록";
-        } else if(dialogType === ClientConfSettingDialog.TYPE_VIEW) {
+        } else if(dialogType === MediaControlSettingDialog.TYPE_VIEW) {
             title = "단말정책설정 정보";
-        } else if(dialogType === ClientConfSettingDialog.TYPE_EDIT) {
+        } else if(dialogType === MediaControlSettingDialog.TYPE_EDIT) {
             title = "단말정책설정 수정";
         }
 
         return (
-            <Dialog open={ClientConfSettingProps.dialogOpen}>
+            <Dialog open={MediaControlSettingProps.dialogOpen}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
@@ -185,7 +185,7 @@ class ClientConfSettingDialog extends Component {
                         value={(editingViewItem) ? editingViewItem.objNm : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
-                        disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
+                        disabled={(dialogType === MediaControlSettingDialog.TYPE_VIEW)}
                     />
                     <TextField
                         id="comment"
@@ -193,9 +193,9 @@ class ClientConfSettingDialog extends Component {
                         value={(editingViewItem) ? editingViewItem.comment : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
+                        disabled={(dialogType === MediaControlSettingDialog.TYPE_VIEW)}
                     />
-                    {(dialogType === ClientConfSettingDialog.TYPE_VIEW) &&
+                    {(dialogType === MediaControlSettingDialog.TYPE_VIEW) &&
                         <div>
                             <Grid container spacing={24}>
                                 <Grid item xs={6} sm={6}>
@@ -230,7 +230,7 @@ class ClientConfSettingDialog extends Component {
                             />
                         </div>                        
                     }
-                    {(dialogType === ClientConfSettingDialog.TYPE_EDIT || dialogType === ClientConfSettingDialog.TYPE_ADD) &&
+                    {(dialogType === MediaControlSettingDialog.TYPE_EDIT || dialogType === MediaControlSettingDialog.TYPE_ADD) &&
                         <div>
                             <TextField
                                 id="pollingTime"
@@ -275,10 +275,10 @@ class ClientConfSettingDialog extends Component {
                 </form>
 
                 <DialogActions>
-                {(dialogType === ClientConfSettingDialog.TYPE_ADD) &&
+                {(dialogType === MediaControlSettingDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
                 }
-                {(dialogType === ClientConfSettingDialog.TYPE_EDIT) &&
+                {(dialogType === MediaControlSettingDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
@@ -291,13 +291,13 @@ class ClientConfSettingDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientConfSettingProps: state.ClientConfSettingModule
+    MediaControlSettingProps: state.MediaControlSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+    MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch),
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSettingDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaControlSettingDialog));
 

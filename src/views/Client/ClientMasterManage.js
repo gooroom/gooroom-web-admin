@@ -98,6 +98,9 @@ class ClientMasterManage extends Component {
   };
 
   render() {
+
+    console.log('>>>> ', this.props);
+    console.log('>>>name> ', this.props);
     const { classes } = this.props;
     const { ClientMasterManageProps, ClientGroupCompProps, ClientManageCompProps } = this.props;
     const emptyRows = 0;// = ClientManageCompProps.listParam.rowsPerPage - ClientManageCompProps.listData.length;
@@ -108,13 +111,14 @@ class ClientMasterManage extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} />
+        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
-            <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
+          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+            
               <Grid item xs={6}>
-
+              
               <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹등록</Button>
               <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹삭제</Button>
               <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹정책변경</Button>

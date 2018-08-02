@@ -17,6 +17,9 @@ import ClientConfSetting from "views/Rules/ClientConfig/ClientConfSetting";
 import ClientHostNameManage from "views/Rules/HostName/ClientHostNameManage";
 import ClientUpdateServerManage from "views/Rules/UpdateServer/ClientUpdateServerManage";
 
+import MediaControlSetting from "views/Rules/UserConfig/MediaControlSetting";
+
+
 import JobManage from "views/Job/JobManage";
 import PackageManage from 'views/Package/PackageManage';
 
@@ -43,73 +46,59 @@ class GrRouters extends Component {
           <Route exact path="/" name="Home" component={Dashboard} />
           <Route path="/dashboard" name="Dashboard" component={Dashboard} />
           <Route
-            path="/clients/clientmanage/:grMenuId"
-            name="ClientManage"
-            component={ClientManage}
-          />
-          <Route
-            path="/clients/clientmastermanage/:grMenuId"
-            name="ClientMasterManage"
+            path="/clients/clientmastermanage/:grMenuId/:grMenuName"
             component={ClientMasterManage}
           />
+          <Route
+            path="/clients/clientmanage/:grMenuId/:grMenuName"
+            component={ClientManage}
+          />
           <Route 
-            path="/clients/clientgroupmanage/:grMenuId"
-            name="ClientGroupManage"
+            path="/clients/clientgroupmanage/:grMenuId/:grMenuName"
             component={ClientGroupManage}
           />
           <Route
-            path="/clientconfig/regkey/:grMenuId"
-            name="ClientRegKey"
+            path="/clientconfig/regkey/:grMenuId/:grMenuName"
             component={ClientRegKey}
           />
           <Route
-            path="/clientconfig/profileset/:grMenuId"
-            name="ClientProfileSet"
+            path="/clientconfig/profileset/:grMenuId/:grMenuName"
             component={ClientProfileSet}
           />
           <Route
-            path="/clientconfig/setting/:grMenuId"
-            name="ClientConfSetting"
+            path="/clientconfig/setting/:grMenuId/:grMenuName"
             component={ClientConfSetting}
           />
           <Route
-            path="/clientconfig/host/:grMenuId"
-            name="ClientHostNameManage"
+            path="/clientconfig/host/:grMenuId/:grMenuName"
             component={ClientHostNameManage}
           />
           <Route
-            path="/clientconfig/update/:grMenuId"
-            name="ClientUpdateServerManage"
+            path="/clientconfig/update/:grMenuId/:grMenuName"
             component={ClientUpdateServerManage}
           />
           <Route
-            path="/jobs/jobmanage/:grMenuId"
-            name="JobManage"
+            path="/userconfig/media/:grMenuId/:grMenuName"
+            component={MediaControlSetting}
+          />
+          <Route
+            path="/jobs/jobmanage/:grMenuId/:grMenuName"
             component={JobManage}
           />
           <Route
-            path="/user/department/:grMenuId"
-            name="DeptManage"
-            component={DeptManage}
-          />
-          <Route
-            path="/package/packagemanage/:grMenuId"
-            name="PackageManage"
+            path="/package/packagemanage/:grMenuId/:grMenuName"
             component={PackageManage}
           />
           <Route
-            path="/user/deptmanage/:grMenuId"
-            name="DeptManage"
+            path="/user/deptmanage/:grMenuId/:grMenuName"
             component={DeptManage}
           />
           <Route
-            path="/user/usermanage/:grMenuId"
-            name="UserManage"
+            path="/user/usermanage/:grMenuId/:grMenuName"
             component={UserManage}
           />
           <Route
-            path="/test/components/:grMenuId"
-            name="ComponentTests"
+            path="/test/components/:grMenuId/:grMenuName"
             component={ComponentTests}
           />
         </Switch>

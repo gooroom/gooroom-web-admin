@@ -87,7 +87,7 @@ export const readMediaControlSettingList = (param) => dispatch => {
     };
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readMediaControlListPaged', resetParam).then(
+    return requestPostAPI('readMediaRuleListPaged', resetParam).then(
         (response) => {
             dispatch({
                 type: GET_MEDIACONTROL_LIST_SUCCESS,
