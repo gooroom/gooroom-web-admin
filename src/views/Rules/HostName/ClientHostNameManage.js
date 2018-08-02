@@ -366,7 +366,7 @@ class ClientHostNameManage extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} />
+        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
 
           {/* data option area */}

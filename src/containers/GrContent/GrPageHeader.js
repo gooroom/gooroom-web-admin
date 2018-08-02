@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 
-import routes from 'routes';
 import CardHeader from '@material-ui/core/CardHeader';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -14,11 +13,12 @@ class GrPageHeader extends Component {
     }
 
     render() {
-        const { classes } = this.props;
-        const routeName = routes[this.props.path];
+        const { name, classes } = this.props;
+
+        console.log('GrPageHeader..................................name..', name);
 
         return (
-            <CardHeader title={routeName} className={classes.menuHeaderRoot}>GrPageHeader
+            <CardHeader title={name} className={classes.menuHeaderRoot}>GrPageHeader
             </CardHeader>
         )
     }

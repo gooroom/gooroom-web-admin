@@ -58,6 +58,7 @@ class MediaControlSettingHead extends Component {
   ];
 
   render() {
+    const { classes } = this.props;
     const { orderDir, orderColumn, } = this.props;
 
     return (
@@ -66,6 +67,7 @@ class MediaControlSettingHead extends Component {
           {MediaControlSettingHead.columnData.map(column => {
             return (
               <TableCell
+                className={classes.grSmallAndHeaderCell}
                 key={column.id}
                 sortDirection={orderColumn === column.id ? orderDir : false}
               >
@@ -142,6 +144,8 @@ class MediaControlSetting extends Component {
     const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
+
+    console.log('selectedItem : ', selectedItem);
 
     // choice one from two views.
 
@@ -292,11 +296,12 @@ class MediaControlSetting extends Component {
     
     return (
       <div>
-        <GrPageHeader path={this.props.location.pathname} />
+        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-start" direction="row" justify="space-between" >
-            <Grid item xs={6} container alignItems="flex-start" direction="row" justify="flex-start" >
+          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+
               <Grid item xs={6}>
                 <TextField
                   id='keyword'
@@ -341,6 +346,7 @@ class MediaControlSetting extends Component {
             <Table>
 
               <MediaControlSettingHead
+                classes={classes}
                 orderDir={orderDir}
                 orderColumn={orderColumn}
                 onRequestSort={this.handleRequestSort}
@@ -356,16 +362,14 @@ class MediaControlSetting extends Component {
                       tabIndex={-1}
                       key={n.objId}
                     >
-                      <TableCell >{n.objId.endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
-                      <TableCell >{n.objNm}</TableCell>
-                      <TableCell >{n.objId}</TableCell>
-                      <TableCell >{n.modUserId}</TableCell>
-                      <TableCell >{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
-                      <TableCell >
+                      <TableCell className={classes.grSmallAndClickCell}>{n.objId.endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.objNm}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.objId}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.modUserId}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>
 
-                        <Button 
-                          color="secondary" 
-                          size="small" 
+                        <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.objId)}>
                           <BuildIcon />

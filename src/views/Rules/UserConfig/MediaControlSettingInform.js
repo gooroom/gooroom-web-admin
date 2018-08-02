@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
-import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -26,14 +26,15 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientConfSettingInform extends Component {
+class MediaControlSettingInform extends Component {
 
   // .................................................
 
   render() {
+
     const { classes } = this.props;
-    const { ClientConfSettingProps, compId } = this.props;
-    const { viewItems } = ClientConfSettingProps;
+    const { MediaControlSettingProps, compId } = this.props;
+    const { viewItems } = MediaControlSettingProps;
     const bull = <span className={classes.bullet}>•</span>;
 
     let selectedViewItem = null;
@@ -46,9 +47,11 @@ class ClientConfSettingInform extends Component {
       }
     }
 
+    console.log('selectedViewItem : ', selectedViewItem);
+
     return (
       <div>
-      {(ClientConfSettingProps.informOpen && selectedViewItem) &&
+      {(MediaControlSettingProps.informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.objNm : ''}
@@ -63,20 +66,50 @@ class ClientConfSettingInform extends Component {
             <br />
             <Table>
               <TableBody>
+
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
-                  <TableCell numeric>{selectedViewItem.pollingTime}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
-                  <TableCell numeric>{(selectedViewItem.useHypervisor) ? '구동' : '중단'}</TableCell>
+                  <TableCell component="th" scope="row">{bull} USB메모리</TableCell>
+                  <TableCell numeric>{selectedViewItem.usbMemory}</TableCell>
+                  <TableCell component="th" scope="row">{bull} CD/DVD</TableCell>
+                  <TableCell numeric>{selectedViewItem.cdAndDvd}</TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 프린터</TableCell>
+                  <TableCell numeric>{selectedViewItem.printer}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 화면캡쳐</TableCell>
+                  <TableCell numeric>{selectedViewItem.screenCapture}</TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 사운드(소리,마이크)</TableCell>
+                  <TableCell numeric>{selectedViewItem.sound}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 카메라</TableCell>
+                  <TableCell numeric>{selectedViewItem.camera}</TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} USB키보드</TableCell>
+                  <TableCell numeric>{selectedViewItem.keyboard}</TableCell>
+                  <TableCell component="th" scope="row">{bull} USB마우스</TableCell>
+                  <TableCell numeric>{selectedViewItem.mouse}</TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 무선랜</TableCell>
+                  <TableCell numeric>{selectedViewItem.wireless}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 블루투스</TableCell>
+                  <TableCell numeric>{selectedViewItem.bluetoothState}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
-                  <TableCell numeric>{(selectedViewItem.selectedNtpIndex > -1) ? selectedViewItem.ntpAddress[selectedViewItem.selectedNtpIndex] : ''}</TableCell>
-                  <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
-                  <TableCell numeric>{selectedViewItem.ntpAddress.map(function(prop, index) {
-                      return <span key={index}>{prop}<br/></span>;
+                  <TableCell component="th" scope="row"></TableCell>
+                  <TableCell numeric></TableCell>
+                  <TableCell component="th" scope="row">{bull} 맥주소(블루투스)</TableCell>
+                  <TableCell numeric>{selectedViewItem.macAddress.map(function(prop, index) {
+                    return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
                 </TableRow>
+
               </TableBody>
             </Table>
 
@@ -90,38 +123,53 @@ class ClientConfSettingInform extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientConfSettingProps: state.ClientConfSettingModule
+  MediaControlSettingProps: state.MediaControlSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch)
+  MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSettingInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaControlSettingInform));
 
 export const createViewObject = (param) => {
 
   if(param) {
-    let pollingTime = '';
-    let useHypervisor = false;
-    let selectedNtpIndex = -1;
-    let ntpAddrSelected = '';
-    let ntpAddress = [];
+    let usbMemory = '';
+    let wireless = '';
+    let bluetoothState = '';
+    let cdAndDvd = '';
+    let printer = '';
+    let screenCapture = '';
+    let camera = '';
+    let sound = '';
+    let keyboard = '';
+    let mouse = '';
+    let macAddress = [];
     
     param.propList.forEach(function(e) {
-      if(e.propNm == 'AGENTPOLLINGTIME') {
-        pollingTime = e.propValue;
-      } else if(e.propNm == 'USEHYPERVISOR') {
-        useHypervisor = (e.propValue == "true");
-      } else if(e.propNm == 'NTPSELECTADDRESS') {
-        ntpAddrSelected = e.propValue;
-      } else if(e.propNm == 'NTPADDRESSES') {
-        ntpAddress.push(e.propValue);
-      }
-    });
-    ntpAddress.forEach(function(e, i) {
-      if(ntpAddrSelected == e) {
-        selectedNtpIndex = i;
+      if(e.propNm == 'usb_memory') {
+        usbMemory = e.propValue;
+      } else if(e.propNm == 'cd_dvd') {
+        cdAndDvd = e.propValue;
+      } else if(e.propNm == 'printer') {
+        printer = e.propValue;
+      } else if(e.propNm == 'screen_capture') {
+        screenCapture = e.propValue;
+      } else if(e.propNm == 'sound') {
+        sound = e.propValue;
+      } else if(e.propNm == 'camera') {
+        camera = e.propValue;
+      } else if(e.propNm == 'keyboard') {
+        keyboard = e.propValue;
+      } else if(e.propNm == 'mouse') {
+        mouse = e.propValue;
+      } else if(e.propNm == 'wireless') {
+        wireless = e.propValue;
+      } else if(e.propNm == 'bluetooth_state') {
+        bluetoothState = e.propValue;
+      } else if(e.propNm == 'mac_address') {
+        macAddress.push(e.propValue);
       }
     });
   
@@ -130,10 +178,20 @@ export const createViewObject = (param) => {
       objNm: param.objNm,
       comment: param.comment,
       modDate: param.modDate,
-      useHypervisor: useHypervisor,
-      pollingTime: pollingTime,
-      selectedNtpIndex: selectedNtpIndex,
-      ntpAddress: ntpAddress
+      modUserId: param.modUserId,
+
+      usbMemory: usbMemory,
+      cdAndDvd: cdAndDvd,
+      printer: printer,
+      screenCapture: screenCapture,
+      sound: sound,
+      camera: camera,
+      keyboard: keyboard,
+      mouse: mouse,
+
+      wireless: wireless,
+      bluetoothState: bluetoothState,
+      macAddress: macAddress
     };
   
   } else {
