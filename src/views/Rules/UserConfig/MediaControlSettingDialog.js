@@ -23,7 +23,7 @@ import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
-
+import Checkbox from '@material-ui/core/Checkbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -167,11 +167,11 @@ class MediaControlSettingDialog extends Component {
         const bull = <span className={classes.bullet}>•</span>;
 
         if(dialogType === MediaControlSettingDialog.TYPE_ADD) {
-            title = "단말정책설정 등록";
+            title = "매체제어정책설정 등록";
         } else if(dialogType === MediaControlSettingDialog.TYPE_VIEW) {
-            title = "단말정책설정 정보";
+            title = "매체제어정책설정 정보";
         } else if(dialogType === MediaControlSettingDialog.TYPE_EDIT) {
-            title = "단말정책설정 수정";
+            title = "매체제어정책설정 수정";
         }
 
         return (
@@ -198,20 +198,16 @@ class MediaControlSettingDialog extends Component {
                     {(dialogType === MediaControlSettingDialog.TYPE_VIEW) &&
                         <div>
                             <Grid container spacing={24}>
-                                <Grid item xs={6} sm={6}>
+                                <Grid item xs={12}>
                                     <TextField
-                                        label="에이전트폴링주기(초)"
-                                        value={(editingViewItem) ? editingViewItem.pollingTime : ''}
+                                        label="USB메모리"
+                                        value={(editingViewItem.useHypervisor) ? '허가' : '금지'}
                                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                         disabled
                                     />
-                                </Grid>
-                                <Grid item xs={6} sm={6}>
-                                    <TextField
-                                        label="운영체제 보호"
-                                        value={(editingViewItem.useHypervisor) ? '구동' : '중단'}
-                                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                        disabled
+                                    <Checkbox
+                                        checked={editingViewItem.usbReadonly}
+                                        value="checkedA"
                                     />
                                 </Grid> 
                             </Grid>
@@ -232,24 +228,105 @@ class MediaControlSettingDialog extends Component {
                     }
                     {(dialogType === MediaControlSettingDialog.TYPE_EDIT || dialogType === MediaControlSettingDialog.TYPE_ADD) &&
                         <div>
-                            <TextField
-                                id="pollingTime"
-                                label="에이전트폴링주기(초)"
-                                value={(editingViewItem) ? editingViewItem.pollingTime : ''}
-                                onChange={this.handleValueChange("pollingTime")}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            />
-                            <div style={{marginTop:"10px"}}>
-                                <FormLabel style={{marginRight:"50px"}}>{bull} 운영체제 보호</FormLabel>
+                        
+                        <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between">
+                            <Grid item xs={6}>
+
                                 <FormControlLabel
                                     control={
-                                    <Switch onChange={this.handleValueChange('useHypervisor')} 
-                                        checked={(editingViewItem) ? editingViewItem.useHypervisor : false}
+                                    <Switch onChange={this.handleValueChange('cdAndDvd')} 
+                                        checked={(editingViewItem) ? editingViewItem.cdAndDvd : false}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.useHypervisor) ? '구동' : '중단'}
+                                    label={(editingViewItem.cdAndDvd) ? 'CD/DVD 허가' : 'CD/DVD 금지'}
+                                />
+
+                            </Grid>
+
+                            <Grid item xs={6} >
+
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('cdAndDvd')} 
+                                        checked={(editingViewItem) ? editingViewItem.cdAndDvd : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.cdAndDvd) ? 'CD/DVD 허가' : 'CD/DVD 금지'}
+                                />
+
+                            </Grid>
+                        </Grid>
+
+                        
+
+                        <Grid>
+                            <div style={{marginTop:"10px"}}>
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('usbMemory')} 
+                                        checked={(editingViewItem) ? editingViewItem.usbMemory : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.usbMemory) ? 'USB 메모리 허가' : 'USB 메모리 금지'}
+                                />
+                                <FormControlLabel style={{marginLeft:"40px"}}
+                                    control={
+                                    <Checkbox
+                                        checked={editingViewItem.usbReadonly}
+                                        onChange={this.handleValueChange('usbReadonly')}
+                                        value="1"
+                                    />
+                                    }
+                                    label="Readonly"
                                 />
                             </div>
+
+                            <div style={{marginTop:"10px"}}>
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('cdAndDvd')} 
+                                        checked={(editingViewItem) ? editingViewItem.cdAndDvd : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.cdAndDvd) ? 'CD/DVD 허가' : 'CD/DVD 금지'}
+                                />
+                            </div>
+
+                            <div style={{marginTop:"10px"}}>
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('printer')} 
+                                        checked={(editingViewItem) ? editingViewItem.printer : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.printer) ? '프린터 허가' : '프린터 금지'}
+                                />
+                            </div>
+
+                            <div style={{marginTop:"10px"}}>
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('screenCapture')} 
+                                        checked={(editingViewItem) ? editingViewItem.screenCapture : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.screenCapture) ? '화면캡쳐 허가' : '화면캡쳐 금지'}
+                                />
+                            </div>
+
+                            <div style={{marginTop:"10px"}}>
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('camera')} 
+                                        checked={(editingViewItem) ? editingViewItem.camera : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.camera) ? '카메라 허가' : '카메라 금지'}
+                                />
+                            </div>
+
+
+
                             <div style={{marginTop:"10px"}}>
                                 <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
                                 <Button onClick={this.handleAddNtp} variant="outlined" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
@@ -270,6 +347,8 @@ class MediaControlSettingDialog extends Component {
                                 ))}
                                 </List>
                             </div>
+                        </Grid>
+
                         </div>
                     }
                 </form>
