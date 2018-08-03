@@ -144,14 +144,14 @@ class ClientHostNameManageDialog extends Component {
                         label="이름"
                         value={(editingViewItem) ? editingViewItem.objNm : ''}
                         onChange={this.handleValueChange("objNm")}
-                        className={classes.dialogContainer}
+                        className={classes.fullWidth}
                         disabled={(dialogType === ClientHostNameManageDialog.TYPE_VIEW)}
                     />
                     <TextField
                         label="설명"
                         value={(editingViewItem) ? editingViewItem.comment : ''}
                         onChange={this.handleValueChange("comment")}
-                        className={classNames(classes.dialogContainer, classes.dialogItemRow)}
+                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === ClientHostNameManageDialog.TYPE_VIEW)}
                     />
                     {(dialogType === ClientHostNameManageDialog.TYPE_VIEW) &&
@@ -160,7 +160,7 @@ class ClientHostNameManageDialog extends Component {
                                 label="Hosts 정보"
                                 multiline
                                 value={(editingViewItem.hosts) ? editingViewItem.hosts : ''}
-                                className={classNames(classes.dialogContainer, classes.dialogItemRow)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
                         </div>                        
@@ -172,7 +172,7 @@ class ClientHostNameManageDialog extends Component {
                                 multiline
                                 value={(editingViewItem.hosts) ? editingViewItem.hosts : ''}
                                 onChange={this.handleValueChange("hosts")}
-                                className={classNames(classes.dialogContainer, classes.dialogItemRow)}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
                         </div>
                     }

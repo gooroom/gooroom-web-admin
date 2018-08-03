@@ -127,10 +127,18 @@ class MediaControlSetting extends Component {
         objId: '',
         objNm: '',
         comment: '',
-        useHypervisor: false,
-        pollingTime: '',
-        selectedNtpIndex: -1,
-        ntpAddress: ['']
+
+        usbMemory: '',
+        cdAndDvd: '',
+        printer: '',
+        screenCapture: '',
+        camera: '',
+        sound: '',
+        wireless: '',
+        keyboard: '',
+        mouse: '',
+        bluetooth: '',
+        bluetoothMac: ['']
       },
       dialogType: MediaControlSettingDialog.TYPE_ADD
     });

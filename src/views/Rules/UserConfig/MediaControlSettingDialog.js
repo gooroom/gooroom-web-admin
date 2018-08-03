@@ -31,6 +31,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
+import AddIcon from '@material-ui/icons/Add';
+
 import Radio from '@material-ui/core/Radio';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -63,7 +65,7 @@ class MediaControlSettingDialog extends Component {
         }
     }
 
-    handleNtpValueChange = index => event => {
+    handleBluetoothMacValueChange = index => event => {
         this.props.MediaControlSettingActions.setSelectedNtpValue({
             index: index,
             value: event.target.value
@@ -146,14 +148,14 @@ class MediaControlSettingDialog extends Component {
         }
     }
 
-    handleAddNtp = () => {
+    handleAddBluetoothMac = () => {
         const { MediaControlSettingActions } = this.props;
-        MediaControlSettingActions.addNtpAddress();
+        MediaControlSettingActions.addBluetoothMac();
     }
 
-    handleDeleteNtp = index => event => {
+    handleDeleteBluetoothMac = index => event => {
         const { MediaControlSettingActions } = this.props;
-        MediaControlSettingActions.deleteNtpAddress(index);
+        MediaControlSettingActions.deleteBluetoothMac(index);
     }
 
     render() {
@@ -197,7 +199,7 @@ class MediaControlSettingDialog extends Component {
                     />
                     {(dialogType === MediaControlSettingDialog.TYPE_VIEW) &&
                         <div>
-                            <Grid container spacing={24}>
+                            <Grid container spacing={24} className={classes.grNormalTableRow}>
                                 <Grid item xs={12}>
                                     <TextField
                                         label="USB메모리"
@@ -227,61 +229,39 @@ class MediaControlSettingDialog extends Component {
                         </div>                        
                     }
                     {(dialogType === MediaControlSettingDialog.TYPE_EDIT || dialogType === MediaControlSettingDialog.TYPE_ADD) &&
-                        <div>
+                        <div className={classes.dialogItemRowBig}>
                         
-                        <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between">
+                        <Grid item xs={12} container 
+                            alignItems="flex-end" direction="row" justify="space-between" 
+                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
                             <Grid item xs={6}>
-
-                                <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('cdAndDvd')} 
-                                        checked={(editingViewItem) ? editingViewItem.cdAndDvd : false}
-                                        color="primary" />
-                                    }
-                                    label={(editingViewItem.cdAndDvd) ? 'CD/DVD 허가' : 'CD/DVD 금지'}
-                                />
-
+                            <FormControlLabel
+                                control={
+                                <Switch onChange={this.handleValueChange('usbMemory')} 
+                                    checked={(editingViewItem) ? editingViewItem.usbMemory : false}
+                                    color="primary" />
+                                }
+                                label={(editingViewItem.usbMemory) ? 'USB 메모리 허가' : 'USB 메모리 금지'}
+                            />
                             </Grid>
-
-                            <Grid item xs={6} >
-
-                                <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('cdAndDvd')} 
-                                        checked={(editingViewItem) ? editingViewItem.cdAndDvd : false}
-                                        color="primary" />
-                                    }
-                                    label={(editingViewItem.cdAndDvd) ? 'CD/DVD 허가' : 'CD/DVD 금지'}
+                            <Grid item xs={6}>
+                            <FormControlLabel
+                                control={
+                                <Checkbox
+                                    checked={editingViewItem.usbReadonly}
+                                    onChange={this.handleValueChange('usbReadonly')}
+                                    value="1"
                                 />
-
+                                }
+                                label="Readonly"
+                            />
                             </Grid>
                         </Grid>
 
-                        
-
-                        <Grid>
-                            <div style={{marginTop:"10px"}}>
-                                <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('usbMemory')} 
-                                        checked={(editingViewItem) ? editingViewItem.usbMemory : false}
-                                        color="primary" />
-                                    }
-                                    label={(editingViewItem.usbMemory) ? 'USB 메모리 허가' : 'USB 메모리 금지'}
-                                />
-                                <FormControlLabel style={{marginLeft:"40px"}}
-                                    control={
-                                    <Checkbox
-                                        checked={editingViewItem.usbReadonly}
-                                        onChange={this.handleValueChange('usbReadonly')}
-                                        value="1"
-                                    />
-                                    }
-                                    label="Readonly"
-                                />
-                            </div>
-
-                            <div style={{marginTop:"10px"}}>
+                        <Grid item xs={12} container 
+                            alignItems="flex-end" direction="row" justify="space-between" 
+                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            <Grid item xs={6}>
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('cdAndDvd')} 
@@ -290,9 +270,8 @@ class MediaControlSettingDialog extends Component {
                                     }
                                     label={(editingViewItem.cdAndDvd) ? 'CD/DVD 허가' : 'CD/DVD 금지'}
                                 />
-                            </div>
-
-                            <div style={{marginTop:"10px"}}>
+                            </Grid>
+                            <Grid item xs={6} >
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('printer')} 
@@ -301,9 +280,13 @@ class MediaControlSettingDialog extends Component {
                                     }
                                     label={(editingViewItem.printer) ? '프린터 허가' : '프린터 금지'}
                                 />
-                            </div>
+                            </Grid>
+                        </Grid>
 
-                            <div style={{marginTop:"10px"}}>
+                        <Grid item xs={12} container 
+                            alignItems="flex-end" direction="row" justify="space-between" 
+                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            <Grid item xs={6}>
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('screenCapture')} 
@@ -312,9 +295,9 @@ class MediaControlSettingDialog extends Component {
                                     }
                                     label={(editingViewItem.screenCapture) ? '화면캡쳐 허가' : '화면캡쳐 금지'}
                                 />
-                            </div>
+                            </Grid>
 
-                            <div style={{marginTop:"10px"}}>
+                            <Grid item xs={6} >
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('camera')} 
@@ -323,30 +306,98 @@ class MediaControlSettingDialog extends Component {
                                     }
                                     label={(editingViewItem.camera) ? '카메라 허가' : '카메라 금지'}
                                 />
-                            </div>
+                            </Grid>
+                        </Grid>
 
+                        <Grid item xs={12} container 
+                            alignItems="flex-end" direction="row" justify="space-between" 
+                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            <Grid item xs={6}>
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('sound')} 
+                                        checked={(editingViewItem) ? editingViewItem.sound : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.sound) ? '사운드(소리, 마이크) 허가' : '사운드(소리, 마이크) 금지'}
+                                />
+                            </Grid>
 
+                            <Grid item xs={6} >
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('wireless')} 
+                                        checked={(editingViewItem) ? editingViewItem.wireless : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.wireless) ? '무선랜 허가' : '무선랜 금지'}
+                                />
+                            </Grid>
+                        </Grid>
 
-                            <div style={{marginTop:"10px"}}>
-                                <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
-                                <Button onClick={this.handleAddNtp} variant="outlined" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
-                                <List>
-                                {editingViewItem.ntpAddress && editingViewItem.ntpAddress.length > 0 && editingViewItem.ntpAddress.map((value, index) => (
-                                    <ListItem style={{paddingTop:"0px", paddingBottom:"0px"}} key={index} >
-                                        <Radio value={index.toString()} name="radio-button-demo" 
-                                            checked={editingViewItem.selectedNtpIndex != -1 && editingViewItem.selectedNtpIndex === index}
-                                            onChange={this.handleChangeSelectedNtp('selectedNtpIndex', index)}
-                                        />
-                                        <Input value={value} onChange={this.handleNtpValueChange(index)} style={{width:"100%"}} />
-                                        <ListItemSecondaryAction>
-                                            <IconButton onClick={this.handleDeleteNtp(index)} aria-label="NtpDelete">
+                        <Grid item xs={12} container 
+                            alignItems="flex-end" direction="row" justify="space-between" 
+                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            <Grid item xs={6}>
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('keyboard')} 
+                                        checked={(editingViewItem) ? editingViewItem.keyboard : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.keyboard) ? 'USB키보드 허가' : 'USB키보드 금지'}
+                                />
+                            </Grid>
+
+                            <Grid item xs={6} >
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('mouse')} 
+                                        checked={(editingViewItem) ? editingViewItem.mouse : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.mouse) ? 'USB마우스 허가' : 'USB마우스 금지'}
+                                />
+                            </Grid>
+                        </Grid>
+                        
+                        <Grid item xs={12} container 
+                            alignItems="flex-end" direction="row" justify="space-between" 
+                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            <Grid item xs={4}>
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('bluetooth')} 
+                                        checked={(editingViewItem) ? editingViewItem.bluetooth : false}
+                                        color="primary" />
+                                    }
+                                    label={(editingViewItem.bluetooth) ? '블루투스 허가' : '블루투스 금지'}
+                                />
+                            </Grid>
+                            <Grid item xs={8} >
+
+                            <FormLabel >{bull} 연결가능 블루투스 Mac 주소</FormLabel>
+                            <Button size="small" variant="contained" color="primary" 
+                                className={classes.smallIconButton}
+                                onClick={this.handleAddBluetoothMac}
+                            >
+                                <AddIcon />
+                            </Button>
+                            <List>
+                            {editingViewItem.bluetoothMac && editingViewItem.bluetoothMac.length > 0 && editingViewItem.bluetoothMac.map((value, index) => (
+                                <ListItem key={index} >
+                                    <Input value={value} onChange={this.handleBluetoothMacValueChange(index)}/>
+                                    <ListItemSecondaryAction>
+                                        <IconButton onClick={this.handleDeleteBluetoothMac(index)} aria-label="NtpDelete">
                                             <DeleteForeverIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                ))}
-                                </List>
-                            </div>
+                                        </IconButton>
+                                    </ListItemSecondaryAction>
+                                </ListItem>
+                            ))}
+                            </List>
+
+
+                            </Grid>
                         </Grid>
 
                         </div>
