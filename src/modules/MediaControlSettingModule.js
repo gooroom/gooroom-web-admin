@@ -21,8 +21,8 @@ const CHG_VIEWITEM_DATA = 'mediaControlSetting/CHG_VIEWITEM_DATA';
 const CHG_STORE_DATA = 'mediaControlSetting/CHG_STORE_DATA';
 
 const SET_SELECTED_NTP_VALUE = 'mediaControlSetting/SET_SELECTED_NTP_VALUE';
-const ADD_NTPADDRESS_ITEM = 'mediaControlSetting/ADD_NTPADDRESS_ITEM';
-const DELETE_NTPADDRESS_ITEM = 'mediaControlSetting/DELETE_NTPADDRESS_ITEM';
+const ADD_BLUETOOTHMAC_ITEM = 'mediaControlSetting/ADD_BLUETOOTHMAC_ITEM';
+const DELETE_BLUETOOTHMAC_ITEM = 'mediaControlSetting/DELETE_BLUETOOTHMAC_ITEM';
 
 
 // ...
@@ -141,10 +141,19 @@ const makeParameter = (param) => {
         objId: param.objId,
         objName: param.objNm,
         objComment: param.comment,
-        AGENTPOLLINGTIME: param.pollingTime,
-        USEHYPERVISOR: param.useHypervisor,
-        NTPSELECTADDRESS: (param.selectedNtpIndex > -1) ? param.ntpAddress[param.selectedNtpIndex] : '',
-        NTPADDRESSES: param.ntpAddress
+
+        usb_memory: param,
+        cd_dvd: param,
+        printer: param,
+        screen_capture: param,
+        camera: param,
+        microphone: param,
+        sound: param,
+        keyboard: param,
+        mouse: param,
+        wireless: param,
+        bluetooth_state: param,
+        macAddressList: param,
     };
 }
 
@@ -211,15 +220,15 @@ export const deleteMediaControlSettingData = (param) => dispatch => {
     });
 };
 
-export const addNtpAddress = () => dispatch => {
+export const addBluetoothMac = () => dispatch => {
     return dispatch({
-        type: ADD_NTPADDRESS_ITEM
+        type: ADD_BLUETOOTHMAC_ITEM
     });
 }
 
-export const deleteNtpAddress = (index) => dispatch => {
+export const deleteBluetoothMac = (index) => dispatch => {
     return dispatch({
-        type: DELETE_NTPADDRESS_ITEM,
+        type: DELETE_BLUETOOTHMAC_ITEM,
         payload: {index:index}
     });
 }
@@ -479,27 +488,27 @@ export default handleActions({
         };
     },
     [SET_SELECTED_NTP_VALUE]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress[action.payload.index] = action.payload.value;
-        const newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
+        let newBluetoothMac = state.editingItem.bluetoothMac;
+        newBluetoothMac[action.payload.index] = action.payload.value;
+        const newEditingItem = getMergedObject(state.editingItem, {'bluetoothMac': newBluetoothMac});
         return {
             ...state,
             editingItem: newEditingItem
         }
     },
-    [ADD_NTPADDRESS_ITEM]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress.push('');
-        const newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
+    [ADD_BLUETOOTHMAC_ITEM]: (state, action) => {
+        let newBluetoothMac = state.editingItem.bluetoothMac;
+        newBluetoothMac.push('');
+        const newEditingItem = getMergedObject(state.editingItem, {'bluetoothMac': newBluetoothMac});
         return {
             ...state,
             editingItem: newEditingItem
         }
     },
-    [DELETE_NTPADDRESS_ITEM]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress.splice(action.payload.index, 1);
-        let newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
+    [DELETE_BLUETOOTHMAC_ITEM]: (state, action) => {
+        let newBluetoothMac = state.editingItem.bluetoothMac;
+        newBluetoothMac.splice(action.payload.index, 1);
+        let newEditingItem = getMergedObject(state.editingItem, {'bluetoothMac': newBluetoothMac});
         // changed selected ntp addres index
         if(state.editingItem.selectedNtpIndex == action.payload.index) {
             newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': -1});

@@ -222,6 +222,9 @@ export const GrCommonStyle = theme => ({
         margin: '0 2px',
         transform: 'scale(0.8)',
     },
+    smallIconButton: {
+        minWidth: '34px'
+    },
 
     // Dialog Container and row - common (containerClass)
     dialogContainer: {
@@ -230,7 +233,10 @@ export const GrCommonStyle = theme => ({
         minWidth: 500
     },
     dialogItemRow: {
-        marginTop: "10px"
+        marginTop: "10px",
+    },
+    dialogItemRowBig: {
+        marginTop: "30px",
     },
 
     buttonInTableRow: {
