@@ -383,6 +383,8 @@ class MediaControlSettingDialog extends Component {
                             >
                                 <AddIcon />
                             </Button>
+                            <div>
+
                             <List>
                             {editingViewItem.bluetoothMac && editingViewItem.bluetoothMac.length > 0 && editingViewItem.bluetoothMac.map((value, index) => (
                                 <ListItem key={index} >
@@ -395,6 +397,8 @@ class MediaControlSettingDialog extends Component {
                                 </ListItem>
                             ))}
                             </List>
+                            
+                            </div>
 
 
                             </Grid>
