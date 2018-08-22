@@ -265,20 +265,20 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('cdAndDvd')} 
-                                        checked={(editingViewItem) ? editingViewItem.cdAndDvd : false}
+                                        checked={(editingViewItem && editingViewItem.cdAndDvd == 'allow') || (editingViewItem && editingViewItem.cdAndDvd)}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.cdAndDvd) ? 'CD/DVD 허가' : 'CD/DVD 금지'}
+                                    label={(editingViewItem && editingViewItem.cdAndDvd == 'allow') ? 'CD/DVD 허가' : 'CD/DVD 금지'}
                                 />
                             </Grid>
                             <Grid item xs={6} >
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('printer')} 
-                                        checked={(editingViewItem) ? editingViewItem.printer : false}
+                                        checked={(editingViewItem) ? (editingViewItem.printer == 'allow') : false}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.printer) ? '프린터 허가' : '프린터 금지'}
+                                    label={(editingViewItem && editingViewItem.printer == 'allow') ? '프린터 허가' : '프린터 금지'}
                                 />
                             </Grid>
                         </Grid>

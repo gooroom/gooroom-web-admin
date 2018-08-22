@@ -311,40 +311,24 @@ class MediaControlSetting extends Component {
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
               <Grid item xs={6}>
-                <TextField
-                  id='keyword'
-                  label='검색어'
-                  value={this.state.keyword}
-                  onChange={this.handleKeywordChange('keyword')}
-                  margin='dense'
-                />
+                <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} margin='dense' />
               </Grid>
 
               <Grid item xs={6}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={ () => this.handleSelectBtnClick() }
-                >
-                  <Search />
-                  조회
+                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                  <Search /> 조회
                 </Button>
-
               </Grid>
+
             </Grid>
 
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
+              <Button size="small" variant="contained" color="primary"
                 onClick={() => {
                   this.handleCreateButton();
                 }}
               >
-                <AddIcon />
-                등록
+                <AddIcon /> 등록
               </Button>
             </Grid>
           </Grid>            

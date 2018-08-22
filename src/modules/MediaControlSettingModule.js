@@ -141,26 +141,25 @@ const makeParameter = (param) => {
         objId: param.objId,
         objName: param.objNm,
         objComment: param.comment,
-
-        usb_memory: param,
-        cd_dvd: param,
-        printer: param,
-        screen_capture: param,
-        camera: param,
-        microphone: param,
-        sound: param,
-        keyboard: param,
-        mouse: param,
-        wireless: param,
-        bluetooth_state: param,
-        macAddressList: param,
+        
+        usb_memory: (param.usbMemory) ? ((param.usbReadonly) ? 'read_only' : 'allow') : 'disallow',
+        cd_dvd: (param.cdAndDvd) ? 'allow' : 'disallow',
+        printer: (param.printer) ? 'allow' : 'disallow',
+        screen_capture: (param.screenCapture) ? 'allow' : 'disallow',
+        camera: (param.camera) ? 'allow' : 'disallow',
+        sound: (param.sound) ? 'allow' : 'disallow',
+        keyboard: (param.keyboard) ? 'allow' : 'disallow',
+        mouse: (param.mouse) ? 'allow' : 'disallow',
+        wireless: (param.wireless) ? 'allow' : 'disallow',
+        bluetooth_state: (param.bluetooth) ? 'allow' : 'disallow',
+        macAddressList: (param.bluetoothMac && param.bluetoothMac.length > 0) ? param.bluetoothMac : ''
     };
 }
 
 // create (add)
 export const createMediaControlSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createMediaControl', makeParameter(param)).then(
+    return requestPostAPI('createMediaRule', makeParameter(param)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
