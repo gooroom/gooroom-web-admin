@@ -4,19 +4,19 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
+import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject, getListParam, getListData, getViewItem } from 'components/GrUtils/GrCommonUtils';
 
-import { createViewObject } from './MediaControlSettingInform';
+import { createViewObject } from './ClientSecuSettingInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import MediaControlSettingDialog from './MediaControlSettingDialog';
-import MediaControlSettingInform from './MediaControlSettingInform';
+import ClientSecuSettingDialog from './ClientSecuSettingDialog';
+import ClientSecuSettingInform from './ClientSecuSettingInform';
 import GrPane from 'containers/GrContent/GrPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -42,7 +42,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
-class MediaControlSettingHead extends Component {
+class ClientSecuSettingHead extends Component {
 
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
@@ -64,7 +64,7 @@ class MediaControlSettingHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          {MediaControlSettingHead.columnData.map(column => {
+          {ClientSecuSettingHead.columnData.map(column => {
             return (
               <TableCell
                 className={classes.grSmallAndHeaderCell}
@@ -94,7 +94,7 @@ class MediaControlSettingHead extends Component {
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class MediaControlSetting extends Component {
+class ClientSecuSetting extends Component {
 
   constructor(props) {
     super(props);
@@ -110,68 +110,54 @@ class MediaControlSetting extends Component {
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
+    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: MediaControlSettingProps, compId: menuCompId });
-    MediaControlSettingActions.readMediaControlSettingList(getMergedObject(listParam, {
+    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
+    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
       page: 0,
       compId: menuCompId
     }));
   };
   
   handleCreateButton = () => {
-    const { MediaControlSettingActions } = this.props;
-    MediaControlSettingActions.showDialog({
+    const { ClientSecuSettingActions } = this.props;
+    ClientSecuSettingActions.showDialog({
       selectedItem: {
         objId: '',
         objNm: '',
         comment: '',
 
-        usbMemory: '',
-        cdAndDvd: '',
-        printer: '',
-        screenCapture: '',
-        camera: '',
-        sound: '',
-        wireless: '',
-        keyboard: '',
-        mouse: '',
-        bluetooth: '',
-        bluetoothMac: ['']
+        screenTime: '',
+        passwordTime: '',
+        packageHandle: 'disallow',
+        state: 'disallow'
       },
-      dialogType: MediaControlSettingDialog.TYPE_ADD
+      dialogType: ClientSecuSettingDialog.TYPE_ADD
     });
   }
   
   handleRowClick = (event, id) => {
-    const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
+    const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: MediaControlSettingProps, compId: menuCompId });
+    const listData = getListData({ props: ClientSecuSettingProps, compId: menuCompId });
     const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
 
     console.log('selectedItem : ', selectedItem);
 
-    // create usb read-onry node
-    if(selectedItem.usbMemory == 'read_only') {
-      Object.assign(selectedItem, {usbReadonly: "allow"}); 
-    } else {
-      Object.assign(selectedItem, {usbReadonly: "disallow"}); 
-    }
-    
     // choice one from two views.
 
     // 1. popup dialog
-    // MediaControlSettingActions.showDialog({
+    // ClientSecuSettingActions.showDialog({
     //   selectedItem: viewObject,
-    //   dialogType: MediaControlSettingDialog.TYPE_VIEW,
+    //   dialogType: ClientSecuSettingDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    MediaControlSettingActions.showInform({
+    ClientSecuSettingActions.showInform({
       compId: menuCompId,
       selectedItem: selectedItem
     });
@@ -179,28 +165,28 @@ class MediaControlSetting extends Component {
   };
 
   handleEditClick = (event, id) => { 
-    const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
+    const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: MediaControlSettingProps, compId: menuCompId });
+    const listData = getListData({ props: ClientSecuSettingProps, compId: menuCompId });
     const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
 
-    MediaControlSettingActions.showDialog({
+    ClientSecuSettingActions.showDialog({
       compId: menuCompId,
       selectedItem: createViewObject(selectedItem),
-      dialogType: MediaControlSettingDialog.TYPE_EDIT,
+      dialogType: ClientSecuSettingDialog.TYPE_EDIT,
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { MediaControlSettingProps, MediaControlSettingActions, GrConfirmActions } = this.props;
+    const { ClientSecuSettingProps, ClientSecuSettingActions, GrConfirmActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: MediaControlSettingProps, compId: menuCompId });
+    const listData = getListData({ props: ClientSecuSettingProps, compId: menuCompId });
     const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
@@ -216,16 +202,16 @@ class MediaControlSetting extends Component {
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
 
     if(confirmValue) {
-      const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
+      const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
 
-      MediaControlSettingActions.deleteMediaControlSettingData({
+      ClientSecuSettingActions.deleteClientSecuSettingData({
         objId: paramObject.objId
       }).then((res) => {
 
-        const { editingCompId, viewItems } = MediaControlSettingProps;
+        const { editingCompId, viewItems } = ClientSecuSettingProps;
         viewItems.forEach((element) => {
           if(element && element.listParam) {
-            MediaControlSettingActions.readMediaControlSettingList(getMergedObject(element.listParam, {
+            ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(element.listParam, {
               compId: element._COMPID_
             }));
           }
@@ -239,11 +225,11 @@ class MediaControlSetting extends Component {
 
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-    const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
+    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: MediaControlSettingProps, compId: menuCompId });
-    MediaControlSettingActions.readMediaControlSettingList(getMergedObject(listParam, {
+    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
+    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
       page: page,
       compId: menuCompId
     }));
@@ -251,11 +237,11 @@ class MediaControlSetting extends Component {
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
-    const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
+    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: MediaControlSettingProps, compId: menuCompId });
-    MediaControlSettingActions.readMediaControlSettingList(getMergedObject(listParam, {
+    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
+    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
       rowsPerPage: event.target.value,
       compId: menuCompId
     }));
@@ -263,16 +249,16 @@ class MediaControlSetting extends Component {
   
   // .................................................
   handleRequestSort = (event, property) => {
-    const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
+    const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: MediaControlSettingProps, compId: menuCompId });
+    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
     let orderDir = "desc";
     if (listParam.orderColumn === property && listParam.orderDir === "desc") {
       orderDir = "asc";
     }
 
-    MediaControlSettingActions.readMediaControlSettingList(getMergedObject(listParam, {
+    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
       orderColumn: property, 
       orderDir: orderDir,
       compId: menuCompId
@@ -282,11 +268,11 @@ class MediaControlSetting extends Component {
 
   // .................................................
   handleKeywordChange = name => event => {
-    const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
+    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: MediaControlSettingProps, compId: menuCompId });
-    MediaControlSettingActions.changeStoreData({
+    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
+    ClientSecuSettingActions.changeStoreData({
       name: 'listParam',
       value: getMergedObject(listParam, {keyword: event.target.value}),
       compId: menuCompId
@@ -295,19 +281,19 @@ class MediaControlSetting extends Component {
 
   render() {
     const { classes } = this.props;
-    const { MediaControlSettingProps } = this.props;
+    const { ClientSecuSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
-    const emptyRows = 0;//MediaControlSettingProps.listParam.rowsPerPage - MediaControlSettingProps.listData.length;
+    const emptyRows = 0;//ClientSecuSettingProps.listParam.rowsPerPage - ClientSecuSettingProps.listData.length;
 
     const viewItem = getViewItem({
-      props: MediaControlSettingProps,
+      props: ClientSecuSettingProps,
       compId: menuCompId
     });
 
     const listData = (viewItem) ? viewItem.listData : [];
-    const listParam = (viewItem) ? viewItem.listParam : MediaControlSettingProps.defaultListParam;
-    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : MediaControlSettingProps.defaultListParam.orderDir;
-    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : MediaControlSettingProps.defaultListParam.orderColumn;
+    const listParam = (viewItem) ? viewItem.listParam : ClientSecuSettingProps.defaultListParam;
+    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientSecuSettingProps.defaultListParam.orderDir;
+    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientSecuSettingProps.defaultListParam.orderColumn;
     
     return (
       <div>
@@ -344,7 +330,7 @@ class MediaControlSetting extends Component {
           <div>
             <Table>
 
-              <MediaControlSettingHead
+              <ClientSecuSettingHead
                 classes={classes}
                 orderDir={orderDir}
                 orderColumn={orderColumn}
@@ -388,7 +374,7 @@ class MediaControlSetting extends Component {
                 {emptyRows > 0 && (
                   <TableRow >
                     <TableCell
-                      colSpan={MediaControlSettingHead.columnData.length + 1}
+                      colSpan={ClientSecuSettingHead.columnData.length + 1}
                     />
                   </TableRow>
                 )}
@@ -414,8 +400,8 @@ class MediaControlSetting extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
-        <MediaControlSettingInform compId={menuCompId} />
-        <MediaControlSettingDialog />
+        <ClientSecuSettingInform compId={menuCompId} />
+        <ClientSecuSettingDialog />
         <GrConfirm />
       </div>
     );
@@ -423,15 +409,15 @@ class MediaControlSetting extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  MediaControlSettingProps: state.MediaControlSettingModule
+  ClientSecuSettingProps: state.ClientSecuSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch),
+  ClientSecuSettingActions: bindActionCreators(ClientSecuSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaControlSetting));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientSecuSetting));
 
 
 
