@@ -20,7 +20,7 @@ const SET_EDITING_ITEM_VALUE = 'mediaControlSetting/SET_EDITING_ITEM_VALUE';
 const CHG_VIEWITEM_DATA = 'mediaControlSetting/CHG_VIEWITEM_DATA';
 const CHG_STORE_DATA = 'mediaControlSetting/CHG_STORE_DATA';
 
-const SET_SELECTED_NTP_VALUE = 'mediaControlSetting/SET_SELECTED_NTP_VALUE';
+const SET_BLUETOOTHMAC_ITEM = 'mediaControlSetting/SET_BLUETOOTHMAC_ITEM';
 const ADD_BLUETOOTHMAC_ITEM = 'mediaControlSetting/ADD_BLUETOOTHMAC_ITEM';
 const DELETE_BLUETOOTHMAC_ITEM = 'mediaControlSetting/DELETE_BLUETOOTHMAC_ITEM';
 
@@ -137,22 +137,24 @@ export const changeStoreData = (param) => dispatch => {
 };
 
 const makeParameter = (param) => {
+
+    const usbReadonly = (param.usbReadonly == 'allow') ? 'allow' : 'disallow';
     return {
         objId: param.objId,
         objName: param.objNm,
         objComment: param.comment,
         
-        usb_memory: (param.usbMemory) ? ((param.usbReadonly) ? 'read_only' : 'allow') : 'disallow',
-        cd_dvd: (param.cdAndDvd) ? 'allow' : 'disallow',
-        printer: (param.printer) ? 'allow' : 'disallow',
-        screen_capture: (param.screenCapture) ? 'allow' : 'disallow',
-        camera: (param.camera) ? 'allow' : 'disallow',
-        sound: (param.sound) ? 'allow' : 'disallow',
-        keyboard: (param.keyboard) ? 'allow' : 'disallow',
-        mouse: (param.mouse) ? 'allow' : 'disallow',
-        wireless: (param.wireless) ? 'allow' : 'disallow',
-        bluetooth_state: (param.bluetooth) ? 'allow' : 'disallow',
-        macAddressList: (param.bluetoothMac && param.bluetoothMac.length > 0) ? param.bluetoothMac : ''
+        usb_memory: (param.usbMemory == 'allow') ? ((usbReadonly == 'allow') ? 'read_only' : 'allow') : 'disallow',
+        cd_dvd: (param.cdAndDvd == 'allow') ? 'allow' : 'disallow',
+        printer: (param.printer == 'allow') ? 'allow' : 'disallow',
+        screen_capture: (param.screenCapture == 'allow') ? 'allow' : 'disallow',
+        camera: (param.camera == 'allow') ? 'allow' : 'disallow',
+        sound: (param.sound == 'allow') ? 'allow' : 'disallow',
+        keyboard: (param.keyboard == 'allow') ? 'allow' : 'disallow',
+        mouse: (param.mouse == 'allow') ? 'allow' : 'disallow',
+        wireless: (param.wireless == 'allow') ? 'allow' : 'disallow',
+        bluetooth_state: (param.bluetoothState == 'allow') ? 'allow' : 'disallow',
+        macAddressList: (param.macAddress && param.macAddress.length > 0) ? param.macAddress : ''
     };
 }
 
@@ -186,7 +188,7 @@ export const createMediaControlSettingData = (param) => dispatch => {
 // edit
 export const editMediaControlSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateMediaControl', makeParameter(param)).then(
+    return requestPostAPI('updateMediaRule', makeParameter(param)).then(
         (response) => {
             dispatch({
                 type: EDIT_MEDIACONTROL_SUCCESS,
@@ -204,7 +206,7 @@ export const editMediaControlSettingData = (param) => dispatch => {
 // delete
 export const deleteMediaControlSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteMediaControl', param).then(
+    return requestPostAPI('deleteMediaRule', param).then(
         (response) => {
             dispatch({
                 type: DELETE_MEDIACONTROL_SUCCESS,
@@ -232,9 +234,9 @@ export const deleteBluetoothMac = (index) => dispatch => {
     });
 }
 
-export const setSelectedNtpValue = (param) => dispatch => {
+export const setBluetoothMac = (param) => dispatch => {
     return dispatch({
-        type: SET_SELECTED_NTP_VALUE,
+        type: SET_BLUETOOTHMAC_ITEM,
         payload: param
     });
 };
@@ -486,28 +488,28 @@ export default handleActions({
             dialogType: ''
         };
     },
-    [SET_SELECTED_NTP_VALUE]: (state, action) => {
-        let newBluetoothMac = state.editingItem.bluetoothMac;
+    [SET_BLUETOOTHMAC_ITEM]: (state, action) => {
+        let newBluetoothMac = state.editingItem.macAddress;
         newBluetoothMac[action.payload.index] = action.payload.value;
-        const newEditingItem = getMergedObject(state.editingItem, {'bluetoothMac': newBluetoothMac});
+        const newEditingItem = getMergedObject(state.editingItem, {'macAddress': newBluetoothMac});
         return {
             ...state,
             editingItem: newEditingItem
         }
     },
     [ADD_BLUETOOTHMAC_ITEM]: (state, action) => {
-        let newBluetoothMac = state.editingItem.bluetoothMac;
+        let newBluetoothMac = (state.editingItem.macAddress) ? state.editingItem.macAddress : [];
         newBluetoothMac.push('');
-        const newEditingItem = getMergedObject(state.editingItem, {'bluetoothMac': newBluetoothMac});
+        const newEditingItem = getMergedObject(state.editingItem, {'macAddress': newBluetoothMac});
         return {
             ...state,
             editingItem: newEditingItem
         }
     },
     [DELETE_BLUETOOTHMAC_ITEM]: (state, action) => {
-        let newBluetoothMac = state.editingItem.bluetoothMac;
+        let newBluetoothMac = state.editingItem.macAddress;
         newBluetoothMac.splice(action.payload.index, 1);
-        let newEditingItem = getMergedObject(state.editingItem, {'bluetoothMac': newBluetoothMac});
+        let newEditingItem = getMergedObject(state.editingItem, {'macAddress': newBluetoothMac});
         // changed selected ntp addres index
         if(state.editingItem.selectedNtpIndex == action.payload.index) {
             newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': -1});
