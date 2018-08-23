@@ -136,6 +136,7 @@ export const createViewObject = (param) => {
 
   if(param) {
     let usbMemory = '';
+    let usbReadonly = '';
     let wireless = '';
     let bluetoothState = '';
     let cdAndDvd = '';
@@ -150,6 +151,11 @@ export const createViewObject = (param) => {
     param.propList.forEach(function(e) {
       if(e.propNm == 'usb_memory') {
         usbMemory = e.propValue;
+        if(usbMemory == 'read_only') {
+          usbReadonly = 'allow';
+        } else {
+          usbReadonly = 'disallow';
+        }
       } else if(e.propNm == 'cd_dvd') {
         cdAndDvd = e.propValue;
       } else if(e.propNm == 'printer') {
@@ -181,6 +187,7 @@ export const createViewObject = (param) => {
       modUserId: param.modUserId,
 
       usbMemory: usbMemory,
+      usbReadonly: usbReadonly,
       cdAndDvd: cdAndDvd,
       printer: printer,
       screenCapture: screenCapture,

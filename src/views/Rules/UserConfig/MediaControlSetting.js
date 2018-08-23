@@ -164,6 +164,12 @@ class MediaControlSetting extends Component {
     // });
 
     // 2. view detail content
+    // create usb read-onry node
+    if(selectedItem.usbMemory == 'read_only') {
+      Object.assign(selectedItem, {usbReadonly: "allow"}); 
+    } else {
+      Object.assign(selectedItem, {usbReadonly: "disallow"}); 
+    }
     MediaControlSettingActions.showInform({
       compId: menuCompId,
       selectedItem: selectedItem
