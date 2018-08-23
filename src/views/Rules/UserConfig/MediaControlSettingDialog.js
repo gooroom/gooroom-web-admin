@@ -82,8 +82,8 @@ class MediaControlSettingDialog extends Component {
     handleCreateData = (event) => {
         const { MediaControlSettingProps, GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
-            confirmTitle: '단말정책정보 등록',
-            confirmMsg: '단말정책정보를 등록하시겠습니까?',
+            confirmTitle: '매체제어정책정보 등록',
+            confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
             confirmObject: MediaControlSettingProps.editingItem
@@ -113,8 +113,8 @@ class MediaControlSettingDialog extends Component {
     handleEditData = (event, id) => {
         const { MediaControlSettingProps, GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
-            confirmTitle: '단말정책정보 수정',
-            confirmMsg: '단말정책정보를 수정하시겠습니까?',
+            confirmTitle: '매체제어정책정보 수정',
+            confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
             confirmObject: MediaControlSettingProps.editingItem
