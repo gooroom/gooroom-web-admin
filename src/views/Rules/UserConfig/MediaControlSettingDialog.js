@@ -369,32 +369,27 @@ class MediaControlSettingDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={8} >
-
-                            <FormLabel >{bull} 연결가능 블루투스 Mac 주소</FormLabel>
-                            <Button size="small" variant="contained" color="primary" 
-                                className={classes.smallIconButton}
-                                onClick={this.handleAddBluetoothMac}
-                            >
-                                <AddIcon />
-                            </Button>
-                            <div>
-
-                            <List>
-                            {editingViewItem.macAddress && editingViewItem.macAddress.length > 0 && editingViewItem.macAddress.map((value, index) => (
-                                <ListItem key={index} >
-                                    <Input value={value} onChange={this.handleBluetoothMacValueChange(index)}/>
-                                    <ListItemSecondaryAction>
-                                        <IconButton onClick={this.handleDeleteBluetoothMac(index)}>
-                                            <DeleteForeverIcon />
-                                        </IconButton>
-                                    </ListItemSecondaryAction>
-                                </ListItem>
-                            ))}
-                            </List>
-                            
-                            </div>
-
-
+                                <FormLabel >{bull} 연결가능 블루투스 Mac 주소</FormLabel>
+                                <Button size="small" variant="contained" color="primary" 
+                                    className={classes.smallIconButton}
+                                    onClick={this.handleAddBluetoothMac}
+                                >
+                                    <AddIcon />
+                                </Button>
+                                <div>
+                                    <List>
+                                    {editingViewItem.macAddress && editingViewItem.macAddress.length > 0 && editingViewItem.macAddress.map((value, index) => (
+                                        <ListItem key={index} >
+                                            <Input value={value} onChange={this.handleBluetoothMacValueChange(index)}/>
+                                            <ListItemSecondaryAction>
+                                                <IconButton onClick={this.handleDeleteBluetoothMac(index)}>
+                                                    <DeleteForeverIcon />
+                                                </IconButton>
+                                            </ListItemSecondaryAction>
+                                        </ListItem>
+                                    ))}
+                                    </List>
+                                </div>
                             </Grid>
                         </Grid>
 
