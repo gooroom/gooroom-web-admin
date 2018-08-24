@@ -30,6 +30,9 @@ class DeptManage extends Component {
   }
 
   handleSelectDept(node) {
+
+    console.log('handleSelectDept >> ', node);
+
     this.setState({
       deptName: node.title,
       deptId: node.key
