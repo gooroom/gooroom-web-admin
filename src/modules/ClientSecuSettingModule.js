@@ -87,7 +87,7 @@ export const readClientSecuSettingList = (param) => dispatch => {
     };
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientSecuRuleListPaged', resetParam).then(
+    return requestPostAPI('readClientSecuListPaged', resetParam).then(
         (response) => {
             dispatch({
                 type: GET_CLIENTSECU_LIST_SUCCESS,
