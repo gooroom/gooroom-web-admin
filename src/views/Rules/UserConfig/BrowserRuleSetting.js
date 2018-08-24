@@ -4,19 +4,19 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
+import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject, getListParam, getListData, getViewItem } from 'components/GrUtils/GrCommonUtils';
 
-import { createViewObject } from './ClientSecuSettingInform';
+import { createViewObject } from './BrowserRuleSettingInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import ClientSecuSettingDialog from './ClientSecuSettingDialog';
-import ClientSecuSettingInform from './ClientSecuSettingInform';
+import BrowserRuleSettingDialog from './BrowserRuleSettingDialog';
+import BrowserRuleSettingInform from './BrowserRuleSettingInform';
 import GrPane from 'containers/GrContent/GrPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -42,7 +42,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Header ########## ########## ########## ########## ########## 
 //
-class ClientSecuSettingHead extends Component {
+class BrowserRuleSettingHead extends Component {
 
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
@@ -64,7 +64,7 @@ class ClientSecuSettingHead extends Component {
     return (
       <TableHead>
         <TableRow>
-          {ClientSecuSettingHead.columnData.map(column => {
+          {BrowserRuleSettingHead.columnData.map(column => {
             return (
               <TableCell
                 className={classes.grSmallAndHeaderCell}
@@ -94,7 +94,7 @@ class ClientSecuSettingHead extends Component {
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientSecuSetting extends Component {
+class BrowserRuleSetting extends Component {
 
   constructor(props) {
     super(props);
@@ -110,38 +110,39 @@ class ClientSecuSetting extends Component {
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
-    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
+    const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
+    BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(listParam, {
       page: 0,
       compId: menuCompId
     }));
   };
   
   handleCreateButton = () => {
-    const { ClientSecuSettingActions } = this.props;
-    ClientSecuSettingActions.showDialog({
+    const { BrowserRuleSettingActions } = this.props;
+    BrowserRuleSettingActions.showDialog({
       selectedItem: {
         objId: '',
         objNm: '',
         comment: '',
 
-        screenTime: '',
-        passwordTime: '',
-        packageHandle: 'disallow',
-        state: 'disallow'
+        webSocket: 'disallow',
+        webWorker: 'disallow',
+        trustSetupId: '',
+        untrustSetupId: '',
+        trustUrlList: ['']
       },
-      dialogType: ClientSecuSettingDialog.TYPE_ADD
+      dialogType: BrowserRuleSettingDialog.TYPE_ADD
     });
   }
   
   handleRowClick = (event, id) => {
-    const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
+    const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: ClientSecuSettingProps, compId: menuCompId });
+    const listData = getListData({ props: BrowserRuleSettingProps, compId: menuCompId });
     const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
@@ -151,13 +152,13 @@ class ClientSecuSetting extends Component {
     // choice one from two views.
 
     // 1. popup dialog
-    // ClientSecuSettingActions.showDialog({
+    // BrowserRuleSettingActions.showDialog({
     //   selectedItem: viewObject,
-    //   dialogType: ClientSecuSettingDialog.TYPE_VIEW,
+    //   dialogType: BrowserRuleSettingDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    ClientSecuSettingActions.showInform({
+    BrowserRuleSettingActions.showInform({
       compId: menuCompId,
       selectedItem: selectedItem
     });
@@ -165,35 +166,35 @@ class ClientSecuSetting extends Component {
   };
 
   handleEditClick = (event, id) => { 
-    const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
+    const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: ClientSecuSettingProps, compId: menuCompId });
+    const listData = getListData({ props: BrowserRuleSettingProps, compId: menuCompId });
     const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
 
-    ClientSecuSettingActions.showDialog({
+    BrowserRuleSettingActions.showDialog({
       compId: menuCompId,
       selectedItem: createViewObject(selectedItem),
-      dialogType: ClientSecuSettingDialog.TYPE_EDIT,
+      dialogType: BrowserRuleSettingDialog.TYPE_EDIT,
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientSecuSettingProps, ClientSecuSettingActions, GrConfirmActions } = this.props;
+    const { BrowserRuleSettingProps, BrowserRuleSettingActions, GrConfirmActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: ClientSecuSettingProps, compId: menuCompId });
+    const listData = getListData({ props: BrowserRuleSettingProps, compId: menuCompId });
     const selectedItem = listData.find(function(element) {
       return element.objId == id;
     });
 
     const re = GrConfirmActions.showConfirm({
-      confirmTitle: '단말보안정책정보 삭제',
-      confirmMsg: '단말보안정책정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmTitle: '브라우저제어정보 삭제',
+      confirmMsg: '브라우저제어정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedItem
@@ -202,16 +203,16 @@ class ClientSecuSetting extends Component {
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
 
     if(confirmValue) {
-      const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
+      const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
 
-      ClientSecuSettingActions.deleteClientSecuSettingData({
+      BrowserRuleSettingActions.deleteBrowserRuleSettingData({
         objId: paramObject.objId
       }).then((res) => {
 
-        const { editingCompId, viewItems } = ClientSecuSettingProps;
+        const { editingCompId, viewItems } = BrowserRuleSettingProps;
         viewItems.forEach((element) => {
           if(element && element.listParam) {
-            ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(element.listParam, {
+            BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(element.listParam, {
               compId: element._COMPID_
             }));
           }
@@ -225,11 +226,11 @@ class ClientSecuSetting extends Component {
 
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
-    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
+    const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
+    BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(listParam, {
       page: page,
       compId: menuCompId
     }));
@@ -237,11 +238,11 @@ class ClientSecuSetting extends Component {
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
-    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
+    const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
+    BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(listParam, {
       rowsPerPage: event.target.value,
       compId: menuCompId
     }));
@@ -249,16 +250,16 @@ class ClientSecuSetting extends Component {
   
   // .................................................
   handleRequestSort = (event, property) => {
-    const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
+    const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
+    const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
     let orderDir = "desc";
     if (listParam.orderColumn === property && listParam.orderDir === "desc") {
       orderDir = "asc";
     }
 
-    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
+    BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(listParam, {
       orderColumn: property, 
       orderDir: orderDir,
       compId: menuCompId
@@ -268,11 +269,11 @@ class ClientSecuSetting extends Component {
 
   // .................................................
   handleKeywordChange = name => event => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
-    ClientSecuSettingActions.changeStoreData({
+    const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
+    BrowserRuleSettingActions.changeStoreData({
       name: 'listParam',
       value: getMergedObject(listParam, {keyword: event.target.value}),
       compId: menuCompId
@@ -281,19 +282,19 @@ class ClientSecuSetting extends Component {
 
   render() {
     const { classes } = this.props;
-    const { ClientSecuSettingProps } = this.props;
+    const { BrowserRuleSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
-    const emptyRows = 0;//ClientSecuSettingProps.listParam.rowsPerPage - ClientSecuSettingProps.listData.length;
+    const emptyRows = 0;//BrowserRuleSettingProps.listParam.rowsPerPage - BrowserRuleSettingProps.listData.length;
 
     const viewItem = getViewItem({
-      props: ClientSecuSettingProps,
+      props: BrowserRuleSettingProps,
       compId: menuCompId
     });
 
     const listData = (viewItem) ? viewItem.listData : [];
-    const listParam = (viewItem) ? viewItem.listParam : ClientSecuSettingProps.defaultListParam;
-    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientSecuSettingProps.defaultListParam.orderDir;
-    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientSecuSettingProps.defaultListParam.orderColumn;
+    const listParam = (viewItem) ? viewItem.listParam : BrowserRuleSettingProps.defaultListParam;
+    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : BrowserRuleSettingProps.defaultListParam.orderDir;
+    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : BrowserRuleSettingProps.defaultListParam.orderColumn;
     
     return (
       <div>
@@ -330,7 +331,7 @@ class ClientSecuSetting extends Component {
           <div>
             <Table>
 
-              <ClientSecuSettingHead
+              <BrowserRuleSettingHead
                 classes={classes}
                 orderDir={orderDir}
                 orderColumn={orderColumn}
@@ -374,7 +375,7 @@ class ClientSecuSetting extends Component {
                 {emptyRows > 0 && (
                   <TableRow >
                     <TableCell
-                      colSpan={ClientSecuSettingHead.columnData.length + 1}
+                      colSpan={BrowserRuleSettingHead.columnData.length + 1}
                     />
                   </TableRow>
                 )}
@@ -400,8 +401,8 @@ class ClientSecuSetting extends Component {
 
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientSecuSettingInform compId={menuCompId} />
-        <ClientSecuSettingDialog />
+        <BrowserRuleSettingInform compId={menuCompId} />
+        <BrowserRuleSettingDialog />
         <GrConfirm />
       </div>
     );
@@ -409,15 +410,15 @@ class ClientSecuSetting extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientSecuSettingProps: state.ClientSecuSettingModule
+  BrowserRuleSettingProps: state.BrowserRuleSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientSecuSettingActions: bindActionCreators(ClientSecuSettingActions, dispatch),
+  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientSecuSetting));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleSetting));
 
 
 
