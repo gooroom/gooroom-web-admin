@@ -257,6 +257,7 @@ class MediaControlSetting extends Component {
     const listParam = getListParam({ props: MediaControlSettingProps, compId: menuCompId });
     MediaControlSettingActions.readMediaControlSettingList(getMergedObject(listParam, {
       rowsPerPage: event.target.value,
+      page: 0,
       compId: menuCompId
     }));
   };

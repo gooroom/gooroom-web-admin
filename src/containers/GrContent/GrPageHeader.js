@@ -15,7 +15,7 @@ class GrPageHeader extends Component {
     render() {
         const { name, classes } = this.props;
 
-        console.log('GrPageHeader..................................name..', name);
+//        console.log('GrPageHeader..................................name..', name);
 
         return (
             <CardHeader title={name} className={classes.menuHeaderRoot}>GrPageHeader

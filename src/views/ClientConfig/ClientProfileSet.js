@@ -219,7 +219,7 @@ class ClientProfileSet extends Component {
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = (event) => {
     const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(getMergedObject(ClientProfileSetProps.listParam, {rowsPerPage: event.target.value}));
+    ClientProfileSetActions.readClientProfileSetList(getMergedObject(ClientProfileSetProps.listParam, {rowsPerPage: event.target.value,page: 0}));
   };
   
   // .................................................

@@ -38,7 +38,6 @@ class ClientGroupCompHead extends Component {
   };
 
   static columnData = [
-    { id: "chCheckbox", isCheckbox: true},
     { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
     { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
   ];

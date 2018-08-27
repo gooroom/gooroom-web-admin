@@ -149,7 +149,7 @@ class JobManage extends Component {
   handleChangeRowsPerPage = (event) => {
 
     const { JobManageActions, jobManageModule } = this.props;
-    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {rowsPerPage: event.target.value}));
+    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {rowsPerPage: event.target.value, page: 0}));
   };
 
   // .................................................

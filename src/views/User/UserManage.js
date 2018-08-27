@@ -309,6 +309,7 @@ class UserManage extends Component {
     const listParam = getListParam({ props: UserProps, compId: menuCompId });
     UserActions.readUserList(getMergedObject(listParam, {
       rowsPerPage: event.target.value,
+      page: 0,
       compId: menuCompId
     }));
   };

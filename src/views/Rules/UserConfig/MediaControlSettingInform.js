@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
 
 import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
 
@@ -34,20 +35,9 @@ class MediaControlSettingInform extends Component {
 
     const { classes } = this.props;
     const { MediaControlSettingProps, compId } = this.props;
-    const { viewItems } = MediaControlSettingProps;
     const bull = <span className={classes.bullet}>•</span>;
 
-    let selectedViewItem = null;
-    if(viewItems) {
-      const viewItem = viewItems.find(function(element) {
-        return element._COMPID_ == compId;
-      });
-      if(viewItem) {
-        selectedViewItem = createViewObject(viewItem.selectedItem);
-      }
-    }
-
-    console.log('selectedViewItem : ', selectedViewItem);
+    const selectedViewItem = createViewObject(getTableSelectedObject(MediaControlSettingProps, compId));
 
     return (
       <div>
