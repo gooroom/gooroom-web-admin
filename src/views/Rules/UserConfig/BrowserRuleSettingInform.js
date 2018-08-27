@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
 
 import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 
@@ -34,18 +35,9 @@ class BrowserRuleSettingInform extends Component {
 
     const { classes } = this.props;
     const { BrowserRuleSettingProps, compId } = this.props;
-    const { viewItems } = BrowserRuleSettingProps;
     const bull = <span className={classes.bullet}>•</span>;
 
-    let selectedViewItem = null;
-    if(viewItems) {
-      const viewItem = viewItems.find(function(element) {
-        return element._COMPID_ == compId;
-      });
-      if(viewItem) {
-        selectedViewItem = createViewObject(viewItem.selectedItem);
-      }
-    }
+    const selectedViewItem = createViewObject(getTableSelectedObject(BrowserRuleSettingProps, compId));
 
     return (
       <div>

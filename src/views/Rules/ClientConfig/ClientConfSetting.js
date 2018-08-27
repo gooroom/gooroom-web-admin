@@ -240,6 +240,7 @@ class ClientConfSetting extends Component {
     const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
     ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
       rowsPerPage: event.target.value,
+      page: 0,
       compId: menuCompId
     }));
   };

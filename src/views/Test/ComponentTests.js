@@ -97,7 +97,7 @@ class ComponentTests extends Component {
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {rowsPerPage: event.target.value}));
+    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {rowsPerPage: event.target.value, page: 0}));
   };
   
   // .................................................

@@ -243,6 +243,7 @@ class ClientSecuSetting extends Component {
     const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
     ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
       rowsPerPage: event.target.value,
+      page: 0,
       compId: menuCompId
     }));
   };

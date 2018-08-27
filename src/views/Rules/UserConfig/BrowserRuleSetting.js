@@ -244,6 +244,7 @@ class BrowserRuleSetting extends Component {
     const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
     BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(listParam, {
       rowsPerPage: event.target.value,
+      page: 0,
       compId: menuCompId
     }));
   };

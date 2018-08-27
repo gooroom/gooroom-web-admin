@@ -7,6 +7,8 @@ import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrTreeList from "components/GrTree/GrTreeList";
 import GrPane from "containers/GrContent/GrPane";
 
+import UserListComp from 'views/User/UserListComp';
+
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 
@@ -87,6 +89,11 @@ class DeptManage extends Component {
                   <Typography className={classes.deptTitle} color="textSecondary">
                   사용자 정보
                   </Typography>
+                  <UserListComp 
+                    name="UserListComp"
+                    compId="DeptManage"
+                    deptCd="11111"
+                  />
                 </CardContent>
               </Card>
             </Grid>

@@ -132,6 +132,9 @@ class GrTreeList extends Component {
   }
 
   handleClickNode(listItem, index) {
+
+    console.log('handleClickNode > listItem', listItem);
+
     if (listItem.children) {
       // fetch children data
       // request to server if children array is empty.
