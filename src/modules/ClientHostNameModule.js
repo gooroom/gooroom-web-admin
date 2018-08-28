@@ -280,15 +280,12 @@ export default handleActions({
         };
     },  
     [GET_HOSTNAME_SUCCESS]: (state, action) => {
-        let COMP_ID = '';
-        if(action.compId && action.compId != '') {
-            COMP_ID = action.compId;
-        }
+        const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data } = action.payload.data;
         let oldViewItems = [];
+
         if(state.viewItems) {
             oldViewItems = state.viewItems;
-
             const viewItem = oldViewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
@@ -301,6 +298,8 @@ export default handleActions({
             // 같은 오브젝트를 가지고 있는 콤프정보들을 모두 변경 한다.
             oldViewItems = oldViewItems.map((element) => {
                 if(element.selectedItem && (element.selectedItem.objId == data[0].objId)) {
+                    return Object.assign(element, {'selectedItem': data[0]});
+                } else if(element._COMPID_ == COMP_ID) {
                     return Object.assign(element, {'selectedItem': data[0]});
                 } else {
                     return element;

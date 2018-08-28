@@ -14,6 +14,8 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
+import { getTableListObject, getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
+import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -98,6 +100,13 @@ class ClientGroupCompHead extends Component {
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientGroupComp extends Component {
+
+  columnHeaders = [
+    { id: "chCheckbox", isCheckbox: true},
+    { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
+    { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
+  ];
+
   constructor(props) {
     super(props);
 
@@ -108,8 +117,8 @@ class ClientGroupComp extends Component {
 
   componentDidMount() {
 
-    const { ClientGroupActions, ClientGroupCompProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupCompProps.listParam, {
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.defaultListParam, {
       page:0,
       compId: this.props.compId
     }));
@@ -117,14 +126,14 @@ class ClientGroupComp extends Component {
 
   // .................................................
   handleRequestSort = (event, property) => {
-    const { ClientGroupActions, ClientGroupCompProps, compId } = this.props;
-    const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam } = ClientGroupCompProps;
+    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
+    const listObj = getTableListObject(ClientGroupProps, compId);
 
     let orderDir = "desc";
-    if (compListParam.orderColumn === property && compListParam.orderDir === "desc") {
+    if (listObj.orderColumn === property && listObj.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupActions.readClientGroupList(getMergedObject(compListParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
       orderColumn: property, 
       orderDir: orderDir,
       compId: this.props.compId
@@ -132,11 +141,12 @@ class ClientGroupComp extends Component {
   };
   
   handleSelectAllClick = (event, checked) => {
-    const { ClientGroupActions, ClientGroupCompProps, compId } = this.props;
-    const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam } = ClientGroupCompProps;
+    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
+    const listObj = getTableListObject(ClientGroupProps, compId);
+    const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam } = ClientGroupProps;
 
     if(checked) {
-      const newSelected = compListData.map(n => n.grpId)
+      const newSelected = listObj.listData.map(n => n.grpId)
       ClientGroupActions.changeStoreData({
         name: compId + '__selected',
         value: newSelected
@@ -153,11 +163,11 @@ class ClientGroupComp extends Component {
 
   handleRowClick = (event, id) => {
 
-    const { compId, ClientGroupCompProps } = this.props;
+    const { compId, ClientGroupProps } = this.props;
     const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
      
-    const { [compId + '__selected'] : preSelected } = ClientGroupCompProps;
+    const { [compId + '__selected'] : preSelected } = ClientGroupProps;
     const selectedIndex = preSelected.indexOf(id);
     let newSelected = [];
 
@@ -179,7 +189,7 @@ class ClientGroupComp extends Component {
       value: newSelected
     });
 
-    const selectedItem = ClientGroupCompProps[compId + '__listData'].find(function(element) {
+    const selectedItem = ClientGroupProps[compId + '__listData'].find(function(element) {
       return element.grpId == id;
     });
 
@@ -214,20 +224,20 @@ class ClientGroupComp extends Component {
   };
 
   handleChangePage = (event, page) => {
-    const { ClientGroupActions, ClientGroupCompProps, compId } = this.props;
-    const { [compId + '__listParam'] : compListParam } = ClientGroupCompProps;
+    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
+    const listObj = getTableListObject(ClientGroupProps, compId);
 
-    ClientGroupActions.readClientGroupList(getMergedObject(compListParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
       page: page, 
       compId: this.props.compId
     }));
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientGroupActions, ClientGroupCompProps, compId } = this.props;
-    const { [compId + '__listParam'] : compListParam } = ClientGroupCompProps;
+    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
+    const listObj = getTableListObject(ClientGroupProps, compId);
 
-    ClientGroupActions.readClientGroupList(getMergedObject(compListParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
       rowsPerPage: event.target.value,
       page:0,
       compId: this.props.compId
@@ -236,39 +246,51 @@ class ClientGroupComp extends Component {
 
   //isSelected = id => this.state.selected.indexOf(id) !== -1;
   isSelected = id => {
-    const { ClientGroupCompProps, compId } = this.props;
-    const { [compId + '__selected'] : compSelected } = ClientGroupCompProps;
-    return compSelected.indexOf(id) !== -1;
+    const { ClientGroupProps, compId } = this.props;
+    const selectedObj = getTableSelectedObject(ClientGroupProps, compId);
+    if(selectedObj) {
+      return selectedObj.indexOf(id) !== -1;
+    } else {
+      return false;
+    }    
   }
 
   // loadInitData = (param) => {
-  //   const { ClientGroupActions, ClientGroupCompProps } = this.props;
-  //   ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupCompProps.listParam, param));
+  //   const { ClientGroupActions, ClientGroupProps } = this.props;
+  //   ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, param));
   // };
 
   // .................................................
 
   render() {
     const { classes } = this.props;
-    const { ClientGroupCompProps, compId } = this.props;
-    const emptyRows = 0;// = ClientGroupCompProps.listParam.rowsPerPage - ClientGroupCompProps.listData.length;
-    const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam, [compId + '__selected'] : compSelected } = ClientGroupCompProps;
+    const { ClientGroupProps, compId } = this.props;
+    const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
+
+    const listObj = getTableListObject(ClientGroupProps, compId);
+    const selectedObj = getTableSelectedObject(ClientGroupProps, compId);
+    // const { 
+    //   [compId + '__listData'] : compListData, 
+    //   [compId + '__listParam'] : compListParam, 
+    //   [compId + '__selected'] : compSelected
+    // } = ClientGroupProps;
 
     return (
 
       <div>
         <Table>
-          <ClientGroupCompHead
+          <GrCommonTableHead
             classes={classes}
-            onSelectAllClick={this.handleSelectAllClick}
-            orderDir={compListParam && compListParam.orderDir}
-            orderColumn={compListParam && compListParam.orderColumn}
+            orderDir={listObj.orderDir}
+            orderColumn={listObj.orderColumn}
             onRequestSort={this.handleRequestSort}
-            selectedData={compSelected}
-            listData={compListData}
+            onSelectAllClick={this.handleSelectAllClick}
+            selectedData={selectedObj}
+            listData={listObj.listData}
+            columnData={this.columnHeaders}
           />
           <TableBody>
-          {compListData && compListData.map(n => {
+          {listObj.listData && listObj.listData.map(n => {
             const isSelected = this.isSelected(n.grpId);
             return (
               <TableRow
@@ -296,21 +318,21 @@ class ClientGroupComp extends Component {
           {emptyRows > 0 && (
             <TableRow >
               <TableCell
-                colSpan={ClientGroupCompHead.columnData.length + 1}
+                colSpan={this.columnHeaders.length + 1}
                 className={classes.grSmallAndClickCell}
               />
             </TableRow>
           )}
           </TableBody>
         </Table>
-        {compListParam &&
+        {listObj.listParam &&
           <TablePagination
             component='div'
-            count={compListParam && compListParam.rowsFiltered}
-            rowsPerPage={compListParam && compListParam.rowsPerPage}
+            count={listObj.listParam.rowsFiltered}
+            rowsPerPage={listObj.listParam.rowsPerPage}
             rowsPerPageOptions={[]}
             labelDisplayedRows={() => {return ''}}
-            page={compListParam && compListParam.page}
+            page={listObj.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -328,7 +350,7 @@ class ClientGroupComp extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupCompProps: state.ClientGroupModule,
+  ClientGroupProps: state.ClientGroupModule,
   ClientConfSettingProps: state.ClientConfSettingModule,
   ClientHostNameProps: state.ClientHostNameModule,
   ClientUpdateServerProps: state.ClientUpdateServerModule,
