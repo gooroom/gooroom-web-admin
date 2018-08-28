@@ -18,6 +18,8 @@ import ClientHostNameModule from './ClientHostNameModule';
 import ClientUpdateServerModule from './ClientUpdateServerModule';
 
 import MediaControlSettingModule from './MediaControlSettingModule';
+import BrowserRuleSettingModule from './BrowserRuleSettingModule';
+import ClientSecuSettingModule from './ClientSecuSettingModule';
 
 import ClientMasterManageModule from './ClientMasterManageModule';
 
@@ -33,6 +35,8 @@ export default combineReducers({
     ClientUpdateServerModule,
 
     MediaControlSettingModule,
+    BrowserRuleSettingModule,
+    ClientSecuSettingModule,
 
     ClientMasterManageModule,
     

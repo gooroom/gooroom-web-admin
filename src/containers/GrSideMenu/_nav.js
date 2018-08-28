@@ -103,13 +103,13 @@ export default {
           level: 2,
         },
         {
-          name: '???브라우저제어정책관리',
+          name: '브라우저제어정책관리',
           url: '/userconfig/browser/GRM0403/브라우저제어정책관리',
           icon: 'icon-folder',
           level: 2,
         },
         {
-          name: '???단말보안정책관리',
+          name: '단말보안정책관리',
           url: '/userconfig/security/GRM0404/단말보안정책관리',
           icon: 'icon-layers',
           level: 2,

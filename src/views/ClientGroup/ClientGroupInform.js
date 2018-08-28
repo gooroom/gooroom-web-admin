@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
@@ -34,13 +35,17 @@ class ClientGroupInform extends Component {
   render() {
 
     const { compId, ClientGroupCompProps } = this.props;
-    const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
-    const { isOpen } = this.props;
-    const { [compId + '__selectedItem'] : selectedItem } = ClientGroupCompProps;
+    //const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
 
+    const selectedItem = getTableSelectedObject(ClientGroupCompProps, compId);
+
+    if(selectedItem && selectedItem.hostNameConfigId) {
+      console.log('selectedItem.hostNameConfigId : ' + selectedItem.hostNameConfigId);
+    }
+ 
     return (
       <div>
-      {(isOpen && selectedItem) &&
+      {(ClientGroupCompProps.informOpen && selectedItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedItem) ? selectedItem.grpNm : ''}

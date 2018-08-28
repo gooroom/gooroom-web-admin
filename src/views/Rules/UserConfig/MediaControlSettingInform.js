@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
 
 import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
 
@@ -34,20 +35,9 @@ class MediaControlSettingInform extends Component {
 
     const { classes } = this.props;
     const { MediaControlSettingProps, compId } = this.props;
-    const { viewItems } = MediaControlSettingProps;
     const bull = <span className={classes.bullet}>•</span>;
 
-    let selectedViewItem = null;
-    if(viewItems) {
-      const viewItem = viewItems.find(function(element) {
-        return element._COMPID_ == compId;
-      });
-      if(viewItem) {
-        selectedViewItem = createViewObject(viewItem.selectedItem);
-      }
-    }
-
-    console.log('selectedViewItem : ', selectedViewItem);
+    const selectedViewItem = createViewObject(getTableSelectedObject(MediaControlSettingProps, compId));
 
     return (
       <div>
@@ -136,6 +126,7 @@ export const createViewObject = (param) => {
 
   if(param) {
     let usbMemory = '';
+    let usbReadonly = '';
     let wireless = '';
     let bluetoothState = '';
     let cdAndDvd = '';
@@ -150,6 +141,11 @@ export const createViewObject = (param) => {
     param.propList.forEach(function(e) {
       if(e.propNm == 'usb_memory') {
         usbMemory = e.propValue;
+        if(usbMemory == 'read_only') {
+          usbReadonly = 'allow';
+        } else {
+          usbReadonly = 'disallow';
+        }
       } else if(e.propNm == 'cd_dvd') {
         cdAndDvd = e.propValue;
       } else if(e.propNm == 'printer') {
@@ -181,6 +177,7 @@ export const createViewObject = (param) => {
       modUserId: param.modUserId,
 
       usbMemory: usbMemory,
+      usbReadonly: usbReadonly,
       cdAndDvd: cdAndDvd,
       printer: printer,
       screenCapture: screenCapture,
