@@ -47,16 +47,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
-//
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class ClientGroupManageHead extends Component {
+class ClientGroupManage extends Component {
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
+  columnHeaders = [
     { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
     { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
     { id: "chDesktopConfigNm", isOrder: true, numeric: false, disablePadding: true, label: "데스크톱환경" },
@@ -65,43 +58,6 @@ class ClientGroupManageHead extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
   ];
 
-  render() {
-    const { classes } = this.props;
-    const { orderDir, orderColumn } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {ClientGroupManageHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel active={orderColumn === column.id}
-                            direction={orderDir}
-                            onClick={this.createSortHandler(column.id)}
-                          >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
-class ClientGroupManage extends Component {
   constructor(props) {
     super(props);
 
@@ -137,42 +93,38 @@ class ClientGroupManage extends Component {
     const menuCompId = this.props.match.params.grMenuId;
 
     const listObj = getTableListObject(ClientGroupProps, menuCompId);
-    const selectedGroupObj = listObj.listData.find(function(element) {
+    const selectedItem = listObj.listData.find(function(element) {
       return element.grpId == id;
     });
 
     ClientGroupActions.showClientGroupInform({
       compId: menuCompId,
-      selectedItem: Object.assign({}, selectedGroupObj),
+      selectedItem: selectedItem,
     });
 
-    ClientConfSettingActions.getClientConfSetting({
-      compId: menuCompId,
-      objId: selectedGroupObj.clientConfigId
-    });
     
     // '단말정책설정' : 정책 정보 변경
     ClientConfSettingActions.getClientConfSetting({
       compId: menuCompId,
-      objId: selectedGroupObj.clientConfigId
+      objId: selectedItem.clientConfigId
     });   
 
     // 'Hosts설정' : 정책 정보 변경
     ClientHostNameActions.getClientHostName({
       compId: menuCompId,
-      objId: selectedGroupObj.hostNameConfigId
+      objId: selectedItem.hostNameConfigId
     });   
 
     // '업데이트서버설정' : 정책 정보 변경
     ClientUpdateServerActions.getClientUpdateServer({
       compId: menuCompId,
-      objId: selectedGroupObj.updateServerConfigId
+      objId: selectedItem.updateServerConfigId
     });   
 
     // '데스크톱 정보설정' : 정책 정보 변경
     ClientDesktopConfigActions.getClientDesktopConfig({
       compId: menuCompId,
-      desktopConfId: selectedGroupObj.desktopConfigId
+      desktopConfId: selectedItem.desktopConfigId
     });   
 
   };
@@ -362,14 +314,7 @@ class ClientGroupManage extends Component {
                 orderDir={listObj.orderDir}
                 orderColumn={listObj.orderColumn}
                 onRequestSort={this.handleRequestSort}
-                columnData={[
-                  { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
-                  { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
-                  { id: "chDesktopConfigNm", isOrder: true, numeric: false, disablePadding: true, label: "데스크톱환경" },
-                  { id: "chClientConfigNm", isOrder: true, numeric: false, disablePadding: true, label: "단말정책" },
-                  { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
-                  { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
-                ]}
+                columnData={this.columnHeaders}
               />
               <TableBody>
               {listObj.listData.map(n => {
@@ -404,7 +349,7 @@ class ClientGroupManage extends Component {
                 {emptyRows > 0 && (
                 <TableRow >
                   <TableCell
-                    colSpan={ClientGroupManageHead.columnData.length + 1}
+                    colSpan={this.columnHeaders.length + 1}
                     className={classes.grSmallAndClickCell}
                   />
                 </TableRow>

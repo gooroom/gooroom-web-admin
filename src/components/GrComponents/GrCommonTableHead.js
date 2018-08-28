@@ -10,6 +10,8 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import Checkbox from "@material-ui/core/Checkbox";
 
+import { arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
+
 class GrCommonTableHead extends Component {
 
   createSortHandler = property => event => {
@@ -32,7 +34,7 @@ class GrCommonTableHead extends Component {
     } = this.props;
 
     let checkSelection = 0;
-    if(listData && listData.length > 0) {
+    if(listData && listData.length > 0 && selectedData) {
       checkSelection = arrayContainsArray(selectedData, listData.map(x => x.grpId));
     }
     
@@ -43,13 +45,16 @@ class GrCommonTableHead extends Component {
 
             if(column.isCheckbox) {
               return (
-                <TableCell padding="checkbox" className={classes.grSmallAndHeaderCell} >
-                <Checkbox
-                  indeterminate={checkSelection === 50}
-                  checked={checkSelection === 100}
-                  onChange={onSelectAllClick}
-                />
-              </TableCell>
+                <TableCell padding="checkbox" 
+                  className={classes.grSmallAndHeaderCell} 
+                  key={column.id}
+                >
+                  <Checkbox
+                    indeterminate={checkSelection === 50}
+                    checked={checkSelection === 100}
+                    onChange={onSelectAllClick}
+                  />
+                </TableCell>
               );
             } else {
               return (

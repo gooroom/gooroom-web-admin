@@ -143,10 +143,6 @@ class ClientGroupManage extends Component {
       selectedItem: Object.assign({}, selectedGroupObj),
     });
 
-    ClientConfSettingActions.getClientConfSetting({
-      compId: compId,
-      objId: selectedGroupObj.clientConfigId
-    });
     
     // '단말정책설정' : 정책 정보 변경
     ClientConfSettingActions.getClientConfSetting({

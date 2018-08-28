@@ -15,6 +15,8 @@ import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrConfirm from 'components/GrComponents/GrConfirm';
 import GrPane from 'containers/GrContent/GrPane';
 
+import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -39,17 +41,12 @@ import JobInform from './JobInform';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-
 //
-//  ## Header ########## ########## ########## ########## ########## 
+//  ## Content ########## ########## ########## ########## ########## 
 //
-class JobManageHead extends Component {
+class JobManage extends Component {
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
+  columnHeaders = [
     { id: "chJobNo", isOrder: true, numeric: false, disablePadding: true, label: "작업번호" },
     { id: "chJobName", isOrder: true, numeric: false, disablePadding: true, label: "작업이름" },
     { id: "chReadyCount", isOrder: true, numeric: false, disablePadding: true, label: "진행상태" },
@@ -59,51 +56,6 @@ class JobManageHead extends Component {
     { id: "chRegUserId", isOrder: true, numeric: false, disablePadding: true, label: "등록자" },
     { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
   ];
-
-  render() {
-    const { classes } = this.props;
-    const {
-      orderDir,
-      orderColumn,
-    } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {JobManageHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? "none" : "default"}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(column.isOrder) &&
-                <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >
-                  {column.label}
-                </TableSortLabel>
-              }
-              {(!column.isOrder) &&
-                <p>{column.label}</p>
-              }
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
-class JobManage extends Component {
 
   constructor(props) {
     super(props);
@@ -266,11 +218,12 @@ class JobManage extends Component {
           <div>
             <Table>
             
-              <JobManageHead
+              <GrCommonTableHead
                 classes={classes}
                 orderDir={jobManageModule.listParam.orderDir}
                 orderColumn={jobManageModule.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
+                columnData={this.columnHeaders}
               />
               <TableBody>
                 {jobManageModule.listData.map(n => {
@@ -312,7 +265,7 @@ class JobManage extends Component {
                 {emptyRows > 0 && (
                   <TableRow >
                     <TableCell
-                      colSpan={JobManageHead.columnData.length + 1}
+                      colSpan={this.columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
