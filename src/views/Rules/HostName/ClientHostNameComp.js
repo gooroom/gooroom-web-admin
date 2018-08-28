@@ -9,6 +9,7 @@ import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
+import { getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
 import ClientHostNameDialog from './ClientHostNameManageDialog';
 import { createViewObject } from './ClientHostNameManageInform';
 
@@ -60,6 +61,9 @@ class ClientHostNameComp extends Component {
   render() {
     const { classes } = this.props;
     const { ClientHostNameProps, compId } = this.props;
+
+
+    
     const { viewItems } = ClientHostNameProps;
     const bull = <span className={classes.bullet}>•</span>;
     

@@ -105,6 +105,7 @@ class ClientHostNameManageDialog extends Component {
                         }
                     });
 
+                    // 아래 정보 조회는 효과 없음. - 보여줄 인폼 객체가 안보이는 상태임.
                     ClientHostNameActions.getClientHostName({
                         compId: editingCompId,
                         objId: paramObject.objId

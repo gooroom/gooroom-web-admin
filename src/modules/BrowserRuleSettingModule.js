@@ -6,23 +6,23 @@ import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 const COMMON_PENDING = 'mediaControlSetting/COMMON_PENDING';
 const COMMON_FAILURE = 'mediaControlSetting/COMMON_FAILURE';
 
-const GET_MEDIACONTROL_LIST_SUCCESS = 'mediaControlSetting/GET_LIST_SUCCESS';
-const GET_MEDIACONTROL_SUCCESS = 'mediaControlSetting/GET_MEDIACONTROL_SUCCESS';
-const CREATE_MEDIACONTROL_SUCCESS = 'mediaControlSetting/CREATE_MEDIACONTROL_SUCCESS';
-const EDIT_MEDIACONTROL_SUCCESS = 'mediaControlSetting/EDIT_MEDIACONTROL_SUCCESS';
-const DELETE_MEDIACONTROL_SUCCESS = 'mediaControlSetting/DELETE_MEDIACONTROL_SUCCESS';
+const GET_BROWSERRULE_LIST_SUCCESS = 'mediaControlSetting/GET_LIST_SUCCESS';
+const GET_BROWSERRULE_SUCCESS = 'mediaControlSetting/GET_BROWSERRULE_SUCCESS';
+const CREATE_BROWSERRULE_SUCCESS = 'mediaControlSetting/CREATE_BROWSERRULE_SUCCESS';
+const EDIT_BROWSERRULE_SUCCESS = 'mediaControlSetting/EDIT_BROWSERRULE_SUCCESS';
+const DELETE_BROWSERRULE_SUCCESS = 'mediaControlSetting/DELETE_BROWSERRULE_SUCCESS';
 
-const SHOW_MEDIACONTROL_INFORM = 'mediaControlSetting/SHOW_MEDIACONTROL_INFORM';
-const SHOW_MEDIACONTROL_DIALOG = 'mediaControlSetting/SHOW_MEDIACONTROL_DIALOG';
+const SHOW_BROWSERRULE_INFORM = 'mediaControlSetting/SHOW_BROWSERRULE_INFORM';
+const SHOW_BROWSERRULE_DIALOG = 'mediaControlSetting/SHOW_BROWSERRULE_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'mediaControlSetting/SET_EDITING_ITEM_VALUE';
 
 const CHG_VIEWITEM_DATA = 'mediaControlSetting/CHG_VIEWITEM_DATA';
 const CHG_STORE_DATA = 'mediaControlSetting/CHG_STORE_DATA';
 
-const SET_BLUETOOTHMAC_ITEM = 'mediaControlSetting/SET_BLUETOOTHMAC_ITEM';
-const ADD_BLUETOOTHMAC_ITEM = 'mediaControlSetting/ADD_BLUETOOTHMAC_ITEM';
-const DELETE_BLUETOOTHMAC_ITEM = 'mediaControlSetting/DELETE_BLUETOOTHMAC_ITEM';
+const SET_WHITELIST_ITEM = 'mediaControlSetting/SET_WHITELIST_ITEM';
+const ADD_WHITELIST_ITEM = 'mediaControlSetting/ADD_WHITELIST_ITEM';
+const DELETE_WHITELIST_ITEM = 'mediaControlSetting/DELETE_WHITELIST_ITEM';
 
 
 // ...
@@ -49,7 +49,7 @@ const initialState = {
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
-        type: SHOW_MEDIACONTROL_DIALOG,
+        type: SHOW_BROWSERRULE_DIALOG,
         payload: param
     });
 };
@@ -63,7 +63,7 @@ export const closeDialog = () => dispatch => {
 
 export const showInform = (param) => dispatch => {
     return dispatch({
-        type: SHOW_MEDIACONTROL_INFORM,
+        type: SHOW_BROWSERRULE_INFORM,
         payload: param
     });
 };
@@ -75,7 +75,7 @@ export const closeInform = () => dispatch => {
     });
 };
 
-export const readMediaControlSettingList = (param) => dispatch => {
+export const readBrowserRuleSettingList = (param) => dispatch => {
 
     const resetParam = {
         keyword: param.keyword,
@@ -87,10 +87,10 @@ export const readMediaControlSettingList = (param) => dispatch => {
     };
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readMediaRuleListPaged', resetParam).then(
+    return requestPostAPI('readBrowserRuleListPaged', resetParam).then(
         (response) => {
             dispatch({
-                type: GET_MEDIACONTROL_LIST_SUCCESS,
+                type: GET_BROWSERRULE_LIST_SUCCESS,
                 compId: param.compId,
                 payload: response
             });
@@ -103,13 +103,13 @@ export const readMediaControlSettingList = (param) => dispatch => {
     });
 };
 
-export const getMediaControlSetting = (param) => dispatch => {
+export const getBrowserRuleSetting = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readMediaControl', param).then(
+    return requestPostAPI('readBrowserRule', param).then(
         (response) => {
             dispatch({
-                type: GET_MEDIACONTROL_SUCCESS,
+                type: GET_BROWSERRULE_SUCCESS,
                 compId: compId,
                 payload: response
             });
@@ -137,36 +137,28 @@ export const changeStoreData = (param) => dispatch => {
 };
 
 const makeParameter = (param) => {
-
-    const usbReadonly = (param.usbReadonly == 'allow') ? 'allow' : 'disallow';
     return {
         objId: param.objId,
         objName: param.objNm,
         objComment: param.comment,
-        
-        usb_memory: (param.usbMemory == 'allow') ? ((usbReadonly == 'allow') ? 'read_only' : 'allow') : 'disallow',
-        cd_dvd: (param.cdAndDvd == 'allow') ? 'allow' : 'disallow',
-        printer: (param.printer == 'allow') ? 'allow' : 'disallow',
-        screen_capture: (param.screenCapture == 'allow') ? 'allow' : 'disallow',
-        camera: (param.camera == 'allow') ? 'allow' : 'disallow',
-        sound: (param.sound == 'allow') ? 'allow' : 'disallow',
-        keyboard: (param.keyboard == 'allow') ? 'allow' : 'disallow',
-        mouse: (param.mouse == 'allow') ? 'allow' : 'disallow',
-        wireless: (param.wireless == 'allow') ? 'allow' : 'disallow',
-        bluetooth_state: (param.bluetoothState == 'allow') ? 'allow' : 'disallow',
-        macAddressList: (param.macAddress && param.macAddress.length > 0) ? param.macAddress : ''
+
+        webSocket: param.webSocket,
+        webWorker: param.webWorker,
+        trustSetupId: param.trustSetupId,
+        untrustSetupId: param.untrustSetupId,
+        trustUrlList: (param.trustUrlList && param.trustUrlList.length > 0) ? param.trustUrlList : ''
     };
 }
 
 // create (add)
-export const createMediaControlSettingData = (param) => dispatch => {
+export const createBrowserRuleSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createMediaRule', makeParameter(param)).then(
+    return requestPostAPI('createBrowserRuleConf', makeParameter(param)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_MEDIACONTROL_SUCCESS,
+                        type: CREATE_BROWSERRULE_SUCCESS,
                         payload: response
                     });
                 }    
@@ -186,12 +178,12 @@ export const createMediaControlSettingData = (param) => dispatch => {
 };
 
 // edit
-export const editMediaControlSettingData = (param) => dispatch => {
+export const editBrowserRuleSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateMediaRule', makeParameter(param)).then(
+    return requestPostAPI('updateBrowserRuleConf', makeParameter(param)).then(
         (response) => {
             dispatch({
-                type: EDIT_MEDIACONTROL_SUCCESS,
+                type: EDIT_BROWSERRULE_SUCCESS,
                 payload: response
             });
         }
@@ -204,12 +196,12 @@ export const editMediaControlSettingData = (param) => dispatch => {
 };
 
 // delete
-export const deleteMediaControlSettingData = (param) => dispatch => {
+export const deleteBrowserRuleSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteMediaRule', param).then(
+    return requestPostAPI('deleteBrowserRuleConf', param).then(
         (response) => {
             dispatch({
-                type: DELETE_MEDIACONTROL_SUCCESS,
+                type: DELETE_BROWSERRULE_SUCCESS,
                 payload: response
             });
         }
@@ -221,22 +213,22 @@ export const deleteMediaControlSettingData = (param) => dispatch => {
     });
 };
 
-export const addBluetoothMac = () => dispatch => {
+export const addWhiteList = () => dispatch => {
     return dispatch({
-        type: ADD_BLUETOOTHMAC_ITEM
+        type: ADD_WHITELIST_ITEM
     });
 }
 
-export const deleteBluetoothMac = (index) => dispatch => {
+export const deleteWhiteList = (index) => dispatch => {
     return dispatch({
-        type: DELETE_BLUETOOTHMAC_ITEM,
+        type: DELETE_WHITELIST_ITEM,
         payload: {index:index}
     });
 }
 
-export const setBluetoothMac = (param) => dispatch => {
+export const setWhiteList = (param) => dispatch => {
     return dispatch({
-        type: SET_BLUETOOTHMAC_ITEM,
+        type: SET_WHITELIST_ITEM,
         payload: param
     });
 };
@@ -260,7 +252,7 @@ export default handleActions({
         };
     },
 
-    [GET_MEDIACONTROL_LIST_SUCCESS]: (state, action) => {
+    [GET_BROWSERRULE_LIST_SUCCESS]: (state, action) => {
 
         const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
@@ -324,13 +316,13 @@ export default handleActions({
             viewItems: oldViewItems
         };
     }, 
-    [GET_MEDIACONTROL_SUCCESS]: (state, action) => {
+    [GET_BROWSERRULE_SUCCESS]: (state, action) => {
         const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data } = action.payload.data;
         let oldViewItems = [];
+
         if(state.viewItems) {
             oldViewItems = state.viewItems;
-            
             const viewItem = oldViewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
@@ -371,7 +363,7 @@ export default handleActions({
             };
         }
     },
-    [SHOW_MEDIACONTROL_DIALOG]: (state, action) => {
+    [SHOW_BROWSERRULE_DIALOG]: (state, action) => {
         return {
             ...state,
             editingItem: Object.assign({}, action.payload.selectedItem),
@@ -380,7 +372,7 @@ export default handleActions({
             dialogType: action.payload.dialogType,
         };
     },
-    [SHOW_MEDIACONTROL_INFORM]: (state, action) => {
+    [SHOW_BROWSERRULE_INFORM]: (state, action) => {
 
         const COMP_ID = action.payload.compId;
 
@@ -456,24 +448,14 @@ export default handleActions({
             viewItems: oldViewItems
         }
     },
-    [CREATE_MEDIACONTROL_SUCCESS]: (state, action) => {
+    [CREATE_BROWSERRULE_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
             error: false,
         };
     },
-    [EDIT_MEDIACONTROL_SUCCESS]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: false,
-            informOpen: false,
-            dialogOpen: false,
-            dialogType: ''
-        };
-    },
-    [DELETE_MEDIACONTROL_SUCCESS]: (state, action) => {
+    [EDIT_BROWSERRULE_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -483,28 +465,38 @@ export default handleActions({
             dialogType: ''
         };
     },
-    [SET_BLUETOOTHMAC_ITEM]: (state, action) => {
-        let newBluetoothMac = state.editingItem.macAddress;
-        newBluetoothMac[action.payload.index] = action.payload.value;
-        const newEditingItem = getMergedObject(state.editingItem, {'macAddress': newBluetoothMac});
+    [DELETE_BROWSERRULE_SUCCESS]: (state, action) => {
+        return {
+            ...state,
+            pending: false,
+            error: false,
+            informOpen: false,
+            dialogOpen: false,
+            dialogType: ''
+        };
+    },
+    [SET_WHITELIST_ITEM]: (state, action) => {
+        let newWhiteList = state.editingItem.trustUrlList;
+        newWhiteList[action.payload.index] = action.payload.value;
+        const newEditingItem = getMergedObject(state.editingItem, {'trustUrlList': newWhiteList});
         return {
             ...state,
             editingItem: newEditingItem
         }
     },
-    [ADD_BLUETOOTHMAC_ITEM]: (state, action) => {
-        let newBluetoothMac = (state.editingItem.macAddress) ? state.editingItem.macAddress : [];
-        newBluetoothMac.push('');
-        const newEditingItem = getMergedObject(state.editingItem, {'macAddress': newBluetoothMac});
+    [ADD_WHITELIST_ITEM]: (state, action) => {
+        let newWhiteList = (state.editingItem.trustUrlList) ? state.editingItem.trustUrlList : [];
+        newWhiteList.push('');
+        const newEditingItem = getMergedObject(state.editingItem, {'trustUrlList': newWhiteList});
         return {
             ...state,
             editingItem: newEditingItem
         }
     },
-    [DELETE_BLUETOOTHMAC_ITEM]: (state, action) => {
-        let newBluetoothMac = state.editingItem.macAddress;
-        newBluetoothMac.splice(action.payload.index, 1);
-        let newEditingItem = getMergedObject(state.editingItem, {'macAddress': newBluetoothMac});
+    [DELETE_WHITELIST_ITEM]: (state, action) => {
+        let newWhiteList = state.editingItem.trustUrlList;
+        newWhiteList.splice(action.payload.index, 1);
+        let newEditingItem = getMergedObject(state.editingItem, {'trustUrlList': newWhiteList});
         // changed selected ntp addres index
         if(state.editingItem.selectedNtpIndex == action.payload.index) {
             newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': -1});

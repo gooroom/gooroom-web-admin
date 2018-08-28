@@ -195,7 +195,7 @@ class ClientRegKey extends Component {
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {rowsPerPage: event.target.value}));
+    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {rowsPerPage: event.target.value, page: 0}));
   };
   
   // .................................................

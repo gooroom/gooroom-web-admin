@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
 
-import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -27,20 +27,21 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientHostNameInform extends Component {
+class ClientSecuSettingInform extends Component {
 
   // .................................................
 
   render() {
+
     const { classes } = this.props;
-    const { ClientHostNameProps, compId } = this.props;
+    const { ClientSecuSettingProps, compId } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = createViewObject(getTableSelectedObject(ClientHostNameProps, compId));
+    const selectedViewItem = createViewObject(getTableSelectedObject(ClientSecuSettingProps, compId));
 
     return (
       <div>
-      {(ClientHostNameProps.informOpen && selectedViewItem) &&
+      {(ClientSecuSettingProps.informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.objNm : ''}
@@ -55,10 +56,28 @@ class ClientHostNameInform extends Component {
             <br />
             <Table>
               <TableBody>
+
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.hosts}</pre></TableCell>
+                  <TableCell component="th" scope="row">{bull} 화면보호기 설정시간(분)</TableCell>
+                  <TableCell numeric>{selectedViewItem.screenTime}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 패스워드 변경주기(일)</TableCell>
+                  <TableCell numeric>{selectedViewItem.passwordTime}</TableCell>
                 </TableRow>
+
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 패키지추가/삭제 기능</TableCell>
+                  <TableCell numeric>{selectedViewItem.packageHandle}</TableCell>
+                  <TableCell component="th" scope="row"></TableCell>
+                  <TableCell numeric></TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 전체네트워크허용</TableCell>
+                  <TableCell numeric>{selectedViewItem.state}</TableCell>
+                  <TableCell component="th" scope="row"></TableCell>
+                  <TableCell numeric></TableCell>
+                </TableRow>
+
               </TableBody>
             </Table>
 
@@ -71,26 +90,33 @@ class ClientHostNameInform extends Component {
   }
 }
 
-
 const mapStateToProps = (state) => ({
-  ClientHostNameProps: state.ClientHostNameModule
+  ClientSecuSettingProps: state.ClientSecuSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
+  ClientSecuSettingActions: bindActionCreators(ClientSecuSettingActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientHostNameInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientSecuSettingInform));
 
 export const createViewObject = (param) => {
 
   if(param) {
-
-    let hosts = '';
-  
+    let screenTime = '';
+    let passwordTime = '';
+    let packageHandle = '';
+    let state = '';
+    
     param.propList.forEach(function(e) {
-      if(e.propNm == 'HOSTS') {
-        hosts = e.propValue;
+      if(e.propNm == 'screen_time') {
+        screenTime = e.propValue;
+      } else if(e.propNm == 'password_time') {
+        passwordTime = e.propValue;
+      } else if(e.propNm == 'package_handle') {
+        packageHandle = e.propValue;
+      } else if(e.propNm == 'state') {
+        state = e.propValue;
       }
     });
   
@@ -99,7 +125,12 @@ export const createViewObject = (param) => {
       objNm: param.objNm,
       comment: param.comment,
       modDate: param.modDate,
-      hosts: hosts
+      modUserId: param.modUserId,
+
+      screenTime: screenTime,
+      passwordTime: passwordTime,
+      packageHandle: packageHandle,
+      state: state
     };
   
   } else {

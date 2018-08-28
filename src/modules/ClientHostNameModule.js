@@ -67,13 +67,12 @@ export const showInform = (param) => dispatch => {
 export const closeInform = () => dispatch => {
     return dispatch({
         type: CHG_STORE_DATA,
-        payload: {name:"informOpen",value:false}
+        payload: {name:"informOpen", value:false}
     });
 };
 
 // ...
-export const readClientHostNameList = (param) => dispatch => {
-    
+export const readClientHostNameList = (param) => dispatch => {    
     const resetParam = {
         keyword: param.keyword,
         page: param.page,
@@ -227,23 +226,16 @@ export default handleActions({
 
     [GET_HOSTNAME_LIST_SUCCESS]: (state, action) => {
 
-        let COMP_ID = '';
-        if(action.compId && action.compId != '') {
-            COMP_ID = action.compId;
-        }
-
+        let COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
 
         let oldViewItems = [];
         if(state.viewItems) {
-
             oldViewItems = state.viewItems;
             const viewItem = oldViewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
-
             if(viewItem) {
-
                 Object.assign(viewItem, {
                     'listData': data,
                     'listParam': Object.assign({}, viewItem.listParam, {
@@ -253,9 +245,7 @@ export default handleActions({
                         rowsPerPage: parseInt(rowLength, 10)
                     })
                 });
-
             } else {
-
                 // 현재 콤프아이디로 데이타 없음. -> 추가 함
                 oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
                     'listData': data,
@@ -270,10 +260,8 @@ export default handleActions({
                         rowsPerPage: parseInt(rowLength, 10)
                     }
                 }));
-
             }
         } else {
-
             oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
                 'listData': data,
                 'listParam': Object.assign({}, state.defaultListParam, {
@@ -283,9 +271,7 @@ export default handleActions({
                     rowsPerPage: parseInt(rowLength, 10)
                 })
             }));
-
         }
-
         return {
             ...state,
             pending: false,
@@ -294,15 +280,12 @@ export default handleActions({
         };
     },  
     [GET_HOSTNAME_SUCCESS]: (state, action) => {
-        let COMP_ID = '';
-        if(action.compId && action.compId != '') {
-            COMP_ID = action.compId;
-        }
+        const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data } = action.payload.data;
         let oldViewItems = [];
+
         if(state.viewItems) {
             oldViewItems = state.viewItems;
-
             const viewItem = oldViewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
@@ -315,6 +298,8 @@ export default handleActions({
             // 같은 오브젝트를 가지고 있는 콤프정보들을 모두 변경 한다.
             oldViewItems = oldViewItems.map((element) => {
                 if(element.selectedItem && (element.selectedItem.objId == data[0].objId)) {
+                    return Object.assign(element, {'selectedItem': data[0]});
+                } else if(element._COMPID_ == COMP_ID) {
                     return Object.assign(element, {'selectedItem': data[0]});
                 } else {
                     return element;
@@ -354,7 +339,6 @@ export default handleActions({
     [SHOW_HOSTNAME_INFORM]: (state, action) => {
 
         const COMP_ID = action.payload.compId;
-
         let oldViewItems = [];
         if(state.viewItems) {
             oldViewItems = state.viewItems;

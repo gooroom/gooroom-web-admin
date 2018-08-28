@@ -55,7 +55,7 @@ class MediaControlSettingDialog extends Component {
         if(event.target.type === 'checkbox') {
             this.props.MediaControlSettingActions.setEditingItemValue({
                 name: name,
-                value: event.target.checked
+                value: (event.target.checked) ? 'allow' : 'disallow'
             });
         } else {
             this.props.MediaControlSettingActions.setEditingItemValue({
@@ -66,7 +66,7 @@ class MediaControlSettingDialog extends Component {
     }
 
     handleBluetoothMacValueChange = index => event => {
-        this.props.MediaControlSettingActions.setSelectedNtpValue({
+        this.props.MediaControlSettingActions.setBluetoothMac({
             index: index,
             value: event.target.value
         });
@@ -82,8 +82,8 @@ class MediaControlSettingDialog extends Component {
     handleCreateData = (event) => {
         const { MediaControlSettingProps, GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
-            confirmTitle: '단말정책정보 등록',
-            confirmMsg: '단말정책정보를 등록하시겠습니까?',
+            confirmTitle: '매체제어정책정보 등록',
+            confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
             confirmObject: MediaControlSettingProps.editingItem
@@ -113,8 +113,8 @@ class MediaControlSettingDialog extends Component {
     handleEditData = (event, id) => {
         const { MediaControlSettingProps, GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
-            confirmTitle: '단말정책정보 수정',
-            confirmMsg: '단말정책정보를 수정하시겠습니까?',
+            confirmTitle: '매체제어정책정보 수정',
+            confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
             confirmObject: MediaControlSettingProps.editingItem
@@ -136,10 +136,11 @@ class MediaControlSettingDialog extends Component {
                         }
                     });
 
-                    MediaControlSettingActions.getMediaControlSetting({
-                        compId: editingCompId,
-                        objId: paramObject.objId
-                    });
+                    // 아래 정보 조회는 효과 없음. - 보여줄 인폼 객체가 안보이는 상태임.
+                    // MediaControlSettingActions.getMediaControlSetting({
+                    //     compId: editingCompId,
+                    //     objId: paramObject.objId
+                    // });
 
                 this.handleClose();
             }, (res) => {
@@ -156,6 +157,10 @@ class MediaControlSettingDialog extends Component {
     handleDeleteBluetoothMac = index => event => {
         const { MediaControlSettingActions } = this.props;
         MediaControlSettingActions.deleteBluetoothMac(index);
+    }
+
+    checkAllow = value => {
+        return (value == 'allow');
     }
 
     render() {
@@ -213,19 +218,6 @@ class MediaControlSettingDialog extends Component {
                                     />
                                 </Grid> 
                             </Grid>
-                            <TextField
-                                label="선택된 NTP 서버 주소"
-                                value={(editingViewItem.selectedNtpIndex > -1) ? editingViewItem.ntpAddress[editingViewItem.selectedNtpIndex] : ''}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                disabled
-                            />
-                            <TextField
-                                label="NTP 서버로 사용할 주소정보"
-                                multiline
-                                value={(editingViewItem.ntpAddress.length > 0) ? editingViewItem.ntpAddress.join('\n') : ''}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                disabled
-                            />
                         </div>                        
                     }
                     {(dialogType === MediaControlSettingDialog.TYPE_EDIT || dialogType === MediaControlSettingDialog.TYPE_ADD) &&
@@ -237,24 +229,26 @@ class MediaControlSettingDialog extends Component {
                             <Grid item xs={6}>
                             <FormControlLabel
                                 control={
-                                <Switch onChange={this.handleValueChange('usbMemory')} 
-                                    checked={(editingViewItem) ? editingViewItem.usbMemory : false}
+                                <Switch onChange={this.handleValueChange('usbMemory')}
+                                    checked={this.checkAllow(editingViewItem.usbMemory)}
                                     color="primary" />
                                 }
                                 label={(editingViewItem.usbMemory) ? 'USB 메모리 허가' : 'USB 메모리 금지'}
                             />
                             </Grid>
                             <Grid item xs={6}>
+
+
                             <FormControlLabel
                                 control={
-                                <Checkbox
-                                    checked={editingViewItem.usbReadonly}
-                                    onChange={this.handleValueChange('usbReadonly')}
-                                    value="1"
+                                <Checkbox onChange={this.handleValueChange('usbReadonly')}
+                                    checked={this.checkAllow(editingViewItem.usbReadonly)}
                                 />
                                 }
                                 label="Readonly"
                             />
+
+
                             </Grid>
                         </Grid>
 
@@ -265,20 +259,20 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('cdAndDvd')} 
-                                        checked={(editingViewItem && editingViewItem.cdAndDvd == 'allow') || (editingViewItem && editingViewItem.cdAndDvd)}
+                                        checked={this.checkAllow(editingViewItem.cdAndDvd)}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem && editingViewItem.cdAndDvd == 'allow') ? 'CD/DVD 허가' : 'CD/DVD 금지'}
+                                    label={(editingViewItem.cdAndDvd == 'allow') ? 'CD/DVD 허가' : 'CD/DVD 금지'}
                                 />
                             </Grid>
                             <Grid item xs={6} >
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('printer')} 
-                                        checked={(editingViewItem) ? (editingViewItem.printer == 'allow') : false}
+                                        checked={this.checkAllow(editingViewItem.printer)}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem && editingViewItem.printer == 'allow') ? '프린터 허가' : '프린터 금지'}
+                                    label={(editingViewItem.printer == 'allow') ? '프린터 허가' : '프린터 금지'}
                                 />
                             </Grid>
                         </Grid>
@@ -290,10 +284,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('screenCapture')} 
-                                        checked={(editingViewItem) ? editingViewItem.screenCapture : false}
+                                        checked={this.checkAllow(editingViewItem.screenCapture)}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.screenCapture) ? '화면캡쳐 허가' : '화면캡쳐 금지'}
+                                    label={(editingViewItem.screenCapture == 'allow') ? '화면캡쳐 허가' : '화면캡쳐 금지'}
                                 />
                             </Grid>
 
@@ -301,10 +295,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('camera')} 
-                                        checked={(editingViewItem) ? editingViewItem.camera : false}
+                                        checked={this.checkAllow(editingViewItem.camera)}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.camera) ? '카메라 허가' : '카메라 금지'}
+                                    label={(editingViewItem.camera == 'allow') ? '카메라 허가' : '카메라 금지'}
                                 />
                             </Grid>
                         </Grid>
@@ -316,10 +310,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('sound')} 
-                                        checked={(editingViewItem) ? editingViewItem.sound : false}
+                                        checked={this.checkAllow(editingViewItem.sound)}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.sound) ? '사운드(소리, 마이크) 허가' : '사운드(소리, 마이크) 금지'}
+                                    label={(editingViewItem.sound == 'allow') ? '사운드(소리, 마이크) 허가' : '사운드(소리, 마이크) 금지'}
                                 />
                             </Grid>
 
@@ -327,10 +321,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('wireless')} 
-                                        checked={(editingViewItem) ? editingViewItem.wireless : false}
+                                        checked={this.checkAllow(editingViewItem.wireless)}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.wireless) ? '무선랜 허가' : '무선랜 금지'}
+                                    label={(editingViewItem.wireless == 'allow') ? '무선랜 허가' : '무선랜 금지'}
                                 />
                             </Grid>
                         </Grid>
@@ -342,10 +336,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('keyboard')} 
-                                        checked={(editingViewItem) ? editingViewItem.keyboard : false}
+                                        checked={this.checkAllow(editingViewItem.keyboard)}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.keyboard) ? 'USB키보드 허가' : 'USB키보드 금지'}
+                                    label={(editingViewItem.keyboard == 'allow') ? 'USB키보드 허가' : 'USB키보드 금지'}
                                 />
                             </Grid>
 
@@ -353,10 +347,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('mouse')} 
-                                        checked={(editingViewItem) ? editingViewItem.mouse : false}
+                                        checked={this.checkAllow(editingViewItem.mouse)}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.mouse) ? 'USB마우스 허가' : 'USB마우스 금지'}
+                                    label={(editingViewItem.mouse == 'allow') ? 'USB마우스 허가' : 'USB마우스 금지'}
                                 />
                             </Grid>
                         </Grid>
@@ -367,40 +361,35 @@ class MediaControlSettingDialog extends Component {
                             <Grid item xs={4}>
                                 <FormControlLabel
                                     control={
-                                    <Switch onChange={this.handleValueChange('bluetooth')} 
-                                        checked={(editingViewItem) ? editingViewItem.bluetooth : false}
+                                    <Switch onChange={this.handleValueChange('bluetoothState')} 
+                                        checked={this.checkAllow(editingViewItem.bluetoothState)}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.bluetooth) ? '블루투스 허가' : '블루투스 금지'}
+                                    label={(editingViewItem.bluetoothState == 'allow') ? '블루투스 허가' : '블루투스 금지'}
                                 />
                             </Grid>
                             <Grid item xs={8} >
-
-                            <FormLabel >{bull} 연결가능 블루투스 Mac 주소</FormLabel>
-                            <Button size="small" variant="contained" color="primary" 
-                                className={classes.smallIconButton}
-                                onClick={this.handleAddBluetoothMac}
-                            >
-                                <AddIcon />
-                            </Button>
-                            <div>
-
-                            <List>
-                            {editingViewItem.bluetoothMac && editingViewItem.bluetoothMac.length > 0 && editingViewItem.bluetoothMac.map((value, index) => (
-                                <ListItem key={index} >
-                                    <Input value={value} onChange={this.handleBluetoothMacValueChange(index)}/>
-                                    <ListItemSecondaryAction>
-                                        <IconButton onClick={this.handleDeleteBluetoothMac(index)} aria-label="NtpDelete">
-                                            <DeleteForeverIcon />
-                                        </IconButton>
-                                    </ListItemSecondaryAction>
-                                </ListItem>
-                            ))}
-                            </List>
-                            
-                            </div>
-
-
+                                <FormLabel >{bull} 연결가능 블루투스 Mac 주소</FormLabel>
+                                <Button size="small" variant="contained" color="primary" 
+                                    className={classes.smallIconButton}
+                                    onClick={this.handleAddBluetoothMac}
+                                >
+                                    <AddIcon />
+                                </Button>
+                                <div>
+                                    <List>
+                                    {editingViewItem.macAddress && editingViewItem.macAddress.length > 0 && editingViewItem.macAddress.map((value, index) => (
+                                        <ListItem key={index} >
+                                            <Input value={value} onChange={this.handleBluetoothMacValueChange(index)}/>
+                                            <ListItemSecondaryAction>
+                                                <IconButton onClick={this.handleDeleteBluetoothMac(index)}>
+                                                    <DeleteForeverIcon />
+                                                </IconButton>
+                                            </ListItemSecondaryAction>
+                                        </ListItem>
+                                    ))}
+                                    </List>
+                                </div>
                             </Grid>
                         </Grid>
 

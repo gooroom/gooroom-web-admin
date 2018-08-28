@@ -15,13 +15,11 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { getTableListObject } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
+
 import GrPane from 'containers/GrContent/GrPane';
 import GrConfirm from 'components/GrComponents/GrConfirm';
-
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -47,9 +45,16 @@ import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
-class ClientGroupManage extends Component {
+//
+//  ## Header ########## ########## ########## ########## ########## 
+//
+class ClientGroupManageHead extends Component {
 
-  columnHeaders = [
+  createSortHandler = property => event => {
+    this.props.onRequestSort(event, property);
+  };
+
+  static columnData = [
     { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
     { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
     { id: "chDesktopConfigNm", isOrder: true, numeric: false, disablePadding: true, label: "데스크톱환경" },
@@ -58,6 +63,43 @@ class ClientGroupManage extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
   ];
 
+  render() {
+    const { classes } = this.props;
+    const { orderDir, orderColumn } = this.props;
+
+    return (
+      <TableHead>
+        <TableRow>
+          {ClientGroupManageHead.columnData.map(column => {
+            return (
+              <TableCell
+                className={classes.grSmallAndHeaderCell}
+                key={column.id}
+                sortDirection={orderColumn === column.id ? orderDir : false}
+              >
+              {(() => {
+                if(column.isOrder) {
+                  return <TableSortLabel active={orderColumn === column.id}
+                            direction={orderDir}
+                            onClick={this.createSortHandler(column.id)}
+                          >{column.label}</TableSortLabel>
+                } else {
+                  return <p>{column.label}</p>
+                }
+              })()}
+              </TableCell>
+            );
+          }, this)}
+        </TableRow>
+      </TableHead>
+    );
+  }
+}
+
+//
+//  ## Content ########## ########## ########## ########## ########## 
+//
+class ClientGroupManage extends Component {
   constructor(props) {
     super(props);
 
@@ -73,82 +115,75 @@ class ClientGroupManage extends Component {
   // .................................................
   handleRequestSort = (event, property) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
 
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
     let orderDir = "desc";
-    if (listObj.listParam.orderColumn === property && listObj.listParam.orderDir === "desc") {
+    if (ClientGroupProps.listParam.orderColumn === property && ClientGroupProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       orderColumn: property, 
       orderDir: orderDir,
-      compId: menuCompId
+      compId: compId
     }));
   };
 
   handleRowClick = (event, id) => {
-    const { ClientGroupProps } = this.props;
+    const { ClientGroupProps, ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
 
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-    const selectedItem = listObj.listData.find(function(element) {
+    const compId = this.props.match.params.grMenuId;
+
+    const selectedGroupObj = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
 
     ClientGroupActions.showClientGroupInform({
-      compId: menuCompId,
-      selectedItem: selectedItem,
+      compId: compId,
+      selectedItem: Object.assign({}, selectedGroupObj),
     });
 
     
     // '단말정책설정' : 정책 정보 변경
     ClientConfSettingActions.getClientConfSetting({
-      compId: menuCompId,
-      objId: selectedItem.clientConfigId
+      compId: compId,
+      objId: selectedGroupObj.clientConfigId
     });   
 
     // 'Hosts설정' : 정책 정보 변경
     ClientHostNameActions.getClientHostName({
-      compId: menuCompId,
-      objId: selectedItem.hostNameConfigId
+      compId: compId,
+      objId: selectedGroupObj.hostNameConfigId
     });   
 
     // '업데이트서버설정' : 정책 정보 변경
     ClientUpdateServerActions.getClientUpdateServer({
-      compId: menuCompId,
-      objId: selectedItem.updateServerConfigId
+      compId: compId,
+      objId: selectedGroupObj.updateServerConfigId
     });   
 
     // '데스크톱 정보설정' : 정책 정보 변경
     ClientDesktopConfigActions.getClientDesktopConfig({
-      compId: menuCompId,
-      desktopConfId: selectedItem.desktopConfigId
+      compId: compId,
+      desktopConfId: selectedGroupObj.desktopConfigId
     });   
 
   };
 
   handleChangePage = (event, page) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       page: page,
-      compId: menuCompId
+      compId: ''
     }));
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       rowsPerPage: event.target.value,
       page: 0,
-      compId: menuCompId
+      compId: ''
     }));
   };
 
@@ -170,16 +205,12 @@ class ClientGroupManage extends Component {
 
   // edit
   handleEditClick = (event, id) => {
+    event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-    const selectedItem = listObj.listData.find(function(element) {
+    const selectedItem = ClientGroupProps.listData.find(function(element) {
       return element.grpId == id;
     });
-
     ClientGroupActions.showDialog({
-      compId: menuCompId,
       selectedItem: Object.assign({}, selectedItem),
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
@@ -218,26 +249,19 @@ class ClientGroupManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
+    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, {
       page: 0,
-      compId: menuCompId
+      compId: ''
     }));
   };
   
   handleKeywordChange = name => event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-    const newParam = getMergedObject(listObj.listParam, {keyword: event.target.value});
-    ClientGroupActions.changeStoreData({
-      name: 'listParam', 
-      value: newParam,
-      compId: menuCompId
+    const newParam = getMergedObject(ClientGroupProps.listParam, {
+      keyword: event.target.value,
+      compId: ''
     });
+    ClientGroupActions.changeStoreData({name: 'listParam', value: newParam});
   }
 
   // .................................................
@@ -251,9 +275,7 @@ class ClientGroupManage extends Component {
   render() {
     const { classes } = this.props;
     const { ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
 
     return (
 
@@ -270,7 +292,7 @@ class ClientGroupManage extends Component {
                   <TextField
                     id='keyword'
                     label='검색어'
-                    value={listObj.listParam.keyword}
+                    value={ClientGroupProps.listParam.keyword}
                     onChange={this.handleKeywordChange('keyword')}
                   />
                 </FormControl>
@@ -309,15 +331,14 @@ class ClientGroupManage extends Component {
           <div>
             <Table>
 
-              <GrCommonTableHead
+              <ClientGroupManageHead
                 classes={classes}
-                orderDir={listObj.orderDir}
-                orderColumn={listObj.orderColumn}
+                orderDir={ClientGroupProps.listParam.orderDir}
+                orderColumn={ClientGroupProps.listParam.orderColumn}
                 onRequestSort={this.handleRequestSort}
-                columnData={this.columnHeaders}
               />
               <TableBody>
-              {listObj.listData.map(n => {
+              {ClientGroupProps.listData.map(n => {
                   return (
                     <TableRow
                       className={classes.grNormalTableRow}
@@ -349,7 +370,7 @@ class ClientGroupManage extends Component {
                 {emptyRows > 0 && (
                 <TableRow >
                   <TableCell
-                    colSpan={this.columnHeaders.length + 1}
+                    colSpan={ClientGroupManageHead.columnData.length + 1}
                     className={classes.grSmallAndClickCell}
                   />
                 </TableRow>
@@ -360,10 +381,10 @@ class ClientGroupManage extends Component {
 
           <TablePagination
             component='div'
-            count={listObj.listParam.rowsFiltered}
-            rowsPerPage={listObj.listParam.rowsPerPage}
-            rowsPerPageOptions={listObj.listParam.rowsPerPageOptions}
-            page={listObj.listParam.page}
+            count={ClientGroupProps.listParam.rowsFiltered}
+            rowsPerPage={ClientGroupProps.listParam.rowsPerPage}
+            rowsPerPageOptions={ClientGroupProps.listParam.rowsPerPageOptions}
+            page={ClientGroupProps.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
@@ -375,7 +396,11 @@ class ClientGroupManage extends Component {
           />
 
         </GrPane>
-        <ClientGroupInform compId={menuCompId} />
+        <ClientGroupInform
+            compId={this.props.match.params.grMenuId} 
+            isOpen={ClientGroupProps.informOpen} 
+            selectedItem={ClientGroupProps.listParam.selectedItem}
+          />
         <ClientGroupDialog />
         <GrConfirm />
       </React.Fragment>

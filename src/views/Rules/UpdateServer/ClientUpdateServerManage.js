@@ -293,6 +293,7 @@ class ClientUpdateServerManage extends Component {
 
     ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(listParam, {
       rowsPerPage: event.target.value,
+      page: 0,
       compId: menuCompId
     }));
   };

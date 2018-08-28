@@ -9,6 +9,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { getTableListObject } from 'components/GrUtils/GrTableListUtils';
 
 import { createViewObject } from './ClientHostNameManageInform';
 
@@ -113,18 +114,9 @@ class ClientHostNameManage extends Component {
   handleSelectBtnClick = () => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
+    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
 
-
-    let viewItem = null;
-    if(ClientHostNameProps.viewItems) {
-      viewItem = ClientHostNameProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
-
-
-    ClientHostNameActions.readClientHostNameList(getMergedObject(listParam, {
+    ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
       page: 0,
       compId: menuCompId
     }));
@@ -148,17 +140,8 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientHostNameProps.viewItems) {
-      viewItem = ClientHostNameProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listData = (viewItem) ? viewItem.listData : [];
-
-
-    const selectedItem = listData.find(function(element) {
+    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const selectedItem = listObj.listData.find(function(element) {
       return element.objId == id;
     });
 
@@ -182,17 +165,8 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientHostNameProps.viewItems) {
-      viewItem = ClientHostNameProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listData = (viewItem) ? viewItem.listData : [];
-
-
-    const selectedItem = listData.find(function(element) {
+    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const selectedItem = listObj.listData.find(function(element) {
       return element.objId == id;
     });
 
@@ -209,17 +183,8 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameProps, ClientHostNameActions, GrConfirmActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientHostNameProps.viewItems) {
-      viewItem = ClientHostNameProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listData = (viewItem) ? viewItem.listData : [];
-
-
-    const selectedItem = listData.find(function(element) {
+    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const selectedItem = listObj.listData.find(function(element) {
       return element.objId == id;
     });
 
@@ -258,17 +223,9 @@ class ClientHostNameManage extends Component {
   handleChangePage = (event, page) => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
-
-    let viewItem = null;
-    if(ClientHostNameProps.viewItems) {
-      viewItem = ClientHostNameProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
-
+    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
     
-    ClientHostNameActions.readClientHostNameList(getMergedObject(listParam, {
+    ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
       page: page,
       compId: menuCompId
     }));
@@ -278,19 +235,11 @@ class ClientHostNameManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
+    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
 
-
-    let viewItem = null;
-    if(ClientHostNameProps.viewItems) {
-      viewItem = ClientHostNameProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
-
-
-    ClientHostNameActions.readClientHostNameList(getMergedObject(listParam, {
+    ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
       rowsPerPage: event.target.value,
+      page: 0,
       compId: menuCompId
     }));
   };
@@ -300,22 +249,13 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientHostNameProps.viewItems) {
-      viewItem = ClientHostNameProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
-
-
+    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
     let orderDir = "desc";
-    if (listParam.orderColumn === property && listParam.orderDir === "desc") {
+    if (listObj.listParam.orderColumn === property && listObj.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
 
-    ClientHostNameActions.readClientHostNameList(getMergedObject(listParam, {
+    ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
       orderColumn: property, 
       orderDir: orderDir,
       compId: menuCompId
@@ -328,17 +268,8 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientHostNameProps.viewItems) {
-      viewItem = ClientHostNameProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
-
-
-    const newParam = getMergedObject(listParam, {keyword: event.target.value});
+    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const newParam = getMergedObject(listObj.listParam, {keyword: event.target.value});
     ClientHostNameActions.changeStoreData({
       name: 'listParam',
       value: newParam,
@@ -352,18 +283,7 @@ class ClientHostNameManage extends Component {
     const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientHostNameProps.listParam.rowsPerPage - ClientHostNameProps.listData.length;
 
-    let viewItem = null;
-    if(ClientHostNameProps.viewItems) {
-      viewItem = ClientHostNameProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId;
-      });
-    }
-
-    const listData = (viewItem) ? viewItem.listData : [];
-    const listParam = (viewItem) ? viewItem.listParam : ClientHostNameProps.defaultListParam;
-    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientHostNameProps.defaultListParam.orderDir;
-    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientHostNameProps.defaultListParam.orderColumn;
-
+    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
     return (
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
@@ -419,13 +339,13 @@ class ClientHostNameManage extends Component {
 
               <ClientHostNameHead
                 classes={classes}
-                orderDir={orderDir}
-                orderColumn={orderColumn}
+                orderDir={listObj.orderDir}
+                orderColumn={listObj.orderColumn}
                 onRequestSort={this.handleRequestSort}
               />
 
               <TableBody>
-                {listData.map(n => {
+                {listObj.listData.map(n => {
                   return (
                     <TableRow
                       className={classes.grNormalTableRow}
@@ -465,10 +385,10 @@ class ClientHostNameManage extends Component {
 
           <TablePagination
             component='div'
-            count={listParam.rowsFiltered}
-            rowsPerPage={listParam.rowsPerPage}
-            rowsPerPageOptions={listParam.rowsPerPageOptions}
-            page={listParam.page}
+            count={listObj.listParam.rowsFiltered}
+            rowsPerPage={listObj.listParam.rowsPerPage}
+            rowsPerPageOptions={listObj.listParam.rowsPerPageOptions}
+            page={listObj.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}

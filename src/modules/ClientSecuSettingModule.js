@@ -6,14 +6,14 @@ import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 const COMMON_PENDING = 'mediaControlSetting/COMMON_PENDING';
 const COMMON_FAILURE = 'mediaControlSetting/COMMON_FAILURE';
 
-const GET_MEDIACONTROL_LIST_SUCCESS = 'mediaControlSetting/GET_LIST_SUCCESS';
-const GET_MEDIACONTROL_SUCCESS = 'mediaControlSetting/GET_MEDIACONTROL_SUCCESS';
-const CREATE_MEDIACONTROL_SUCCESS = 'mediaControlSetting/CREATE_MEDIACONTROL_SUCCESS';
-const EDIT_MEDIACONTROL_SUCCESS = 'mediaControlSetting/EDIT_MEDIACONTROL_SUCCESS';
-const DELETE_MEDIACONTROL_SUCCESS = 'mediaControlSetting/DELETE_MEDIACONTROL_SUCCESS';
+const GET_CLIENTSECU_LIST_SUCCESS = 'mediaControlSetting/GET_LIST_SUCCESS';
+const GET_CLIENTSECU_SUCCESS = 'mediaControlSetting/GET_CLIENTSECU_SUCCESS';
+const CREATE_CLIENTSECU_SUCCESS = 'mediaControlSetting/CREATE_CLIENTSECU_SUCCESS';
+const EDIT_CLIENTSECU_SUCCESS = 'mediaControlSetting/EDIT_CLIENTSECU_SUCCESS';
+const DELETE_CLIENTSECU_SUCCESS = 'mediaControlSetting/DELETE_CLIENTSECU_SUCCESS';
 
-const SHOW_MEDIACONTROL_INFORM = 'mediaControlSetting/SHOW_MEDIACONTROL_INFORM';
-const SHOW_MEDIACONTROL_DIALOG = 'mediaControlSetting/SHOW_MEDIACONTROL_DIALOG';
+const SHOW_CLIENTSECU_INFORM = 'mediaControlSetting/SHOW_CLIENTSECU_INFORM';
+const SHOW_CLIENTSECU_DIALOG = 'mediaControlSetting/SHOW_CLIENTSECU_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'mediaControlSetting/SET_EDITING_ITEM_VALUE';
 
@@ -49,7 +49,7 @@ const initialState = {
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
-        type: SHOW_MEDIACONTROL_DIALOG,
+        type: SHOW_CLIENTSECU_DIALOG,
         payload: param
     });
 };
@@ -63,7 +63,7 @@ export const closeDialog = () => dispatch => {
 
 export const showInform = (param) => dispatch => {
     return dispatch({
-        type: SHOW_MEDIACONTROL_INFORM,
+        type: SHOW_CLIENTSECU_INFORM,
         payload: param
     });
 };
@@ -75,7 +75,7 @@ export const closeInform = () => dispatch => {
     });
 };
 
-export const readMediaControlSettingList = (param) => dispatch => {
+export const readClientSecuSettingList = (param) => dispatch => {
 
     const resetParam = {
         keyword: param.keyword,
@@ -87,10 +87,10 @@ export const readMediaControlSettingList = (param) => dispatch => {
     };
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readMediaRuleListPaged', resetParam).then(
+    return requestPostAPI('readClientSecuListPaged', resetParam).then(
         (response) => {
             dispatch({
-                type: GET_MEDIACONTROL_LIST_SUCCESS,
+                type: GET_CLIENTSECU_LIST_SUCCESS,
                 compId: param.compId,
                 payload: response
             });
@@ -103,13 +103,13 @@ export const readMediaControlSettingList = (param) => dispatch => {
     });
 };
 
-export const getMediaControlSetting = (param) => dispatch => {
+export const getClientSecuSetting = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readMediaControl', param).then(
+    return requestPostAPI('readClientSecu', param).then(
         (response) => {
             dispatch({
-                type: GET_MEDIACONTROL_SUCCESS,
+                type: GET_CLIENTSECU_SUCCESS,
                 compId: compId,
                 payload: response
             });
@@ -137,36 +137,39 @@ export const changeStoreData = (param) => dispatch => {
 };
 
 const makeParameter = (param) => {
-
-    const usbReadonly = (param.usbReadonly == 'allow') ? 'allow' : 'disallow';
     return {
         objId: param.objId,
         objName: param.objNm,
         objComment: param.comment,
+
+        screen_time: param.screenTime,
+        password_time: param.passwordTime,
+        package_handle: (param.packageHandle == 'allow') ? 'allow' : 'disallow',
+        state: (param.state == 'allow') ? 'allow' : 'disallow'
         
-        usb_memory: (param.usbMemory == 'allow') ? ((usbReadonly == 'allow') ? 'read_only' : 'allow') : 'disallow',
-        cd_dvd: (param.cdAndDvd == 'allow') ? 'allow' : 'disallow',
-        printer: (param.printer == 'allow') ? 'allow' : 'disallow',
-        screen_capture: (param.screenCapture == 'allow') ? 'allow' : 'disallow',
-        camera: (param.camera == 'allow') ? 'allow' : 'disallow',
-        sound: (param.sound == 'allow') ? 'allow' : 'disallow',
-        keyboard: (param.keyboard == 'allow') ? 'allow' : 'disallow',
-        mouse: (param.mouse == 'allow') ? 'allow' : 'disallow',
-        wireless: (param.wireless == 'allow') ? 'allow' : 'disallow',
-        bluetooth_state: (param.bluetoothState == 'allow') ? 'allow' : 'disallow',
-        macAddressList: (param.macAddress && param.macAddress.length > 0) ? param.macAddress : ''
+        // usb_memory: (param.usbMemory == 'allow') ? ((usbReadonly == 'allow') ? 'read_only' : 'allow') : 'disallow',
+        // cd_dvd: (param.cdAndDvd == 'allow') ? 'allow' : 'disallow',
+        // printer: (param.printer == 'allow') ? 'allow' : 'disallow',
+        // screen_capture: (param.screenCapture == 'allow') ? 'allow' : 'disallow',
+        // camera: (param.camera == 'allow') ? 'allow' : 'disallow',
+        // sound: (param.sound == 'allow') ? 'allow' : 'disallow',
+        // keyboard: (param.keyboard == 'allow') ? 'allow' : 'disallow',
+        // mouse: (param.mouse == 'allow') ? 'allow' : 'disallow',
+        // wireless: (param.wireless == 'allow') ? 'allow' : 'disallow',
+        // bluetooth_state: (param.bluetoothState == 'allow') ? 'allow' : 'disallow',
+        // macAddressList: (param.macAddress && param.macAddress.length > 0) ? param.macAddress : ''
     };
 }
 
 // create (add)
-export const createMediaControlSettingData = (param) => dispatch => {
+export const createClientSecuSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createMediaRule', makeParameter(param)).then(
+    return requestPostAPI('createClientSecuConf', makeParameter(param)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_MEDIACONTROL_SUCCESS,
+                        type: CREATE_CLIENTSECU_SUCCESS,
                         payload: response
                     });
                 }    
@@ -186,12 +189,12 @@ export const createMediaControlSettingData = (param) => dispatch => {
 };
 
 // edit
-export const editMediaControlSettingData = (param) => dispatch => {
+export const editClientSecuSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateMediaRule', makeParameter(param)).then(
+    return requestPostAPI('updateClientSecuConf', makeParameter(param)).then(
         (response) => {
             dispatch({
-                type: EDIT_MEDIACONTROL_SUCCESS,
+                type: EDIT_CLIENTSECU_SUCCESS,
                 payload: response
             });
         }
@@ -204,12 +207,12 @@ export const editMediaControlSettingData = (param) => dispatch => {
 };
 
 // delete
-export const deleteMediaControlSettingData = (param) => dispatch => {
+export const deleteClientSecuSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteMediaRule', param).then(
+    return requestPostAPI('deleteClientSecuConf', param).then(
         (response) => {
             dispatch({
-                type: DELETE_MEDIACONTROL_SUCCESS,
+                type: DELETE_CLIENTSECU_SUCCESS,
                 payload: response
             });
         }
@@ -260,7 +263,7 @@ export default handleActions({
         };
     },
 
-    [GET_MEDIACONTROL_LIST_SUCCESS]: (state, action) => {
+    [GET_CLIENTSECU_LIST_SUCCESS]: (state, action) => {
 
         const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
@@ -324,13 +327,13 @@ export default handleActions({
             viewItems: oldViewItems
         };
     }, 
-    [GET_MEDIACONTROL_SUCCESS]: (state, action) => {
+    [GET_CLIENTSECU_SUCCESS]: (state, action) => {
         const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data } = action.payload.data;
         let oldViewItems = [];
+
         if(state.viewItems) {
             oldViewItems = state.viewItems;
-            
             const viewItem = oldViewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
@@ -371,7 +374,7 @@ export default handleActions({
             };
         }
     },
-    [SHOW_MEDIACONTROL_DIALOG]: (state, action) => {
+    [SHOW_CLIENTSECU_DIALOG]: (state, action) => {
         return {
             ...state,
             editingItem: Object.assign({}, action.payload.selectedItem),
@@ -380,7 +383,7 @@ export default handleActions({
             dialogType: action.payload.dialogType,
         };
     },
-    [SHOW_MEDIACONTROL_INFORM]: (state, action) => {
+    [SHOW_CLIENTSECU_INFORM]: (state, action) => {
 
         const COMP_ID = action.payload.compId;
 
@@ -456,14 +459,14 @@ export default handleActions({
             viewItems: oldViewItems
         }
     },
-    [CREATE_MEDIACONTROL_SUCCESS]: (state, action) => {
+    [CREATE_CLIENTSECU_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
             error: false,
         };
     },
-    [EDIT_MEDIACONTROL_SUCCESS]: (state, action) => {
+    [EDIT_CLIENTSECU_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
@@ -473,7 +476,7 @@ export default handleActions({
             dialogType: ''
         };
     },
-    [DELETE_MEDIACONTROL_SUCCESS]: (state, action) => {
+    [DELETE_CLIENTSECU_SUCCESS]: (state, action) => {
         return {
             ...state,
             pending: false,
