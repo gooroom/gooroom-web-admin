@@ -34,7 +34,7 @@ const initialState = Map({
         orderColumn: 'chGrpNm',
         page: 0,
         rowsPerPage: 10,
-        rowsPerPageOptions: [5, 10, 25],
+        rowsPerPageOptions: List([5, 10, 25]),
         rowsTotal: 0,
         rowsFiltered: 0
     }),
@@ -220,29 +220,34 @@ export const deleteClientGroupData = (param) => dispatch => {
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        return { 
+        return Map({ 
             ...state, 
             pending: true, 
             error: false 
-        };
+        });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return {
+        return Map({
             ...state,
             pending: false,
             error: true,
             resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
-        };
+        });
     },
 
     [GET_LIST_SUCCESS]: (state, action) => {
+
+        console.log('------- GET_LIST_SUCCESS ----------');
 
         let COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
 
         let oldViewItems = [];
-        if(state.viewItems) {
-            oldViewItems = state.viewItems;
+
+        console.log('>>> state : ', state);
+
+        if(state.get('viewItems')) {
+            oldViewItems = state.get('viewItems');
             const viewItem = oldViewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
@@ -283,12 +288,12 @@ export default handleActions({
                 })
             }));
         }
-        return {
+        return Map({
             ...state,
             pending: false,
             error: false,
-            viewItems: oldViewItems
-        };
+            viewItems: List(oldViewItems)
+        });
     },
     [GET_LISTALL_SUCCESS]: (state, action) => {
         return { 
