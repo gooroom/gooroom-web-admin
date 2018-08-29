@@ -53,6 +53,33 @@ class ClientMasterManage extends Component {
   };
 
   // Select Group Item
+  handleClientGroupSelect = (selectedGroupObj='', selectedGroupIdArray) => {
+
+    const { ClientMasterManageActions, ClientGroupActions } = this.props;
+    const { ClientManageCompProps, ClientManageCompActions } = this.props;
+
+    const menuId = this.props.match.params.grMenuId;
+
+    ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, {
+      groupId: selectedGroupIdArray.join(','), 
+      page: 0,
+      compId: menuId
+    }));
+
+    // show group info.
+    if(selectedGroupObj !== '') {
+      ClientMasterManageActions.closeClientManageInform();
+      ClientGroupActions.setSelectedItemObj({
+        compId: menuId,
+        selectedItem: selectedGroupObj
+      });
+
+      // Show inform
+      ClientMasterManageActions.showClientGroupInform();
+    }
+  };
+
+  // 제거해야할 코드
   handleChangeClientGroupSelected = (selectedGroupObj='', selectedGroupIdArray) => {
 
     const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
@@ -99,15 +126,13 @@ class ClientMasterManage extends Component {
 
   render() {
 
-    console.log('>>>> ', this.props);
-    console.log('>>>name> ', this.props);
     const { classes } = this.props;
     const { ClientMasterManageProps, ClientGroupCompProps, ClientManageCompProps } = this.props;
-    const emptyRows = 0;// = ClientManageCompProps.listParam.rowsPerPage - ClientManageCompProps.listData.length;
 
+    const menuId = this.props.match.params.grMenuId;
     const { isGroupInformOpen, isClientInformOpen } = ClientMasterManageProps;
-    const selectedGroupItem = ClientGroupCompProps[this.props.match.params.grMenuId + '__selectedItem'];
-    const selectedClientItem = ClientManageCompProps[this.props.match.params.grMenuId + '__selectedItem'];
+    const selectedGroupItem = ClientGroupCompProps[menuId + '__selectedItem'];
+    const selectedClientItem = ClientManageCompProps[menuId + '__selectedItem'];
 
     return (
       <React.Fragment>
@@ -118,40 +143,36 @@ class ClientMasterManage extends Component {
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
             
               <Grid item xs={6}>
-              
-              <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹등록</Button>
-              <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹삭제</Button>
-              <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹정책변경</Button>
-
+                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹등록</Button>
+                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹삭제</Button>
+                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹정책변경</Button>
               </Grid>
 
               <Grid item xs={6}>
-
-              <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
-
+                <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
               </Grid>
             </Grid>
 
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-
-            <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
-            <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
-
+              <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
+              <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
             </Grid>
           </Grid>
 
           <Grid container spacing={24} style={{border:"0px solid red",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
               <Card style={{minWidth:"240px",boxShadow:"2px 2px 8px blue"}}>
-                <ClientGroupComp 
-                  compId={this.props.match.params.grMenuId}
+                <ClientGroupComp
+                  compId={menuId}
+                  isMulti="true"
+                  onSelect={this.handleClientGroupSelect}
                   onChangeGroupSelected={this.handleChangeClientGroupSelected}
                 />
               </Card>
             </Grid>
             <Grid item xs>
               <Card style={{minWidth:"710px",boxShadow:"2px 2px 8px green"}}>
-                <ClientManageComp compId={this.props.match.params.grMenuId}
+                <ClientManageComp compId={menuId}
                   onChangeClientSelected={this.handleChangeClientSelected}
                 />
               </Card>
@@ -171,7 +192,7 @@ class ClientMasterManage extends Component {
           </Grid>
           
           <ClientGroupInform
-            compId={this.props.match.params.grMenuId}
+            compId={menuId}
             isOpen={isGroupInformOpen} 
             selectedItem={selectedGroupItem}
             compShadow="2px 2px 8px blue" 

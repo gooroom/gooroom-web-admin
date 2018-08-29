@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { merge } from 'immutable';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -13,7 +14,7 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
+import { getMergedObject, arrayContainsArray, getListData } from 'components/GrUtils/GrCommonUtils';
 import { getTableListObject, getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
@@ -29,72 +30,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
-
-//
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class ClientGroupCompHead extends Component {
-
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
-    { id: "chCheckbox", isCheckbox: true},
-    { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
-    { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
-  ];
-
-  render() {
-    const { classes } = this.props;
-    const { 
-      onSelectAllClick,
-      orderDir,
-      orderColumn,
-      selectedData,
-      listData
-    } = this.props;
-
-    let checkSelection = 0;
-    if(listData && listData.length > 0) {
-      checkSelection = arrayContainsArray(selectedData, listData.map(x => x.grpId));
-    }
-    
-    return (
-      <TableHead>
-        <TableRow>
-          <TableCell padding="checkbox" className={classes.grSmallAndHeaderCell} >
-            <Checkbox
-              indeterminate={checkSelection === 50}
-              checked={checkSelection === 100}
-              onChange={onSelectAllClick}
-            />
-          </TableCell>
-          {ClientGroupCompHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel active={orderColumn === column.id}
-                            direction={orderDir}
-                            onClick={this.createSortHandler(column.id)}
-                          >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -118,10 +53,18 @@ class ClientGroupComp extends Component {
   componentDidMount() {
 
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.defaultListParam, {
+
+    // ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.defaultListParam, {
+    //   page:0,
+    //   compId: this.props.compId
+    // }));
+
+    let listParam = ClientGroupProps.get('defaultListParam').toJS();
+    Object.assign(listParam, {
       page:0,
       compId: this.props.compId
-    }));
+    });
+    ClientGroupActions.readClientGroupList(listParam);
   }
 
   // .................................................
@@ -143,7 +86,6 @@ class ClientGroupComp extends Component {
   handleSelectAllClick = (event, checked) => {
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
     const listObj = getTableListObject(ClientGroupProps, compId);
-    const { [compId + '__listData'] : compListData, [compId + '__listParam'] : compListParam } = ClientGroupProps;
 
     if(checked) {
       const newSelected = listObj.listData.map(n => n.grpId)
@@ -164,32 +106,36 @@ class ClientGroupComp extends Component {
   handleRowClick = (event, id) => {
 
     const { compId, ClientGroupProps } = this.props;
-    const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
-     
-    const { [compId + '__selected'] : preSelected } = ClientGroupProps;
-    const selectedIndex = preSelected.indexOf(id);
-    let newSelected = [];
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(preSelected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(preSelected.slice(1));
-    } else if (selectedIndex === preSelected.length - 1) {
-      newSelected = newSelected.concat(preSelected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        preSelected.slice(0, selectedIndex),
-        preSelected.slice(selectedIndex + 1)
-      );
+    const preSelected = getTableSelectedObject(ClientGroupProps, compId);
+    let newSelected = [];
+    if(preSelected) {
+      const selectedIndex = preSelected.indexOf(id);  
+      if (selectedIndex === -1) {
+        newSelected = newSelected.concat(preSelected, id);
+      } else if (selectedIndex === 0) {
+        newSelected = newSelected.concat(preSelected.slice(1));
+      } else if (selectedIndex === preSelected.length - 1) {
+        newSelected = newSelected.concat(preSelected.slice(0, -1));
+      } else if (selectedIndex > 0) {
+        newSelected = newSelected.concat(
+          preSelected.slice(0, selectedIndex),
+          preSelected.slice(selectedIndex + 1)
+        );
+      }
+    } else {
+      newSelected = [id];
     }
 
     ClientGroupActions.changeStoreData({
-      name: compId + '__selected',
-      value: newSelected
+      name: 'listParam',
+      value: newSelected,
+      compId: compId
     });
 
-    const selectedItem = ClientGroupProps[compId + '__listData'].find(function(element) {
+    const listData = getListData({ props: ClientGroupProps, compId: compId });
+    const selectedItem = listData.find(function(element) {
       return element.grpId == id;
     });
 
@@ -197,29 +143,29 @@ class ClientGroupComp extends Component {
       this.props.onChangeGroupSelected(selectedItem, newSelected);
     }
 
-    // '단말정책설정' : 정책 정보 변경
-    ClientConfSettingActions.getClientConfSetting({
-      compId: compId,
-      objId: selectedItem.clientConfigId
-    });   
+    // // '단말정책설정' : 정책 정보 변경
+    // ClientConfSettingActions.getClientConfSetting({
+    //   compId: compId,
+    //   objId: selectedItem.clientConfigId
+    // });   
 
-    // 'Hosts설정' : 정책 정보 변경
-    ClientHostNameActions.getClientHostName({
-      compId: compId,
-      objId: selectedItem.hostNameConfigId
-    });   
+    // // 'Hosts설정' : 정책 정보 변경
+    // ClientHostNameActions.getClientHostName({
+    //   compId: compId,
+    //   objId: selectedItem.hostNameConfigId
+    // });   
 
-    // '업데이트서버설정' : 정책 정보 변경
-    ClientUpdateServerActions.getClientUpdateServer({
-      compId: compId,
-      objId: selectedItem.updateServerConfigId
-    });   
+    // // '업데이트서버설정' : 정책 정보 변경
+    // ClientUpdateServerActions.getClientUpdateServer({
+    //   compId: compId,
+    //   objId: selectedItem.updateServerConfigId
+    // });   
 
-    // '데스크톱 정보설정' : 정책 정보 변경
-    ClientDesktopConfigActions.getClientDesktopConfig({
-      compId: compId,
-      desktopConfId: selectedItem.desktopConfigId
-    });   
+    // // '데스크톱 정보설정' : 정책 정보 변경
+    // ClientDesktopConfigActions.getClientDesktopConfig({
+    //   compId: compId,
+    //   desktopConfId: selectedItem.desktopConfigId
+    // });   
 
   };
 
@@ -248,11 +194,14 @@ class ClientGroupComp extends Component {
   isSelected = id => {
     const { ClientGroupProps, compId } = this.props;
     const selectedObj = getTableSelectedObject(ClientGroupProps, compId);
-    if(selectedObj) {
-      return selectedObj.indexOf(id) !== -1;
-    } else {
+
+    console.log('selectedObj >>> ', selectedObj);
+
+    // if(selectedObj) {
+    //   return selectedObj.indexOf(id) !== -1;
+    // } else {
       return false;
-    }    
+    // }    
   }
 
   // loadInitData = (param) => {
@@ -267,7 +216,11 @@ class ClientGroupComp extends Component {
     const { ClientGroupProps, compId } = this.props;
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
 
-    const listObj = getTableListObject(ClientGroupProps, compId);
+    console.log('ClientGroupProps >>> ', ClientGroupProps);
+
+    const listObj = (ClientGroupProps.get('viewItems')) ? getTableListObject(ClientGroupProps.get('viewItems'), compId) : ClientGroupProps.get('defaultListParam');
+    console.log('================================');
+    
     const selectedObj = getTableSelectedObject(ClientGroupProps, compId);
     // const { 
     //   [compId + '__listData'] : compListData, 
@@ -281,12 +234,12 @@ class ClientGroupComp extends Component {
         <Table>
           <GrCommonTableHead
             classes={classes}
-            orderDir={listObj.orderDir}
-            orderColumn={listObj.orderColumn}
+            orderDir={listObj.get('orderDir')}
+            orderColumn={listObj.get('orderColumn')}
             onRequestSort={this.handleRequestSort}
             onSelectAllClick={this.handleSelectAllClick}
-            selectedData={selectedObj}
-            listData={listObj.listData}
+            //selectedData={selectedObj}
+            listData={listObj.get('listData')}
             columnData={this.columnHeaders}
           />
           <TableBody>

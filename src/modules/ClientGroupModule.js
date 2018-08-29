@@ -1,4 +1,6 @@
 import { handleActions } from 'redux-actions';
+import { Map, List } from 'immutable';
+
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
@@ -21,12 +23,12 @@ const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
 const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
 
 // ...
-const initialState = {
+const initialState = Map({
     pending: false,
     error: false,
     resultMsg: '',
 
-    defaultListParam: {
+    defaultListParam: Map({
         keyword: '',
         orderDir: 'desc',
         orderColumn: 'chGrpNm',
@@ -35,12 +37,12 @@ const initialState = {
         rowsPerPageOptions: [5, 10, 25],
         rowsTotal: 0,
         rowsFiltered: 0
-    },
+    }),
 
     informOpen: false,
     dialogOpen: false,
     dialogType: ''
-};
+});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -335,14 +337,46 @@ export default handleActions({
 
     },
     [SET_SELECTED_OBJ]: (state, action) => {
-        let selectedItem = 'selectedItem';
-        if(action.compId && action.compId != '') {
-            selectedItem = action.compId + '__selectedItem';
+
+        const COMP_ID = action.payload.compId;
+        let viewItems = [];
+        if(state.viewItems) {
+            viewItems = state.viewItems;
+            const viewItem = viewItems.find((element) => {
+                return element._COMPID_ == COMP_ID;
+            });
+            if(viewItem) {
+                Object.assign(viewItem, {
+                    'selectedItem': action.payload.selectedItem,
+                    'checkItems': action.payload.selectedItem
+                });
+            } else {
+                viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                    'selectedItem': action.payload.selectedItem,
+                    'checkItems': action.payload.selectedItem
+                }));
+            }
+        } else {
+            viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                'selectedItem': action.payload.selectedItem,
+                'checkItems': action.payload.selectedItem
+            }));
         }
+
         return {
             ...state,
-            [selectedItem]: action.payload.selectedItem
-        }
+            viewItems: viewItems,
+            informOpen: true
+        };
+
+        // let selectedItem = 'selectedItem';
+        // if(action.compId && action.compId != '') {
+        //     selectedItem = action.compId + '__selectedItem';
+        // }
+        // return {
+        //     ...state,
+        //     [selectedItem]: action.payload.selectedItem
+        // }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
