@@ -256,6 +256,8 @@ export default handleActions({
 
     [GET_LIST_SUCCESS]: (state, action) => {
 
+        console.log('------- GET_LIST_SUCCESS ----------');
+
         let COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
 

@@ -64,6 +64,8 @@ class ClientGroupComp extends Component {
       page:0,
       compId: this.props.compId
     });
+
+    console.log('listParam : ', listParam);
     ClientGroupActions.readClientGroupList(listParam);
   }
 
@@ -217,11 +219,14 @@ class ClientGroupComp extends Component {
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
 
     console.log('ClientGroupProps >>> ', ClientGroupProps);
+    console.log('ClientGroupProps.toJS() >>> ', ClientGroupProps.toJS());
+    console.log('ClientGroupProps.get(viewItems) >>> ', ClientGroupProps.get('viewItems'));
 
     const listObj = getTableListObject(ClientGroupProps, compId);
     console.log('================================');
     
-    const selectedObj = getTableSelectedObject(ClientGroupProps, compId);
+    //const selectedObj = getTableSelectedObject(ClientGroupProps, compId);
+
     // const { 
     //   [compId + '__listData'] : compListData, 
     //   [compId + '__listParam'] : compListParam, 
