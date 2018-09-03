@@ -218,7 +218,7 @@ class ClientGroupComp extends Component {
 
     console.log('ClientGroupProps >>> ', ClientGroupProps);
 
-    const listObj = (ClientGroupProps.get('viewItems')) ? getTableListObject(ClientGroupProps.get('viewItems'), compId) : ClientGroupProps.get('defaultListParam');
+    const listObj = getTableListObject(ClientGroupProps, compId);
     console.log('================================');
     
     const selectedObj = getTableSelectedObject(ClientGroupProps, compId);
