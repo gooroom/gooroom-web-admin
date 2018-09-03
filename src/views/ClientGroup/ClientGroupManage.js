@@ -67,7 +67,7 @@ class ClientGroupManage extends Component {
   }
 
   componentDidMount() {
-    this.handleSelectBtnClick();
+    //this.handleSelectBtnClick();
   }
 
   // .................................................
@@ -93,6 +93,8 @@ class ClientGroupManage extends Component {
     const menuCompId = this.props.match.params.grMenuId;
 
     const listObj = getTableListObject(ClientGroupProps, menuCompId);
+
+    console.log(">> handleRowClick - listObj : ", listObj);
     const selectedItem = listObj.listData.find(function(element) {
       return element.grpId == id;
     });
@@ -254,6 +256,7 @@ class ClientGroupManage extends Component {
     const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
     const listObj = getTableListObject(ClientGroupProps, menuCompId);
+    console.log('ClientGroupManage(render) listObj :', listObj);
 
     return (
 

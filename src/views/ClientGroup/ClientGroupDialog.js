@@ -76,7 +76,10 @@ class ClientGroupDialog extends Component {
     render() {
         const { classes } = this.props;
         const { ClientGroupProps } = this.props;
-        const { dialogType, editingItem } = ClientGroupProps;
+        //const { dialogType, editingItem } = ClientGroupProps;
+        
+        const dialogType = ClientGroupProps.get('dialogType');
+        const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem').toJS() : null;
 
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
@@ -88,7 +91,7 @@ class ClientGroupDialog extends Component {
         } 
 
         return (
-            <Dialog open={ClientGroupProps.dialogOpen}>
+            <Dialog open={ClientGroupProps.get('dialogOpen')}>
                 <DialogTitle >{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
