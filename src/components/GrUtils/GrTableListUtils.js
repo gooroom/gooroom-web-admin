@@ -11,27 +11,44 @@ export const getTableListObject = (propObj, compId) => {
         return {listParam: propObj.get('defaultListParam').toJS(), listData: []};
     }
 
-    // return {
-    //     // listData: List([]),
-    //     // listParam: propObj.get('defaultListParam'),
-    //     // orderDir: (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : propObj.defaultListParam.orderDir,
-    //     // orderColumn: (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : propObj.defaultListParam.orderColumn,
-    // }
 }
 
-export const getTableSelectedObject = (propObj, compId) => {
+export const getTableSelectedObject = (propObj, compId, id) => {
 
-  // if(propObj && propObj.viewItems) {
-  //   const viewItem = propObj.viewItems.find(function(element) {
-  //     return element._COMPID_ == compId;
-  //   });
-  
-  //   if(viewItem) {
-  //     return viewItem.selectedItem;
-  //   } else {
-  //     return null;
-  //   }
-  // } else {
-     return null;
-  // }
+    if(propObj.get('viewItems')) {
+        let viewItem = propObj.get('viewItems').find((element) => {
+            return element.get('_COMPID_') == compId;
+        });
+
+        if(viewItem && viewItem.get('listData')) {
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>> viewItem.get : ", viewItem.get('listData'));
+            const selectedItem = viewItem.get('listData').find((element) => {
+                console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>> element : ", element);
+                console.log("-------------------------------------------");
+                return element.grpId == id;
+            });
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>> selectedItem : ", selectedItem);
+            console.log("-------------------------------------------");
+            return (selectedItem) ? selectedItem : null;
+        }
+    }
+    console.log("-------------------------------------------");
+    return null;
+    
 }
+
+
+// export const getTableSelectedObject = (propObj, compId) => {
+
+//     if(propObj.get('viewItems')) {
+//         let viewItem = propObj.get('viewItems').find((element) => {
+//             return element.get('_COMPID_') == compId;
+//         });
+//         console.log(">>> viewItem : ", viewItem);
+//         console.log(">>> viewItem >>> : ", viewItem.get('selectedItem'));
+//         console.log((viewItem.get('selectedItem')) ? 'T' : 'F');
+//         return (viewItem.get('selectedItem')) ? viewItem.get('selectedItem') : null;
+//     }
+//     return null;
+    
+// }
