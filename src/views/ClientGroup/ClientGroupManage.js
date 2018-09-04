@@ -15,7 +15,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { getTableListObject } from 'components/GrUtils/GrTableListUtils';
+import { getTableListObject, getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrPane from 'containers/GrContent/GrPane';
@@ -92,12 +92,11 @@ class ClientGroupManage extends Component {
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-
-    console.log(">> handleRowClick - listObj : ", listObj);
-    const selectedItem = listObj.listData.find(function(element) {
-      return element.grpId == id;
-    });
+    // const listObj = getTableListObject(ClientGroupProps, menuCompId);
+    // const selectedItem = listObj.listData.find(function(element) {
+    //   return element.grpId == id;
+    // });
+    const selectedItem = getTableSelectedObject(ClientGroupProps, menuCompId, id);
 
     ClientGroupActions.showClientGroupInform({
       compId: menuCompId,
@@ -175,14 +174,13 @@ class ClientGroupManage extends Component {
     const { ClientGroupProps, ClientGroupActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-    const selectedItem = listObj.listData.find(function(element) {
-      return element.grpId == id;
-    });
+    const selectedItem = getTableSelectedObject(ClientGroupProps, menuCompId);
+
+    console.log(">>> selectedItem : ", selectedItem);
 
     ClientGroupActions.showDialog({
       compId: menuCompId,
-      selectedItem: Object.assign({}, selectedItem),
+      selectedItem: selectedItem,
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };

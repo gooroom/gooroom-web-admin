@@ -9,7 +9,6 @@ const COMMON_PENDING = 'groupComp/COMMON_PENDING';
 const COMMON_FAILURE = 'groupComp/COMMON_FAILURE';
 
 const GET_LIST_SUCCESS = 'groupComp/GET_LIST_SUCCESS';
-const GET_LISTALL_SUCCESS = 'groupComp/GET_LISTALL_SUCCESS';
 const CREATE_CLIENTGROUP_SUCCESS = 'groupComp/CREATE_CLIENTGROUP_SUCCESS';
 const EDIT_CLIENTGROUP_SUCCESS = 'groupComp/EDIT_CLIENTGROUP_SUCCESS';
 const DELETE_CLIENTGROUP_SUCCESS = 'groupComp/DELETE_CLIENTGROUP_SUCCESS';
@@ -88,23 +87,6 @@ export const readClientGroupList = (param) => dispatch => {
             dispatch({
                 type: GET_LIST_SUCCESS,
                 compId: param.compId,
-                payload: response
-            });
-        }
-    ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            payload: error
-        });
-    });
-};
-
-export const readClientGroupListAll = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientGroupList', {}).then(
-        (response) => {
-            dispatch({
-                type: GET_LISTALL_SUCCESS,
                 payload: response
             });
         }
@@ -219,63 +201,35 @@ export const deleteClientGroupData = (param) => dispatch => {
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        const newState = state.merge({
+        return state.merge({
             pending: true, 
             error: false
         });
-        return newState;
-
-        // console.log("COMMON_PENDING state1 : ", state.toJS());
-        // state.set('pending', true).set('error', false);
-        // console.log("COMMON_PENDING state2 : ", state.toJS());
-        // return state;
-
-        // return { 
-        //     ...state, 
-        //     pending: true, 
-        //     error: false 
-        // };
     },
     [COMMON_FAILURE]: (state, action) => {
-        const newState = state.merge({
+        return state.merge({
             pending: false, 
-            error: true
+            error: true,
+            resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
         });
-        return newState;
-
-        // state.set('pending', false).set('error', true);
-        // return state;
-
-        // return {
-        //     ...state,
-        //     pending: false,
-        //     error: true,
-        //     resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
-        // };
     },
 
     [GET_LIST_SUCCESS]: (state, action) => {
 
-        console.log('------- GET_LIST_SUCCESS ----------');
-
-        let COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
+        const COMP_ID = (action.compId) ? action.compId : '';
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
 
-        let oldViewItems = [];
+        let oldViewItems = List([0]);
         if(state.get('viewItems')) {
-
-            console.log(">>>>> [1] ");
-
             oldViewItems = state.get('viewItems');
-            const viewItem = oldViewItems.find((element) => {
+            let viewItem = oldViewItems.find((element) => {
                 return element.get('_COMPID_') == COMP_ID;
             });
 
-            console.log(">>> viewItem : ", viewItem);
             if(viewItem) {
-                Object.assign(viewItem, {
-                    'listData': data,
-                    'listParam': Object.assign({}, viewItem.listParam, {
+                viewItem = viewItem.merge({
+                    'listData': List(data),
+                    'listParam': viewItem.get('listParam').merge({
                         rowsFiltered: parseInt(recordsFiltered, 10),
                         rowsTotal: parseInt(recordsTotal, 10),
                         page: parseInt(draw, 10),
@@ -284,27 +238,22 @@ export default handleActions({
                 });
             } else {
                 // 현재 콤프아이디로 데이타 없음. -> 추가 함
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    'listData': data,
-                    'listParam': {
-                        keyword: '',
-                        orderDir: 'desc',
-                        orderColumn: 'chGrpNm',
-                        rowsPerPageOptions: [5, 10, 25],
+                oldViewItems = oldViewItems.push(Map({
+                    '_COMPID_': COMP_ID,
+                    'listData': List(data),
+                    'listParam': state.get('defaultListParam').merge({
                         rowsFiltered: parseInt(recordsFiltered, 10),
                         rowsTotal: parseInt(recordsTotal, 10),
                         page: parseInt(draw, 10),
                         rowsPerPage: parseInt(rowLength, 10)
-                    }
+                    })
                 }));
             }
         } else {
-
-            console.log(">>>>> [2] ");
-
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                'listData': data,
-                'listParam': Object.assign({}, state.get('defaultListParam').toJS(), {
+            oldViewItems = oldViewItems.set(0, Map({
+                '_COMPID_': COMP_ID,
+                'listData': List(data),
+                'listParam': state.get('defaultListParam').merge({
                     rowsFiltered: parseInt(recordsFiltered, 10),
                     rowsTotal: parseInt(recordsTotal, 10),
                     page: parseInt(draw, 10),
@@ -313,67 +262,37 @@ export default handleActions({
             }));
         }
 
-        const newState = state.merge({
+        return state.merge({
             pending: false, 
             error: false,
             viewItems: oldViewItems
         });
-        return newState;
-
-        // state.set('pending', false).set('error', true).set('viewItems', oldViewItems);
-        // return state;
-
-        // return {
-        //     ...state,
-        //     pending: false,
-        //     error: false,
-        //     viewItems: oldViewItems
-        // };
-    },
-    [GET_LISTALL_SUCCESS]: (state, action) => {
-        return { 
-            ...state, 
-            pending: false, 
-            error: false 
-        };
     },
     [SHOW_CLIENTGROUP_DIALOG]: (state, action) => {
-        return {
-            ...state,
-            editingItem: Object.assign({}, action.payload.selectedItem),
+        return state.merge({
+            editingItem: action.payload.selectedItem,
             dialogOpen: true,
             dialogType: action.payload.dialogType,
-        };
+        });
     },
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
 
         const COMP_ID = action.payload.compId;
         let oldViewItems = [];
         if(state.get('viewItems')) {
-            oldViewItems = state.get('viewItems');
-            const viewItem = oldViewItems.find((element) => {
-                return element.get('_COMPID_') == COMP_ID;
+            const newViewItems = state.get('viewItems').map((element) => {
+                if(element.get('_COMPID_') == COMP_ID) {
+                    return element.set('selectedItem', Map(action.payload.selectedItem));
+                } else {
+                    return element;
+                }
             });
-            if(viewItem) {
-                Object.assign(viewItem, {
-                    'selectedItem': action.payload.selectedItem
-                });
-            } else {
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    'selectedItem': action.payload.selectedItem
-                }));
-            }
-        } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                'selectedItem': action.payload.selectedItem
-            }));
+            return state.merge({
+                viewItems: newViewItems,
+                informOpen: true
+            });
         }
-
-        const newState = state.merge({
-            viewItems: oldViewItems,
-            informOpen: true
-        });
-        return newState;
+        return state;
 
         // return {
         //     ...state,
@@ -414,15 +333,6 @@ export default handleActions({
             viewItems: viewItems,
             informOpen: true
         };
-
-        // let selectedItem = 'selectedItem';
-        // if(action.compId && action.compId != '') {
-        //     selectedItem = action.compId + '__selectedItem';
-        // }
-        // return {
-        //     ...state,
-        //     [selectedItem]: action.payload.selectedItem
-        // }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
@@ -432,37 +342,33 @@ export default handleActions({
         }
     },
     [CHG_STORE_DATA]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             [action.payload.name]: action.payload.value
-        }
+        });
     },
     [CREATE_CLIENTGROUP_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             pending: false,
-            error: false,
-        };
+            error: false
+        });
     },
     [EDIT_CLIENTGROUP_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             pending: false,
             error: false,
             informOpen: false,
             dialogOpen: false,
             dialogType: ''
-        };
+        });
     },
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             pending: false,
             error: false,
             informOpen: false,
             dialogOpen: false,
             dialogType: ''
-        };
+        });
     },
 
 }, initialState);
