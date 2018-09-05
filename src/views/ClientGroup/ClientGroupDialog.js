@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
+import { getTableListObject, getDataListAndParamInComp, getTableObjectById } from 'components/GrUtils/GrTableListUtils';
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -41,14 +43,12 @@ class ClientGroupDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { ClientGroupProps, ClientGroupActions } = this.props;
-        ClientGroupActions.createClientGroupData(ClientGroupProps.editingItem)
+        const { ClientGroupProps, ClientGroupActions, compId } = this.props;
+        ClientGroupActions.createClientGroupData(ClientGroupProps.get('editingItem'))
             .then(() => {
-                ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
+                ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
                 this.handleClose();
-        }, (res) => {
-
-        })
+        });
     }
 
     handleEditData = (event) => {
@@ -62,24 +62,21 @@ class ClientGroupDialog extends Component {
     }
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
-            const { ClientGroupProps, ClientGroupActions } = this.props;
-            ClientGroupActions.editClientGroupData(ClientGroupProps.editingItem)
+            const { ClientGroupProps, ClientGroupActions, compId } = this.props;
+            ClientGroupActions.editClientGroupData(ClientGroupProps.get('editingItem'))
                 .then((res) => {
-                    ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
+                    ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
                     this.handleClose();
-            }, (res) => {
-
-            })
+            });
         }
     }
 
     render() {
         const { classes } = this.props;
         const { ClientGroupProps } = this.props;
-        //const { dialogType, editingItem } = ClientGroupProps;
         
         const dialogType = ClientGroupProps.get('dialogType');
-        const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem').toJS() : null;
+        const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
@@ -91,14 +88,15 @@ class ClientGroupDialog extends Component {
         } 
 
         return (
+            <div>
+            {(ClientGroupProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientGroupProps.get('dialogOpen')}>
                 <DialogTitle >{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
-
                     <TextField
                         id="grpNm"
                         label="단말그룹이름"
-                        value={(editingItem) ? editingItem.grpNm : ''}
+                        value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
                         onChange={this.handleValueChange('grpNm')}
                         margin="normal"
                         className={classes.fullWidth}
@@ -107,7 +105,7 @@ class ClientGroupDialog extends Component {
                     <TextField
                         id="comment"
                         label="단말그룹설명"
-                        value={(editingItem) ? editingItem.comment : ''}
+                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange('comment')}
                         margin="normal"
                         className={classes.fullWidth}
@@ -124,6 +122,8 @@ class ClientGroupDialog extends Component {
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
                 </DialogActions>
             </Dialog>
+            }
+            </div>
         );
     }
 }

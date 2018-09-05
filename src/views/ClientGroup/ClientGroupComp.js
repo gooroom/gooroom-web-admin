@@ -59,14 +59,10 @@ class ClientGroupComp extends Component {
     //   compId: this.props.compId
     // }));
 
-    let listParam = ClientGroupProps.get('defaultListParam').toJS();
-    Object.assign(listParam, {
+    ClientGroupActions.readClientGroupList(ClientGroupProps.get('defaultListParam').merge({
       page:0,
       compId: this.props.compId
-    });
-
-    console.log('listParam : ', listParam);
-    ClientGroupActions.readClientGroupList(listParam);
+    }));
   }
 
   // .................................................

@@ -14,14 +14,9 @@ import { arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 class GrCommonTableHead extends Component {
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
+  createSortHandler = (columnId, orderDir) => event => {
+    this.props.onRequestSort(event, columnId, orderDir);
   };
-
-  // static columnData = [
-  //   { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
-  //   { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
-  // ];
 
   render() {
     const { classes, columnData } = this.props;
@@ -67,7 +62,7 @@ class GrCommonTableHead extends Component {
                   if(column.isOrder) {
                     return <TableSortLabel active={orderColumn === column.id}
                               direction={orderDir}
-                              onClick={this.createSortHandler(column.id)}
+                              onClick={this.createSortHandler(column.id, orderDir)}
                             >{column.label}</TableSortLabel>
                   } else {
                     return <p>{column.label}</p>
