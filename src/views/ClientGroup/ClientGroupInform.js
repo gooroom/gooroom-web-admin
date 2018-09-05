@@ -38,9 +38,6 @@ class ClientGroupInform extends Component {
     //const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
 
     const selectedItem = getTableSelectedObject(ClientGroupCompProps, compId);
-
-    console.log('ClientGroupInform selectedItem : ', ((selectedItem) ? selectedItem.toJS() : ''));
- 
     return (
       <div>
       {(ClientGroupCompProps.get('informOpen') && selectedItem) &&
