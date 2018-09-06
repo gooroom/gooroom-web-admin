@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { merge } from 'immutable';
+import { Map, List } from 'immutable';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -15,7 +16,8 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { getMergedObject, arrayContainsArray, getListData } from 'components/GrUtils/GrCommonUtils';
-import { getTableListObject, getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
+import { getTableListObject, getTableSelectedObject, getDataListAndParamInComp, getTableObjectById } from 'components/GrUtils/GrTableListUtils';
+
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import Table from '@material-ui/core/Table';
@@ -51,34 +53,36 @@ class ClientGroupComp extends Component {
   }
 
   componentDidMount() {
-
     const { ClientGroupActions, ClientGroupProps } = this.props;
-
-    // ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.defaultListParam, {
-    //   page:0,
-    //   compId: this.props.compId
-    // }));
-
-    ClientGroupActions.readClientGroupList(ClientGroupProps.get('defaultListParam').merge({
-      page:0,
-      compId: this.props.compId
-    }));
+    ClientGroupActions.readClientGroupList(ClientGroupProps, this.props.compId);
   }
 
-  // .................................................
-  handleRequestSort = (event, property) => {
+  handleChangePage = (event, page) => {
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    const listObj = getTableListObject(ClientGroupProps, compId);
+    ClientGroupActions.readClientGroupList(ClientGroupProps, compId, {
+      page: page
+    });
+  };
 
+  handleChangeRowsPerPage = event => {
+    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
+    ClientGroupActions.readClientGroupList(ClientGroupProps, compId, {
+      rowsPerPage: event.target.value,
+      page: 0
+    });
+  };
+
+  // .................................................
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
     let orderDir = "desc";
-    if (listObj.orderColumn === property && listObj.orderDir === "desc") {
+    if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
-      orderColumn: property, 
-      orderDir: orderDir,
-      compId: this.props.compId
-    }));
+    ClientGroupActions.readClientGroupList(ClientGroupProps, compId, {
+      orderColumn: columnId,
+      orderDir: orderDir
+    });
   };
   
   handleSelectAllClick = (event, checked) => {
@@ -167,27 +171,6 @@ class ClientGroupComp extends Component {
 
   };
 
-  handleChangePage = (event, page) => {
-    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    const listObj = getTableListObject(ClientGroupProps, compId);
-
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
-      page: page, 
-      compId: this.props.compId
-    }));
-  };
-
-  handleChangeRowsPerPage = event => {
-    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    const listObj = getTableListObject(ClientGroupProps, compId);
-
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
-      rowsPerPage: event.target.value,
-      page:0,
-      compId: this.props.compId
-    }));
-  };
-
   //isSelected = id => this.state.selected.indexOf(id) !== -1;
   isSelected = id => {
     const { ClientGroupProps, compId } = this.props;
@@ -202,32 +185,11 @@ class ClientGroupComp extends Component {
     // }    
   }
 
-  // loadInitData = (param) => {
-  //   const { ClientGroupActions, ClientGroupProps } = this.props;
-  //   ClientGroupActions.readClientGroupList(getMergedObject(ClientGroupProps.listParam, param));
-  // };
-
-  // .................................................
-
   render() {
     const { classes } = this.props;
     const { ClientGroupProps, compId } = this.props;
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
-
-    console.log('ClientGroupProps >>> ', ClientGroupProps);
-    console.log('ClientGroupProps.toJS() >>> ', ClientGroupProps.toJS());
-    console.log('ClientGroupProps.get(viewItems) >>> ', ClientGroupProps.get('viewItems'));
-
     const listObj = getTableListObject(ClientGroupProps, compId);
-    console.log('================================');
-    
-    //const selectedObj = getTableSelectedObject(ClientGroupProps, compId);
-
-    // const { 
-    //   [compId + '__listData'] : compListData, 
-    //   [compId + '__listParam'] : compListParam, 
-    //   [compId + '__selected'] : compSelected
-    // } = ClientGroupProps;
 
     return (
 
@@ -235,35 +197,35 @@ class ClientGroupComp extends Component {
         <Table>
           <GrCommonTableHead
             classes={classes}
-            orderDir={listObj.get('orderDir')}
-            orderColumn={listObj.get('orderColumn')}
-            onRequestSort={this.handleRequestSort}
+            orderDir={listObj.getIn(['listParam', 'orderDir'])}
+            orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+            onRequestSort={this.handleChangeSort}
             onSelectAllClick={this.handleSelectAllClick}
             //selectedData={selectedObj}
             listData={listObj.get('listData')}
             columnData={this.columnHeaders}
           />
           <TableBody>
-          {listObj.listData && listObj.listData.map(n => {
+          {listObj.get('listData').map(n => {
             const isSelected = this.isSelected(n.grpId);
             return (
               <TableRow
                 className={classes.grNormalTableRow}
                 hover
-                onClick={event => this.handleRowClick(event, n.grpId)}
+                onClick={event => this.handleRowClick(event, n.get('grpId'))}
                 role="checkbox"
                 aria-checked={isSelected}
-                key={n.grpId}
+                key={n.get('grpId')}
                 selected={isSelected}
               >
                 <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                   <Checkbox checked={isSelected} className={classes.grObjInCell} />
                 </TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>
-                  {n.grpNm}
+                  {n.get('grpNm')}
                 </TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>
-                  {n.clientCount}
+                  {n.get('clientCount')}
                 </TableCell>
               </TableRow>
             );
@@ -279,14 +241,14 @@ class ClientGroupComp extends Component {
           )}
           </TableBody>
         </Table>
-        {listObj.listParam &&
+        {listObj.get('listData') && listObj.get('listData').size > 0 &&
           <TablePagination
             component='div'
-            count={listObj.listParam.rowsFiltered}
-            rowsPerPage={listObj.listParam.rowsPerPage}
-            rowsPerPageOptions={[]}
+            count={listObj.getIn(['listParam', 'rowsFiltered'])}
+            rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+            rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+            page={listObj.getIn(['listParam', 'page'])}
             labelDisplayedRows={() => {return ''}}
-            page={listObj.listParam.page}
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}
