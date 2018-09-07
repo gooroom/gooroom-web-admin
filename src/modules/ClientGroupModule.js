@@ -18,6 +18,7 @@ const SET_SELECTED_OBJ = 'groupComp/SET_SELECTED_OBJ';
 const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'groupComp/CHG_LISTPARAM_DATA';
+const CHG_COMPVARIABLE_DATA = 'groupComp/CHG_COMPVARIABLE_DATA';
 const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
 
 // ...
@@ -37,7 +38,6 @@ const initialState = Map({
         rowsFiltered: 0
     }),
 
-    informOpen: false,
     dialogOpen: false,
     dialogType: ''
 });
@@ -108,10 +108,8 @@ export const readClientGroupList = (module, compId, extParam) => dispatch => {
 };
 
 export const setSelectedItemObj = (param) => dispatch => {
-    const compId = param.compId;
     return dispatch({
         type: SET_SELECTED_OBJ,
-        compId: compId,
         payload: param
     });
 };
@@ -126,6 +124,13 @@ export const setEditingItemValue = (param) => dispatch => {
 export const changeListParamData = (param) => dispatch => {
     return dispatch({
         type: CHG_LISTPARAM_DATA,
+        payload: param
+    });
+};
+
+export const changeCompVariable = (param) => dispatch => {
+    return dispatch({
+        type: CHG_COMPVARIABLE_DATA,
         payload: param
     });
 };
@@ -233,7 +238,6 @@ export default handleActions({
     [GET_LIST_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.payload.data;
 
-
         if(state.get('viewItems')) {
             const viewIndex = state.get('viewItems').findIndex((e) => {
                 return e.get('_COMPID_') == action.compId;
@@ -251,7 +255,7 @@ export default handleActions({
                         .setIn(['viewItems', viewIndex, 'listData'], List(data.map((e) => {return Map(e)})))
                         .setIn(['viewItems', viewIndex, 'listParam'], newListParam);
             } else {
-                return state.get('viewItems').push(Map({
+                return state.set('viewItems', state.get('viewItems').push(Map({
                     '_COMPID_': action.compId,
                     'listData': List(data.map((e) => {return Map(e)})),
                     'listParam': state.get('defaultListParam').merge({
@@ -262,7 +266,7 @@ export default handleActions({
                         orderColumn: orderColumn,
                         orderDir: orderDir
                     })
-                }));
+                })));
             }
         } else {
             return state.set('viewItems', List([Map({
@@ -297,44 +301,56 @@ export default handleActions({
                 }
             });
             return state.merge({
-                viewItems: newViewItems,
-                informOpen: true
+                viewItems: newViewItems
             });
         }
         return state;
     },
     [SET_SELECTED_OBJ]: (state, action) => {
-
         const COMP_ID = action.payload.compId;
-        let viewItems = [];
-        if(state.viewItems) {
-            viewItems = state.viewItems;
-            const viewItem = viewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
+        if(state.get('viewItems')) {
+            const newViewItems = state.get('viewItems').map((element) => {
+                if(element.get('_COMPID_') == COMP_ID) {
+                    return element.set('selectedItem', Map(action.payload.selectedItem)).set('informOpen', true);
+                } else {
+                    return element;
+                }
             });
-            if(viewItem) {
-                Object.assign(viewItem, {
-                    'selectedItem': action.payload.selectedItem,
-                    'checkItems': action.payload.selectedItem
-                });
-            } else {
-                viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    'selectedItem': action.payload.selectedItem,
-                    'checkItems': action.payload.selectedItem
-                }));
-            }
-        } else {
-            viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                'selectedItem': action.payload.selectedItem,
-                'checkItems': action.payload.selectedItem
-            }));
+            return state.merge({
+                viewItems: newViewItems
+            });
         }
+        return state;
 
-        return {
-            ...state,
-            viewItems: viewItems,
-            informOpen: true
-        };
+        // let viewItems = [];
+        // if(state.viewItems) {
+        //     viewItems = state.viewItems;
+        //     const viewItem = viewItems.find((element) => {
+        //         return element._COMPID_ == COMP_ID;
+        //     });
+        //     if(viewItem) {
+        //         Object.assign(viewItem, {
+        //             'selectedItem': action.payload.selectedItem,
+        //             'checkItems': action.payload.selectedItem
+        //         });
+        //     } else {
+        //         viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+        //             'selectedItem': action.payload.selectedItem,
+        //             'checkItems': action.payload.selectedItem
+        //         }));
+        //     }
+        // } else {
+        //     viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+        //         'selectedItem': action.payload.selectedItem,
+        //         'checkItems': action.payload.selectedItem
+        //     }));
+        // }
+
+        // return {
+        //     ...state,
+        //     viewItems: viewItems,
+        //     informOpen: true
+        // };
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
@@ -346,6 +362,12 @@ export default handleActions({
             return e.get('_COMPID_') == action.payload.compId;
         });
         return state.setIn(['viewItems', viewIndex, 'listParam', action.payload.name], action.payload.value);
+    },
+    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+        const viewIndex = state.get('viewItems').findIndex((e) => {
+            return e.get('_COMPID_') == action.payload.compId;
+        });
+        return state.setIn(['viewItems', viewIndex, action.payload.name], action.payload.value);
     },
     [CHG_STORE_DATA]: (state, action) => {
         return state.merge({

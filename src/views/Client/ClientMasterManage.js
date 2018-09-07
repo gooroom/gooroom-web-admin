@@ -53,7 +53,7 @@ class ClientMasterManage extends Component {
   };
 
   // Select Group Item
-  handleClientGroupSelect = (selectedGroupObj='', selectedGroupIdArray) => {
+  _________________handleClientGroupSelect = (selectedGroupObj='', selectedGroupIdArray) => {
 
     const { ClientMasterManageActions, ClientGroupActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
@@ -79,13 +79,14 @@ class ClientMasterManage extends Component {
     }
   };
 
-  // 제거해야할 코드
-  handleChangeClientGroupSelected = (selectedGroupObj='', selectedGroupIdArray) => {
+  // 
+  handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
 
     const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
     const { ClientGroupCompProps, ClientGroupActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
 
+    // 단말 리스트 조회
     ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, {
       groupId: selectedGroupIdArray.join(','), 
       page:0,
@@ -93,7 +94,7 @@ class ClientMasterManage extends Component {
     }));
 
     // show group info.
-    if(selectedGroupObj !== '') {
+    if(selectedGroupObj) {
       ClientMasterManageActions.closeClientManageInform();
       ClientGroupActions.setSelectedItemObj({
         compId: this.props.match.params.grMenuId,
@@ -165,8 +166,8 @@ class ClientMasterManage extends Component {
                 <ClientGroupComp
                   compId={menuId}
                   isMulti="true"
+                  onSelectAll={this.handleClientGroupSelectAll}
                   onSelect={this.handleClientGroupSelect}
-                  onChangeGroupSelected={this.handleChangeClientGroupSelected}
                 />
               </Card>
             </Grid>
