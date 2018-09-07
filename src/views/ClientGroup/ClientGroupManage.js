@@ -17,7 +17,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { getTableListObject, getDataListAndParamInComp, getTableObjectById } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getDataListAndParamInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrPane from 'containers/GrContent/GrPane';
@@ -105,7 +105,7 @@ class ClientGroupManage extends Component {
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
 
     const menuCompId = this.props.match.params.grMenuId;
-    const selectedItem = getTableObjectById(ClientGroupProps, menuCompId, id);
+    const selectedItem = getRowObjectById(ClientGroupProps, menuCompId, id);
 
     ClientGroupActions.showClientGroupInform({
       compId: menuCompId,
@@ -151,7 +151,7 @@ class ClientGroupManage extends Component {
   // edit
   handleEditClick = (event, id) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const selectedItem = getTableObjectById(ClientGroupProps, this.props.match.params.grMenuId, id);
+    const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id);
     ClientGroupActions.showDialog({
       selectedItem: selectedItem,
       dialogType: ClientGroupDialog.TYPE_EDIT
@@ -161,7 +161,7 @@ class ClientGroupManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { ClientGroupProps, ClientGroupActions, GrConfirmActions } = this.props;
-    const selectedItem = getTableObjectById(ClientGroupProps, this.props.match.params.grMenuId, id);
+    const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id);
     GrConfirmActions.showConfirm({
       confirmTitle: '단말그룹 삭제',
       confirmMsg: '단말그룹(' + selectedItem.get('grpNm') + ')을 삭제하시겠습니까?',
@@ -201,9 +201,7 @@ class ClientGroupManage extends Component {
     const { ClientGroupProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-
-    console.log('>>>> listObj : ', listObj.toJS());
+    const listObj = getDataObjectInComp(ClientGroupProps, menuCompId);
 
     return (
 
@@ -256,9 +254,9 @@ class ClientGroupManage extends Component {
           </Grid>
 
           {/* data area */}
-          <div>
+          {(listObj) && 
+            <div>
             <Table>
-
               <GrCommonTableHead
                 classes={classes}
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -306,23 +304,24 @@ class ClientGroupManage extends Component {
                 )}
               </TableBody>
             </Table>
-          </div>
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+            </div>
+          }
 
-          <TablePagination
-            component='div'
-            count={listObj.getIn(['listParam', 'rowsFiltered'])}
-            rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-            rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-            page={listObj.getIn(['listParam', 'page'])}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
 
         </GrPane>
         <ClientGroupInform compId={menuCompId} />

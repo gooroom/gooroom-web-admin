@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { getTableListObject, getDataListAndParamInComp, getTableObjectById } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getDataListAndParamInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";

@@ -1,21 +1,31 @@
 import { Map, List } from 'immutable';
 
-export const getTableListObject = (propObj, compId) => {
-
+export const getDataObjectInComp = (propObj, compId) => {
     if(propObj.get('viewItems')) {
-        let viewItem = propObj.get('viewItems').find((element) => {
+        const viewItem = propObj.get('viewItems').find((element) => {
             return element.get('_COMPID_') == compId;
         });
-        return viewItem;
+        if(viewItem) {
+            return viewItem;
+        }
+    }
+    return Map({listParam: propObj.get('defaultListParam'), listData: List([])});
+}
+
+export const getDataObjectVariableInComp = (propObj, compId, name) => {
+    if(propObj.get('viewItems')) {
+        const viewItem = propObj.get('viewItems').find((element) => {
+            return element.get('_COMPID_') == compId;
+        });
+        return viewItem.get(name);
     } else {
-        return Map({listParam: propObj.get('defaultListParam'), listData: List([])});
+        return null;
     }
 }
 
 export const getDataListAndParamInComp = (propObj, compId) => {
-
     if(propObj.get('viewItems')) {
-        let viewItem = propObj.get('viewItems').find((element) => {
+        const viewItem = propObj.get('viewItems').find((element) => {
             return element.get('_COMPID_') == compId;
         });
         return Map({listParam: viewItem.get('listParam'), listData: viewItem.get('listData')});
@@ -24,10 +34,9 @@ export const getDataListAndParamInComp = (propObj, compId) => {
     }
 }
 
-export const getTableObjectById = (propObj, compId, id) => {
-
+export const getRowObjectById = (propObj, compId, id) => {
     if(propObj.get('viewItems')) {
-        let viewItem = propObj.get('viewItems').find((element) => {
+        const viewItem = propObj.get('viewItems').find((element) => {
             return element.get('_COMPID_') == compId;
         });
         if(viewItem && viewItem.get('listData')) {
@@ -40,14 +49,12 @@ export const getTableObjectById = (propObj, compId, id) => {
     return null;
 }
 
-
-export const getTableSelectedObject = (propObj, compId) => {
-
+export const getSelectedObjectInComp = (propObj, compId) => {
     if(propObj.get('viewItems')) {
-        let viewItem = propObj.get('viewItems').find((element) => {
+        const viewItem = propObj.get('viewItems').find((element) => {
             return element.get('_COMPID_') == compId;
         });
-        return (viewItem.get('selectedItem')) ? viewItem.get('selectedItem') : null;
+        return (viewItem) ? viewItem.get('selectedItem') : null;
     }
     return null;
 }

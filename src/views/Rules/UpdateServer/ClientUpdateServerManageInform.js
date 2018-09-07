@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
+import { getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 
@@ -38,7 +38,7 @@ class ClientUpdateServerInform extends Component {
     const { ClientUpdateServerProps, compId } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = createViewObject(getTableSelectedObject(ClientUpdateServerProps, compId));
+    const selectedViewItem = createViewObject(getSelectedObjectInComp(ClientUpdateServerProps, compId));
 
     return (
       <div >

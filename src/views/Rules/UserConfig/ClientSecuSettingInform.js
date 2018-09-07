@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
+import { getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
 
@@ -37,7 +37,7 @@ class ClientSecuSettingInform extends Component {
     const { ClientSecuSettingProps, compId } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = createViewObject(getTableSelectedObject(ClientSecuSettingProps, compId));
+    const selectedViewItem = createViewObject(getSelectedObjectInComp(ClientSecuSettingProps, compId));
 
     return (
       <div>
