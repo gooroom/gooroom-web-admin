@@ -19,6 +19,7 @@ export const getMergedObject = (source, param) => {
  * @returns {boolean}
  */
 export const arrayContainsArray = (superset, subset) => {
+
     if (0 === subset.length) {
         return 0;
     }

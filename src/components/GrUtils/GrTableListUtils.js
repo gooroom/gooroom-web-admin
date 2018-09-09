@@ -1,34 +1,60 @@
+import { Map, List } from 'immutable';
 
-export const getTableListObject = (propObj, compId) => {
-
-    let viewItem = null;
-    if(propObj.viewItems) {
-      viewItem = propObj.viewItems.find((element) => {
-        return element._COMPID_ == compId;
-      });
+export const getDataObjectInComp = (propObj, compId) => {
+    if(propObj.get('viewItems')) {
+        const viewItem = propObj.get('viewItems').find((element) => {
+            return element.get('_COMPID_') == compId;
+        });
+        if(viewItem) {
+            return viewItem;
+        }
     }
+    return Map({listParam: propObj.get('defaultListParam'), listData: List([])});
+}
 
-    return {
-        listData: (viewItem) ? viewItem.listData : [],
-        listParam: (viewItem) ? viewItem.listParam : propObj.defaultListParam,
-        orderDir: (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : propObj.defaultListParam.orderDir,
-        orderColumn: (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : propObj.defaultListParam.orderColumn,
+export const getDataObjectVariableInComp = (propObj, compId, name) => {
+    if(propObj.get('viewItems')) {
+        const viewItem = propObj.get('viewItems').find((element) => {
+            return element.get('_COMPID_') == compId;
+        });
+        return viewItem.get(name);
+    } else {
+        return null;
     }
 }
 
-export const getTableSelectedObject = (propObj, compId) => {
-
-  if(propObj && propObj.viewItems) {
-    const viewItem = propObj.viewItems.find(function(element) {
-      return element._COMPID_ == compId;
-    });
-  
-    if(viewItem) {
-      return viewItem.selectedItem;
+export const getDataListAndParamInComp = (propObj, compId) => {
+    if(propObj.get('viewItems')) {
+        const viewItem = propObj.get('viewItems').find((element) => {
+            return element.get('_COMPID_') == compId;
+        });
+        return Map({listParam: viewItem.get('listParam'), listData: viewItem.get('listData')});
     } else {
-      return null;
+        return Map({listParam: propObj.get('defaultListParam'), listData: List([])});
     }
-  } else {
+}
+
+export const getRowObjectById = (propObj, compId, id) => {
+    if(propObj.get('viewItems')) {
+        const viewItem = propObj.get('viewItems').find((element) => {
+            return element.get('_COMPID_') == compId;
+        });
+        if(viewItem && viewItem.get('listData')) {
+            const selectedItem = viewItem.get('listData').find((element) => {
+                return element.get('grpId') == id;
+            });
+            return (selectedItem) ? selectedItem : null;
+        }
+    }
     return null;
-  }
+}
+
+export const getSelectedObjectInComp = (propObj, compId) => {
+    if(propObj.get('viewItems')) {
+        const viewItem = propObj.get('viewItems').find((element) => {
+            return element.get('_COMPID_') == compId;
+        });
+        return (viewItem) ? viewItem.get('selectedItem') : null;
+    }
+    return null;
 }

@@ -14,14 +14,9 @@ import { arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 class GrCommonTableHead extends Component {
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
+  createSortHandler = (columnId, orderDir) => event => {
+    this.props.onRequestSort(event, columnId, orderDir);
   };
-
-  // static columnData = [
-  //   { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
-  //   { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
-  // ];
 
   render() {
     const { classes, columnData } = this.props;
@@ -29,13 +24,13 @@ class GrCommonTableHead extends Component {
       onSelectAllClick,
       orderDir,
       orderColumn,
-      selectedData,
+      selectedIds,
       listData
     } = this.props;
 
     let checkSelection = 0;
-    if(listData && listData.length > 0 && selectedData) {
-      checkSelection = arrayContainsArray(selectedData, listData.map(x => x.grpId));
+    if(listData && listData.size > 0 && selectedIds && selectedIds.size > 0) {
+      checkSelection = arrayContainsArray(selectedIds.toJS(), listData.map(x => x.get('grpId')));
     }
     
     return (
@@ -67,7 +62,7 @@ class GrCommonTableHead extends Component {
                   if(column.isOrder) {
                     return <TableSortLabel active={orderColumn === column.id}
                               direction={orderDir}
-                              onClick={this.createSortHandler(column.id)}
+                              onClick={this.createSortHandler(column.id, orderDir)}
                             >{column.label}</TableSortLabel>
                   } else {
                     return <p>{column.label}</p>
