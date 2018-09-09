@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getTableSelectedObject } from 'components/GrUtils/GrTableListUtils';
+import { getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 
@@ -36,7 +36,7 @@ class ClientHostNameInform extends Component {
     const { ClientHostNameProps, compId } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = createViewObject(getTableSelectedObject(ClientHostNameProps, compId));
+    const selectedViewItem = createViewObject(getSelectedObjectInComp(ClientHostNameProps, compId));
 
     return (
       <div>

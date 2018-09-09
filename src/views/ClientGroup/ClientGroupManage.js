@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Map, List } from 'immutable';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -15,7 +17,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { getTableListObject } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getDataListAndParamInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrPane from 'containers/GrContent/GrPane';
@@ -71,85 +73,68 @@ class ClientGroupManage extends Component {
   }
 
   // .................................................
-  handleRequestSort = (event, property) => {
+  handleChangePage = (event, page) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    ClientGroupActions.readClientGroupList(ClientGroupProps, this.props.match.params.grMenuId, {
+      page: page
+    });
+  };
 
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
+  handleChangeRowsPerPage = event => {
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    ClientGroupActions.readClientGroupList(ClientGroupProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value,
+      page: 0
+    });
+  };
+
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    const { ClientGroupActions, ClientGroupProps } = this.props;
     let orderDir = "desc";
-    if (listObj.listParam.orderColumn === property && listObj.listParam.orderDir === "desc") {
+    if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
-      orderColumn: property, 
-      orderDir: orderDir,
-      compId: menuCompId
-    }));
+    ClientGroupActions.readClientGroupList(ClientGroupProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId,
+      orderDir: orderDir
+    });
   };
 
   handleRowClick = (event, id) => {
     const { ClientGroupProps } = this.props;
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
 
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-    const selectedItem = listObj.listData.find(function(element) {
-      return element.grpId == id;
-    });
+    const menuCompId = this.props.match.params.grMenuId;
+    const selectedItem = getRowObjectById(ClientGroupProps, menuCompId, id);
 
     ClientGroupActions.showClientGroupInform({
       compId: menuCompId,
       selectedItem: selectedItem,
     });
-
     
     // '단말정책설정' : 정책 정보 변경
     ClientConfSettingActions.getClientConfSetting({
       compId: menuCompId,
-      objId: selectedItem.clientConfigId
+      objId: selectedItem.get('clientConfigId')
     });   
 
     // 'Hosts설정' : 정책 정보 변경
     ClientHostNameActions.getClientHostName({
       compId: menuCompId,
-      objId: selectedItem.hostNameConfigId
+      objId: selectedItem.get('hostNameConfigId')
     });   
 
     // '업데이트서버설정' : 정책 정보 변경
     ClientUpdateServerActions.getClientUpdateServer({
       compId: menuCompId,
-      objId: selectedItem.updateServerConfigId
+      objId: selectedItem.get('updateServerConfigId')
     });   
 
     // '데스크톱 정보설정' : 정책 정보 변경
     ClientDesktopConfigActions.getClientDesktopConfig({
       compId: menuCompId,
-      desktopConfId: selectedItem.desktopConfigId
+      desktopConfId: selectedItem.get('desktopConfigId')
     });   
-
-  };
-
-  handleChangePage = (event, page) => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
-      page: page,
-      compId: menuCompId
-    }));
-  };
-
-  handleChangeRowsPerPage = event => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
-      rowsPerPage: event.target.value,
-      page: 0,
-      compId: menuCompId
-    }));
   };
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
@@ -158,12 +143,7 @@ class ClientGroupManage extends Component {
   // add
   handleCreateButton = () => {
     this.props.ClientGroupActions.showDialog({
-      selectedItem: {
-        grpNm: '',
-        comment: '',
-        clientConfigId: '',
-        isDefault: ''
-      },
+      selectedItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD
     });
   }
@@ -171,46 +151,33 @@ class ClientGroupManage extends Component {
   // edit
   handleEditClick = (event, id) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-    const selectedItem = listObj.listData.find(function(element) {
-      return element.grpId == id;
-    });
-
+    const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id);
     ClientGroupActions.showDialog({
-      compId: menuCompId,
-      selectedItem: Object.assign({}, selectedItem),
+      selectedItem: selectedItem,
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions, GrConfirmActions } = this.props;
-    const selectedItem = ClientGroupProps.listData.find(function(element) {
-      return element.grpId == id;
-    });
-    ClientGroupActions.setSelectedItemObj({
-      compId: this.props.match.params.grMenuId,
-      selectedItem: selectedItem
-    });
-    const re = GrConfirmActions.showConfirm({
+    const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id);
+    GrConfirmActions.showConfirm({
       confirmTitle: '단말그룹 삭제',
-      confirmMsg: '단말그룹(' + selectedItem.grpNm + ')을 삭제하시겠습니까?',
+      confirmMsg: '단말그룹(' + selectedItem.get('grpNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true
+      confirmOpen: true,
+      confirmObject: selectedItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue) => {
+  handleDeleteConfirmResult = (confirmValue, confirmObject) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
     if(confirmValue) {
+      const menuCompId = this.props.match.params.grMenuId;
       ClientGroupActions.deleteClientGroupData({
-        groupId: ClientGroupProps.selectedItem.grpId
+        groupId: confirmObject.get('grpId')
       }).then(() => {
-        ClientGroupActions.readClientGroupList(ClientGroupProps.listParam);
-        }, () => {
+        ClientGroupActions.readClientGroupList(ClientGroupProps, menuCompId);
         });
     }
   };
@@ -218,42 +185,23 @@ class ClientGroupManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-
-    ClientGroupActions.readClientGroupList(getMergedObject(listObj.listParam, {
-      page: 0,
-      compId: menuCompId
-    }));
+    ClientGroupActions.readClientGroupList(ClientGroupProps, this.props.match.params.grMenuId);
   };
   
   handleKeywordChange = name => event => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
-    const newParam = getMergedObject(listObj.listParam, {keyword: event.target.value});
-    ClientGroupActions.changeStoreData({
-      name: 'listParam', 
-      value: newParam,
-      compId: menuCompId
+    this.props.ClientGroupActions.changeListParamData({
+      name: 'keyword', 
+      value: event.target.value,
+      compId: this.props.match.params.grMenuId
     });
   }
-
-  // .................................................
-  handleChangeGroupSelect = (event, property) => {
-
-  };
-  handleChangeClientStatusSelect = (event, property) => {
-
-  };
 
   render() {
     const { classes } = this.props;
     const { ClientGroupProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
-    const listObj = getTableListObject(ClientGroupProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientGroupProps, menuCompId);
 
     return (
 
@@ -270,7 +218,7 @@ class ClientGroupManage extends Component {
                   <TextField
                     id='keyword'
                     label='검색어'
-                    value={listObj.listParam.keyword}
+                    
                     onChange={this.handleKeywordChange('keyword')}
                   />
                 </FormControl>
@@ -306,39 +254,39 @@ class ClientGroupManage extends Component {
           </Grid>
 
           {/* data area */}
-          <div>
+          {(listObj) && 
+            <div>
             <Table>
-
               <GrCommonTableHead
                 classes={classes}
-                orderDir={listObj.orderDir}
-                orderColumn={listObj.orderColumn}
-                onRequestSort={this.handleRequestSort}
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-              {listObj.listData.map(n => {
+              {listObj.get('listData').map(n => {
                   return (
                     <TableRow
                       className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.grpId)}
-                      key={n.grpId}
+                      onClick={event => this.handleRowClick(event, n.get('grpId'))}
+                      key={n.get('grpId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.grpNm}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.clientCount}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.desktopConfigNm}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.clientConfigNm}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.regDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('clientCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('desktopConfigNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('clientConfigNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
                         <Button color='secondary' size="small" 
                           className={classes.buttonInTableRow} 
-                          onClick={event => this.handleEditClick(event, n.grpId)}>
+                          onClick={event => this.handleEditClick(event, n.get('grpId'))}>
                           <BuildIcon />
                         </Button>
                         <Button color='secondary' size="small"
                           className={classes.buttonInTableRow} 
-                          onClick={event => this.handleDeleteClick(event, n.grpId)}>
+                          onClick={event => this.handleDeleteClick(event, n.get('grpId'))}>
                           <DeleteIcon />
                         </Button>
                       </TableCell>
@@ -356,27 +304,28 @@ class ClientGroupManage extends Component {
                 )}
               </TableBody>
             </Table>
-          </div>
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+            </div>
+          }
 
-          <TablePagination
-            component='div'
-            count={listObj.listParam.rowsFiltered}
-            rowsPerPage={listObj.listParam.rowsPerPage}
-            rowsPerPageOptions={listObj.listParam.rowsPerPageOptions}
-            page={listObj.listParam.page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
 
         </GrPane>
         <ClientGroupInform compId={menuCompId} />
-        <ClientGroupDialog />
+        <ClientGroupDialog compId={menuCompId} />
         <GrConfirm />
       </React.Fragment>
 

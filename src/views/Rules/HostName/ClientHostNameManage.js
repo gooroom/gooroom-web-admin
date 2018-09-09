@@ -9,7 +9,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { getTableListObject } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import { createViewObject } from './ClientHostNameManageInform';
 
@@ -114,7 +114,7 @@ class ClientHostNameManage extends Component {
   handleSelectBtnClick = () => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
 
     ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
       page: 0,
@@ -140,7 +140,7 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
     const selectedItem = listObj.listData.find(function(element) {
       return element.objId == id;
     });
@@ -165,7 +165,7 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
     const selectedItem = listObj.listData.find(function(element) {
       return element.objId == id;
     });
@@ -183,7 +183,7 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameProps, ClientHostNameActions, GrConfirmActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
     const selectedItem = listObj.listData.find(function(element) {
       return element.objId == id;
     });
@@ -223,7 +223,7 @@ class ClientHostNameManage extends Component {
   handleChangePage = (event, page) => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
     
     ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
       page: page,
@@ -235,7 +235,7 @@ class ClientHostNameManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
 
     ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
       rowsPerPage: event.target.value,
@@ -249,7 +249,7 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
     let orderDir = "desc";
     if (listObj.listParam.orderColumn === property && listObj.listParam.orderDir === "desc") {
       orderDir = "asc";
@@ -268,7 +268,7 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
     const newParam = getMergedObject(listObj.listParam, {keyword: event.target.value});
     ClientHostNameActions.changeStoreData({
       name: 'listParam',
@@ -283,7 +283,7 @@ class ClientHostNameManage extends Component {
     const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientHostNameProps.listParam.rowsPerPage - ClientHostNameProps.listData.length;
 
-    const listObj = getTableListObject(ClientHostNameProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
     return (
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />

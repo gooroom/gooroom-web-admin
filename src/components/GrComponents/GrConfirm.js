@@ -24,10 +24,11 @@ class GrConfirm extends Component {
   };
 
   handleCancel = () => {
-    const { GrConfirmActions } = this.props;
+    const { GrConfirmActions, GrConfirmProps } = this.props;
     GrConfirmActions.closeConfirm({
       confirmResult: false,
-      confirmOpen: false
+      confirmOpen: false,
+      confirmObject: GrConfirmProps.confirmObject
     });
   };
 
@@ -36,7 +37,8 @@ class GrConfirm extends Component {
     GrConfirmProps.handleConfirmResult(true, GrConfirmProps.confirmObject);
     GrConfirmActions.closeConfirm({
       confirmResult: true,
-      confirmOpen: false
+      confirmOpen: false,
+      confirmObject: GrConfirmProps.confirmObject
     });
   };
 

@@ -257,11 +257,11 @@ export default handleActions({
         const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
         
-        let oldViewItems = [];
+        let viewItems = [];
         if(state.viewItems) {
 
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
+            viewItems = state.viewItems;
+            const viewItem = viewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
 
@@ -280,7 +280,7 @@ export default handleActions({
             } else {
 
                 // 현재 콤프아이디로 데이타 없음. -> 추가 함
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
                     'listData': data,
                     'listParam': {
                         keyword: '',
@@ -297,7 +297,7 @@ export default handleActions({
             }
         } else {
 
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+            viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
                 'listData': data,
                 'listParam': Object.assign({}, state.defaultListParam, {
                     rowsFiltered: parseInt(recordsFiltered, 10),
@@ -313,27 +313,27 @@ export default handleActions({
             ...state,
             pending: false,
             error: false,
-            viewItems: oldViewItems
+            viewItems: viewItems
         };
     }, 
     [GET_BROWSERRULE_SUCCESS]: (state, action) => {
         const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
         const { data } = action.payload.data;
-        let oldViewItems = [];
+        let viewItems = [];
 
         if(state.viewItems) {
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
+            viewItems = state.viewItems;
+            const viewItem = viewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
 
             // 이전에 해당 콤프정보가 없으면 신규로 등록
             if(!viewItem) {
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
+                viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
             }
 
             // 같은 오브젝트를 가지고 있는 콤프정보들을 모두 변경 한다.
-            oldViewItems = oldViewItems.map((element) => {
+            viewItems = viewItems.map((element) => {
                 if(element.selectedItem && (element.selectedItem.objId == data[0].objId)) {
                     return Object.assign(element, {'selectedItem': data[0]});
                 } else if(element._COMPID_ == COMP_ID) {
@@ -344,7 +344,7 @@ export default handleActions({
             });
 
         } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
+            viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
         }
 
         if(data && data.length > 0) {
@@ -352,14 +352,14 @@ export default handleActions({
                 ...state,
                 pending: false,
                 error: false,
-                viewItems: oldViewItems
+                viewItems: viewItems
             };
         } else {
             return {
                 ...state,
                 pending: false,
                 error: false,
-                viewItems: oldViewItems
+                viewItems: viewItems
             };
         }
     },
@@ -376,10 +376,10 @@ export default handleActions({
 
         const COMP_ID = action.payload.compId;
 
-        let oldViewItems = [];
+        let viewItems = [];
         if(state.viewItems) {
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
+            viewItems = state.viewItems;
+            const viewItem = viewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
             if(viewItem) {
@@ -387,19 +387,19 @@ export default handleActions({
                     'selectedItem': action.payload.selectedItem
                 });
             } else {
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
                     'selectedItem': action.payload.selectedItem
                 }));
             }
         } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+            viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
                 'selectedItem': action.payload.selectedItem
             }));
         }
 
         return {
             ...state,
-            viewItems: oldViewItems,
+            viewItems: viewItems,
             informOpen: true
         };
     },
@@ -420,10 +420,10 @@ export default handleActions({
 
         const COMP_ID = action.payload.compId;
 
-        let oldViewItems = [];
+        let viewItems = [];
         if(state.viewItems) {
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
+            viewItems = state.viewItems;
+            const viewItem = viewItems.find((element) => {
                 return element._COMPID_ == COMP_ID;
             });
             
@@ -432,20 +432,20 @@ export default handleActions({
                     [action.payload.name]: action.payload.value
                 });
             } else {
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+                viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
                     [action.payload.name]: action.payload.value
                 }));
             }
 
         } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+            viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
                 [action.payload.name]: action.payload.value
             }));
         }
 
         return {
             ...state,
-            viewItems: oldViewItems
+            viewItems: viewItems
         }
     },
     [CREATE_BROWSERRULE_SUCCESS]: (state, action) => {
