@@ -1,51 +1,53 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { Map, List } from 'immutable';
 
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 const COMMON_PENDING = 'clientConfSetting/COMMON_PENDING';
 const COMMON_FAILURE = 'clientConfSetting/COMMON_FAILURE';
 
-const GET_CONFSETTING_LIST_SUCCESS = 'clientConfSetting/GET_LIST_SUCCESS';
+const GET_CONFSETTING_LIST_SUCCESS = 'clientConfSetting/GET_CONFSETTING_LIST_SUCCESS';
 const GET_CONFSETTING_SUCCESS = 'clientConfSetting/GET_CONFSETTING_SUCCESS';
 const CREATE_CONFSETTING_SUCCESS = 'clientConfSetting/CREATE_CONFSETTING_SUCCESS';
 const EDIT_CONFSETTING_SUCCESS = 'clientConfSetting/EDIT_CONFSETTING_SUCCESS';
 const DELETE_CONFSETTING_SUCCESS = 'clientConfSetting/DELETE_CONFSETTING_SUCCESS';
 
 const SHOW_CONFSETTING_INFORM = 'clientConfSetting/SHOW_CONFSETTING_INFORM';
+const CLOSE_CONFSETTING_INFORM = 'clientConfSetting/CLOSE_CONFSETTING_INFORM';
 const SHOW_CONFSETTING_DIALOG = 'clientConfSetting/SHOW_CONFSETTING_DIALOG';
 
+const SET_SELECTED_OBJ = 'clientConfSetting/SET_SELECTED_OBJ';
 const SET_EDITING_ITEM_VALUE = 'clientConfSetting/SET_EDITING_ITEM_VALUE';
 
+const CHG_LISTPARAM_DATA = 'clientConfSetting/CHG_LISTPARAM_DATA';
 const CHG_VIEWITEM_DATA = 'clientConfSetting/CHG_VIEWITEM_DATA';
+const CHG_COMPVARIABLE_DATA = 'clientConfSetting/CHG_COMPVARIABLE_DATA';
 const CHG_STORE_DATA = 'clientConfSetting/CHG_STORE_DATA';
 
 const SET_SELECTED_NTP_VALUE = 'clientConfSetting/SET_SELECTED_NTP_VALUE';
 const ADD_NTPADDRESS_ITEM = 'clientConfSetting/ADD_NTPADDRESS_ITEM';
 const DELETE_NTPADDRESS_ITEM = 'clientConfSetting/DELETE_NTPADDRESS_ITEM';
 
-
 // ...
-const initialState = {
+const initialState = Map({
     pending: false,
     error: false,
     resultMsg: '',
 
-    defaultListParam: {
+    defaultListParam: Map({
         keyword: '',
         orderDir: 'desc',
         orderColumn: 'chConfId',
         page: 0,
         rowsPerPage: 10,
-        rowsPerPageOptions: [5, 10, 25],
+        rowsPerPageOptions: List([5, 10, 25]),
         rowsTotal: 0,
         rowsFiltered: 0
-    },
+    }),
 
-    informOpen: false,
     dialogOpen: false,
     dialogType: '',
-};
+});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -70,28 +72,37 @@ export const showInform = (param) => dispatch => {
 
 export const closeInform = () => dispatch => {
     return dispatch({
-        type: CHG_STORE_DATA,
-        payload: {name:"informOpen",value:false}
+        type: CLOSE_CONFSETTING_INFORM,
+        payload: param
     });
 };
 
-export const readClientConfSettingList = (param) => dispatch => {
+export const readClientConfSettingList = (module, compId, extParam) => dispatch => {
 
-    const resetParam = {
-        keyword: param.keyword,
-        page: param.page,
-        start: param.page * param.rowsPerPage,
-        length: param.rowsPerPage,
-        orderColumn: param.orderColumn,
-        orderDir: param.orderDir
-    };
+    let newListParam;
+    if(module.get('viewItems')) {
+        const viewIndex = module.get('viewItems').findIndex((e) => {
+            return e.get('_COMPID_') == compId;
+        });
+        newListParam = module.getIn(['viewItems', viewIndex, 'listParam']).merge(extParam);
+    } else {
+        newListParam = module.get('defaultListParam');
+    }
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientConfListPaged', resetParam).then(
+    return requestPostAPI('readClientConfListPaged', {
+        keyword: newListParam.get('keyword'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
+    }).then(
         (response) => {
             dispatch({
                 type: GET_CONFSETTING_LIST_SUCCESS,
-                compId: param.compId,
+                compId: compId,
+                listParam: newListParam,
                 payload: response
             });
         }
@@ -125,6 +136,20 @@ export const getClientConfSetting = (param) => dispatch => {
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,
+        payload: param
+    });
+};
+
+export const changeListParamData = (param) => dispatch => {
+    return dispatch({
+        type: CHG_LISTPARAM_DATA,
+        payload: param
+    });
+};
+
+export const changeCompVariable = (param) => dispatch => {
+    return dispatch({
+        type: CHG_COMPVARIABLE_DATA,
         payload: param
     });
 };
@@ -235,84 +260,66 @@ export const setSelectedNtpValue = (param) => dispatch => {
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
+        return state.merge({
+            pending: true, 
             error: false
-        };
+        });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
+        return state.merge({
+            pending: false, 
             error: true,
             resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
-        };
+        });
     },
 
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
+        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.payload.data;
 
-        const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
-        const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-        
-        let oldViewItems = [];
-        if(state.viewItems) {
-
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
+        if(state.get('viewItems')) {
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
             });
-
-            if(viewItem) {
-
-                Object.assign(viewItem, {
-                    'listData': data,
-                    'listParam': Object.assign({}, viewItem.listParam, {
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10)
-                    })
-                });
-
-            } else {
-
-                // 현재 콤프아이디로 데이타 없음. -> 추가 함
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    'listData': data,
-                    'listParam': {
-                        keyword: '',
-                        orderDir: 'desc',
-                        orderColumn: 'chConfId',
-                        rowsPerPageOptions: [5, 10, 25],
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10)
-                    }
-                }));
-
-            }
-        } else {
-
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                'listData': data,
-                'listParam': Object.assign({}, state.defaultListParam, {
+            if(viewIndex > -1) {
+                const newListParam = state.getIn(['viewItems', viewIndex, 'listParam']).merge({
                     rowsFiltered: parseInt(recordsFiltered, 10),
                     rowsTotal: parseInt(recordsTotal, 10),
                     page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10)
+                    rowsPerPage: parseInt(rowLength, 10),
+                    orderColumn: orderColumn,
+                    orderDir: orderDir
+                });
+                return state
+                        .setIn(['viewItems', viewIndex, 'listData'], List(data.map((e) => {return Map(e)})))
+                        .setIn(['viewItems', viewIndex, 'listParam'], newListParam);
+            } else {
+                return state.set('viewItems', state.get('viewItems').push(Map({
+                    '_COMPID_': action.compId,
+                    'listData': List(data.map((e) => {return Map(e)})),
+                    'listParam': state.get('defaultListParam').merge({
+                        rowsFiltered: parseInt(recordsFiltered, 10),
+                        rowsTotal: parseInt(recordsTotal, 10),
+                        page: parseInt(draw, 10),
+                        rowsPerPage: parseInt(rowLength, 10),
+                        orderColumn: orderColumn,
+                        orderDir: orderDir
+                    })
+                })));
+            }
+        } else {
+            return state.set('viewItems', List([Map({
+                '_COMPID_': action.compId,
+                'listData': List(data.map((e) => {return Map(e)})),
+                'listParam': state.get('defaultListParam').merge({
+                    rowsFiltered: parseInt(recordsFiltered, 10),
+                    rowsTotal: parseInt(recordsTotal, 10),
+                    page: parseInt(draw, 10),
+                    rowsPerPage: parseInt(rowLength, 10),
+                    orderColumn: orderColumn,
+                    orderDir: orderDir
                 })
-            }));
-
+            })]));
         }
-
-        return {
-            ...state,
-            pending: false,
-            error: false,
-            viewItems: oldViewItems
-        };
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
         const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
@@ -362,57 +369,81 @@ export default handleActions({
         }
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
-        return {
-            ...state,
-            editingItem: Object.assign({}, action.payload.selectedItem),
-            editingCompId: action.payload.compId,
+        return state.merge({
+            editingItem: action.payload.selectedItem,
             dialogOpen: true,
             dialogType: action.payload.dialogType,
-        };
+        });
     },
     [SHOW_CONFSETTING_INFORM]: (state, action) => {
-
         const COMP_ID = action.payload.compId;
-
-        let oldViewItems = [];
-        if(state.viewItems) {
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
+        if(state.get('viewItems')) {
+            const newViewItems = state.get('viewItems').map((element) => {
+                if(element.get('_COMPID_') == COMP_ID) {
+                    return element.set('selectedItem', Map(action.payload.selectedItem)).set('informOpen', true);
+                } else {
+                    return element;
+                }
             });
-            if(viewItem) {
-                Object.assign(viewItem, {
-                    'selectedItem': action.payload.selectedItem
-                });
-            } else {
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    'selectedItem': action.payload.selectedItem
-                }));
-            }
-        } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                'selectedItem': action.payload.selectedItem
-            }));
+            return state.merge({
+                viewItems: newViewItems
+            });
         }
-
-        return {
-            ...state,
-            viewItems: oldViewItems,
-            informOpen: true
-        };
+        return state;
+    },
+    [CLOSE_CONFSETTING_INFORM]: (state, action) => {
+        const COMP_ID = action.payload.compId;
+        if(state.get('viewItems')) {
+            const newViewItems = state.get('viewItems').map((element) => {
+                if(element.get('_COMPID_') == COMP_ID) {
+                    return element.delete('selectedItem', Map(action.payload.selectedItem)).set('informOpen', false);
+                } else {
+                    return element;
+                }
+            });
+            return state.merge({
+                viewItems: newViewItems
+            });
+        }
+        return state;
+    },
+    [SET_SELECTED_OBJ]: (state, action) => {
+        const COMP_ID = action.payload.compId;
+        if(state.get('viewItems')) {
+            const newViewItems = state.get('viewItems').map((element) => {
+                if(element.get('_COMPID_') == COMP_ID) {
+                    return element.set('selectedItem', Map(action.payload.selectedItem)).set('informOpen', true);
+                } else {
+                    return element;
+                }
+            });
+            return state.merge({
+                viewItems: newViewItems
+            });
+        }
+        return state;
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
-        const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
+        return state.merge({
+            editingItem: state.get('editingItem').merge({[action.payload.name]: action.payload.value})
+        });
+    },
+    [CHG_LISTPARAM_DATA]: (state, action) => {
+        const viewIndex = state.get('viewItems').findIndex((e) => {
+            return e.get('_COMPID_') == action.payload.compId;
+        });
+        return state.setIn(['viewItems', viewIndex, 'listParam', action.payload.name], action.payload.value);
+    },
+    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+        const viewIndex = state.get('viewItems').findIndex((e) => {
+            return e.get('_COMPID_') == action.payload.compId;
+        });
+        return state.setIn(['viewItems', viewIndex, action.payload.name], action.payload.value);
     },
     [CHG_STORE_DATA]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             [action.payload.name]: action.payload.value
-        }
+        });
     },
     [CHG_VIEWITEM_DATA]: (state, action) => {
 
@@ -474,37 +505,16 @@ export default handleActions({
         };
     },
     [SET_SELECTED_NTP_VALUE]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress[action.payload.index] = action.payload.value;
-        const newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
+        const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).set(action.payload.index, action.payload.value);
+        return state.setIn(['editingItem', 'ntpAddress'], newNtpAddress);
     },
     [ADD_NTPADDRESS_ITEM]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress.push('');
-        const newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
+        const newNtpAddress = (state.getIn(['editingItem', 'ntpAddress'])) ? state.getIn(['editingItem', 'ntpAddress']).push('') : List(['']);
+        return state.setIn(['editingItem', 'ntpAddress'], newNtpAddress);
     },
     [DELETE_NTPADDRESS_ITEM]: (state, action) => {
-        let newNtpAddress = state.editingItem.ntpAddress;
-        newNtpAddress.splice(action.payload.index, 1);
-        let newEditingItem = getMergedObject(state.editingItem, {'ntpAddress': newNtpAddress});
-        // changed selected ntp addres index
-        if(state.editingItem.selectedNtpIndex == action.payload.index) {
-            newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': -1});
-        } else if(state.editingItem.selectedNtpIndex > action.payload.index) {
-            newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': (state.editingItem.selectedNtpIndex - 1)});
-        }
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
+        const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).delete(action.payload.index);
+        return state.setIn(['editingItem', 'ntpAddress'], newNtpAddress);
     },
 
 }, initialState);

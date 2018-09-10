@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
+import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
@@ -8,8 +8,6 @@ import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
-
-import { getDataObjectInComp, getDataListAndParamInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -43,14 +41,26 @@ class ClientGroupDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-        ClientGroupActions.createClientGroupData(ClientGroupProps.get('editingItem'))
-            .then(() => {
-                ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
-                this.handleClose();
-        });
+        const { ClientGroupProps, GrConfirmActions } = this.props;
+        const re = GrConfirmActions.showConfirm({
+            confirmTitle: '단말그룹 수정',
+            confirmMsg: '단말그룹을 수정하시겠습니까?',
+            handleConfirmResult: this.handleEditConfirmResult,
+            confirmOpen: true,
+            confirmObject: ClientGroupProps.get('editingItem')
+          });
     }
-
+    handleCreateConfirmResult = (confirmValue, paramObject) => {
+        if(confirmValue) {
+            const { ClientGroupProps, ClientGroupActions, compId } = this.props;
+            ClientGroupActions.createClientGroupData(ClientGroupProps.get('editingItem'))
+                .then(() => {
+                    ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
+                    this.handleClose();
+            });
+        }
+    }
+    
     handleEditData = (event) => {
         const { GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
