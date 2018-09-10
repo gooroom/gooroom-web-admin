@@ -114,24 +114,24 @@ export const readClientConfSettingList = (module, compId, extParam) => dispatch 
     });
 };
 
-export const getClientConfSetting = (param) => dispatch => {
-    const compId = param.compId;
-    dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientConf', param).then(
-        (response) => {
-            dispatch({
-                type: GET_CONFSETTING_SUCCESS,
-                compId: compId,
-                payload: response
-            });
-        }
-    ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            payload: error
-        });
-    });
-};
+// export const getClientConfSetting = (param) => dispatch => {
+//     const compId = param.compId;
+//     dispatch({type: COMMON_PENDING});
+//     return requestPostAPI('readClientConf', param).then(
+//         (response) => {
+//             dispatch({
+//                 type: GET_CONFSETTING_SUCCESS,
+//                 compId: compId,
+//                 payload: response
+//             });
+//         }
+//     ).catch(error => {
+//         dispatch({
+//             type: COMMON_FAILURE,
+//             payload: error
+//         });
+//     });
+// };
 
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
@@ -154,22 +154,22 @@ export const changeCompVariable = (param) => dispatch => {
     });
 };
 
-export const changeStoreData = (param) => dispatch => {
-    return dispatch({
-        type: CHG_VIEWITEM_DATA,
-        payload: param
-    });
-};
+// export const changeStoreData = (param) => dispatch => {
+//     return dispatch({
+//         type: CHG_VIEWITEM_DATA,
+//         payload: param
+//     });
+// };
 
 const makeParameter = (param) => {
     return {
-        objId: param.objId,
-        objName: param.objNm,
-        objComment: param.comment,
-        AGENTPOLLINGTIME: param.pollingTime,
-        USEHYPERVISOR: param.useHypervisor,
-        NTPSELECTADDRESS: (param.selectedNtpIndex > -1) ? param.ntpAddress[param.selectedNtpIndex] : '',
-        NTPADDRESSES: param.ntpAddress
+        objId: param.get('objId'),
+        objName: param.get('objNm'),
+        objComment: param.get('comment'),
+        AGENTPOLLINGTIME: param.get('pollingTime'),
+        USEHYPERVISOR: param.get('useHypervisor'),
+        NTPSELECTADDRESS: (param.get('selectedNtpIndex') > -1) ? param.getIn(['ntpAddress', param.get('selectedNtpIndex')]) : '',
+        NTPADDRESSES: (param.get('ntpAddress')) ? param.get('ntpAddress').toArray() : []
     };
 }
 
@@ -445,64 +445,59 @@ export default handleActions({
             [action.payload.name]: action.payload.value
         });
     },
-    [CHG_VIEWITEM_DATA]: (state, action) => {
+    // [CHG_VIEWITEM_DATA]: (state, action) => {
 
-        const COMP_ID = action.payload.compId;
+    //     const COMP_ID = action.payload.compId;
 
-        let oldViewItems = [];
-        if(state.viewItems) {
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
-            });
+    //     let oldViewItems = [];
+    //     if(state.viewItems) {
+    //         oldViewItems = state.viewItems;
+    //         const viewItem = oldViewItems.find((element) => {
+    //             return element._COMPID_ == COMP_ID;
+    //         });
             
-            if(viewItem) {
-                Object.assign(viewItem, {
-                    [action.payload.name]: action.payload.value
-                });
-            } else {
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    [action.payload.name]: action.payload.value
-                }));
-            }
+    //         if(viewItem) {
+    //             Object.assign(viewItem, {
+    //                 [action.payload.name]: action.payload.value
+    //             });
+    //         } else {
+    //             oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+    //                 [action.payload.name]: action.payload.value
+    //             }));
+    //         }
 
-        } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                [action.payload.name]: action.payload.value
-            }));
-        }
+    //     } else {
+    //         oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+    //             [action.payload.name]: action.payload.value
+    //         }));
+    //     }
 
-        return {
-            ...state,
-            viewItems: oldViewItems
-        }
-    },
+    //     return {
+    //         ...state,
+    //         viewItems: oldViewItems
+    //     }
+    // },
     [CREATE_CONFSETTING_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             pending: false,
-            error: false,
-        };
+            error: false
+        });
     },
     [EDIT_CONFSETTING_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             pending: false,
             error: false,
-            informOpen: false,
             dialogOpen: false,
             dialogType: ''
-        };
+        });
     },
     [DELETE_CONFSETTING_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             pending: false,
             error: false,
-            informOpen: false,
             dialogOpen: false,
             dialogType: ''
-        };
+        });
     },
     [SET_SELECTED_NTP_VALUE]: (state, action) => {
         const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).set(action.payload.index, action.payload.value);
