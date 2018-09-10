@@ -35,8 +35,6 @@ class ClientGroupInform extends Component {
   render() {
 
     const { compId, ClientGroupCompProps } = this.props;
-    //const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, ClientDesktopConfigProps } = this.props;
-
     const viewItem = getDataObjectInComp(ClientGroupCompProps, compId);
     const selectedItem = viewItem.get('selectedItem');
 
@@ -95,11 +93,7 @@ class ClientGroupInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupCompProps: state.ClientGroupModule,
-  ClientConfSettingProps: state.ClientConfSettingModule,
-  ClientHostNameProps: state.ClientHostNameModule,
-  ClientUpdateServerProps: state.ClientUpdateServerModule,
-  ClientDesktopConfigProps: state.ClientDesktopConfigModule
+  ClientGroupCompProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
