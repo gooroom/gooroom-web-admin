@@ -16,8 +16,7 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { getDataObjectInComp, getDataListAndParamInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrPane from 'containers/GrContent/GrPane';
@@ -105,7 +104,7 @@ class ClientGroupManage extends Component {
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
 
     const menuCompId = this.props.match.params.grMenuId;
-    const selectedItem = getRowObjectById(ClientGroupProps, menuCompId, id);
+    const selectedItem = getRowObjectById(ClientGroupProps, menuCompId, id, 'grpId');
 
     ClientGroupActions.showClientGroupInform({
       compId: menuCompId,
@@ -136,8 +135,6 @@ class ClientGroupManage extends Component {
       desktopConfId: selectedItem.get('desktopConfigId')
     });   
   };
-
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
   // .................................................
 
   // add
@@ -151,7 +148,7 @@ class ClientGroupManage extends Component {
   // edit
   handleEditClick = (event, id) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id);
+    const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     ClientGroupActions.showDialog({
       selectedItem: selectedItem,
       dialogType: ClientGroupDialog.TYPE_EDIT
@@ -161,7 +158,7 @@ class ClientGroupManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { ClientGroupProps, ClientGroupActions, GrConfirmActions } = this.props;
-    const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id);
+    const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     GrConfirmActions.showConfirm({
       confirmTitle: '단말그룹 삭제',
       confirmMsg: '단말그룹(' + selectedItem.get('grpNm') + ')을 삭제하시겠습니까?',
@@ -218,7 +215,6 @@ class ClientGroupManage extends Component {
                   <TextField
                     id='keyword'
                     label='검색어'
-                    
                     onChange={this.handleKeywordChange('keyword')}
                   />
                 </FormControl>
@@ -259,6 +255,7 @@ class ClientGroupManage extends Component {
             <Table>
               <GrCommonTableHead
                 classes={classes}
+                keyId="grpId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
@@ -321,7 +318,6 @@ class ClientGroupManage extends Component {
             />
             </div>
           }
-
 
         </GrPane>
         <ClientGroupInform compId={menuCompId} />

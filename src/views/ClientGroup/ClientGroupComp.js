@@ -15,8 +15,7 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { getMergedObject, arrayContainsArray, getListData } from 'components/GrUtils/GrCommonUtils';
-import { getDataObjectInComp, getSelectedObjectInComp, getDataListAndParamInComp, getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
@@ -86,7 +85,6 @@ class ClientGroupComp extends Component {
   };
   
   handleSelectAllClick = (event, checked) => {
-    
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
     const listObj = getDataObjectInComp(ClientGroupProps, compId);
     let newSelectedIds = listObj.get('selectedIds');
@@ -121,38 +119,13 @@ class ClientGroupComp extends Component {
       value: newSelectedIds,
       compId: compId
     });
-
-
-
-
-    // if(this.props.onSelectAll) {
-    //   this.props.onSelectAll(selectedItem, newSelectedIds);
-    // }
-
-    // const listObj = getDataObjectInComp(ClientGroupProps, compId);
-
-    // if(checked) {
-    //   const newSelected = listObj.listData.map(n => n.grpId)
-    //   ClientGroupActions.changeStoreData({
-    //     name: compId + '__selected',
-    //     value: newSelected
-    //   });
-    //   this.props.onSelect(compId, newSelected);
-    // } else {
-    //   ClientGroupActions.changeStoreData({
-    //     name: compId + '__selected',
-    //     value: []
-    //   });
-    //   this.props.onSelect(compId, []);
-    // }
   };
 
   handleRowClick = (event, id) => {
-
     const { ClientGroupProps, compId } = this.props;
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
 
-    const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id);
+    const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
     
     let selectedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
     if(selectedIds === undefined) {
@@ -228,6 +201,7 @@ class ClientGroupComp extends Component {
         <Table>
           <GrCommonTableHead
             classes={classes}
+            keyId="grpId"
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
@@ -280,6 +254,7 @@ class ClientGroupComp extends Component {
             rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
             page={listObj.getIn(['listParam', 'page'])}
             labelDisplayedRows={() => {return ''}}
+            labelRowsPerPage=""
             backIconButtonProps={{
               'aria-label': 'Previous Page'
             }}

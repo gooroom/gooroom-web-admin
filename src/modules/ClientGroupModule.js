@@ -12,6 +12,7 @@ const EDIT_CLIENTGROUP_SUCCESS = 'groupComp/EDIT_CLIENTGROUP_SUCCESS';
 const DELETE_CLIENTGROUP_SUCCESS = 'groupComp/DELETE_CLIENTGROUP_SUCCESS';
 
 const SHOW_CLIENTGROUP_INFORM = 'groupComp/SHOW_CLIENTGROUP_INFORM';
+const CLOSE_CLIENTGROUP_INFORM = 'groupComp/CLOSE_CLIENTGROUP_INFORM';
 const SHOW_CLIENTGROUP_DIALOG = 'groupComp/SHOW_CLIENTGROUP_DIALOG';
 
 const SET_SELECTED_OBJ = 'groupComp/SET_SELECTED_OBJ';
@@ -65,8 +66,8 @@ export const showClientGroupInform = (param) => dispatch => {
 
 export const closeClientGroupInform = (param) => dispatch => {
     return dispatch({
-        type: CHG_STORE_DATA,
-        payload: {name:"informOpen", value:false}
+        type: CLOSE_CLIENTGROUP_INFORM,
+        payload: param
     });
 };
 
@@ -306,6 +307,22 @@ export default handleActions({
         }
         return state;
     },
+    [CLOSE_CLIENTGROUP_INFORM]: (state, action) => {
+        const COMP_ID = action.payload.compId;
+        if(state.get('viewItems')) {
+            const newViewItems = state.get('viewItems').map((element) => {
+                if(element.get('_COMPID_') == COMP_ID) {
+                    return element.delete('selectedItem', Map(action.payload.selectedItem)).set('informOpen', false);
+                } else {
+                    return element;
+                }
+            });
+            return state.merge({
+                viewItems: newViewItems
+            });
+        }
+        return state;
+    },
     [SET_SELECTED_OBJ]: (state, action) => {
         const COMP_ID = action.payload.compId;
         if(state.get('viewItems')) {
@@ -321,36 +338,6 @@ export default handleActions({
             });
         }
         return state;
-
-        // let viewItems = [];
-        // if(state.viewItems) {
-        //     viewItems = state.viewItems;
-        //     const viewItem = viewItems.find((element) => {
-        //         return element._COMPID_ == COMP_ID;
-        //     });
-        //     if(viewItem) {
-        //         Object.assign(viewItem, {
-        //             'selectedItem': action.payload.selectedItem,
-        //             'checkItems': action.payload.selectedItem
-        //         });
-        //     } else {
-        //         viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-        //             'selectedItem': action.payload.selectedItem,
-        //             'checkItems': action.payload.selectedItem
-        //         }));
-        //     }
-        // } else {
-        //     viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-        //         'selectedItem': action.payload.selectedItem,
-        //         'checkItems': action.payload.selectedItem
-        //     }));
-        // }
-
-        // return {
-        //     ...state,
-        //     viewItems: viewItems,
-        //     informOpen: true
-        // };
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
