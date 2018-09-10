@@ -144,7 +144,7 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
     const selectedItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
     ClientConfSettingActions.showDialog({
-      selectedItem: selectedItem,
+      selectedItem: createViewObject(selectedItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -170,7 +170,13 @@ class ClientConfSetting extends Component {
       ClientConfSettingActions.deleteClientConfSettingData({
         objId: confirmObject.get('objId')
       }).then((res) => {
-        ClientConfSettingActions.readClientGroupList(ClientConfSettingProps, menuCompId);
+        const viewItems = ClientConfSettingProps.get('viewItems');
+                    viewItems.forEach((element) => {
+                        if(element && element.get('listParam')) {
+                            ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, element.get('_COMPID_'), {});
+                        }
+                    });
+        //ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, menuCompId);
       });
     }
   };

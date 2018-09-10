@@ -11,6 +11,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { createViewObject } from './ClientConfSettingInform';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -121,17 +122,16 @@ class ClientConfSettingDialog extends Component {
             ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.get('editingItem'))
                 .then((res) => {
                     const viewItems = ClientConfSettingProps.get('viewItems');
-                    const editingCompId = ClientConfSettingProps.get('editingCompId');
                     viewItems.forEach((element) => {
                         if(element && element.get('listParam')) {
                             ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, element.get('_COMPID_'), {});
                         }
                     });
 
-                    ClientConfSettingActions.getClientConfSetting({
-                        compId: editingCompId,
-                        objId: paramObject.get('objId')
-                    });
+                    // ClientConfSettingActions.getClientConfSetting({
+                    //     compId: editingCompId,
+                    //     objId: paramObject.get('objId')
+                    // });
 
                     this.handleClose();
                 });
@@ -155,6 +155,7 @@ class ClientConfSettingDialog extends Component {
         const dialogType = ClientConfSettingProps.get('dialogType');
         const editingItem = (ClientConfSettingProps.get('editingItem')) ? ClientConfSettingProps.get('editingItem') : null;
 
+        //const editingViewItem = createViewObject(editingItem);
         const editingViewItem = editingItem;
 
         const bull = <span className={classes.bullet}>•</span>;

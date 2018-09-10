@@ -79,7 +79,7 @@ class ClientConfSettingInform extends Component {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
-                  <TableCell numeric>{(selectedViewItem.get('selectedNtpIndex') > -1) ? selectedViewItem.get('ntpAddress')[selectedViewItem.get('selectedNtpIndex')] : ''}</TableCell>
+                  <TableCell numeric>{(selectedViewItem.get('selectedNtpIndex') > -1) ? selectedViewItem.getIn(['ntpAddress', selectedViewItem.get('selectedNtpIndex')]) : ''}</TableCell>
                   <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
                   <TableCell numeric>{selectedViewItem.get('ntpAddress').map(function(prop, index) {
                       return <span key={index}>{prop}<br/></span>;
@@ -117,6 +117,9 @@ export const createViewObject = (param) => {
     let ntpAddress = [];
     
     param.get('propList').forEach(function(e) {
+      
+      console.log('e.propNm  >>> ', e.propNm);
+
       if(e.propNm == 'AGENTPOLLINGTIME') {
         pollingTime = e.propValue;
       } else if(e.propNm == 'USEHYPERVISOR') {
@@ -132,6 +135,8 @@ export const createViewObject = (param) => {
         selectedNtpIndex = i;
       }
     });
+
+    console.log(' selectedNtpIndex>>>>> ', selectedNtpIndex);
   
     return Map({
       objId: param.get('objId'),
