@@ -58,19 +58,19 @@ class ClientMasterManage extends Component {
     const { ClientMasterManageActions, ClientGroupActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
 
-    const menuId = this.props.match.params.grMenuId;
+    const menuCompId = this.props.match.params.grMenuId;
 
     ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, {
       groupId: selectedGroupIdArray.join(','), 
       page: 0,
-      compId: menuId
+      compId: menuCompId
     }));
 
     // show group info.
     if(selectedGroupObj !== '') {
       ClientMasterManageActions.closeClientManageInform();
       ClientGroupActions.setSelectedItemObj({
-        compId: menuId,
+        compId: menuCompId,
         selectedItem: selectedGroupObj
       });
 
@@ -81,59 +81,56 @@ class ClientMasterManage extends Component {
 
   // 
   handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
-
     const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
     const { ClientGroupCompProps, ClientGroupActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId; 
 
-    // 단말 리스트 조회
-    ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, {
+    // show client list
+    ClientManageCompActions.readClientList(ClientManageCompProps, menuCompId, {
       groupId: selectedGroupIdArray.join(','), 
-      page:0,
-      compId: this.props.match.params.grMenuId
-    }));
+      page:0
+    }, true);
 
-    // show group info.
+    // show client group info.
     if(selectedGroupObj) {
-      ClientMasterManageActions.closeClientManageInform();
-      ClientGroupActions.setSelectedItemObj({
-        compId: this.props.match.params.grMenuId,
-        selectedItem: selectedGroupObj
+      ClientManageCompActions.closeClientManageInform({
+        compId: menuCompId
       });
-
-      // Show inform
-      ClientMasterManageActions.showClientGroupInform();
+      ClientGroupActions.showClientGroupInform({
+        compId: menuCompId,
+        selectedItem: selectedGroupObj,
+      });
     }
   };
 
   // Select Client Item
-  handleChangeClientSelected = (selectedClientObj='', selectedClientIdArray) => {
-
+  handleClientSelect = (selectedClientObj, selectedClientIdArray) => {
     const { ClientMasterManageProps, ClientMasterManageActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
+    const { ClientGroupActions } = this.props;
+    const menuCompId = this.props.match.params.grMenuId;
+
+    console.log('selectedClientObj : ', selectedClientObj);
 
     // show client info.
-    if(selectedClientObj !== '') {
-
-      ClientMasterManageActions.closeClientGroupInform();
-      ClientManageCompActions.setSelectedItemObj({
-        compId: this.props.match.params.grMenuId,
-        selectedItem: selectedClientObj
+    if(selectedClientObj) {
+      ClientGroupActions.closeClientGroupInform({
+        compId: menuCompId
       });
-      ClientMasterManageActions.showClientManageInform();
-
+      ClientManageCompActions.showClientManageInform({
+        compId: menuCompId,
+        selectedItem: selectedClientObj,
+      });
     }
   };
 
   render() {
-
     const { classes } = this.props;
     const { ClientMasterManageProps, ClientGroupCompProps, ClientManageCompProps } = this.props;
 
-    const menuId = this.props.match.params.grMenuId;
+    const menuCompId = this.props.match.params.grMenuId;
     const { isGroupInformOpen, isClientInformOpen } = ClientMasterManageProps;
-    const selectedGroupItem = ClientGroupCompProps[menuId + '__selectedItem'];
-    const selectedClientItem = ClientManageCompProps[menuId + '__selectedItem'];
 
     return (
       <React.Fragment>
@@ -163,9 +160,7 @@ class ClientMasterManage extends Component {
           <Grid container spacing={24} style={{border:"0px solid red",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
               <Card style={{minWidth:"240px",boxShadow:"2px 2px 8px blue"}}>
-                <ClientGroupComp
-                  compId={menuId}
-                  isMulti="true"
+                <ClientGroupComp compId={menuCompId}
                   onSelectAll={this.handleClientGroupSelectAll}
                   onSelect={this.handleClientGroupSelect}
                 />
@@ -173,8 +168,9 @@ class ClientMasterManage extends Component {
             </Grid>
             <Grid item xs>
               <Card style={{minWidth:"710px",boxShadow:"2px 2px 8px green"}}>
-                <ClientManageComp compId={menuId}
-                  onChangeClientSelected={this.handleChangeClientSelected}
+                <ClientManageComp compId={menuCompId}
+                onSelectAll={this.handleClientSelectAll}
+                onSelect={this.handleClientSelect}
                 />
               </Card>
             </Grid>
@@ -192,17 +188,8 @@ class ClientMasterManage extends Component {
             </Grid>
           </Grid>
           
-          <ClientGroupInform
-            compId={menuId}
-            isOpen={isGroupInformOpen} 
-            selectedItem={selectedGroupItem}
-            compShadow="2px 2px 8px blue" 
-          />
-          <ClientManageInform 
-            isOpen={isClientInformOpen}
-            selectedItem={selectedClientItem}
-            compShadow="2px 2px 8px green"
-          />
+          <ClientGroupInform compId={menuCompId} onSelect={this.handleClientGroupSelect} />
+          <ClientManageInform compId={menuCompId} onSelect={this.handleClientSelect}  />
           
         </GrPane>
       </React.Fragment>
