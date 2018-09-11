@@ -292,18 +292,31 @@ export default handleActions({
         });
     },
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
-        const COMP_ID = action.payload.compId;
+
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>> ', state.get('viewItems'));
+        
+
         if(state.get('viewItems')) {
-            const newViewItems = state.get('viewItems').map((element) => {
-                if(element.get('_COMPID_') == COMP_ID) {
-                    return element.set('selectedItem', Map(action.payload.selectedItem)).set('informOpen', true);
-                } else {
-                    return element;
-                }
+
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
             });
-            return state.merge({
-                viewItems: newViewItems
-            });
+
+            return state.setIn(['viewItems', viewIndex, 'selectedItem'], Map(action.payload.selectedItem));
+
+
+
+
+            // const newViewItems = state.get('viewItems').map((element) => {
+            //     if(element.get('_COMPID_') == action.payload.compId) {
+            //         return element.set('selectedItem', Map(action.payload.selectedItem)).set('informOpen', true);
+            //     } else {
+            //         return element;
+            //     }
+            // });
+            // return state.merge({
+            //     viewItems: newViewItems
+            // });
         }
         return state;
     },
