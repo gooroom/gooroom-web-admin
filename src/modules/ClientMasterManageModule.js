@@ -1,10 +1,10 @@
-
 import { handleActions } from 'redux-actions';
+import { Map, List } from 'immutable';
 
 const CHG_STORE_DATA = 'clientMasterManage/CHG_STORE_DATA';
 
 // ...
-const initialState = {
+const initialState = Map({
     pending: false,
     error: false,
     resultMsg: '',
@@ -12,19 +12,19 @@ const initialState = {
     isClientInformOpen: false,
     isGroupInformOpen: false,
 
-    clientConfig: {
+    clientConfig: Map({
         objId: ''
-    },
-    desktopConfigId: {
+    }),
+    desktopConfigId: Map({
         objId: ''
-    },
-    hostNameConfigId: {
+    }),
+    hostNameConfigId: Map({
         objId: ''
-    },
-    updateServerConfigId: {
+    }),
+    updateServerConfigId: Map({
         objId: ''
-    },
-};
+    })
+});
 
 export const showClientGroupInform = (param) => dispatch => {
     return dispatch({
@@ -58,10 +58,9 @@ export const closeClientManageInform = (param) => dispatch => {
 export default handleActions({
 
     [CHG_STORE_DATA]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             [action.payload.name]: action.payload.value
-        }
+        });
     }
 
 }, initialState);

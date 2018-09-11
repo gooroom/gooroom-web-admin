@@ -19,7 +19,7 @@ class GrCommonTableHead extends Component {
   };
 
   render() {
-    const { classes, columnData } = this.props;
+    const { classes, columnData, keyId } = this.props;
     const { 
       onSelectAllClick,
       orderDir,
@@ -30,7 +30,7 @@ class GrCommonTableHead extends Component {
 
     let checkSelection = 0;
     if(listData && listData.size > 0 && selectedIds && selectedIds.size > 0) {
-      checkSelection = arrayContainsArray(selectedIds.toJS(), listData.map(x => x.get('grpId')));
+      checkSelection = arrayContainsArray(selectedIds.toJS(), listData.map(x => x.get(keyId)));
     }
     
     return (

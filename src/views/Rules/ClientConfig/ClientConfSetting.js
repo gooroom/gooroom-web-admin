@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Map, List } from 'immutable';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -9,11 +11,14 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject, getListParam, getListData, getViewItem } from 'components/GrUtils/GrCommonUtils';
+import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { createViewObject } from './ClientConfSettingInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
+
+import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
 import ClientConfSettingInform from './ClientConfSettingInform';
@@ -40,15 +45,11 @@ import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
-//  ## Header ########## ########## ########## ########## ########## 
+//  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientConfSettingHead extends Component {
+class ClientConfSetting extends Component {
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
+  columnHeaders = [
     { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
     { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '정책이름' },
     { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: '정책아이디' },
@@ -56,45 +57,6 @@ class ClientConfSettingHead extends Component {
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
-
-  render() {
-    const { classes } = this.props;
-    const { orderDir, orderColumn, } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {ClientConfSettingHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
-class ClientConfSetting extends Component {
 
   constructor(props) {
     super(props);
@@ -108,31 +70,44 @@ class ClientConfSetting extends Component {
     this.handleSelectBtnClick();
   }
 
+  handleChangePage = (event, page) => {
+    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
+    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, this.props.match.params.grMenuId, {
+      page: page
+    });
+  };
+
+  handleChangeRowsPerPage = event => {
+    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
+    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value,
+      page: 0
+    });
+  };
+  
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
+    let orderDir = "desc";
+    if (currOrderDir === "desc") {
+      orderDir = "asc";
+    }
+    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId,
+      orderDir: orderDir
+    });
+  };
+
   // .................................................
   handleSelectBtnClick = () => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
-      page: 0,
-      compId: menuCompId
-    }));
+    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, this.props.match.params.grMenuId);
   };
-  
-  handleCreateButton = () => {
-    const { ClientConfSettingActions } = this.props;
-    ClientConfSettingActions.showDialog({
-      selectedItem: {
-        objId: '',
-        objNm: '',
-        comment: '',
-        useHypervisor: false,
-        pollingTime: '',
-        selectedNtpIndex: -1,
-        ntpAddress: ['']
-      },
-      dialogType: ClientConfSettingDialog.TYPE_ADD
+
+  handleKeywordChange = name => event => {
+    this.props.ClientConfSettingActions.changeListParamData({
+      name: 'keyword', 
+      value: event.target.value,
+      compId: this.props.match.params.grMenuId
     });
   }
   
@@ -140,10 +115,7 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: ClientConfSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
+    const selectedItem = getRowObjectById(ClientConfSettingProps, menuCompId, id, 'objId');
 
     // choice one from two views.
 
@@ -161,138 +133,63 @@ class ClientConfSetting extends Component {
     
   };
 
+  handleCreateButton = () => {
+    this.props.ClientConfSettingActions.showDialog({
+      selectedItem: Map(),
+      dialogType: ClientConfSettingDialog.TYPE_ADD
+    });
+  }
+
   handleEditClick = (event, id) => { 
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listData = getListData({ props: ClientConfSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
-
+    const selectedItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
     ClientConfSettingActions.showDialog({
-      compId: menuCompId,
       selectedItem: createViewObject(selectedItem),
-      dialogType: ClientConfSettingDialog.TYPE_EDIT,
+      dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    event.stopPropagation();
     const { ClientConfSettingProps, ClientConfSettingActions, GrConfirmActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listData = getListData({ props: ClientConfSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
-
-    const re = GrConfirmActions.showConfirm({
+    const selectedItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    GrConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말정책정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue, paramObject) => {
+  handleDeleteConfirmResult = (confirmValue, confirmObject) => {
 
     if(confirmValue) {
       const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+      const menuCompId = this.props.match.params.grMenuId;
 
       ClientConfSettingActions.deleteClientConfSettingData({
-        objId: paramObject.objId
+        objId: confirmObject.get('objId')
       }).then((res) => {
-
-        const { editingCompId, viewItems } = ClientConfSettingProps;
-        viewItems.forEach((element) => {
-          if(element && element.listParam) {
-            ClientConfSettingActions.readClientConfSettingList(getMergedObject(element.listParam, {
-              compId: element._COMPID_
-            }));
-          }
-        });
-          
-      }, () => {
-        
+        const viewItems = ClientConfSettingProps.get('viewItems');
+                    viewItems.forEach((element) => {
+                        if(element && element.get('listParam')) {
+                            ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, element.get('_COMPID_'), {});
+                        }
+                    });
+        //ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, menuCompId);
       });
     }
   };
 
-  // 페이지 번호 변경
-  handleChangePage = (event, page) => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
-      page: page,
-      compId: menuCompId
-    }));
-  };
-
-  // 페이지당 레코드수 변경
-  handleChangeRowsPerPage = event => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
-      rowsPerPage: event.target.value,
-      page: 0,
-      compId: menuCompId
-    }));
-  };
-  
   // .................................................
-  handleRequestSort = (event, property) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
-    let orderDir = "desc";
-    if (listParam.orderColumn === property && listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(listParam, {
-      orderColumn: property, 
-      orderDir: orderDir,
-      compId: menuCompId
-    }));
-  };
-  // .................................................
-
-  // .................................................
-  handleKeywordChange = name => event => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: ClientConfSettingProps, compId: menuCompId });
-    ClientConfSettingActions.changeStoreData({
-      name: 'listParam',
-      value: getMergedObject(listParam, {keyword: event.target.value}),
-      compId: menuCompId
-    });
-  }
 
   render() {
     const { classes } = this.props;
     const { ClientConfSettingProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientConfSettingProps.listParam.rowsPerPage - ClientConfSettingProps.listData.length;
+    const listObj = getDataObjectInComp(ClientConfSettingProps, menuCompId);
 
-    const viewItem = getViewItem({
-      props: ClientConfSettingProps,
-      compId: menuCompId
-    });
-
-    const listData = (viewItem) ? viewItem.listData : [];
-    const listParam = (viewItem) ? viewItem.listParam : ClientConfSettingProps.defaultListParam;
-    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientConfSettingProps.defaultListParam.orderDir;
-    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientConfSettingProps.defaultListParam.orderColumn;
-    
     return (
       <div>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
@@ -305,9 +202,7 @@ class ClientConfSetting extends Component {
                 <TextField
                   id='keyword'
                   label='검색어'
-                  value={this.state.keyword}
                   onChange={this.handleKeywordChange('keyword')}
-                  margin='dense'
                 />
               </Grid>
 
@@ -341,42 +236,42 @@ class ClientConfSetting extends Component {
           </Grid>            
 
           {/* data area */}
+          {(listObj) && 
           <div>
             <Table>
-
-              <ClientConfSettingHead
+              <GrCommonTableHead
                 classes={classes}
-                orderDir={orderDir}
-                orderColumn={orderColumn}
-                onRequestSort={this.handleRequestSort}
+                keyId="objId"
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                onRequestSort={this.handleChangeSort}
+                columnData={this.columnHeaders}
               />
-
               <TableBody>
-                {listData.map(n => {
+                {listObj.get('listData').map(n => {
                   return (
                     <TableRow 
                       className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.objId)}
-                      tabIndex={-1}
-                      key={n.objId}
+                      onClick={event => this.handleRowClick(event, n.get('objId'))}
+                      key={n.get('objId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objId.endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objNm}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.modUserId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('odUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditClick(event, n.objId)}>
+                          onClick={event => this.handleEditClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleDeleteClick(event, n.objId)}>
+                          onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>                        
 
@@ -388,34 +283,34 @@ class ClientConfSetting extends Component {
                 {emptyRows > 0 && (
                   <TableRow >
                     <TableCell
-                      colSpan={ClientConfSettingHead.columnData.length + 1}
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <TablePagination
-            component='div'
-            count={listParam.rowsFiltered}
-            rowsPerPage={listParam.rowsPerPage}
-            rowsPerPageOptions={listParam.rowsPerPageOptions}
-            page={listParam.page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
-
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+            </div>
+          }
         </GrPane>
         {/* dialog(popup) component area */}
+        <ClientConfSettingDialog compId={menuCompId} />
         <ClientConfSettingInform compId={menuCompId} />
-        <ClientConfSettingDialog />
         <GrConfirm />
       </div>
     );

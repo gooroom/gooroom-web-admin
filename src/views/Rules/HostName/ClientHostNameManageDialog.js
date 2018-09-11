@@ -9,7 +9,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
+import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
