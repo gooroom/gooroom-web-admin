@@ -11,6 +11,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
 import { createViewObject } from './ClientConfSettingInform';
+import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -60,19 +61,26 @@ class ClientConfSettingComp extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { ClientConfSettingProps, compId } = this.props;
-    const { viewItems } = ClientConfSettingProps;
     const bull = <span className={classes.bullet}>•</span>;
 
-    let viewCompItem = null;
-    if(viewItems) {
-      const viewItem = viewItems.find((element) => {
-        return element._COMPID_ === compId;
-      });
-      if(viewItem) {
-        viewCompItem = createViewObject(viewItem.selectedItem);
-      }
-    }
+    const { ClientConfSettingProps, compId } = this.props;
+
+    // const { viewItems } = ClientConfSettingProps;
+    // let viewCompItem = null;
+    // if(viewItems) {
+    //   const viewItem = viewItems.find((element) => {
+    //     return element._COMPID_ === compId;
+    //   });
+    //   if(viewItem) {
+    //     viewCompItem = createViewObject(viewItem.selectedItem);
+    //   }
+    // }
+
+    const viewItem = getDataObjectInComp(ClientConfSettingProps, compId);
+    const viewCompItem = createViewObject(viewItem.get('selectedItem'));
+
+    console.log('viewItem >>>>>>>>>>>>> ', viewItem);
+    console.log('viewCompItem >>>>>>>>>>>>> ', viewCompItem);
 
     return (
       <React.Fragment>
@@ -88,36 +96,36 @@ class ClientConfSettingComp extends Component {
               <Grid container justify="flex-end">
                 <Button size="small"
                   variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
+                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'))}
                 ><SettingsApplicationsIcon />수정</Button>
               </Grid>
             </Grid>
           </Grid>
           <Typography variant="headline" component="h2">
-            {viewCompItem.objNm}
+            {viewCompItem.get('objNm')}
           </Typography>
           <Typography color="textSecondary">
-            {(viewCompItem.comment != '') ? '"' + viewCompItem.comment + '"' : ''}
+            {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
           </Typography>
           <Divider />
-          {(viewCompItem && viewCompItem.objId != '') &&
+          {(viewCompItem && viewCompItem.get('objId') != '') &&
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
-                  <TableCell numeric>{viewCompItem.pollingTime}</TableCell>
+                  <TableCell numeric>{viewCompItem.get('pollingTime')}</TableCell>
                 </TableRow>
                 <TableRow>
                     <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
-                  <TableCell numeric>{(viewCompItem.useHypervisor) ? '구동' : '중단'}</TableCell>
+                  <TableCell numeric>{(viewCompItem.get('useHypervisor')) ? '구동' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
-                  <TableCell numeric>{(viewCompItem.selectedNtpIndex > -1) ? viewCompItem.ntpAddress[viewCompItem.selectedNtpIndex] : ''}</TableCell>
+                  <TableCell numeric>{viewCompItem.get('selectedNtpAddress')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
-                  <TableCell numeric>{viewCompItem.ntpAddress.map(function(prop, index) {
+                  <TableCell numeric>{viewCompItem.get('ntpAddress').map(function(prop, index) {
                       return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
                 </TableRow>

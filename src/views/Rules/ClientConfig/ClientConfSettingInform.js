@@ -117,9 +117,6 @@ export const createViewObject = (param) => {
     let ntpAddress = [];
     
     param.get('propList').forEach(function(e) {
-      
-      console.log('e.propNm  >>> ', e.propNm);
-
       if(e.propNm == 'AGENTPOLLINGTIME') {
         pollingTime = e.propValue;
       } else if(e.propNm == 'USEHYPERVISOR') {
@@ -135,8 +132,6 @@ export const createViewObject = (param) => {
         selectedNtpIndex = i;
       }
     });
-
-    console.log(' selectedNtpIndex>>>>> ', selectedNtpIndex);
   
     return Map({
       objId: param.get('objId'),
@@ -145,6 +140,7 @@ export const createViewObject = (param) => {
       modDate: param.get('modDate'),
       useHypervisor: useHypervisor,
       pollingTime: pollingTime,
+      selectedNtpAddress: ntpAddrSelected,
       selectedNtpIndex: selectedNtpIndex,
       ntpAddress: List(ntpAddress)
     });
