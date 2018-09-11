@@ -162,21 +162,20 @@ class ClientConfSetting extends Component {
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
-
     if(confirmValue) {
       const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
       const menuCompId = this.props.match.params.grMenuId;
 
       ClientConfSettingActions.deleteClientConfSettingData({
-        objId: confirmObject.get('objId')
+        objId: confirmObject.get('objId'),
+        compId: menuCompId
       }).then((res) => {
         const viewItems = ClientConfSettingProps.get('viewItems');
-                    viewItems.forEach((element) => {
-                        if(element && element.get('listParam')) {
-                            ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, element.get('_COMPID_'), {});
-                        }
-                    });
-        //ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, menuCompId);
+        viewItems.forEach((element) => {
+            if(element && element.get('listParam')) {
+                ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, element.get('_COMPID_'), {});
+            }
+        });
       });
     }
   };
