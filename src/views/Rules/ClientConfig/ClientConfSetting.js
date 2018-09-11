@@ -10,7 +10,6 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject, getListParam, getListData, getViewItem } from 'components/GrUtils/GrCommonUtils';
 import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { createViewObject } from './ClientConfSettingInform';
@@ -143,6 +142,7 @@ class ClientConfSetting extends Component {
   handleEditClick = (event, id) => { 
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
     const selectedItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
+
     ClientConfSettingActions.showDialog({
       selectedItem: createViewObject(selectedItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT

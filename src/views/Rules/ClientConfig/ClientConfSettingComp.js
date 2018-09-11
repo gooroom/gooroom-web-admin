@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
@@ -47,16 +46,17 @@ class ClientConfSettingComp extends Component {
 
   handleEditBtnClick = (param) => {
     const { ClientConfSettingActions, ClientConfSettingProps, compId } = this.props;
-    const viewItem = ClientConfSettingProps.viewItems.find(function(element) {
-      return element._COMPID_ == compId;
-    });
+    // const viewItem = ClientConfSettingProps.viewItems.find(function(element) {
+    //   return element._COMPID_ == compId;
+    // });
 
-    ClientConfSettingActions.showDialog({
-      compId: compId,
-      selectedItem: createViewObject(viewItem.selectedItem),
-      dialogType: ClientConfSettingDialog.TYPE_EDIT,
-    });
+    // ClientConfSettingActions.showDialog({
+    //   compId: compId,
+    //   selectedItem: createViewObject(viewItem.get('selectedItem')),
+    //   dialogType: ClientConfSettingDialog.TYPE_EDIT,
+    // });
   };
+
 
   // .................................................
   render() {
@@ -64,23 +64,8 @@ class ClientConfSettingComp extends Component {
     const bull = <span className={classes.bullet}>•</span>;
 
     const { ClientConfSettingProps, compId } = this.props;
-
-    // const { viewItems } = ClientConfSettingProps;
-    // let viewCompItem = null;
-    // if(viewItems) {
-    //   const viewItem = viewItems.find((element) => {
-    //     return element._COMPID_ === compId;
-    //   });
-    //   if(viewItem) {
-    //     viewCompItem = createViewObject(viewItem.selectedItem);
-    //   }
-    // }
-
     const viewItem = getDataObjectInComp(ClientConfSettingProps, compId);
     const viewCompItem = createViewObject(viewItem.get('selectedItem'));
-
-    console.log('viewItem >>>>>>>>>>>>> ', viewItem);
-    console.log('viewCompItem >>>>>>>>>>>>> ', viewCompItem);
 
     return (
       <React.Fragment>
@@ -142,12 +127,10 @@ class ClientConfSettingComp extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule,
   ClientConfSettingProps: state.ClientConfSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });

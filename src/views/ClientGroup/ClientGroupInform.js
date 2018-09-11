@@ -35,8 +35,16 @@ class ClientGroupInform extends Component {
   render() {
 
     const { compId, ClientGroupCompProps } = this.props;
+
+    
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ClientGroupInform compId : ' + compId);
     const viewItem = getDataObjectInComp(ClientGroupCompProps, compId);
     const selectedItem = viewItem.get('selectedItem');
+    console.log('>> ClientGroupInform viewItem : ', viewItem);
+    console.log('>> ClientGroupInform selectedItem : ', selectedItem);
+
+    if(selectedItem)
+    console.log('>> group inform : ', selectedItem.toJS());
 
     return (
       <div>

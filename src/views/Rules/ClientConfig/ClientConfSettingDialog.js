@@ -10,9 +10,6 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { createViewObject } from './ClientConfSettingInform';
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -127,12 +124,6 @@ class ClientConfSettingDialog extends Component {
                             ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, element.get('_COMPID_'), {});
                         }
                     });
-
-                    // ClientConfSettingActions.getClientConfSetting({
-                    //     compId: editingCompId,
-                    //     objId: paramObject.get('objId')
-                    // });
-
                     this.handleClose();
                 });
         }

@@ -102,37 +102,37 @@ class ClientGroupManage extends Component {
   handleRowClick = (event, id) => {
     const { ClientGroupProps } = this.props;
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+    const compId = this.props.match.params.grMenuId;
 
-    const menuCompId = this.props.match.params.grMenuId;
-    const selectedItem = getRowObjectById(ClientGroupProps, menuCompId, id, 'grpId');
+    const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
 
     ClientGroupActions.showClientGroupInform({
-      compId: menuCompId,
-      selectedItem: selectedItem,
+      compId: compId,
+      selectedItem: clickedRowObject,
     });
     
     // '단말정책설정' : 정책 정보 변경
     ClientConfSettingActions.getClientConfSetting({
-      compId: menuCompId,
-      objId: selectedItem.get('clientConfigId')
+      compId: compId,
+      objId: clickedRowObject.get('clientConfigId')
     });   
 
     // 'Hosts설정' : 정책 정보 변경
     ClientHostNameActions.getClientHostName({
-      compId: menuCompId,
-      objId: selectedItem.get('hostNameConfigId')
+      compId: compId,
+      objId: clickedRowObject.get('hostNameConfigId')
     });   
 
     // '업데이트서버설정' : 정책 정보 변경
     ClientUpdateServerActions.getClientUpdateServer({
-      compId: menuCompId,
-      objId: selectedItem.get('updateServerConfigId')
+      compId: compId,
+      objId: clickedRowObject.get('updateServerConfigId')
     });   
 
     // '데스크톱 정보설정' : 정책 정보 변경
     ClientDesktopConfigActions.getClientDesktopConfig({
-      compId: menuCompId,
-      desktopConfId: selectedItem.get('desktopConfigId')
+      compId: compId,
+      desktopConfId: clickedRowObject.get('desktopConfigId')
     });   
   };
   // .................................................

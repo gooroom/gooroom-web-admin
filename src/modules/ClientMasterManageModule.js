@@ -12,7 +12,7 @@ const initialState = Map({
     isClientInformOpen: false,
     isGroupInformOpen: false,
 
-    clientConfig: Map({
+    clientConfigId: Map({
         objId: ''
     }),
     desktopConfigId: Map({
