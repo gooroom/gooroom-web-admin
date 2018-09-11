@@ -314,63 +314,20 @@ export default handleActions({
         }
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
-        console.log('GET_CONFSETTING_SUCCESS ...... ', action);
-
         const { data } = action.payload.data;
         if(state.get('viewItems')) {
-
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
+            });
+            return state
+                    .setIn(['viewItems', viewIndex, 'selectedItem'], fromJS(data[0]))
+                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
         } else {
             return state.set('viewItems', List([Map({
                 '_COMPID_': action.compId,
                 'selectedItem': fromJS(data[0])
             })]));
         }
-
-    //     const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
-    //     const { data } = action.payload.data;
-    //     let oldViewItems = [];
-
-    //     if(state.viewItems) {
-    //         oldViewItems = state.viewItems;
-    //         const viewItem = oldViewItems.find((element) => {
-    //             return element._COMPID_ == COMP_ID;
-    //         });
-
-    //         // 이전에 해당 콤프정보가 없으면 신규로 등록
-    //         if(!viewItem) {
-    //             oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
-    //         }
-
-    //         // 같은 오브젝트를 가지고 있는 콤프정보들을 모두 변경 한다.
-    //         oldViewItems = oldViewItems.map((element) => {
-    //             if(element.selectedItem && (element.selectedItem.objId == data[0].objId)) {
-    //                 return Object.assign(element, {'selectedItem': data[0]});
-    //             } else if(element._COMPID_ == COMP_ID) {
-    //                 return Object.assign(element, {'selectedItem': data[0]});
-    //             } else {
-    //                 return element;
-    //             }
-    //         });
-
-    //     } else {
-    //         oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
-    //     }
-
-    //     if(data && data.length > 0) {
-    //         return {
-    //             ...state,
-    //             pending: false,
-    //             error: false,
-    //             viewItems: oldViewItems
-    //         };
-    //     } else {
-    //         return {
-    //             ...state,
-    //             pending: false,
-    //             error: false,
-    //             viewItems: oldViewItems
-    //         };
-    //     }
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
         return state.merge({
@@ -386,34 +343,24 @@ export default handleActions({
         });
     },
     [SHOW_CONFSETTING_INFORM]: (state, action) => {
-        const COMP_ID = action.payload.compId;
         if(state.get('viewItems')) {
-            const newViewItems = state.get('viewItems').map((element) => {
-                if(element.get('_COMPID_') == COMP_ID) {
-                    return element.set('selectedItem', Map(action.payload.selectedItem)).set('informOpen', true);
-                } else {
-                    return element;
-                }
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.payload.compId;
             });
-            return state.merge({
-                viewItems: newViewItems
-            });
+            return state
+                    .setIn(['viewItems', viewIndex, 'selectedItem'], Map(action.payload.selectedItem))
+                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
         }
         return state;
     },
     [CLOSE_CONFSETTING_INFORM]: (state, action) => {
-        const COMP_ID = action.payload.compId;
         if(state.get('viewItems')) {
-            const newViewItems = state.get('viewItems').map((element) => {
-                if(element.get('_COMPID_') == COMP_ID) {
-                    return element.delete('selectedItem', Map(action.payload.selectedItem)).set('informOpen', false);
-                } else {
-                    return element;
-                }
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.payload.compId;
             });
-            return state.merge({
-                viewItems: newViewItems
-            });
+            return state
+                    .setIn(['viewItems', viewIndex, 'informOpen'], false)
+                    .deleteIn(['viewItems', viewIndex, 'selectedItem'])
         }
         return state;
     },

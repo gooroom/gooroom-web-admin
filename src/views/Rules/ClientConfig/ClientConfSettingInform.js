@@ -38,21 +38,7 @@ class ClientConfSettingInform extends Component {
 
     const { ClientConfSettingProps, compId } = this.props;
     const viewItem = getDataObjectInComp(ClientConfSettingProps, compId);
-    const selectedItem = viewItem.get('selectedItem');
-
-
-    // const { viewItems } = ClientConfSettingProps;
-    // let selectedViewItem = null;
-    // if(viewItems) {
-    //   const viewItem = viewItems.find(function(element) {
-    //     return element._COMPID_ == compId;
-    //   });
-    //   if(viewItem) {
-    //     selectedViewItem = createViewObject(viewItem.selectedItem);
-    //   }
-    // }
-
-    const selectedViewItem = createViewObject(selectedItem);
+    const selectedViewItem = createViewObject(viewItem.get('selectedItem'));
 
     return (
       <div>
@@ -79,7 +65,7 @@ class ClientConfSettingInform extends Component {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
-                  <TableCell numeric>{(selectedViewItem.get('selectedNtpIndex') > -1) ? selectedViewItem.getIn(['ntpAddress', selectedViewItem.get('selectedNtpIndex')]) : ''}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('selectedNtpAddress')}</TableCell>
                   <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
                   <TableCell numeric>{selectedViewItem.get('ntpAddress').map(function(prop, index) {
                       return <span key={index}>{prop}<br/></span>;
