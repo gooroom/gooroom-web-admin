@@ -34,14 +34,14 @@ export const getDataListAndParamInComp = (propObj, compId) => {
     }
 }
 
-export const getRowObjectById = (propObj, compId, id) => {
+export const getRowObjectById = (propObj, compId, id, keyId) => {
     if(propObj.get('viewItems')) {
         const viewItem = propObj.get('viewItems').find((element) => {
             return element.get('_COMPID_') == compId;
         });
         if(viewItem && viewItem.get('listData')) {
             const selectedItem = viewItem.get('listData').find((element) => {
-                return element.get('grpId') == id;
+                return element.get(keyId) == id;
             });
             return (selectedItem) ? selectedItem : null;
         }
