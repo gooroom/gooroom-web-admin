@@ -38,7 +38,7 @@ class ClientConfSettingInform extends Component {
 
     const { ClientConfSettingProps, compId } = this.props;
     const viewItem = getDataObjectInComp(ClientConfSettingProps, compId);
-    const selectedViewItem = createViewObject(viewItem.get('selectedItem'));
+    const selectedViewItem = (viewItem.get('selectedItem')) ? createViewObject(viewItem.get('selectedItem')) : null;
 
     return (
       <div>
@@ -103,14 +103,16 @@ export const createViewObject = (param) => {
     let ntpAddress = [];
     
     param.get('propList').forEach(function(e) {
-      if(e.propNm == 'AGENTPOLLINGTIME') {
-        pollingTime = e.propValue;
-      } else if(e.propNm == 'USEHYPERVISOR') {
-        useHypervisor = (e.propValue == "true");
-      } else if(e.propNm == 'NTPSELECTADDRESS') {
-        ntpAddrSelected = e.propValue;
-      } else if(e.propNm == 'NTPADDRESSES') {
-        ntpAddress.push(e.propValue);
+      const ename = e.get('propNm');
+      const evalue = e.get('propValue');
+      if(ename == 'AGENTPOLLINGTIME') {
+        pollingTime = evalue;
+      } else if(ename == 'USEHYPERVISOR') {
+        useHypervisor = (evalue == "true");
+      } else if(ename == 'NTPSELECTADDRESS') {
+        ntpAddrSelected = evalue;
+      } else if(ename == 'NTPADDRESSES') {
+        ntpAddress.push(evalue);
       }
     });
     ntpAddress.forEach(function(e, i) {

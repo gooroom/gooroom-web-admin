@@ -1,4 +1,4 @@
-import { Map, List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 export const getDataObjectInComp = (propObj, compId) => {
     if(propObj.get('viewItems')) {
@@ -43,7 +43,7 @@ export const getRowObjectById = (propObj, compId, id, keyId) => {
             const selectedItem = viewItem.get('listData').find((element) => {
                 return element.get(keyId) == id;
             });
-            return (selectedItem) ? selectedItem : null;
+            return (selectedItem) ? fromJS(selectedItem.toJS()) : null;
         }
     }
     return null;

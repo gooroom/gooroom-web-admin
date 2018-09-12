@@ -141,15 +141,11 @@ class ClientConfSettingDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { ClientConfSettingProps } = this.props;
+        const bull = <span className={classes.bullet}>•</span>;
 
+        const { ClientConfSettingProps } = this.props;
         const dialogType = ClientConfSettingProps.get('dialogType');
         const editingItem = (ClientConfSettingProps.get('editingItem')) ? ClientConfSettingProps.get('editingItem') : null;
-
-        //const editingViewItem = createViewObject(editingItem);
-        const editingViewItem = editingItem;
-
-        const bull = <span className={classes.bullet}>•</span>;
 
         let title = "";
         if(dialogType === ClientConfSettingDialog.TYPE_ADD) {
@@ -162,14 +158,14 @@ class ClientConfSettingDialog extends Component {
 
         return (
             <div>
-            {(ClientConfSettingProps.get('dialogOpen') && editingViewItem) &&
+            {(ClientConfSettingProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientConfSettingProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
                     <TextField
                         id="objNm"
                         label="이름"
-                        value={(editingViewItem.get('objNm')) ? editingViewItem.get('objNm') : ''}
+                        value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         margin="normal"
                         className={classes.fullWidth}
@@ -178,7 +174,7 @@ class ClientConfSettingDialog extends Component {
                     <TextField
                         id="comment"
                         label="설명"
-                        value={(editingViewItem.get('comment')) ? editingViewItem.get('comment') : ''}
+                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
@@ -189,7 +185,7 @@ class ClientConfSettingDialog extends Component {
                                 <Grid item xs={6} sm={6}>
                                     <TextField
                                         label="에이전트폴링주기(초)"
-                                        value={(editingViewItem.get('pollingTime')) ? editingViewItem.get('pollingTime') : ''}
+                                        value={(editingItem.get('pollingTime')) ? editingItem.get('pollingTime') : ''}
                                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                         disabled
                                     />
@@ -197,7 +193,7 @@ class ClientConfSettingDialog extends Component {
                                 <Grid item xs={6} sm={6}>
                                     <TextField
                                         label="운영체제 보호"
-                                        value={(editingViewItem.get('useHypervisor')) ? '구동' : '중단'}
+                                        value={(editingItem.get('useHypervisor')) ? '구동' : '중단'}
                                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                         disabled
                                     />
@@ -205,14 +201,14 @@ class ClientConfSettingDialog extends Component {
                             </Grid>
                             <TextField
                                 label="선택된 NTP 서버 주소"
-                                value={(editingViewItem.get('selectedNtpIndex') > -1) ? editingViewItem.getIn(['ntpAddress', editingViewItem.get('selectedNtpIndex')]) : ''}
+                                value={(editingItem.get('selectedNtpIndex') > -1) ? editingItem.getIn(['ntpAddress', editingItem.get('selectedNtpIndex')]) : ''}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
                             <TextField
                                 label="NTP 서버로 사용할 주소정보"
                                 multiline
-                                value={(editingViewItem.get('ntpAddress').size > 0) ? editingViewItem.get('ntpAddress').join('\n') : ''}
+                                value={(editingItem.get('ntpAddress').size > 0) ? editingItem.get('ntpAddress').join('\n') : ''}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
@@ -223,7 +219,7 @@ class ClientConfSettingDialog extends Component {
                             <TextField
                                 id="pollingTime"
                                 label="에이전트폴링주기(초)"
-                                value={(editingViewItem.get('pollingTime')) ? editingViewItem.get('pollingTime') : ''}
+                                value={(editingItem.get('pollingTime')) ? editingItem.get('pollingTime') : ''}
                                 onChange={this.handleValueChange("pollingTime")}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
@@ -232,20 +228,20 @@ class ClientConfSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('useHypervisor')} 
-                                        checked={(editingViewItem.get('useHypervisor')) ? editingViewItem.get('useHypervisor') : false}
+                                        checked={(editingItem.get('useHypervisor')) ? editingItem.get('useHypervisor') : false}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.get('useHypervisor')) ? '구동' : '중단'}
+                                    label={(editingItem.get('useHypervisor')) ? '구동' : '중단'}
                                 />
                             </div>
                             <div style={{marginTop:"10px"}}>
                                 <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
                                 <Button onClick={this.handleAddNtp} variant="outlined" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
                                 <List>
-                                {editingViewItem.get('ntpAddress') && editingViewItem.get('ntpAddress').size > 0 && editingViewItem.get('ntpAddress').map((value, index) => (
+                                {editingItem.get('ntpAddress') && editingItem.get('ntpAddress').size > 0 && editingItem.get('ntpAddress').map((value, index) => (
                                     <ListItem style={{paddingTop:"0px", paddingBottom:"0px"}} key={index} >
                                         <Radio value={index.toString()} name="radio-button-demo" 
-                                            checked={editingViewItem.get('selectedNtpIndex') != -1 && editingViewItem.get('selectedNtpIndex') === index}
+                                            checked={editingItem.get('selectedNtpIndex') != -1 && editingItem.get('selectedNtpIndex') === index}
                                             onChange={this.handleChangeSelectedNtp('selectedNtpIndex', index)}
                                         />
                                         <Input value={value} onChange={this.handleNtpValueChange(index)} style={{width:"100%"}} />

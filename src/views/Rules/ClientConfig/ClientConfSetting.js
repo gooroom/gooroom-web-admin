@@ -198,20 +198,11 @@ class ClientConfSetting extends Component {
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
               <Grid item xs={6}>
-                <TextField
-                  id='keyword'
-                  label='검색어'
-                  onChange={this.handleKeywordChange('keyword')}
-                />
+                <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
               </Grid>
 
               <Grid item xs={6}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={ () => this.handleSelectBtnClick() }
-                >
+                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
                   <Search />
                   조회
                 </Button>
@@ -220,10 +211,7 @@ class ClientConfSetting extends Component {
             </Grid>
 
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
+              <Button size="small" variant="contained" color="primary"
                 onClick={() => {
                   this.handleCreateButton();
                 }}
