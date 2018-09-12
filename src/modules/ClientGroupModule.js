@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { Map, List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
@@ -200,10 +200,26 @@ export const editClientGroupData = (item) => dispatch => {
         updateServerConfigId: item.get('updateServerConfigId')
     }).then(
         (response) => {
-            dispatch({
-                type: EDIT_CLIENTGROUP_SUCCESS,
-                response: response
-            });
+
+            if(response && response.data && response.data.status && response.data.status.result == 'success') {
+                // alarm ... success
+                requestPostAPI('readClientGroupData', {'groupId': item.get('grpId')}).then(
+                    (response) => {
+                        dispatch({
+                            type: EDIT_CLIENTGROUP_SUCCESS,
+                            grpId: item.get('grpId'),
+                            response: response
+                        });
+                    }
+                ).catch(error => {
+                });
+            } else {
+                // alarm ... fail
+                dispatch({
+                    type: COMMON_FAILURE,
+                    error: error
+                });
+            }
         }
     ).catch(error => {
         dispatch({
@@ -216,11 +232,12 @@ export const editClientGroupData = (item) => dispatch => {
 // delete
 export const deleteClientGroupData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteClientGroup', param).then(
+    return requestPostAPI('deleteClientGroup', {'groupId': param.grpId}).then(
         (response) => {
             dispatch({
                 type: DELETE_CLIENTGROUP_SUCCESS,
-                response: response
+                compId: param.compId,
+                grpId: param.grpId
             });
         }
     ).catch(error => {
@@ -375,19 +392,39 @@ export default handleActions({
         });
     },
     [EDIT_CLIENTGROUP_SUCCESS]: (state, action) => {
-        return state.merge({
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                if(e.get('selectedItem')) {
+                    if(e.getIn(['selectedItem', 'grpId']) == action.grpId) {
+                        // replace
+                        newState = newState.setIn(['viewItems', i, 'selectedItem'], fromJS(action.response.data.data[0]));
+                    }
+                }
+            });
+        }
+        return state.merge(newState).merge({
             pending: false,
             error: false,
-            informOpen: false,
             dialogOpen: false,
             dialogType: ''
         });
     },
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
-        return state.merge({
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                if(e.get('selectedItem')) {
+                    if(e.getIn(['selectedItem', 'grpId']) == action.grpId) {
+                        // replace
+                        newState = newState.deleteIn(['viewItems', i, 'selectedItem']);
+                    }
+                }
+            });
+        }
+        return state.merge(newState).merge({
             pending: false,
             error: false,
-            informOpen: false,
             dialogOpen: false,
             dialogType: ''
         });
