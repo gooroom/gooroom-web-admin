@@ -111,8 +111,6 @@ class ClientMasterManage extends Component {
     const { ClientGroupActions } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    console.log('selectedClientObj : ', selectedClientObj);
-
     // show client info.
     if(selectedClientObj) {
       ClientGroupActions.closeClientGroupInform({

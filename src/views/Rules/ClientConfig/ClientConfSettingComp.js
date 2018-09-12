@@ -10,7 +10,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
 import { createViewObject } from './ClientConfSettingInform';
-import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -44,19 +44,15 @@ class ClientConfSettingComp extends Component {
     };
   }
 
-  handleEditBtnClick = (param) => {
-    const { ClientConfSettingActions, ClientConfSettingProps, compId } = this.props;
-    // const viewItem = ClientConfSettingProps.viewItems.find(function(element) {
-    //   return element._COMPID_ == compId;
-    // });
+  handleEditBtnClick = (objId) => {
+    const { ClientConfSettingProps, ClientConfSettingActions, compId } = this.props;
+    const selectedItem = getSelectedObjectInComp(ClientConfSettingProps, compId);
 
-    // ClientConfSettingActions.showDialog({
-    //   compId: compId,
-    //   selectedItem: createViewObject(viewItem.get('selectedItem')),
-    //   dialogType: ClientConfSettingDialog.TYPE_EDIT,
-    // });
+    ClientConfSettingActions.showDialog({
+      selectedItem: createViewObject(selectedItem),
+      dialogType: ClientConfSettingDialog.TYPE_EDIT
+    });
   };
-
 
   // .................................................
   render() {
@@ -120,7 +116,7 @@ class ClientConfSettingComp extends Component {
         </CardContent>
         }
       </Card>
-      <ClientConfSettingDialog />
+      <ClientConfSettingDialog compId={compId} />
       </React.Fragment>
     );
   }

@@ -50,39 +50,44 @@ const initialState = Map({
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_CONFSETTING_DIALOG,
-        payload: param
+        selectedItem: param.selectedItem,
+        dialogType: param.dialogType
     });
 };
 
 export const closeDialog = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_CONFSETTING_DIALOG,
-        payload: param
+        type: CLOSE_CONFSETTING_DIALOG
     });
 };
 
 export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CONFSETTING_INFORM,
-        payload: param
+        compId: param.compId,
+        selectedItem: param.selectedItem
     });
 };
 
 export const closeInform = (param) => dispatch => {
     return dispatch({
         type: CLOSE_CONFSETTING_INFORM,
-        payload: param
+        compId: param.compId
     });
 };
 
 export const readClientConfSettingList = (module, compId, extParam) => dispatch => {
-
+    
     let newListParam;
     if(module.get('viewItems')) {
         const viewIndex = module.get('viewItems').findIndex((e) => {
             return e.get('_COMPID_') == compId;
         });
-        newListParam = module.getIn(['viewItems', viewIndex, 'listParam']).merge(extParam);
+        if(viewIndex < 0) {
+            newListParam = module.get('defaultListParam');
+        } else {
+            newListParam = module.getIn(['viewItems', viewIndex, 'listParam']).merge(extParam);
+        }
     } else {
         newListParam = module.get('defaultListParam');
     }
@@ -101,13 +106,13 @@ export const readClientConfSettingList = (module, compId, extParam) => dispatch 
                 type: GET_CONFSETTING_LIST_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -115,18 +120,18 @@ export const readClientConfSettingList = (module, compId, extParam) => dispatch 
 export const getClientConfSetting = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientConf', param).then(
+    return requestPostAPI('readClientConf', {'objId': param.objId}).then(
         (response) => {
             dispatch({
                 type: GET_CONFSETTING_SUCCESS,
                 compId: compId,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -134,21 +139,26 @@ export const getClientConfSetting = (param) => dispatch => {
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,
-        payload: param
+        name: param.name,
+        value: param.value
     });
 };
 
 export const changeListParamData = (param) => dispatch => {
     return dispatch({
         type: CHG_LISTPARAM_DATA,
-        payload: param
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
         type: CHG_COMPVARIABLE_DATA,
-        payload: param
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
@@ -172,21 +182,20 @@ export const createClientConfSettingData = (param) => dispatch => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_CONFSETTING_SUCCESS,
-                        payload: response
+                        type: CREATE_CONFSETTING_SUCCESS
                     });
                 }    
             } catch(ex) {
                 dispatch({
                     type: COMMON_FAILURE,
-                    payload: response
+                    ex: ex
                 });
             }
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -196,15 +205,32 @@ export const editClientConfSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateClientConf', makeParameter(param)).then(
         (response) => {
-            dispatch({
-                type: EDIT_CONFSETTING_SUCCESS,
-                payload: response
-            });
+
+            if(response && response.data && response.data.status && response.data.status.result == 'success') {
+                // alarm ... success
+                requestPostAPI('readClientConf', {'objId': param.get('objId')}).then(
+                    (response) => {
+                        console.log('>>> response : ', response);
+                        dispatch({
+                            type: EDIT_CONFSETTING_SUCCESS,
+                            objId: param.get('objId'),
+                            response: response
+                        });
+                    }
+                ).catch(error => {
+                });
+            } else {
+                // alarm ... fail
+                dispatch({
+                    type: COMMON_FAILURE,
+                    error: error
+                });
+            }
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -216,14 +242,14 @@ export const deleteClientConfSettingData = (param) => dispatch => {
         (response) => {
             dispatch({
                 type: DELETE_CONFSETTING_SUCCESS,
-                param: param,
-                payload: response
+                compId: param.compId,
+                objId: param.objId
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -237,14 +263,15 @@ export const addNtpAddress = () => dispatch => {
 export const deleteNtpAddress = (index) => dispatch => {
     return dispatch({
         type: DELETE_NTPADDRESS_ITEM,
-        payload: {index:index}
+        index: index
     });
 }
 
 export const setSelectedNtpValue = (param) => dispatch => {
     return dispatch({
         type: SET_SELECTED_NTP_VALUE,
-        payload: param
+        index: param.index,
+        value: param.value
     });
 };
 
@@ -261,12 +288,13 @@ export default handleActions({
         return state.merge({
             pending: false, 
             error: true,
-            resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
+            resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
+            ex: (action.ex) ? action.ex : ''
         });
     },
 
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.payload.data;
+        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
 
         if(state.get('viewItems')) {
             const viewIndex = state.get('viewItems').findIndex((e) => {
@@ -314,26 +342,36 @@ export default handleActions({
         }
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
-        const { data } = action.payload.data;
+        const { data } = action.response.data;
         if(state.get('viewItems')) {
             const viewIndex = state.get('viewItems').findIndex((e) => {
                 return e.get('_COMPID_') == action.compId;
             });
-            return state
+
+            if(viewIndex < 0) {
+                return state.set('viewItems', state.get('viewItems').push(Map({
+                    '_COMPID_': action.compId,
+                    'informOpen': true,
+                    'selectedItem': fromJS(data[0])
+                })));
+            } else {
+                return state
                     .setIn(['viewItems', viewIndex, 'selectedItem'], fromJS(data[0]))
                     .setIn(['viewItems', viewIndex, 'informOpen'], true);
+            }
         } else {
             return state.set('viewItems', List([Map({
                 '_COMPID_': action.compId,
-                'selectedItem': fromJS(data[0])
+                'selectedItem': fromJS(data[0]),
+                'informOpen': true
             })]));
         }
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
         return state.merge({
-            editingItem: action.payload.selectedItem,
+            editingItem: action.selectedItem,
             dialogOpen: true,
-            dialogType: action.payload.dialogType
+            dialogType: action.dialogType
         });
     },
     [CLOSE_CONFSETTING_DIALOG]: (state, action) => {
@@ -345,18 +383,28 @@ export default handleActions({
     [SHOW_CONFSETTING_INFORM]: (state, action) => {
         if(state.get('viewItems')) {
             const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.payload.compId;
+                return e.get('_COMPID_') == action.compId;
             });
-            return state
-                    .setIn(['viewItems', viewIndex, 'selectedItem'], Map(action.payload.selectedItem))
+            if(viewIndex < 0) {
+                return state.set('viewItems', state.get('viewItems').push(Map({
+                    '_COMPID_': action.compId,
+                    'informOpen': true,
+                    'selectedItem': action.selectedItem
+                })));
+            } else {
+                return state
+                    .setIn(['viewItems', viewIndex, 'selectedItem'], action.selectedItem)
                     .setIn(['viewItems', viewIndex, 'informOpen'], true);
+            }
+        } else {
+            // no occure this event
         }
         return state;
     },
     [CLOSE_CONFSETTING_INFORM]: (state, action) => {
         if(state.get('viewItems')) {
             const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.payload.compId;
+                return e.get('_COMPID_') == action.compId;
             });
             return state
                     .setIn(['viewItems', viewIndex, 'informOpen'], false)
@@ -366,20 +414,20 @@ export default handleActions({
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
-            editingItem: state.get('editingItem').merge({[action.payload.name]: action.payload.value})
+            editingItem: state.get('editingItem').merge({[action.name]: action.value})
         });
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
         const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.payload.compId;
+            return e.get('_COMPID_') == action.compId;
         });
-        return state.setIn(['viewItems', viewIndex, 'listParam', action.payload.name], action.payload.value);
+        return state.setIn(['viewItems', viewIndex, 'listParam', action.name], action.value);
     },
     [CHG_COMPVARIABLE_DATA]: (state, action) => {
         const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.payload.compId;
+            return e.get('_COMPID_') == action.compId;
         });
-        return state.setIn(['viewItems', viewIndex, action.payload.name], action.payload.value);
+        return state.setIn(['viewItems', viewIndex, action.name], action.value);
     },
     [CREATE_CONFSETTING_SUCCESS]: (state, action) => {
         return state.merge({
@@ -388,7 +436,18 @@ export default handleActions({
         });
     },
     [EDIT_CONFSETTING_SUCCESS]: (state, action) => {
-        return state.merge({
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                if(e.get('selectedItem')) {
+                    if(e.getIn(['selectedItem', 'objId']) == action.objId) {
+                        // replace
+                        newState = newState.setIn(['viewItems', i, 'selectedItem'], fromJS(action.response.data.data[0]));
+                    }
+                }
+            });
+        }
+        return state.merge(newState).merge({
             pending: false,
             error: false,
             dialogOpen: false,
@@ -396,13 +455,18 @@ export default handleActions({
         });
     },
     [DELETE_CONFSETTING_SUCCESS]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.param.compId;
-        });
-        if(action.param.objId == state.getIn(['viewItems', viewIndex, 'selectedItem', 'objId'])) {
-            state = state.setIn(['viewItems', viewIndex, 'informOpen'], false).deleteIn(['viewItems', viewIndex, 'selectedItem']);
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                if(e.get('selectedItem')) {
+                    if(e.getIn(['selectedItem', 'objId']) == action.objId) {
+                        // replace
+                        newState = newState.deleteIn(['viewItems', i, 'selectedItem']);
+                    }
+                }
+            });
         }
-        return state.merge({
+        return state.merge(newState).merge({
             pending: false,
             error: false,
             dialogOpen: false,
@@ -410,7 +474,7 @@ export default handleActions({
         });
     },
     [SET_SELECTED_NTP_VALUE]: (state, action) => {
-        const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).set(action.payload.index, action.payload.value);
+        const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).set(action.index, action.value);
         return state.setIn(['editingItem', 'ntpAddress'], newNtpAddress);
     },
     [ADD_NTPADDRESS_ITEM]: (state, action) => {
@@ -418,7 +482,7 @@ export default handleActions({
         return state.setIn(['editingItem', 'ntpAddress'], newNtpAddress);
     },
     [DELETE_NTPADDRESS_ITEM]: (state, action) => {
-        const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).delete(action.payload.index);
+        const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).delete(action.index);
         return state.setIn(['editingItem', 'ntpAddress'], newNtpAddress);
     },
 

@@ -46,28 +46,32 @@ const initialState = Map({
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTGROUP_DIALOG,
-        payload: param
+        selectedItem: param.selectedItem,
+        dialogType: param.dialogType
     });
 };
 
 export const closeDialog = () => dispatch => {
     return dispatch({
         type: CHG_STORE_DATA,
-        payload: {name:"dialogOpen",value:false}
+        name: 'dialogOpen',
+        value: false
     });
 };
 
 export const showClientGroupInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTGROUP_INFORM,
-        payload: param
+        compId: param.compId,
+        selectedItem: param.selectedItem
     });
 };
 
 export const closeClientGroupInform = (param) => dispatch => {
     return dispatch({
         type: CLOSE_CLIENTGROUP_INFORM,
-        payload: param
+        compId: param.compId,
+        selectedItem: param.selectedItem
     });
 };
 
@@ -97,13 +101,13 @@ export const readClientGroupList = (module, compId, extParam) => dispatch => {
                 type: GET_LIST_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -111,35 +115,42 @@ export const readClientGroupList = (module, compId, extParam) => dispatch => {
 export const setSelectedItemObj = (param) => dispatch => {
     return dispatch({
         type: SET_SELECTED_OBJ,
-        payload: param
+        compId: param.compId,
+        selectedItem: param.selectedItem
     });
 };
 
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,
-        payload: param
+        name: param.name,
+        value: param.value
     });
 };
 
 export const changeListParamData = (param) => dispatch => {
     return dispatch({
         type: CHG_LISTPARAM_DATA,
-        payload: param
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
         type: CHG_COMPVARIABLE_DATA,
-        payload: param
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
 export const changeStoreData = (param) => dispatch => {
     return dispatch({
         type: CHG_STORE_DATA,
-        payload: param
+        name: param.name,
+        value: param.value
     });
 };
 
@@ -157,20 +168,21 @@ export const createClientGroupData = (item) => dispatch => {
                 if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
                         type: CREATE_CLIENTGROUP_SUCCESS,
-                        payload: response
+                        response: response
                     });
                 }
             } catch(ex) {
                 dispatch({
                     type: COMMON_FAILURE,
-                    payload: response
+                    error: null,
+                    ex: ex
                 });
             }
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -190,13 +202,13 @@ export const editClientGroupData = (item) => dispatch => {
         (response) => {
             dispatch({
                 type: EDIT_CLIENTGROUP_SUCCESS,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -208,13 +220,13 @@ export const deleteClientGroupData = (param) => dispatch => {
         (response) => {
             dispatch({
                 type: DELETE_CLIENTGROUP_SUCCESS,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -232,13 +244,13 @@ export default handleActions({
         return state.merge({
             pending: false, 
             error: true,
-            resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
+            resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
+            ex:  (action.ex) ? action.ex : ''
         });
     },
 
     [GET_LIST_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.payload.data;
-
+        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
         if(state.get('viewItems')) {
             const viewIndex = state.get('viewItems').findIndex((e) => {
                 return e.get('_COMPID_') == action.compId;
@@ -286,9 +298,9 @@ export default handleActions({
     },
     [SHOW_CLIENTGROUP_DIALOG]: (state, action) => {
         return state.merge({
-            editingItem: action.payload.selectedItem,
+            editingItem: action.selectedItem,
             dialogOpen: true,
-            dialogType: action.payload.dialogType,
+            dialogType: action.dialogType,
         });
     },
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
@@ -298,17 +310,16 @@ export default handleActions({
             });
             return state
                     .setIn(['viewItems', viewIndex, 'informOpen'], true)
-                    .setIn(['viewItems', viewIndex, 'selectedItem'], Map(action.payload.selectedItem));
+                    .setIn(['viewItems', viewIndex, 'selectedItem'], Map(action.selectedItem));
         }
-        console.log('##########################################');
         return state;
     },
     [CLOSE_CLIENTGROUP_INFORM]: (state, action) => {
-        const COMP_ID = action.payload.compId;
+        const COMP_ID = action.compId;
         if(state.get('viewItems')) {
             const newViewItems = state.get('viewItems').map((element) => {
                 if(element.get('_COMPID_') == COMP_ID) {
-                    return element.delete('selectedItem', Map(action.payload.selectedItem)).set('informOpen', false);
+                    return element.delete('selectedItem', Map(action.selectedItem)).set('informOpen', false);
                 } else {
                     return element;
                 }
@@ -320,11 +331,11 @@ export default handleActions({
         return state;
     },
     [SET_SELECTED_OBJ]: (state, action) => {
-        const COMP_ID = action.payload.compId;
+        const COMP_ID = action.compId;
         if(state.get('viewItems')) {
             const newViewItems = state.get('viewItems').map((element) => {
                 if(element.get('_COMPID_') == COMP_ID) {
-                    return element.set('selectedItem', Map(action.payload.selectedItem)).set('informOpen', true);
+                    return element.set('selectedItem', Map(action.selectedItem)).set('informOpen', true);
                 } else {
                     return element;
                 }
@@ -337,24 +348,24 @@ export default handleActions({
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
-            editingItem: state.get('editingItem').merge({[action.payload.name]: action.payload.value})
+            editingItem: state.get('editingItem').merge({[action.name]: action.value})
         });
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
         const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.payload.compId;
+            return e.get('_COMPID_') == action.compId;
         });
-        return state.setIn(['viewItems', viewIndex, 'listParam', action.payload.name], action.payload.value);
+        return state.setIn(['viewItems', viewIndex, 'listParam', action.name], action.value);
     },
     [CHG_COMPVARIABLE_DATA]: (state, action) => {
         const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.payload.compId;
+            return e.get('_COMPID_') == action.compId;
         });
-        return state.setIn(['viewItems', viewIndex, action.payload.name], action.payload.value);
+        return state.setIn(['viewItems', viewIndex, action.name], action.value);
     },
     [CHG_STORE_DATA]: (state, action) => {
         return state.merge({
-            [action.payload.name]: action.payload.value
+            [action.name]: action.value
         });
     },
     [CREATE_CLIENTGROUP_SUCCESS]: (state, action) => {
