@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { Map, List } from 'immutable';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
@@ -120,13 +121,11 @@ class ClientHostNameComp extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule,
   ClientHostNameProps: state.ClientHostNameModule
 });
 
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
   ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });

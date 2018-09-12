@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Map, List } from 'immutable';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -8,8 +10,8 @@ import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
+//import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { createViewObject } from './ClientHostNameManageInform';
 
@@ -42,61 +44,18 @@ import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
-//  ## Header ########## ########## ########## ########## ########## 
+//  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientHostNameHead extends Component {
+class ClientHostNameManage extends Component {
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
+  columnHeaders = [
     { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
     { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '정책이름' },
     { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: '정책아이디' },
     { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: '수정자' },
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
-
-  render() {
-    const { classes } = this.props;
-    const { orderDir, orderColumn, } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {ClientHostNameHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
-class ClientHostNameManage extends Component {
 
   constructor(props) {
     super(props);
@@ -109,6 +68,21 @@ class ClientHostNameManage extends Component {
   componentDidMount() {
     this.handleSelectBtnClick();
   }
+
+  handleChangePage = (event, page) => {
+    const { ClientHostNameActions, ClientHostNameProps } = this.props;
+    ClientHostNameActions.readClientHostNameList(ClientHostNameProps, this.props.match.params.grMenuId, {
+      page: page
+    });
+  };
+
+  handleChangeRowsPerPage = event => {
+    const { ClientHostNameActions, ClientHostNameProps } = this.props;
+    ClientHostNameActions.readClientHostNameList(ClientHostNameProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value,
+      page: page
+    });
+  };
 
   // .................................................
   handleSelectBtnClick = () => {
@@ -217,31 +191,6 @@ class ClientHostNameManage extends Component {
       }, () => {
       });
     }
-  };
-
-  // 페이지 번호 변경
-  handleChangePage = (event, page) => {
-    const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
-    
-    ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
-      page: page,
-      compId: menuCompId
-    }));
-  };
-
-  // 페이지당 레코드수 변경
-  handleChangeRowsPerPage = event => {
-    const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
-
-    ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
-      rowsPerPage: event.target.value,
-      page: 0,
-      compId: menuCompId
-    }));
   };
   
   // .................................................
