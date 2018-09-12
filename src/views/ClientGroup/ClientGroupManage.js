@@ -170,11 +170,12 @@ class ClientGroupManage extends Component {
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
     if(confirmValue) {
       const { ClientGroupProps, ClientGroupActions } = this.props;
-      const menuCompId = this.props.match.params.grMenuId;
+      const compId = this.props.match.params.grMenuId;
       ClientGroupActions.deleteClientGroupData({
-        groupId: confirmObject.get('grpId')
+        compId: compId,
+        grpId: confirmObject.get('grpId')
       }).then(() => {
-        ClientGroupActions.readClientGroupList(ClientGroupProps, menuCompId);
+        ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
       });
     }
   };
