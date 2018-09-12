@@ -210,7 +210,6 @@ export const editClientConfSettingData = (param) => dispatch => {
                 // alarm ... success
                 requestPostAPI('readClientConf', {'objId': param.get('objId')}).then(
                     (response) => {
-                        console.log('>>> response : ', response);
                         dispatch({
                             type: EDIT_CONFSETTING_SUCCESS,
                             objId: param.get('objId'),
