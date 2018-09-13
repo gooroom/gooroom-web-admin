@@ -9,8 +9,6 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -81,26 +79,24 @@ class ClientSecuSettingDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientSecuSettingProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '단말보안정책정보 등록',
             confirmMsg: '단말보안정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientSecuSettingProps.editingItem
+            confirmObject: ClientSecuSettingProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
-            ClientSecuSettingActions.createClientSecuSettingData(ClientSecuSettingProps.editingItem)
+            ClientSecuSettingActions.createClientSecuSettingData(ClientSecuSettingProps.get('editingItem'))
                 .then((res) => {
-                    const { viewItems } = ClientSecuSettingProps;
+                    const viewItems = ClientSecuSettingProps.get('viewItems');
                     if(viewItems) {
                         viewItems.forEach((element) => {
-                            if(element && element.listParam) {
-                                ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(element.listParam, {
-                                    compId: element._COMPID_
-                                }));
+                            if(element && element.get('listParam')) {
+                                compId.readClientSecuSettingList(ClientSecuSettingProps, element.get('_COMPID_'), {});
                             }
                         });
                     }
@@ -112,40 +108,28 @@ class ClientSecuSettingDialog extends Component {
 
     handleEditData = (event, id) => {
         const { ClientSecuSettingProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '단말보안정책정보 수정',
             confirmMsg: '단말보안정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientSecuSettingProps.editingItem
-          });
+            confirmObject: ClientSecuSettingProps.get('editingItem')
+        });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
 
-            ClientSecuSettingActions.editClientSecuSettingData(ClientSecuSettingProps.editingItem)
+            ClientSecuSettingActions.editClientSecuSettingData(ClientSecuSettingProps.get('editingItem'))
                 .then((res) => {
-
-                    const { editingCompId, viewItems } = ClientSecuSettingProps;
+                    const viewItems = ClientSecuSettingProps.get('viewItems');
                     viewItems.forEach((element) => {
-                        if(element && element.listParam) {
-                            ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(element.listParam, {
-                                compId: element._COMPID_
-                            }));
+                        if(element && element.get('listParam')) {
+                            compId.readClientSecuSettingList(ClientSecuSettingProps, element.get('_COMPID_'), {});
                         }
                     });
-
-                    // 아래 정보 조회는 효과 없음. - 보여줄 인폼 객체가 안보이는 상태임.
-                    // ClientSecuSettingActions.getClientSecuSetting({
-                    //     compId: editingCompId,
-                    //     objId: paramObject.objId
-                    // });
-
-                this.handleClose();
-            }, (res) => {
-
-            })
+                    this.handleClose();
+                });
         }
     }
 
@@ -165,14 +149,13 @@ class ClientSecuSettingDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { ClientSecuSettingProps } = this.props;
-        const { dialogType, editingItem } = ClientSecuSettingProps;
-
-        const editingViewItem = editingItem;
-
-        let title = "";
         const bull = <span className={classes.bullet}>•</span>;
 
+        const { ClientSecuSettingProps } = this.props;
+        const dialogType = ClientSecuSettingProps.get('dialogType');
+        const editingItem = (ClientSecuSettingProps.get('editingItem')) ? ClientSecuSettingProps.get('editingItem') : null;
+
+        let title = "";
         if(dialogType === ClientSecuSettingDialog.TYPE_ADD) {
             title = "단말보안정책설정 등록";
         } else if(dialogType === ClientSecuSettingDialog.TYPE_VIEW) {
@@ -182,6 +165,8 @@ class ClientSecuSettingDialog extends Component {
         }
 
         return (
+            <div>
+            {(ClientSecuSettingProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientSecuSettingProps.dialogOpen}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
@@ -189,7 +174,7 @@ class ClientSecuSettingDialog extends Component {
                     <TextField
                         id="objNm"
                         label="이름"
-                        value={(editingViewItem) ? editingViewItem.objNm : ''}
+                        value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientSecuSettingDialog.TYPE_VIEW)}
@@ -197,7 +182,7 @@ class ClientSecuSettingDialog extends Component {
                     <TextField
                         id="comment"
                         label="설명"
-                        value={(editingViewItem) ? editingViewItem.comment : ''}
+                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === ClientSecuSettingDialog.TYPE_VIEW)}
@@ -220,7 +205,7 @@ class ClientSecuSettingDialog extends Component {
                                     <TextField
                                         label="화면보호기 설정시간(분)"
                                         multiline
-                                        value={(editingViewItem.screenTime) ? editingViewItem.screenTime : ''}
+                                        value={(editingItem.get('screenTime')) ? editingItem.get('screenTime') : ''}
                                         onChange={this.handleValueChange("screenTime")}
                                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                     />
@@ -231,7 +216,7 @@ class ClientSecuSettingDialog extends Component {
                                     <TextField
                                         label="패스워드 변경주기(일)"
                                         multiline
-                                        value={(editingViewItem.passwordTime) ? editingViewItem.passwordTime : ''}
+                                        value={(editingItem.get('passwordTime')) ? editingItem.get('passwordTime') : ''}
                                         onChange={this.handleValueChange("passwordTime")}
                                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                     />
@@ -242,10 +227,10 @@ class ClientSecuSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('packageHandle')} 
-                                        checked={this.checkAllow(editingViewItem.packageHandle)}
+                                        checked={this.checkAllow(editingItem.get('packageHandle'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.packageHandle == 'allow') ? '패키지추가/삭제 기능차단' : '패키지추가/삭제 기능사용'}
+                                    label={(editingItem.get('packageHandle') == 'allow') ? '패키지추가/삭제 기능차단' : '패키지추가/삭제 기능사용'}
                                 />
                             </div>
                             <Divider />
@@ -253,13 +238,12 @@ class ClientSecuSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('state')} 
-                                        checked={this.checkAllow(editingViewItem.state)}
+                                        checked={this.checkAllow(editingItem.get('state'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.state == 'allow') ? '전체네트워크허용' : '전체네트워크차단'}
+                                    label={(editingItem.get('state') == 'allow') ? '전체네트워크허용' : '전체네트워크차단'}
                                 />
                             </div>
-
                         </div>
                     }
                 </form>
@@ -275,6 +259,8 @@ class ClientSecuSettingDialog extends Component {
                 </DialogActions>
                 <GrConfirm />
             </Dialog>
+            }
+            </div>
         );
     }
 

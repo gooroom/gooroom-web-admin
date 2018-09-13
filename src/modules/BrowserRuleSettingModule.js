@@ -3,31 +3,31 @@ import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-const COMMON_PENDING = 'mediaControlSetting/COMMON_PENDING';
-const COMMON_FAILURE = 'mediaControlSetting/COMMON_FAILURE';
+const COMMON_PENDING = 'browserRule/COMMON_PENDING';
+const COMMON_FAILURE = 'browserRule/COMMON_FAILURE';
 
-const GET_BROWSERRULE_LIST_SUCCESS = 'mediaControlSetting/GET_LIST_SUCCESS';
-const GET_BROWSERRULE_SUCCESS = 'mediaControlSetting/GET_BROWSERRULE_SUCCESS';
-const CREATE_BROWSERRULE_SUCCESS = 'mediaControlSetting/CREATE_BROWSERRULE_SUCCESS';
-const EDIT_BROWSERRULE_SUCCESS = 'mediaControlSetting/EDIT_BROWSERRULE_SUCCESS';
-const DELETE_BROWSERRULE_SUCCESS = 'mediaControlSetting/DELETE_BROWSERRULE_SUCCESS';
+const GET_BROWSERRULE_LIST_SUCCESS = 'browserRule/GET_BROWSERRULE_LIST_SUCCESS';
+const GET_BROWSERRULE_SUCCESS = 'browserRule/GET_BROWSERRULE_SUCCESS';
+const CREATE_BROWSERRULE_SUCCESS = 'browserRule/CREATE_BROWSERRULE_SUCCESS';
+const EDIT_BROWSERRULE_SUCCESS = 'browserRule/EDIT_BROWSERRULE_SUCCESS';
+const DELETE_BROWSERRULE_SUCCESS = 'browserRule/DELETE_BROWSERRULE_SUCCESS';
 
-const SHOW_BROWSERRULE_INFORM = 'mediaControlSetting/SHOW_BROWSERRULE_INFORM';
-const CLOSE_BROWSERRULE_INFORM = 'mediaControlSetting/CLOSE_BROWSERRULE_INFORM';
-const SHOW_BROWSERRULE_DIALOG = 'mediaControlSetting/SHOW_BROWSERRULE_DIALOG';
-const CLOSE_BROWSERRULE_DIALOG = 'mediaControlSetting/CLOSE_BROWSERRULE_DIALOG';
+const SHOW_BROWSERRULE_INFORM = 'browserRule/SHOW_BROWSERRULE_INFORM';
+const CLOSE_BROWSERRULE_INFORM = 'browserRule/CLOSE_BROWSERRULE_INFORM';
+const SHOW_BROWSERRULE_DIALOG = 'browserRule/SHOW_BROWSERRULE_DIALOG';
+const CLOSE_BROWSERRULE_DIALOG = 'browserRule/CLOSE_BROWSERRULE_DIALOG';
 
-const SET_EDITING_ITEM_VALUE = 'mediaControlSetting/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_ITEM_VALUE = 'browserRule/SET_EDITING_ITEM_VALUE';
 
-const CHG_LISTPARAM_DATA = 'mediaControlSetting/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'mediaControlSetting/CHG_COMPVARIABLE_DATA';
+const CHG_LISTPARAM_DATA = 'browserRule/CHG_LISTPARAM_DATA';
+const CHG_COMPVARIABLE_DATA = 'browserRule/CHG_COMPVARIABLE_DATA';
 
-const CHG_VIEWITEM_DATA = 'mediaControlSetting/CHG_VIEWITEM_DATA';
-const CHG_STORE_DATA = 'mediaControlSetting/CHG_STORE_DATA';
+const CHG_VIEWITEM_DATA = 'browserRule/CHG_VIEWITEM_DATA';
+const CHG_STORE_DATA = 'browserRule/CHG_STORE_DATA';
 
-const SET_WHITELIST_ITEM = 'mediaControlSetting/SET_WHITELIST_ITEM';
-const ADD_WHITELIST_ITEM = 'mediaControlSetting/ADD_WHITELIST_ITEM';
-const DELETE_WHITELIST_ITEM = 'mediaControlSetting/DELETE_WHITELIST_ITEM';
+const SET_WHITELIST_ITEM = 'browserRule/SET_WHITELIST_ITEM';
+const ADD_WHITELIST_ITEM = 'browserRule/ADD_WHITELIST_ITEM';
+const DELETE_WHITELIST_ITEM = 'browserRule/DELETE_WHITELIST_ITEM';
 
 
 // ...
@@ -233,7 +233,7 @@ export const editBrowserRuleSettingData = (itemObj) => dispatch => {
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };

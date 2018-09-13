@@ -126,7 +126,7 @@ export const createViewObject = (param) => {
       } else if(ename == 'untrustSetupId') {
         untrustSetupId = evalue;
       } else if(ename == 'trust') {
-        ntpAddress.push(evalue);
+        trustUrlList.push(evalue);
       }
     });
 
