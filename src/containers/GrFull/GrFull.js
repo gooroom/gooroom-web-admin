@@ -17,6 +17,17 @@ import GrRouters from "containers/GrContent/";
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
+const theme = createMuiTheme({
+  overrides: {
+    // Name of the component ⚛️ / style sheet
+    MuiButton: {
+      // Name of the rule
+      sizeSmall: {
+        padding: 0
+      },
+    },
+  },
+});
 
 class Full extends Component {
 
@@ -41,7 +52,7 @@ class Full extends Component {
     const { classes } = this.props;
 
     return (
-
+      <MuiThemeProvider theme={theme}>
       <div>
         <CssBaseline />
           <div className={classes.fullRoot} >
@@ -59,6 +70,7 @@ class Full extends Component {
             </div>
           </div>
       </div>
+      </MuiThemeProvider>
 
     );
   }
