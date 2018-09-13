@@ -81,7 +81,8 @@ export const GrCommonStyle = theme => ({
 
     // MENU Header
     menuHeaderRoot: {
-        paddingBottom: 0
+        paddingBottom: 0,
+        marginBottom: 20
     },
 
     // MENU Body

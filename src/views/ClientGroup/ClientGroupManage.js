@@ -157,7 +157,7 @@ class ClientGroupManage extends Component {
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { ClientGroupProps, ClientGroupActions, GrConfirmActions } = this.props;
+    const { ClientGroupProps, GrConfirmActions } = this.props;
     const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     GrConfirmActions.showConfirm({
       confirmTitle: '단말그룹 삭제',
@@ -213,21 +213,12 @@ class ClientGroupManage extends Component {
 
               <Grid item xs={6} >
                 <FormControl fullWidth={true}>
-                  <TextField
-                    id='keyword'
-                    label='검색어'
-                    onChange={this.handleKeywordChange('keyword')}
-                  />
+                  <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
                 </FormControl>
               </Grid>
 
               <Grid item xs={6} >
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={ () => this.handleSelectBtnClick() }
-                >
+                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
                   <Search />
                   조회
                 </Button>
@@ -236,10 +227,7 @@ class ClientGroupManage extends Component {
             </Grid>
 
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
+              <Button size="small" variant="contained" color="primary"
                 onClick={() => {
                   this.handleCreateButton();
                 }}

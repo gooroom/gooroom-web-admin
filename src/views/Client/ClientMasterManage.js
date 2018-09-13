@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Map, List } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -12,21 +14,26 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
+import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import Grid from '@material-ui/core/Grid';
 
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
 import ClientManageComp from 'views/Client/ClientManageComp';
 import ClientManageInform from 'views/Client/ClientManageInform';
 
 import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
 import ClientGroupInform from 'views/ClientGroup/ClientGroupInform';
+import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
 
 import Card from "@material-ui/core/Card";
 
@@ -58,19 +65,19 @@ class ClientMasterManage extends Component {
     const { ClientMasterManageActions, ClientGroupActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
 
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
 
     ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, {
       groupId: selectedGroupIdArray.join(','), 
       page: 0,
-      compId: menuCompId
+      compId: compId
     }));
 
     // show group info.
     if(selectedGroupObj !== '') {
       ClientMasterManageActions.closeClientManageInform();
       ClientGroupActions.setSelectedItemObj({
-        compId: menuCompId,
+        compId: compId,
         selectedItem: selectedGroupObj
       });
 
@@ -84,10 +91,10 @@ class ClientMasterManage extends Component {
     const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
     const { ClientGroupCompProps, ClientGroupActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId; 
+    const compId = this.props.match.params.grMenuId; 
 
     // show client list
-    ClientManageCompActions.readClientList(ClientManageCompProps, menuCompId, {
+    ClientManageCompActions.readClientList(ClientManageCompProps, compId, {
       groupId: selectedGroupIdArray.join(','), 
       page:0
     }, true);
@@ -95,10 +102,10 @@ class ClientMasterManage extends Component {
     // show client group info.
     if(selectedGroupObj) {
       ClientManageCompActions.closeClientManageInform({
-        compId: menuCompId
+        compId: compId
       });
       ClientGroupActions.showClientGroupInform({
-        compId: menuCompId,
+        compId: compId,
         selectedItem: selectedGroupObj,
       });
     }
@@ -109,25 +116,63 @@ class ClientMasterManage extends Component {
     const { ClientMasterManageProps, ClientMasterManageActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
     const { ClientGroupActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
 
     // show client info.
     if(selectedClientObj) {
       ClientGroupActions.closeClientGroupInform({
-        compId: menuCompId
+        compId: compId
       });
       ClientManageCompActions.showClientManageInform({
-        compId: menuCompId,
+        compId: compId,
         selectedItem: selectedClientObj,
       });
     }
   };
 
+  // CLIENT GROUP COMPONENT
+  // add client group
+  handleClientGroupCreateButton = () => {
+    this.props.ClientGroupActions.showDialog({
+      selectedItem: Map(),
+      dialogType: ClientGroupDialog.TYPE_ADD
+    });
+  }
+
+  isClientGroupRemovable = () => {
+    const selectedIds = getDataObjectVariableInComp(this.props.ClientGroupCompProps, this.props.match.params.grMenuId, 'selectedIds');
+    return !(selectedIds && selectedIds.size > 0);
+  }
+
+  handleClientGroupDeleteButton = () => {
+
+  }
+
+  // CLIENT COMPONENT
+  // add client group
+  handleClientGroupCreateButton = () => {
+    this.props.ClientGroupActions.showDialog({
+      selectedItem: Map(),
+      dialogType: ClientGroupDialog.TYPE_ADD
+    });
+  }
+
+  isClientRemovable = () => {
+    const selectedIds = getDataObjectVariableInComp(this.props.ClientManageCompProps, this.props.match.params.grMenuId, 'selectedIds');
+    return !(selectedIds && selectedIds.size > 0);
+  }
+
+  handleClientDeleteButton = () => {
+    
+  }
+
+
+
   render() {
     const { classes } = this.props;
     const { ClientMasterManageProps, ClientGroupCompProps, ClientManageCompProps } = this.props;
 
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
     const { isGroupInformOpen, isClientInformOpen } = ClientMasterManageProps;
 
     return (
@@ -139,34 +184,39 @@ class ClientMasterManage extends Component {
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
             
               <Grid item xs={6}>
-                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹등록</Button>
-                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹삭제</Button>
-                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() }>그룹정책변경</Button>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
+                  
+                <Button size="small" variant="contained" color="primary" onClick={() => {this.handleClientGroupCreateButton();}} >
+                  <AddIcon />
+                  등록
+                </Button>
+                <Button size="small" variant="contained" color="primary" onClick={() => {this.handleClientGroupDeleteButton();}} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
+                  <RemoveIcon />
+                  삭제
+                </Button>
               </Grid>
             </Grid>
-
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
-              <Button size="small" variant="outlined" color="primary" onClick={ () => this.handleSelectBtnClick() }>조회</Button>
-            </Grid>
+              <Button size="small" variant="contained" color="primary" onClick={() => {this.handleClientDeleteButton();}} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}} >
+                <RemoveIcon />
+                삭제
+              </Button>
           </Grid>
-
+          </Grid>
+          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+          &nbsp;
+          </Grid>
           <Grid container spacing={24} style={{border:"0px solid red",minWidth:"990px"}}>
             <Grid item xs={4} sm={3}>
-              <Card style={{minWidth:"240px",boxShadow:"2px 2px 8px blue"}}>
-                <ClientGroupComp compId={menuCompId}
+              <Card style={{minWidth:"240px",boxShadow:"0px"}}>
+                <ClientGroupComp compId={compId}
                   onSelectAll={this.handleClientGroupSelectAll}
                   onSelect={this.handleClientGroupSelect}
                 />
               </Card>
             </Grid>
             <Grid item xs>
-              <Card style={{minWidth:"710px",boxShadow:"2px 2px 8px green"}}>
-                <ClientManageComp compId={menuCompId}
+              <Card style={{minWidth:"710px",boxShadow:"0px"}}>
+                <ClientManageComp compId={compId}
                 onSelectAll={this.handleClientSelectAll}
                 onSelect={this.handleClientSelect}
                 />
@@ -186,8 +236,10 @@ class ClientMasterManage extends Component {
             </Grid>
           </Grid>
           
-          <ClientGroupInform compId={menuCompId} onSelect={this.handleClientGroupSelect} />
-          <ClientManageInform compId={menuCompId} onSelect={this.handleClientSelect}  />
+          <ClientGroupInform compId={compId} onSelect={this.handleClientGroupSelect} />
+          <ClientManageInform compId={compId} onSelect={this.handleClientSelect}  />
+          <ClientGroupDialog compId={compId} />
+          <GrConfirm />
           
         </GrPane>
       </React.Fragment>
