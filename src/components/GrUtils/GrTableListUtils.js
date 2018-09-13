@@ -17,7 +17,9 @@ export const getDataObjectVariableInComp = (propObj, compId, name) => {
         const viewItem = propObj.get('viewItems').find((element) => {
             return element.get('_COMPID_') == compId;
         });
-        return viewItem.get(name);
+        if(viewItem) {
+            return viewItem.get(name);
+        }
     } else {
         return null;
     }
