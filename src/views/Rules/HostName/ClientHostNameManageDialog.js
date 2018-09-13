@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -51,83 +52,67 @@ class ClientHostNameManageDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientHostNameProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: 'Hosts 정보 등록',
             confirmMsg: 'Hosts 정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientHostNameProps.editingItem
+            confirmObject: ClientHostNameProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientHostNameProps, ClientHostNameActions } = this.props;
-            ClientHostNameActions.createClientHostNameData(ClientHostNameProps.editingItem)
+            ClientHostNameActions.createClientHostNameData(ClientHostNameProps.get('editingItem'))
                 .then((res) => {
-                    const { viewItems } = ClientHostNameProps;
+                    const viewItems = ClientHostNameProps.get('viewItems');
                     if(viewItems) {
                         viewItems.forEach((element) => {
-                            if(element && element.listParam) {
-                                ClientHostNameActions.readClientHostNameList(getMergedObject(element.listParam, {
-                                    compId: element._COMPID_
-                                }));
+                            if(element && element.get('listParam')) {
+                                ClientHostNameActions.readClientHostNameList(ClientHostNameProps, element.get('_COMPID_'), {});
                             }
                         });
                     }
                     this.handleClose();
-                }, (res) => {
-            })
+                });
         }
     }
 
-    handleEditData = (event) => {
+    handleEditData = (event, id) => {
         const { ClientHostNameProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: 'Hosts 정보 수정',
             confirmMsg: 'Hosts 정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientHostNameProps.editingItem
-          });
+            confirmObject: ClientHostNameProps.get('editingItem')
+        });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientHostNameProps, ClientHostNameActions } = this.props;
-            ClientHostNameActions.editClientHostNameData(ClientHostNameProps.editingItem)
+            ClientHostNameActions.editClientHostNameData(ClientHostNameProps.get('editingItem'))
                 .then((res) => {
-
-                    const { editingCompId, viewItems } = ClientHostNameProps;
+                    const viewItems = ClientHostNameProps.get('viewItems');
                     viewItems.forEach((element) => {
-                        if(element && element.listParam) {
-                            ClientHostNameActions.readClientHostNameList(getMergedObject(element.listParam, {
-                                compId: element._COMPID_
-                            }));
+                        if(element && element.get('listParam')) {
+                            ClientHostNameActions.readClientHostNameList(ClientHostNameProps, element.get('_COMPID_'), {});
                         }
                     });
-
-                    // 아래 정보 조회는 효과 없음. - 보여줄 인폼 객체가 안보이는 상태임.
-                    ClientHostNameActions.getClientHostName({
-                        compId: editingCompId,
-                        objId: paramObject.objId
-                    });
-
-                this.handleClose();
-            }, (res) => {
-
-            })
+                    this.handleClose();
+                });
         }
     }
 
     render() {
         const { classes } = this.props;
-        const { ClientHostNameProps } = this.props;
-        const { dialogType, editingItem } = ClientHostNameProps;
-
-        const editingViewItem = editingItem;
-
-        let title = "";
         const bull = <span className={classes.bullet}>•</span>;
 
+        const { ClientHostNameProps } = this.props;
+        const dialogType = ClientHostNameProps.get('dialogType');
+        const editingItem = (ClientHostNameProps.get('editingItem')) ? ClientHostNameProps.get('editingItem') : null;
+
+        let title = "";
         if(dialogType === ClientHostNameManageDialog.TYPE_ADD) {
             title = "Hosts정책 등록";
         } else if(dialogType === ClientHostNameManageDialog.TYPE_VIEW) {
@@ -137,20 +122,23 @@ class ClientHostNameManageDialog extends Component {
         }
 
         return (
-            <Dialog open={ClientHostNameProps.dialogOpen}>
+            <div>
+            {(ClientHostNameProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={ClientHostNameProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
-
                     <TextField
+                        id="objNm"
                         label="이름"
-                        value={(editingViewItem) ? editingViewItem.objNm : ''}
+                        value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientHostNameManageDialog.TYPE_VIEW)}
                     />
                     <TextField
+                        id="comment"
                         label="설명"
-                        value={(editingViewItem) ? editingViewItem.comment : ''}
+                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === ClientHostNameManageDialog.TYPE_VIEW)}
@@ -160,7 +148,7 @@ class ClientHostNameManageDialog extends Component {
                             <TextField
                                 label="Hosts 정보"
                                 multiline
-                                value={(editingViewItem.hosts) ? editingViewItem.hosts : ''}
+                                value={(editingItem.get('hosts')) ? editingItem.get('hosts') : ''}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
@@ -171,7 +159,7 @@ class ClientHostNameManageDialog extends Component {
                             <TextField
                                 label="Hosts 정보"
                                 multiline
-                                value={(editingViewItem.hosts) ? editingViewItem.hosts : ''}
+                                value={editingItem.get('hosts')}
                                 onChange={this.handleValueChange("hosts")}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
@@ -190,6 +178,8 @@ class ClientHostNameManageDialog extends Component {
                 </DialogActions>
                 <GrConfirm />
             </Dialog>
+            }
+            </div>
         );
     }
 

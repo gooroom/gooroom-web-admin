@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { Map, List, fromJS } from 'immutable';
 
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 const COMMON_PENDING = 'clientHostName/COMMON_PENDING';
 const COMMON_FAILURE = 'clientHostName/COMMON_FAILURE';
@@ -13,101 +13,115 @@ const EDIT_HOSTNAME_SUCCESS = 'clientHostName/EDIT_HOSTNAME_SUCCESS';
 const DELETE_HOSTNAME_SUCCESS = 'clientHostName/DELETE_HOSTNAME_SUCCESS';
 
 const SHOW_HOSTNAME_INFORM = 'clientHostName/SHOW_HOSTNAME_INFORM';
+const CLOSE_HOSTNAME_INFORM = 'clientHostName/CLOSE_HOSTNAME_INFORM';
 const SHOW_HOSTNAME_DIALOG = 'clientHostName/SHOW_HOSTNAME_DIALOG';
+const CLOSE_HOSTNAME_DIALOG = 'clientHostName/CLOSE_HOSTNAME_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'clientHostName/SET_EDITING_ITEM_VALUE';
 
-const CHG_VIEWITEM_DATA = 'clientHostName/CHG_VIEWITEM_DATA';
-const CHG_STORE_DATA = 'clientHostName/CHG_STORE_DATA';
+const CHG_LISTPARAM_DATA = 'clientConfSetting/CHG_LISTPARAM_DATA';
+const CHG_COMPVARIABLE_DATA = 'clientConfSetting/CHG_COMPVARIABLE_DATA';
 
 // ...
-const initialState = {
+const initialState = Map({
     pending: false,
     error: false,
     resultMsg: '',
 
-    defaultListParam: {
+    defaultListParam: Map({
         keyword: '',
         orderDir: 'desc',
         orderColumn: 'chConfId',
         page: 0,
         rowsPerPage: 10,
-        rowsPerPageOptions: [5, 10, 25],
+        rowsPerPageOptions: List([5, 10, 25]),
         rowsTotal: 0,
         rowsFiltered: 0
-    },
+    }),
 
-    informOpen: false,
     dialogOpen: false,
     dialogType: '',
-
-};
+});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_HOSTNAME_DIALOG,
-        payload: param
+        selectedItem: param.selectedItem,
+        dialogType: param.dialogType
     });
 };
 
 export const closeDialog = () => dispatch => {
     return dispatch({
-        type: CHG_STORE_DATA,
-        payload: {name:"dialogOpen",value:false}
+        type: CLOSE_HOSTNAME_DIALOG
     });
 };
 
 export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_HOSTNAME_INFORM,
-        payload: param
+        compId: param.compId,
+        selectedItem: param.selectedItem
     });
 };
 
-export const closeInform = () => dispatch => {
+export const closeInform = (param) => dispatch => {
     return dispatch({
-        type: CHG_STORE_DATA,
-        payload: {name:"informOpen", value:false}
+        type: CLOSE_HOSTNAME_INFORM,
+        compId: param.compId
     });
 };
 
 // ...
-export const readClientHostNameList = (param) => dispatch => {    
-    const resetParam = {
-        keyword: param.keyword,
-        page: param.page,
-        start: param.page * param.rowsPerPage,
-        length: param.rowsPerPage,
-        orderColumn: param.orderColumn,
-        orderDir: param.orderDir
-    };
+export const readClientHostNameList = (module, compId, extParam) => dispatch => {let newListParam;
+    
+    if(module.get('viewItems')) {
+        const viewIndex = module.get('viewItems').findIndex((e) => {
+            return e.get('_COMPID_') == compId;
+        });
+        if(viewIndex < 0) {
+            newListParam = module.get('defaultListParam');
+        } else {
+            newListParam = module.getIn(['viewItems', viewIndex, 'listParam']).merge(extParam);
+        }
+    } else {
+        newListParam = module.get('defaultListParam');
+    }
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readHostNameConfListPaged', resetParam).then(
+    return requestPostAPI('readHostNameConfListPaged', {
+        keyword: newListParam.get('keyword'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
+    }).then(
         (response) => {
             dispatch({
                 type: GET_HOSTNAME_LIST_SUCCESS,
-                compId: param.compId,
-                payload: response
+                compId: compId,
+                listParam: newListParam,
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
 
 export const getClientHostName = (param) => dispatch => {
-
+    const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readHostNameConf', param).then(
+    return requestPostAPI('readHostNameConf', {'objId': param.objId}).then(
         (response) => {
             dispatch({
                 type: GET_HOSTNAME_SUCCESS,
-                compId: param.compId,
-                payload: response
+                compId: compId,
+                response: response
             });
         }
     ).catch(error => {
@@ -121,63 +135,89 @@ export const getClientHostName = (param) => dispatch => {
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,
-        payload: param
+        name: param.name,
+        value: param.value
     });
 };
 
-export const changeStoreData = (param) => dispatch => {
+export const changeListParamData = (param) => dispatch => {
     return dispatch({
-        type: CHG_VIEWITEM_DATA,
-        payload: param
+        type: CHG_LISTPARAM_DATA,
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
-const makeParameter = (param) => {
+export const changeCompVariable = (param) => dispatch => {
+    return dispatch({
+        type: CHG_COMPVARIABLE_DATA,
+        compId: param.compId,
+        name: param.name,
+        value: param.value
+    });
+};
+
+const makeParameter = (itemObj) => {
     return {
-        objId: param.objId,
-        objName: param.objNm,
-        objComment: param.comment,
-        HOSTS: param.hosts
+        objId: itemObj.get('objId'),
+        objName: itemObj.get('objNm'),
+        objComment: itemObj.get('comment'),
+        HOSTS: itemObj.get('hosts')
     };
 }
 
 // create (add)
-export const createClientHostNameData = (param) => dispatch => {
+export const createClientHostNameData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createHostNameConf', makeParameter(param)).then(
+    return requestPostAPI('createHostNameConf', makeParameter(itemObj)).then(
         (response) => {
             try {
-                if(response.data.status.result === 'success') {
+                if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_HOSTNAME_SUCCESS,
-                        payload: response
+                        type: CREATE_HOSTNAME_SUCCESS
                     });
                 }    
             } catch(ex) {
                 dispatch({
                     type: COMMON_FAILURE,
-                    payload: response
+                    ex: ex
                 });
             }
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 
 };
 
 // edit
-export const editClientHostNameData = (param) => dispatch => {
+export const editClientHostNameData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateHostNameConf', makeParameter(param)).then(
+    return requestPostAPI('updateHostNameConf', makeParameter(itemObj)).then(
         (response) => {
-            dispatch({
-                type: EDIT_HOSTNAME_SUCCESS,
-                payload: response
-            });
+            if(response && response.data && response.data.status && response.data.status.result == 'success') {
+                // alarm ... success
+                requestPostAPI('readHostNameConf', {'objId': itemObj.get('objId')}).then(
+                    (response) => {
+                        dispatch({
+                            type: EDIT_HOSTNAME_SUCCESS,
+                            objId: itemObj.get('objId'),
+                            response: response
+                        });
+                    }
+                ).catch(error => {
+                });
+            } else {
+                // alarm ... fail
+                dispatch({
+                    type: COMMON_FAILURE,
+                    error: error
+                });
+            }
         }
     ).catch(error => {
         dispatch({
@@ -190,254 +230,218 @@ export const editClientHostNameData = (param) => dispatch => {
 // delete
 export const deleteClientHostNameData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteHostNameConf', param).then(
+    return requestPostAPI('deleteHostNameConf', {'objId': param.objId}).then(
         (response) => {
             dispatch({
                 type: DELETE_HOSTNAME_SUCCESS,
-                payload: response
+                compId: param.compId,
+                objId: param.objId
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
 
-
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
+        return state.merge({
+            pending: true, 
             error: false
-        };
+        });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
+        return state.merge({
+            pending: false, 
             error: true,
-            resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
-        };
+            resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
+            ex: (action.ex) ? action.ex : ''
+        });
     },
 
     [GET_HOSTNAME_LIST_SUCCESS]: (state, action) => {
+        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
 
-        let COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
-        const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-
-        let oldViewItems = [];
-        if(state.viewItems) {
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
+        if(state.get('viewItems')) {
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
             });
-            if(viewItem) {
-                Object.assign(viewItem, {
-                    'listData': data,
-                    'listParam': Object.assign({}, viewItem.listParam, {
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10)
-                    })
-                });
-            } else {
-                // 현재 콤프아이디로 데이타 없음. -> 추가 함
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    'listData': data,
-                    'listParam': {
-                        keyword: '',
-                        orderDir: 'desc',
-                        orderColumn: 'chConfId',
-                        rowsPerPageOptions: [5, 10, 25],
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10)
-                    }
-                }));
-            }
-        } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                'listData': data,
-                'listParam': Object.assign({}, state.defaultListParam, {
+            if(viewIndex > -1) {
+                const newListParam = state.getIn(['viewItems', viewIndex, 'listParam']).merge({
                     rowsFiltered: parseInt(recordsFiltered, 10),
                     rowsTotal: parseInt(recordsTotal, 10),
                     page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10)
+                    rowsPerPage: parseInt(rowLength, 10),
+                    orderColumn: orderColumn,
+                    orderDir: orderDir
+                });
+                return state
+                        .setIn(['viewItems', viewIndex, 'listData'], List(data.map((e) => {return Map(e)})))
+                        .setIn(['viewItems', viewIndex, 'listParam'], newListParam);
+            } else {
+                return state.set('viewItems', state.get('viewItems').push(Map({
+                    '_COMPID_': action.compId,
+                    'listData': List(data.map((e) => {return Map(e)})),
+                    'listParam': state.get('defaultListParam').merge({
+                        rowsFiltered: parseInt(recordsFiltered, 10),
+                        rowsTotal: parseInt(recordsTotal, 10),
+                        page: parseInt(draw, 10),
+                        rowsPerPage: parseInt(rowLength, 10),
+                        orderColumn: orderColumn,
+                        orderDir: orderDir
+                    })
+                })));
+            }
+        } else {
+            return state.set('viewItems', List([Map({
+                '_COMPID_': action.compId,
+                'listData': List(data.map((e) => {return Map(e)})),
+                'listParam': state.get('defaultListParam').merge({
+                    rowsFiltered: parseInt(recordsFiltered, 10),
+                    rowsTotal: parseInt(recordsTotal, 10),
+                    page: parseInt(draw, 10),
+                    rowsPerPage: parseInt(rowLength, 10),
+                    orderColumn: orderColumn,
+                    orderDir: orderDir
                 })
-            }));
+            })]));
         }
-        return {
-            ...state,
-            pending: false,
-            error: false,
-            viewItems: oldViewItems
-        };
     },  
     [GET_HOSTNAME_SUCCESS]: (state, action) => {
-        const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
-        const { data } = action.payload.data;
-        let oldViewItems = [];
-
-        if(state.viewItems) {
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
+        const { data } = action.response.data;
+        if(state.get('viewItems')) {
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
             });
 
-            // 이전에 해당 콤프정보가 없으면 신규로 등록
-            if(!viewItem) {
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
+            if(viewIndex < 0) {
+                return state.set('viewItems', state.get('viewItems').push(Map({
+                    '_COMPID_': action.compId,
+                    'informOpen': true,
+                    'selectedItem': fromJS(data[0])
+                })));
+            } else {
+                return state
+                    .setIn(['viewItems', viewIndex, 'selectedItem'], fromJS(data[0]))
+                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
             }
-
-            // 같은 오브젝트를 가지고 있는 콤프정보들을 모두 변경 한다.
-            oldViewItems = oldViewItems.map((element) => {
-                if(element.selectedItem && (element.selectedItem.objId == data[0].objId)) {
-                    return Object.assign(element, {'selectedItem': data[0]});
-                } else if(element._COMPID_ == COMP_ID) {
-                    return Object.assign(element, {'selectedItem': data[0]});
-                } else {
-                    return element;
-                }
-            });
-
         } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
-        }
-
-        if(data && data.length > 0) {
-            return {
-                ...state,
-                pending: false,
-                error: false,
-                viewItems: oldViewItems
-            };
-        } else {
-            return {
-                ...state,
-                pending: false,
-                error: false,
-                viewItems: oldViewItems
-            };
+            return state.set('viewItems', List([Map({
+                '_COMPID_': action.compId,
+                'selectedItem': fromJS(data[0]),
+                'informOpen': true
+            })]));
         }
     },
     [SHOW_HOSTNAME_DIALOG]: (state, action) => {
-
-        return {
-            ...state,
-            editingItem: Object.assign({}, action.payload.selectedItem),
-            editingCompId: action.payload.compId,
+        return state.merge({
+            editingItem: action.selectedItem,
             dialogOpen: true,
-            dialogType: action.payload.dialogType,
-        };
+            dialogType: action.dialogType
+        });
+    },
+    [CLOSE_HOSTNAME_DIALOG]: (state, action) => {
+        return state.merge({
+            dialogOpen: false,
+            dialogType: ''
+        });
     },
     [SHOW_HOSTNAME_INFORM]: (state, action) => {
-
-        const COMP_ID = action.payload.compId;
-        let oldViewItems = [];
-        if(state.viewItems) {
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
+        if(state.get('viewItems')) {
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
             });
-            if(viewItem) {
-                Object.assign(viewItem, {
-                    'selectedItem': action.payload.selectedItem
-                });
+            if(viewIndex < 0) {
+                return state.set('viewItems', state.get('viewItems').push(Map({
+                    '_COMPID_': action.compId,
+                    'informOpen': true,
+                    'selectedItem': action.selectedItem
+                })));
             } else {
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    'selectedItem': action.payload.selectedItem
-                }));
+                return state
+                    .setIn(['viewItems', viewIndex, 'selectedItem'], action.selectedItem)
+                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
             }
         } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                'selectedItem': action.payload.selectedItem
-            }));
+            // no occure this event
         }
-
-        return {
-            ...state,
-            viewItems: oldViewItems,
-            informOpen: true,
-        };
+        return state;
+    },
+    [CLOSE_HOSTNAME_INFORM]: (state, action) => {
+        if(state.get('viewItems')) {
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
+            });
+            return state
+                    .setIn(['viewItems', viewIndex, 'informOpen'], false)
+                    .deleteIn(['viewItems', viewIndex, 'selectedItem'])
+        }
+        return state;
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
-        const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
+        return state.merge({
+            editingItem: state.get('editingItem').merge({[action.name]: action.value})
+        });
     },
-    [CHG_STORE_DATA]: (state, action) => {
-        return {
-            ...state,
-            [action.payload.name]: action.payload.value
-        }
+    [CHG_LISTPARAM_DATA]: (state, action) => {
+        const viewIndex = state.get('viewItems').findIndex((e) => {
+            return e.get('_COMPID_') == action.compId;
+        });
+        return state.setIn(['viewItems', viewIndex, 'listParam', action.name], action.value);
     },
-    [CHG_VIEWITEM_DATA]: (state, action) => {
-
-        const COMP_ID = action.payload.compId;
-
-        let oldViewItems = [];
-        if(state.viewItems) {
-            oldViewItems = state.viewItems;
-            const viewItem = oldViewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
-            });
-            
-            if(viewItem) {
-                Object.assign(viewItem, {
-                    [action.payload.name]: action.payload.value
-                });
-            } else {
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    [action.payload.name]: action.payload.value
-                }));
-            }
-
-        } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                [action.payload.name]: action.payload.value
-            }));
-        }
-
-        return {
-            ...state,
-            viewItems: oldViewItems
-        }
+    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+        const viewIndex = state.get('viewItems').findIndex((e) => {
+            return e.get('_COMPID_') == action.compId;
+        });
+        return state.setIn(['viewItems', viewIndex, action.name], action.value);
     },
-
     [CREATE_HOSTNAME_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             pending: false,
-            error: false,
-        };
+            error: false
+        });
     },
     [EDIT_HOSTNAME_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                if(e.get('selectedItem')) {
+                    if(e.getIn(['selectedItem', 'objId']) == action.objId) {
+                        // replace
+                        newState = newState.setIn(['viewItems', i, 'selectedItem'], fromJS(action.response.data.data[0]));
+                    }
+                }
+            });
+        }
+        return state.merge(newState).merge({
             pending: false,
             error: false,
-            informOpen: false,
             dialogOpen: false,
             dialogType: ''
-        };
+        });
     },
     [DELETE_HOSTNAME_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                if(e.get('selectedItem')) {
+                    if(e.getIn(['selectedItem', 'objId']) == action.objId) {
+                        // replace
+                        newState = newState.deleteIn(['viewItems', i, 'selectedItem']);
+                    }
+                }
+            });
+        }
+        return state.merge(newState).merge({
             pending: false,
             error: false,
-            informOpen: false,
             dialogOpen: false,
             dialogType: ''
-        };
+        });
     }
 
 }, initialState);

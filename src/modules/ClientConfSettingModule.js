@@ -77,7 +77,6 @@ export const closeInform = (param) => dispatch => {
 };
 
 export const readClientConfSettingList = (module, compId, extParam) => dispatch => {
-    
     let newListParam;
     if(module.get('viewItems')) {
         const viewIndex = module.get('viewItems').findIndex((e) => {
@@ -201,18 +200,18 @@ export const createClientConfSettingData = (param) => dispatch => {
 };
 
 // edit
-export const editClientConfSettingData = (param) => dispatch => {
+export const editClientConfSettingData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateClientConf', makeParameter(param)).then(
+    return requestPostAPI('updateClientConf', makeParameter(itemObj)).then(
         (response) => {
 
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
-                requestPostAPI('readClientConf', {'objId': param.get('objId')}).then(
+                requestPostAPI('readClientConf', {'objId': itemObj.get('objId')}).then(
                     (response) => {
                         dispatch({
                             type: EDIT_CONFSETTING_SUCCESS,
-                            objId: param.get('objId'),
+                            objId: itemObj.get('objId'),
                             response: response
                         });
                     }
@@ -237,7 +236,7 @@ export const editClientConfSettingData = (param) => dispatch => {
 // delete
 export const deleteClientConfSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteClientConf', param).then(
+    return requestPostAPI('deleteClientConf', {'objId': param.objId}).then(
         (response) => {
             dispatch({
                 type: DELETE_CONFSETTING_SUCCESS,
@@ -273,7 +272,6 @@ export const setSelectedNtpValue = (param) => dispatch => {
         value: param.value
     });
 };
-
 
 export default handleActions({
 

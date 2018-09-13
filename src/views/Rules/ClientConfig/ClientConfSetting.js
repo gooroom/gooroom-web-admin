@@ -111,10 +111,10 @@ class ClientConfSetting extends Component {
   }
   
   handleRowClick = (event, id) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
+    const compId = this.props.match.params.grMenuId;
 
-    const selectedItem = getRowObjectById(ClientConfSettingProps, menuCompId, id, 'objId');
+    const selectedItem = getRowObjectById(ClientConfSettingProps, compId, id, 'objId');
 
     // choice one from two views.
 
@@ -126,7 +126,7 @@ class ClientConfSetting extends Component {
 
     // 2. view detail content
     ClientConfSettingActions.showInform({
-      compId: menuCompId,
+      compId: compId,
       selectedItem: selectedItem
     });
     
@@ -151,7 +151,7 @@ class ClientConfSetting extends Component {
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { ClientConfSettingProps, ClientConfSettingActions, GrConfirmActions } = this.props;
+    const { ClientConfSettingProps, GrConfirmActions } = this.props;
     const selectedItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
@@ -164,11 +164,10 @@ class ClientConfSetting extends Component {
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
     if(confirmValue) {
       const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-      const menuCompId = this.props.match.params.grMenuId;
 
       ClientConfSettingActions.deleteClientConfSettingData({
         objId: confirmObject.get('objId'),
-        compId: menuCompId
+        compId: this.props.match.params.grMenuId
       }).then((res) => {
         const viewItems = ClientConfSettingProps.get('viewItems');
         viewItems.forEach((element) => {
@@ -181,13 +180,12 @@ class ClientConfSetting extends Component {
   };
 
   // .................................................
-
   render() {
     const { classes } = this.props;
     const { ClientConfSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientConfSettingProps.listParam.rowsPerPage - ClientConfSettingProps.listData.length;
-    const listObj = getDataObjectInComp(ClientConfSettingProps, menuCompId);
+    const listObj = getDataObjectInComp(ClientConfSettingProps, compId);
 
     return (
       <div>
@@ -246,19 +244,15 @@ class ClientConfSetting extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('odUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
 
-                        <Button color="secondary" size="small" 
-                          className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditClick(event, n.get('objId'))}>
+                        <Button color="secondary" size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
 
-                        <Button color="secondary" size="small" 
-                          className={classes.buttonInTableRow}
-                          onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
+                        <Button color="secondary" size="small" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>                        
 
@@ -269,10 +263,7 @@ class ClientConfSetting extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell
-                      colSpan={this.columnHeaders.length + 1}
-                      className={classes.grSmallAndClickCell}
-                    />
+                    <TableCell colSpan={this.columnHeaders.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
@@ -296,8 +287,8 @@ class ClientConfSetting extends Component {
           }
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientConfSettingDialog compId={menuCompId} />
-        <ClientConfSettingInform compId={menuCompId} />
+        <ClientConfSettingInform compId={compId} />
+        <ClientConfSettingDialog compId={compId} />
         <GrConfirm />
       </div>
     );

@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Map, List } from 'immutable';
-
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -46,13 +44,10 @@ class ClientHostNameComp extends Component {
 
   handleEditBtnClick = (param) => {
     const { ClientHostNameActions, ClientHostNameProps, compId } = this.props;
-    const viewItem = ClientHostNameProps.viewItems.find(function(element) {
-      return element._COMPID_ == compId;
-    });
+    const selectedItem = getSelectedObjectInComp(ClientHostNameProps, compId);
 
     ClientHostNameActions.showDialog({
-      compId: compId,
-      selectedItem: createViewObject(viewItem.selectedItem),
+      selectedItem: createViewObject(selectedItem),
       dialogType: ClientHostNameDialog.TYPE_EDIT,
     });
   };
@@ -60,19 +55,11 @@ class ClientHostNameComp extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { ClientHostNameProps, compId } = this.props;
-    const { viewItems } = ClientHostNameProps;
     const bull = <span className={classes.bullet}>•</span>;
-    
-    let viewCompItem = null;
-    if(viewItems) {
-      const viewItem = viewItems.find((element) => {
-        return element._COMPID_ === compId;
-      });
-      if(viewItem) {
-        viewCompItem = createViewObject(viewItem.selectedItem);
-      }
-    }
+
+    const { ClientHostNameProps, compId } = this.props;
+    const viewItem = getDataObjectInComp(ClientHostNameProps, compId);
+    const viewCompItem = createViewObject(viewItem.get('selectedItem'));
 
     return (
       <React.Fragment>
@@ -88,24 +75,24 @@ class ClientHostNameComp extends Component {
               <Grid container justify="flex-end">
                 <Button size="small"
                   variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
+                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'))}
                 ><SettingsApplicationsIcon />수정</Button>
               </Grid>
             </Grid>
           </Grid>
           <Typography variant="headline" component="h2">
-            {viewCompItem.objNm}
+            {viewCompItem.get('objNm')}
           </Typography>
           <Typography color="textSecondary">
-            {(viewCompItem.comment != '') ? '"' + viewCompItem.comment + '"' : ''}
+            {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
           </Typography>
           <Divider />
-          {(viewCompItem && viewCompItem.objId != '') &&
+          {(viewCompItem && viewCompItem.get('objId') != '') &&
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} Host 정보</TableCell>
-                  <TableCell><pre>{viewCompItem.hosts}</pre></TableCell>
+                  <TableCell><pre>{viewCompItem.get('hosts')}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
