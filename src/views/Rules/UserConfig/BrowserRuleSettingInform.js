@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Map, List } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -6,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 
@@ -34,22 +36,23 @@ class BrowserRuleSettingInform extends Component {
   render() {
 
     const { classes } = this.props;
-    const { BrowserRuleSettingProps, compId } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = createViewObject(getSelectedObjectInComp(BrowserRuleSettingProps, compId));
+    const { BrowserRuleSettingProps, compId } = this.props;
+    const viewItem = getDataObjectInComp(BrowserRuleSettingProps, compId);
+    const selectedViewItem = (viewItem.get('selectedItem')) ? createViewObject(viewItem.get('selectedItem')) : null;
 
     return (
       <div>
-      {(BrowserRuleSettingProps.informOpen && selectedViewItem) &&
+      {(viewItem.get('informOpen') && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(selectedViewItem) ? selectedViewItem.objNm : ''}
-            subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
+            title={(selectedViewItem) ? selectedViewItem.get('objNm') : ''}
+            subheader={selectedViewItem.get('objId') + ', ' + formatDateToSimple(selectedViewItem.get('modDate'), 'YYYY-MM-DD')}
           />
           <CardContent>
             <Typography component="pre">
-              "{selectedViewItem.comment}"
+              "{selectedViewItem.get('comment')}"
             </Typography>
             
             <Divider />
@@ -59,23 +62,23 @@ class BrowserRuleSettingInform extends Component {
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} Web Socket 사용</TableCell>
-                  <TableCell numeric>{selectedViewItem.webSocket}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('webSocket')}</TableCell>
                   <TableCell component="th" scope="row">{bull} Web Worker 사용</TableCell>
-                  <TableCell numeric>{selectedViewItem.webWorker}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('webWorker')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{selectedViewItem.trustSetupId}</pre></TableCell>
+                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{selectedViewItem.get('trustSetupId')}</pre></TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 비신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{selectedViewItem.untrustSetupId}</pre></TableCell>
+                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{selectedViewItem.get('untrustSetupId')}</pre></TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} White List</TableCell>
-                  <TableCell colSpan={3} numeric>{selectedViewItem.trustUrlList.map(function(prop, index) {
+                  <TableCell colSpan={3} numeric>{selectedViewItem.get('trustUrlList').map(function(prop, index) {
                     return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
                 </TableRow>
@@ -107,39 +110,38 @@ export const createViewObject = (param) => {
   if(param) {
     let webSocket = '';
     let webWorker = '';
-    
     let trustSetupId = '';
     let untrustSetupId = '';
     let trustUrlList = [];
-    
-    param.propList.forEach(function(e) {
-      if(e.propNm == 'websocket') {
-        webSocket = e.propValue;
-      } else if(e.propNm == 'webworker') {
-        webWorker = e.propValue;
-      } else if(e.propNm == 'trustSetupId') {
-        trustSetupId = e.propValue;
-      } else if(e.propNm == 'untrustSetupId') {
-        untrustSetupId = e.propValue;
-      } else if(e.propNm == 'trust') {
-        trustUrlList.push(e.propValue);
+
+    param.get('propList').forEach(function(e) {
+      const ename = e.get('propNm');
+      const evalue = e.get('propValue');
+      if(ename == 'websocket') {
+        webSocket = evalue;
+      } else if(ename == 'webworker') {
+        webWorker = evalue;
+      } else if(ename == 'trustSetupId') {
+        trustSetupId = evalue;
+      } else if(ename == 'untrustSetupId') {
+        untrustSetupId = evalue;
+      } else if(ename == 'trust') {
+        ntpAddress.push(evalue);
       }
     });
-  
-    return {
-      objId: param.objId,
-      objNm: param.objNm,
-      comment: param.comment,
-      modDate: param.modDate,
-      modUserId: param.modUserId,
 
+  
+    return Map({
+      objId: param.get('objId'),
+      objNm: param.get('objNm'),
+      comment: param.get('comment'),
+      modDate: param.get('modDate'),
       webSocket: webSocket,
       webWorker: webWorker,
       trustSetupId: trustSetupId,
       untrustSetupId: untrustSetupId,
-
-      trustUrlList: trustUrlList
-    };
+      trustUrlList: List(trustUrlList)
+    });
   
   } else {
     return param;

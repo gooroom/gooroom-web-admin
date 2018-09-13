@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Map, List } from 'immutable';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -9,11 +11,14 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject, getListParam, getListData, getViewItem } from 'components/GrUtils/GrCommonUtils';
+import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { createViewObject } from './BrowserRuleSettingInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
+
+import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import BrowserRuleSettingDialog from './BrowserRuleSettingDialog';
 import BrowserRuleSettingInform from './BrowserRuleSettingInform';
@@ -40,15 +45,11 @@ import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
-//  ## Header ########## ########## ########## ########## ########## 
+//  ## Content ########## ########## ########## ########## ########## 
 //
-class BrowserRuleSettingHead extends Component {
+class BrowserRuleSetting extends Component {
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
+  columnHeaders = [
     { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
     { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '정책이름' },
     { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: '정책아이디' },
@@ -56,45 +57,6 @@ class BrowserRuleSettingHead extends Component {
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
-
-  render() {
-    const { classes } = this.props;
-    const { orderDir, orderColumn, } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {BrowserRuleSettingHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
-class BrowserRuleSetting extends Component {
 
   constructor(props) {
     super(props);
@@ -108,46 +70,52 @@ class BrowserRuleSetting extends Component {
     this.handleSelectBtnClick();
   }
 
+  handleChangePage = (event, page) => {
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+      page: page
+    });
+  };
+
+  handleChangeRowsPerPage = event => {
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value,
+      page: 0
+    });
+  };
+  
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    let orderDir = "desc";
+    if (currOrderDir === "desc") {
+      orderDir = "asc";
+    }
+    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId,
+      orderDir: orderDir
+    });
+  };
+
   // .................................................
   handleSelectBtnClick = () => {
     const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
-    BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(listParam, {
-      page: 0,
-      compId: menuCompId
-    }));
+    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId);
   };
-  
-  handleCreateButton = () => {
-    const { BrowserRuleSettingActions } = this.props;
-    BrowserRuleSettingActions.showDialog({
-      selectedItem: {
-        objId: '',
-        objNm: '',
-        comment: '',
 
-        webSocket: 'disallow',
-        webWorker: 'disallow',
-        trustSetupId: '',
-        untrustSetupId: '',
-        trustUrlList: ['']
-      },
-      dialogType: BrowserRuleSettingDialog.TYPE_ADD
+  handleKeywordChange = name => event => {
+    this.props.BrowserRuleSettingActions.changeListParamData({
+      name: 'keyword', 
+      value: event.target.value,
+      compId: this.props.match.params.grMenuId
     });
   }
   
   handleRowClick = (event, id) => {
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    const compId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: BrowserRuleSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
-
-    console.log('selectedItem : ', selectedItem);
+    const selectedItem = getRowObjectById(BrowserRuleSettingProps, compId, id, 'objId');
 
     // choice one from two views.
 
@@ -159,144 +127,66 @@ class BrowserRuleSetting extends Component {
 
     // 2. view detail content
     BrowserRuleSettingActions.showInform({
-      compId: menuCompId,
+      compId: compId,
       selectedItem: selectedItem
     });
     
   };
 
+  handleCreateButton = () => {
+    this.props.BrowserRuleSettingActions.showDialog({
+      selectedItem: Map(),
+      dialogType: BrowserRuleSettingDialog.TYPE_ADD
+    });
+  }
+
   handleEditClick = (event, id) => { 
     const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listData = getListData({ props: BrowserRuleSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
+    const selectedItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     BrowserRuleSettingActions.showDialog({
-      compId: menuCompId,
       selectedItem: createViewObject(selectedItem),
-      dialogType: BrowserRuleSettingDialog.TYPE_EDIT,
+      dialogType: BrowserRuleSettingDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    event.stopPropagation();
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions, GrConfirmActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listData = getListData({ props: BrowserRuleSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
-
-    const re = GrConfirmActions.showConfirm({
-      confirmTitle: '브라우저제어정보 삭제',
-      confirmMsg: '브라우저제어정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+    const { BrowserRuleSettingProps, GrConfirmActions } = this.props;
+    const selectedItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    GrConfirmActions.showConfirm({
+      confirmTitle: '단말정책정보 삭제',
+      confirmMsg: '단말정책정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
-
     if(confirmValue) {
       const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
 
       BrowserRuleSettingActions.deleteBrowserRuleSettingData({
-        objId: paramObject.objId
+        objId: confirmObject.get('objId'),
+        compId: this.props.match.params.grMenuId
       }).then((res) => {
-
-        const { editingCompId, viewItems } = BrowserRuleSettingProps;
+        const viewItems = BrowserRuleSettingProps.get('viewItems');
         viewItems.forEach((element) => {
-          if(element && element.listParam) {
-            BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(element.listParam, {
-              compId: element._COMPID_
-            }));
-          }
+            if(element && element.get('listParam')) {
+                BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, element.get('_COMPID_'), {});
+            }
         });
-          
-      }, () => {
-        
       });
     }
   };
 
-  // 페이지 번호 변경
-  handleChangePage = (event, page) => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
-    BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(listParam, {
-      page: page,
-      compId: menuCompId
-    }));
-  };
-
-  // 페이지당 레코드수 변경
-  handleChangeRowsPerPage = event => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
-    BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(listParam, {
-      rowsPerPage: event.target.value,
-      page: 0,
-      compId: menuCompId
-    }));
-  };
-  
-  // .................................................
-  handleRequestSort = (event, property) => {
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
-    let orderDir = "desc";
-    if (listParam.orderColumn === property && listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-
-    BrowserRuleSettingActions.readBrowserRuleSettingList(getMergedObject(listParam, {
-      orderColumn: property, 
-      orderDir: orderDir,
-      compId: menuCompId
-    }));
-  };
-  // .................................................
-
-  // .................................................
-  handleKeywordChange = name => event => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: BrowserRuleSettingProps, compId: menuCompId });
-    BrowserRuleSettingActions.changeStoreData({
-      name: 'listParam',
-      value: getMergedObject(listParam, {keyword: event.target.value}),
-      compId: menuCompId
-    });
-  }
-
   render() {
     const { classes } = this.props;
     const { BrowserRuleSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//BrowserRuleSettingProps.listParam.rowsPerPage - BrowserRuleSettingProps.listData.length;
+    const listObj = getDataObjectInComp(BrowserRuleSettingProps, compId);
 
-    const viewItem = getViewItem({
-      props: BrowserRuleSettingProps,
-      compId: menuCompId
-    });
-
-    const listData = (viewItem) ? viewItem.listData : [];
-    const listParam = (viewItem) ? viewItem.listParam : BrowserRuleSettingProps.defaultListParam;
-    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : BrowserRuleSettingProps.defaultListParam.orderDir;
-    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : BrowserRuleSettingProps.defaultListParam.orderColumn;
-    
     return (
       <div>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
@@ -306,7 +196,7 @@ class BrowserRuleSetting extends Component {
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
               <Grid item xs={6}>
-                <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} margin='dense' />
+                <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} />
               </Grid>
 
               <Grid item xs={6}>
@@ -329,42 +219,43 @@ class BrowserRuleSetting extends Component {
           </Grid>            
 
           {/* data area */}
+          {(listObj) &&
           <div>
             <Table>
-
-              <BrowserRuleSettingHead
+              <GrCommonTableHead
                 classes={classes}
-                orderDir={orderDir}
-                orderColumn={orderColumn}
-                onRequestSort={this.handleRequestSort}
+                keyId="objId"
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                onRequestSort={this.handleChangeSort}
+                columnData={this.columnHeaders}
               />
-
               <TableBody>
-                {listData.map(n => {
+                {listObj.get('listData').map(n => {
                   return (
                     <TableRow 
                       className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.objId)}
+                      onClick={event => this.handleRowClick(event, n.get('objId'))}
                       tabIndex={-1}
-                      key={n.objId}
+                      key={n.get('objId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objId.endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objNm}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.modUserId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditClick(event, n.objId)}>
+                          onClick={event => this.handleEditClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleDeleteClick(event, n.objId)}>
+                          onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>                        
 
@@ -375,35 +266,32 @@ class BrowserRuleSetting extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell
-                      colSpan={BrowserRuleSettingHead.columnData.length + 1}
-                    />
+                    <TableCell colSpan={BrowserRuleSettingHead.columnData.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
             </Table>
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
           </div>
-
-          <TablePagination
-            component='div'
-            count={listParam.rowsFiltered}
-            rowsPerPage={listParam.rowsPerPage}
-            rowsPerPageOptions={listParam.rowsPerPageOptions}
-            page={listParam.page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
-
+        }
         </GrPane>
         {/* dialog(popup) component area */}
-        <BrowserRuleSettingInform compId={menuCompId} />
-        <BrowserRuleSettingDialog />
+        <BrowserRuleSettingInform compId={compId} />
+        <BrowserRuleSettingDialog compId={compId} />
         <GrConfirm />
       </div>
     );
