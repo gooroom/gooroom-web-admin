@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Map, List } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -6,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 
@@ -33,22 +35,23 @@ class ClientHostNameInform extends Component {
 
   render() {
     const { classes } = this.props;
-    const { ClientHostNameProps, compId } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = createViewObject(getSelectedObjectInComp(ClientHostNameProps, compId));
+    const { ClientHostNameProps, compId } = this.props;
+    const viewItem = getDataObjectInComp(ClientHostNameProps, compId);
+    const selectedViewItem = (viewItem.get('selectedItem')) ? createViewObject(viewItem.get('selectedItem')) : null;
 
     return (
       <div>
-      {(ClientHostNameProps.informOpen && selectedViewItem) &&
+      {(viewItem.get('informOpen') && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(selectedViewItem) ? selectedViewItem.objNm : ''}
-            subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
+            title={(selectedViewItem) ? selectedViewItem.get('objNm') : ''}
+            subheader={selectedViewItem.get('objId') + ', ' + formatDateToSimple(selectedViewItem.get('modDate'), 'YYYY-MM-DD')}
           />
           <CardContent>
             <Typography component="pre">
-              "{selectedViewItem.comment}"
+              "{selectedViewItem.get('comment')}"
             </Typography>
             
             <Divider />
@@ -57,7 +60,7 @@ class ClientHostNameInform extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.hosts}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.get('hosts')}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -85,22 +88,23 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonS
 export const createViewObject = (param) => {
 
   if(param) {
-
     let hosts = '';
-  
-    param.propList.forEach(function(e) {
-      if(e.propNm == 'HOSTS') {
-        hosts = e.propValue;
+
+    param.get('propList').forEach(function(e) {
+      const ename = e.get('propNm');
+      const evalue = e.get('propValue');
+      if(ename == 'HOSTS') {
+        hosts = evalue;
       }
     });
   
-    return {
-      objId: param.objId,
-      objNm: param.objNm,
-      comment: param.comment,
-      modDate: param.modDate,
+    return Map({
+      objId: param.get('objId'),
+      objNm: param.get('objNm'),
+      comment: param.get('comment'),
+      modDate: param.get('modDate'),
       hosts: hosts
-    };
+    });
   
   } else {
     return param;

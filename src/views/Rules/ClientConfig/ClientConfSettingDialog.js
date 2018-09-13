@@ -77,12 +77,12 @@ class ClientConfSettingDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientConfSettingProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '단말정책정보 등록',
             confirmMsg: '단말정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientConfSettingProps.editingItem
+            confirmObject: ClientConfSettingProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
@@ -105,13 +105,13 @@ class ClientConfSettingDialog extends Component {
 
     handleEditData = (event, id) => {
         const { ClientConfSettingProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '단말정책정보 수정',
             confirmMsg: '단말정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
             confirmObject: ClientConfSettingProps.get('editingItem')
-          });
+        });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -167,7 +167,6 @@ class ClientConfSettingDialog extends Component {
                         label="이름"
                         value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
-                        margin="normal"
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientConfSettingDialog.TYPE_VIEW)}
                     />

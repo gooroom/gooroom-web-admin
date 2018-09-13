@@ -10,13 +10,14 @@ import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-//import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { createViewObject } from './ClientHostNameManageInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
+
+import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import ClientHostNameManageDialog from './ClientHostNameManageDialog';
 import ClientHostNameManageInform from './ClientHostNameManageInform';
@@ -84,40 +85,37 @@ class ClientHostNameManage extends Component {
     });
   };
 
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    const { ClientHostNameActions, ClientHostNameProps } = this.props;
+    let orderDir = "desc";
+    if (currOrderDir === "desc") {
+      orderDir = "asc";
+    }
+    ClientHostNameActions.readClientHostNameList(ClientHostNameProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId,
+      orderDir: orderDir
+    });
+  };
+
   // .................................................
   handleSelectBtnClick = () => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
-
-    ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
-      page: 0,
-      compId: menuCompId
-    }));
-
+    ClientHostNameActions.readClientHostNameList(ClientHostNameProps, this.props.match.params.grMenuId);
   };
-  
-  handleCreateButton = () => {
-    const { ClientHostNameActions } = this.props;
-    ClientHostNameActions.showDialog({
-      selectedItem: {
-        objId: '',
-        objNm: '',
-        comment: '',
-        hosts: ''
-      },
-      dialogType: ClientHostNameManageDialog.TYPE_ADD
+
+  handleKeywordChange = name => event => {
+    this.props.ClientHostNameActions.changeListParamData({
+      name: 'keyword', 
+      value: event.target.value,
+      compId: this.props.match.params.grMenuId
     });
   }
-  
+
   handleRowClick = (event, id) => {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
 
-    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
-    const selectedItem = listObj.listData.find(function(element) {
-      return element.objId == id;
-    });
+    const selectedItem = getRowObjectById(ClientHostNameProps, compId, id, 'objId');
 
     // choice one from two views.
 
@@ -129,137 +127,83 @@ class ClientHostNameManage extends Component {
 
     // 2. view detail content
     ClientHostNameActions.showInform({
-      compId: menuCompId,
+      compId: compId,
       selectedItem: selectedItem
     });
     
   };
 
-  handleEditClick = (event, id) => {
-    const { ClientHostNameProps, ClientHostNameActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
-    const selectedItem = listObj.listData.find(function(element) {
-      return element.objId == id;
+  handleCreateButton = () => {
+    this.props.ClientHostNameActions.showDialog({
+      selectedItem: Map(),
+      dialogType: ClientHostNameManageDialog.TYPE_ADD
     });
+  }
+
+  handleEditClick = (event, id) => { 
+    const { ClientHostNameActions, ClientHostNameProps } = this.props;
+    const selectedItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientHostNameActions.showDialog({
-      compId: menuCompId,
       selectedItem: createViewObject(selectedItem),
-      dialogType: ClientHostNameManageDialog.TYPE_EDIT,
+      dialogType: ClientHostNameManageDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    event.stopPropagation();
-    const { ClientHostNameProps, ClientHostNameActions, GrConfirmActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
-    const selectedItem = listObj.listData.find(function(element) {
-      return element.objId == id;
-    });
-
-    const re = GrConfirmActions.showConfirm({
+    const { ClientHostNameProps, GrConfirmActions } = this.props;
+    const selectedItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
+    GrConfirmActions.showConfirm({
       confirmTitle: 'Hosts 정보 삭제',
-      confirmMsg: 'Hosts 정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmMsg: 'Hosts 정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue, paramObject) => {
-
+  handleDeleteConfirmResult = (confirmValue, confirmObject) => {
     if(confirmValue) {
       const { ClientHostNameProps, ClientHostNameActions } = this.props;
 
       ClientHostNameActions.deleteClientHostNameData({
-        objId: paramObject.objId
-      }).then(() => {
-
-        const { editingCompId, viewItems } = ClientHostNameProps;
+        objId: confirmObject.get('objId'),
+        compId: this.props.match.params.grMenuId
+      }).then((res) => {
+        const viewItems = ClientHostNameProps.get('viewItems');
         viewItems.forEach((element) => {
-          if(element && element.listParam) {
-            ClientHostNameActions.readClientHostNameList(getMergedObject(element.listParam, {
-              compId: element._COMPID_
-            }));
-          }
+            if(element && element.get('listParam')) {
+                ClientHostNameActions.readClientHostNameList(ClientHostNameProps, element.get('_COMPID_'), {});
+            }
         });
-
-      }, () => {
       });
     }
   };
   
   // .................................................
-  handleRequestSort = (event, property) => {
-    const { ClientHostNameProps, ClientHostNameActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
-    let orderDir = "desc";
-    if (listObj.listParam.orderColumn === property && listObj.listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-
-    ClientHostNameActions.readClientHostNameList(getMergedObject(listObj.listParam, {
-      orderColumn: property, 
-      orderDir: orderDir,
-      compId: menuCompId
-    }));
-  };
-  // .................................................
-
-  // .................................................
-  handleKeywordChange = name => event => {
-    const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
-    const newParam = getMergedObject(listObj.listParam, {keyword: event.target.value});
-    ClientHostNameActions.changeStoreData({
-      name: 'listParam',
-      value: newParam,
-      compId: menuCompId
-    });
-  }
-
   render() {
     const { classes } = this.props;
     const { ClientHostNameProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientHostNameProps.listParam.rowsPerPage - ClientHostNameProps.listData.length;
+    const listObj = getDataObjectInComp(ClientHostNameProps, compId);
 
-    const listObj = getDataObjectInComp(ClientHostNameProps, menuCompId);
     return (
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
-
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
               <Grid item xs={6} >
                 <FormControl fullWidth={true}>
-                <TextField
-                  id='keyword'
-                  label='검색어'
-                  value={this.state.keyword}
-                  onChange={this.handleKeywordChange('keyword')}
-                />
+                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} />
                 </FormControl>
               </Grid>
 
               <Grid item xs={6} >
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={ () => this.handleSelectBtnClick() }
-                >
+                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
                   <Search />
                   조회
                 </Button>
@@ -268,10 +212,7 @@ class ClientHostNameManage extends Component {
             </Grid>
 
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
+              <Button size="small" variant="contained" color="primary"
                 onClick={() => {
                   this.handleCreateButton();
                 }}
@@ -283,36 +224,36 @@ class ClientHostNameManage extends Component {
           </Grid>
 
           {/* data area */}
+          {(listObj) && 
           <div>
             <Table>
-
-              <ClientHostNameHead
+              <GrCommonTableHead
                 classes={classes}
-                orderDir={listObj.orderDir}
-                orderColumn={listObj.orderColumn}
-                onRequestSort={this.handleRequestSort}
+                keyId="objId"
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                onRequestSort={this.handleChangeSort}
+                columnData={this.columnHeaders}
               />
-
               <TableBody>
-                {listObj.listData.map(n => {
+                {listObj.get('listData').map(n => {
                   return (
                     <TableRow
                       className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.objId)}
-                      tabIndex={-1}
-                      key={n.objId}
+                      onClick={event => this.handleRowClick(event, n.get('objId'))}
+                      key={n.get('objId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objId.endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objNm}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.modUserId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
-                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.objId)}>
+                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
-                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.objId)}>
+                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>
                       </TableCell>
@@ -322,36 +263,32 @@ class ClientHostNameManage extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell
-                      colSpan={ClientHostNameHead.columnData.length + 1}
-                      className={classes.grSmallAndClickCell}
-                    />
+                    <TableCell colSpan={ClientHostNameHead.columnData.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <TablePagination
-            component='div'
-            count={listObj.listParam.rowsFiltered}
-            rowsPerPage={listObj.listParam.rowsPerPage}
-            rowsPerPageOptions={listObj.listParam.rowsPerPageOptions}
-            page={listObj.listParam.page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
-
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+            </div>
+          }
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientHostNameManageInform compId={menuCompId} />
-        <ClientHostNameManageDialog />
+        <ClientHostNameManageInform compId={compId} />
+        <ClientHostNameManageDialog compId={compId} />
         <GrConfirm />
       </React.Fragment>
     );
