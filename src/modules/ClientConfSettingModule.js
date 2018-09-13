@@ -22,7 +22,7 @@ const SET_EDITING_ITEM_VALUE = 'clientConfSetting/SET_EDITING_ITEM_VALUE';
 const CHG_LISTPARAM_DATA = 'clientConfSetting/CHG_LISTPARAM_DATA';
 const CHG_COMPVARIABLE_DATA = 'clientConfSetting/CHG_COMPVARIABLE_DATA';
 
-const SET_SELECTED_NTP_VALUE = 'clientConfSetting/SET_SELECTED_NTP_VALUE';
+const SET_NTP_VALUE = 'clientConfSetting/SET_NTP_VALUE';
 const ADD_NTPADDRESS_ITEM = 'clientConfSetting/ADD_NTPADDRESS_ITEM';
 const DELETE_NTPADDRESS_ITEM = 'clientConfSetting/DELETE_NTPADDRESS_ITEM';
 
@@ -174,9 +174,9 @@ const makeParameter = (param) => {
 }
 
 // create (add)
-export const createClientConfSettingData = (param) => dispatch => {
+export const createClientConfSettingData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClientConf', makeParameter(param)).then(
+    return requestPostAPI('createClientConf', makeParameter(itemObj)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
@@ -265,9 +265,9 @@ export const deleteNtpAddress = (index) => dispatch => {
     });
 }
 
-export const setSelectedNtpValue = (param) => dispatch => {
+export const setNtpValue = (param) => dispatch => {
     return dispatch({
-        type: SET_SELECTED_NTP_VALUE,
+        type: SET_NTP_VALUE,
         index: param.index,
         value: param.value
     });
@@ -470,7 +470,7 @@ export default handleActions({
             dialogType: ''
         });
     },
-    [SET_SELECTED_NTP_VALUE]: (state, action) => {
+    [SET_NTP_VALUE]: (state, action) => {
         const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).set(action.index, action.value);
         return state.setIn(['editingItem', 'ntpAddress'], newNtpAddress);
     },

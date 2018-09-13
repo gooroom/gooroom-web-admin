@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { Map, List, fromJS } from 'immutable';
 
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 const COMMON_PENDING = 'mediaControlSetting/COMMON_PENDING';
 const COMMON_FAILURE = 'mediaControlSetting/COMMON_FAILURE';
@@ -13,9 +13,14 @@ const EDIT_BROWSERRULE_SUCCESS = 'mediaControlSetting/EDIT_BROWSERRULE_SUCCESS';
 const DELETE_BROWSERRULE_SUCCESS = 'mediaControlSetting/DELETE_BROWSERRULE_SUCCESS';
 
 const SHOW_BROWSERRULE_INFORM = 'mediaControlSetting/SHOW_BROWSERRULE_INFORM';
+const CLOSE_BROWSERRULE_INFORM = 'mediaControlSetting/CLOSE_BROWSERRULE_INFORM';
 const SHOW_BROWSERRULE_DIALOG = 'mediaControlSetting/SHOW_BROWSERRULE_DIALOG';
+const CLOSE_BROWSERRULE_DIALOG = 'mediaControlSetting/CLOSE_BROWSERRULE_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'mediaControlSetting/SET_EDITING_ITEM_VALUE';
+
+const CHG_LISTPARAM_DATA = 'mediaControlSetting/CHG_LISTPARAM_DATA';
+const CHG_COMPVARIABLE_DATA = 'mediaControlSetting/CHG_COMPVARIABLE_DATA';
 
 const CHG_VIEWITEM_DATA = 'mediaControlSetting/CHG_VIEWITEM_DATA';
 const CHG_STORE_DATA = 'mediaControlSetting/CHG_STORE_DATA';
@@ -26,79 +31,91 @@ const DELETE_WHITELIST_ITEM = 'mediaControlSetting/DELETE_WHITELIST_ITEM';
 
 
 // ...
-const initialState = {
+const initialState = Map({
     pending: false,
     error: false,
     resultMsg: '',
 
-    defaultListParam: {
+    defaultListParam: Map({
         keyword: '',
         orderDir: 'desc',
         orderColumn: 'chConfId',
         page: 0,
         rowsPerPage: 10,
-        rowsPerPageOptions: [5, 10, 25],
+        rowsPerPageOptions: List([5, 10, 25]),
         rowsTotal: 0,
         rowsFiltered: 0
-    },
+    }),
 
-    informOpen: false,
     dialogOpen: false,
     dialogType: '',
-};
+});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_BROWSERRULE_DIALOG,
-        payload: param
+        selectedItem: param.selectedItem,
+        dialogType: param.dialogType
     });
 };
 
 export const closeDialog = () => dispatch => {
     return dispatch({
-        type: CHG_STORE_DATA,
-        payload: {name:"dialogOpen",value:false}
+        type: CLOSE_BROWSERRULE_DIALOG
     });
 };
 
 export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_BROWSERRULE_INFORM,
-        payload: param
+        compId: param.compId,
+        selectedItem: param.selectedItem
     });
 };
 
 export const closeInform = () => dispatch => {
     return dispatch({
-        type: CHG_STORE_DATA,
-        payload: {name:"informOpen",value:false}
+        type: CLOSE_BROWSERRULE_INFORM,
+        compId: param.compId
     });
 };
 
-export const readBrowserRuleSettingList = (param) => dispatch => {
-
-    const resetParam = {
-        keyword: param.keyword,
-        page: param.page,
-        start: param.page * param.rowsPerPage,
-        length: param.rowsPerPage,
-        orderColumn: param.orderColumn,
-        orderDir: param.orderDir
-    };
+export const readBrowserRuleSettingList = (module, compId, extParam) => dispatch => {
+    let newListParam;
+    if(module.get('viewItems')) {
+        const viewIndex = module.get('viewItems').findIndex((e) => {
+            return e.get('_COMPID_') == compId;
+        });
+        if(viewIndex < 0) {
+            newListParam = module.get('defaultListParam');
+        } else {
+            newListParam = module.getIn(['viewItems', viewIndex, 'listParam']).merge(extParam);
+        }
+    } else {
+        newListParam = module.get('defaultListParam');
+    }
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readBrowserRuleListPaged', resetParam).then(
+    return requestPostAPI('readBrowserRuleListPaged', {
+        keyword: newListParam.get('keyword'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
+    }).then(
         (response) => {
             dispatch({
                 type: GET_BROWSERRULE_LIST_SUCCESS,
-                compId: param.compId,
-                payload: response
+                compId: compId,
+                listParam: newListParam,
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -106,18 +123,18 @@ export const readBrowserRuleSettingList = (param) => dispatch => {
 export const getBrowserRuleSetting = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readBrowserRule', param).then(
+    return requestPostAPI('readBrowserRule', {'objId': param.objId}).then(
         (response) => {
             dispatch({
                 type: GET_BROWSERRULE_SUCCESS,
                 compId: compId,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -125,67 +142,93 @@ export const getBrowserRuleSetting = (param) => dispatch => {
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,
-        payload: param
+        name: param.name,
+        value: param.value
     });
 };
 
-export const changeStoreData = (param) => dispatch => {
+export const changeListParamData = (param) => dispatch => {
     return dispatch({
-        type: CHG_VIEWITEM_DATA,
-        payload: param
+        type: CHG_LISTPARAM_DATA,
+        compId: param.compId,
+        name: param.name,
+        value: param.value
+    });
+};
+
+export const changeCompVariable = (param) => dispatch => {
+    return dispatch({
+        type: CHG_COMPVARIABLE_DATA,
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
 const makeParameter = (param) => {
     return {
-        objId: param.objId,
-        objName: param.objNm,
-        objComment: param.comment,
+        objId: param.get('objId'),
+        objName: param.get('objNm'),
+        objComment: param.get('comment'),
 
-        webSocket: param.webSocket,
-        webWorker: param.webWorker,
-        trustSetupId: param.trustSetupId,
-        untrustSetupId: param.untrustSetupId,
-        trustUrlList: (param.trustUrlList && param.trustUrlList.length > 0) ? param.trustUrlList : ''
+        webSocket: param.get('webSocket'),
+        webWorker: param.get('webWorker'),
+        trustSetupId: param.get('trustSetupId'),
+        untrustSetupId: param.get('untrustSetupId'),
+        trustUrlList: (param.get('trustUrlList')) ? param.get('trustUrlList').toArray() : []
     };
 }
 
 // create (add)
-export const createBrowserRuleSettingData = (param) => dispatch => {
+export const createBrowserRuleSettingData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createBrowserRuleConf', makeParameter(param)).then(
+    return requestPostAPI('createBrowserRuleConf', makeParameter(itemObj)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_BROWSERRULE_SUCCESS,
-                        payload: response
+                        type: CREATE_BROWSERRULE_SUCCESS
                     });
                 }    
             } catch(ex) {
                 dispatch({
                     type: COMMON_FAILURE,
-                    payload: response
+                    ex: ex
                 });
             }
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
 
 // edit
-export const editBrowserRuleSettingData = (param) => dispatch => {
+export const editBrowserRuleSettingData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateBrowserRuleConf', makeParameter(param)).then(
+    return requestPostAPI('updateBrowserRuleConf', makeParameter(itemObj)).then(
         (response) => {
-            dispatch({
-                type: EDIT_BROWSERRULE_SUCCESS,
-                payload: response
-            });
+            if(response && response.data && response.data.status && response.data.status.result == 'success') {
+                // alarm ... success
+                requestPostAPI('readBrowserRule', {'objId': itemObj.get('objId')}).then(
+                    (response) => {
+                        dispatch({
+                            type: EDIT_BROWSERRULE_SUCCESS,
+                            objId: itemObj.get('objId'),
+                            response: response
+                        });
+                    }
+                ).catch(error => {
+                });
+            } else {
+                // alarm ... fail
+                dispatch({
+                    type: COMMON_FAILURE,
+                    error: error
+                });
+            }
         }
     ).catch(error => {
         dispatch({
@@ -198,17 +241,18 @@ export const editBrowserRuleSettingData = (param) => dispatch => {
 // delete
 export const deleteBrowserRuleSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteBrowserRuleConf', param).then(
+    return requestPostAPI('deleteBrowserRuleConf', {'objId': param.objId}).then(
         (response) => {
             dispatch({
                 type: DELETE_BROWSERRULE_SUCCESS,
-                payload: response
+                compId: param.compId,
+                objId: param.objId
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -222,14 +266,15 @@ export const addWhiteList = () => dispatch => {
 export const deleteWhiteList = (index) => dispatch => {
     return dispatch({
         type: DELETE_WHITELIST_ITEM,
-        payload: {index:index}
+        index: index
     });
 }
 
 export const setWhiteList = (param) => dispatch => {
     return dispatch({
         type: SET_WHITELIST_ITEM,
-        payload: param
+        index: param.index,
+        value: param.value
     });
 };
 
@@ -237,276 +282,249 @@ export const setWhiteList = (param) => dispatch => {
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
+        return state.merge({
+            pending: true, 
             error: false
-        };
+        });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
+        return state.merge({
+            pending: false, 
             error: true,
-            resultMsg: (action.payload.data && action.payload.data.status) ? action.payload.data.status.message : ''
-        };
+            resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
+            ex: (action.ex) ? action.ex : ''
+        });
     },
 
     [GET_BROWSERRULE_LIST_SUCCESS]: (state, action) => {
+        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
 
-        const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
-        const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-        
-        let viewItems = [];
-        if(state.viewItems) {
-
-            viewItems = state.viewItems;
-            const viewItem = viewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
+        if(state.get('viewItems')) {
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
             });
-
-            if(viewItem) {
-
-                Object.assign(viewItem, {
-                    'listData': data,
-                    'listParam': Object.assign({}, viewItem.listParam, {
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10)
-                    })
-                });
-
-            } else {
-
-                // 현재 콤프아이디로 데이타 없음. -> 추가 함
-                viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    'listData': data,
-                    'listParam': {
-                        keyword: '',
-                        orderDir: 'desc',
-                        orderColumn: 'chConfId',
-                        rowsPerPageOptions: [5, 10, 25],
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10)
-                    }
-                }));
-
-            }
-        } else {
-
-            viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                'listData': data,
-                'listParam': Object.assign({}, state.defaultListParam, {
+            if(viewIndex > -1) {
+                const newListParam = state.getIn(['viewItems', viewIndex, 'listParam']).merge({
                     rowsFiltered: parseInt(recordsFiltered, 10),
                     rowsTotal: parseInt(recordsTotal, 10),
                     page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10)
+                    rowsPerPage: parseInt(rowLength, 10),
+                    orderColumn: orderColumn,
+                    orderDir: orderDir
+                });
+                return state
+                        .setIn(['viewItems', viewIndex, 'listData'], List(data.map((e) => {return Map(e)})))
+                        .setIn(['viewItems', viewIndex, 'listParam'], newListParam);
+            } else {
+                return state.set('viewItems', state.get('viewItems').push(Map({
+                    '_COMPID_': action.compId,
+                    'listData': List(data.map((e) => {return Map(e)})),
+                    'listParam': state.get('defaultListParam').merge({
+                        rowsFiltered: parseInt(recordsFiltered, 10),
+                        rowsTotal: parseInt(recordsTotal, 10),
+                        page: parseInt(draw, 10),
+                        rowsPerPage: parseInt(rowLength, 10),
+                        orderColumn: orderColumn,
+                        orderDir: orderDir
+                    })
+                })));
+            }
+        } else {
+            return state.set('viewItems', List([Map({
+                '_COMPID_': action.compId,
+                'listData': List(data.map((e) => {return Map(e)})),
+                'listParam': state.get('defaultListParam').merge({
+                    rowsFiltered: parseInt(recordsFiltered, 10),
+                    rowsTotal: parseInt(recordsTotal, 10),
+                    page: parseInt(draw, 10),
+                    rowsPerPage: parseInt(rowLength, 10),
+                    orderColumn: orderColumn,
+                    orderDir: orderDir
                 })
-            }));
-
+            })]));
         }
-
-        return {
-            ...state,
-            pending: false,
-            error: false,
-            viewItems: viewItems
-        };
     }, 
     [GET_BROWSERRULE_SUCCESS]: (state, action) => {
-        const COMP_ID = (action.compId && action.compId != '') ? action.compId : '';
-        const { data } = action.payload.data;
-        let viewItems = [];
-
-        if(state.viewItems) {
-            viewItems = state.viewItems;
-            const viewItem = viewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
+        const { data } = action.response.data;
+        if(state.get('viewItems')) {
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
             });
 
-            // 이전에 해당 콤프정보가 없으면 신규로 등록
-            if(!viewItem) {
-                viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
+            if(viewIndex < 0) {
+                return state.set('viewItems', state.get('viewItems').push(Map({
+                    '_COMPID_': action.compId,
+                    'informOpen': true,
+                    'selectedItem': fromJS(data[0])
+                })));
+            } else {
+                return state
+                    .setIn(['viewItems', viewIndex, 'selectedItem'], fromJS(data[0]))
+                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
             }
-
-            // 같은 오브젝트를 가지고 있는 콤프정보들을 모두 변경 한다.
-            viewItems = viewItems.map((element) => {
-                if(element.selectedItem && (element.selectedItem.objId == data[0].objId)) {
-                    return Object.assign(element, {'selectedItem': data[0]});
-                } else if(element._COMPID_ == COMP_ID) {
-                    return Object.assign(element, {'selectedItem': data[0]});
-                } else {
-                    return element;
-                }
-            });
-
         } else {
-            viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
-        }
-
-        if(data && data.length > 0) {
-            return {
-                ...state,
-                pending: false,
-                error: false,
-                viewItems: viewItems
-            };
-        } else {
-            return {
-                ...state,
-                pending: false,
-                error: false,
-                viewItems: viewItems
-            };
+            return state.set('viewItems', List([Map({
+                '_COMPID_': action.compId,
+                'selectedItem': fromJS(data[0]),
+                'informOpen': true
+            })]));
         }
     },
     [SHOW_BROWSERRULE_DIALOG]: (state, action) => {
-        return {
-            ...state,
-            editingItem: Object.assign({}, action.payload.selectedItem),
-            editingCompId: action.payload.compId,
+        return state.merge({
+            editingItem: action.selectedItem,
             dialogOpen: true,
-            dialogType: action.payload.dialogType,
-        };
+            dialogType: action.dialogType
+        });
+    },
+    [CLOSE_BROWSERRULE_DIALOG]: (state, action) => {
+        return state.merge({
+            dialogOpen: false,
+            dialogType: ''
+        });
     },
     [SHOW_BROWSERRULE_INFORM]: (state, action) => {
-
-        const COMP_ID = action.payload.compId;
-
-        let viewItems = [];
-        if(state.viewItems) {
-            viewItems = state.viewItems;
-            const viewItem = viewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
+        if(state.get('viewItems')) {
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
             });
-            if(viewItem) {
-                Object.assign(viewItem, {
-                    'selectedItem': action.payload.selectedItem
-                });
+            if(viewIndex < 0) {
+                return state.set('viewItems', state.get('viewItems').push(Map({
+                    '_COMPID_': action.compId,
+                    'informOpen': true,
+                    'selectedItem': action.selectedItem
+                })));
             } else {
-                viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    'selectedItem': action.payload.selectedItem
-                }));
+                return state
+                    .setIn(['viewItems', viewIndex, 'selectedItem'], action.selectedItem)
+                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
             }
         } else {
-            viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                'selectedItem': action.payload.selectedItem
-            }));
+            // no occure this event
         }
-
-        return {
-            ...state,
-            viewItems: viewItems,
-            informOpen: true
-        };
+        return state;
+    },
+    [CLOSE_BROWSERRULE_INFORM]: (state, action) => {
+        if(state.get('viewItems')) {
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
+            });
+            return state
+                    .setIn(['viewItems', viewIndex, 'informOpen'], false)
+                    .deleteIn(['viewItems', viewIndex, 'selectedItem'])
+        }
+        return state;
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
-        const newEditingItem = getMergedObject(state.editingItem, {[action.payload.name]: action.payload.value});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
+        return state.merge({
+            editingItem: state.get('editingItem').merge({[action.name]: action.value})
+        });
     },
-    [CHG_STORE_DATA]: (state, action) => {
-        return {
-            ...state,
-            [action.payload.name]: action.payload.value
-        }
+    [CHG_LISTPARAM_DATA]: (state, action) => {
+        const viewIndex = state.get('viewItems').findIndex((e) => {
+            return e.get('_COMPID_') == action.compId;
+        });
+        return state.setIn(['viewItems', viewIndex, 'listParam', action.name], action.value);
     },
-    [CHG_VIEWITEM_DATA]: (state, action) => {
+    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+        const viewIndex = state.get('viewItems').findIndex((e) => {
+            return e.get('_COMPID_') == action.compId;
+        });
+        return state.setIn(['viewItems', viewIndex, action.name], action.value);
+    },
+    // [CHG_STORE_DATA]: (state, action) => {
+    //     return {
+    //         ...state,
+    //         [action.payload.name]: action.payload.value
+    //     }
+    // },
+    // [CHG_VIEWITEM_DATA]: (state, action) => {
 
-        const COMP_ID = action.payload.compId;
+    //     const COMP_ID = action.payload.compId;
 
-        let viewItems = [];
-        if(state.viewItems) {
-            viewItems = state.viewItems;
-            const viewItem = viewItems.find((element) => {
-                return element._COMPID_ == COMP_ID;
-            });
+    //     let viewItems = [];
+    //     if(state.viewItems) {
+    //         viewItems = state.viewItems;
+    //         const viewItem = viewItems.find((element) => {
+    //             return element._COMPID_ == COMP_ID;
+    //         });
             
-            if(viewItem) {
-                Object.assign(viewItem, {
-                    [action.payload.name]: action.payload.value
-                });
-            } else {
-                viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    [action.payload.name]: action.payload.value
-                }));
-            }
+    //         if(viewItem) {
+    //             Object.assign(viewItem, {
+    //                 [action.payload.name]: action.payload.value
+    //             });
+    //         } else {
+    //             viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+    //                 [action.payload.name]: action.payload.value
+    //             }));
+    //         }
 
-        } else {
-            viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                [action.payload.name]: action.payload.value
-            }));
-        }
+    //     } else {
+    //         viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
+    //             [action.payload.name]: action.payload.value
+    //         }));
+    //     }
 
-        return {
-            ...state,
-            viewItems: viewItems
-        }
-    },
+    //     return {
+    //         ...state,
+    //         viewItems: viewItems
+    //     }
+    // },
     [CREATE_BROWSERRULE_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        return state.merge({
             pending: false,
-            error: false,
-        };
+            error: false
+        });
     },
     [EDIT_BROWSERRULE_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                if(e.get('selectedItem')) {
+                    if(e.getIn(['selectedItem', 'objId']) == action.objId) {
+                        // replace
+                        newState = newState.setIn(['viewItems', i, 'selectedItem'], fromJS(action.response.data.data[0]));
+                    }
+                }
+            });
+        }
+        return state.merge(newState).merge({
             pending: false,
             error: false,
-            informOpen: false,
             dialogOpen: false,
             dialogType: ''
-        };
+        });
     },
     [DELETE_BROWSERRULE_SUCCESS]: (state, action) => {
-        return {
-            ...state,
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                if(e.get('selectedItem')) {
+                    if(e.getIn(['selectedItem', 'objId']) == action.objId) {
+                        // replace
+                        newState = newState.deleteIn(['viewItems', i, 'selectedItem']);
+                    }
+                }
+            });
+        }
+        return state.merge(newState).merge({
             pending: false,
             error: false,
-            informOpen: false,
             dialogOpen: false,
             dialogType: ''
-        };
+        });
     },
     [SET_WHITELIST_ITEM]: (state, action) => {
-        let newWhiteList = state.editingItem.trustUrlList;
-        newWhiteList[action.payload.index] = action.payload.value;
-        const newEditingItem = getMergedObject(state.editingItem, {'trustUrlList': newWhiteList});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
+        const newWhiteList = state.getIn(['editingItem', 'trustUrlList']).set(action.index, action.value);
+        return state.setIn(['editingItem', 'trustUrlList'], newWhiteList);
     },
     [ADD_WHITELIST_ITEM]: (state, action) => {
-        let newWhiteList = (state.editingItem.trustUrlList) ? state.editingItem.trustUrlList : [];
-        newWhiteList.push('');
-        const newEditingItem = getMergedObject(state.editingItem, {'trustUrlList': newWhiteList});
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
+        const newWhiteList = (state.getIn(['editingItem', 'trustUrlList'])) ? state.getIn(['editingItem', 'trustUrlList']).push('') : List(['']);
+        return state.setIn(['editingItem', 'trustUrlList'], newWhiteList);
     },
     [DELETE_WHITELIST_ITEM]: (state, action) => {
-        let newWhiteList = state.editingItem.trustUrlList;
-        newWhiteList.splice(action.payload.index, 1);
-        let newEditingItem = getMergedObject(state.editingItem, {'trustUrlList': newWhiteList});
-        // changed selected ntp addres index
-        if(state.editingItem.selectedNtpIndex == action.payload.index) {
-            newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': -1});
-        } else if(state.editingItem.selectedNtpIndex > action.payload.index) {
-            newEditingItem = getMergedObject(newEditingItem, {'selectedNtpIndex': (state.editingItem.selectedNtpIndex - 1)});
-        }
-        return {
-            ...state,
-            editingItem: newEditingItem
-        }
+        const newWhiteList = state.getIn(['editingItem', 'trustUrlList']).delete(action.index);
+        return state.setIn(['editingItem', 'trustUrlList'], newWhiteList);
     },
 
 }, initialState);

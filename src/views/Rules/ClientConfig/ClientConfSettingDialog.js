@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -62,7 +61,7 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleNtpValueChange = index => event => {
-        this.props.ClientConfSettingActions.setSelectedNtpValue({
+        this.props.ClientConfSettingActions.setNtpValue({
             index: index,
             value: event.target.value
         });
@@ -246,7 +245,7 @@ class ClientConfSettingDialog extends Component {
                                         <Input value={value} onChange={this.handleNtpValueChange(index)} style={{width:"100%"}} />
                                         <ListItemSecondaryAction>
                                             <IconButton onClick={this.handleDeleteNtp(index)} aria-label="NtpDelete">
-                                            <DeleteForeverIcon />
+                                                <DeleteForeverIcon />
                                             </IconButton>
                                         </ListItemSecondaryAction>
                                     </ListItem>
