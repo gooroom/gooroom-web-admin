@@ -97,7 +97,6 @@ class ClientHostNameManage extends Component {
     });
   };
 
-  // .................................................
   handleSelectBtnClick = () => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     ClientHostNameActions.readClientHostNameList(ClientHostNameProps, this.props.match.params.grMenuId);
@@ -207,7 +206,6 @@ class ClientHostNameManage extends Component {
                   <Search />
                   조회
                 </Button>
-
               </Grid>
             </Grid>
 

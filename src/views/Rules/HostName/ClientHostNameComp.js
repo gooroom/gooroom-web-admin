@@ -10,6 +10,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientHostNameDialog from './ClientHostNameManageDialog';
 import { createViewObject } from './ClientHostNameManageInform';
+import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';

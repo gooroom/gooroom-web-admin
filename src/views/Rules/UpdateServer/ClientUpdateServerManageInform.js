@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Map, List } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -6,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 
@@ -25,7 +27,6 @@ import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
@@ -35,22 +36,23 @@ class ClientUpdateServerInform extends Component {
 
   render() {
     const { classes } = this.props;
-    const { ClientUpdateServerProps, compId } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = createViewObject(getSelectedObjectInComp(ClientUpdateServerProps, compId));
+    const { ClientUpdateServerProps, compId } = this.props;
+    const viewItem = getDataObjectInComp(ClientUpdateServerProps, compId);
+    const selectedViewItem = (viewItem.get('selectedItem')) ? createViewObject(viewItem.get('selectedItem')) : null;
 
     return (
       <div >
-      {(ClientUpdateServerProps.informOpen && selectedViewItem) &&
+      {(viewItem.get('informOpen') && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(selectedViewItem) ? selectedViewItem.objNm : ''}
-            subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
+            title={(selectedViewItem) ? selectedViewItem.get('objNm') : ''}
+            subheader={selectedViewItem.get('objId') + ', ' + formatDateToSimple(selectedViewItem.get('modDate'), 'YYYY-MM-DD')}
           />
           <CardContent >
             <Typography component="pre">
-              "{selectedViewItem.comment}"
+              "{selectedViewItem.get('comment')}"
             </Typography>
             
             <Divider />
@@ -59,17 +61,17 @@ class ClientUpdateServerInform extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} 주 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.mainos}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.get('mainos')}</pre></TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} 기반 OS 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.extos}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.get('extos')}</pre></TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"190px"}}>{bull} gooroom.pref</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.priorities}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.get('priorities')}</pre></TableCell>
                 </TableRow>
 
               </TableBody>
@@ -101,26 +103,28 @@ export const createViewObject = (param) => {
     let mainos = '';
     let extos = '';
     let priorities = '';
-    
-    param.propList.forEach(function(e) {
-      if(e.propNm == 'MAINOS') {
-        mainos = e.propValue;
-      } else if(e.propNm == 'EXTOS') {
-        extos = e.propValue;
-      } else if(e.propNm == 'PRIORITIES') {
-        priorities = e.propValue;
+
+    param.get('propList').forEach(function(e) {
+      const ename = e.get('propNm');
+      const evalue = e.get('propValue');
+      if(ename == 'MAINOS') {
+        mainos = evalue;
+      } else if(ename == 'EXTOS') {
+        extos = evalue;
+      } else if(ename == 'PRIORITIES') {
+        priorities = evalue;
       }
     });
 
-    return {
-      objId: param.objId,
-      objNm: param.objNm,
-      comment: param.comment,
-      modDate: param.modDate,
+    return Map({
+      objId: param.get('objId'),
+      objNm: param.get('objNm'),
+      comment: param.get('comment'),
+      modDate: param.get('modDate'),
       mainos: mainos,
       extos: extos,
       priorities: priorities
-    };
+    });
     
   } else {
     return param;

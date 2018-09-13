@@ -10,8 +10,6 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -106,8 +104,6 @@ class ClientHostNameManageDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const bull = <span className={classes.bullet}>•</span>;
-
         const { ClientHostNameProps } = this.props;
         const dialogType = ClientHostNameProps.get('dialogType');
         const editingItem = (ClientHostNameProps.get('editingItem')) ? ClientHostNameProps.get('editingItem') : null;

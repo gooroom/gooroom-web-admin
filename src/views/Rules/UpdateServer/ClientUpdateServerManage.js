@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Map, List } from 'immutable';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -8,12 +10,14 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { createViewObject } from './ClientUpdateServerManageInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
+
+import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import ClientUpdateServerManageDialog from './ClientUpdateServerManageDialog';
 import ClientUpdateServerManageInform from './ClientUpdateServerManageInform';
@@ -40,63 +44,19 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-
 //
-//  ## Header ########## ########## ########## ########## ########## 
+//  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientUpdateServerHead extends Component {
+class ClientUpdateServerManage extends Component {
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
+  columnHeaders = [
     { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
     { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '정책이름' },
     { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: '정책아이디' },
     { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: '수정자' },
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
-
-  render() {
-    const { classes } = this.props;
-    const { orderDir, orderColumn, } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {ClientUpdateServerHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
-class ClientUpdateServerManage extends Component {
 
   constructor(props) {
     super(props);
@@ -110,302 +70,149 @@ class ClientUpdateServerManage extends Component {
     this.handleSelectBtnClick();
   }
 
+  handleChangePage = (event, page) => {
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, this.props.match.params.grMenuId, {
+      page: page
+    });
+  };
 
-  // .................................................
+  handleChangeRowsPerPage = event => {
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value,
+      page: page
+    });
+  };
+
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    let orderDir = "desc";
+    if (currOrderDir === "desc") {
+      orderDir = "asc";
+    }
+    ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId,
+      orderDir: orderDir
+    });
+  };
+
   handleSelectBtnClick = () => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    let viewItem = null;
-    if(ClientUpdateServerProps.viewItems) {
-      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
-
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(listParam, {
-      page: 0,
-      compId: menuCompId
-    }));
+    ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, this.props.match.params.grMenuId);
   };
-  
-  handleCreateButton = () => {
-    const { ClientUpdateServerActions } = this.props;
-    ClientUpdateServerActions.showDialog({
-      selectedItem: {
-        objId: '',
-        objNm: '',
-        comment: '',
-        mainos: '',
-        extos: '',
-        priorities: ''
-      },
-      dialogType: ClientUpdateServerManageDialog.TYPE_ADD
+
+  handleKeywordChange = name => event => {
+    this.props.ClientUpdateServerActions.changeListParamData({
+      name: 'keyword', 
+      value: event.target.value,
+      compId: this.props.match.params.grMenuId
     });
   }
 
   handleRowClick = (event, id) => {
     const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientUpdateServerProps.viewItems) {
-      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listData = (viewItem) ? viewItem.listData : [];
-
-
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
+    const selectedItem = getRowObjectById(ClientUpdateServerProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // ClientUpdateServerActions.showDialog({
     //   selectedItem: viewItem,
-    //   dialogType: ClientUpdateServerManageDialog.TYPE_VIEW,
+    //   dialogType: ClientHostNameManageDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     ClientUpdateServerActions.showInform({
-      compId: menuCompId,
+      compId: compId,
       selectedItem: selectedItem
     });
     
   };
+  
+  handleCreateButton = () => {
+    this.props.ClientUpdateServerActions.showDialog({
+      selectedItem: Map(),
+      dialogType: ClientUpdateServerManageDialog.TYPE_ADD
+    });
+  }
 
   handleEditClick = (event, id) => {
-    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-
-    let viewItem = null;
-    if(ClientUpdateServerProps.viewItems) {
-      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listData = (viewItem) ? viewItem.listData : [];
-
-
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
+    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
+    const selectedItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientUpdateServerActions.showDialog({
-      compId: menuCompId,
       selectedItem: createViewObject(selectedItem),
-      dialogType: ClientUpdateServerManageDialog.TYPE_EDIT,
+      dialogType: ClientUpdateServerManageDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    event.stopPropagation();
-    const { ClientUpdateServerProps, ClientUpdateServerActions, GrConfirmActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
 
-
-    let viewItem = null;
-    if(ClientUpdateServerProps.viewItems) {
-      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listData = (viewItem) ? viewItem.listData : [];
-
-
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
-
-    const re = GrConfirmActions.showConfirm({
+    const { ClientUpdateServerProps, GrConfirmActions } = this.props;
+    const selectedItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
+    GrConfirmActions.showConfirm({
       confirmTitle: '업데이트서버 정보 삭제',
-      confirmMsg: '업데이트서버 정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmMsg: '업데이트서버 정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue, paramObject) => {
-
+  handleDeleteConfirmResult = (confirmValue, confirmObject) => {
     if(confirmValue) {
       const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
 
       ClientUpdateServerActions.deleteClientUpdateServerData({
-        objId: paramObject.objId
-      }).then(() => {
-
-        const { editingCompId, viewItems } = ClientUpdateServerProps;
+        objId: confirmObject.get('objId'),
+        compId: this.props.match.params.grMenuId
+      }).then((res) => {
+        const viewItems = ClientUpdateServerProps.get('viewItems');
         viewItems.forEach((element) => {
-          if(element && element.listParam) {
-            ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(element.listParam, {
-              compId: element._COMPID_
-            }));
-          }
+            if(element && element.get('listParam')) {
+                ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, element.get('_COMPID_'), {});
+            }
         });
-
-      }, () => {
       });
-
     }
   };
 
-  // 페이지 번호 변경
-  handleChangePage = (event, page) => {
-    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    let viewItem = null;
-    if(ClientUpdateServerProps.viewItems) {
-      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
-
-    
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(listParam, {
-      page: page,
-      compId: menuCompId
-    }));
-  };
-
-  // 페이지당 레코드수 변경
-  handleChangeRowsPerPage = event => {
-    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-
-    let viewItem = null;
-    if(ClientUpdateServerProps.viewItems) {
-      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
-
-
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(listParam, {
-      rowsPerPage: event.target.value,
-      page: 0,
-      compId: menuCompId
-    }));
-  };
-  
-  // .................................................
-  handleRequestSort = (event, property) => {
-    const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-
-    let viewItem = null;
-    if(ClientUpdateServerProps.viewItems) {
-      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
-
-
-    let orderDir = "desc";
-    if (listParam.orderColumn === property && listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-
-    ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(listParam, {
-      orderColumn: property, 
-      orderDir: orderDir,
-      compId: menuCompId
-    }));
-  };
-  // .................................................
-
-  // .................................................
-  handleKeywordChange = name => event => {
-    const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-
-    let viewItem = null;
-    if(ClientUpdateServerProps.viewItems) {
-      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId
-      });
-    }
-    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
-
-
-    const newParam = getMergedObject(listParam, {keyword: event.target.value});
-    ClientUpdateServerActions.changeStoreData({
-      name: 'listParam',
-      value: newParam,
-      compId: menuCompId
-    });
-  }
-
+  // ..............................................
   render() {
     const { classes } = this.props;
     const { ClientUpdateServerProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientUpdateServerProps.listParam.rowsPerPage - ClientUpdateServerProps.listData.length;
-
-    let viewItem = null;
-    if(ClientUpdateServerProps.viewItems) {
-      viewItem = ClientUpdateServerProps.viewItems.find((element) => {
-        return element._COMPID_ == menuCompId;
-      });
-    }
-
-    const listData = (viewItem) ? viewItem.listData : [];
-    const listParam = (viewItem) ? viewItem.listParam : ClientUpdateServerProps.defaultListParam;
-    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientUpdateServerProps.defaultListParam.orderDir;
-    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientUpdateServerProps.defaultListParam.orderColumn;
+    const listObj = getDataObjectInComp(ClientUpdateServerProps, compId);
 
     return (
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
-
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
-              <Grid item xs={6}>
+              <Grid item xs={6} >
                 <FormControl fullWidth={true}>
-                  <TextField
-                    id='keyword'
-                    label='검색어'
-                    value={this.state.keyword}
-                    onChange={this.handleKeywordChange('keyword')}
-                  />
+                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} />
                 </FormControl>
               </Grid>
 
-              <Grid item xs={6}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={ () => this.handleSelectBtnClick() }
-                >
+              <Grid item xs={6} >
+                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
                   <Search />
                   조회
                 </Button>
-
               </Grid>
+
             </Grid>
 
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
+            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
+              <Button size="small" variant="contained" color="primary"
                 onClick={() => {
                   this.handleCreateButton();
                 }}
@@ -414,39 +221,40 @@ class ClientUpdateServerManage extends Component {
                 등록
               </Button>
             </Grid>
+
           </Grid>            
 
           {/* data area */}
+          {(listObj) &&
           <div>
             <Table>
-
-              <ClientUpdateServerHead
+              <GrCommonTableHead
                 classes={classes}
-                orderDir={orderDir}
-                orderColumn={orderColumn}
-                onRequestSort={this.handleRequestSort}
+                keyId="objId"
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                onRequestSort={this.handleChangeSort}
+                columnData={this.columnHeaders}
               />
-
               <TableBody>
-                {listData.map(n => {
+                {listObj.get('listData').map(n => {
                   return (
                     <TableRow
                       className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.objId)}
-                      tabIndex={-1}
-                      key={n.objId}
+                      onClick={event => this.handleRowClick(event, n.get('objId'))}
+                      key={n.get('objId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objId.endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objNm}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.modUserId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
-                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.objId)}>
+                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
-                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.objId)}>
+                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>
                       </TableCell>
@@ -456,36 +264,32 @@ class ClientUpdateServerManage extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell
-                      colSpan={ClientUpdateServerHead.columnData.length + 1}
-                      className={classes.grSmallAndClickCell}
-                    />
+                    <TableCell colSpan={ClientHostNameHead.columnData.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <TablePagination
-            component='div'
-            count={listParam.rowsFiltered}
-            rowsPerPage={listParam.rowsPerPage}
-            rowsPerPageOptions={listParam.rowsPerPageOptions}
-            page={listParam.page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
-
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+            </div>
+          }
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientUpdateServerManageInform compId={menuCompId} />
-        <ClientUpdateServerManageDialog />
+        <ClientUpdateServerManageInform compId={compId} />
+        <ClientUpdateServerManageDialog compId={compId} />
         <GrConfirm />
       </React.Fragment>
     );

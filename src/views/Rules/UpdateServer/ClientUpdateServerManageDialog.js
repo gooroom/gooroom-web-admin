@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -8,8 +9,6 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
-
-import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -51,79 +50,63 @@ class ClientUpdateServerManageDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientUpdateServerProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '업데이트서버 정보 등록',
             confirmMsg: '업데이트서버 정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientUpdateServerProps.editingItem
+            confirmObject: ClientUpdateServerProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
-            ClientUpdateServerActions.createClientUpdateServerData(ClientUpdateServerProps.editingItem)
+            ClientUpdateServerActions.createClientUpdateServerData(ClientUpdateServerProps.get('editingItem'))
                 .then((res) => {
-                    const { viewItems } = ClientUpdateServerProps;
+                    const viewItems = ClientUpdateServerProps.get('viewItems');
                     if(viewItems) {
                         viewItems.forEach((element) => {
-                            if(element && element.listParam) {
-                                ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(element.listParam, {
-                                    compId: element._COMPID_
-                                }));
+                            if(element && element.get('listParam')) {
+                                ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, element.get('_COMPID_'), {});
                             }
                         });
                     }
                     this.handleClose();
-                }, (res) => {
-            })
+                });
         }
     }
 
     handleEditData = (event) => {
         const { ClientUpdateServerProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '업데이트서버 정보 수정',
             confirmMsg: '업데이트서버 정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientUpdateServerProps.editingItem
-          });
+            confirmObject: ClientUpdateServerProps.get('editingItem')
+        });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
-            ClientUpdateServerActions.editClientUpdateServerData(ClientUpdateServerProps.editingItem)
+            ClientUpdateServerActions.editClientUpdateServerData(ClientUpdateServerProps.get('editingItem'))
                 .then((res) => {
-
-                    const { editingCompId, viewItems } = ClientUpdateServerProps;
+                    const viewItems = ClientUpdateServerProps.get('viewItems');
                     viewItems.forEach((element) => {
-                        if(element && element.listParam) {
-                            ClientUpdateServerActions.readClientUpdateServerList(getMergedObject(element.listParam, {
-                                compId: element._COMPID_
-                            }));
+                        if(element && element.get('listParam')) {
+                            ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, element.get('_COMPID_'), {});
                         }
                     });
-                    
-                    // 아래 정보 조회는 효과 없음. - 보여줄 인폼 객체가 안보이는 상태임.
-                    ClientUpdateServerActions.getClientUpdateServer({
-                        compId: editingCompId,
-                        objId: paramObject.objId
-                    });
-
-                this.handleClose();
-            }, (res) => {
-
-            })
+                    this.handleClose();
+                });
         }
     }
 
     render() {
         const { classes } = this.props;
         const { ClientUpdateServerProps } = this.props;
-        const { dialogType, editingItem } = ClientUpdateServerProps;
-
-        const editingViewItem = editingItem;
+        const dialogType = ClientUpdateServerProps.get('dialogType');
+        const editingItem = (ClientUpdateServerProps.get('editingItem')) ? ClientUpdateServerProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === ClientUpdateServerManageDialog.TYPE_ADD) {
@@ -135,20 +118,24 @@ class ClientUpdateServerManageDialog extends Component {
         }
 
         return (
-            <Dialog open={ClientUpdateServerProps.dialogOpen}>
+            <div>
+            {(ClientUpdateServerProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={ClientUpdateServerProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <TextField
+                        id="objNm"
                         label="이름"
-                        value={(editingViewItem) ? editingViewItem.objNm : ''}
+                        value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientUpdateServerManageDialog.TYPE_VIEW)}
                     />
                     <TextField
+                        id="comment"
                         label="설명"
-                        value={(editingViewItem) ? editingViewItem.comment : ''}
+                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === ClientUpdateServerManageDialog.TYPE_VIEW)}
@@ -158,21 +145,21 @@ class ClientUpdateServerManageDialog extends Component {
                             <TextField
                                 label="주 OS 정보"
                                 multiline
-                                value={(editingViewItem.mainos) ? editingViewItem.mainos : ''}
+                                value={(editingItem.get('mainos')) ? editingItem.get('mainos') : ''}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
                             <TextField
                                 label="기반 OS 정보"
                                 multiline
-                                value={(editingViewItem.extos) ? editingViewItem.extos : ''}
+                                value={(editingItem.get('extos')) ? editingItem.get('extos') : ''}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
                             <TextField
                                 label="gooroom.pref"
                                 multiline
-                                value={(editingViewItem.priorities) ? editingViewItem.priorities : ''}
+                                value={(editingItem.get('priorities')) ? editingItem.get('priorities') : ''}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                 disabled
                             />
@@ -183,21 +170,21 @@ class ClientUpdateServerManageDialog extends Component {
                             <TextField
                                 label="주 OS 정보"
                                 multiline
-                                value={(editingViewItem.mainos) ? editingViewItem.mainos : ''}
+                                value={(editingItem.get('mainos')) ? editingItem.get('mainos') : ''}
                                 onChange={this.handleValueChange("mainos")}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
                             <TextField
                                 label="기반 OS 정보"
                                 multiline
-                                value={(editingViewItem.extos) ? editingViewItem.extos : ''}
+                                value={(editingItem.get('extos')) ? editingItem.get('extos') : ''}
                                 onChange={this.handleValueChange("extos")}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
                             <TextField
                                 label="gooroom.pref"
                                 multiline
-                                value={(editingViewItem.priorities) ? editingViewItem.priorities : ''}
+                                value={(editingItem.get('priorities')) ? editingItem.get('priorities') : ''}
                                 onChange={this.handleValueChange("priorities")}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
@@ -216,6 +203,8 @@ class ClientUpdateServerManageDialog extends Component {
                 </DialogActions>
                 <GrConfirm />
             </Dialog>
+            }
+            </div>
         );
     }
 
