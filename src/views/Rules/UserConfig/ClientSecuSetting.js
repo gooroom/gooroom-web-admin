@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Map, List } from 'immutable';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -8,7 +10,7 @@ import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject, getListParam, getListData, getViewItem } from 'components/GrUtils/GrCommonUtils';
+import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { createViewObject } from './ClientSecuSettingInform';
 
@@ -28,6 +30,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
@@ -40,15 +43,11 @@ import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 //
-//  ## Header ########## ########## ########## ########## ########## 
+//  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientSecuSettingHead extends Component {
+class ClientSecuSetting extends Component {
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
+  columnHeaders = [
     { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
     { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '정책이름' },
     { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: '정책아이디' },
@@ -56,45 +55,6 @@ class ClientSecuSettingHead extends Component {
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
-
-  render() {
-    const { classes } = this.props;
-    const { orderDir, orderColumn, } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {ClientSecuSettingHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
-class ClientSecuSetting extends Component {
 
   constructor(props) {
     super(props);
@@ -108,45 +68,52 @@ class ClientSecuSetting extends Component {
     this.handleSelectBtnClick();
   }
 
-  // .................................................
-  handleSelectBtnClick = () => {
+  handleChangePage = (event, page) => {
     const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId, {
+      page: page
+    });
+  };
 
-    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
-    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
-      page: 0,
-      compId: menuCompId
-    }));
+  handleChangeRowsPerPage = event => {
+    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
+    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value,
+      page: 0
+    });
   };
   
-  handleCreateButton = () => {
-    const { ClientSecuSettingActions } = this.props;
-    ClientSecuSettingActions.showDialog({
-      selectedItem: {
-        objId: '',
-        objNm: '',
-        comment: '',
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
+    let orderDir = "desc";
+    if (currOrderDir === "desc") {
+      orderDir = "asc";
+    }
+    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId,
+      orderDir: orderDir
+    });
+  };
 
-        screenTime: '',
-        passwordTime: '',
-        packageHandle: 'disallow',
-        state: 'disallow'
-      },
-      dialogType: ClientSecuSettingDialog.TYPE_ADD
+  // .................................................
+  handleSelectBtnClick = () => {
+    const { ClientSecuSettingProps, ClientSecuSettingProps } = this.props;
+    ClientSecuSettingProps.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId);
+  };
+
+  handleKeywordChange = name => event => {
+    this.props.compId.changeListParamData({
+      name: 'keyword', 
+      value: event.target.value,
+      compId: this.props.match.params.grMenuId
     });
   }
-  
+    
   handleRowClick = (event, id) => {
-    const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const { compId, compId } = this.props;
+    const compId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: ClientSecuSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
-
-    console.log('selectedItem : ', selectedItem);
+    const selectedItem = getRowObjectById(compId, compId, id, 'objId');
 
     // choice one from two views.
 
@@ -158,42 +125,36 @@ class ClientSecuSetting extends Component {
 
     // 2. view detail content
     ClientSecuSettingActions.showInform({
-      compId: menuCompId,
+      compId: compId,
       selectedItem: selectedItem
     });
     
   };
 
-  handleEditClick = (event, id) => { 
-    const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listData = getListData({ props: ClientSecuSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
+  handleCreateButton = () => {
+    this.props.compId.showDialog({
+      selectedItem: Map(),
+      dialogType: BrowserRuleSettingDialog.TYPE_ADD
     });
+  }
 
-    ClientSecuSettingActions.showDialog({
-      compId: menuCompId,
+  handleEditClick = (event, id) => { 
+    const { compId, compId } = this.props;
+    const selectedItem = getRowObjectById(compId, this.props.match.params.grMenuId, id, 'objId');
+
+    compId.showDialog({
       selectedItem: createViewObject(selectedItem),
-      dialogType: ClientSecuSettingDialog.TYPE_EDIT,
+      dialogType: BrowserRuleSettingDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    event.stopPropagation();
-    const { ClientSecuSettingProps, ClientSecuSettingActions, GrConfirmActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listData = getListData({ props: ClientSecuSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
-      return element.objId == id;
-    });
-
-    const re = GrConfirmActions.showConfirm({
+    const { compId, GrConfirmActions } = this.props;
+    const selectedItem = getRowObjectById(compId, this.props.match.params.grMenuId, id, 'objId');
+    GrConfirmActions.showConfirm({
       confirmTitle: '단말보안정책정보 삭제',
-      confirmMsg: '단말보안정책정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말보안정책정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedItem
@@ -205,96 +166,25 @@ class ClientSecuSetting extends Component {
       const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
 
       ClientSecuSettingActions.deleteClientSecuSettingData({
-        objId: paramObject.objId
+        objId: paramObject.get('objId'),
+        compId: this.props.match.params.grMenuId
       }).then((res) => {
-
-        const { editingCompId, viewItems } = ClientSecuSettingProps;
+        const viewItems = compId.get('viewItems');
         viewItems.forEach((element) => {
-          if(element && element.listParam) {
-            ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(element.listParam, {
-              compId: element._COMPID_
-            }));
+          if(element && element.get('listParam')) {
+            compId.readClientSecuSettingList(compId, element.get('_COMPID_'), {});
           }
         });
-          
-      }, () => {
-        
       });
     }
   };
 
-  // 페이지 번호 변경
-  handleChangePage = (event, page) => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
-    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
-      page: page,
-      compId: menuCompId
-    }));
-  };
-
-  // 페이지당 레코드수 변경
-  handleChangeRowsPerPage = event => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
-    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
-      rowsPerPage: event.target.value,
-      page: 0,
-      compId: menuCompId
-    }));
-  };
-  
-  // .................................................
-  handleRequestSort = (event, property) => {
-    const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
-    let orderDir = "desc";
-    if (listParam.orderColumn === property && listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-
-    ClientSecuSettingActions.readClientSecuSettingList(getMergedObject(listParam, {
-      orderColumn: property, 
-      orderDir: orderDir,
-      compId: menuCompId
-    }));
-  };
-  // .................................................
-
-  // .................................................
-  handleKeywordChange = name => event => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: ClientSecuSettingProps, compId: menuCompId });
-    ClientSecuSettingActions.changeStoreData({
-      name: 'listParam',
-      value: getMergedObject(listParam, {keyword: event.target.value}),
-      compId: menuCompId
-    });
-  }
-
   render() {
     const { classes } = this.props;
     const { ClientSecuSettingProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientSecuSettingProps.listParam.rowsPerPage - ClientSecuSettingProps.listData.length;
-
-    const viewItem = getViewItem({
-      props: ClientSecuSettingProps,
-      compId: menuCompId
-    });
-
-    const listData = (viewItem) ? viewItem.listData : [];
-    const listParam = (viewItem) ? viewItem.listParam : ClientSecuSettingProps.defaultListParam;
-    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : ClientSecuSettingProps.defaultListParam.orderDir;
-    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : ClientSecuSettingProps.defaultListParam.orderColumn;
+    const listObj = getDataObjectInComp(compId, compId);
     
     return (
       <div>
@@ -305,7 +195,9 @@ class ClientSecuSetting extends Component {
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
               <Grid item xs={6}>
-                <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} margin='dense' />
+                <FormControl fullWidth={true}>
+                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} margin='dense' />
+                </FormControl>
               </Grid>
 
               <Grid item xs={6}>
@@ -328,42 +220,45 @@ class ClientSecuSetting extends Component {
           </Grid>            
 
           {/* data area */}
+          {(listObj) &&
           <div>
             <Table>
 
-              <ClientSecuSettingHead
+              <GrCommonTableHead
                 classes={classes}
-                orderDir={orderDir}
-                orderColumn={orderColumn}
-                onRequestSort={this.handleRequestSort}
+                keyId="objId"
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                onRequestSort={this.handleChangeSort}
+                columnData={this.columnHeaders}
               />
 
               <TableBody>
-                {listData.map(n => {
+                {listObj.get('listData').map(n => {
                   return (
                     <TableRow 
                       className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.objId)}
+                      onClick={event => this.handleRowClick(event, n.get('objId'))}
                       tabIndex={-1}
-                      key={n.objId}
+                      key={n.get('objId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objId.endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objNm}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.objId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.modUserId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditClick(event, n.objId)}>
+                          onClick={event => this.handleEditClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleDeleteClick(event, n.objId)}>
+                          onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>                        
 
@@ -381,28 +276,28 @@ class ClientSecuSetting extends Component {
                 )}
               </TableBody>
             </Table>
+
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
           </div>
-
-          <TablePagination
-            component='div'
-            count={listParam.rowsFiltered}
-            rowsPerPage={listParam.rowsPerPage}
-            rowsPerPageOptions={listParam.rowsPerPageOptions}
-            page={listParam.page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
-
+        }
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientSecuSettingInform compId={menuCompId} />
-        <ClientSecuSettingDialog />
+        <ClientSecuSettingInform compId={compId} />
+        <ClientSecuSettingDialog compId={compId} />
         <GrConfirm />
       </div>
     );

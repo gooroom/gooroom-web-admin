@@ -82,7 +82,7 @@ class BrowserRuleSettingDialog extends Component {
             const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
             BrowserRuleSettingActions.createBrowserRuleSettingData(BrowserRuleSettingProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = BrowserRuleSettingProps.get('BrowserRuleSettingProps');
+                    const viewItems = BrowserRuleSettingProps.get('viewItems');
                     if(viewItems) {
                         viewItems.forEach((element) => {
                             if(element && element.get('listParam')) {

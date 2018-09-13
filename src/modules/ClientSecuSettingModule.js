@@ -1,28 +1,28 @@
 import { handleActions } from 'redux-actions';
+import { Map, List, fromJS } from 'immutable';
+
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+const COMMON_PENDING = 'clientSecuSetting/COMMON_PENDING';
+const COMMON_FAILURE = 'clientSecuSetting/COMMON_FAILURE';
 
-const COMMON_PENDING = 'mediaControlSetting/COMMON_PENDING';
-const COMMON_FAILURE = 'mediaControlSetting/COMMON_FAILURE';
+const GET_CLIENTSECU_LIST_SUCCESS = 'clientSecuSetting/GET_CLIENTSECU_LIST_SUCCESS';
+const GET_CLIENTSECU_SUCCESS = 'clientSecuSetting/GET_CLIENTSECU_SUCCESS';
+const CREATE_CLIENTSECU_SUCCESS = 'clientSecuSetting/CREATE_CLIENTSECU_SUCCESS';
+const EDIT_CLIENTSECU_SUCCESS = 'clientSecuSetting/EDIT_CLIENTSECU_SUCCESS';
+const DELETE_CLIENTSECU_SUCCESS = 'clientSecuSetting/DELETE_CLIENTSECU_SUCCESS';
 
-const GET_CLIENTSECU_LIST_SUCCESS = 'mediaControlSetting/GET_LIST_SUCCESS';
-const GET_CLIENTSECU_SUCCESS = 'mediaControlSetting/GET_CLIENTSECU_SUCCESS';
-const CREATE_CLIENTSECU_SUCCESS = 'mediaControlSetting/CREATE_CLIENTSECU_SUCCESS';
-const EDIT_CLIENTSECU_SUCCESS = 'mediaControlSetting/EDIT_CLIENTSECU_SUCCESS';
-const DELETE_CLIENTSECU_SUCCESS = 'mediaControlSetting/DELETE_CLIENTSECU_SUCCESS';
+const SHOW_CLIENTSECU_INFORM = 'clientSecuSetting/SHOW_CLIENTSECU_INFORM';
+const SHOW_CLIENTSECU_DIALOG = 'clientSecuSetting/SHOW_CLIENTSECU_DIALOG';
 
-const SHOW_CLIENTSECU_INFORM = 'mediaControlSetting/SHOW_CLIENTSECU_INFORM';
-const SHOW_CLIENTSECU_DIALOG = 'mediaControlSetting/SHOW_CLIENTSECU_DIALOG';
+const SET_EDITING_ITEM_VALUE = 'clientSecuSetting/SET_EDITING_ITEM_VALUE';
 
-const SET_EDITING_ITEM_VALUE = 'mediaControlSetting/SET_EDITING_ITEM_VALUE';
+const CHG_VIEWITEM_DATA = 'clientSecuSetting/CHG_VIEWITEM_DATA';
+const CHG_STORE_DATA = 'clientSecuSetting/CHG_STORE_DATA';
 
-const CHG_VIEWITEM_DATA = 'mediaControlSetting/CHG_VIEWITEM_DATA';
-const CHG_STORE_DATA = 'mediaControlSetting/CHG_STORE_DATA';
-
-const SET_BLUETOOTHMAC_ITEM = 'mediaControlSetting/SET_BLUETOOTHMAC_ITEM';
-const ADD_BLUETOOTHMAC_ITEM = 'mediaControlSetting/ADD_BLUETOOTHMAC_ITEM';
-const DELETE_BLUETOOTHMAC_ITEM = 'mediaControlSetting/DELETE_BLUETOOTHMAC_ITEM';
+const SET_BLUETOOTHMAC_ITEM = 'clientSecuSetting/SET_BLUETOOTHMAC_ITEM';
+const ADD_BLUETOOTHMAC_ITEM = 'clientSecuSetting/ADD_BLUETOOTHMAC_ITEM';
+const DELETE_BLUETOOTHMAC_ITEM = 'clientSecuSetting/DELETE_BLUETOOTHMAC_ITEM';
 
 
 // ...

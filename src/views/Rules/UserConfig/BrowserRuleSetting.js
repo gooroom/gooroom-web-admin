@@ -10,7 +10,6 @@ import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject, getListParam, getListData, getViewItem } from 'components/GrUtils/GrCommonUtils';
 import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { createViewObject } from './BrowserRuleSettingInform';
@@ -33,6 +32,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
@@ -167,7 +167,7 @@ class BrowserRuleSetting extends Component {
       const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
 
       BrowserRuleSettingActions.deleteBrowserRuleSettingData({
-        objId: confirmObject.get('objId'),
+        objId: paramObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
         const viewItems = BrowserRuleSettingProps.get('viewItems');
@@ -196,7 +196,9 @@ class BrowserRuleSetting extends Component {
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
               <Grid item xs={6}>
-                <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} />
+                <FormControl fullWidth={true}>
+                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} />
+                </FormControl>
               </Grid>
 
               <Grid item xs={6}>

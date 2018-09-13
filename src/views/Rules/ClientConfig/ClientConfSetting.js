@@ -32,6 +32,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
@@ -196,7 +197,9 @@ class ClientConfSetting extends Component {
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
               <Grid item xs={6}>
-                <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
+                <FormControl fullWidth={true}>
+                  <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
+                </FormControl>
               </Grid>
 
               <Grid item xs={6}>
