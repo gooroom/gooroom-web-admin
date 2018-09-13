@@ -5,12 +5,12 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientUpdateServerDialog from './ClientUpdateServerManageDialog';
 import { createViewObject } from './ClientUpdateServerManageInform';
+import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -45,13 +45,10 @@ class ClientUpdateServerComp extends Component {
 
   handleEditBtnClick = (param) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps, compId } = this.props;
-    const viewItem = ClientUpdateServerProps.viewItems.find(function(element) {
-      return element._COMPID_ == compId;
-    });
+    const selectedItem = getSelectedObjectInComp(ClientUpdateServerProps, compId);
 
     ClientUpdateServerActions.showDialog({
-      compId: compId,
-      selectedItem: createViewObject(viewItem.selectedItem),
+      selectedItem: createViewObject(selectedItem),
       dialogType: ClientUpdateServerDialog.TYPE_EDIT,
     });
   };
@@ -59,19 +56,11 @@ class ClientUpdateServerComp extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { ClientUpdateServerProps, compId } = this.props;
-    const { viewItems } = ClientUpdateServerProps;
     const bull = <span className={classes.bullet}>•</span>;
 
-    let viewCompItem = null;
-    if(viewItems) {
-      const viewItem = viewItems.find((element) => {
-        return element._COMPID_ === compId;
-      });
-      if(viewItem) {
-        viewCompItem = createViewObject(viewItem.selectedItem);
-      }
-    }
+    const { ClientUpdateServerProps, compId } = this.props;
+    const viewItem = getDataObjectInComp(ClientUpdateServerProps, compId);
+    const viewCompItem = createViewObject(viewItem.get('selectedItem'));
 
     return (
       <React.Fragment>
@@ -87,32 +76,32 @@ class ClientUpdateServerComp extends Component {
               <Grid container justify="flex-end">
                 <Button size="small"
                   variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
+                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'))}
                 ><SettingsApplicationsIcon />수정</Button>
               </Grid>
             </Grid>
           </Grid>
           <Typography variant="headline" component="h2">
-            {viewCompItem.objNm}
+            {viewCompItem.get('objNm')}
           </Typography>
           <Typography color="textSecondary">
-            {(viewCompItem.comment != '') ? '"' + viewCompItem.comment + '"' : ''}
+            {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
           </Typography>
           <Divider />
-          {(viewCompItem && viewCompItem.objId != '') &&
+          {(viewCompItem && viewCompItem.get('objId') != '') &&
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row" >{bull} 주 OS 정보</TableCell>
-                  <TableCell><pre>{viewCompItem.mainos}</pre></TableCell>
+                  <TableCell><pre>{viewCompItem.get('mainos')}</pre></TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" >{bull} 기반 OS 정보</TableCell>
-                  <TableCell><pre>{viewCompItem.extos}</pre></TableCell>
+                  <TableCell><pre>{viewCompItem.get('extos')}</pre></TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" >{bull} gooroom.pref</TableCell>
-                  <TableCell><pre>{viewCompItem.priorities}</pre></TableCell>
+                  <TableCell><pre>{viewCompItem.get('priorities')}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -128,13 +117,11 @@ class ClientUpdateServerComp extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule,
   ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
   ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });

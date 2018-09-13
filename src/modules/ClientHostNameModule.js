@@ -73,8 +73,8 @@ export const closeInform = (param) => dispatch => {
 };
 
 // ...
-export const readClientHostNameList = (module, compId, extParam) => dispatch => {let newListParam;
-    
+export const readClientHostNameList = (module, compId, extParam) => dispatch => {
+    let newListParam;
     if(module.get('viewItems')) {
         const viewIndex = module.get('viewItems').findIndex((e) => {
             return e.get('_COMPID_') == compId;
@@ -127,7 +127,7 @@ export const getClientHostName = (param) => dispatch => {
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -222,7 +222,7 @@ export const editClientHostNameData = (itemObj) => dispatch => {
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
