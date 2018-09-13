@@ -273,21 +273,12 @@ class ClientManage extends Component {
 
               <Grid item xs={3} >
                 <FormControl fullWidth={true}>
-                <TextField
-                  id='keyword'
-                  label='검색어'
-                  onChange={this.handleKeywordChange('keyword')}
-                />
+                <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
                 </FormControl>
               </Grid>
 
               <Grid item xs={3} >
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={ () => this.handleSelectBtnClick() }
-                >
+                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
                   <Search />
                   조회
                 </Button>
@@ -296,10 +287,7 @@ class ClientManage extends Component {
             </Grid>
 
             <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
+              <Button size="small" variant="contained" color="primary"
                 onClick={() => {
                   this.handleCreateButton();
                 }}

@@ -173,7 +173,7 @@ class GrSideMenu extends React.Component {
         open={this.props.sideOpen}
       >
         <div style={{position: "relative", flex: "1"}}>
-          <AppBar position="static" color="secondary" style={{height:grLayout.sideMenuHeaderHeight}}>
+          <AppBar position="static" style={{height:grLayout.sideMenuHeaderHeight, backgroundColor:"gray"}}>
             <Toolbar style={{minHeight:"100%"}}>
               <Typography variant="title" color="inherit">
               SIDE HEADER
@@ -184,7 +184,7 @@ class GrSideMenu extends React.Component {
           {menuList(menus.items, 0)}
           </MenuList>
         </div>
-        <AppBar position="static" color="secondary">
+        <AppBar position="static" style={{backgroundColor:"gray"}}>
           <Toolbar>
             <Typography variant="title" color="inherit">
             SIDE FOOTER

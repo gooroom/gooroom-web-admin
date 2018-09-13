@@ -42,13 +42,13 @@ class ClientGroupDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientGroupProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '단말그룹 등록',
             confirmMsg: '단말그룹을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
             confirmObject: ClientGroupProps.get('editingItem')
-          });
+        });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
