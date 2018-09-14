@@ -97,13 +97,13 @@ class BrowserRuleSettingDialog extends Component {
 
     handleEditData = (event, id) => {
         const { BrowserRuleSettingProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '브라우저제어정보 수정',
             confirmMsg: '브라우저제어정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
             confirmObject: BrowserRuleSettingProps.get('editingItem')
-          });
+        });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {

@@ -125,7 +125,7 @@ export const createViewObject = (param) => {
       }
     });
   
-    return {
+    return Map({
       objId: param.get('objId'),
       objNm: param.get('objNm'),
       comment: param.get('comment'),
@@ -135,7 +135,7 @@ export const createViewObject = (param) => {
       passwordTime: passwordTime,
       packageHandle: packageHandle,
       state: state
-    };
+    });
   
   } else {
     return param;

@@ -268,7 +268,7 @@ class BrowserRuleSetting extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell colSpan={BrowserRuleSettingHead.columnData.length + 1} className={classes.grSmallAndClickCell} />
+                    <TableCell colSpan={this.columnHeaders.columnData.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>

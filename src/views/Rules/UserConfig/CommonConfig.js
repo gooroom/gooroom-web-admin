@@ -6,21 +6,21 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
+import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
-import { createViewObject } from './ClientSecuSettingInform';
+import { createViewObject } from './BrowserRuleSettingInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
-import ClientSecuSettingDialog from './ClientSecuSettingDialog';
-import ClientSecuSettingInform from './ClientSecuSettingInform';
+import BrowserRuleSettingDialog from './BrowserRuleSettingDialog';
+import BrowserRuleSettingInform from './BrowserRuleSettingInform';
 import GrPane from 'containers/GrContent/GrPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -47,7 +47,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientSecuSetting extends Component {
+class CommonConfig extends Component {
 
   columnHeaders = [
     { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
@@ -71,27 +71,27 @@ class ClientSecuSetting extends Component {
   }
 
   handleChangePage = (event, page) => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId, {
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId, {
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
     let orderDir = "desc";
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId, {
+    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -99,34 +99,34 @@ class ClientSecuSetting extends Component {
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId);
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId);
   };
 
   handleKeywordChange = name => event => {
-    this.props.ClientSecuSettingActions.changeListParamData({
+    this.props.BrowserRuleSettingActions.changeListParamData({
       name: 'keyword', 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
     });
   }
-    
+  
   handleRowClick = (event, id) => {
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
+    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedItem = getRowObjectById(ClientSecuSettingProps, compId, id, 'objId');
+    const selectedItem = getRowObjectById(BrowserRuleSettingProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
-    // ClientSecuSettingActions.showDialog({
+    // BrowserRuleSettingActions.showDialog({
     //   selectedItem: viewObject,
-    //   dialogType: ClientSecuSettingDialog.TYPE_VIEW,
+    //   dialogType: BrowserRuleSettingDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    ClientSecuSettingActions.showInform({
+    BrowserRuleSettingActions.showInform({
       compId: compId,
       selectedItem: selectedItem
     });
@@ -134,48 +134,47 @@ class ClientSecuSetting extends Component {
   };
 
   handleCreateButton = () => {
-    this.props.ClientSecuSettingActions.showDialog({
+    this.props.BrowserRuleSettingActions.showDialog({
       selectedItem: Map(),
-      dialogType: ClientSecuSettingDialog.TYPE_ADD
+      dialogType: BrowserRuleSettingDialog.TYPE_ADD
     });
   }
 
   handleEditClick = (event, id) => { 
-    const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    const selectedItem = getRowObjectById(ClientSecuSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
+    const selectedItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
-    ClientSecuSettingActions.showDialog({
+    BrowserRuleSettingActions.showDialog({
       selectedItem: createViewObject(selectedItem),
-      dialogType: ClientSecuSettingDialog.TYPE_EDIT
+      dialogType: BrowserRuleSettingDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { ClientSecuSettingProps, GrConfirmActions } = this.props;
-    const selectedItem = getRowObjectById(ClientSecuSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const { BrowserRuleSettingProps, GrConfirmActions } = this.props;
+    const selectedItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
-      confirmTitle: '단말보안정책정보 삭제',
-      confirmMsg: '단말보안정책정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmTitle: '단말정책정보 삭제',
+      confirmMsg: '단말정책정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
-
     if(confirmValue) {
-      const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
+      const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
 
-      ClientSecuSettingActions.deleteClientSecuSettingData({
+      BrowserRuleSettingActions.deleteBrowserRuleSettingData({
         objId: paramObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        const viewItems = ClientSecuSettingProps.get('viewItems');
+        const viewItems = BrowserRuleSettingProps.get('viewItems');
         viewItems.forEach((element) => {
-          if(element && element.get('listParam')) {
-            ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, element.get('_COMPID_'), {});
-          }
+            if(element && element.get('listParam')) {
+                BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, element.get('_COMPID_'), {});
+            }
         });
       });
     }
@@ -183,11 +182,11 @@ class ClientSecuSetting extends Component {
 
   render() {
     const { classes } = this.props;
-    const { ClientSecuSettingProps } = this.props;
+    const { BrowserRuleSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;//ClientSecuSettingProps.listParam.rowsPerPage - ClientSecuSettingProps.listData.length;
-    const listObj = getDataObjectInComp(ClientSecuSettingProps, compId);
-    
+    const emptyRows = 0;//BrowserRuleSettingProps.listParam.rowsPerPage - BrowserRuleSettingProps.listData.length;
+    const listObj = getDataObjectInComp(BrowserRuleSettingProps, compId);
+
     return (
       <div>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
@@ -198,7 +197,7 @@ class ClientSecuSetting extends Component {
 
               <Grid item xs={6}>
                 <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} margin='dense' />
+                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} />
                 </FormControl>
               </Grid>
 
@@ -225,7 +224,6 @@ class ClientSecuSetting extends Component {
           {(listObj) &&
           <div>
             <Table>
-
               <GrCommonTableHead
                 classes={classes}
                 keyId="objId"
@@ -234,7 +232,6 @@ class ClientSecuSetting extends Component {
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
-
               <TableBody>
                 {listObj.get('listData').map(n => {
                   return (
@@ -271,12 +268,11 @@ class ClientSecuSetting extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell colSpan={this.columnHeaders.columnData.length + 1} className={classes.grSmallAndClickCell} />
+                    <TableCell colSpan={BrowserRuleSettingHead.columnData.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
             </Table>
-
             <TablePagination
               component='div'
               count={listObj.getIn(['listParam', 'rowsFiltered'])}
@@ -296,8 +292,8 @@ class ClientSecuSetting extends Component {
         }
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientSecuSettingInform compId={compId} />
-        <ClientSecuSettingDialog compId={compId} />
+        <BrowserRuleSettingInform compId={compId} />
+        <BrowserRuleSettingDialog compId={compId} />
         <GrConfirm />
       </div>
     );
@@ -305,15 +301,15 @@ class ClientSecuSetting extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientSecuSettingProps: state.ClientSecuSettingModule
+  BrowserRuleSettingProps: state.BrowserRuleSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientSecuSettingActions: bindActionCreators(ClientSecuSettingActions, dispatch),
+  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientSecuSetting));
+export default (CommonConfig);
 
 
 

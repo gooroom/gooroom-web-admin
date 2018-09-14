@@ -9,8 +9,6 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -72,13 +70,6 @@ class MediaControlSettingDialog extends Component {
         });
     }
 
-    handleChangeSelectedNtp = (name, index) => event => {
-        this.props.MediaControlSettingActions.setEditingItemValue({
-            name: name,
-            value: index
-        });
-    }
-
     handleCreateData = (event) => {
         const { MediaControlSettingProps, GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
@@ -86,66 +77,50 @@ class MediaControlSettingDialog extends Component {
             confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: MediaControlSettingProps.editingItem
+            confirmObject: MediaControlSettingProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
-            MediaControlSettingActions.createMediaControlSettingData(MediaControlSettingProps.editingItem)
+            MediaControlSettingActions.createMediaControlSettingData(MediaControlSettingProps.get('editingItem'))
                 .then((res) => {
-                    const { viewItems } = MediaControlSettingProps;
+                    const viewItems = MediaControlSettingProps.get('viewItems');
                     if(viewItems) {
                         viewItems.forEach((element) => {
-                            if(element && element.listParam) {
-                                MediaControlSettingActions.readMediaControlSettingList(getMergedObject(element.listParam, {
-                                    compId: element._COMPID_
-                                }));
+                            if(element && element.get('listParam')) {
+                                MediaControlSettingActions.readMediaControlSettingList(MediaControlSettingProps, element.get('_COMPID_'), {});
                             }
                         });
                     }
                     this.handleClose();
-                }, (res) => {
-            })
+                });
         }
     }
 
     handleEditData = (event, id) => {
         const { MediaControlSettingProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '매체제어정책정보 수정',
             confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            confirmObject: MediaControlSettingProps.editingItem
-          });
+            confirmObject: MediaControlSettingProps.get('editingItem')
+        });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
-
-            MediaControlSettingActions.editMediaControlSettingData(MediaControlSettingProps.editingItem)
+            MediaControlSettingActions.editMediaControlSettingData(MediaControlSettingProps.get('editingItem'))
                 .then((res) => {
-
-                    const { editingCompId, viewItems } = MediaControlSettingProps;
+                    const viewItems = MediaControlSettingProps.get('viewItems');
                     viewItems.forEach((element) => {
-                        if(element && element.listParam) {
-                            MediaControlSettingActions.readMediaControlSettingList(getMergedObject(element.listParam, {
-                                compId: element._COMPID_
-                            }));
+                        if(element && element.get('listParam')) {
+                            MediaControlSettingActions.readMediaControlSettingList(MediaControlSettingProps, element.get('_COMPID_'), {});
                         }
                     });
-
-                    // 아래 정보 조회는 효과 없음. - 보여줄 인폼 객체가 안보이는 상태임.
-                    // MediaControlSettingActions.getMediaControlSetting({
-                    //     compId: editingCompId,
-                    //     objId: paramObject.objId
-                    // });
-
-                this.handleClose();
-            }, (res) => {
-
-            })
+                    this.handleClose();
+                });
         }
     }
 
@@ -165,14 +140,13 @@ class MediaControlSettingDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { MediaControlSettingProps } = this.props;
-        const { dialogType, editingItem } = MediaControlSettingProps;
-
-        const editingViewItem = editingItem;
-
-        let title = "";
         const bull = <span className={classes.bullet}>•</span>;
 
+        const { MediaControlSettingProps } = this.props;
+        const dialogType = MediaControlSettingProps.get('dialogType');
+        const editingItem = (MediaControlSettingProps.get('editingItem')) ? MediaControlSettingProps.get('editingItem') : null;
+
+        let title = "";
         if(dialogType === MediaControlSettingDialog.TYPE_ADD) {
             title = "매체제어정책설정 등록";
         } else if(dialogType === MediaControlSettingDialog.TYPE_VIEW) {
@@ -182,14 +156,16 @@ class MediaControlSettingDialog extends Component {
         }
 
         return (
-            <Dialog open={MediaControlSettingProps.dialogOpen}>
+            <div>
+            {(MediaControlSettingProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={MediaControlSettingProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <TextField
                         id="objNm"
                         label="이름"
-                        value={(editingViewItem) ? editingViewItem.objNm : ''}
+                        value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
                         disabled={(dialogType === MediaControlSettingDialog.TYPE_VIEW)}
@@ -197,7 +173,7 @@ class MediaControlSettingDialog extends Component {
                     <TextField
                         id="comment"
                         label="설명"
-                        value={(editingViewItem) ? editingViewItem.comment : ''}
+                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === MediaControlSettingDialog.TYPE_VIEW)}
@@ -206,16 +182,6 @@ class MediaControlSettingDialog extends Component {
                         <div>
                             <Grid container spacing={24} className={classes.grNormalTableRow}>
                                 <Grid item xs={12}>
-                                    <TextField
-                                        label="USB메모리"
-                                        value={(editingViewItem.useHypervisor) ? '허가' : '금지'}
-                                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                        disabled
-                                    />
-                                    <Checkbox
-                                        checked={editingViewItem.usbReadonly}
-                                        value="checkedA"
-                                    />
                                 </Grid> 
                             </Grid>
                         </div>                        
@@ -230,25 +196,21 @@ class MediaControlSettingDialog extends Component {
                             <FormControlLabel
                                 control={
                                 <Switch onChange={this.handleValueChange('usbMemory')}
-                                    checked={this.checkAllow(editingViewItem.usbMemory)}
+                                    checked={this.checkAllow(editingItem.get('usbMemory'))}
                                     color="primary" />
                                 }
-                                label={(editingViewItem.usbMemory) ? 'USB 메모리 허가' : 'USB 메모리 금지'}
+                                label={(editingItem.get('usbMemory')) ? 'USB 메모리 허가' : 'USB 메모리 금지'}
                             />
                             </Grid>
                             <Grid item xs={6}>
-
-
                             <FormControlLabel
                                 control={
                                 <Checkbox onChange={this.handleValueChange('usbReadonly')}
-                                    checked={this.checkAllow(editingViewItem.usbReadonly)}
+                                    checked={this.checkAllow(editingItem.get('usbReadonly'))}
                                 />
                                 }
                                 label="Readonly"
                             />
-
-
                             </Grid>
                         </Grid>
 
@@ -259,20 +221,20 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('cdAndDvd')} 
-                                        checked={this.checkAllow(editingViewItem.cdAndDvd)}
+                                        checked={this.checkAllow(editingItem.get('cdAndDvd'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.cdAndDvd == 'allow') ? 'CD/DVD 허가' : 'CD/DVD 금지'}
+                                    label={(editingItem.get('cdAndDvd') == 'allow') ? 'CD/DVD 허가' : 'CD/DVD 금지'}
                                 />
                             </Grid>
                             <Grid item xs={6} >
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('printer')} 
-                                        checked={this.checkAllow(editingViewItem.printer)}
+                                        checked={this.checkAllow(editingItem.get('printer'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.printer == 'allow') ? '프린터 허가' : '프린터 금지'}
+                                    label={(editingItem.get('printer') == 'allow') ? '프린터 허가' : '프린터 금지'}
                                 />
                             </Grid>
                         </Grid>
@@ -284,10 +246,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('screenCapture')} 
-                                        checked={this.checkAllow(editingViewItem.screenCapture)}
+                                        checked={this.checkAllow(editingItem.get('screenCapture'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.screenCapture == 'allow') ? '화면캡쳐 허가' : '화면캡쳐 금지'}
+                                    label={(editingItem.get('screenCapture') == 'allow') ? '화면캡쳐 허가' : '화면캡쳐 금지'}
                                 />
                             </Grid>
 
@@ -295,10 +257,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('camera')} 
-                                        checked={this.checkAllow(editingViewItem.camera)}
+                                        checked={this.checkAllow(editingItem.get('camera'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.camera == 'allow') ? '카메라 허가' : '카메라 금지'}
+                                    label={(editingItem.get('camera') == 'allow') ? '카메라 허가' : '카메라 금지'}
                                 />
                             </Grid>
                         </Grid>
@@ -310,10 +272,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('sound')} 
-                                        checked={this.checkAllow(editingViewItem.sound)}
+                                        checked={this.checkAllow(editingItem.get('sound'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.sound == 'allow') ? '사운드(소리, 마이크) 허가' : '사운드(소리, 마이크) 금지'}
+                                    label={(editingItem.get('sound') == 'allow') ? '사운드(소리, 마이크) 허가' : '사운드(소리, 마이크) 금지'}
                                 />
                             </Grid>
 
@@ -321,10 +283,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('wireless')} 
-                                        checked={this.checkAllow(editingViewItem.wireless)}
+                                        checked={this.checkAllow(editingItem.get('wireless'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.wireless == 'allow') ? '무선랜 허가' : '무선랜 금지'}
+                                    label={(editingItem.get('wireless') == 'allow') ? '무선랜 허가' : '무선랜 금지'}
                                 />
                             </Grid>
                         </Grid>
@@ -336,10 +298,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('keyboard')} 
-                                        checked={this.checkAllow(editingViewItem.keyboard)}
+                                        checked={this.checkAllow(editingItem.get('keyboard'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.keyboard == 'allow') ? 'USB키보드 허가' : 'USB키보드 금지'}
+                                    label={(editingItem.get('keyboard') == 'allow') ? 'USB키보드 허가' : 'USB키보드 금지'}
                                 />
                             </Grid>
 
@@ -347,10 +309,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('mouse')} 
-                                        checked={this.checkAllow(editingViewItem.mouse)}
+                                        checked={this.checkAllow(editingItem.get('mouse'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.mouse == 'allow') ? 'USB마우스 허가' : 'USB마우스 금지'}
+                                    label={(editingItem.get('mouse') == 'allow') ? 'USB마우스 허가' : 'USB마우스 금지'}
                                 />
                             </Grid>
                         </Grid>
@@ -362,10 +324,10 @@ class MediaControlSettingDialog extends Component {
                                 <FormControlLabel
                                     control={
                                     <Switch onChange={this.handleValueChange('bluetoothState')} 
-                                        checked={this.checkAllow(editingViewItem.bluetoothState)}
+                                        checked={this.checkAllow(editingItem.get('bluetoothState'))}
                                         color="primary" />
                                     }
-                                    label={(editingViewItem.bluetoothState == 'allow') ? '블루투스 허가' : '블루투스 금지'}
+                                    label={(editingItem.get('bluetoothState') == 'allow') ? '블루투스 허가' : '블루투스 금지'}
                                 />
                             </Grid>
                             <Grid item xs={8} >
@@ -378,7 +340,7 @@ class MediaControlSettingDialog extends Component {
                                 </Button>
                                 <div>
                                     <List>
-                                    {editingViewItem.macAddress && editingViewItem.macAddress.length > 0 && editingViewItem.macAddress.map((value, index) => (
+                                    {editingItem.get('macAddress') && editingItem.get('macAddress').size > 0 && editingItem.get('macAddress').map((value, index) => (
                                         <ListItem key={index} >
                                             <Input value={value} onChange={this.handleBluetoothMacValueChange(index)}/>
                                             <ListItemSecondaryAction>
@@ -408,6 +370,8 @@ class MediaControlSettingDialog extends Component {
                 </DialogActions>
                 <GrConfirm />
             </Dialog>
+            }
+            </div>
         );
     }
 

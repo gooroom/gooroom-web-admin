@@ -22,9 +22,6 @@ const SET_EDITING_ITEM_VALUE = 'browserRule/SET_EDITING_ITEM_VALUE';
 const CHG_LISTPARAM_DATA = 'browserRule/CHG_LISTPARAM_DATA';
 const CHG_COMPVARIABLE_DATA = 'browserRule/CHG_COMPVARIABLE_DATA';
 
-const CHG_VIEWITEM_DATA = 'browserRule/CHG_VIEWITEM_DATA';
-const CHG_STORE_DATA = 'browserRule/CHG_STORE_DATA';
-
 const SET_WHITELIST_ITEM = 'browserRule/SET_WHITELIST_ITEM';
 const ADD_WHITELIST_ITEM = 'browserRule/ADD_WHITELIST_ITEM';
 const DELETE_WHITELIST_ITEM = 'browserRule/DELETE_WHITELIST_ITEM';
@@ -73,7 +70,7 @@ export const showInform = (param) => dispatch => {
     });
 };
 
-export const closeInform = () => dispatch => {
+export const closeInform = (param) => dispatch => {
     return dispatch({
         type: CLOSE_BROWSERRULE_INFORM,
         compId: param.compId
@@ -432,44 +429,6 @@ export default handleActions({
         });
         return state.setIn(['viewItems', viewIndex, action.name], action.value);
     },
-    // [CHG_STORE_DATA]: (state, action) => {
-    //     return {
-    //         ...state,
-    //         [action.payload.name]: action.payload.value
-    //     }
-    // },
-    // [CHG_VIEWITEM_DATA]: (state, action) => {
-
-    //     const COMP_ID = action.payload.compId;
-
-    //     let viewItems = [];
-    //     if(state.viewItems) {
-    //         viewItems = state.viewItems;
-    //         const viewItem = viewItems.find((element) => {
-    //             return element._COMPID_ == COMP_ID;
-    //         });
-            
-    //         if(viewItem) {
-    //             Object.assign(viewItem, {
-    //                 [action.payload.name]: action.payload.value
-    //             });
-    //         } else {
-    //             viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-    //                 [action.payload.name]: action.payload.value
-    //             }));
-    //         }
-
-    //     } else {
-    //         viewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-    //             [action.payload.name]: action.payload.value
-    //         }));
-    //     }
-
-    //     return {
-    //         ...state,
-    //         viewItems: viewItems
-    //     }
-    // },
     [CREATE_BROWSERRULE_SUCCESS]: (state, action) => {
         return state.merge({
             pending: false,
