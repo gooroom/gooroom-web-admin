@@ -63,20 +63,6 @@ class ClientSecuSettingDialog extends Component {
         }
     }
 
-    handleBluetoothMacValueChange = index => event => {
-        this.props.ClientSecuSettingActions.setBluetoothMac({
-            index: index,
-            value: event.target.value
-        });
-    }
-
-    handleChangeSelectedNtp = (name, index) => event => {
-        this.props.ClientSecuSettingActions.setEditingItemValue({
-            name: name,
-            value: index
-        });
-    }
-
     handleCreateData = (event) => {
         const { ClientSecuSettingProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
@@ -96,7 +82,7 @@ class ClientSecuSettingDialog extends Component {
                     if(viewItems) {
                         viewItems.forEach((element) => {
                             if(element && element.get('listParam')) {
-                                compId.readClientSecuSettingList(ClientSecuSettingProps, element.get('_COMPID_'), {});
+                                ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, element.get('_COMPID_'), {});
                             }
                         });
                     }
@@ -125,22 +111,12 @@ class ClientSecuSettingDialog extends Component {
                     const viewItems = ClientSecuSettingProps.get('viewItems');
                     viewItems.forEach((element) => {
                         if(element && element.get('listParam')) {
-                            compId.readClientSecuSettingList(ClientSecuSettingProps, element.get('_COMPID_'), {});
+                            ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, element.get('_COMPID_'), {});
                         }
                     });
                     this.handleClose();
                 });
         }
-    }
-
-    handleAddBluetoothMac = () => {
-        const { ClientSecuSettingActions } = this.props;
-        ClientSecuSettingActions.addBluetoothMac();
-    }
-
-    handleDeleteBluetoothMac = index => event => {
-        const { ClientSecuSettingActions } = this.props;
-        ClientSecuSettingActions.deleteBluetoothMac(index);
     }
 
     checkAllow = value => {
@@ -167,7 +143,7 @@ class ClientSecuSettingDialog extends Component {
         return (
             <div>
             {(ClientSecuSettingProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={ClientSecuSettingProps.dialogOpen}>
+            <Dialog open={ClientSecuSettingProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 

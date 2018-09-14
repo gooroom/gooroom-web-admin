@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Map, List } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -6,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
 
@@ -34,22 +36,23 @@ class MediaControlSettingInform extends Component {
   render() {
 
     const { classes } = this.props;
-    const { MediaControlSettingProps, compId } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = createViewObject(getSelectedObjectInComp(MediaControlSettingProps, compId));
+    const { MediaControlSettingProps, compId } = this.props;
+    const viewItem = getDataObjectInComp(MediaControlSettingProps, compId);
+    const selectedViewItem = (viewItem.get('selectedItem')) ? createViewObject(viewItem.get('selectedItem')) : null;
 
     return (
       <div>
-      {(MediaControlSettingProps.informOpen && selectedViewItem) &&
+      {(viewItem.get('informOpen') && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(selectedViewItem) ? selectedViewItem.objNm : ''}
-            subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
+            title={(selectedViewItem) ? selectedViewItem.get('objNm') : ''}
+            subheader={selectedViewItem.get('objId') + ', ' + formatDateToSimple(selectedViewItem.get('modDate'), 'YYYY-MM-DD')}
           />
           <CardContent>
             <Typography component="pre">
-              "{selectedViewItem.comment}"
+              "{selectedViewItem.get('comment')}"
             </Typography>
             
             <Divider />
@@ -59,43 +62,43 @@ class MediaControlSettingInform extends Component {
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} USB메모리</TableCell>
-                  <TableCell numeric>{selectedViewItem.usbMemory}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('usbMemory')}</TableCell>
                   <TableCell component="th" scope="row">{bull} CD/DVD</TableCell>
-                  <TableCell numeric>{selectedViewItem.cdAndDvd}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('cdAndDvd')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 프린터</TableCell>
-                  <TableCell numeric>{selectedViewItem.printer}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('printer')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 화면캡쳐</TableCell>
-                  <TableCell numeric>{selectedViewItem.screenCapture}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('screenCapture')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 사운드(소리,마이크)</TableCell>
-                  <TableCell numeric>{selectedViewItem.sound}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('sound')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 카메라</TableCell>
-                  <TableCell numeric>{selectedViewItem.camera}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('camera')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} USB키보드</TableCell>
-                  <TableCell numeric>{selectedViewItem.keyboard}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('keyboard')}</TableCell>
                   <TableCell component="th" scope="row">{bull} USB마우스</TableCell>
-                  <TableCell numeric>{selectedViewItem.mouse}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('mouse')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 무선랜</TableCell>
-                  <TableCell numeric>{selectedViewItem.wireless}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('wireless')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 블루투스</TableCell>
-                  <TableCell numeric>{selectedViewItem.bluetoothState}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('bluetoothState')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row"></TableCell>
                   <TableCell numeric></TableCell>
                   <TableCell component="th" scope="row">{bull} 맥주소(블루투스)</TableCell>
-                  <TableCell numeric>{selectedViewItem.macAddress.map(function(prop, index) {
+                  <TableCell numeric>{selectedViewItem.get('macAddress').map(function(prop, index) {
                     return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
                 </TableRow>
@@ -138,43 +141,44 @@ export const createViewObject = (param) => {
     let mouse = '';
     let macAddress = [];
     
-    param.propList.forEach(function(e) {
-      if(e.propNm == 'usb_memory') {
-        usbMemory = e.propValue;
+    param.get('propList').forEach(function(e) {
+      const ename = e.get('propNm');
+      const evalue = e.get('propValue');
+      if(ename == 'usb_memory') {
+        usbMemory = evalue;
         if(usbMemory == 'read_only') {
           usbReadonly = 'allow';
         } else {
           usbReadonly = 'disallow';
         }
-      } else if(e.propNm == 'cd_dvd') {
-        cdAndDvd = e.propValue;
-      } else if(e.propNm == 'printer') {
-        printer = e.propValue;
-      } else if(e.propNm == 'screen_capture') {
-        screenCapture = e.propValue;
-      } else if(e.propNm == 'sound') {
-        sound = e.propValue;
-      } else if(e.propNm == 'camera') {
-        camera = e.propValue;
-      } else if(e.propNm == 'keyboard') {
-        keyboard = e.propValue;
-      } else if(e.propNm == 'mouse') {
-        mouse = e.propValue;
-      } else if(e.propNm == 'wireless') {
-        wireless = e.propValue;
-      } else if(e.propNm == 'bluetooth_state') {
-        bluetoothState = e.propValue;
-      } else if(e.propNm == 'mac_address') {
-        macAddress.push(e.propValue);
+      } else if(ename == 'cd_dvd') {
+        cdAndDvd = evalue;
+      } else if(ename == 'printer') {
+        printer = evalue;
+      } else if(ename == 'screen_capture') {
+        screenCapture = evalue;
+      } else if(ename == 'sound') {
+        sound = evalue;
+      } else if(ename == 'camera') {
+        camera = evalue;
+      } else if(ename == 'keyboard') {
+        keyboard = evalue;
+      } else if(ename == 'mouse') {
+        mouse = evalue;
+      } else if(ename == 'wireless') {
+        wireless = evalue;
+      } else if(ename == 'bluetooth_state') {
+        bluetoothState = evalue;
+      } else if(ename == 'mac_address') {
+        macAddress.push(evalue);
       }
     });
   
-    return {
-      objId: param.objId,
-      objNm: param.objNm,
-      comment: param.comment,
-      modDate: param.modDate,
-      modUserId: param.modUserId,
+    return Map({
+      objId: param.get('objId'),
+      objNm: param.get('objNm'),
+      comment: param.get('comment'),
+      modDate: param.get('modDate'),
 
       usbMemory: usbMemory,
       usbReadonly: usbReadonly,
@@ -188,8 +192,8 @@ export const createViewObject = (param) => {
 
       wireless: wireless,
       bluetoothState: bluetoothState,
-      macAddress: macAddress
-    };
+      macAddress: List(macAddress)  
+    });
   
   } else {
     return param;

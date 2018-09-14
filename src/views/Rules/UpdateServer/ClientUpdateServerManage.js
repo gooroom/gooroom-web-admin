@@ -264,7 +264,7 @@ class ClientUpdateServerManage extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell colSpan={ClientHostNameHead.columnData.length + 1} className={classes.grSmallAndClickCell} />
+                    <TableCell colSpan={this.columnHeaders.columnData.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
