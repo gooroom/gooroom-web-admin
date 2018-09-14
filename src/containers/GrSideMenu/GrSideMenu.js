@@ -25,7 +25,7 @@ import Divider from "@material-ui/core/Divider";
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
 
-import menus from "./_nav";
+import menuItems from "./GrMenuItems";
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -181,7 +181,7 @@ class GrSideMenu extends React.Component {
             </Toolbar>
           </AppBar>
           <MenuList>
-          {menuList(menus.items, 0)}
+          {menuList(menuItems.items, 0)}
           </MenuList>
         </div>
         <AppBar position="static" style={{backgroundColor:"gray"}}>

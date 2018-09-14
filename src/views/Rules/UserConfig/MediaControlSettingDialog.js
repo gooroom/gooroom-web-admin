@@ -158,7 +158,7 @@ class MediaControlSettingDialog extends Component {
         return (
             <div>
             {(MediaControlSettingProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={MediaControlSettingProps.get('dialogOpen')}>
+            <Dialog open={MediaControlSettingProps.get('dialogOpen')} scroll="paper">
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 

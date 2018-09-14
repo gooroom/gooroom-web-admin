@@ -108,16 +108,13 @@ class ClientGroupDialog extends Component {
                         label="단말그룹이름"
                         value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
                         onChange={this.handleValueChange('grpNm')}
-                        margin="normal"
                         className={classes.fullWidth}
                     />
-
                     <TextField
                         id="comment"
                         label="단말그룹설명"
                         value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange('comment')}
-                        margin="normal"
                         className={classes.fullWidth}
                     />
                 </form>

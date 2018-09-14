@@ -51,7 +51,8 @@ export const GrCommonStyle = theme => ({
 
     headerToolbar: {
         flexDirection: "row",
-        minHeight: grLayout.headerHeight
+        minHeight: grLayout.headerHeight,
+        width: "100%"
     },
 
     headerBrandLogo: {
