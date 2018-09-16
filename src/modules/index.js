@@ -23,6 +23,8 @@ import ClientSecuSettingModule from './ClientSecuSettingModule';
 
 import ClientMasterManageModule from './ClientMasterManageModule';
 
+import AdminModule from './AdminModule';
+
 
 export default combineReducers({
 
@@ -47,6 +49,8 @@ export default combineReducers({
     JobManageModule, 
     
     GrConfirmModule,
-    CommonOptionModule
+    CommonOptionModule,
+
+    AdminModule
 
 });

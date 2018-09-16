@@ -20,6 +20,8 @@ import GrFooter from "containers/GrFooter/";
 import GrSideMenu from "containers/GrSideMenu";
 import GrBreadcrumb from "containers/GrBreadcrumb/";
 
+import AdminInform from "views/Admin/AdminInform";
+
 import GrRouters from "containers/GrContent/";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -106,14 +108,11 @@ class Full extends Component {
       </div>
 
       <Drawer anchor="right" open={this.state.rightDrawer} onClose={this.toggleRightDrawer('rightDrawer', false)}>
-        <div
-          tabIndex={0}
-          role="button"
-          onClick={this.toggleRightDrawer('rightDrawer', false)}
-          onKeyDown={this.toggleRightDrawer('rightDrawer', false)}
-        >
-          {sideList}
-        </div>
+          <AdminInform 
+            role="button"
+            onClick={this.toggleRightDrawer('rightDrawer', false)}
+            onKeyDown={this.toggleRightDrawer('rightDrawer', false)}
+          />
       </Drawer>
         
       </MuiThemeProvider>
