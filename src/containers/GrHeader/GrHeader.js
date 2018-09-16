@@ -80,9 +80,8 @@ class GrHeader extends Component {
                   <Paper>
                     <ClickAwayListener onClickAway={this.handleClose}>
                       <MenuList>
-                        <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                        <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                        <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+                        <MenuItem onClick={this.handleClose}>서버설정</MenuItem>
+                        <MenuItem onClick={this.handleClose}>관리자관리</MenuItem>
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>
