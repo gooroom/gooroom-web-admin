@@ -14,7 +14,7 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
-import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
@@ -89,7 +89,7 @@ class ClientMasterManage extends Component {
   // 
   handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
     const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
-    const { ClientGroupCompProps, ClientGroupActions } = this.props;
+    const { ClientGroupProps, ClientGroupActions } = this.props;
     const { ClientManageCompProps, ClientManageCompActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
 
@@ -132,7 +132,7 @@ class ClientMasterManage extends Component {
 
   // CLIENT GROUP COMPONENT
   // add client group
-  handleClientGroupCreateButton = () => {
+  handleCreateButtonForClientGroup = () => {
     this.props.ClientGroupActions.showDialog({
       selectedItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD
@@ -140,17 +140,40 @@ class ClientMasterManage extends Component {
   }
 
   isClientGroupRemovable = () => {
-    const selectedIds = getDataObjectVariableInComp(this.props.ClientGroupCompProps, this.props.match.params.grMenuId, 'selectedIds');
+    const selectedIds = getDataObjectVariableInComp(this.props.ClientGroupProps, this.props.match.params.grMenuId, 'selectedIds');
     return !(selectedIds && selectedIds.size > 0);
   }
 
-  handleClientGroupDeleteButton = () => {
-
+  handleDeleteButtonForClientGroup = () => {
+    const dataObject = getDataObjectInComp(this.props.ClientGroupProps, this.props.match.params.grMenuId);
+    if(dataObject.get('selectedIds') && dataObject.get('selectedIds').size > 0) {
+      this.props.GrConfirmActions.showConfirm({
+        confirmTitle: '단말그룹 삭제',
+        confirmMsg: '단말그룹(' + dataObject.get('selectedIds').size + '개)을 삭제하시겠습니까?',
+        handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
+        confirmOpen: true,
+        confirmObject: dataObject
+      });
+    }
+  }
+  handleDeleteButtonForClientGroupConfirmResult = (confirmValue, confirmObject) => {
+    if(confirmValue) {
+      const { ClientGroupProps, ClientGroupActions } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      const selectedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
+      if(selectedIds && selectedIds.size > 0) {
+        ClientGroupActions.deleteSelectedClientGroupData({
+          grpIds: selectedIds.toArray()
+        }).then(() => {
+          ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
+        });
+      }
+    }
   }
 
   // CLIENT COMPONENT
   // add client group
-  handleClientGroupCreateButton = () => {
+  handleCreateButtonForClientGroup = () => {
     this.props.ClientGroupActions.showDialog({
       selectedItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD
@@ -170,7 +193,7 @@ class ClientMasterManage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { ClientMasterManageProps, ClientGroupCompProps, ClientManageCompProps } = this.props;
+    const { ClientMasterManageProps, ClientGroupProps, ClientManageCompProps } = this.props;
 
     const compId = this.props.match.params.grMenuId;
     const { isGroupInformOpen, isClientInformOpen } = ClientMasterManageProps;
@@ -184,16 +207,16 @@ class ClientMasterManage extends Component {
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
             
               <Grid item xs={6}>
-                  
-                <Button size="small" variant="contained" color="primary" onClick={() => {this.handleClientGroupCreateButton();}} >
+                <Button size="small" variant="contained" color="primary" onClick={() => {this.handleCreateButtonForClientGroup();}} >
                   <AddIcon />
                   등록
                 </Button>
-                <Button size="small" variant="contained" color="primary" onClick={() => {this.handleClientGroupDeleteButton();}} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
+                <Button size="small" variant="contained" color="primary" onClick={() => {this.handleDeleteButtonForClientGroup();}} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
                   <RemoveIcon />
                   삭제
                 </Button>
               </Grid>
+
             </Grid>
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
               <Button size="small" variant="contained" color="primary" onClick={() => {this.handleClientDeleteButton();}} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}} >
@@ -251,7 +274,7 @@ class ClientMasterManage extends Component {
 const mapStateToProps = (state) => ({
   ClientMasterManageProps: state.ClientMasterManageModule,
   ClientManageCompProps: state.ClientManageCompModule,
-  ClientGroupCompProps: state.ClientGroupModule
+  ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 
-import * as AdminActions from 'modules/ClientManageCompModule';
+import * as AdminActions from 'modules/AdminModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import Card from '@material-ui/core/Card';
@@ -57,8 +57,8 @@ class AdminInform extends Component {
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 관리자 이름</TableCell>
                   <TableCell numeric>{AdminProps.get('adminName')}</TableCell>
-                  </TableRow>
-                  <TableRow>
+                </TableRow>
+                <TableRow>
                   <TableCell component="th" scope="row">{bull} 관리자 아이디</TableCell>
                   <TableCell numeric>{AdminProps.get('adminId')}</TableCell>
                 </TableRow>
@@ -68,7 +68,7 @@ class AdminInform extends Component {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 알람사용여부</TableCell>
-                  <TableCell numeric>{AdminProps.get('isEnableAlarm')}</TableCell>
+                  <TableCell numeric>{(AdminProps.get('isEnableAlarm')) ? '사용함' : '사용안함'}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 갱신주기</TableCell>
@@ -86,7 +86,7 @@ class AdminInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  AdminProps: state.ClientManageCompModule
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
