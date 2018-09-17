@@ -248,6 +248,25 @@ export const deleteClientGroupData = (param) => dispatch => {
     });
 };
 
+// delete group selected
+export const deleteSelectedClientGroupData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('deleteClientGroupList', {'groupIds': param.grpIds}).then(
+        (response) => {
+            dispatch({
+                type: DELETE_CLIENTGROUP_SUCCESS,
+                compId: param.compId,
+                grpId: param.grpId
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
 
 export default handleActions({
 
