@@ -67,7 +67,7 @@ class ClientHostNameManageDialog extends Component {
                     if(viewItems) {
                         viewItems.forEach((element) => {
                             if(element && element.get('listParam')) {
-                                ClientHostNameActions.readClientHostNameList(ClientHostNameProps, element.get('_COMPID_'), {});
+                                ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, element.get('_COMPID_'), {});
                             }
                         });
                     }
@@ -94,7 +94,7 @@ class ClientHostNameManageDialog extends Component {
                     const viewItems = ClientHostNameProps.get('viewItems');
                     viewItems.forEach((element) => {
                         if(element && element.get('listParam')) {
-                            ClientHostNameActions.readClientHostNameList(ClientHostNameProps, element.get('_COMPID_'), {});
+                            ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, element.get('_COMPID_'), {});
                         }
                     });
                     this.handleClose();

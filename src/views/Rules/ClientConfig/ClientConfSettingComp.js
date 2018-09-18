@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Map, List, fromJS } from 'immutable';
+import { fromJS } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -42,7 +42,7 @@ class ClientConfSettingComp extends Component {
     super(props);
 
     this.state = {
-      loading: true,
+      loading: true
     };
   }
 
