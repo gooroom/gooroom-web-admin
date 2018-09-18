@@ -312,24 +312,33 @@ export default handleActions({
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
         const { data } = action.response.data;
 
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            if(viewIndex > -1) {
-                return state
-                        .setIn(['viewItems', viewIndex, 'listAllData'], List(data.map((e) => {return Map(e)})))
+        if(data && data.length > 0) {
+            if(state.get('viewItems')) {
+                const viewIndex = state.get('viewItems').findIndex((e) => {
+                    return e.get('_COMPID_') == action.compId;
+                });
+                if(viewIndex > -1) {
+                    return state
+                            .setIn(['viewItems', viewIndex, 'listAllData'], List(data.map((e) => {return Map(e)})))
+                            .setIn(['viewItems', viewIndex, 'selectedOptionItemId'], data[0].objId);
+                } else {
+                    return state.set('viewItems', state.get('viewItems').push(Map({
+                        '_COMPID_': action.compId,
+                        'listAllData': List(data.map((e) => {return Map(e)})),
+                        'selectedOptionItemId': data[0].objId
+                    })));
+                }
             } else {
-                return state.set('viewItems', state.get('viewItems').push(Map({
+                return state.set('viewItems', List([Map({
                     '_COMPID_': action.compId,
-                    'listAllData': List(data.map((e) => {return Map(e)}))
-                })));
+                    'listAllData': List(data.map((e) => {return Map(e)})),
+                    'selectedOptionItemId': data[0].objId
+                })]));
             }
         } else {
-            return state.set('viewItems', List([Map({
-                '_COMPID_': action.compId,
-                'listAllData': List(data.map((e) => {return Map(e)}))
-            })]));
+            return state
+            .deleteIn(['viewItems', viewIndex, 'listAllData'])
+            .deleteIn(['viewItems', viewIndex, 'selectedOptionItemId']);
         }
     }, 
     [GET_CONFSETTING_LISTPAGED_SUCCESS]: (state, action) => {

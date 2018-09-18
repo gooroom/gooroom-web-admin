@@ -105,6 +105,7 @@ export const createViewObject = (param) => {
     param.get('propList').forEach(function(e) {
       const ename = e.get('propNm');
       const evalue = e.get('propValue');
+      
       if(ename == 'AGENTPOLLINGTIME') {
         pollingTime = evalue;
       } else if(ename == 'USEHYPERVISOR') {
