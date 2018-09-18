@@ -63,7 +63,7 @@ class ClientConfSettingComp extends Component {
     const bull = <span className={classes.bullet}>•</span>;
 
     const viewItem = getDataObjectInComp(ClientConfSettingProps, compId);
-    const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : '';
+    const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
     const viewCompItem = (compType != 'VIEW') ? createViewObject(viewItem.get('selectedViewItem')) : 
       (() => {

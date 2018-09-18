@@ -74,7 +74,6 @@ export const closeInform = (param) => dispatch => {
 };
 
 export const readClientHostNameList = (module, compId) => dispatch => {
-    console.log('>>>>>>>>>> readClientHostNameList.......');
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readHostNameConfList', {
     }).then(

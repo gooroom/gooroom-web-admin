@@ -148,7 +148,6 @@ export const changeCompVariable = (param) => dispatch => {
 };
 
 export const changeStoreData = (param) => dispatch => {
-    console.log('param : ', param);
     return dispatch({
         type: CHG_STORE_DATA,
         name: param.name,
@@ -157,13 +156,14 @@ export const changeStoreData = (param) => dispatch => {
 };
 
 // create (add)
-export const createClientGroupData = (item) => dispatch => {
+export const createClientGroupData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('createClientGroup', {
-        groupName: item.get('grpNm'),
-        groupComment: item.get('comment'),
-        clientConfigId: item.get('clientConfigId'),
-        isDefault: item.get('isDefault')
+        groupName: param.groupName,
+        groupComment: param.groupComment,
+        clientConfigId: param.clientConfigId,
+        hostNameConfigId: param.hostNameConfigId,
+        updateServerConfigId: param.updateServerConfigId
     }).then(
         (response) => {
             try {
@@ -190,19 +190,17 @@ export const createClientGroupData = (item) => dispatch => {
 };
 
 // edit
-export const editClientGroupData = (item) => dispatch => {
+export const editClientGroupData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateClientGroup', {
-        groupId: item.get('grpId'),
-        groupName: item.get('grpNm'),
-        groupComment: item.get('comment'),
-        desktopConfigId: item.get('desktopConfigId'),
-        clientConfigId: item.get('clientConfigId'),
-        hostNameConfigId: item.get('hostNameConfigId'),
-        updateServerConfigId: item.get('updateServerConfigId')
+        groupId: param.groupId,
+        groupName: param.groupName,
+        groupComment: param.groupComment,
+        clientConfigId: param.clientConfigId,
+        hostNameConfigId: param.hostNameConfigId,
+        updateServerConfigId: param.updateServerConfigId
     }).then(
         (response) => {
-
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
                 requestPostAPI('readClientGroupData', {'groupId': item.get('grpId')}).then(

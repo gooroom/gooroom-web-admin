@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { getIn } from 'immutable'; 
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -51,12 +52,7 @@ class ClientGroupDialog extends Component {
     static TYPE_ADD = 'ADD';
     static TYPE_VIEW = 'VIEW';
     static TYPE_EDIT = 'EDIT';
-
-    componentDidMount() {
-        console.log('ClientGroupDialog > componentDidMount............');
-    }
-
-
+    
     handleClose = (event) => {
         this.props.ClientGroupActions.closeDialog();
     }
@@ -81,30 +77,67 @@ class ClientGroupDialog extends Component {
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-            ClientGroupActions.createClientGroupData(ClientGroupProps.get('editingItem'))
-                .then(() => {
-                    ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
-                    this.handleClose();
+            const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
+            const clientConfIndex = ClientConfSettingProps.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == compId;
+            });
+            const hostsConfIndex = ClientHostNameProps.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == compId;
+            });
+            const updateServerConfIndex = ClientUpdateServerProps.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == compId;
+            });
+            
+            ClientGroupActions.createClientGroupData({
+                groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
+                groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
+                clientConfigId: ClientGroupProps.getIn(['editingItem', 'clientConfigId']),
+                isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
+                clientConfigId: ClientConfSettingProps.getIn(['viewItems', clientConfIndex, 'selectedOptionItemId']),
+                hostNameConfigId: ClientHostNameProps.getIn(['viewItems', hostsConfIndex, 'selectedOptionItemId']),
+                updateServerConfigId: ClientUpdateServerProps.getIn(['viewItems', updateServerConfIndex, 'selectedOptionItemId'])
+            }).then(() => {
+                ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
+                this.handleClose();
             });
         }
     }
     
     handleEditData = (event) => {
         const { GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '단말그룹 수정',
             confirmMsg: '단말그룹을 수정하시겠습니까?',
             confirmOpen: true,
             handleConfirmResult: this.handleEditConfirmResult
-          });
+        });
     }
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-            ClientGroupActions.editClientGroupData(ClientGroupProps.get('editingItem'))
-                .then((res) => {
-                    ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
-                    this.handleClose();
+            const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
+            const clientConfIndex = ClientConfSettingProps.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == compId;
+            });
+            const hostsConfIndex = ClientHostNameProps.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == compId;
+            });
+            const updateServerConfIndex = ClientUpdateServerProps.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == compId;
+            });
+
+            ClientGroupActions.editClientGroupData({
+                groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
+                groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
+                groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
+                clientConfigId: ClientGroupProps.getIn(['editingItem', 'clientConfigId']),
+                isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
+                clientConfigId: ClientConfSettingProps.getIn(['viewItems', clientConfIndex, 'selectedOptionItemId']),
+                hostNameConfigId: ClientHostNameProps.getIn(['viewItems', hostsConfIndex, 'selectedOptionItemId']),
+                updateServerConfigId: ClientUpdateServerProps.getIn(['viewItems', updateServerConfIndex, 'selectedOptionItemId'])
+            }).then((res) => {
+                ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
+                this.handleClose();
             });
         }
     }
@@ -188,7 +221,10 @@ class ClientGroupDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientGroupProps: state.ClientGroupModule
+    ClientGroupProps: state.ClientGroupModule,
+    ClientConfSettingProps: state.ClientConfSettingModule,
+    ClientHostNameProps: state.ClientHostNameModule,
+    ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
