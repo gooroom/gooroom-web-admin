@@ -46,7 +46,7 @@ class ClientProfileSetDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-        ClientProfileSetActions.createClientProfileSetData(ClientProfileSetProps.selectedItem)
+        ClientProfileSetActions.createClientProfileSetData(ClientProfileSetProps.selectedViewItem)
         .then(() => {
             ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
             this.handleClose();
@@ -67,7 +67,7 @@ class ClientProfileSetDialog extends Component {
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
             const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-            ClientProfileSetActions.editClientProfileSetData(ClientProfileSetProps.selectedItem)
+            ClientProfileSetActions.editClientProfileSetData(ClientProfileSetProps.selectedViewItem)
                 .then((res) => {
                 ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
                 this.handleClose();
@@ -90,9 +90,9 @@ class ClientProfileSetDialog extends Component {
     handleProfileJobConfirmResult = (confirmValue) => {
         if(confirmValue) {
             const { ClientProfileSetProps } = this.props;
-            const targetClientIds = (ClientProfileSetProps.selectedItem.targetClientIdArray).map((v) => (v.clientId)).join(',');
-            const targetGroupIds = (ClientProfileSetProps.selectedItem.targetGroupIdArray).map((v) => (v.grpId)).join(',');
-            const newSelectedItem = getMergedObject(ClientProfileSetProps.selectedItem, {targetClientIds: targetClientIds, targetGroupIds: targetGroupIds});
+            const targetClientIds = (ClientProfileSetProps.selectedViewItem.targetClientIdArray).map((v) => (v.clientId)).join(',');
+            const targetGroupIds = (ClientProfileSetProps.selectedViewItem.targetGroupIdArray).map((v) => (v.grpId)).join(',');
+            const newSelectedItem = getMergedObject(ClientProfileSetProps.selectedViewItem, {targetClientIds: targetClientIds, targetGroupIds: targetGroupIds});
             this.props.ClientProfileSetActions.createClientProfileSetJob(newSelectedItem)
                 .then((res) => {
                 this.props.ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
@@ -168,7 +168,7 @@ class ClientProfileSetDialog extends Component {
                     <TextField  
                         id="profileNm"
                         label="프로파일 이름"
-                        value={(ClientProfileSetProps.selectedItem) ? ClientProfileSetProps.selectedItem.profileNm : ''}
+                        value={(ClientProfileSetProps.selectedViewItem) ? ClientProfileSetProps.selectedViewItem.profileNm : ''}
                         onChange={this.handleChange("profileNm")}
                         className={classNames(classes.fullWidthfullWidth)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
@@ -176,7 +176,7 @@ class ClientProfileSetDialog extends Component {
                     <TextField
                         id="profileCmt"
                         label="프로파일 설명"
-                        value={(ClientProfileSetProps.selectedItem) ? ClientProfileSetProps.selectedItem.profileCmt : ''}
+                        value={(ClientProfileSetProps.selectedViewItem) ? ClientProfileSetProps.selectedViewItem.profileCmt : ''}
                         onChange={this.handleChange("profileCmt")}
                         className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
@@ -184,7 +184,7 @@ class ClientProfileSetDialog extends Component {
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
                         <div className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}>
                             <FormLabel>기타 패키지 처리방식</FormLabel>
-                            <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={ClientProfileSetProps.selectedItem.isRemoval} row>
+                            <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={ClientProfileSetProps.selectedViewItem.isRemoval} row>
                                 <FormControlLabel value="true" control={<Radio />} label="삭제함" />
                                 <FormControlLabel value="false" control={<Radio />} label="삭제안함" />
                             </RadioGroup>
@@ -194,7 +194,7 @@ class ClientProfileSetDialog extends Component {
                         <TextField
                             id="clientId"
                             label="레퍼런스 단말"
-                            value={(ClientProfileSetProps.selectedItem) ? ClientProfileSetProps.selectedItem.clientNm + ' (' + ClientProfileSetProps.selectedItem.clientId + ')' : ''}
+                            value={(ClientProfileSetProps.selectedViewItem) ? ClientProfileSetProps.selectedViewItem.clientNm + ' (' + ClientProfileSetProps.selectedViewItem.clientId + ')' : ''}
                             onChange={this.handleChange("clientId")}
                             className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
                             disabled
@@ -205,7 +205,7 @@ class ClientProfileSetDialog extends Component {
                             <TextField
                                 id="clientId"
                                 label="레퍼런스 단말"
-                                value={(ClientProfileSetProps.selectedItem && ClientProfileSetProps.selectedItem.clientNm) ? ClientProfileSetProps.selectedItem.clientNm + ' (' + ClientProfileSetProps.selectedItem.clientId + ')' : ''}
+                                value={(ClientProfileSetProps.selectedViewItem && ClientProfileSetProps.selectedViewItem.clientNm) ? ClientProfileSetProps.selectedViewItem.clientNm + ' (' + ClientProfileSetProps.selectedViewItem.clientId + ')' : ''}
                                 placeholder="아래 목록에서 단말을 선택하세요."
                                 onChange={this.handleChange("clientId")}
                                 className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}

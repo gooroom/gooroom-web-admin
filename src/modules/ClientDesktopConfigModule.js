@@ -37,7 +37,7 @@ const initialState = {
         rowsFiltered: 0
     },
 
-    selectedItem: {
+    selectedViewItem: {
         objId: '',
         objNm: '',
         comment: '',
@@ -282,7 +282,7 @@ export default handleActions({
 
         return {
             ...state,
-            editingItem: Object.assign({}, action.payload.selectedItem),
+            editingItem: Object.assign({}, action.payload.selectedViewItem),
             dialogOpen: true,
             dialogType: action.payload.dialogType,
         };
@@ -290,14 +290,14 @@ export default handleActions({
     [SHOW_DESKTOP_INFORM]: (state, action) => {
         return {
             ...state,
-            selectedItem: action.payload.selectedItem,
+            selectedViewItem: action.payload.selectedViewItem,
             informOpen: true,
         };
     },
     [SET_SELECTED_OBJ]: (state, action) => {
         return {
             ...state,
-            selectedItem: action.payload.selectedItem
+            selectedViewItem: action.payload.selectedViewItem
         }
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {

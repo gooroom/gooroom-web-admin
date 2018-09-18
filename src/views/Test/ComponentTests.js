@@ -40,7 +40,7 @@ class ComponentTests extends Component {
   // .................................................
   handleSelectBtnClick = (param) => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, param));
+    ClientConfSettingActions.readClientConfSettingListPaged(getMergedObject(ClientConfSettingProps.listParam, param));
   };
   
   handleCreateButton = () => {
@@ -61,16 +61,16 @@ class ComponentTests extends Component {
     event.stopPropagation();
     const { ClientConfSettingProps, ClientConfSettingActions, GrConfirmActions } = this.props;
 
-    const selectedItem = ClientConfSettingProps.listData.find(function(element) {
+    const selectedViewItem = ClientConfSettingProps.listData.find(function(element) {
       return element.objId == id;
     });
 
     ClientConfSettingActions.setSelectedItemObj({
-      selectedItem: Object.assign(ClientConfSettingProps.selectedItem, selectedItem)
+      selectedViewItem: Object.assign(ClientConfSettingProps.selectedViewItem, selectedViewItem)
     });
     const re = GrConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말정책정보(' + selectedViewItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true
     });
@@ -80,9 +80,9 @@ class ComponentTests extends Component {
 
     if(confirmValue) {
       ClientConfSettingActions.deleteClientConfSettingData({
-        objId: ClientConfSettingProps.selectedItem.objId
+        objId: ClientConfSettingProps.selectedViewItem.objId
       }).then(() => {
-        ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps.listParam);
+        ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps.listParam);
         }, () => {
       });
     }
@@ -91,13 +91,13 @@ class ComponentTests extends Component {
   // 페이지 번호 변경
   handleChangePage = (event, page) => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {page: page}));
+    ClientConfSettingActions.readClientConfSettingListPaged(getMergedObject(ClientConfSettingProps.listParam, {page: page}));
   };
 
   // 페이지당 레코드수 변경
   handleChangeRowsPerPage = event => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {rowsPerPage: event.target.value, page: 0}));
+    ClientConfSettingActions.readClientConfSettingListPaged(getMergedObject(ClientConfSettingProps.listParam, {rowsPerPage: event.target.value, page: 0}));
   };
   
   // .................................................
@@ -107,7 +107,7 @@ class ComponentTests extends Component {
     if (ClientConfSettingProps.listParam.orderColumn === property && ClientConfSettingProps.listParam.orderDir === "desc") {
       orderDir = "asc";
     }
-    ClientConfSettingActions.readClientConfSettingList(getMergedObject(ClientConfSettingProps.listParam, {orderColumn: property, orderDir: orderDir}));
+    ClientConfSettingActions.readClientConfSettingListPaged(getMergedObject(ClientConfSettingProps.listParam, {orderColumn: property, orderDir: orderDir}));
   };
   // .................................................
 
@@ -123,21 +123,21 @@ class ComponentTests extends Component {
 
 
 
-  handleChangeGroupSelected_first = (newSelected, selectedItem) => {
+  handleChangeGroupSelected_first = (newSelected, selectedViewItem) => {
 
   }
 
 
-  handleChangeGroupSelected_second = (newSelected, selectedItem) => {
+  handleChangeGroupSelected_second = (newSelected, selectedViewItem) => {
 
   }
 
-  handleChangeClientSelected_first = (newSelected, selectedItem) => {
+  handleChangeClientSelected_first = (newSelected, selectedViewItem) => {
 
   }
 
 
-  handleChangeClientSelected_second = (newSelected, selectedItem) => {
+  handleChangeClientSelected_second = (newSelected, selectedViewItem) => {
 
   }
 

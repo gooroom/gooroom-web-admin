@@ -110,14 +110,14 @@ class JobInform extends Component {
       <div>
         <Card >
           <CardHeader
-            title={jobManageModule.selectedItem.jobName}
-            subheader={jobManageModule.selectedItem.jobNo + ', ' + formatDateToSimple(jobManageModule.selectedItem.regDate, 'YYYY-MM-DD')}
+            title={jobManageModule.selectedViewItem.jobName}
+            subheader={jobManageModule.selectedViewItem.jobNo + ', ' + formatDateToSimple(jobManageModule.selectedViewItem.regDate, 'YYYY-MM-DD')}
           />
           <Grid container spacing={24}>
           <Grid item xs={12} sm={5}>
             <CardContent>
               <Typography component="pre">
-                {jobManageModule.selectedItem.jobData}
+                {jobManageModule.selectedViewItem.jobData}
               </Typography>
             </CardContent>
           </Grid>

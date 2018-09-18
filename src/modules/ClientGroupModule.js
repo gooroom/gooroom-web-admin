@@ -40,13 +40,14 @@ const initialState = Map({
     }),
 
     dialogOpen: false,
-    dialogType: ''
+    dialogType: '',
+    dialogTabValue: 0
 });
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTGROUP_DIALOG,
-        selectedItem: param.selectedItem,
+        selectedViewItem: param.selectedViewItem,
         dialogType: param.dialogType
     });
 };
@@ -63,7 +64,7 @@ export const showClientGroupInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTGROUP_INFORM,
         compId: param.compId,
-        selectedItem: param.selectedItem
+        selectedViewItem: param.selectedViewItem
     });
 };
 
@@ -71,7 +72,7 @@ export const closeClientGroupInform = (param) => dispatch => {
     return dispatch({
         type: CLOSE_CLIENTGROUP_INFORM,
         compId: param.compId,
-        selectedItem: param.selectedItem
+        selectedViewItem: param.selectedViewItem
     });
 };
 
@@ -116,7 +117,7 @@ export const setSelectedItemObj = (param) => dispatch => {
     return dispatch({
         type: SET_SELECTED_OBJ,
         compId: param.compId,
-        selectedItem: param.selectedItem
+        selectedViewItem: param.selectedViewItem
     });
 };
 
@@ -147,6 +148,7 @@ export const changeCompVariable = (param) => dispatch => {
 };
 
 export const changeStoreData = (param) => dispatch => {
+    console.log('param : ', param);
     return dispatch({
         type: CHG_STORE_DATA,
         name: param.name,
@@ -334,7 +336,7 @@ export default handleActions({
     },
     [SHOW_CLIENTGROUP_DIALOG]: (state, action) => {
         return state.merge({
-            editingItem: action.selectedItem,
+            editingItem: action.selectedViewItem,
             dialogOpen: true,
             dialogType: action.dialogType,
         });
@@ -346,7 +348,7 @@ export default handleActions({
             });
             return state
                     .setIn(['viewItems', viewIndex, 'informOpen'], true)
-                    .setIn(['viewItems', viewIndex, 'selectedItem'], Map(action.selectedItem));
+                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], Map(action.selectedViewItem));
         }
         return state;
     },
@@ -355,7 +357,7 @@ export default handleActions({
         if(state.get('viewItems')) {
             const newViewItems = state.get('viewItems').map((element) => {
                 if(element.get('_COMPID_') == COMP_ID) {
-                    return element.delete('selectedItem', Map(action.selectedItem)).set('informOpen', false);
+                    return element.delete('selectedViewItem', Map(action.selectedViewItem)).set('informOpen', false);
                 } else {
                     return element;
                 }
@@ -371,7 +373,7 @@ export default handleActions({
         if(state.get('viewItems')) {
             const newViewItems = state.get('viewItems').map((element) => {
                 if(element.get('_COMPID_') == COMP_ID) {
-                    return element.set('selectedItem', Map(action.selectedItem)).set('informOpen', true);
+                    return element.set('selectedViewItem', Map(action.selectedViewItem)).set('informOpen', true);
                 } else {
                     return element;
                 }
@@ -414,10 +416,10 @@ export default handleActions({
         let newState = state;
         if(newState.get('viewItems')) {
             newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedItem')) {
-                    if(e.getIn(['selectedItem', 'grpId']) == action.grpId) {
+                if(e.get('selectedViewItem')) {
+                    if(e.getIn(['selectedViewItem', 'grpId']) == action.grpId) {
                         // replace
-                        newState = newState.setIn(['viewItems', i, 'selectedItem'], fromJS(action.response.data.data[0]));
+                        newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
                     }
                 }
             });
@@ -433,10 +435,10 @@ export default handleActions({
         let newState = state;
         if(newState.get('viewItems')) {
             newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedItem')) {
-                    if(e.getIn(['selectedItem', 'grpId']) == action.grpId) {
+                if(e.get('selectedViewItem')) {
+                    if(e.getIn(['selectedViewItem', 'grpId']) == action.grpId) {
                         // replace
-                        newState = newState.deleteIn(['viewItems', i, 'selectedItem']);
+                        newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
                     }
                 }
             });

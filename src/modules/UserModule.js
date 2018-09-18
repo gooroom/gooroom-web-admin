@@ -334,20 +334,20 @@ export default handleActions({
 
             // 이전에 해당 콤프정보가 없으면 신규로 등록
             if(!viewItem) {
-                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
+                oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedViewItem': data[0]}));
             }
 
             // 같은 오브젝트를 가지고 있는 콤프정보들을 모두 변경 한다.
             oldViewItems = oldViewItems.map((element) => {
-                if(element.selectedItem && (element.selectedItem.objId == data[0].objId)) {
-                    return Object.assign(element, {'selectedItem': data[0]});
+                if(element.selectedViewItem && (element.selectedViewItem.objId == data[0].objId)) {
+                    return Object.assign(element, {'selectedViewItem': data[0]});
                 } else {
                     return element;
                 }
             });
 
         } else {
-            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedItem': data[0]}));
+            oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {'selectedViewItem': data[0]}));
         }
 
         if(data && data.length > 0) {
@@ -370,7 +370,7 @@ export default handleActions({
 
         return {
             ...state,
-            editingItem: Object.assign({}, action.payload.selectedItem),
+            editingItem: Object.assign({}, action.payload.selectedViewItem),
             editingCompId: action.payload.compId,
             dialogOpen: true,
             dialogType: action.payload.dialogType,
@@ -388,16 +388,16 @@ export default handleActions({
             });
             if(viewItem) {
                 Object.assign(viewItem, {
-                    'selectedItem': action.payload.selectedItem
+                    'selectedViewItem': action.payload.selectedViewItem
                 });
             } else {
                 oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                    'selectedItem': action.payload.selectedItem
+                    'selectedViewItem': action.payload.selectedViewItem
                 }));
             }
         } else {
             oldViewItems.push(Object.assign({}, {'_COMPID_': COMP_ID}, {
-                'selectedItem': action.payload.selectedItem
+                'selectedViewItem': action.payload.selectedViewItem
             }));
         }
 

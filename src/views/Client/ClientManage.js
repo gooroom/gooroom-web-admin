@@ -107,7 +107,7 @@ class ClientManage extends Component {
     const { ClientManageActions, ClientManageProps } = this.props;
     const menuCompId = this.props.match.params.grMenuId;
 
-    const selectedItem = getRowObjectById(ClientManageProps, menuCompId, id, 'clientId');
+    const selectedViewItem = getRowObjectById(ClientManageProps, menuCompId, id, 'clientId');
 
     let selectedIds = getDataObjectVariableInComp(ClientManageProps, menuCompId, 'selectedIds');
     if(selectedIds === undefined) {
@@ -131,7 +131,7 @@ class ClientManage extends Component {
 
     ClientManageActions.showClientManageInform({
       compId: menuCompId,
-      selectedItem: selectedItem,
+      selectedViewItem: selectedViewItem,
     });
   };
 
@@ -190,12 +190,12 @@ class ClientManage extends Component {
   // handleInfoClick = (event, clientId, clientGroupId) => {
   //   event.stopPropagation();
   //   const { ClientManageActions, ClientManageProps } = this.props;
-  //   const selectedItem = ClientManageProps.listData.find(function(element) {
+  //   const selectedViewItem = ClientManageProps.listData.find(function(element) {
   //     return element.clientId == clientId;
   //   });
 
   //   ClientManageActions.showDialog({
-  //     selectedItem: Object.assign({}, selectedItem),
+  //     selectedViewItem: Object.assign({}, selectedViewItem),
   //     dialogType: ClientDialog.TYPE_VIEW,
   //     dialogOpen: true,
   //     compId: ''

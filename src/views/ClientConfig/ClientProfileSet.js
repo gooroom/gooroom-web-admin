@@ -120,7 +120,7 @@ class ClientProfileSet extends Component {
   
   handleCreateButton = () => {
     this.props.ClientProfileSetActions.showDialog({
-      selectedItem: {
+      selectedViewItem: {
         profileNo: '',
         profileNm: '',
         profileCmt: '',
@@ -138,11 +138,11 @@ class ClientProfileSet extends Component {
   
   handleRowClick = (event, id) => {
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-    const selectedItem = ClientProfileSetProps.listData.find(function(element) {
+    const selectedViewItem = ClientProfileSetProps.listData.find(function(element) {
       return element.profileNo == id;
     });
     ClientProfileSetActions.showDialog({
-      selectedItem: Object.assign({}, selectedItem),
+      selectedViewItem: Object.assign({}, selectedViewItem),
       dialogType: ClientProfileSetDialog.TYPE_VIEW,
       dialogOpen: true
     });
@@ -151,12 +151,12 @@ class ClientProfileSet extends Component {
   handleEditClick = (event, id) => {
     event.stopPropagation();
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-    const selectedItem = ClientProfileSetProps.listData.find(function(element) {
+    const selectedViewItem = ClientProfileSetProps.listData.find(function(element) {
       return element.profileNo == id;
     });
     
     ClientProfileSetActions.showDialog({
-      selectedItem: Object.assign({}, selectedItem),
+      selectedViewItem: Object.assign({}, selectedViewItem),
       dialogType: ClientProfileSetDialog.TYPE_EDIT,
       dialogOpen: true
     });
@@ -165,17 +165,17 @@ class ClientProfileSet extends Component {
   handleProfileClick = (event, id) => {
     event.stopPropagation();
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-    const selectedItem = ClientProfileSetProps.listData.find(function(element) {
+    const selectedViewItem = ClientProfileSetProps.listData.find(function(element) {
       return element.profileNo == id;
     });
     ClientProfileSetActions.showDialog({
-      selectedItem: Object.assign({
+      selectedViewItem: Object.assign({
         targetClientIds: '',
         targetClientIdArray: [],
         targetGroupIds: '',
         targetGroupIdArray: [],
         isRemoval: 'false'
-      }, selectedItem),
+      }, selectedViewItem),
       dialogType: ClientProfileSetDialog.TYPE_PROFILE,
       dialogOpen: true
     });
@@ -184,16 +184,16 @@ class ClientProfileSet extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientProfileSetProps, ClientProfileSetActions, GrConfirmActions } = this.props;
-    const selectedItem = ClientProfileSetProps.listData.find(function(element) {
+    const selectedViewItem = ClientProfileSetProps.listData.find(function(element) {
       return element.profileNo == id;
     });
     ClientProfileSetActions.changeParamValue({
       name: 'profileNo',
-      value: selectedItem.profileNo
+      value: selectedViewItem.profileNo
     });
     const re = GrConfirmActions.showConfirm({
       confirmTitle: '단말프로파일 삭제',
-      confirmMsg: '단말프로파일(' + selectedItem.profileNo + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말프로파일(' + selectedViewItem.profileNo + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true
     });
@@ -202,7 +202,7 @@ class ClientProfileSet extends Component {
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
     if(confirmValue) {
       this.props.ClientProfileSetActions.deleteClientProfileSetData({
-        profileNo: ClientProfileSetProps.selectedItem.profileNo
+        profileNo: ClientProfileSetProps.selectedViewItem.profileNo
       }).then(() => {
           ClientProfileSetActions.readClientProfileSetList(getMergedObject(ClientProfileSetProps.listParam, {}));
         }, () => {

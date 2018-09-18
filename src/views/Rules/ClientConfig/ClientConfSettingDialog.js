@@ -93,7 +93,7 @@ class ClientConfSettingDialog extends Component {
                     if(viewItems) {
                         viewItems.forEach((element) => {
                             if(element && element.get('listParam')) {
-                                ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, element.get('_COMPID_'), {});
+                                ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, element.get('_COMPID_'), {});
                             }
                         });
                     }
@@ -120,7 +120,7 @@ class ClientConfSettingDialog extends Component {
                     const viewItems = ClientConfSettingProps.get('viewItems');
                     viewItems.forEach((element) => {
                         if(element && element.get('listParam')) {
-                            ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, element.get('_COMPID_'), {});
+                            ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, element.get('_COMPID_'), {});
                         }
                     });
                     this.handleClose();

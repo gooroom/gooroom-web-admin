@@ -80,12 +80,12 @@ class JobManage extends Component {
   };
 
   handleRowClick = (event, id) => {
-    const selectedItem = this.props.jobManageModule.listData.find(function(element) {
+    const selectedViewItem = this.props.jobManageModule.listData.find(function(element) {
       return element.jobNo == id;
     });
 
     this.props.JobManageActions.showJobInform({
-      selectedItem: selectedItem,
+      selectedViewItem: selectedViewItem,
     });
   };
 

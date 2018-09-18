@@ -48,7 +48,7 @@ class ClientRegKeyDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-        ClientRegKeyActions.createClientRegKeyData(ClientRegKeyProps.selectedItem)
+        ClientRegKeyActions.createClientRegKeyData(ClientRegKeyProps.selectedViewItem)
             .then(() => {
                 ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
                 this.handleClose();
@@ -69,7 +69,7 @@ class ClientRegKeyDialog extends Component {
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
             const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-            ClientRegKeyActions.editClientRegKeyData(ClientRegKeyProps.selectedItem)
+            ClientRegKeyActions.editClientRegKeyData(ClientRegKeyProps.selectedViewItem)
                 .then((res) => {
                 ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
                 this.handleClose();
@@ -107,7 +107,7 @@ class ClientRegKeyDialog extends Component {
                             <TextField
                                 id="regKeyNo"
                                 label="등록키"
-                                value={(ClientRegKeyProps.selectedItem) ? ClientRegKeyProps.selectedItem.regKeyNo: ''}
+                                value={(ClientRegKeyProps.selectedViewItem) ? ClientRegKeyProps.selectedViewItem.regKeyNo: ''}
                                 onChange={this.handleChange("regKeyNo")}
                                 margin="normal"
                                 className={classes.fullWidth}
@@ -135,7 +135,7 @@ class ClientRegKeyDialog extends Component {
                             label="유효날짜"
                             type="date"
                             margin="normal"
-                            value={(ClientRegKeyProps.selectedItem) ? formatDateToSimple(ClientRegKeyProps.selectedItem.validDate, 'YYYY-MM-DD') : ''}
+                            value={(ClientRegKeyProps.selectedViewItem) ? formatDateToSimple(ClientRegKeyProps.selectedViewItem.validDate, 'YYYY-MM-DD') : ''}
                             onChange={this.handleChange("validDate")}
                             className={classes.fullWidth}
                             InputLabelProps={{
@@ -150,7 +150,7 @@ class ClientRegKeyDialog extends Component {
                             label="인증서만료날짜"
                             type="date"
                             margin="normal"
-                            value={(ClientRegKeyProps.selectedItem) ? formatDateToSimple(ClientRegKeyProps.selectedItem.expireDate, 'YYYY-MM-DD') : ''}
+                            value={(ClientRegKeyProps.selectedViewItem) ? formatDateToSimple(ClientRegKeyProps.selectedViewItem.expireDate, 'YYYY-MM-DD') : ''}
                             onChange={this.handleChange("expireDate")}
                             className={classes.fullWidth}
                             InputLabelProps={{
@@ -164,7 +164,7 @@ class ClientRegKeyDialog extends Component {
                     <TextField
                         id="ipRange"
                         label="유효 IP 범위"
-                        value={(ClientRegKeyProps.selectedItem) ? ClientRegKeyProps.selectedItem.ipRange : ''}
+                        value={(ClientRegKeyProps.selectedViewItem) ? ClientRegKeyProps.selectedViewItem.ipRange : ''}
                         onChange={this.handleChange("ipRange")}
                         margin="normal"
                         className={classes.fullWidth}
@@ -180,7 +180,7 @@ class ClientRegKeyDialog extends Component {
                         id="comment"
                         label="설명"
                         margin="normal"
-                        value={(ClientRegKeyProps.selectedItem) ? ClientRegKeyProps.selectedItem.comment : ''}
+                        value={(ClientRegKeyProps.selectedViewItem) ? ClientRegKeyProps.selectedViewItem.comment : ''}
                         onChange={this.handleChange("comment")}
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}

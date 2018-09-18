@@ -47,7 +47,7 @@ const initialState = Map({
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTSECU_DIALOG,
-        selectedItem: param.selectedItem,
+        selectedViewItem: param.selectedViewItem,
         dialogType: param.dialogType
     });
 };
@@ -62,7 +62,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTSECU_INFORM,
         compId: param.compId,
-        selectedItem: param.selectedItem
+        selectedViewItem: param.selectedViewItem
     });
 };
 
@@ -327,24 +327,24 @@ export default handleActions({
                 return state.set('viewItems', state.get('viewItems').push(Map({
                     '_COMPID_': action.compId,
                     'informOpen': true,
-                    'selectedItem': fromJS(data[0])
+                    'selectedViewItem': fromJS(data[0])
                 })));
             } else {
                 return state
-                    .setIn(['viewItems', viewIndex, 'selectedItem'], fromJS(data[0]))
+                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], fromJS(data[0]))
                     .setIn(['viewItems', viewIndex, 'informOpen'], true);
             }
         } else {
             return state.set('viewItems', List([Map({
                 '_COMPID_': action.compId,
-                'selectedItem': fromJS(data[0]),
+                'selectedViewItem': fromJS(data[0]),
                 'informOpen': true
             })]));
         }
     },
     [SHOW_CLIENTSECU_DIALOG]: (state, action) => {
         return state.merge({
-            editingItem: action.selectedItem,
+            editingItem: action.selectedViewItem,
             dialogOpen: true,
             dialogType: action.dialogType
         });
@@ -364,11 +364,11 @@ export default handleActions({
                 return state.set('viewItems', state.get('viewItems').push(Map({
                     '_COMPID_': action.compId,
                     'informOpen': true,
-                    'selectedItem': action.selectedItem
+                    'selectedViewItem': action.selectedViewItem
                 })));
             } else {
                 return state
-                    .setIn(['viewItems', viewIndex, 'selectedItem'], action.selectedItem)
+                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], action.selectedViewItem)
                     .setIn(['viewItems', viewIndex, 'informOpen'], true);
             }
         } else {
@@ -383,7 +383,7 @@ export default handleActions({
             });
             return state
                     .setIn(['viewItems', viewIndex, 'informOpen'], false)
-                    .deleteIn(['viewItems', viewIndex, 'selectedItem'])
+                    .deleteIn(['viewItems', viewIndex, 'selectedViewItem'])
         }
         return state;
     },
@@ -414,10 +414,10 @@ export default handleActions({
         let newState = state;
         if(newState.get('viewItems')) {
             newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedItem')) {
-                    if(e.getIn(['selectedItem', 'objId']) == action.objId) {
+                if(e.get('selectedViewItem')) {
+                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
                         // replace
-                        newState = newState.setIn(['viewItems', i, 'selectedItem'], fromJS(action.response.data.data[0]));
+                        newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
                     }
                 }
             });
@@ -433,10 +433,10 @@ export default handleActions({
         let newState = state;
         if(newState.get('viewItems')) {
             newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedItem')) {
-                    if(e.getIn(['selectedItem', 'objId']) == action.objId) {
+                if(e.get('selectedViewItem')) {
+                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
                         // replace
-                        newState = newState.deleteIn(['viewItems', i, 'selectedItem']);
+                        newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
                     }
                 }
             });

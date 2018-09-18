@@ -40,7 +40,7 @@ class BrowserRuleSettingInform extends Component {
 
     const { BrowserRuleSettingProps, compId } = this.props;
     const viewItem = getDataObjectInComp(BrowserRuleSettingProps, compId);
-    const selectedViewItem = (viewItem.get('selectedItem')) ? createViewObject(viewItem.get('selectedItem')) : null;
+    const selectedViewItem = (viewItem.get('selectedViewItem')) ? createViewObject(viewItem.get('selectedViewItem')) : null;
 
     return (
       <div>

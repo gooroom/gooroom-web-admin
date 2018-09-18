@@ -34,7 +34,7 @@ class ClientDesktopConfigInform extends Component {
   render() {
     const { classes } = this.props;
     const { ClientHostNameProps } = this.props;
-    const { selectedItem } = ClientHostNameProps;
+    const { selectedViewItem } = ClientHostNameProps;
     const bull = <span className={classes.bullet}>•</span>;
 
     return (
@@ -42,12 +42,12 @@ class ClientDesktopConfigInform extends Component {
       {(ClientHostNameProps.informOpen) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(selectedItem) ? selectedItem.objNm : ''}
-            subheader={selectedItem.objId + ', ' + formatDateToSimple(selectedItem.modDate, 'YYYY-MM-DD')}
+            title={(selectedViewItem) ? selectedViewItem.objNm : ''}
+            subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
           />
           <CardContent >
             <Typography component="pre">
-              "{selectedItem.comment}"
+              "{selectedViewItem.comment}"
             </Typography>
             
             <Divider />
@@ -56,7 +56,7 @@ class ClientDesktopConfigInform extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} Host 정보</TableCell>
-                  <TableCell style={{fontSize:"17px"}}><pre>{selectedItem.hosts}</pre></TableCell>
+                  <TableCell style={{fontSize:"17px"}}><pre>{selectedViewItem.hosts}</pre></TableCell>
                 </TableRow>
               </TableBody>
             </Table>

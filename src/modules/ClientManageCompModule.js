@@ -321,7 +321,7 @@ export default handleActions({
     },
     [SHOW_CLIENT_DIALOG]: (state, action) => {
         return state.merge({
-            editingItem: action.payload.selectedItem,
+            editingItem: action.payload.selectedViewItem,
             dialogOpen: true,
             dialogType: action.payload.dialogType,
         });
@@ -331,7 +331,7 @@ export default handleActions({
         if(state.get('viewItems')) {
             const newViewItems = state.get('viewItems').map((element) => {
                 if(element.get('_COMPID_') == COMP_ID) {
-                    return element.set('selectedItem', Map(action.payload.selectedItem)).set('informOpen', true);
+                    return element.set('selectedViewItem', Map(action.payload.selectedViewItem)).set('informOpen', true);
                 } else {
                     return element;
                 }
@@ -347,7 +347,7 @@ export default handleActions({
         if(state.get('viewItems')) {
             const newViewItems = state.get('viewItems').map((element) => {
                 if(element.get('_COMPID_') == COMP_ID) {
-                    return element.delete('selectedItem', Map(action.payload.selectedItem)).set('informOpen', false);
+                    return element.delete('selectedViewItem', Map(action.payload.selectedViewItem)).set('informOpen', false);
                 } else {
                     return element;
                 }
@@ -363,7 +363,7 @@ export default handleActions({
         if(state.get('viewItems')) {
             const newViewItems = state.get('viewItems').map((element) => {
                 if(element.get('_COMPID_') == COMP_ID) {
-                    return element.set('selectedItem', Map(action.payload.selectedItem)).set('informOpen', true);
+                    return element.set('selectedViewItem', Map(action.payload.selectedViewItem)).set('informOpen', true);
                 } else {
                     return element;
                 }

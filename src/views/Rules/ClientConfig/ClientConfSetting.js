@@ -72,14 +72,14 @@ class ClientConfSetting extends Component {
 
   handleChangePage = (event, page) => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, this.props.match.params.grMenuId, {
+    ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, this.props.match.params.grMenuId, {
+    ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: 0
     });
@@ -91,7 +91,7 @@ class ClientConfSetting extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, this.props.match.params.grMenuId, {
+    ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -100,7 +100,7 @@ class ClientConfSetting extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, this.props.match.params.grMenuId);
+    ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId);
   };
 
   handleKeywordChange = name => event => {
@@ -115,37 +115,37 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedItem = getRowObjectById(ClientConfSettingProps, compId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientConfSettingProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // ClientConfSettingActions.showDialog({
-    //   selectedItem: viewObject,
+    //   selectedViewItem: viewObject,
     //   dialogType: ClientConfSettingDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     ClientConfSettingActions.showInform({
       compId: compId,
-      selectedItem: selectedItem
+      selectedViewItem: selectedViewItem
     });
     
   };
 
   handleCreateButton = () => {
     this.props.ClientConfSettingActions.showDialog({
-      selectedItem: Map(),
+      selectedViewItem: Map(),
       dialogType: ClientConfSettingDialog.TYPE_ADD
     });
   }
 
   handleEditClick = (event, id) => { 
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const selectedItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientConfSettingActions.showDialog({
-      selectedItem: createViewObject(selectedItem),
+      selectedViewItem: createViewObject(selectedViewItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -153,13 +153,13 @@ class ClientConfSetting extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { ClientConfSettingProps, GrConfirmActions } = this.props;
-    const selectedItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
-      confirmObject: selectedItem
+      confirmObject: selectedViewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -173,7 +173,7 @@ class ClientConfSetting extends Component {
         const viewItems = ClientConfSettingProps.get('viewItems');
         viewItems.forEach((element) => {
             if(element && element.get('listParam')) {
-                ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, element.get('_COMPID_'), {});
+                ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, element.get('_COMPID_'), {});
             }
         });
       });

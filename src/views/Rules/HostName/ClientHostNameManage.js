@@ -114,37 +114,37 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedItem = getRowObjectById(ClientHostNameProps, compId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientHostNameProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // ClientHostNameActions.showDialog({
-    //   selectedItem: viewItem,
+    //   selectedViewItem: viewItem,
     //   dialogType: ClientHostNameManageDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     ClientHostNameActions.showInform({
       compId: compId,
-      selectedItem: selectedItem
+      selectedViewItem: selectedViewItem
     });
     
   };
 
   handleCreateButton = () => {
     this.props.ClientHostNameActions.showDialog({
-      selectedItem: Map(),
+      selectedViewItem: Map(),
       dialogType: ClientHostNameManageDialog.TYPE_ADD
     });
   }
 
   handleEditClick = (event, id) => { 
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    const selectedItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientHostNameActions.showDialog({
-      selectedItem: createViewObject(selectedItem),
+      selectedViewItem: createViewObject(selectedViewItem),
       dialogType: ClientHostNameManageDialog.TYPE_EDIT
     });
   };
@@ -152,13 +152,13 @@ class ClientHostNameManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { ClientHostNameProps, GrConfirmActions } = this.props;
-    const selectedItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
       confirmTitle: 'Hosts 정보 삭제',
-      confirmMsg: 'Hosts 정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: 'Hosts 정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
-      confirmObject: selectedItem
+      confirmObject: selectedViewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {

@@ -114,37 +114,37 @@ class ClientUpdateServerManage extends Component {
     const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedItem = getRowObjectById(ClientUpdateServerProps, compId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientUpdateServerProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // ClientUpdateServerActions.showDialog({
-    //   selectedItem: viewItem,
+    //   selectedViewItem: viewItem,
     //   dialogType: ClientHostNameManageDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     ClientUpdateServerActions.showInform({
       compId: compId,
-      selectedItem: selectedItem
+      selectedViewItem: selectedViewItem
     });
     
   };
   
   handleCreateButton = () => {
     this.props.ClientUpdateServerActions.showDialog({
-      selectedItem: Map(),
+      selectedViewItem: Map(),
       dialogType: ClientUpdateServerManageDialog.TYPE_ADD
     });
   }
 
   handleEditClick = (event, id) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    const selectedItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientUpdateServerActions.showDialog({
-      selectedItem: createViewObject(selectedItem),
+      selectedViewItem: createViewObject(selectedViewItem),
       dialogType: ClientUpdateServerManageDialog.TYPE_EDIT
     });
   };
@@ -153,13 +153,13 @@ class ClientUpdateServerManage extends Component {
   handleDeleteClick = (event, id) => {
 
     const { ClientUpdateServerProps, GrConfirmActions } = this.props;
-    const selectedItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
       confirmTitle: '업데이트서버 정보 삭제',
-      confirmMsg: '업데이트서버 정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '업데이트서버 정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
-      confirmObject: selectedItem
+      confirmObject: selectedViewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
