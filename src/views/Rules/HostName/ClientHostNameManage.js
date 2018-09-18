@@ -72,14 +72,14 @@ class ClientHostNameManage extends Component {
 
   handleChangePage = (event, page) => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(ClientHostNameProps, this.props.match.params.grMenuId, {
+    ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(ClientHostNameProps, this.props.match.params.grMenuId, {
+    ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: page
     });
@@ -91,7 +91,7 @@ class ClientHostNameManage extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientHostNameActions.readClientHostNameList(ClientHostNameProps, this.props.match.params.grMenuId, {
+    ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -99,7 +99,7 @@ class ClientHostNameManage extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameList(ClientHostNameProps, this.props.match.params.grMenuId);
+    ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId);
   };
 
   handleKeywordChange = name => event => {
@@ -172,7 +172,7 @@ class ClientHostNameManage extends Component {
         const viewItems = ClientHostNameProps.get('viewItems');
         viewItems.forEach((element) => {
             if(element && element.get('listParam')) {
-                ClientHostNameActions.readClientHostNameList(ClientHostNameProps, element.get('_COMPID_'), {});
+                ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, element.get('_COMPID_'), {});
             }
         });
       });

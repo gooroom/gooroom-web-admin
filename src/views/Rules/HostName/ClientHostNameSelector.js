@@ -6,8 +6,11 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as GrConfirmActions from 'modules/GrConfirmModule';
 
+import ClientHostNameComp from './ClientHostNameComp';
+import { createViewObject } from './ClientHostNameManageInform';
 import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import FormControl from '@material-ui/core/FormControl';
@@ -17,21 +20,29 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
+import Grid from '@material-ui/core/Grid';
+
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
-
-import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
-
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientConfSettingSelector extends Component {
-
+class ClientHostNameSelector extends Component {
   constructor(props) {
     super(props);
 
@@ -41,11 +52,11 @@ class ClientConfSettingSelector extends Component {
   }
 
   componentDidMount() {
-    this.props.ClientConfSettingActions.readClientConfSettingList(this.props.ClientConfSettingProps, this.props.compId);
+    this.props.ClientHostNameActions.readClientHostNameList(this.props.ClientHostNameProps, this.props.compId);
   }
 
   handleChange = (event, value) => {
-    this.props.ClientConfSettingActions.changeCompVariable({
+    this.props.ClientHostNameActions.changeCompVariable({
       compId: this.props.compId,
       name: 'selectedOptionItemId',
       value: event.target.value
@@ -55,8 +66,8 @@ class ClientConfSettingSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { ClientConfSettingProps, compId } = this.props;
-    const viewItem = getDataObjectInComp(ClientConfSettingProps, compId);
+    const { ClientHostNameProps, compId } = this.props;
+    const viewItem = getDataObjectInComp(ClientHostNameProps, compId);
 
     let confItems = [];
     let selectedOptionItemId = '';
@@ -83,10 +94,10 @@ class ClientConfSettingSelector extends Component {
             <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
           ))}
           </Select>
-          <FormHelperText>정책 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
+          <FormHelperText>Hosts 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
         </FormControl>
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientConfSettingComp
+          <ClientHostNameComp
             compId={compId}
             objId={selectedOptionItemId}
             compType="VIEW"
@@ -98,14 +109,16 @@ class ClientConfSettingSelector extends Component {
   }
 }
 
+
 const mapStateToProps = (state) => ({
-  ClientConfSettingProps: state.ClientConfSettingModule
+  ClientHostNameProps: state.ClientHostNameModule
 });
+
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch)
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSettingSelector));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientHostNameSelector));
 
 

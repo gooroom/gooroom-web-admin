@@ -30,6 +30,8 @@ import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 import ClientConfSettingSelector from 'views/Rules/ClientConfig/ClientConfSettingSelector'
+import ClientHostNameSelector from 'views/Rules/HostName/ClientHostNameSelector'
+
 
 
 function TabContainer(props) {
@@ -163,7 +165,7 @@ class ClientGroupDialog extends Component {
                         </Tabs>
                     </AppBar>
                     {tabValue === 0 && <ClientConfSettingSelector compId={compId}>Item One</ClientConfSettingSelector>}
-                    {tabValue === 1 && <ClientConfSettingSelector compId={compId}>Item Two</ClientConfSettingSelector>}
+                    {tabValue === 1 && <ClientHostNameSelector compId={compId}>Item Two</ClientHostNameSelector>}
                     {tabValue === 2 && <ClientConfSettingSelector compId={compId}>Item Three</ClientConfSettingSelector>}
 
                 </form>
