@@ -73,7 +73,7 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readClientHostNameList = (module, compId, extParam) => dispatch => {
+export const readClientHostNameList = (module, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readHostNameConfList', {
     }).then(

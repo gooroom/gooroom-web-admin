@@ -6,9 +6,9 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 
-import ClientHostNameComp from './ClientHostNameComp';
+import ClientUpdateServerComp from './ClientUpdateServerComp';
 import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import FormControl from '@material-ui/core/FormControl';
@@ -27,7 +27,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientHostNameSelector extends Component {
+class ClientUpdateServerSelector extends Component {
   constructor(props) {
     super(props);
 
@@ -37,11 +37,11 @@ class ClientHostNameSelector extends Component {
   }
 
   componentDidMount() {
-    this.props.ClientHostNameActions.readClientHostNameList(this.props.ClientHostNameProps, this.props.compId);
+    this.props.ClientUpdateServerActions.readClientUpdateServerList(this.props.ClientUpdateServerProps, this.props.compId);
   }
 
   handleChange = (event, value) => {
-    this.props.ClientHostNameActions.changeCompVariable({
+    this.props.ClientUpdateServerActions.changeCompVariable({
       compId: this.props.compId,
       name: 'selectedOptionItemId',
       value: event.target.value
@@ -51,8 +51,8 @@ class ClientHostNameSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { ClientHostNameProps, compId } = this.props;
-    const viewItem = getDataObjectInComp(ClientHostNameProps, compId);
+    const { ClientUpdateServerProps, compId } = this.props;
+    const viewItem = getDataObjectInComp(ClientUpdateServerProps, compId);
 
     let confItems = [];
     let selectedOptionItemId = '';
@@ -79,10 +79,10 @@ class ClientHostNameSelector extends Component {
             <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
           ))}
           </Select>
-          <FormHelperText>Hosts 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
+          <FormHelperText>업데이트서버 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
         </FormControl>
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientHostNameComp
+          <ClientUpdateServerComp
             compId={compId}
             objId={selectedOptionItemId}
             compType="VIEW"
@@ -96,14 +96,14 @@ class ClientHostNameSelector extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientHostNameProps: state.ClientHostNameModule
+  ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientHostNameSelector));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientUpdateServerSelector));
 
 

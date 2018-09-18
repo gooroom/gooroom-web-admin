@@ -31,6 +31,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 import ClientConfSettingSelector from 'views/Rules/ClientConfig/ClientConfSettingSelector'
 import ClientHostNameSelector from 'views/Rules/HostName/ClientHostNameSelector'
+import ClientUpdateServerSelector from 'views/Rules/UpdateServer/ClientUpdateServerSelector'
 
 
 
@@ -166,7 +167,7 @@ class ClientGroupDialog extends Component {
                     </AppBar>
                     {tabValue === 0 && <ClientConfSettingSelector compId={compId}>Item One</ClientConfSettingSelector>}
                     {tabValue === 1 && <ClientHostNameSelector compId={compId}>Item Two</ClientHostNameSelector>}
-                    {tabValue === 2 && <ClientConfSettingSelector compId={compId}>Item Three</ClientConfSettingSelector>}
+                    {tabValue === 2 && <ClientUpdateServerSelector compId={compId}>Item Three</ClientUpdateServerSelector>}
 
                 </form>
 

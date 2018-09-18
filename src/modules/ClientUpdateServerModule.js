@@ -6,7 +6,8 @@ import { requestPostAPI } from 'components/GrUtils/GrRequester';
 const COMMON_PENDING = 'clientHostName/COMMON_PENDING';
 const COMMON_FAILURE = 'clientHostName/COMMON_FAILURE';
 
-const GET_UPDATESERVER_LIST_SUCCESS = 'clientUpdateServer/GET_LIST_SUCCESS';
+const GET_UPDATESERVER_LIST_SUCCESS = 'clientUpdateServer/GET_UPDATESERVER_LIST_SUCCESS';
+const GET_UPDATESERVER_LISTPAGED_SUCCESS = 'clientUpdateServer/GET_UPDATESERVER_LISTPAGED_SUCCESS';
 const GET_UPDATESERVER_SUCCESS = 'clientUpdateServer/GET_UPDATESERVER_SUCCESS';
 const CREATE_UPDATESERVER_SUCCESS = 'clientUpdateServer/CREATE_UPDATESERVER_SUCCESS';
 const EDIT_UPDATESERVER_SUCCESS = 'clientUpdateServer/EDIT_UPDATESERVER_SUCCESS';
@@ -72,8 +73,26 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-// ...
-export const readClientUpdateServerList = (module, compId, extParam) => dispatch => {
+export const readClientUpdateServerList = (module, compId) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readUpdateServerConfList', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_UPDATESERVER_LIST_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+export const readClientUpdateServerListPaged = (module, compId, extParam) => dispatch => {
     let newListParam;
     if(module.get('viewItems')) {
         const viewIndex = module.get('viewItems').findIndex((e) => {
@@ -99,7 +118,7 @@ export const readClientUpdateServerList = (module, compId, extParam) => dispatch
     }).then(
         (response) => {
             dispatch({
-                type: GET_UPDATESERVER_LIST_SUCCESS,
+                type: GET_UPDATESERVER_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
                 response: response
@@ -265,8 +284,35 @@ export default handleActions({
             ex: (action.ex) ? action.ex : ''
         });
     },
-
     [GET_UPDATESERVER_LIST_SUCCESS]: (state, action) => {
+        const { data } = action.response.data;
+
+        if(data && data.length > 0) {
+            if(state.get('viewItems')) {
+                const viewIndex = state.get('viewItems').findIndex((e) => {
+                    return e.get('_COMPID_') == action.compId;
+                });
+                if(viewIndex > -1) {
+                    return state
+                        .setIn(['viewItems', viewIndex, 'listAllData'], List(data.map((e) => {return Map(e)})))
+                        .setIn(['viewItems', viewIndex, 'selectedOptionItemId'], data[0].objId);
+                } else {
+                    return state.set('viewItems', state.get('viewItems').push(Map({
+                        '_COMPID_': action.compId,
+                        'listAllData': List(data.map((e) => {return Map(e)})),
+                        'selectedOptionItemId': data[0].objId
+                    })));
+                }
+            } else {
+                return state.set('viewItems', List([Map({
+                    '_COMPID_': action.compId,
+                    'listAllData': List(data.map((e) => {return Map(e)})),
+                    'selectedOptionItemId': data[0].objId
+                })]));
+            }
+        }
+    },
+    [GET_UPDATESERVER_LISTPAGED_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
 
         if(state.get('viewItems')) {
