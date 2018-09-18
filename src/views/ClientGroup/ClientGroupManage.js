@@ -108,7 +108,7 @@ class ClientGroupManage extends Component {
 
     ClientGroupActions.showClientGroupInform({
       compId: compId,
-      selectedItem: clickedRowObject,
+      selectedViewItem: clickedRowObject,
     });
     
     // '단말정책설정' : 정책 정보 변경
@@ -140,7 +140,7 @@ class ClientGroupManage extends Component {
   // add
   handleCreateButton = () => {
     this.props.ClientGroupActions.showDialog({
-      selectedItem: Map(),
+      selectedViewItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD
     });
   }
@@ -148,9 +148,9 @@ class ClientGroupManage extends Component {
   // edit
   handleEditClick = (event, id) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
+    const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     ClientGroupActions.showDialog({
-      selectedItem: selectedItem,
+      selectedViewItem: selectedViewItem,
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
@@ -158,13 +158,13 @@ class ClientGroupManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { ClientGroupProps, GrConfirmActions } = this.props;
-    const selectedItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
+    const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     GrConfirmActions.showConfirm({
       confirmTitle: '단말그룹 삭제',
-      confirmMsg: '단말그룹(' + selectedItem.get('grpNm') + ')을 삭제하시겠습니까?',
+      confirmMsg: '단말그룹(' + selectedViewItem.get('grpNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
-      confirmObject: selectedItem
+      confirmObject: selectedViewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {

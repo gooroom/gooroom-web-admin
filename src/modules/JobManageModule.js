@@ -70,7 +70,7 @@ const initialState = {
         rowsFiltered: 0
     },
 
-    selectedItem: {},
+    selectedViewItem: {},
 
     informOpen: false,
 };
@@ -116,7 +116,7 @@ export const showJobInform222 = (param) => dispatch => {
 export const showJobInform = (param) => dispatch => {
 
     const resetParam = {
-        jobNo: param.selectedItem.jobNo,
+        jobNo: param.selectedViewItem.jobNo,
         page: 0,
         start: 0,
         length: 10,
@@ -292,7 +292,7 @@ export default handleActions({
     [SHOW_JOBINFORM_DATA]: (state, action) => {
         return {
             ...state,
-            selectedItem: action.payload.selectedItem,
+            selectedViewItem: action.payload.selectedViewItem,
             informOpen: true
         };
     },
@@ -367,7 +367,7 @@ export default handleActions({
     // [SET_PROFILESET_SELECTED]: (state, action) => {
     //     return {
     //         ...state,
-    //         selectedItem: action.payload.selectedItem
+    //         selectedViewItem: action.payload.selectedViewItem
     //     }
     // },
     // [CREATE_PROFILESET_JOB_PENDING]: (state, action) => {

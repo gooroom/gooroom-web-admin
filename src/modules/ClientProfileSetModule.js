@@ -48,7 +48,7 @@ const initialState = {
         rowsFiltered: 0
     },
 
-    selectedItem: {
+    selectedViewItem: {
         profileNo: '',
         profileNm: '',
         profileCmt: '',
@@ -266,7 +266,7 @@ export default handleActions({
     [SHOW_PROFILESET_DIALOG]: (state, action) => {
         return {
             ...state,
-            selectedItem: action.payload.selectedItem,
+            selectedViewItem: action.payload.selectedViewItem,
             dialogOpen: action.payload.dialogOpen,
             dialogType: action.payload.dialogType,
         };
@@ -278,16 +278,16 @@ export default handleActions({
         }
     },
     [CHG_PROFILESET_PARAM]: (state, action) => {
-        const newSelectedItem = getMergedObject(state.selectedItem, {[action.payload.name]: action.payload.value});
+        const newSelectedItem = getMergedObject(state.selectedViewItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
-            selectedItem: newSelectedItem
+            selectedViewItem: newSelectedItem
         }
     },
     [SET_PROFILESET_SELECTED]: (state, action) => {
         return {
             ...state,
-            selectedItem: action.payload.selectedItem
+            selectedViewItem: action.payload.selectedViewItem
         }
     },
     [CREATE_PROFILESET_JOB_PENDING]: (state, action) => {

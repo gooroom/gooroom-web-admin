@@ -45,7 +45,7 @@ const initialState = {
         rowsFiltered: 0
     },
 
-    selectedItem: {
+    selectedViewItem: {
         regKeyNo: '',
         validDate: '',
         expireDate: '',
@@ -232,7 +232,7 @@ export default handleActions({
     [SHOW_REGKEY_DIALOG]: (state, action) => {
         return {
             ...state,
-            selectedItem: action.payload.selectedItem,
+            selectedViewItem: action.payload.selectedViewItem,
             dialogOpen: action.payload.dialogOpen,
             dialogType: action.payload.dialogType,
         };
@@ -244,17 +244,17 @@ export default handleActions({
         }
     },
     [CHG_REGKEY_PARAM]: (state, action) => {
-        const newSelectedItem = getMergedObject(state.selectedItem, {[action.payload.name]: action.payload.value});
+        const newSelectedItem = getMergedObject(state.selectedViewItem, {[action.payload.name]: action.payload.value});
         return {
             ...state,
-            selectedItem: newSelectedItem
+            selectedViewItem: newSelectedItem
         }
     },
     [CREATE_REGKEY_NEWKEY]: (state, action) => {
-        const newSelectedItem = getMergedObject(state.selectedItem, {regKeyNo: action.payload.key});
+        const newSelectedItem = getMergedObject(state.selectedViewItem, {regKeyNo: action.payload.key});
         return {
             ...state,
-            selectedItem: newSelectedItem
+            selectedViewItem: newSelectedItem
         }
     },
     [CREATE_REGKEY_PENDING]: (state, action) => {

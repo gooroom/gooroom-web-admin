@@ -40,7 +40,7 @@ class ClientSecuSettingInform extends Component {
 
     const { ClientSecuSettingProps, compId } = this.props;
     const viewItem = getDataObjectInComp(ClientSecuSettingProps, compId);
-    const selectedViewItem = (viewItem.get('selectedItem')) ? createViewObject(viewItem.get('selectedItem')) : null;
+    const selectedViewItem = (viewItem.get('selectedViewItem')) ? createViewObject(viewItem.get('selectedViewItem')) : null;
 
     return (
       <div>

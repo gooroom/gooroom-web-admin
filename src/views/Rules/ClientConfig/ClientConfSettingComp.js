@@ -46,10 +46,10 @@ class ClientConfSettingComp extends Component {
 
   handleEditBtnClick = (objId) => {
     const { ClientConfSettingProps, ClientConfSettingActions, compId } = this.props;
-    const selectedItem = getSelectedObjectInComp(ClientConfSettingProps, compId);
+    const selectedViewItem = getSelectedObjectInComp(ClientConfSettingProps, compId);
 
     ClientConfSettingActions.showDialog({
-      selectedItem: createViewObject(selectedItem),
+      selectedViewItem: createViewObject(selectedViewItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -61,7 +61,7 @@ class ClientConfSettingComp extends Component {
 
     const { ClientConfSettingProps, compId } = this.props;
     const viewItem = getDataObjectInComp(ClientConfSettingProps, compId);
-    const viewCompItem = createViewObject(viewItem.get('selectedItem'));
+    const viewCompItem = createViewObject(viewItem.get('selectedViewItem'));
 
     return (
       <React.Fragment>

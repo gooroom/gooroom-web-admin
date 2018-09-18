@@ -43,21 +43,21 @@ class ClientManageInform extends Component {
     const { compId, ClientManageProps } = this.props;
 
     const viewItem = getDataObjectInComp(ClientManageProps, compId);
-    const selectedItem = viewItem.get('selectedItem');
+    const selectedViewItem = viewItem.get('selectedViewItem');
 
     const bull = <span className={classes.bullet}>•</span>;
 
     return (
       <div>
-      {(viewItem.get('informOpen') && selectedItem) &&
+      {(viewItem.get('informOpen') && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={(selectedItem) ? selectedItem.get('clientName') : ''}
-            subheader={selectedItem.get('clientId') + ', ' + formatDateToSimple(selectedItem.get('regDate'), 'YYYY-MM-DD')}
+            title={(selectedViewItem) ? selectedViewItem.get('clientName') : ''}
+            subheader={selectedViewItem.get('clientId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
           />
           <CardContent>
             <Typography component="pre">
-              {selectedItem.get('clientStatus')}
+              {selectedViewItem.get('clientStatus')}
             </Typography>
           </CardContent>
           <Divider />
@@ -68,15 +68,15 @@ class ClientManageInform extends Component {
                 <TableBody>
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} 단말그룹</TableCell>
-                    <TableCell numeric>{selectedItem.get('clientGroupName')} ({selectedItem.get('clientGroupId')})</TableCell>
+                    <TableCell numeric>{selectedViewItem.get('clientGroupName')} ({selectedViewItem.get('clientGroupId')})</TableCell>
                   </TableRow>
                   <TableRow>
                       <TableCell component="th" scope="row">{bull} 단말설명</TableCell>
-                    <TableCell numeric>{selectedItem.get('comment')}</TableCell>
+                    <TableCell numeric>{selectedViewItem.get('comment')}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} 온라인여부</TableCell>
-                    <TableCell numeric>{(selectedItem.get('isOn') == '0') ? '오프라인' : '온라인'}</TableCell>
+                    <TableCell numeric>{(selectedViewItem.get('isOn') == '0') ? '오프라인' : '온라인'}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
@@ -87,27 +87,27 @@ class ClientManageInform extends Component {
                   
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} isBootProtector</TableCell>
-                    <TableCell numeric>{(selectedItem.get('isBootProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                    <TableCell numeric>{(selectedViewItem.get('isBootProtector') == '0') ? '미침해' : '침해'}</TableCell>
                   </TableRow>
 
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} isExeProtector</TableCell>
-                    <TableCell numeric>{(selectedItem.get('isExeProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                    <TableCell numeric>{(selectedViewItem.get('isExeProtector') == '0') ? '미침해' : '침해'}</TableCell>
                   </TableRow>
 
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} isMediaProtector</TableCell>
-                    <TableCell numeric>{(selectedItem.get('isMediaProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                    <TableCell numeric>{(selectedViewItem.get('isMediaProtector') == '0') ? '미침해' : '침해'}</TableCell>
                   </TableRow>
 
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} isOsProtector</TableCell>
-                    <TableCell numeric>{(selectedItem.get('isOsProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                    <TableCell numeric>{(selectedViewItem.get('isOsProtector') == '0') ? '미침해' : '침해'}</TableCell>
                   </TableRow>
 
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} isProtector</TableCell>
-                    <TableCell numeric>{(selectedItem.get('isProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                    <TableCell numeric>{(selectedViewItem.get('isProtector') == '0') ? '미침해' : '침해'}</TableCell>
                   </TableRow>
 
                 </TableBody>
@@ -120,15 +120,15 @@ class ClientManageInform extends Component {
             <Grid item xs={12} sm={6} >
               <ClientConfSettingComp
                 compId={compId}
-                objId={selectedItem.get('clientConfigId')} 
-                objNm={selectedItem.get('clientConfigNm')} 
+                objId={selectedViewItem.get('clientConfigId')} 
+                objNm={selectedViewItem.get('clientConfigNm')} 
               />
             </Grid>
             <Grid item xs={12} sm={6} >
               <DesktopConfigComp 
                 compId={compId}
-                objId={selectedItem.get('desktopConfigId')} 
-                objNm={selectedItem.get('desktopConfigNm')} 
+                objId={selectedViewItem.get('desktopConfigId')} 
+                objNm={selectedViewItem.get('desktopConfigNm')} 
               />
             </Grid>
           </Grid>
@@ -136,15 +136,15 @@ class ClientManageInform extends Component {
             <Grid item xs={12} sm={6} >
               <ClientHostNameComp
                 compId={compId}
-                objId={selectedItem.get('hostNameConfigId')} 
-                objNm={selectedItem.get('hostNameConfigNm')} 
+                objId={selectedViewItem.get('hostNameConfigId')} 
+                objNm={selectedViewItem.get('hostNameConfigNm')} 
               />
             </Grid>
             <Grid item xs={12} sm={6} >
               <ClientUpdateServerComp
                 compId={compId}
-                objId={selectedItem.get('updateServerConfigId')} 
-                objNm={selectedItem.get('updateServerConfigNm')} 
+                objId={selectedViewItem.get('updateServerConfigId')} 
+                objNm={selectedViewItem.get('updateServerConfigNm')} 
               />
             </Grid>
           </Grid>

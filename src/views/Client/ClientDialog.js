@@ -50,7 +50,7 @@ class ClientDialog extends Component {
     const { ClientManageProps } = this.props;
     const { dialogType, tabValue } = ClientManageProps;
 
-    if (ClientManageProps.selectedItem !== "") {
+    if (ClientManageProps.selectedViewItem !== "") {
 
       return (
         <Dialog open={ClientManageProps.dialogOpen}>

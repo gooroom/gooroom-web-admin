@@ -39,7 +39,7 @@ class ClientHostNameInform extends Component {
 
     const { ClientHostNameProps, compId } = this.props;
     const viewItem = getDataObjectInComp(ClientHostNameProps, compId);
-    const selectedViewItem = (viewItem.get('selectedItem')) ? createViewObject(viewItem.get('selectedItem')) : null;
+    const selectedViewItem = (viewItem.get('selectedViewItem')) ? createViewObject(viewItem.get('selectedViewItem')) : null;
 
     return (
       <div>

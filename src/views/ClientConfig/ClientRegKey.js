@@ -119,7 +119,7 @@ class ClientRegKey extends Component {
   handleCreateButton = () => {
     const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
     ClientRegKeyActions.showDialog({
-      selectedItem: {
+      selectedViewItem: {
         regKeyNo: '',
         validDate: (new Date()).setMonth((new Date()).getMonth() + 1),
         expireDate: (new Date()).setMonth((new Date()).getMonth() + 1),
@@ -133,11 +133,11 @@ class ClientRegKey extends Component {
   
   handleRowClick = (event, id) => {
     const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-    const selectedItem = ClientRegKeyProps.listData.find(function(element) {
+    const selectedViewItem = ClientRegKeyProps.listData.find(function(element) {
       return element.regKeyNo == id;
     });
     ClientRegKeyActions.showDialog({
-      selectedItem: Object.assign({}, selectedItem),
+      selectedViewItem: Object.assign({}, selectedViewItem),
       dialogType: ClientRegKeyDialog.TYPE_VIEW,
       dialogOpen: true
     });
@@ -146,11 +146,11 @@ class ClientRegKey extends Component {
   handleEditClick = (event, id) => {
     event.stopPropagation();
     const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-    const selectedItem = ClientRegKeyProps.listData.find(function(element) {
+    const selectedViewItem = ClientRegKeyProps.listData.find(function(element) {
       return element.regKeyNo == id;
     });
     ClientRegKeyActions.showDialog({
-      selectedItem: Object.assign({}, selectedItem),
+      selectedViewItem: Object.assign({}, selectedViewItem),
       dialogType: ClientRegKeyDialog.TYPE_EDIT,
       dialogOpen: true
     });
@@ -160,16 +160,16 @@ class ClientRegKey extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientRegKeyProps, ClientRegKeyActions, GrConfirmActions } = this.props;
-    const selectedItem = ClientRegKeyProps.listData.find(function(element) {
+    const selectedViewItem = ClientRegKeyProps.listData.find(function(element) {
       return element.regKeyNo == id;
     });
     ClientRegKeyActions.changeParamValue({
       name: 'regKeyNo',
-      value: selectedItem.regKeyNo
+      value: selectedViewItem.regKeyNo
     });
     const re = GrConfirmActions.showConfirm({
       confirmTitle: '단말등록키 삭제',
-      confirmMsg: '단말등록키(' + selectedItem.regKeyNo + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말등록키(' + selectedViewItem.regKeyNo + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true
     });
@@ -178,7 +178,7 @@ class ClientRegKey extends Component {
     const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
     if(confirmValue) {
       ClientRegKeyActions.deleteClientRegKeyData({
-        regKeyNo: ClientRegKeyProps.selectedItem.regKeyNo
+        regKeyNo: ClientRegKeyProps.selectedViewItem.regKeyNo
       }).then(() => {
         ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
         }, () => {

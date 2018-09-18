@@ -115,37 +115,37 @@ class BrowserRuleSetting extends Component {
     const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedItem = getRowObjectById(BrowserRuleSettingProps, compId, id, 'objId');
+    const selectedViewItem = getRowObjectById(BrowserRuleSettingProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // BrowserRuleSettingActions.showDialog({
-    //   selectedItem: viewObject,
+    //   selectedViewItem: viewObject,
     //   dialogType: BrowserRuleSettingDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     BrowserRuleSettingActions.showInform({
       compId: compId,
-      selectedItem: selectedItem
+      selectedViewItem: selectedViewItem
     });
     
   };
 
   handleCreateButton = () => {
     this.props.BrowserRuleSettingActions.showDialog({
-      selectedItem: Map(),
+      selectedViewItem: Map(),
       dialogType: BrowserRuleSettingDialog.TYPE_ADD
     });
   }
 
   handleEditClick = (event, id) => { 
     const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
-    const selectedItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     BrowserRuleSettingActions.showDialog({
-      selectedItem: createViewObject(selectedItem),
+      selectedViewItem: createViewObject(selectedViewItem),
       dialogType: BrowserRuleSettingDialog.TYPE_EDIT
     });
   };
@@ -153,13 +153,13 @@ class BrowserRuleSetting extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { BrowserRuleSettingProps, GrConfirmActions } = this.props;
-    const selectedItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
-      confirmObject: selectedItem
+      confirmObject: selectedViewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {

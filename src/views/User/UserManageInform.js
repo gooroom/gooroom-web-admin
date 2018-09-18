@@ -37,7 +37,7 @@ class UserManageInform extends Component {
     const bull = <span className={classes.bullet}>•</span>;
 
     const viewItem = getViewItem({ props: UserProps, compId: compId });
-    const selectedViewItem = (viewItem) ? viewItem.selectedItem : null;
+    const selectedViewItem = (viewItem) ? viewItem.selectedViewItem : null;
 
     return (
       <div >

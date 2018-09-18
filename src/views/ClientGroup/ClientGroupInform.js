@@ -36,18 +36,18 @@ class ClientGroupInform extends Component {
 
     const { compId, ClientGroupCompProps } = this.props;
     const viewItem = getDataObjectInComp(ClientGroupCompProps, compId);
-    const selectedItem = viewItem.get('selectedItem');
+    const selectedViewItem = viewItem.get('selectedViewItem');
 
     return (
       <div>
-      {(viewItem.get('informOpen') && selectedItem) &&
+      {(viewItem.get('informOpen') && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
-            title={selectedItem.get('grpNm')}
-            subheader={selectedItem.get('grpId') + ', ' + formatDateToSimple(selectedItem.get('regDate'), 'YYYY-MM-DD')}
+            title={selectedViewItem.get('grpNm')}
+            subheader={selectedViewItem.get('grpId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
           />
           <CardContent>
-            <Typography component="pre">"{selectedItem.get('comment')}"</Typography>
+            <Typography component="pre">"{selectedViewItem.get('comment')}"</Typography>
           </CardContent>
           <Divider />
           
@@ -55,15 +55,15 @@ class ClientGroupInform extends Component {
             <Grid item xs={12} sm={6} >
               <ClientConfSettingComp
                 compId={compId}
-                objId={selectedItem.get('clientConfigId')} 
-                objNm={selectedItem.get('clientConfigNm')} 
+                objId={selectedViewItem.get('clientConfigId')} 
+                objNm={selectedViewItem.get('clientConfigNm')} 
               />
             </Grid>
             <Grid item xs={12} sm={6} >
               <DesktopConfigComp 
                 compId={compId}
-                objId={selectedItem.get('desktopConfigId')} 
-                objNm={selectedItem.get('desktopConfigNm')} 
+                objId={selectedViewItem.get('desktopConfigId')} 
+                objNm={selectedViewItem.get('desktopConfigNm')} 
               />
             </Grid>
           </Grid>
@@ -71,15 +71,15 @@ class ClientGroupInform extends Component {
             <Grid item xs={12} sm={6} >
               <ClientHostNameComp
                 compId={compId}
-                objId={selectedItem.get('hostNameConfigId')} 
-                objNm={selectedItem.get('hostNameConfigNm')} 
+                objId={selectedViewItem.get('hostNameConfigId')} 
+                objNm={selectedViewItem.get('hostNameConfigNm')} 
               />
             </Grid>
             <Grid item xs={12} sm={6} >
               <ClientUpdateServerComp
                 compId={compId}
-                objId={selectedItem.get('updateServerConfigId')} 
-                objNm={selectedItem.get('updateServerConfigNm')} 
+                objId={selectedViewItem.get('updateServerConfigId')} 
+                objNm={selectedViewItem.get('updateServerConfigNm')} 
               />
             </Grid>
           </Grid>

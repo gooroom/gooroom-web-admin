@@ -146,7 +146,7 @@ class UserManage extends Component {
   handleCreateButton = value => {
     const { UserActions } = this.props;
     UserActions.showDialog({
-      selectedItem: {
+      selectedViewItem: {
         userId: '',
         userName: '',
         userPassword: '',
@@ -205,14 +205,14 @@ class UserManage extends Component {
     });
 
     // show user info.
-    const selectedItem = viewItem.listData.find(function(element) {
+    const selectedViewItem = viewItem.listData.find(function(element) {
       return element.userId == id;
     });
 
-    if(selectedItem) {
+    if(selectedViewItem) {
       UserActions.showInform({
         compId: menuCompId,
-        selectedItem: selectedItem
+        selectedViewItem: selectedViewItem
       });
     }
   };
@@ -231,16 +231,16 @@ class UserManage extends Component {
     const menuCompId = this.props.match.params.grMenuId;
 
     const listData = getListData({ props: UserProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
+    const selectedViewItem = listData.find(function(element) {
       return element.userId == id;
     });
 
     UserActions.showDialog({
       compId: menuCompId,
-      selectedItem: {
-        userId: selectedItem.userId,
-        userName: selectedItem.userNm,
-        userPassword: selectedItem.userPasswd
+      selectedViewItem: {
+        userId: selectedViewItem.userId,
+        userName: selectedViewItem.userNm,
+        userPassword: selectedViewItem.userPasswd
       },
       dialogType: UserManageDialog.TYPE_EDIT,
     });
@@ -253,16 +253,16 @@ class UserManage extends Component {
     const menuCompId = this.props.match.params.grMenuId;
 
     const listData = getListData({ props: UserProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
+    const selectedViewItem = listData.find(function(element) {
       return element.userId == id;
     });
 
     const re = GrConfirmActions.showConfirm({
       confirmTitle: '사용자정보 삭제',
-      confirmMsg: '사용자정보(' + selectedItem.userId + ')를 삭제하시겠습니까?',
+      confirmMsg: '사용자정보(' + selectedViewItem.userId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
-      confirmObject: selectedItem
+      confirmObject: selectedViewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {

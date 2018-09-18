@@ -115,37 +115,37 @@ class ClientSecuSetting extends Component {
     const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedItem = getRowObjectById(ClientSecuSettingProps, compId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientSecuSettingProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // ClientSecuSettingActions.showDialog({
-    //   selectedItem: viewObject,
+    //   selectedViewItem: viewObject,
     //   dialogType: ClientSecuSettingDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     ClientSecuSettingActions.showInform({
       compId: compId,
-      selectedItem: selectedItem
+      selectedViewItem: selectedViewItem
     });
     
   };
 
   handleCreateButton = () => {
     this.props.ClientSecuSettingActions.showDialog({
-      selectedItem: Map(),
+      selectedViewItem: Map(),
       dialogType: ClientSecuSettingDialog.TYPE_ADD
     });
   }
 
   handleEditClick = (event, id) => { 
     const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    const selectedItem = getRowObjectById(ClientSecuSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientSecuSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientSecuSettingActions.showDialog({
-      selectedItem: createViewObject(selectedItem),
+      selectedViewItem: createViewObject(selectedViewItem),
       dialogType: ClientSecuSettingDialog.TYPE_EDIT
     });
   };
@@ -153,13 +153,13 @@ class ClientSecuSetting extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { ClientSecuSettingProps, GrConfirmActions } = this.props;
-    const selectedItem = getRowObjectById(ClientSecuSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(ClientSecuSettingProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
       confirmTitle: '단말보안정책정보 삭제',
-      confirmMsg: '단말보안정책정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말보안정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
-      confirmObject: selectedItem
+      confirmObject: selectedViewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {

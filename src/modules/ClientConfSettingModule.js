@@ -7,6 +7,7 @@ const COMMON_PENDING = 'clientConfSetting/COMMON_PENDING';
 const COMMON_FAILURE = 'clientConfSetting/COMMON_FAILURE';
 
 const GET_CONFSETTING_LIST_SUCCESS = 'clientConfSetting/GET_CONFSETTING_LIST_SUCCESS';
+const GET_CONFSETTING_LISTPAGED_SUCCESS = 'clientConfSetting/GET_CONFSETTING_LISTPAGED_SUCCESS';
 const GET_CONFSETTING_SUCCESS = 'clientConfSetting/GET_CONFSETTING_SUCCESS';
 const CREATE_CONFSETTING_SUCCESS = 'clientConfSetting/CREATE_CONFSETTING_SUCCESS';
 const EDIT_CONFSETTING_SUCCESS = 'clientConfSetting/EDIT_CONFSETTING_SUCCESS';
@@ -50,7 +51,7 @@ const initialState = Map({
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_CONFSETTING_DIALOG,
-        selectedItem: param.selectedItem,
+        selectedViewItem: param.selectedViewItem,
         dialogType: param.dialogType
     });
 };
@@ -65,7 +66,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CONFSETTING_INFORM,
         compId: param.compId,
-        selectedItem: param.selectedItem
+        selectedViewItem: param.selectedViewItem
     });
 };
 
@@ -76,7 +77,26 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readClientConfSettingList = (module, compId, extParam) => dispatch => {
+export const readClientConfSettingList = (module, compId) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readClientConfList', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_CONFSETTING_LIST_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+export const readClientConfSettingListPaged = (module, compId, extParam) => dispatch => {
     let newListParam;
     if(module.get('viewItems')) {
         const viewIndex = module.get('viewItems').findIndex((e) => {
@@ -102,7 +122,7 @@ export const readClientConfSettingList = (module, compId, extParam) => dispatch 
     }).then(
         (response) => {
             dispatch({
-                type: GET_CONFSETTING_LIST_SUCCESS,
+                type: GET_CONFSETTING_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
                 response: response
@@ -289,8 +309,30 @@ export default handleActions({
             ex: (action.ex) ? action.ex : ''
         });
     },
-
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
+        const { data } = action.response.data;
+
+        if(state.get('viewItems')) {
+            const viewIndex = state.get('viewItems').findIndex((e) => {
+                return e.get('_COMPID_') == action.compId;
+            });
+            if(viewIndex > -1) {
+                return state
+                        .setIn(['viewItems', viewIndex, 'listAllData'], List(data.map((e) => {return Map(e)})))
+            } else {
+                return state.set('viewItems', state.get('viewItems').push(Map({
+                    '_COMPID_': action.compId,
+                    'listAllData': List(data.map((e) => {return Map(e)}))
+                })));
+            }
+        } else {
+            return state.set('viewItems', List([Map({
+                '_COMPID_': action.compId,
+                'listAllData': List(data.map((e) => {return Map(e)}))
+            })]));
+        }
+    }, 
+    [GET_CONFSETTING_LISTPAGED_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
 
         if(state.get('viewItems')) {
@@ -349,24 +391,24 @@ export default handleActions({
                 return state.set('viewItems', state.get('viewItems').push(Map({
                     '_COMPID_': action.compId,
                     'informOpen': true,
-                    'selectedItem': fromJS(data[0])
+                    'selectedViewItem': fromJS(data[0])
                 })));
             } else {
                 return state
-                    .setIn(['viewItems', viewIndex, 'selectedItem'], fromJS(data[0]))
+                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], fromJS(data[0]))
                     .setIn(['viewItems', viewIndex, 'informOpen'], true);
             }
         } else {
             return state.set('viewItems', List([Map({
                 '_COMPID_': action.compId,
-                'selectedItem': fromJS(data[0]),
+                'selectedViewItem': fromJS(data[0]),
                 'informOpen': true
             })]));
         }
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
         return state.merge({
-            editingItem: action.selectedItem,
+            editingItem: action.selectedViewItem,
             dialogOpen: true,
             dialogType: action.dialogType
         });
@@ -386,11 +428,11 @@ export default handleActions({
                 return state.set('viewItems', state.get('viewItems').push(Map({
                     '_COMPID_': action.compId,
                     'informOpen': true,
-                    'selectedItem': action.selectedItem
+                    'selectedViewItem': action.selectedViewItem
                 })));
             } else {
                 return state
-                    .setIn(['viewItems', viewIndex, 'selectedItem'], action.selectedItem)
+                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], action.selectedViewItem)
                     .setIn(['viewItems', viewIndex, 'informOpen'], true);
             }
         } else {
@@ -405,7 +447,7 @@ export default handleActions({
             });
             return state
                     .setIn(['viewItems', viewIndex, 'informOpen'], false)
-                    .deleteIn(['viewItems', viewIndex, 'selectedItem'])
+                    .deleteIn(['viewItems', viewIndex, 'selectedViewItem'])
         }
         return state;
     },
@@ -436,10 +478,10 @@ export default handleActions({
         let newState = state;
         if(newState.get('viewItems')) {
             newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedItem')) {
-                    if(e.getIn(['selectedItem', 'objId']) == action.objId) {
+                if(e.get('selectedViewItem')) {
+                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
                         // replace
-                        newState = newState.setIn(['viewItems', i, 'selectedItem'], fromJS(action.response.data.data[0]));
+                        newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
                     }
                 }
             });
@@ -455,10 +497,10 @@ export default handleActions({
         let newState = state;
         if(newState.get('viewItems')) {
             newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedItem')) {
-                    if(e.getIn(['selectedItem', 'objId']) == action.objId) {
+                if(e.get('selectedViewItem')) {
+                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
                         // replace
-                        newState = newState.deleteIn(['viewItems', i, 'selectedItem']);
+                        newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
                     }
                 }
             });

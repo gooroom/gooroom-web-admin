@@ -45,10 +45,10 @@ class ClientUpdateServerComp extends Component {
 
   handleEditBtnClick = (param) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps, compId } = this.props;
-    const selectedItem = getSelectedObjectInComp(ClientUpdateServerProps, compId);
+    const selectedViewItem = getSelectedObjectInComp(ClientUpdateServerProps, compId);
 
     ClientUpdateServerActions.showDialog({
-      selectedItem: createViewObject(selectedItem),
+      selectedViewItem: createViewObject(selectedViewItem),
       dialogType: ClientUpdateServerDialog.TYPE_EDIT,
     });
   };
@@ -60,7 +60,7 @@ class ClientUpdateServerComp extends Component {
 
     const { ClientUpdateServerProps, compId } = this.props;
     const viewItem = getDataObjectInComp(ClientUpdateServerProps, compId);
-    const viewCompItem = createViewObject(viewItem.get('selectedItem'));
+    const viewCompItem = createViewObject(viewItem.get('selectedViewItem'));
 
     return (
       <React.Fragment>

@@ -17,12 +17,28 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
+import Divider from '@material-ui/core/Divider';
+
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
+import ClientConfSettingSelector from 'views/Rules/ClientConfig/ClientConfSettingSelector'
+
+
+function TabContainer(props) {
+    return (
+      <Typography component="div" style={{ padding: 8 * 3 }}>
+        {props.children}
+      </Typography>
+    );
+  }
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -90,12 +106,21 @@ class ClientGroupDialog extends Component {
         }
     }
 
+    handleChangeTabs = (event, value) => {
+        this.props.ClientGroupActions.changeStoreData({
+            name: 'dialogTabValue',
+            value: value
+        });
+          };
+
     render() {
         const { classes } = this.props;
-        const { ClientGroupProps } = this.props;
+        const { ClientGroupProps, compId } = this.props;
         
         const dialogType = ClientGroupProps.get('dialogType');
         const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem') : null;
+
+        const tabValue = ClientGroupProps.get('dialogTabValue');
 
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
@@ -111,7 +136,9 @@ class ClientGroupDialog extends Component {
             {(ClientGroupProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientGroupProps.get('dialogOpen')}>
                 <DialogTitle >{title}</DialogTitle>
+
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
+                
                     <TextField
                         id="grpNm"
                         label="단말그룹이름"
@@ -126,15 +153,19 @@ class ClientGroupDialog extends Component {
                         onChange={this.handleValueChange('comment')}
                         className={classes.fullWidth}
                     />
-                    <InputLabel htmlFor="age-simple">Age</InputLabel>
-                    <Select value="">
-                        <MenuItem value="">
-                            <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
-                    </Select>
+
+                    <Divider style={{marginBottom: 10}} />        
+                    <AppBar position="static" color="default">
+                        <Tabs value={tabValue} onChange={this.handleChangeTabs}>
+                            <Tab label="단말정책정보" />
+                            <Tab label="Hosts정보" />
+                            <Tab label="업데이트서버정보" />
+                        </Tabs>
+                    </AppBar>
+                    {tabValue === 0 && <ClientConfSettingSelector compId={compId}>Item One</ClientConfSettingSelector>}
+                    {tabValue === 1 && <ClientConfSettingSelector compId={compId}>Item Two</ClientConfSettingSelector>}
+                    {tabValue === 2 && <ClientConfSettingSelector compId={compId}>Item Three</ClientConfSettingSelector>}
+
                 </form>
 
                 <DialogActions>

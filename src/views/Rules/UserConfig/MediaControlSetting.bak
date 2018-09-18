@@ -84,7 +84,7 @@ class MediaControlSetting extends Component {
   handleCreateButton = () => {
     const { MediaControlSettingActions } = this.props;
     MediaControlSettingActions.showDialog({
-      selectedItem: {
+      selectedViewItem: {
         objId: '',
         objNm: '',
         comment: '',
@@ -110,31 +110,31 @@ class MediaControlSetting extends Component {
     const menuCompId = this.props.match.params.grMenuId;
 
     const listData = getListData({ props: MediaControlSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
+    const selectedViewItem = listData.find(function(element) {
       return element.objId == id;
     });
 
-    console.log('selectedItem : ', selectedItem);
+    console.log('selectedViewItem : ', selectedViewItem);
 
     // create usb read-onry node
-    if(selectedItem.usbMemory == 'read_only') {
-      Object.assign(selectedItem, {usbReadonly: "allow"}); 
+    if(selectedViewItem.usbMemory == 'read_only') {
+      Object.assign(selectedViewItem, {usbReadonly: "allow"}); 
     } else {
-      Object.assign(selectedItem, {usbReadonly: "disallow"}); 
+      Object.assign(selectedViewItem, {usbReadonly: "disallow"}); 
     }
     
     // choice one from two views.
 
     // 1. popup dialog
     // MediaControlSettingActions.showDialog({
-    //   selectedItem: viewObject,
+    //   selectedViewItem: viewObject,
     //   dialogType: MediaControlSettingDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     MediaControlSettingActions.showInform({
       compId: menuCompId,
-      selectedItem: selectedItem
+      selectedViewItem: selectedViewItem
     });
     
   };
@@ -144,13 +144,13 @@ class MediaControlSetting extends Component {
     const menuCompId = this.props.match.params.grMenuId;
 
     const listData = getListData({ props: MediaControlSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
+    const selectedViewItem = listData.find(function(element) {
       return element.objId == id;
     });
 
     MediaControlSettingActions.showDialog({
       compId: menuCompId,
-      selectedItem: createViewObject(selectedItem),
+      selectedViewItem: createViewObject(selectedViewItem),
       dialogType: MediaControlSettingDialog.TYPE_EDIT,
     });
   };
@@ -162,16 +162,16 @@ class MediaControlSetting extends Component {
     const menuCompId = this.props.match.params.grMenuId;
 
     const listData = getListData({ props: MediaControlSettingProps, compId: menuCompId });
-    const selectedItem = listData.find(function(element) {
+    const selectedViewItem = listData.find(function(element) {
       return element.objId == id;
     });
 
     const re = GrConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedItem.objId + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말정책정보(' + selectedViewItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
-      confirmObject: selectedItem
+      confirmObject: selectedViewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {

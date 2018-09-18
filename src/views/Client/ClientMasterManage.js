@@ -78,7 +78,7 @@ class ClientMasterManage extends Component {
       ClientMasterManageActions.closeClientManageInform();
       ClientGroupActions.setSelectedItemObj({
         compId: compId,
-        selectedItem: selectedGroupObj
+        selectedViewItem: selectedGroupObj
       });
 
       // Show inform
@@ -106,7 +106,7 @@ class ClientMasterManage extends Component {
       });
       ClientGroupActions.showClientGroupInform({
         compId: compId,
-        selectedItem: selectedGroupObj,
+        selectedViewItem: selectedGroupObj,
       });
     }
   };
@@ -125,7 +125,7 @@ class ClientMasterManage extends Component {
       });
       ClientManageCompActions.showClientManageInform({
         compId: compId,
-        selectedItem: selectedClientObj,
+        selectedViewItem: selectedClientObj,
       });
     }
   };
@@ -134,7 +134,7 @@ class ClientMasterManage extends Component {
   // add client group
   handleCreateButtonForClientGroup = () => {
     this.props.ClientGroupActions.showDialog({
-      selectedItem: Map(),
+      selectedViewItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD
     });
   }
@@ -175,7 +175,7 @@ class ClientMasterManage extends Component {
   // add client group
   handleCreateButtonForClientGroup = () => {
     this.props.ClientGroupActions.showDialog({
-      selectedItem: Map(),
+      selectedViewItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD
     });
   }

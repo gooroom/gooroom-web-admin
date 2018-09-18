@@ -115,36 +115,36 @@ class MediaControlSetting extends Component {
     const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedItem = getRowObjectById(MediaControlSettingProps, compId, id, 'objId');
+    const selectedViewItem = getRowObjectById(MediaControlSettingProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // MediaControlSettingActions.showDialog({
-    //   selectedItem: viewObject,
+    //   selectedViewItem: viewObject,
     //   dialogType: MediaControlSettingDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     MediaControlSettingActions.showInform({
       compId: compId,
-      selectedItem: selectedItem
+      selectedViewItem: selectedViewItem
     });
   };
 
   handleCreateButton = () => {
     this.props.MediaControlSettingActions.showDialog({
-      selectedItem: Map(),
+      selectedViewItem: Map(),
       dialogType: MediaControlSettingDialog.TYPE_ADD
     });
   }
   
   handleEditClick = (event, id) => {
     const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
-    const selectedItem = getRowObjectById(MediaControlSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(MediaControlSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     MediaControlSettingActions.showDialog({
-      selectedItem: createViewObject(selectedItem),
+      selectedViewItem: createViewObject(selectedViewItem),
       dialogType: MediaControlSettingDialog.TYPE_EDIT
     });
   };
@@ -152,13 +152,13 @@ class MediaControlSetting extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { MediaControlSettingProps, GrConfirmActions } = this.props;
-    const selectedItem = getRowObjectById(MediaControlSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const selectedViewItem = getRowObjectById(MediaControlSettingProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
       confirmTitle: '매체재어정책정보 삭제',
-      confirmMsg: '매체재어정책정보(' + selectedItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '매체재어정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
-      confirmObject: selectedItem
+      confirmObject: selectedViewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {

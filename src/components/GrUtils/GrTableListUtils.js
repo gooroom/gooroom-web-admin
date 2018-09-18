@@ -42,10 +42,10 @@ export const getRowObjectById = (propObj, compId, id, keyId) => {
             return element.get('_COMPID_') == compId;
         });
         if(viewItem && viewItem.get('listData')) {
-            const selectedItem = viewItem.get('listData').find((element) => {
+            const selectedViewItem = viewItem.get('listData').find((element) => {
                 return element.get(keyId) == id;
             });
-            return (selectedItem) ? fromJS(selectedItem.toJS()) : null;
+            return (selectedViewItem) ? fromJS(selectedViewItem.toJS()) : null;
         }
     }
     return null;
@@ -56,7 +56,7 @@ export const getSelectedObjectInComp = (propObj, compId) => {
         const viewItem = propObj.get('viewItems').find((element) => {
             return element.get('_COMPID_') == compId;
         });
-        return (viewItem) ? viewItem.get('selectedItem') : null;
+        return (viewItem) ? viewItem.get('selectedViewItem') : null;
     }
     return null;
 }

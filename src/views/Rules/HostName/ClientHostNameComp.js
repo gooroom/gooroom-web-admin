@@ -45,10 +45,10 @@ class ClientHostNameComp extends Component {
 
   handleEditBtnClick = (param) => {
     const { ClientHostNameActions, ClientHostNameProps, compId } = this.props;
-    const selectedItem = getSelectedObjectInComp(ClientHostNameProps, compId);
+    const selectedViewItem = getSelectedObjectInComp(ClientHostNameProps, compId);
 
     ClientHostNameActions.showDialog({
-      selectedItem: createViewObject(selectedItem),
+      selectedViewItem: createViewObject(selectedViewItem),
       dialogType: ClientHostNameDialog.TYPE_EDIT,
     });
   };
@@ -60,7 +60,7 @@ class ClientHostNameComp extends Component {
 
     const { ClientHostNameProps, compId } = this.props;
     const viewItem = getDataObjectInComp(ClientHostNameProps, compId);
-    const viewCompItem = createViewObject(viewItem.get('selectedItem'));
+    const viewCompItem = createViewObject(viewItem.get('selectedViewItem'));
 
     return (
       <React.Fragment>
