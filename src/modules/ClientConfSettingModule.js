@@ -318,9 +318,25 @@ export default handleActions({
                     return e.get('_COMPID_') == action.compId;
                 });
                 if(viewIndex > -1) {
-                    return state
+                    const beforeItemId = state.getIn(['viewItems', viewIndex, 'selectedOptionItemId']);
+                    if(beforeItemId && beforeItemId != '') {
+                        const pos = data.map((e) => (e.objId)).indexOf(beforeItemId);
+                        if(pos < 0) {
+                            // no exist
+                            return state
                             .setIn(['viewItems', viewIndex, 'listAllData'], List(data.map((e) => {return Map(e)})))
                             .setIn(['viewItems', viewIndex, 'selectedOptionItemId'], data[0].objId);
+                        } else {
+                            // exist
+                            return state
+                            .setIn(['viewItems', viewIndex, 'listAllData'], List(data.map((e) => {return Map(e)})))
+                            .setIn(['viewItems', viewIndex, 'selectedOptionItemId'], beforeItemId);
+                        }
+                    } else {
+                        return state
+                            .setIn(['viewItems', viewIndex, 'listAllData'], List(data.map((e) => {return Map(e)})))
+                            .setIn(['viewItems', viewIndex, 'selectedOptionItemId'], data[0].objId);
+                    }
                 } else {
                     return state.set('viewItems', state.get('viewItems').push(Map({
                         '_COMPID_': action.compId,
