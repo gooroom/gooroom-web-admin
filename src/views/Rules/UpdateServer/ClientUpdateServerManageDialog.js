@@ -67,7 +67,7 @@ class ClientUpdateServerManageDialog extends Component {
                     if(viewItems) {
                         viewItems.forEach((element) => {
                             if(element && element.get('listParam')) {
-                                ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, element.get('_COMPID_'), {});
+                                ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, element.get('_COMPID_'), {});
                             }
                         });
                     }
@@ -94,7 +94,7 @@ class ClientUpdateServerManageDialog extends Component {
                     const viewItems = ClientUpdateServerProps.get('viewItems');
                     viewItems.forEach((element) => {
                         if(element && element.get('listParam')) {
-                            ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, element.get('_COMPID_'), {});
+                            ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, element.get('_COMPID_'), {});
                         }
                     });
                     this.handleClose();

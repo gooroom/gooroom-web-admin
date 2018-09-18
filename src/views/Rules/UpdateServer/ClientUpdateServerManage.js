@@ -72,14 +72,14 @@ class ClientUpdateServerManage extends Component {
 
   handleChangePage = (event, page) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, this.props.match.params.grMenuId, {
+    ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, this.props.match.params.grMenuId, {
+    ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: page
     });
@@ -91,7 +91,7 @@ class ClientUpdateServerManage extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, this.props.match.params.grMenuId, {
+    ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -99,7 +99,7 @@ class ClientUpdateServerManage extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, this.props.match.params.grMenuId);
+    ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId);
   };
 
   handleKeywordChange = name => event => {
@@ -173,7 +173,7 @@ class ClientUpdateServerManage extends Component {
         const viewItems = ClientUpdateServerProps.get('viewItems');
         viewItems.forEach((element) => {
             if(element && element.get('listParam')) {
-                ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, element.get('_COMPID_'), {});
+                ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, element.get('_COMPID_'), {});
             }
         });
       });

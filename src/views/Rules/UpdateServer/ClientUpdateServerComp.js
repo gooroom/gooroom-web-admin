@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { fromJS } from 'immutable';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -39,7 +41,7 @@ class ClientUpdateServerComp extends Component {
     super(props);
 
     this.state = {
-      loading: true,
+      loading: true
     };
   }
 
@@ -56,16 +58,32 @@ class ClientUpdateServerComp extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
+    const { ClientUpdateServerProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const { ClientUpdateServerProps, compId } = this.props;
     const viewItem = getDataObjectInComp(ClientUpdateServerProps, compId);
-    const viewCompItem = createViewObject(viewItem.get('selectedViewItem'));
+    const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : '';
+
+    const viewCompItem = (compType != 'VIEW') ? createViewObject(viewItem.get('selectedViewItem')) : 
+      (() => {
+        if(viewItem.get('listAllData') && viewItem.get('selectedOptionItemId') != null) {
+          const item = viewItem.get('listAllData').find((element) => {
+            return element.get('objId') == viewItem.get('selectedOptionItemId');
+          });
+          if(item) {
+            return createViewObject(fromJS(item.toJS()));
+          } else {
+            return null;
+          }
+        }
+      })()
+    ;
 
     return (
       <React.Fragment>
       <Card elevation={0}>
-        {(viewCompItem) && <CardContent>
+        {(viewCompItem) && <CardContent style={contentStyle}>
+          {(compType != 'VIEW') && 
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>
@@ -81,6 +99,7 @@ class ClientUpdateServerComp extends Component {
               </Grid>
             </Grid>
           </Grid>
+          }
           <Typography variant="headline" component="h2">
             {viewCompItem.get('objNm')}
           </Typography>
