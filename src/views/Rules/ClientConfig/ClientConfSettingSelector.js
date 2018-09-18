@@ -55,6 +55,8 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
+import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
+
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -76,7 +78,7 @@ class ClientConfSettingSelector extends Component {
   handleChange = (event, value) => {
     this.props.ClientConfSettingActions.changeCompVariable({
       compId: this.props.compId,
-      name: 'selectedOptionItem',
+      name: 'selectedOptionItemId',
       value: event.target.value
     });
   };
@@ -88,14 +90,15 @@ class ClientConfSettingSelector extends Component {
     const viewItem = getDataObjectInComp(ClientConfSettingProps, compId);
 
     let confItems = [];
-    let selectedOptionItem = '';
+    let selectedOptionItemId = '';
 
     if(viewItem && viewItem.get('listAllData') && viewItem.get('listAllData').size > 0) {
       confItems = viewItem.get('listAllData');
-      if(viewItem && viewItem.get('selectedOptionItem') && viewItem.get('selectedOptionItem') !== '') {
-        selectedOptionItem = viewItem.get('selectedOptionItem');
+
+      if(viewItem && viewItem.get('selectedOptionItemId') && viewItem.get('selectedOptionItemId') !== '') {
+        selectedOptionItemId = viewItem.get('selectedOptionItemId');
       } else {
-        selectedOptionItem = confItems.getIn([0, 'objId']);
+        selectedOptionItemId = confItems.getIn([0, 'objId']);
       }
     }
 
@@ -104,7 +107,7 @@ class ClientConfSettingSelector extends Component {
         <CardContent>
         <FormControl className={classes.formControl} style={{width: '100%'}}>
           <InputLabel htmlFor="cfg-helper">단말정책정보</InputLabel>
-          <Select value={selectedOptionItem}
+          <Select value={selectedOptionItemId}
             onChange={this.handleChange}
           >
           {confItems.map(item => (
@@ -113,8 +116,13 @@ class ClientConfSettingSelector extends Component {
           </Select>
           <FormHelperText>정책 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
         </FormControl>
-          <Typography component="p">
-          </Typography>
+        {selectedOptionItemId && selectedOptionItemId != '' &&
+          <ClientConfSettingComp
+            compId={compId}
+            objId={selectedOptionItemId}
+            compType="VIEW"
+          />
+        }
         </CardContent>
       </Card>
     );
