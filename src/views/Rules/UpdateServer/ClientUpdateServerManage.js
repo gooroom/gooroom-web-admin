@@ -10,9 +10,9 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { refreshDataListInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
-import { createViewObject } from './ClientUpdateServerManageInform';
+import { generateConfigObject } from './ClientUpdateServerManageInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -113,7 +113,6 @@ class ClientUpdateServerManage extends Component {
   handleRowClick = (event, id) => {
     const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
     const compId = this.props.match.params.grMenuId;
-
     const selectedViewItem = getRowObjectById(ClientUpdateServerProps, compId, id, 'objId');
 
     // choice one from two views.
@@ -144,7 +143,7 @@ class ClientUpdateServerManage extends Component {
     const selectedViewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientUpdateServerActions.showDialog({
-      selectedViewItem: createViewObject(selectedViewItem),
+      selectedViewItem: generateConfigObject(selectedViewItem),
       dialogType: ClientUpdateServerManageDialog.TYPE_EDIT
     });
   };
@@ -170,12 +169,7 @@ class ClientUpdateServerManage extends Component {
         objId: confirmObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        const viewItems = ClientUpdateServerProps.get('viewItems');
-        viewItems.forEach((element) => {
-            if(element && element.get('listParam')) {
-                ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, element.get('_COMPID_'), {});
-            }
-        });
+        refreshDataListInComp(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
       });
     }
   };
@@ -186,7 +180,8 @@ class ClientUpdateServerManage extends Component {
     const { ClientUpdateServerProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientUpdateServerProps.listParam.rowsPerPage - ClientUpdateServerProps.listData.length;
-    const listObj = getDataObjectInComp(ClientUpdateServerProps, compId);
+
+    const listObj = ClientUpdateServerProps.getIn(['viewItems', compId]);
 
     return (
       <React.Fragment>

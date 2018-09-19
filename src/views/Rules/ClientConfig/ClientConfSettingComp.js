@@ -11,8 +11,8 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
-import { createViewObject } from './ClientConfSettingInform';
-import { getDataObjectInComp, getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
+import { generateConfigObject } from './ClientConfSettingInform';
+import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -51,7 +51,7 @@ class ClientConfSettingComp extends Component {
     const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientConfSettingProps, compId) : getSelectedObjectInComp(ClientConfSettingProps, compId);
 
     ClientConfSettingActions.showDialog({
-      selectedViewItem: createViewObject(selectedViewItem),
+      selectedViewItem: generateConfigObject(selectedViewItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -61,18 +61,19 @@ class ClientConfSettingComp extends Component {
     const { classes } = this.props;
     const { ClientConfSettingProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-
-    const viewItem = getDataObjectInComp(ClientConfSettingProps, compId);
     const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
-    const viewCompItem = (compType != 'VIEW') ? createViewObject(viewItem.get('selectedViewItem')) : 
+    const selectedViewItem = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = ClientConfSettingProps.getIn(['viewItems', compId, 'listAllData']);
+    const selectedOptionItemId = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
-        if(viewItem.get('listAllData') && viewItem.get('selectedOptionItemId') != null) {
-          const item = viewItem.get('listAllData').find((element) => {
-            return element.get('objId') == viewItem.get('selectedOptionItemId');
+        if(listAllData && selectedOptionItemId != null) {
+          const item = listAllData.find((element) => {
+            return element.get('objId') == selectedOptionItemId;
           });
           if(item) {
-            return createViewObject(fromJS(item.toJS()));
+            return generateConfigObject(fromJS(item.toJS()));
           } else {
             return null;
           }

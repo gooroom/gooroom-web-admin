@@ -11,7 +11,7 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientUpdateServerDialog from './ClientUpdateServerManageDialog';
-import { createViewObject } from './ClientUpdateServerManageInform';
+import { generateConfigObject } from './ClientUpdateServerManageInform';
 import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Table from '@material-ui/core/Table';
@@ -47,10 +47,10 @@ class ClientUpdateServerComp extends Component {
 
   handleEditBtnClick = (param) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps, compId } = this.props;
-    const selectedViewItem = getSelectedObjectInComp(ClientUpdateServerProps, compId);
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientUpdateServerProps, compId) : getSelectedObjectInComp(ClientUpdateServerProps, compId);
 
     ClientUpdateServerActions.showDialog({
-      selectedViewItem: createViewObject(selectedViewItem),
+      selectedViewItem: generateConfigObject(selectedViewItem),
       dialogType: ClientUpdateServerDialog.TYPE_EDIT,
     });
   };
@@ -60,18 +60,19 @@ class ClientUpdateServerComp extends Component {
     const { classes } = this.props;
     const { ClientUpdateServerProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-
-    const viewItem = getDataObjectInComp(ClientUpdateServerProps, compId);
     const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
-    const viewCompItem = (compType != 'VIEW') ? createViewObject(viewItem.get('selectedViewItem')) : 
+    const selectedViewItem = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = ClientUpdateServerProps.getIn(['viewItems', compId, 'listAllData']);
+    const selectedOptionItemId = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
-        if(viewItem.get('listAllData') && viewItem.get('selectedOptionItemId') != null) {
-          const item = viewItem.get('listAllData').find((element) => {
-            return element.get('objId') == viewItem.get('selectedOptionItemId');
+        if(listAllData && selectedOptionItemId != null) {
+          const item = listAllData.find((element) => {
+            return element.get('objId') == selectedOptionItemId;
           });
           if(item) {
-            return createViewObject(fromJS(item.toJS()));
+            return generateConfigObject(fromJS(item.toJS()));
           } else {
             return null;
           }
@@ -83,7 +84,7 @@ class ClientUpdateServerComp extends Component {
       <React.Fragment>
       <Card elevation={0}>
         {(viewCompItem) && <CardContent style={contentStyle}>
-          {(compType != 'VIEW') && 
+          {(compType != 'VIEW222222222222222222') && 
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>
@@ -94,7 +95,7 @@ class ClientUpdateServerComp extends Component {
               <Grid container justify="flex-end">
                 <Button size="small"
                   variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'))}
+                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
                 ><SettingsApplicationsIcon />수정</Button>
               </Grid>
             </Grid>

@@ -10,9 +10,9 @@ import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { refreshDataListInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
-import { createViewObject } from './ClientHostNameManageInform';
+import { generateConfigObject } from './ClientHostNameManageInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -113,7 +113,6 @@ class ClientHostNameManage extends Component {
   handleRowClick = (event, id) => {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
     const compId = this.props.match.params.grMenuId;
-
     const selectedViewItem = getRowObjectById(ClientHostNameProps, compId, id, 'objId');
 
     // choice one from two views.
@@ -144,7 +143,7 @@ class ClientHostNameManage extends Component {
     const selectedViewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientHostNameActions.showDialog({
-      selectedViewItem: createViewObject(selectedViewItem),
+      selectedViewItem: generateConfigObject(selectedViewItem),
       dialogType: ClientHostNameManageDialog.TYPE_EDIT
     });
   };
@@ -169,12 +168,7 @@ class ClientHostNameManage extends Component {
         objId: confirmObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        const viewItems = ClientHostNameProps.get('viewItems');
-        viewItems.forEach((element) => {
-            if(element && element.get('listParam')) {
-                ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, element.get('_COMPID_'), {});
-            }
-        });
+        refreshDataListInComp(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
       });
     }
   };
@@ -185,7 +179,8 @@ class ClientHostNameManage extends Component {
     const { ClientHostNameProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientHostNameProps.listParam.rowsPerPage - ClientHostNameProps.listData.length;
-    const listObj = getDataObjectInComp(ClientHostNameProps, compId);
+
+    const listObj = ClientHostNameProps.getIn(['viewItems', compId]);
 
     return (
       <React.Fragment>

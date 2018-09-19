@@ -8,6 +8,7 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
+import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils'; 
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -89,14 +90,7 @@ class ClientConfSettingDialog extends Component {
             const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
             ClientConfSettingActions.createClientConfSettingData(ClientConfSettingProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = ClientConfSettingProps.get('viewItems');
-                    if(viewItems) {
-                        viewItems.forEach((element) => {
-                            if(element && element.get('listParam')) {
-                                ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, element.get('_COMPID_'), {});
-                            }
-                        });
-                    }
+                    refreshDataListInComp(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
                     this.handleClose();
                 });
         }
@@ -117,12 +111,7 @@ class ClientConfSettingDialog extends Component {
             const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
             ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    const viewItems = ClientConfSettingProps.get('viewItems');
-                    viewItems.forEach((element) => {
-                        if(element && element.get('listParam')) {
-                            ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, element.get('_COMPID_'), {});
-                        }
-                    });
+                    refreshDataListInComp(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
                     this.handleClose();
                 });
         }

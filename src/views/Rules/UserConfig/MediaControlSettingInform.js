@@ -40,7 +40,7 @@ class MediaControlSettingInform extends Component {
 
     const { MediaControlSettingProps, compId } = this.props;
     const viewItem = getDataObjectInComp(MediaControlSettingProps, compId);
-    const selectedViewItem = (viewItem.get('selectedViewItem')) ? createViewObject(viewItem.get('selectedViewItem')) : null;
+    const selectedViewItem = (viewItem.get('selectedViewItem')) ? generateConfigObject(viewItem.get('selectedViewItem')) : null;
 
     return (
       <div>
@@ -125,7 +125,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaControlSettingInform));
 
-export const createViewObject = (param) => {
+export const generateConfigObject = (param) => {
 
   if(param) {
     let usbMemory = '';

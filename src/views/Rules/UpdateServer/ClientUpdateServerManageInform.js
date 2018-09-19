@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 
@@ -39,12 +38,12 @@ class ClientUpdateServerInform extends Component {
     const bull = <span className={classes.bullet}>•</span>;
 
     const { ClientUpdateServerProps, compId } = this.props;
-    const viewItem = getDataObjectInComp(ClientUpdateServerProps, compId);
-    const selectedViewItem = (viewItem.get('selectedViewItem')) ? createViewObject(viewItem.get('selectedViewItem')) : null;
+    const informOpen = ClientUpdateServerProps.getIn(['viewItems', compId, 'informOpen']);
+    const selectedViewItem = generateConfigObject(ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedViewItem']));
 
     return (
       <div >
-      {(viewItem.get('informOpen') && selectedViewItem) &&
+      {(informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.get('objNm') : ''}
@@ -96,7 +95,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientUpdateServerInform));
 
-export const createViewObject = (param) => {
+export const generateConfigObject = (param) => {
   
   if(param) {
 

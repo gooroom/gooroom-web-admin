@@ -1,4 +1,17 @@
+
 import { Map, List, fromJS } from 'immutable';
+
+
+export const refreshDataListInComp = (propObj, callBack) => {
+    const viewItems = propObj.get('viewItems');
+    if(viewItems) {
+        viewItems.forEach((element, compId) => {
+            if(element && element.get('listParam')) {
+                callBack(propObj, compId, {});
+            }
+        });
+    }
+}
 
 export const getDataObjectInComp = (propObj, compId) => {
     if(propObj.get('viewItems')) {
@@ -37,6 +50,16 @@ export const getDataListAndParamInComp = (propObj, compId) => {
 }
 
 export const getRowObjectById = (propObj, compId, id, keyId) => {
+    if(propObj.getIn(['viewItems', compId, 'listData'])) {
+        const selectedViewItem = propObj.getIn(['viewItems', compId, 'listData']).find((element) => {
+            return element.get(keyId) == id;
+        });
+        return (selectedViewItem) ? fromJS(selectedViewItem.toJS()) : null;
+    } 
+    return null;
+}
+
+export const ________getRowObjectById = (propObj, compId, id, keyId) => {
     if(propObj.get('viewItems')) {
         const viewItem = propObj.get('viewItems').find((element) => {
             return element.get('_COMPID_') == compId;
