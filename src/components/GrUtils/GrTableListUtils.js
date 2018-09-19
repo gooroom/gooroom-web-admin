@@ -105,19 +105,13 @@ export const getSelectedObjectInCompAndId = (propObj, compId) => {
 // ?????
 export const getConfigIdsInComp = (ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, compId) => {
 
-    const clientConfIndex = ClientConfSettingProps.get('viewItems').findIndex((e) => {
-        return e.get('_COMPID_') == compId;
-    });
-    const hostsConfIndex = ClientHostNameProps.get('viewItems').findIndex((e) => {
-        return e.get('_COMPID_') == compId;
-    });
-    const updateServerConfIndex = ClientUpdateServerProps.get('viewItems').findIndex((e) => {
-        return e.get('_COMPID_') == compId;
-    });
+    const clientConfigId = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const hostNameConfigId = ClientHostNameProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const updateServerConfigId = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
 
     return {
-        clientConfigId: ClientConfSettingProps.getIn(['viewItems', clientConfIndex, 'selectedOptionItemId']),
-        hostNameConfigId: ClientHostNameProps.getIn(['viewItems', hostsConfIndex, 'selectedOptionItemId']),
-        updateServerConfigId: ClientUpdateServerProps.getIn(['viewItems', updateServerConfIndex, 'selectedOptionItemId'])
+        clientConfigId: clientConfigId,
+        hostNameConfigId: hostNameConfigId,
+        updateServerConfigId: updateServerConfigId
     }
 }

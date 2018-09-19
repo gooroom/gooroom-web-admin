@@ -13,8 +13,7 @@ import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
-import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
@@ -60,33 +59,6 @@ class ClientMasterManage extends Component {
   };
 
   // Select Group Item
-  _________________handleClientGroupSelect = (selectedGroupObj='', selectedGroupIdArray) => {
-
-    const { ClientMasterManageActions, ClientGroupActions } = this.props;
-    const { ClientManageCompProps, ClientManageCompActions } = this.props;
-
-    const compId = this.props.match.params.grMenuId;
-
-    ClientManageCompActions.readClientList(getMergedObject(ClientManageCompProps.listParam, {
-      groupId: selectedGroupIdArray.join(','), 
-      page: 0,
-      compId: compId
-    }));
-
-    // show group info.
-    if(selectedGroupObj !== '') {
-      ClientMasterManageActions.closeClientManageInform();
-      ClientGroupActions.setSelectedItemObj({
-        compId: compId,
-        selectedViewItem: selectedGroupObj
-      });
-
-      // Show inform
-      ClientMasterManageActions.showClientGroupInform();
-    }
-  };
-
-  // 
   handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
     const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
     const { ClientGroupProps, ClientGroupActions } = this.props;
@@ -165,7 +137,7 @@ class ClientMasterManage extends Component {
         ClientGroupActions.deleteSelectedClientGroupData({
           grpIds: selectedIds.toArray()
         }).then(() => {
-          ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
+          ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
         });
       }
     }
