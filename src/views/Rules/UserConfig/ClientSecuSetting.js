@@ -12,7 +12,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
-import { createViewObject } from './ClientSecuSettingInform';
+import { generateConfigObject } from './ClientSecuSettingInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -145,7 +145,7 @@ class ClientSecuSetting extends Component {
     const selectedViewItem = getRowObjectById(ClientSecuSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientSecuSettingActions.showDialog({
-      selectedViewItem: createViewObject(selectedViewItem),
+      selectedViewItem: generateConfigObject(selectedViewItem),
       dialogType: ClientSecuSettingDialog.TYPE_EDIT
     });
   };

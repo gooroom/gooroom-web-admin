@@ -93,19 +93,9 @@ export const readClientUpdateServerList = (module, compId) => dispatch => {
 };
 
 export const readClientUpdateServerListPaged = (module, compId, extParam) => dispatch => {
-    let newListParam;
-    if(module.get('viewItems')) {
-        const viewIndex = module.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == compId;
-        });
-        if(viewIndex < 0) {
-            newListParam = module.get('defaultListParam');
-        } else {
-            newListParam = module.getIn(['viewItems', viewIndex, 'listParam']).merge(extParam);
-        }
-    } else {
-        newListParam = module.get('defaultListParam');
-    }
+    const newListParam = (module.getIn(['viewItems', compId])) ? 
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readUpdateServerConfListPaged', {
@@ -222,6 +212,7 @@ export const editClientUpdateServerData = (itemObj) => dispatch => {
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
+                // change selected object
                 requestPostAPI('readUpdateServerConf', {'objId': itemObj.get('objId')}).then(
                     (response) => {
                         dispatch({
@@ -232,6 +223,20 @@ export const editClientUpdateServerData = (itemObj) => dispatch => {
                     }
                 ).catch(error => {
                 });
+
+                // change object array for selector
+                requestPostAPI('readUpdateServerConfList', {
+                }).then(
+                    (response) => {
+                        dispatch({
+                            type: GET_UPDATESERVER_LIST_SUCCESS,
+                            compId: compId,
+                            response: response
+                        });
+                    }
+                ).catch(error => {
+                });
+
             } else {
                 // alarm ... fail
                 dispatch({
@@ -286,125 +291,53 @@ export default handleActions({
     },
     [GET_UPDATESERVER_LIST_SUCCESS]: (state, action) => {
         const { data } = action.response.data;
-
         if(data && data.length > 0) {
-            if(state.get('viewItems')) {
-                const viewIndex = state.get('viewItems').findIndex((e) => {
-                    return e.get('_COMPID_') == action.compId;
-                });
-                if(viewIndex > -1) {
-                    const beforeItemId = state.getIn(['viewItems', viewIndex, 'selectedOptionItemId']);
-                    if(beforeItemId && beforeItemId != '') {
-                        const pos = data.map((e) => (e.objId)).indexOf(beforeItemId);
-                        if(pos < 0) {
-                            // no exist
-                            return state
-                            .setIn(['viewItems', viewIndex, 'listAllData'], List(data.map((e) => {return Map(e)})))
-                            .setIn(['viewItems', viewIndex, 'selectedOptionItemId'], data[0].objId);
-                        } else {
-                            // exist
-                            return state
-                            .setIn(['viewItems', viewIndex, 'listAllData'], List(data.map((e) => {return Map(e)})))
-                            .setIn(['viewItems', viewIndex, 'selectedOptionItemId'], beforeItemId);
-                        }
-                    } else {
-                        return state
-                            .setIn(['viewItems', viewIndex, 'listAllData'], List(data.map((e) => {return Map(e)})))
-                            .setIn(['viewItems', viewIndex, 'selectedOptionItemId'], data[0].objId);
-                    }
+            if(state.hasIn(['viewItems', action.compId])) {
+                const beforeItemId = state.getIn(['viewItems', action.compId, 'selectedOptionItemId']);
+                const pos = (beforeItemId) ? data.map((e) => (e.objId)).indexOf(beforeItemId) : -1;
+                if(pos < 0) {
+                    // no exist or selected id was deleted
+                    return state
+                        .setIn(['viewItems', action.compId, 'listAllData'], List(data.map((e) => {return Map(e)})))
+                        .setIn(['viewItems', action.compId, 'selectedOptionItemId'], data[0].objId);
                 } else {
-                    return state.set('viewItems', state.get('viewItems').push(Map({
-                        '_COMPID_': action.compId,
-                        'listAllData': List(data.map((e) => {return Map(e)})),
-                        'selectedOptionItemId': data[0].objId
-                    })));
+                    // before exist and selected id is exist
+                    return state
+                        .setIn(['viewItems', action.compId, 'listAllData'], List(data.map((e) => {return Map(e)})))
+                        .setIn(['viewItems', action.compId, 'selectedOptionItemId'], beforeItemId);
                 }
-            } else {
-                return state.set('viewItems', List([Map({
-                    '_COMPID_': action.compId,
-                    'listAllData': List(data.map((e) => {return Map(e)})),
-                    'selectedOptionItemId': data[0].objId
-                })]));
             }
+
+            return state.setIn(['viewItems', action.compId], Map({
+                'listAllData': List(data.map((e) => {return Map(e)})),
+                'selectedOptionItemId': data[0].objId
+            }));
+            
         } else {
             return state
-            .deleteIn(['viewItems', viewIndex, 'listAllData'])
-            .deleteIn(['viewItems', viewIndex, 'selectedOptionItemId']);
+            .deleteIn(['viewItems', action.compId, 'listAllData'])
+            .deleteIn(['viewItems', action.compId, 'selectedOptionItemId']);
         }
     },
     [GET_UPDATESERVER_LISTPAGED_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
-
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            if(viewIndex > -1) {
-                const newListParam = state.getIn(['viewItems', viewIndex, 'listParam']).merge({
-                    rowsFiltered: parseInt(recordsFiltered, 10),
-                    rowsTotal: parseInt(recordsTotal, 10),
-                    page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10),
-                    orderColumn: orderColumn,
-                    orderDir: orderDir
-                });
-                return state
-                        .setIn(['viewItems', viewIndex, 'listData'], List(data.map((e) => {return Map(e)})))
-                        .setIn(['viewItems', viewIndex, 'listParam'], newListParam);
-            } else {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'listData': List(data.map((e) => {return Map(e)})),
-                    'listParam': state.get('defaultListParam').merge({
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10),
-                        orderColumn: orderColumn,
-                        orderDir: orderDir
-                    })
-                })));
-            }
-        } else {
-            return state.set('viewItems', List([Map({
-                '_COMPID_': action.compId,
-                'listData': List(data.map((e) => {return Map(e)})),
-                'listParam': state.get('defaultListParam').merge({
-                    rowsFiltered: parseInt(recordsFiltered, 10),
-                    rowsTotal: parseInt(recordsTotal, 10),
-                    page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10),
-                    orderColumn: orderColumn,
-                    orderDir: orderDir
-                })
-            })]));
-        }
+        return state.setIn(['viewItems', action.compId], Map({
+            'listData': List(data.map((e) => {return Map(e)})),
+            'listParam': state.get('defaultListParam').merge({
+                rowsFiltered: parseInt(recordsFiltered, 10),
+                rowsTotal: parseInt(recordsTotal, 10),
+                page: parseInt(draw, 10),
+                rowsPerPage: parseInt(rowLength, 10),
+                orderColumn: orderColumn,
+                orderDir: orderDir
+            })
+        }));
     },
     [GET_UPDATESERVER_SUCCESS]: (state, action) => {
         const { data } = action.response.data;
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-
-            if(viewIndex < 0) {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'informOpen': true,
-                    'selectedViewItem': fromJS(data[0])
-                })));
-            } else {
-                return state
-                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], fromJS(data[0]))
-                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
-            }
-        } else {
-            return state.set('viewItems', List([Map({
-                '_COMPID_': action.compId,
-                'selectedViewItem': fromJS(data[0]),
-                'informOpen': true
-            })]));
-        }
+        return state
+                .setIn(['viewItems', action.compId, 'selectedViewItem'], fromJS(data[0]))
+                .setIn(['viewItems', action.compId, 'informOpen'], true);
     },
     [SHOW_UPDATESERVER_DIALOG]: (state, action) => {
         return state.merge({
@@ -420,36 +353,14 @@ export default handleActions({
         });
     },
     [SHOW_UPDATESERVER_INFORM]: (state, action) => {
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            if(viewIndex < 0) {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'informOpen': true,
-                    'selectedViewItem': action.selectedViewItem
-                })));
-            } else {
-                return state
-                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], action.selectedViewItem)
-                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
-            }
-        } else {
-            // no occure this event
-        }
-        return state;
+        return state
+                .setIn(['viewItems', action.compId, 'selectedViewItem'], action.selectedViewItem)
+                .setIn(['viewItems', action.compId, 'informOpen'], true);
     },
     [CLOSE_UPDATESERVER_INFORM]: (state, action) => {
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            return state
-                    .setIn(['viewItems', viewIndex, 'informOpen'], false)
-                    .deleteIn(['viewItems', viewIndex, 'selectedViewItem'])
-        }
-        return state;
+        return state
+                .setIn(['viewItems', action.compId, 'informOpen'], false)
+                .deleteIn(['viewItems', action.compId, 'selectedViewItem']);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
@@ -457,16 +368,10 @@ export default handleActions({
         });
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.compId;
-        });
-        return state.setIn(['viewItems', viewIndex, 'listParam', action.name], action.value);
+        return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CHG_COMPVARIABLE_DATA]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.compId;
-        });
-        return state.setIn(['viewItems', viewIndex, action.name], action.value);
+        return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
     [CREATE_UPDATESERVER_SUCCESS]: (state, action) => {
         return state.merge({

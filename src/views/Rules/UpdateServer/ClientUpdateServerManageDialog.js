@@ -9,6 +9,7 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
+import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils'; 
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -63,14 +64,7 @@ class ClientUpdateServerManageDialog extends Component {
             const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
             ClientUpdateServerActions.createClientUpdateServerData(ClientUpdateServerProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = ClientUpdateServerProps.get('viewItems');
-                    if(viewItems) {
-                        viewItems.forEach((element) => {
-                            if(element && element.get('listParam')) {
-                                ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, element.get('_COMPID_'), {});
-                            }
-                        });
-                    }
+                    refreshDataListInComp(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
                     this.handleClose();
                 });
         }
@@ -91,12 +85,7 @@ class ClientUpdateServerManageDialog extends Component {
             const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
             ClientUpdateServerActions.editClientUpdateServerData(ClientUpdateServerProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = ClientUpdateServerProps.get('viewItems');
-                    viewItems.forEach((element) => {
-                        if(element && element.get('listParam')) {
-                            ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, element.get('_COMPID_'), {});
-                        }
-                    });
+                    refreshDataListInComp(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
                     this.handleClose();
                 });
         }

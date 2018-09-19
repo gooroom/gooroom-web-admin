@@ -40,7 +40,7 @@ class ClientSecuSettingInform extends Component {
 
     const { ClientSecuSettingProps, compId } = this.props;
     const viewItem = getDataObjectInComp(ClientSecuSettingProps, compId);
-    const selectedViewItem = (viewItem.get('selectedViewItem')) ? createViewObject(viewItem.get('selectedViewItem')) : null;
+    const selectedViewItem = (viewItem.get('selectedViewItem')) ? generateConfigObject(viewItem.get('selectedViewItem')) : null;
 
     return (
       <div>
@@ -103,7 +103,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientSecuSettingInform));
 
-export const createViewObject = (param) => {
+export const generateConfigObject = (param) => {
 
   if(param) {
     let screenTime = '';

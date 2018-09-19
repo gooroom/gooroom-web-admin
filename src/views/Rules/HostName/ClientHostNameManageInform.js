@@ -38,12 +38,12 @@ class ClientHostNameInform extends Component {
     const bull = <span className={classes.bullet}>•</span>;
 
     const { ClientHostNameProps, compId } = this.props;
-    const viewItem = getDataObjectInComp(ClientHostNameProps, compId);
-    const selectedViewItem = (viewItem.get('selectedViewItem')) ? createViewObject(viewItem.get('selectedViewItem')) : null;
+    const informOpen = ClientHostNameProps.getIn(['viewItems', compId, 'informOpen']);
+    const selectedViewItem = generateConfigObject(ClientHostNameProps.getIn(['viewItems', compId, 'selectedViewItem']));
 
     return (
       <div>
-      {(viewItem.get('informOpen') && selectedViewItem) &&
+      {(informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.get('objNm') : ''}
@@ -85,7 +85,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientHostNameInform));
 
-export const createViewObject = (param) => {
+export const generateConfigObject = (param) => {
 
   if(param) {
     let hosts = '';

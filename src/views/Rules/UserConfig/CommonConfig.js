@@ -12,7 +12,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
-import { createViewObject } from './BrowserRuleSettingInform';
+import { generateConfigObject } from './BrowserRuleSettingInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -145,7 +145,7 @@ class CommonConfig extends Component {
     const selectedViewItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     BrowserRuleSettingActions.showDialog({
-      selectedViewItem: createViewObject(selectedViewItem),
+      selectedViewItem: generateConfigObject(selectedViewItem),
       dialogType: BrowserRuleSettingDialog.TYPE_EDIT
     });
   };

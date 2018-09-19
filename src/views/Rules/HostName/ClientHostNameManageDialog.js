@@ -9,6 +9,7 @@ import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
+import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils'; 
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -63,14 +64,7 @@ class ClientHostNameManageDialog extends Component {
             const { ClientHostNameProps, ClientHostNameActions } = this.props;
             ClientHostNameActions.createClientHostNameData(ClientHostNameProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = ClientHostNameProps.get('viewItems');
-                    if(viewItems) {
-                        viewItems.forEach((element) => {
-                            if(element && element.get('listParam')) {
-                                ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, element.get('_COMPID_'), {});
-                            }
-                        });
-                    }
+                    refreshDataListInComp(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
                     this.handleClose();
                 });
         }
@@ -91,12 +85,7 @@ class ClientHostNameManageDialog extends Component {
             const { ClientHostNameProps, ClientHostNameActions } = this.props;
             ClientHostNameActions.editClientHostNameData(ClientHostNameProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = ClientHostNameProps.get('viewItems');
-                    viewItems.forEach((element) => {
-                        if(element && element.get('listParam')) {
-                            ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, element.get('_COMPID_'), {});
-                        }
-                    });
+                    refreshDataListInComp(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
                     this.handleClose();
                 });
         }

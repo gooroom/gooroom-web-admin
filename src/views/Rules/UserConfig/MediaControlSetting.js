@@ -12,7 +12,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
-import { createViewObject } from './MediaControlSettingInform';
+import { generateConfigObject } from './MediaControlSettingInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -144,7 +144,7 @@ class MediaControlSetting extends Component {
     const selectedViewItem = getRowObjectById(MediaControlSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     MediaControlSettingActions.showDialog({
-      selectedViewItem: createViewObject(selectedViewItem),
+      selectedViewItem: generateConfigObject(selectedViewItem),
       dialogType: MediaControlSettingDialog.TYPE_EDIT
     });
   };

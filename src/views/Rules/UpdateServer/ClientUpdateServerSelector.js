@@ -52,35 +52,30 @@ class ClientUpdateServerSelector extends Component {
   render() {
     const { classes } = this.props;
     const { ClientUpdateServerProps, compId } = this.props;
-    const viewItem = getDataObjectInComp(ClientUpdateServerProps, compId);
 
-    let confItems = [];
-    let selectedOptionItemId = '';
-
-    if(viewItem && viewItem.get('listAllData') && viewItem.get('listAllData').size > 0) {
-      confItems = viewItem.get('listAllData');
-
-      if(viewItem && viewItem.get('selectedOptionItemId') && viewItem.get('selectedOptionItemId') !== '') {
-        selectedOptionItemId = viewItem.get('selectedOptionItemId');
-      } else {
-        selectedOptionItemId = confItems.getIn([0, 'objId']);
-      }
+    const selectedViewItem = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = ClientUpdateServerProps.getIn(['viewItems', compId, 'listAllData']);
+    let selectedOptionItemId = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
+      selectedOptionItemId = listAllData.getIn([0, 'objId']);
     }
 
     return (
       <Card className={classes.card}>
         <CardContent>
+        {listAllData && 
         <FormControl className={classes.formControl} style={{width: '100%'}}>
           <InputLabel htmlFor="cfg-helper"></InputLabel>
           <Select value={selectedOptionItemId}
             onChange={this.handleChange}
           >
-          {confItems.map(item => (
+          {listAllData.map(item => (
             <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
           ))}
           </Select>
           <FormHelperText>업데이트서버 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
         </FormControl>
+        }
         {selectedOptionItemId && selectedOptionItemId != '' &&
           <ClientUpdateServerComp
             compId={compId}

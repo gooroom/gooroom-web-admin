@@ -10,9 +10,9 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { refreshDataListInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
-import { createViewObject } from './ClientConfSettingInform';
+import { generateConfigObject } from './ClientConfSettingInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -97,7 +97,6 @@ class ClientConfSetting extends Component {
     });
   };
 
-  // .................................................
   handleSelectBtnClick = () => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId);
@@ -114,7 +113,6 @@ class ClientConfSetting extends Component {
   handleRowClick = (event, id) => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-
     const selectedViewItem = getRowObjectById(ClientConfSettingProps, compId, id, 'objId');
 
     // choice one from two views.
@@ -145,7 +143,7 @@ class ClientConfSetting extends Component {
     const selectedViewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientConfSettingActions.showDialog({
-      selectedViewItem: createViewObject(selectedViewItem),
+      selectedViewItem: generateConfigObject(selectedViewItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -165,17 +163,11 @@ class ClientConfSetting extends Component {
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
     if(confirmValue) {
       const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-
       ClientConfSettingActions.deleteClientConfSettingData({
         objId: confirmObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        const viewItems = ClientConfSettingProps.get('viewItems');
-        viewItems.forEach((element) => {
-            if(element && element.get('listParam')) {
-                ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, element.get('_COMPID_'), {});
-            }
-        });
+        refreshDataListInComp(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
       });
     }
   };
@@ -186,10 +178,11 @@ class ClientConfSetting extends Component {
     const { ClientConfSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientConfSettingProps.listParam.rowsPerPage - ClientConfSettingProps.listData.length;
-    const listObj = getDataObjectInComp(ClientConfSettingProps, compId);
+
+    const listObj = ClientConfSettingProps.getIn(['viewItems', compId]);
 
     return (
-      <div>
+      <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
           {/* data option area */}
@@ -293,7 +286,7 @@ class ClientConfSetting extends Component {
         <ClientConfSettingInform compId={compId} />
         <ClientConfSettingDialog compId={compId} />
         <GrConfirm />
-      </div>
+      </React.Fragment>
     );
   }
 }
