@@ -15,7 +15,7 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
+import { getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
@@ -53,19 +53,19 @@ class ClientGroupComp extends Component {
 
   componentDidMount() {
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
   }
 
   handleChangePage = (event, page) => {
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    ClientGroupActions.readClientGroupList(ClientGroupProps, compId, {
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    ClientGroupActions.readClientGroupList(ClientGroupProps, compId, {
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId, {
       rowsPerPage: event.target.value,
       page: 0
     });
@@ -78,7 +78,7 @@ class ClientGroupComp extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupActions.readClientGroupList(ClientGroupProps, compId, {
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -86,7 +86,7 @@ class ClientGroupComp extends Component {
   
   handleSelectAllClick = (event, checked) => {
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    const listObj = getDataObjectInComp(ClientGroupProps, compId);
+    const listObj = ClientGroupProps.getIn(['viewItems', compId]);
     let newSelectedIds = listObj.get('selectedIds');
 
     if(newSelectedIds) {
@@ -193,11 +193,12 @@ class ClientGroupComp extends Component {
     const { classes } = this.props;
     const { ClientGroupProps, compId } = this.props;
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
-    const listObj = getDataObjectInComp(ClientGroupProps, compId);
+    const listObj = ClientGroupProps.getIn(['viewItems', compId]);
 
     return (
 
       <div>
+        {listObj &&
         <Table>
           <GrCommonTableHead
             classes={classes}
@@ -246,7 +247,8 @@ class ClientGroupComp extends Component {
           )}
           </TableBody>
         </Table>
-        {listObj.get('listData') && listObj.get('listData').size > 0 &&
+        }
+        {listObj && listObj.get('listData') && listObj.get('listData').size > 0 &&
           <TablePagination
             component='div'
             count={listObj.getIn(['listParam', 'rowsFiltered'])}

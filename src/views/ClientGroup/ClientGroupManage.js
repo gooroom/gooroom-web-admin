@@ -16,7 +16,7 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrPane from 'containers/GrContent/GrPane';
@@ -74,14 +74,14 @@ class ClientGroupManage extends Component {
   // .................................................
   handleChangePage = (event, page) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(ClientGroupProps, this.props.match.params.grMenuId, {
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(ClientGroupProps, this.props.match.params.grMenuId, {
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: 0
     });
@@ -93,7 +93,7 @@ class ClientGroupManage extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientGroupActions.readClientGroupList(ClientGroupProps, this.props.match.params.grMenuId, {
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -175,7 +175,7 @@ class ClientGroupManage extends Component {
         compId: compId,
         grpId: confirmObject.get('grpId')
       }).then(() => {
-        ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
+        ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
       });
     }
   };
@@ -183,7 +183,7 @@ class ClientGroupManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupList(ClientGroupProps, this.props.match.params.grMenuId);
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId);
   };
   
   handleKeywordChange = name => event => {
@@ -197,9 +197,9 @@ class ClientGroupManage extends Component {
   render() {
     const { classes } = this.props;
     const { ClientGroupProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
-    const listObj = getDataObjectInComp(ClientGroupProps, menuCompId);
+    const listObj = ClientGroupProps.getIn(['viewItems', compId]);
 
     return (
 
@@ -309,8 +309,8 @@ class ClientGroupManage extends Component {
           }
 
         </GrPane>
-        <ClientGroupInform compId={menuCompId} />
-        <ClientGroupDialog compId={menuCompId} />
+        <ClientGroupInform compId={compId} />
+        <ClientGroupDialog compId={compId} />
         <GrConfirm />
       </React.Fragment>
 

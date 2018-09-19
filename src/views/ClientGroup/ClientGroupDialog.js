@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
+import { getConfigIdsInComp } from 'components/GrUtils/GrTableListUtils';
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -89,7 +91,7 @@ class ClientGroupDialog extends Component {
                 hostNameConfigId: configIds.hostNameConfigId,
                 updateServerConfigId: configIds.updateServerConfigId
             }).then(() => {
-                ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
+                ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
                 this.handleClose();
             });
         }
@@ -120,7 +122,7 @@ class ClientGroupDialog extends Component {
                 hostNameConfigId: configIds.hostNameConfigId,
                 updateServerConfigId: configIds.updateServerConfigId
             }).then((res) => {
-                ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
+                ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
                 this.handleClose();
             });
         }
