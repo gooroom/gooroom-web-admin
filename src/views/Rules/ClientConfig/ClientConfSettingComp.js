@@ -12,7 +12,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
 import { createViewObject } from './ClientConfSettingInform';
-import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -46,9 +46,9 @@ class ClientConfSettingComp extends Component {
     };
   }
 
-  handleEditBtnClick = (objId) => {
+  handleEditBtnClick = (objId, compType) => {
     const { ClientConfSettingProps, ClientConfSettingActions, compId } = this.props;
-    const selectedViewItem = getSelectedObjectInComp(ClientConfSettingProps, compId);
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientConfSettingProps, compId) : getSelectedObjectInComp(ClientConfSettingProps, compId);
 
     ClientConfSettingActions.showDialog({
       selectedViewItem: createViewObject(selectedViewItem),
@@ -84,7 +84,7 @@ class ClientConfSettingComp extends Component {
       <React.Fragment>
       <Card elevation={0}>
         {(viewCompItem) && <CardContent style={contentStyle}>
-          {(compType != 'VIEW') && 
+          {(compType != 'VIEW222222222222222222') && 
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>
@@ -95,7 +95,7 @@ class ClientConfSettingComp extends Component {
               <Grid container justify="flex-end">
                 <Button size="small"
                   variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'))}
+                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
                 ><SettingsApplicationsIcon />수정</Button>
               </Grid>
             </Grid>

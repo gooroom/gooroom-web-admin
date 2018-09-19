@@ -39,7 +39,6 @@ export const arrayContainsArray = (superset, subset) => {
     }
 };
 
-
 export const getListParam = (param) => {
     let viewItem = null;
     if(param.props.viewItems) {
