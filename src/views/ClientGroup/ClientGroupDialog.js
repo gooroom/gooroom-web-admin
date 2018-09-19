@@ -78,24 +78,16 @@ class ClientGroupDialog extends Component {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
             const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-            const clientConfIndex = ClientConfSettingProps.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == compId;
-            });
-            const hostsConfIndex = ClientHostNameProps.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == compId;
-            });
-            const updateServerConfIndex = ClientUpdateServerProps.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == compId;
-            });
-            
+
+            const configIds = getConfigIdsInComp(ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, compId);
             ClientGroupActions.createClientGroupData({
                 groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                 groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
                 clientConfigId: ClientGroupProps.getIn(['editingItem', 'clientConfigId']),
                 isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
-                clientConfigId: ClientConfSettingProps.getIn(['viewItems', clientConfIndex, 'selectedOptionItemId']),
-                hostNameConfigId: ClientHostNameProps.getIn(['viewItems', hostsConfIndex, 'selectedOptionItemId']),
-                updateServerConfigId: ClientUpdateServerProps.getIn(['viewItems', updateServerConfIndex, 'selectedOptionItemId'])
+                clientConfigId: configIds.clientConfigId,
+                hostNameConfigId: configIds.hostNameConfigId,
+                updateServerConfigId: configIds.updateServerConfigId
             }).then(() => {
                 ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
                 this.handleClose();
@@ -116,15 +108,7 @@ class ClientGroupDialog extends Component {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
             const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-            const clientConfIndex = ClientConfSettingProps.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == compId;
-            });
-            const hostsConfIndex = ClientHostNameProps.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == compId;
-            });
-            const updateServerConfIndex = ClientUpdateServerProps.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == compId;
-            });
+            const configIds = getConfigIdsInComp(ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, compId);
 
             ClientGroupActions.editClientGroupData({
                 groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
@@ -132,9 +116,9 @@ class ClientGroupDialog extends Component {
                 groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
                 clientConfigId: ClientGroupProps.getIn(['editingItem', 'clientConfigId']),
                 isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
-                clientConfigId: ClientConfSettingProps.getIn(['viewItems', clientConfIndex, 'selectedOptionItemId']),
-                hostNameConfigId: ClientHostNameProps.getIn(['viewItems', hostsConfIndex, 'selectedOptionItemId']),
-                updateServerConfigId: ClientUpdateServerProps.getIn(['viewItems', updateServerConfIndex, 'selectedOptionItemId'])
+                clientConfigId: configIds.clientConfigId,
+                hostNameConfigId: configIds.hostNameConfigId,
+                updateServerConfigId: configIds.updateServerConfigId
             }).then((res) => {
                 ClientGroupActions.readClientGroupList(ClientGroupProps, compId);
                 this.handleClose();
@@ -158,6 +142,8 @@ class ClientGroupDialog extends Component {
 
         const tabValue = ClientGroupProps.get('dialogTabValue');
 
+        const tempLabel = <div><InputLabel>단말정책</InputLabel><Divider /><InputLabel>'없음'</InputLabel></div>;
+
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
             title = "단말 그룹 등록";
@@ -170,7 +156,7 @@ class ClientGroupDialog extends Component {
         return (
             <div>
             {(ClientGroupProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={ClientGroupProps.get('dialogOpen')}>
+            <Dialog open={ClientGroupProps.get('dialogOpen')} >
                 <DialogTitle >{title}</DialogTitle>
 
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
@@ -193,14 +179,14 @@ class ClientGroupDialog extends Component {
                     <Divider style={{marginBottom: 10}} />        
                     <AppBar position="static" color="default">
                         <Tabs value={tabValue} onChange={this.handleChangeTabs}>
-                            <Tab label="단말정책정보" />
+                            <Tab label={tempLabel} />
                             <Tab label="Hosts정보" />
                             <Tab label="업데이트서버정보" />
                         </Tabs>
                     </AppBar>
-                    {tabValue === 0 && <ClientConfSettingSelector compId={compId}>Item One</ClientConfSettingSelector>}
-                    {tabValue === 1 && <ClientHostNameSelector compId={compId}>Item Two</ClientHostNameSelector>}
-                    {tabValue === 2 && <ClientUpdateServerSelector compId={compId}>Item Three</ClientUpdateServerSelector>}
+                    {tabValue === 0 && <ClientConfSettingSelector compId={compId} />}
+                    {tabValue === 1 && <ClientHostNameSelector compId={compId} />}
+                    {tabValue === 2 && <ClientUpdateServerSelector compId={compId} />}
 
                 </form>
 

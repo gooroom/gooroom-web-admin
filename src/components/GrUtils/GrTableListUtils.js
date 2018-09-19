@@ -60,3 +60,41 @@ export const getSelectedObjectInComp = (propObj, compId) => {
     }
     return null;
 }
+
+export const getSelectedObjectInCompAndId = (propObj, compId) => {
+    if(propObj.get('viewItems')) {
+        const viewItem = propObj.get('viewItems').find((element) => {
+            return element.get('_COMPID_') == compId;
+        });
+
+        if(viewItem && viewItem.get('listAllData') && viewItem.get('selectedOptionItemId') != null) {
+            const item = viewItem.get('listAllData').find((element) => {
+              return element.get('objId') == viewItem.get('selectedOptionItemId');
+            });
+            if(item) {
+              return fromJS(item.toJS());
+            }
+        }
+    }
+    return null;
+}
+
+// ?????
+export const getConfigIdsInComp = (ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, compId) => {
+
+    const clientConfIndex = ClientConfSettingProps.get('viewItems').findIndex((e) => {
+        return e.get('_COMPID_') == compId;
+    });
+    const hostsConfIndex = ClientHostNameProps.get('viewItems').findIndex((e) => {
+        return e.get('_COMPID_') == compId;
+    });
+    const updateServerConfIndex = ClientUpdateServerProps.get('viewItems').findIndex((e) => {
+        return e.get('_COMPID_') == compId;
+    });
+
+    return {
+        clientConfigId: ClientConfSettingProps.getIn(['viewItems', clientConfIndex, 'selectedOptionItemId']),
+        hostNameConfigId: ClientHostNameProps.getIn(['viewItems', hostsConfIndex, 'selectedOptionItemId']),
+        updateServerConfigId: ClientUpdateServerProps.getIn(['viewItems', updateServerConfIndex, 'selectedOptionItemId'])
+    }
+}

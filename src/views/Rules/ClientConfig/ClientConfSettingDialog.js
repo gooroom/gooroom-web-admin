@@ -115,7 +115,7 @@ class ClientConfSettingDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-            ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.get('editingItem'))
+            ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.get('editingItem'), this.props.compId)
                 .then((res) => {
                     const viewItems = ClientConfSettingProps.get('viewItems');
                     viewItems.forEach((element) => {

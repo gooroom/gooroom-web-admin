@@ -220,13 +220,15 @@ export const createClientConfSettingData = (itemObj) => dispatch => {
 };
 
 // edit
-export const editClientConfSettingData = (itemObj) => dispatch => {
+export const editClientConfSettingData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateClientConf', makeParameter(itemObj)).then(
         (response) => {
 
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
+                
                 // alarm ... success
+                // change selected object
                 requestPostAPI('readClientConf', {'objId': itemObj.get('objId')}).then(
                     (response) => {
                         dispatch({
@@ -237,6 +239,20 @@ export const editClientConfSettingData = (itemObj) => dispatch => {
                     }
                 ).catch(error => {
                 });
+
+                // change object array for selector
+                requestPostAPI('readClientConfList', {
+                }).then(
+                    (response) => {
+                        dispatch({
+                            type: GET_CONFSETTING_LIST_SUCCESS,
+                            compId: compId,
+                            response: response
+                        });
+                    }
+                ).catch(error => {
+                });
+
             } else {
                 // alarm ... fail
                 dispatch({
@@ -311,6 +327,8 @@ export default handleActions({
     },
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
         const { data } = action.response.data;
+
+        console.log('data ::: ', data);
 
         if(data && data.length > 0) {
             if(state.get('viewItems')) {
