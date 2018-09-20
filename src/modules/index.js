@@ -6,7 +6,7 @@ import ClientProfileSetModule from './ClientProfileSetModule';
 import ClientGroupModule from './ClientGroupModule';
 import UserModule from './UserModule';
 
-import ClientManageCompModule from './ClientManageCompModule';
+import ClientManageModule from './ClientManageModule';
 
 import JobManageModule from './JobManageModule';
 import GrConfirmModule from './GrConfirmModule';
@@ -42,7 +42,7 @@ export default combineReducers({
 
     ClientMasterManageModule,
     
-    ClientManageCompModule,
+    ClientManageModule,
     ClientGroupModule,
     UserModule,
 

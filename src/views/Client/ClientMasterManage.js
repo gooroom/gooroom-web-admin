@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientMasterManageActions from 'modules/ClientMasterManageModule';
-import * as ClientManageCompActions from 'modules/ClientManageCompModule';
+import * as ClientManageCompActions from 'modules/ClientManageModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
@@ -62,11 +62,11 @@ class ClientMasterManage extends Component {
   handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
     const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const { ClientManageCompProps, ClientManageCompActions } = this.props;
+    const { ClientManageProps, ClientManageCompActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
 
     // show client list
-    ClientManageCompActions.readClientList(ClientManageCompProps, compId, {
+    ClientManageCompActions.readClientList(ClientManageProps, compId, {
       groupId: selectedGroupIdArray.join(','), 
       page:0
     }, true);
@@ -86,7 +86,7 @@ class ClientMasterManage extends Component {
   // Select Client Item
   handleClientSelect = (selectedClientObj, selectedClientIdArray) => {
     const { ClientMasterManageProps, ClientMasterManageActions } = this.props;
-    const { ClientManageCompProps, ClientManageCompActions } = this.props;
+    const { ClientManageProps, ClientManageCompActions } = this.props;
     const { ClientGroupActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -153,7 +153,7 @@ class ClientMasterManage extends Component {
   }
 
   isClientRemovable = () => {
-    const selectedIds = getDataObjectVariableInComp(this.props.ClientManageCompProps, this.props.match.params.grMenuId, 'selectedIds');
+    const selectedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
     return !(selectedIds && selectedIds.size > 0);
   }
 
@@ -165,7 +165,7 @@ class ClientMasterManage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { ClientMasterManageProps, ClientGroupProps, ClientManageCompProps } = this.props;
+    const { ClientMasterManageProps, ClientGroupProps, ClientManageProps } = this.props;
 
     const compId = this.props.match.params.grMenuId;
     const { isGroupInformOpen, isClientInformOpen } = ClientMasterManageProps;
@@ -225,7 +225,7 @@ class ClientMasterManage extends Component {
               }
             </Grid>
             <Grid item xs style={{textAlign:"right"}}>
-              {(ClientManageCompProps.informOpen) &&
+              {(ClientManageProps.informOpen) &&
               <GetAppIcon />
               }
             </Grid>
@@ -245,7 +245,7 @@ class ClientMasterManage extends Component {
 
 const mapStateToProps = (state) => ({
   ClientMasterManageProps: state.ClientMasterManageModule,
-  ClientManageCompProps: state.ClientManageCompModule,
+  ClientManageProps: state.ClientManageModule,
   ClientGroupProps: state.ClientGroupModule
 });
 

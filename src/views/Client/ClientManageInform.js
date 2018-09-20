@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
-import * as ClientManageActions from 'modules/ClientManageCompModule';
+import * as ClientManageActions from 'modules/ClientManageModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import Grid from '@material-ui/core/Grid';
@@ -159,7 +159,7 @@ class ClientManageInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientManageProps: state.ClientManageCompModule
+  ClientManageProps: state.ClientManageModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
