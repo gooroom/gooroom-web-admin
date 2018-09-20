@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import * as ClientManageActions from 'modules/ClientManageModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
@@ -22,11 +21,6 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-
-import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
-import ClientHostNameComp from 'views/Rules/HostName/ClientHostNameComp';
-import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
-import ClientUpdateServerComp from 'views/Rules/UpdateServer/ClientUpdateServerComp';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';

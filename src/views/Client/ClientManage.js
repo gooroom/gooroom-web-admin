@@ -286,7 +286,6 @@ class ClientManage extends Component {
                       onClick={event => this.handleRowClick(event, n.get('clientId'))}
                       role="checkbox"
                       aria-checked={isSelected}
-                      tabIndex={-1}
                       key={n.get('clientId')}
                       selected={isSelected}
                     >

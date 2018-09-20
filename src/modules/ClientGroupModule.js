@@ -16,6 +16,7 @@ const DELETE_CLIENTGROUP_SUCCESS = 'groupComp/DELETE_CLIENTGROUP_SUCCESS';
 const SHOW_CLIENTGROUP_INFORM = 'groupComp/SHOW_CLIENTGROUP_INFORM';
 const CLOSE_CLIENTGROUP_INFORM = 'groupComp/CLOSE_CLIENTGROUP_INFORM';
 const SHOW_CLIENTGROUP_DIALOG = 'groupComp/SHOW_CLIENTGROUP_DIALOG';
+const CLOSE_CLIENTGROUP_DIALOG = 'groupComp/CLOSE_CLIENTGROUP_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
 
@@ -55,9 +56,7 @@ export const showDialog = (param) => dispatch => {
 
 export const closeDialog = () => dispatch => {
     return dispatch({
-        type: CHG_STORE_DATA,
-        name: 'dialogOpen',
-        value: false
+        type: CLOSE_CLIENTGROUP_DIALOG
     });
 };
 
@@ -72,8 +71,7 @@ export const showClientGroupInform = (param) => dispatch => {
 export const closeClientGroupInform = (param) => dispatch => {
     return dispatch({
         type: CLOSE_CLIENTGROUP_INFORM,
-        compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        compId: param.compId
     });
 };
 
@@ -291,6 +289,12 @@ export default handleActions({
             editingItem: action.selectedViewItem,
             dialogOpen: true,
             dialogType: action.dialogType,
+        });
+    },
+    [CLOSE_CLIENTGROUP_DIALOG]: (state, action) => {
+        return state.merge({
+            dialogOpen: false,
+            dialogType: ''
         });
     },
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {

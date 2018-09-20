@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -43,21 +44,12 @@ class UserManageDialog extends Component {
     }
 
     handleValueChange = name => event => {
-        if(event.target.type === 'checkbox') {
-            this.props.UserActions.setEditingItemValue({
-                name: name,
-                value: event.target.checked
-            });
-        } else {
-            this.props.UserActions.setEditingItemValue({
-                name: name,
-                value: event.target.value
-            });
-        }
+        const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
+        this.props.UserActions.setEditingItemValue({
+            name: name,
+            value: value
+        });
     }
-
-
-
 
     handleMouseDownPassword = event => {
         event.preventDefault();
@@ -65,92 +57,69 @@ class UserManageDialog extends Component {
 
     handleClickShowPassword = () => {
         const { UserProps, UserActions } = this.props;
-        const { editingItem } = UserProps;
+        const editingItem = UserProps.get('editingItem');
         UserActions.setEditingItemValue({
             name: 'showPassword',
-            value: !editingItem.showPassword
+            value: !editingItem.get('showPassword')
         });
     };
 
     // 데이타 생성
     handleCreateData = (event) => {
         const { UserProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '사용자정보 등록',
             confirmMsg: '사용자정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: UserProps.editingItem
+            confirmObject: UserProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { UserProps, UserActions } = this.props;
-            UserActions.createUserData(UserProps.editingItem)
-                .then((res) => {
-                    const { viewItems } = UserProps;
-                    if(viewItems) {
-                        viewItems.forEach((element) => {
-                            if(element && element.listParam) {
-                                UserActions.readUserList(getMergedObject(element.listParam, {
-                                    compId: element._COMPID_
-                                }));
-                            }
-                        });
-                    }
-                    this.handleClose();
-                }, (res) => {
-            })
+            const { UserProps, UserActions, compId } = this.props;
+            UserActions.createUserData({
+                userId: UserProps.getIn(['editingItem', 'userId']),
+                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
+                userNm: UserProps.getIn(['editingItem', 'userName'])
+            }).then((res) => {
+                UserActions.readUserListPaged(UserProps. compId);
+                this.handleClose();
+            });
         }
     }
 
-    // 데이타 수정
-    handleEditData = (event, id) => {
+    handleEditData = (event) => {
         const { UserProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        GrConfirmActions.showConfirm({
             confirmTitle: '사용자정보 수정',
             confirmMsg: '사용자정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            confirmObject: UserProps.editingItem
-          });
+            confirmObject: UserProps.get('editingItem')
+        });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { UserProps, UserActions } = this.props;
 
-            UserActions.editUserData(UserProps.editingItem)
-                .then((res) => {
-
-                    const { editingCompId, viewItems } = UserProps;
-                    viewItems.forEach((element) => {
-                        if(element && element.listParam) {
-                            UserActions.readUserList(getMergedObject(element.listParam, {
-                                compId: element._COMPID_
-                            }));
-                        }
-                    });
-
-                    // 아래 정보 조회는 효과 없음. - 보여줄 인폼 객체가 안보이는 상태임.
-                    UserActions.getUserData({
-                        compId: editingCompId,
-                        userId: paramObject.userId
-                    });
-
+            UserActions.editUserData({
+                userId: UserProps.getIn(['editingItem', 'userId']),
+                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
+                userNm: UserProps.getIn(['editingItem', 'userName'])
+            }).then((res) => {
+                UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
-            }, (res) => {
-
-            })
+            });
         }
     }
 
-
     render() {
         const { classes } = this.props;
-        const { UserProps } = this.props;
-        const { dialogType, editingItem } = UserProps;
+        const { UserProps, compId } = this.props;
 
-        const editingViewItem = editingItem;
+        const dialogType = UserProps.get('dialogType');
+        const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === UserManageDialog.TYPE_ADD) {
@@ -162,34 +131,34 @@ class UserManageDialog extends Component {
         }
 
         return (
-            <Dialog open={UserProps.dialogOpen}>
+            <div>
+            {(UserProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={UserProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <TextField
                         id="userName"
                         label="사용자이름"
-                        value={(editingViewItem) ? editingViewItem.userName : ''}
+                        value={(editingItem.get('userName')) ? editingItem.get('userName') : ''}
                         onChange={this.handleValueChange("userName")}
                         className={classes.fullWidth}
-                        disabled={(dialogType === UserManageDialog.TYPE_VIEW)}
                     />
 
                     <TextField
                         id="userId"
                         label="사용자아이디"
-                        value={(editingViewItem) ? editingViewItem.userId : ''}
+                        value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
                         onChange={this.handleValueChange("userId")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === UserManageDialog.TYPE_VIEW || dialogType === UserManageDialog.TYPE_EDIT)}
                     />
 
                     <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
           <InputLabel htmlFor="adornment-password">Password</InputLabel>
           <Input
             id="userPassword"
-            type={(editingViewItem && editingViewItem.showPassword) ? 'text' : 'password'}
-            value={(editingViewItem) ? editingViewItem.userPassword : ''}
+            type={(editingItem && editingItem.get('showPassword')) ? 'text' : 'password'}
+            value={(editingItem.get('userPassword')) ? editingItem.get('userPassword') : ''}
             onChange={this.handleValueChange('userPassword')}
             endAdornment={
               <InputAdornment position="end">
@@ -198,7 +167,7 @@ class UserManageDialog extends Component {
                   onClick={this.handleClickShowPassword}
                   onMouseDown={this.handleMouseDownPassword}
                 >
-                  {(editingViewItem && editingViewItem.showPassword) ? <VisibilityOff /> : <Visibility />}
+                  {(editingItem && editingItem.get('showPassword')) ? <VisibilityOff /> : <Visibility />}
                 </IconButton>
               </InputAdornment>
             }
@@ -217,6 +186,8 @@ class UserManageDialog extends Component {
                 </DialogActions>
                 <GrConfirm />
             </Dialog>
+            }
+            </div>
         );
     }
 
