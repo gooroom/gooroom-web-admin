@@ -12,7 +12,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientUpdateServerDialog from './ClientUpdateServerManageDialog';
 import { generateConfigObject } from './ClientUpdateServerManageInform';
-import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import { getSelectedObjectInCompAndId, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -45,9 +45,9 @@ class ClientUpdateServerComp extends Component {
     };
   }
 
-  handleEditBtnClick = (param) => {
+  handleEditBtnClick = (param, compType) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientUpdateServerProps, compId) : getSelectedObjectInComp(ClientUpdateServerProps, compId);
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientUpdateServerProps, compId, 'objId') : getSelectedObjectInComp(ClientUpdateServerProps, compId);
 
     ClientUpdateServerActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
@@ -84,11 +84,10 @@ class ClientUpdateServerComp extends Component {
       <React.Fragment>
       <Card elevation={0}>
         {(viewCompItem) && <CardContent style={contentStyle}>
-          {(compType != 'VIEW222222222222222222') && 
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>
-                업데이트서버설정
+                {(compType == 'VIEW') ? '상세내용' : '업데이트서버설정'}
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -100,7 +99,6 @@ class ClientUpdateServerComp extends Component {
               </Grid>
             </Grid>
           </Grid>
-          }
           <Typography variant="headline" component="h2">
             {viewCompItem.get('objNm')}
           </Typography>
@@ -129,7 +127,7 @@ class ClientUpdateServerComp extends Component {
         </CardContent>
       }
       </Card>
-      <ClientUpdateServerDialog />
+      <ClientUpdateServerDialog compId={compId} />
       </React.Fragment>
     );
   }

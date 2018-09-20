@@ -204,7 +204,7 @@ export const createClientHostNameData = (itemObj) => dispatch => {
 };
 
 // edit
-export const editClientHostNameData = (itemObj) => dispatch => {
+export const editClientHostNameData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateHostNameConf', makeParameter(itemObj)).then(
         (response) => {
@@ -220,6 +220,7 @@ export const editClientHostNameData = (itemObj) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    console.log('error(1) :::: ', error);
                 });
 
                 // change object array for selector
@@ -233,6 +234,7 @@ export const editClientHostNameData = (itemObj) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    console.log('error(2) :::: ', error);
                 });
 
             } else {

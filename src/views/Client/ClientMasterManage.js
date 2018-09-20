@@ -60,13 +60,12 @@ class ClientMasterManage extends Component {
 
   // Select Group Item
   handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
-    const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
     const { ClientGroupProps, ClientGroupActions } = this.props;
     const { ClientManageProps, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
 
     // show client list
-    ClientManageActions.readClientList(ClientManageProps, compId, {
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       groupId: selectedGroupIdArray.join(','), 
       page:0
     }, true);
@@ -117,14 +116,14 @@ class ClientMasterManage extends Component {
   }
 
   handleDeleteButtonForClientGroup = () => {
-    const dataObject = getDataObjectInComp(this.props.ClientGroupProps, this.props.match.params.grMenuId);
-    if(dataObject.get('selectedIds') && dataObject.get('selectedIds').size > 0) {
+    const selectedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    if(selectedIds && selectedIds.size > 0) {
       this.props.GrConfirmActions.showConfirm({
         confirmTitle: '단말그룹 삭제',
-        confirmMsg: '단말그룹(' + dataObject.get('selectedIds').size + '개)을 삭제하시겠습니까?',
+        confirmMsg: '단말그룹(' + selectedIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
         confirmOpen: true,
-        confirmObject: dataObject
+        confirmObject: null
       });
     }
   }

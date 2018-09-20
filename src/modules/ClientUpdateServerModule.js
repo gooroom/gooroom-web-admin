@@ -206,7 +206,7 @@ export const createClientUpdateServerData = (itemObj) => dispatch => {
 };
 
 // edit
-export const editClientUpdateServerData = (itemObj) => dispatch => {
+export const editClientUpdateServerData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateUpdateServerConf', makeParameter(itemObj)).then(
         (response) => {

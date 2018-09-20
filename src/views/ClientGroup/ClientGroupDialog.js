@@ -186,9 +186,9 @@ class ClientGroupDialog extends Component {
                             <Tab label="업데이트서버정보" />
                         </Tabs>
                     </AppBar>
-                    {tabValue === 0 && <ClientConfSettingSelector compId={compId} />}
-                    {tabValue === 1 && <ClientHostNameSelector compId={compId} />}
-                    {tabValue === 2 && <ClientUpdateServerSelector compId={compId} />}
+                    {tabValue === 0 && <ClientConfSettingSelector compId={compId} initId={ClientGroupProps.getIn(['editingItem', 'clientConfigId'])} />}
+                    {tabValue === 1 && <ClientHostNameSelector compId={compId} initId={ClientGroupProps.getIn(['editingItem', 'hostNameConfigId'])} />}
+                    {tabValue === 2 && <ClientUpdateServerSelector compId={compId} initId={ClientGroupProps.getIn(['editingItem', 'updateServerConfigId'])} />}
 
                 </form>
 

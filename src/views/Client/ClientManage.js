@@ -11,7 +11,7 @@ import * as ClientManageActions from 'modules/ClientManageModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
@@ -78,14 +78,14 @@ class ClientManage extends Component {
   // .................................................
   handleChangePage = (event, page) => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(ClientManageProps, this.props.match.params.grMenuId, {
+    ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(ClientManageProps, this.props.match.params.grMenuId, {
+    ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value, 
       page:0
     });
@@ -97,7 +97,7 @@ class ClientManage extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientManageActions.readClientList(ClientManagePropsget, this.props.match.params.grMenuId, {
+    ClientManageActions.readClientListPaged(ClientManagePropsget, this.props.match.params.grMenuId, {
       orderColumn: property, 
       orderDir: orderDir
     });
@@ -105,40 +105,27 @@ class ClientManage extends Component {
 
   handleRowClick = (event, id) => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
 
-    const selectedViewItem = getRowObjectById(ClientManageProps, menuCompId, id, 'clientId');
+    const clickedRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
+    const newSelectedIds = setSelectedIdsInComp(ClientManageProps, compId, id);
 
-    let selectedIds = getDataObjectVariableInComp(ClientManageProps, menuCompId, 'selectedIds');
-    if(selectedIds === undefined) {
-      selectedIds = List([]);
-    }
-    // delete if exist or add if no exist.
-    const index = selectedIds.findIndex(e => e === id);
-    let newSelectedIds = null;
-    if(index < 0) {
-      // add (push)
-      newSelectedIds = selectedIds.push(id);
-    } else {
-      // delete
-      newSelectedIds = selectedIds.delete(index);
-    }
     ClientManageActions.changeCompVariable({
       name: 'selectedIds',
       value: newSelectedIds,
-      compId: menuCompId
+      compId: compId
     });
 
     ClientManageActions.showClientManageInform({
-      compId: menuCompId,
-      selectedViewItem: selectedViewItem,
+      compId: compId,
+      selectedViewItem: clickedRowObject,
     });
   };
 
 
   handleSelectBtnClick = () => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientList(ClientManageProps, this.props.match.params.grMenuId);
+    ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId);
   };
 
   handleKeywordChange = name => event => {
@@ -168,8 +155,7 @@ class ClientManage extends Component {
 
   isSelected = id => {
     const { ClientManageProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const selectedIds = getDataObjectVariableInComp(ClientManageProps, menuCompId, 'selectedIds');
+    const selectedIds = getDataObjectVariableInComp(ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
 
     if(selectedIds) {
       return selectedIds.includes(id);
@@ -178,6 +164,10 @@ class ClientManage extends Component {
     }    
   }
 
+
+  handleCreateButton = () => {
+    console.log('handleCreateButton...............');
+  }
 
   // // .................................................
   // handleClientDialogClose = value => {
@@ -204,39 +194,14 @@ class ClientManage extends Component {
 
   handleSelectAllClick = (event, checked) => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const listObj = getDataObjectInComp(ClientManageProps, menuCompId);
-    let newSelectedIds = listObj.get('selectedIds');
+    const compId = this.props.match.params.grMenuId;
 
-    if(newSelectedIds) {
-      if(checked) {
-        // select all
-        listObj.get('listData').map((element) => {
-          if(!newSelectedIds.includes(element.get('clientId'))) {
-            newSelectedIds = newSelectedIds.push(element.get('clientId'));
-          }
-        });
-      } else {
-        // deselect all
-        listObj.get('listData').map((element) => {
-          const index = newSelectedIds.findIndex((e) => {
-            return e == element.get('clientId');
-          });
-          if(index > -1) {
-            newSelectedIds = newSelectedIds.delete(index);
-          }
-        });
-      }
-    } else {
-      if(checked) {
-        newSelectedIds = listObj.get('listData').map((element) => {return element.get('clientId');});
-      }
-    }
+    const newSelectedIds = setAllSelectedIdsInComp(ClientManageProps, compId, 'clientId', checked);
 
     ClientManageActions.changeCompVariable({
       name: 'selectedIds',
       value: newSelectedIds,
-      compId: menuCompId
+      compId: compId
     });
   };
 
@@ -244,9 +209,9 @@ class ClientManage extends Component {
   render() {
     const { classes } = this.props;
     const { ClientManageProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
-    const listObj = getDataObjectInComp(ClientManageProps, menuCompId);
+    const listObj = ClientManageProps.getIn(['viewItems', compId]);
 
     return (
       <React.Fragment>
@@ -369,7 +334,7 @@ class ClientManage extends Component {
           }
 
         </GrPane>
-        <ClientManageInform compId={menuCompId} />
+        <ClientManageInform compId={compId} />
 
       </React.Fragment>
       

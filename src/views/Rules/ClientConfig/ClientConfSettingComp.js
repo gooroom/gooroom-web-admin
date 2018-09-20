@@ -48,7 +48,7 @@ class ClientConfSettingComp extends Component {
 
   handleEditBtnClick = (objId, compType) => {
     const { ClientConfSettingProps, ClientConfSettingActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientConfSettingProps, compId) : getSelectedObjectInComp(ClientConfSettingProps, compId);
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientConfSettingProps, compId, 'objId') : getSelectedObjectInComp(ClientConfSettingProps, compId);
 
     ClientConfSettingActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
@@ -85,11 +85,10 @@ class ClientConfSettingComp extends Component {
       <React.Fragment>
       <Card elevation={0}>
         {(viewCompItem) && <CardContent style={contentStyle}>
-          {(compType != 'VIEW222222222222222222') && 
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>
-                단말정책설정
+                {(compType == 'VIEW') ? '상세내용' : '단말정책설정'}
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -101,7 +100,6 @@ class ClientConfSettingComp extends Component {
               </Grid>
             </Grid>
           </Grid>
-          }
           <Typography variant="headline" component="h2">
             {viewCompItem.get('objNm')}
           </Typography>

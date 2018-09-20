@@ -15,7 +15,7 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
+import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
@@ -86,33 +86,8 @@ class ClientGroupComp extends Component {
   
   handleSelectAllClick = (event, checked) => {
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    const listObj = ClientGroupProps.getIn(['viewItems', compId]);
-    let newSelectedIds = listObj.get('selectedIds');
 
-    if(newSelectedIds) {
-      if(checked) {
-        // select all
-        listObj.get('listData').map((element) => {
-          if(!newSelectedIds.includes(element.get('grpId'))) {
-            newSelectedIds = newSelectedIds.push(element.get('grpId'));
-          }
-        });
-      } else {
-        // deselect all
-        listObj.get('listData').map((element) => {
-          const index = newSelectedIds.findIndex((e) => {
-            return e == element.get('grpId');
-          });
-          if(index > -1) {
-            newSelectedIds = newSelectedIds.delete(index);
-          }
-        });
-      }
-    } else {
-      if(checked) {
-        newSelectedIds = listObj.get('listData').map((element) => {return element.get('grpId');});
-      }
-    }
+    const newSelectedIds = setAllSelectedIdsInComp(ClientGroupProps, compId, 'grpId', checked);
 
     ClientGroupActions.changeCompVariable({
       name: 'selectedIds',
@@ -126,22 +101,8 @@ class ClientGroupComp extends Component {
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
 
     const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
-    
-    let selectedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
-    if(selectedIds === undefined) {
-      selectedIds = List([]);
-    }
+    const newSelectedIds = setSelectedIdsInComp(ClientGroupProps, compId, id);
 
-    // delete if exist or add if no exist.
-    const index = selectedIds.findIndex(e => e === id);
-    let newSelectedIds = null;
-    if(index < 0) {
-      // add (push)
-      newSelectedIds = selectedIds.push(id);
-    } else {
-      // delete
-      newSelectedIds = selectedIds.delete(index);
-    }
     ClientGroupActions.changeCompVariable({
       name: 'selectedIds',
       value: newSelectedIds,

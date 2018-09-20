@@ -38,6 +38,11 @@ class ClientUpdateServerSelector extends Component {
 
   componentDidMount() {
     this.props.ClientUpdateServerActions.readClientUpdateServerList(this.props.ClientUpdateServerProps, this.props.compId);
+    this.props.ClientUpdateServerActions.changeCompVariable({
+      compId: this.props.compId,
+      name: 'selectedOptionItemId',
+      value: this.props.initId
+    });
   }
 
   handleChange = (event, value) => {

@@ -7,7 +7,7 @@ import { requestPostAPI } from 'components/GrUtils/GrRequester';
 const COMMON_PENDING = 'clientManageComp/COMMON_PENDING';
 const COMMON_FAILURE = 'clientManageComp/COMMON_FAILURE';
 
-const GET_LIST_SUCCESS = 'clientManageComp/GET_LIST_SUCCESS';
+const GET_CLIENT_LISTPAGED_SUCCESS = 'clientManageComp/GET_CLIENT_LISTPAGED_SUCCESS';
 const CREATE_CLIENT_SUCCESS = 'clientManageComp/CREATE_CLIENT_SUCCESS';
 const EDIT_CLIENT_SUCCESS = 'clientManageComp/EDIT_CLIENT_SUCCESS';
 const DELETE_CLIENT_SUCCESS = 'clientManageComp/DELETE_CLIENT_SUCCESS';
@@ -16,7 +16,6 @@ const SHOW_CLIENT_INFORM = 'clientManageComp/SHOW_CLIENT_INFORM';
 const CLOSE_CLIENT_INFORM = 'clientManageComp/CLOSE_CLIENT_INFORM';
 const SHOW_CLIENT_DIALOG = 'clientManageComp/SHOW_CLIENT_DIALOG';
 
-const SET_SELECTED_OBJ = 'clientManageComp/SET_SELECTED_OBJ';
 const SET_EDITING_ITEM_VALUE = 'clientManageComp/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'clientManageComp/CHG_LISTPARAM_DATA';
@@ -69,29 +68,26 @@ export const closeDialog = (param) => dispatch => {
 export const showClientManageInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENT_INFORM,
-        payload: param
+        compId: param.compId,
+        selectedViewItem: param.selectedViewItem
     });
 };
 
 export const closeClientManageInform = (param) => dispatch => {
     return dispatch({
         type: CLOSE_CLIENT_INFORM,
-        payload: param
+        compId: param.compId,
+        selectedViewItem: param.selectedViewItem
     });
 };
 
 // ...
-export const readClientList = (module, compId, extParam, isResetSelectedParam) => dispatch => {
+export const readClientListPaged = (module, compId, extParam, isResetSelectedParam) => dispatch => {
 
-    let newListParam;
-    if(module.get('viewItems')) {
-        const viewIndex = module.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == compId;
-        });
-        newListParam = module.getIn(['viewItems', viewIndex, 'listParam']).merge(extParam);
-    } else {
-        newListParam = module.get('defaultListParam');
-    }
+    const newListParam = (module.getIn(['viewItems', compId])) ? 
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam');
+
     const isResetSelected = (isResetSelectedParam) ? isResetSelectedParam : false;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientListPaged', {
@@ -106,17 +102,17 @@ export const readClientList = (module, compId, extParam, isResetSelectedParam) =
     }).then(
         (response) => {
             dispatch({
-                type: GET_LIST_SUCCESS,
+                type: GET_CLIENT_LISTPAGED_SUCCESS,
                 compId: compId,
                 isResetSelected: isResetSelected,
                 listParam: newListParam,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -141,38 +137,37 @@ export const getClientInform = (param) => dispatch => {
     });
 };
 
-export const setSelectedItemObj = (param) => dispatch => {
-    return dispatch({
-        type: SET_SELECTED_OBJ,
-        payload: param
-    });
-};
-
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,
-        payload: param
+        name: param.name,
+        value: param.value
     });
 };
 
 export const changeListParamData = (param) => dispatch => {
     return dispatch({
         type: CHG_LISTPARAM_DATA,
-        payload: param
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
         type: CHG_COMPVARIABLE_DATA,
-        payload: param
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
 export const changeStoreData = (param) => dispatch => {
     return dispatch({
         type: CHG_STORE_DATA,
-        payload: param
+        name: param.name,
+        value: param.value
     });
 };
 
@@ -267,57 +262,19 @@ export default handleActions({
         });
     },
 
-    [GET_LIST_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.payload.data;
-
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-
-            if(viewIndex > -1) {
-                if(action.isResetSelected) {
-                    state = state.setIn(['viewItems', viewIndex, 'selectedIds'], List([]));
-                }
-                const newListParam = state.getIn(['viewItems', viewIndex, 'listParam']).merge({
-                    rowsFiltered: parseInt(recordsFiltered, 10),
-                    rowsTotal: parseInt(recordsTotal, 10),
-                    page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10),
-                    orderColumn: orderColumn,
-                    orderDir: orderDir
-                });
-                return state
-                        .setIn(['viewItems', viewIndex, 'listData'], List(data.map((e) => {return Map(e)})))
-                        .setIn(['viewItems', viewIndex, 'listParam'], newListParam);
-            } else {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'listData': List(data.map((e) => {return Map(e)})),
-                    'listParam': state.get('defaultListParam').merge({
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10),
-                        orderColumn: orderColumn,
-                        orderDir: orderDir
-                    })
-                })));
-            }
-        } else {
-            return state.set('viewItems', List([Map({
-                '_COMPID_': action.compId,
-                'listData': List(data.map((e) => {return Map(e)})),
-                'listParam': state.get('defaultListParam').merge({
-                    rowsFiltered: parseInt(recordsFiltered, 10),
-                    rowsTotal: parseInt(recordsTotal, 10),
-                    page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10),
-                    orderColumn: orderColumn,
-                    orderDir: orderDir
-                })
-            })]));
-        }
+    [GET_CLIENT_LISTPAGED_SUCCESS]: (state, action) => {
+        const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.response.data;
+        return state.setIn(['viewItems', action.compId], Map({
+            'listData': List(data.map((e) => {return Map(e)})),
+            'listParam': state.get('defaultListParam').merge({
+                rowsFiltered: parseInt(recordsFiltered, 10),
+                rowsTotal: parseInt(recordsTotal, 10),
+                page: parseInt(draw, 10),
+                rowsPerPage: parseInt(rowLength, 10),
+                orderColumn: orderColumn,
+                orderDir: orderDir
+            })
+        }));
     },
     [SHOW_CLIENT_DIALOG]: (state, action) => {
         return state.merge({
@@ -327,73 +284,29 @@ export default handleActions({
         });
     },
     [SHOW_CLIENT_INFORM]: (state, action) => {
-        const COMP_ID = action.payload.compId;
-        if(state.get('viewItems')) {
-            const newViewItems = state.get('viewItems').map((element) => {
-                if(element.get('_COMPID_') == COMP_ID) {
-                    return element.set('selectedViewItem', Map(action.payload.selectedViewItem)).set('informOpen', true);
-                } else {
-                    return element;
-                }
-            });
-            return state.merge({
-                viewItems: newViewItems
-            });
-        }
-        return state;
+        return state
+                .setIn(['viewItems', action.compId, 'selectedViewItem'], action.selectedViewItem)
+                .setIn(['viewItems', action.compId, 'informOpen'], true);
     },
     [CLOSE_CLIENT_INFORM]: (state, action) => {
-        const COMP_ID = action.payload.compId;
-        if(state.get('viewItems')) {
-            const newViewItems = state.get('viewItems').map((element) => {
-                if(element.get('_COMPID_') == COMP_ID) {
-                    return element.delete('selectedViewItem', Map(action.payload.selectedViewItem)).set('informOpen', false);
-                } else {
-                    return element;
-                }
-            });
-            return state.merge({
-                viewItems: newViewItems
-            });
-        }
-        return state;
-    },
-    [SET_SELECTED_OBJ]: (state, action) => {
-        const COMP_ID = action.payload.compId;
-        if(state.get('viewItems')) {
-            const newViewItems = state.get('viewItems').map((element) => {
-                if(element.get('_COMPID_') == COMP_ID) {
-                    return element.set('selectedViewItem', Map(action.payload.selectedViewItem)).set('informOpen', true);
-                } else {
-                    return element;
-                }
-            });
-            return state.merge({
-                viewItems: newViewItems
-            });
-        }
-        return state;
+        return state
+                .setIn(['viewItems', action.compId, 'informOpen'], false)
+                .deleteIn(['viewItems', action.compId, 'selectedViewItem']);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
-            editingItem: state.get('editingItem').merge({[action.payload.name]: action.payload.value})
+            editingItem: state.get('editingItem').merge({[action.name]: action.value})
         });
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.payload.compId;
-        });
-        return state.setIn(['viewItems', viewIndex, 'listParam', action.payload.name], action.payload.value);
+        return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CHG_COMPVARIABLE_DATA]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.payload.compId;
-        });
-        return state.setIn(['viewItems', viewIndex, action.payload.name], action.payload.value);
+        return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
     [CHG_STORE_DATA]: (state, action) => {
         return state.merge({
-            [action.payload.name]: action.payload.value
+            [action.name]: action.value
         });
     },
 

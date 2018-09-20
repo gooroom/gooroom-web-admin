@@ -12,7 +12,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientHostNameDialog from './ClientHostNameManageDialog';
 import { generateConfigObject } from './ClientHostNameManageInform';
-import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import { getSelectedObjectInCompAndId, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -45,9 +45,9 @@ class ClientHostNameComp extends Component {
     };
   }
 
-  handleEditBtnClick = (param) => {
+  handleEditBtnClick = (param, compType) => {
     const { ClientHostNameActions, ClientHostNameProps, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientHostNameProps, compId) : getSelectedObjectInComp(ClientHostNameProps, compId);
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientHostNameProps, compId, 'objId') : getSelectedObjectInComp(ClientHostNameProps, compId);
 
     ClientHostNameActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
@@ -84,11 +84,10 @@ class ClientHostNameComp extends Component {
       <React.Fragment>
       <Card elevation={0}>
         {(viewCompItem) && <CardContent style={contentStyle}>
-          {(compType != 'VIEW222222222222222222') && 
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>
-                Hosts설정
+                {(compType == 'VIEW') ? '상세내용' : 'Hosts설정'}
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -100,7 +99,6 @@ class ClientHostNameComp extends Component {
               </Grid>
             </Grid>
           </Grid>
-          }
           <Typography variant="headline" component="h2">
             {viewCompItem.get('objNm')}
           </Typography>
@@ -121,7 +119,7 @@ class ClientHostNameComp extends Component {
         </CardContent>
       }
       </Card>
-      <ClientHostNameDialog />
+      <ClientHostNameDialog compId={compId} />
       </React.Fragment>
     );
   }
