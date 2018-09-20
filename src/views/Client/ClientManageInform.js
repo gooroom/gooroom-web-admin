@@ -40,16 +40,15 @@ class ClientManageInform extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { compId, ClientManageProps } = this.props;
-
-    const viewItem = getDataObjectInComp(ClientManageProps, compId);
-    const selectedViewItem = viewItem.get('selectedViewItem');
-
     const bull = <span className={classes.bullet}>•</span>;
+
+    const { compId, ClientManageProps } = this.props;
+    const informOpen = ClientManageProps.getIn(['viewItems', compId, 'informOpen']);
+    const selectedViewItem = ClientManageProps.getIn(['viewItems', compId, 'selectedViewItem']);
 
     return (
       <div>
-      {(viewItem.get('informOpen') && selectedViewItem) &&
+      {(informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.get('clientName') : ''}

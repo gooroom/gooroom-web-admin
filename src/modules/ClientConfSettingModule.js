@@ -226,6 +226,7 @@ export const editClientConfSettingData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    console.log('error(1) :::: ', error);
                 });
 
                 // change object array for selector
@@ -239,6 +240,7 @@ export const editClientConfSettingData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    console.log('error(2) :::: ', error);
                 });
 
             } else {

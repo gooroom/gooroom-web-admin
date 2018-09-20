@@ -13,7 +13,7 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
-import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
@@ -32,82 +32,9 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 
 //
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class ClientManageHead extends Component {
-
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
-    { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'loginId', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
-    {
-      id: 'clientGroupName', isOrder: true, 
-      numeric: false,
-      disablePadding: true,
-      label: '단말그룹'
-    },
-    { id: 'regDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' }
-  ];
-
-  render() {
-    const { classes } = this.props;
-    const {
-      onSelectAllClick,
-      orderDir,
-      orderColumn,
-      selectedData,
-      listData
-    } = this.props;
-
-    let checkSelection = 0;
-    if(listData && listData.length > 0) {
-      checkSelection = arrayContainsArray(selectedData, listData.map(x => x.clientId));
-    }
-
-    return (
-      <TableHead>
-        <TableRow>
-          <TableCell padding="checkbox" className={classes.grSmallAndHeaderCell} >
-            <Checkbox
-              indeterminate={checkSelection === 50}
-              checked={checkSelection === 100}
-              onChange={onSelectAllClick}
-            />
-          </TableCell>
-          {ClientManageHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel active={orderColumn === column.id}
-                            direction={orderDir}
-                            onClick={this.createSortHandler(column.id)}
-                         >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientManage extends Component {
+class ClientManageComp extends Component {
 
   columnHeaders = [
     { id: "chCheckbox", isCheckbox: true},
@@ -128,19 +55,19 @@ class ClientManage extends Component {
 
   componentDidMount() {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    ClientManageActions.readClientList(ClientManageProps, compId);
+    ClientManageActions.readClientListPaged(ClientManageProps, compId);
   }
 
   handleChangePage = (event, page) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    ClientManageActions.readClientList(ClientManageProps, compId, {
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    ClientManageActions.readClientList(ClientManageProps, compId, {
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       rowsPerPage: event.target.value, 
       page:0
     });
@@ -153,7 +80,7 @@ class ClientManage extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientManageActions.readClientList(ClientManageProps, compId, {
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -161,32 +88,8 @@ class ClientManage extends Component {
 
   handleSelectAllClick = (event, checked) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    const listObj = getDataObjectInComp(ClientManageProps, compId);
-    let newSelectedIds = listObj.get('selectedIds');
-    if(newSelectedIds) {
-      if(checked) {
-        // select all
-        listObj.get('listData').map((element) => {
-          if(!newSelectedIds.includes(element.get('clientId'))) {
-            newSelectedIds = newSelectedIds.push(element.get('clientId'));
-          }
-        });
-      } else {
-        // deselect all
-        listObj.get('listData').map((element) => {
-          const index = newSelectedIds.findIndex((e) => {
-            return e == element.get('clientId');
-          });
-          if(index > -1) {
-            newSelectedIds = newSelectedIds.delete(index);
-          }
-        });
-      }
-    } else {
-      if(checked) {
-        newSelectedIds = listObj.get('listData').map((element) => {return element.get('clientId');});
-      }
-    }
+    
+    const newSelectedIds = setAllSelectedIdsInComp(ClientManageProps, compId, 'clientId', checked);
 
     ClientManageActions.changeCompVariable({
       name: 'selectedIds',
@@ -197,23 +100,10 @@ class ClientManage extends Component {
 
   handleRowClick = (event, id) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
+
     const clickedRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
+    const newSelectedIds = setSelectedIdsInComp(ClientManageProps, compId, id);
 
-    let selectedIds = getDataObjectVariableInComp(ClientManageProps, compId, 'selectedIds');
-    if(selectedIds === undefined) {
-      selectedIds = List([]);
-    }
-
-    // delete if exist or add if no exist.
-    const index = selectedIds.findIndex(e => e === id);
-    let newSelectedIds = null;
-    if(index < 0) {
-      // add (push)
-      newSelectedIds = selectedIds.push(id);
-    } else {
-      // delete
-      newSelectedIds = selectedIds.delete(index);
-    }
     ClientManageActions.changeCompVariable({
       name: 'selectedIds',
       value: newSelectedIds,
@@ -258,11 +148,12 @@ class ClientManage extends Component {
     const { classes } = this.props;
     const { ClientManageProps, compId } = this.props;
     const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
-    const listObj = getDataObjectInComp(ClientManageProps, compId);
+    const listObj = ClientManageProps.getIn(['viewItems', compId]);
 
     return (
 
       <div>
+        {listObj &&
         <Table>
           <GrCommonTableHead
             classes={classes}
@@ -314,13 +205,15 @@ class ClientManage extends Component {
             {emptyRows > 0 && (
               <TableRow >
                 <TableCell
-                  colSpan={ClientManageHead.columnData.length + 1}
+                  colSpan={this.columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
             )}
           </TableBody>
         </Table>
+        }
+        {listObj && listObj.get('listData') && listObj.get('listData').size > 0 &&
         <TablePagination
           component='div'
           count={listObj.getIn(['listParam', 'rowsFiltered'])}
@@ -337,6 +230,7 @@ class ClientManage extends Component {
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
+      }
     </div>
     );
   }
@@ -352,5 +246,5 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientManageComp));
 

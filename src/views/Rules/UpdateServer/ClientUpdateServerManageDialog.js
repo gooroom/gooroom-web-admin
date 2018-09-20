@@ -83,7 +83,7 @@ class ClientUpdateServerManageDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
-            ClientUpdateServerActions.editClientUpdateServerData(ClientUpdateServerProps.get('editingItem'))
+            ClientUpdateServerActions.editClientUpdateServerData(ClientUpdateServerProps.get('editingItem'), this.props.compId)
                 .then((res) => {
                     refreshDataListInComp(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
                     this.handleClose();

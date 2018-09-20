@@ -40,6 +40,11 @@ class ClientConfSettingSelector extends Component {
 
   componentDidMount() {
     this.props.ClientConfSettingActions.readClientConfSettingList(this.props.ClientConfSettingProps, this.props.compId);
+    this.props.ClientConfSettingActions.changeCompVariable({
+      compId: this.props.compId,
+      name: 'selectedOptionItemId',
+      value: this.props.initId
+    });
   }
 
   handleChange = (event, value) => {

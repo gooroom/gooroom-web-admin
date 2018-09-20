@@ -38,6 +38,11 @@ class ClientHostNameSelector extends Component {
 
   componentDidMount() {
     this.props.ClientHostNameActions.readClientHostNameList(this.props.ClientHostNameProps, this.props.compId);
+    this.props.ClientHostNameActions.changeCompVariable({
+      compId: this.props.compId,
+      name: 'selectedOptionItemId',
+      value: this.props.initId
+    });
   }
 
   handleChange = (event, value) => {

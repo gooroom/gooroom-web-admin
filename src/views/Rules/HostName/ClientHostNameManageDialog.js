@@ -83,7 +83,7 @@ class ClientHostNameManageDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientHostNameProps, ClientHostNameActions } = this.props;
-            ClientHostNameActions.editClientHostNameData(ClientHostNameProps.get('editingItem'))
+            ClientHostNameActions.editClientHostNameData(ClientHostNameProps.get('editingItem'), this.props.compId)
                 .then((res) => {
                     refreshDataListInComp(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
                     this.handleClose();
