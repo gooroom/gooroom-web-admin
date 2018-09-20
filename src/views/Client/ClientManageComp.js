@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientManageCompActions from 'modules/ClientManageModule';
+import * as ClientManageActions from 'modules/ClientManageModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
@@ -127,20 +127,20 @@ class ClientManage extends Component {
   }
 
   componentDidMount() {
-    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
-    ClientManageCompActions.readClientList(ClientManageProps, compId);
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
+    ClientManageActions.readClientList(ClientManageProps, compId);
   }
 
   handleChangePage = (event, page) => {
-    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
-    ClientManageCompActions.readClientList(ClientManageProps, compId, {
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
+    ClientManageActions.readClientList(ClientManageProps, compId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
-    ClientManageCompActions.readClientList(ClientManageProps, compId, {
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
+    ClientManageActions.readClientList(ClientManageProps, compId, {
       rowsPerPage: event.target.value, 
       page:0
     });
@@ -148,19 +148,19 @@ class ClientManage extends Component {
 
   // .................................................
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
     let orderDir = "desc";
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientManageCompActions.readClientList(ClientManageProps, compId, {
+    ClientManageActions.readClientList(ClientManageProps, compId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
   };
 
   handleSelectAllClick = (event, checked) => {
-    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
     const listObj = getDataObjectInComp(ClientManageProps, compId);
     let newSelectedIds = listObj.get('selectedIds');
     if(newSelectedIds) {
@@ -188,7 +188,7 @@ class ClientManage extends Component {
       }
     }
 
-    ClientManageCompActions.changeCompVariable({
+    ClientManageActions.changeCompVariable({
       name: 'selectedIds',
       value: newSelectedIds,
       compId: compId
@@ -196,7 +196,7 @@ class ClientManage extends Component {
   };
 
   handleRowClick = (event, id) => {
-    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
     const clickedRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
 
     let selectedIds = getDataObjectVariableInComp(ClientManageProps, compId, 'selectedIds');
@@ -214,7 +214,7 @@ class ClientManage extends Component {
       // delete
       newSelectedIds = selectedIds.delete(index);
     }
-    ClientManageCompActions.changeCompVariable({
+    ClientManageActions.changeCompVariable({
       name: 'selectedIds',
       value: newSelectedIds,
       compId: compId
@@ -240,7 +240,7 @@ class ClientManage extends Component {
   }
 
   // handleKeywordChange = name => event => {
-  //   const { ClientManageCompActions, ClientManageProps, compId } = this.props;
+  //   const { ClientManageActions, ClientManageProps, compId } = this.props;
   //   const { [compId + '__listParam'] : compListParam } = ClientManageProps;
 
   //   const newParam = getMergedObject(compListParam, {
@@ -248,7 +248,7 @@ class ClientManage extends Component {
   //     page:0,
   //     compId: this.props.compId
   //   });
-  //   ClientManageCompActions.changeStoreData({
+  //   ClientManageActions.changeStoreData({
   //     name: compId + '__listParam',
   //     value: newParam
   //   });
@@ -348,7 +348,7 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientManageCompActions: bindActionCreators(ClientManageCompActions, dispatch),
+  ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
