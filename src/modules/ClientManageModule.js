@@ -1,6 +1,6 @@
 
 import { handleActions } from 'redux-actions';
-import { Map, List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
@@ -33,7 +33,6 @@ const initialState = Map({
     error: false,
     resultMsg: '',
 
-    listData: [],
     defaultListParam: Map({
         clientType: 'ALL',
         groupId: '',

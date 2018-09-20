@@ -18,6 +18,7 @@ import GrConfirm from 'components/GrComponents/GrConfirm';
 import UserManageDialog from "views/User/UserManageDialog";
 import UserManageInform from "views/User/UserManageInform";
 import GrPane from "containers/GrContent/GrPane";
+import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -118,6 +119,16 @@ class UserManageHead extends Component {
 //
 class UserManage extends Component {
 
+  columnHeaders = [
+    { id: "chCheckbox", isCheckbox: true},
+    { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
+    { id: "chUserName", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
+    { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
+    { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: "최근로그인날짜" },
+    { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
+  ];
+
   constructor(props) {
     super(props);
 
@@ -130,18 +141,61 @@ class UserManage extends Component {
     this.handleSelectBtnClick();
   }
 
-
   // .................................................
+  handleChangePage = (event, page) => {
+    const { UserActions, UserProps } = this.props;
+    UserActions.readUserList(UserProps, this.props.match.params.grMenuId, {
+      page: page
+    });
+  };
+
+  handleChangeRowsPerPage = event => {
+    const { UserActions, UserProps } = this.props;
+    UserActions.readUserList(UserProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value, 
+      page:0
+    });
+  };
+
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    const { UserActions, UserProps } = this.props;
+    let orderDir = "desc";
+    if (currOrderDir === "desc") {
+      orderDir = "asc";
+    }
+    UserActions.readUserList(ClientManagePropsget, this.props.match.params.grMenuId, {
+      orderColumn: property, 
+      orderDir: orderDir
+    });
+  };
+
+  handleRowClick = (event, id) => {
+    const { UserProps, UserActions } = this.props;
+    const compId = this.props.match.params.grMenuId;
+
+    const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
+    const newSelectedIds = setSelectedIdsInComp(UserProps, compId, id);
+
+    UserActions.changeCompVariable({
+      name: 'selectedIds',
+      value: newSelectedIds,
+      compId: compId
+    });
+
+    UserActions.showClientManageInform({
+      compId: compId,
+      selectedViewItem: clickedRowObject,
+    });
+  };
+
   handleSelectBtnClick = () => {
     const { UserActions, UserProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: UserProps, compId: menuCompId });
-    UserActions.readUserList(getMergedObject(listParam, {
-      page: 0,
-      compId: menuCompId
-    }));
+    UserActions.readUserList(UserProps, this.props.match.params.grMenuId);
   };
+
+
+
+
 
   handleCreateButton = value => {
     const { UserActions } = this.props;
@@ -158,85 +212,39 @@ class UserManage extends Component {
   
   handleSelectAllClick = (event, checked) => {
     const { UserProps, UserActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
     
-    const viewItem = getViewItem({ props: UserProps, compId: menuCompId });
+    const viewItem = getViewItem({ props: UserProps, compId: compId });
     const newSelected = viewItem.listData.map(n => n.userId);
     const oldSelected = (viewItem.selected) ? (viewItem.selected) : [];
 
     UserActions.changeStoreData({
       name: 'selected',
       value: getMergedArray(oldSelected, newSelected, checked),
-      compId: menuCompId
+      compId: compId
     });
   };
   
-  handleRowClick = (event, id) => {
-    const { UserProps, UserActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const viewItem = getViewItem({ props: UserProps, compId: menuCompId });
-     
-    const { selected : preSelected } = viewItem;
-    let newSelected = [];
-
-    if(preSelected) {
-      const selectedIndex = preSelected.indexOf(id);
-      if (selectedIndex === -1) {
-        newSelected = newSelected.concat(preSelected, id);
-      } else if (selectedIndex === 0) {
-        newSelected = newSelected.concat(preSelected.slice(1));
-      } else if (selectedIndex === preSelected.length - 1) {
-        newSelected = newSelected.concat(preSelected.slice(0, -1));
-      } else if (selectedIndex > 0) {
-        newSelected = newSelected.concat(
-          preSelected.slice(0, selectedIndex),
-          preSelected.slice(selectedIndex + 1)
-        );
-      }
-    } else {
-      newSelected.push(id);
-    }
-
-    UserActions.changeStoreData({
-      name: 'selected',
-      value: newSelected,
-      compId: menuCompId
-    });
-
-    // show user info.
-    const selectedViewItem = viewItem.listData.find(function(element) {
-      return element.userId == id;
-    });
-
-    if(selectedViewItem) {
-      UserActions.showInform({
-        compId: menuCompId,
-        selectedViewItem: selectedViewItem
-      });
-    }
-  };
-
-
+  
   isSelected = id => {
     const { UserProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-    const viewItem = getViewItem({ props: UserProps, compId: menuCompId });
+    const compId = this.props.match.params.grMenuId;
+    const viewItem = getViewItem({ props: UserProps, compId: compId });
 
     return (viewItem.selected) ? (viewItem.selected.indexOf(id) !== -1) : false;
   }
   
   handleEditClick = (event, id) => { 
     const { UserProps, UserActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: UserProps, compId: menuCompId });
+    const listData = getListData({ props: UserProps, compId: compId });
     const selectedViewItem = listData.find(function(element) {
       return element.userId == id;
     });
 
     UserActions.showDialog({
-      compId: menuCompId,
+      compId: compId,
       selectedViewItem: {
         userId: selectedViewItem.userId,
         userName: selectedViewItem.userNm,
@@ -250,9 +258,9 @@ class UserManage extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { UserProps, UserActions, GrConfirmActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
 
-    const listData = getListData({ props: UserProps, compId: menuCompId });
+    const listData = getListData({ props: UserProps, compId: compId });
     const selectedViewItem = listData.find(function(element) {
       return element.userId == id;
     });
@@ -287,71 +295,26 @@ class UserManage extends Component {
   };
 
 
-
-
-  // 페이지 번호 변경
-  handleChangePage = (event, page) => {
-    const { UserActions, UserProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: UserProps, compId: menuCompId });
-    UserActions.readUserList(getMergedObject(listParam, {
-      page: page,
-      compId: menuCompId
-    }));
-  };
-
-  // 페이지당 레코드수 변경
-  handleChangeRowsPerPage = event => {
-    const { UserActions, UserProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: UserProps, compId: menuCompId });
-    UserActions.readUserList(getMergedObject(listParam, {
-      rowsPerPage: event.target.value,
-      page: 0,
-      compId: menuCompId
-    }));
-  };
-
-  // .................................................
-  handleRequestSort = (event, property) => {
-    const { UserProps, UserActions } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: UserProps, compId: menuCompId });
-    let orderDir = "desc";
-    if (listParam.orderColumn === property && listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-
-    UserActions.readUserList(getMergedObject(listParam, {
-      orderColumn: property, 
-      orderDir: orderDir,
-      compId: menuCompId
-    }));
-  };
-
   // .................................................
   handleKeywordChange = name => event => {
     const { UserActions, UserProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
 
-    const listParam = getListParam({ props: UserProps, compId: menuCompId });
+    const listParam = getListParam({ props: UserProps, compId: compId });
     UserActions.changeStoreData({
       name: 'listParam',
       value: getMergedObject(listParam, {keyword: event.target.value}),
-      compId: menuCompId
+      compId: compId
     });
   }
   
   render() {
     const { classes } = this.props;
     const { UserProps } = this.props;
-    const menuCompId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//UserProps.listParam.rowsPerPage - UserProps.listData.length;
 
-    const viewItem = getViewItem({ props: UserProps, compId: menuCompId });
+    const viewItem = getViewItem({ props: UserProps, compId: compId });
 
     const listData = (viewItem) ? viewItem.listData : [];
     const listParam = (viewItem) ? viewItem.listParam : UserProps.defaultListParam;
@@ -415,7 +378,7 @@ class UserManage extends Component {
                 onSelectAllClick={this.handleSelectAllClick}
                 orderDir={orderDir}
                 orderColumn={orderColumn}
-                onRequestSort={this.handleRequestSort}
+                onRequestSort={this.handleChangeSort}
                 selectedData={selected}
                 listData={listData}
               />
@@ -488,7 +451,7 @@ class UserManage extends Component {
           />
 
         </GrPane>
-        <UserManageInform compId={menuCompId} />
+        <UserManageInform compId={compId} />
         <UserManageDialog />
         <GrConfirm />
       </React.Fragment>

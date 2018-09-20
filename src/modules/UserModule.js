@@ -1,5 +1,7 @@
 
 import { handleActions } from 'redux-actions';
+import { Map, List } from 'immutable';
+
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
@@ -7,7 +9,7 @@ import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 const COMMON_PENDING = 'user/COMMON_PENDING';
 const COMMON_FAILURE = 'user/COMMON_FAILURE';
 
-const GET_USER_LIST_SUCCESS = 'user/GET_USER_LIST_SUCCESS';
+const GET_USER_LISTPAGED_SUCCESS = 'user/GET_USER_LISTPAGED_SUCCESS';
 const GET_LISTALL_SUCCESS = 'user/GET_LISTALL_SUCCESS';
 const GET_USER_SUCCESS = 'user/GET_USER_SUCCESS';
 const CREATE_USER_SUCCESS = 'user/CREATE_USER_SUCCESS';
@@ -21,15 +23,18 @@ const SET_EDITING_ITEM_VALUE = 'user/SET_EDITING_ITEM_VALUE';
 
 const CHG_VIEWITEM_DATA = 'user/CHG_VIEWITEM_DATA';
 
+
+const CHG_LISTPARAM_DATA = 'user/CHG_LISTPARAM_DATA';
+const CHG_COMPVARIABLE_DATA = 'user/CHG_COMPVARIABLE_DATA';
 const CHG_STORE_DATA = 'user/CHG_STORE_DATA';
 
 // ...
-const initialState = {
+const initialState = Map({
     pending: false,
     error: false,
     resultMsg: '',
 
-    defaultListParam: {
+    defaultListParam: Map({
         keyword: '',
         orderDir: 'asc',
         orderColumn: 'chUserName',
@@ -38,14 +43,11 @@ const initialState = {
         rowsPerPageOptions: [5, 10, 25],
         rowsTotal: 0,
         rowsFiltered: 0
-    },
+    }),
 
-    informOpen: false,
     dialogOpen: false,
-    dialogType: '',
-    
-    selected: []
-};
+    dialogType: ''
+});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -90,7 +92,7 @@ export const readUserList = (param) => dispatch => {
     return requestPostAPI('readUserListPaged', resetParam).then(
         (response) => {
             dispatch({
-                type: GET_USER_LIST_SUCCESS,
+                type: GET_USER_LISTPAGED_SUCCESS,
                 compId: param.compId,
                 payload: response
             });
@@ -243,7 +245,7 @@ export default handleActions({
         };
     },
 
-    [GET_USER_LIST_SUCCESS]: (state, action) => {
+    [GET_USER_LISTPAGED_SUCCESS]: (state, action) => {
 
         let COMP_ID = '';
         if(action.compId && action.compId != '') {
