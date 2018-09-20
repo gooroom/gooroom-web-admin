@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientMasterManageActions from 'modules/ClientMasterManageModule';
-import * as ClientManageCompActions from 'modules/ClientManageModule';
+import * as ClientManageActions from 'modules/ClientManageModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
@@ -62,18 +62,18 @@ class ClientMasterManage extends Component {
   handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
     const { ClientMasterManageProps, ClientMasterManageActions, ClientConfSettingActions } = this.props;
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const { ClientManageProps, ClientManageCompActions } = this.props;
+    const { ClientManageProps, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
 
     // show client list
-    ClientManageCompActions.readClientList(ClientManageProps, compId, {
+    ClientManageActions.readClientList(ClientManageProps, compId, {
       groupId: selectedGroupIdArray.join(','), 
       page:0
     }, true);
 
     // show client group info.
     if(selectedGroupObj) {
-      ClientManageCompActions.closeClientManageInform({
+      ClientManageActions.closeClientManageInform({
         compId: compId
       });
       ClientGroupActions.showClientGroupInform({
@@ -86,7 +86,7 @@ class ClientMasterManage extends Component {
   // Select Client Item
   handleClientSelect = (selectedClientObj, selectedClientIdArray) => {
     const { ClientMasterManageProps, ClientMasterManageActions } = this.props;
-    const { ClientManageProps, ClientManageCompActions } = this.props;
+    const { ClientManageProps, ClientManageActions } = this.props;
     const { ClientGroupActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -95,7 +95,7 @@ class ClientMasterManage extends Component {
       ClientGroupActions.closeClientGroupInform({
         compId: compId
       });
-      ClientManageCompActions.showClientManageInform({
+      ClientManageActions.showClientManageInform({
         compId: compId,
         selectedViewItem: selectedClientObj,
       });
@@ -251,7 +251,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientMasterManageActions: bindActionCreators(ClientMasterManageActions, dispatch),
-  ClientManageCompActions: bindActionCreators(ClientManageCompActions, dispatch),
+  ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
