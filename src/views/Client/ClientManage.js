@@ -122,7 +122,6 @@ class ClientManage extends Component {
     });
   };
 
-
   handleSelectBtnClick = () => {
     const { ClientManageActions, ClientManageProps } = this.props;
     ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId);
