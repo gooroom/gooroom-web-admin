@@ -15,7 +15,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -33,15 +32,15 @@ class UserManageInform extends Component {
 
   render() {
     const { classes } = this.props;
-    const { UserProps, compId } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const viewItem = getViewItem({ props: UserProps, compId: compId });
-    const selectedViewItem = (viewItem) ? viewItem.selectedViewItem : null;
+    const { UserProps, compId } = this.props;
+    const informOpen = UserProps.getIn(['viewItems', compId, 'informOpen']);
+    const selectedViewItem = UserProps.getIn(['viewItems', compId, 'selectedViewItem']);
 
     return (
       <div >
-      {(UserProps.informOpen && selectedViewItem) &&
+      {(informOpen && selectedViewItem) &&
         <Card>
           <CardHeader
             title="사용자 정보"
@@ -53,9 +52,9 @@ class UserManageInform extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 사용자 이름</TableCell>
-                  <TableCell numeric>{selectedViewItem.userNm}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('userNm')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 사용자 아이디</TableCell>
-                  <TableCell numeric>{selectedViewItem.userId}</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('userId')}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

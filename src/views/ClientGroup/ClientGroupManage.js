@@ -199,6 +199,7 @@ class ClientGroupManage extends Component {
     const { ClientGroupProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
+
     const listObj = ClientGroupProps.getIn(['viewItems', compId]);
 
     return (
@@ -251,7 +252,7 @@ class ClientGroupManage extends Component {
                 columnData={this.columnHeaders}
               />
               <TableBody>
-              {listObj.get('listData').map(n => {
+                {listObj.get('listData').map(n => {
                   return (
                     <TableRow
                       className={classes.grNormalTableRow}

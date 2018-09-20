@@ -144,14 +144,14 @@ class UserManage extends Component {
   // .................................................
   handleChangePage = (event, page) => {
     const { UserActions, UserProps } = this.props;
-    UserActions.readUserList(UserProps, this.props.match.params.grMenuId, {
+    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { UserActions, UserProps } = this.props;
-    UserActions.readUserList(UserProps, this.props.match.params.grMenuId, {
+    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value, 
       page:0
     });
@@ -163,7 +163,7 @@ class UserManage extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    UserActions.readUserList(ClientManagePropsget, this.props.match.params.grMenuId, {
+    UserActions.readUserListPaged(ClientManagePropsget, this.props.match.params.grMenuId, {
       orderColumn: property, 
       orderDir: orderDir
     });
@@ -190,7 +190,7 @@ class UserManage extends Component {
 
   handleSelectBtnClick = () => {
     const { UserActions, UserProps } = this.props;
-    UserActions.readUserList(UserProps, this.props.match.params.grMenuId);
+    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId);
   };
 
 
@@ -284,7 +284,7 @@ class UserManage extends Component {
         const { editingCompId, viewItems } = UserProps;
         viewItems.forEach((element) => {
           if(element && element.listParam) {
-            UserActions.readUserList(getMergedObject(element.listParam, {
+            UserActions.readUserListPaged(getMergedObject(element.listParam, {
               compId: element._COMPID_
             }));
           }
@@ -313,41 +313,23 @@ class UserManage extends Component {
     const { UserProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//UserProps.listParam.rowsPerPage - UserProps.listData.length;
-
-    const viewItem = getViewItem({ props: UserProps, compId: compId });
-
-    const listData = (viewItem) ? viewItem.listData : [];
-    const listParam = (viewItem) ? viewItem.listParam : UserProps.defaultListParam;
-    const orderDir = (viewItem && viewItem.listParam) ? viewItem.listParam.orderDir : UserProps.defaultListParam.orderDir;
-    const orderColumn = (viewItem && viewItem.listParam) ? viewItem.listParam.orderColumn : UserProps.defaultListParam.orderColumn;
-    const selected = (viewItem && viewItem.selected) ? viewItem.selected : [];
+    const listObj = UserProps.getIn(['viewItems', compId]);
 
     return (
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
-
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
               
               <Grid item xs={6}>
                 <FormControl fullWidth={true}>
-                  <TextField
-                    id="keyword"
-                    label="검색어"
-                    value={this.state.keyword}
-                    onChange={this.handleKeywordChange("keyword")}
-                  />
+                  <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
                 </FormControl>
               </Grid>
               <Grid item xs={6}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => this.handleSelectBtnClick() }
-                >
+                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
                   <Search />
                   조회
                 </Button>
@@ -355,10 +337,7 @@ class UserManage extends Component {
             </Grid>
 
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
+              <Button size="small" variant="contained" color="primary"
                 onClick={() => {
                   this.handleCreateButton();
                 }}
@@ -370,40 +349,41 @@ class UserManage extends Component {
           </Grid>
 
           {/* data area */}
+          {(listObj) && 
           <div>
             <Table>
-
-              <UserManageHead
+              <GrCommonTableHead
                 classes={classes}
-                onSelectAllClick={this.handleSelectAllClick}
-                orderDir={orderDir}
-                orderColumn={orderColumn}
+                keyId="clientId"
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                selectedData={selected}
-                listData={listData}
+                onSelectAllClick={this.handleSelectAllClick}
+                selectedIds={listObj.get('selectedIds')}
+                listData={listObj.get('listData')}
+                columnData={this.columnHeaders}
               />
-
               <TableBody>
-                {listData.map(n => {
-                  const isSelected = this.isSelected(n.userId);
+                {listObj.get('listData').map(n => {
+                  const isSelected = this.isSelected(n.get('userId'));
                   return (
                     <TableRow
                       className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.userId)}
+                      onClick={event => this.handleRowClick(event, n.get('userId'))}
                       role="checkbox"
                       aria-checked={isSelected}
-                      key={n.userId}
+                      key={n.get('userId')}
                       selected={isSelected}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                         <Checkbox checked={isSelected} className={classes.grObjInCell} />
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.userId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.userNm}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.status}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.lastLoginDt, 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.regDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
 
                         <Button color="secondary" size="small" 
@@ -411,7 +391,6 @@ class UserManage extends Component {
                           onClick={event => this.handleEditClick(event, n.userId)}>
                           <BuildIcon />
                         </Button>
-
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.userId)}>
@@ -426,33 +405,34 @@ class UserManage extends Component {
                 {emptyRows > 0 && (
                   <TableRow >
                     <TableCell
-                      colSpan={UserManageHead.columnData.length + 1}
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
                 )}
               </TableBody>
             </Table>
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              labelDisplayedRows={() => {return ''}}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
           </div>
-
-          <TablePagination
-            component="div"
-            count={listParam.rowsFiltered}
-            rowsPerPage={listParam.rowsPerPage}
-            rowsPerPageOptions={listParam.rowsPerPageOptions}
-            page={listParam.page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
-
+          }
         </GrPane>
         <UserManageInform compId={compId} />
-        <UserManageDialog />
+        <UserManageDialog compId={compId} />
         <GrConfirm />
       </React.Fragment>
     );
