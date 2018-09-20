@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientManageCompActions from 'modules/ClientManageCompModule';
+import * as ClientManageCompActions from 'modules/ClientManageModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
@@ -127,20 +127,20 @@ class ClientManage extends Component {
   }
 
   componentDidMount() {
-    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
-    ClientManageCompActions.readClientList(ClientManageCompProps, compId);
+    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
+    ClientManageCompActions.readClientList(ClientManageProps, compId);
   }
 
   handleChangePage = (event, page) => {
-    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
-    ClientManageCompActions.readClientList(ClientManageCompProps, compId, {
+    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
+    ClientManageCompActions.readClientList(ClientManageProps, compId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
-    ClientManageCompActions.readClientList(ClientManageCompProps, compId, {
+    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
+    ClientManageCompActions.readClientList(ClientManageProps, compId, {
       rowsPerPage: event.target.value, 
       page:0
     });
@@ -148,20 +148,20 @@ class ClientManage extends Component {
 
   // .................................................
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
+    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
     let orderDir = "desc";
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientManageCompActions.readClientList(ClientManageCompProps, compId, {
+    ClientManageCompActions.readClientList(ClientManageProps, compId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
   };
 
   handleSelectAllClick = (event, checked) => {
-    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
-    const listObj = getDataObjectInComp(ClientManageCompProps, compId);
+    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
+    const listObj = getDataObjectInComp(ClientManageProps, compId);
     let newSelectedIds = listObj.get('selectedIds');
     if(newSelectedIds) {
       if(checked) {
@@ -196,10 +196,10 @@ class ClientManage extends Component {
   };
 
   handleRowClick = (event, id) => {
-    const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
-    const clickedRowObject = getRowObjectById(ClientManageCompProps, compId, id, 'clientId');
+    const { ClientManageCompActions, ClientManageProps, compId } = this.props;
+    const clickedRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
 
-    let selectedIds = getDataObjectVariableInComp(ClientManageCompProps, compId, 'selectedIds');
+    let selectedIds = getDataObjectVariableInComp(ClientManageProps, compId, 'selectedIds');
     if(selectedIds === undefined) {
       selectedIds = List([]);
     }
@@ -229,8 +229,8 @@ class ClientManage extends Component {
   };
 
   isSelected = id => {
-    const { ClientManageCompProps, compId } = this.props;
-    const selectedIds = getDataObjectVariableInComp(ClientManageCompProps, compId, 'selectedIds');
+    const { ClientManageProps, compId } = this.props;
+    const selectedIds = getDataObjectVariableInComp(ClientManageProps, compId, 'selectedIds');
 
     if(selectedIds) {
       return selectedIds.includes(id);
@@ -240,8 +240,8 @@ class ClientManage extends Component {
   }
 
   // handleKeywordChange = name => event => {
-  //   const { ClientManageCompActions, ClientManageCompProps, compId } = this.props;
-  //   const { [compId + '__listParam'] : compListParam } = ClientManageCompProps;
+  //   const { ClientManageCompActions, ClientManageProps, compId } = this.props;
+  //   const { [compId + '__listParam'] : compListParam } = ClientManageProps;
 
   //   const newParam = getMergedObject(compListParam, {
   //     keyword: event.target.value,
@@ -256,9 +256,9 @@ class ClientManage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { ClientManageCompProps, compId } = this.props;
-    const emptyRows = 0;// = ClientManageCompProps.listParam.rowsPerPage - ClientManageCompProps.listData.length;
-    const listObj = getDataObjectInComp(ClientManageCompProps, compId);
+    const { ClientManageProps, compId } = this.props;
+    const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
+    const listObj = getDataObjectInComp(ClientManageProps, compId);
 
     return (
 
@@ -343,7 +343,7 @@ class ClientManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientManageCompProps: state.ClientManageCompModule
+  ClientManageProps: state.ClientManageModule
 });
 
 

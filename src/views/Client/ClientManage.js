@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientManageActions from 'modules/ClientManageCompModule';
+import * as ClientManageActions from 'modules/ClientManageModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
@@ -378,7 +378,7 @@ class ClientManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientManageProps: state.ClientManageCompModule,
+  ClientManageProps: state.ClientManageModule,
   CommonOptionProps: state.CommonOptionModule
 });
 

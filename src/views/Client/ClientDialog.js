@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientManageActions from 'modules/ClientManageCompModule';
+import * as ClientManageActions from 'modules/ClientManageModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -91,7 +91,7 @@ class ClientDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientManageProps: state.ClientManageCompModule
+  ClientManageProps: state.ClientManageModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
