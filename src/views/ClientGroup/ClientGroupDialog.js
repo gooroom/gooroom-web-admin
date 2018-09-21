@@ -89,7 +89,7 @@ class ClientGroupDialog extends Component {
                 clientConfigId: configIds.clientConfigId,
                 hostNameConfigId: configIds.hostNameConfigId,
                 updateServerConfigId: configIds.updateServerConfigId
-            }).then(() => {
+            }).then((res) => {
                 ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
                 this.handleClose();
             });

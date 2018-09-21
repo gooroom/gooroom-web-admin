@@ -81,9 +81,9 @@ class UserManageDialog extends Component {
             UserActions.createUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userName'])
+                userNm: UserProps.getIn(['editingItem', 'userNm'])
             }).then((res) => {
-                UserActions.readUserListPaged(UserProps. compId);
+                UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
             });
         }
@@ -101,12 +101,12 @@ class UserManageDialog extends Component {
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { UserProps, UserActions } = this.props;
+            const { UserProps, UserActions, compId } = this.props;
 
             UserActions.editUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userName'])
+                userNm: UserProps.getIn(['editingItem', 'userNm'])
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
@@ -138,19 +138,20 @@ class UserManageDialog extends Component {
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
                     <TextField
-                        id="userName"
-                        label="사용자이름"
-                        value={(editingItem.get('userName')) ? editingItem.get('userName') : ''}
-                        onChange={this.handleValueChange("userName")}
-                        className={classes.fullWidth}
-                    />
-
-                    <TextField
                         id="userId"
                         label="사용자아이디"
                         value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
                         onChange={this.handleValueChange("userId")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                        disabled={(dialogType == UserManageDialog.TYPE_EDIT) ? true : false}
+                    />
+
+                    <TextField
+                        id="userName"
+                        label="사용자이름"
+                        value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
+                        onChange={this.handleValueChange("userNm")}
+                        className={classes.fullWidth}
                     />
 
                     <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>

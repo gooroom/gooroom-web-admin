@@ -22,6 +22,12 @@ const initialState = {
         grpNm: ''
     },
 
+    userStatusData: [
+        { statusId: "NORMAL", statusVal: "STAT010", statusNm: "정상" },
+        { statusId: "DELETE", statusVal: "STAT020", statusNm: "삭제" },
+        { statusId: "ALL", statusVal: "ALL", statusNm: "전체" }
+    ],
+
     clientStatusData: [
         { statusId: "NORMAL", statusVal: "NORMAL", statusNm: "정상단말" },
         { statusId: "SECURE", statusVal: "SECURE", statusNm: "침해단말" },
@@ -38,8 +44,12 @@ const initialState = {
 
 };
 
-export const readClientGroupListAll = (param) => dispatch => {
 
+
+
+
+
+export const readClientGroupListAll = (param) => dispatch => {
     dispatch({type: GET_CLIENTGROUPITEMS_PENDING});
     return requestPostAPI('readClientGroupList', {}).then(
         (response) => {
