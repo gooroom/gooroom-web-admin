@@ -17,9 +17,9 @@ const EDIT_USER_SUCCESS = 'user/EDIT_USER_SUCCESS';
 const DELETE_USER_SUCCESS = 'user/DELETE_USER_SUCCESS';
 
 const SHOW_USER_INFORM = 'user/SHOW_USER_INFORM';
-const CLOSE_USER_INFORM = 'user/SHOW_USER_INFORM';
+const CLOSE_USER_INFORM = 'user/CLOSE_USER_INFORM';
 const SHOW_USER_DIALOG = 'user/SHOW_USER_DIALOG';
-const CLOSE_USER_DIALOG = 'user/SHOW_USER_DIALOG';
+const CLOSE_USER_DIALOG = 'user/CLOSE_USER_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'user/SET_EDITING_ITEM_VALUE';
 
@@ -42,7 +42,7 @@ const initialState = Map({
         orderColumn: 'chUserName',
         page: 0,
         rowsPerPage: 10,
-        rowsPerPageOptions: [5, 10, 25],
+        rowsPerPageOptions: List([5, 10, 25]),
         rowsTotal: 0,
         rowsFiltered: 0
     }),
@@ -81,13 +81,12 @@ export const closeInform = () => dispatch => {
 };
 
 export const readUserListPaged = (module, compId, extParam) => dispatch => {
-
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientGroupListPaged', {
+    return requestPostAPI('readUserListPaged', {
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),
@@ -145,21 +144,13 @@ export const changeStoreData = (param) => dispatch => {
     });
 };
 
-const makeParameter = (param) => {
-    return {
-        userId: param.userId,
-        userPasswd: param.userPassword,
-        userNm: param.userName
-    };
-}
-
 // create (add)
 export const createUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('createUser', {
         userId: param.userId,
         userPasswd: param.userPassword,
-        userNm: param.userName
+        userNm: param.userNm
     }).then(
         (response) => {
             try {
@@ -191,7 +182,7 @@ export const editUserData = (param) => dispatch => {
     return requestPostAPI('updateUserData', {
         userId: param.userId,
         userPasswd: param.userPassword,
-        userNm: param.userName
+        userNm: param.userNm
     }).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {

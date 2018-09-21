@@ -10,6 +10,8 @@ import * as UserActions from 'modules/UserModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
+
 import { getMergedObject, arrayContainsArray, getListParam, getListData, getViewItem, getMergedArray } from 'components/GrUtils/GrCommonUtils';
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
@@ -42,77 +44,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
-
-
-//
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class UserManageHead extends Component {
-
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
-    { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
-    { id: "chUserName", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
-    { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
-    { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: "최근로그인날짜" },
-    { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
-  ];
-
-  render() {
-    const { classes } = this.props;
-    const { 
-      onSelectAllClick, 
-      orderDir, 
-      orderColumn,
-      selectedData,
-      listData 
-    } = this.props;
-
-    let checkSelection = 0;
-    if(listData && listData.length > 0) {
-      checkSelection = arrayContainsArray(selectedData, listData.map(x => x.userId));
-    }
-
-    return (
-      <TableHead>
-        <TableRow>
-          <TableCell padding="checkbox" className={classes.grSmallAndHeaderCell}>
-            <Checkbox
-              indeterminate={checkSelection === 50}
-              checked={checkSelection === 100}
-              onChange={onSelectAllClick}
-            />
-          </TableCell>
-          {UserManageHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel active={orderColumn === column.id}
-                            direction={orderDir}
-                            onClick={this.createSortHandler(column.id)}
-                          >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -163,7 +94,7 @@ class UserManage extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    UserActions.readUserListPaged(ClientManagePropsget, this.props.match.params.grMenuId, {
+    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {
       orderColumn: property, 
       orderDir: orderDir
     });
@@ -182,7 +113,7 @@ class UserManage extends Component {
       compId: compId
     });
 
-    UserActions.showClientManageInform({
+    UserActions.showInform({
       compId: compId,
       selectedViewItem: clickedRowObject,
     });
@@ -202,7 +133,7 @@ class UserManage extends Component {
     UserActions.showDialog({
       selectedViewItem: {
         userId: '',
-        userName: '',
+        userNm: '',
         userPassword: '',
         showPassword: false
       },
@@ -211,16 +142,14 @@ class UserManage extends Component {
   };
   
   handleSelectAllClick = (event, checked) => {
-    const { UserProps, UserActions } = this.props;
+    const { UserActions, UserProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    
-    const viewItem = getViewItem({ props: UserProps, compId: compId });
-    const newSelected = viewItem.listData.map(n => n.userId);
-    const oldSelected = (viewItem.selected) ? (viewItem.selected) : [];
 
-    UserActions.changeStoreData({
-      name: 'selected',
-      value: getMergedArray(oldSelected, newSelected, checked),
+    const newSelectedIds = setAllSelectedIdsInComp(UserProps, compId, 'userId', checked);
+
+    UserActions.changeCompVariable({
+      name: 'selectedIds',
+      value: newSelectedIds,
       compId: compId
     });
   };
@@ -228,68 +157,65 @@ class UserManage extends Component {
   
   isSelected = id => {
     const { UserProps } = this.props;
-    const compId = this.props.match.params.grMenuId;
-    const viewItem = getViewItem({ props: UserProps, compId: compId });
+    const selectedIds = getDataObjectVariableInComp(UserProps, this.props.match.params.grMenuId, 'selectedIds');
 
-    return (viewItem.selected) ? (viewItem.selected.indexOf(id) !== -1) : false;
+    if(selectedIds) {
+      return selectedIds.includes(id);
+    } else {
+      return false;
+    }    
   }
   
   handleEditClick = (event, id) => { 
     const { UserProps, UserActions } = this.props;
-    const compId = this.props.match.params.grMenuId;
-
-    const listData = getListData({ props: UserProps, compId: compId });
-    const selectedViewItem = listData.find(function(element) {
-      return element.userId == id;
-    });
-
+    const selectedViewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
     UserActions.showDialog({
-      compId: compId,
-      selectedViewItem: {
-        userId: selectedViewItem.userId,
-        userName: selectedViewItem.userNm,
-        userPassword: selectedViewItem.userPasswd
-      },
-      dialogType: UserManageDialog.TYPE_EDIT,
+      selectedViewItem: selectedViewItem,
+      dialogType: UserManageDialog.TYPE_EDIT
     });
+
+
+
+    // const { UserProps, UserActions } = this.props;
+    // const compId = this.props.match.params.grMenuId;
+
+    // const listData = getListData({ props: UserProps, compId: compId });
+    // const selectedViewItem = listData.find(function(element) {
+    //   return element.userId == id;
+    // });
+
+    // UserActions.showDialog({
+    //   compId: compId,
+    //   selectedViewItem: {
+    //     userId: selectedViewItem.userId,
+    //     userName: selectedViewItem.userNm,
+    //     userPassword: selectedViewItem.userPasswd
+    //   },
+    //   dialogType: UserManageDialog.TYPE_EDIT,
+    // });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    event.stopPropagation();
-    const { UserProps, UserActions, GrConfirmActions } = this.props;
-    const compId = this.props.match.params.grMenuId;
-
-    const listData = getListData({ props: UserProps, compId: compId });
-    const selectedViewItem = listData.find(function(element) {
-      return element.userId == id;
-    });
-
-    const re = GrConfirmActions.showConfirm({
+    const { UserProps, GrConfirmActions } = this.props;
+    const selectedViewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
+    GrConfirmActions.showConfirm({
       confirmTitle: '사용자정보 삭제',
-      confirmMsg: '사용자정보(' + selectedViewItem.userId + ')를 삭제하시겠습니까?',
+      confirmMsg: '사용자정보(' + selectedViewItem.get('userNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue, paramObject) => {
+  handleDeleteConfirmResult = (confirmValue, confirmObject) => {
     if(confirmValue) {
       const { UserProps, UserActions } = this.props;
-
+      const compId = this.props.match.params.grMenuId;
       UserActions.deleteUserData({
-        userId: paramObject.userId
-      }).then((res) => {
-
-        const { editingCompId, viewItems } = UserProps;
-        viewItems.forEach((element) => {
-          if(element && element.listParam) {
-            UserActions.readUserListPaged(getMergedObject(element.listParam, {
-              compId: element._COMPID_
-            }));
-          }
-        });
-      }, () => {
+        compId: compId,
+        userId: confirmObject.get('userId')
+      }).then(() => {
+        UserActions.readUserListPaged(UserProps, compId);
       });
     }
   };
@@ -297,14 +223,10 @@ class UserManage extends Component {
 
   // .................................................
   handleKeywordChange = name => event => {
-    const { UserActions, UserProps } = this.props;
-    const compId = this.props.match.params.grMenuId;
-
-    const listParam = getListParam({ props: UserProps, compId: compId });
-    UserActions.changeStoreData({
-      name: 'listParam',
-      value: getMergedObject(listParam, {keyword: event.target.value}),
-      compId: compId
+    this.props.UserActions.changeListParamData({
+      name: 'keyword', 
+      value: event.target.value,
+      compId: this.props.match.params.grMenuId
     });
   }
   
@@ -321,14 +243,20 @@ class UserManage extends Component {
         <GrPane>
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-              
-              <Grid item xs={6}>
+            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+            
+              <Grid item xs={4} >
+                <FormControl fullWidth={true}>
+                  <InputLabel htmlFor="client-status">단말상태</InputLabel>
+                  <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+                </FormControl>
+              </Grid>
+              <Grid item xs={4}>
                 <FormControl fullWidth={true}>
                   <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
                 </FormControl>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={4}>
                 <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
                   <Search />
                   조회
@@ -336,7 +264,7 @@ class UserManage extends Component {
               </Grid>
             </Grid>
 
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
+            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end" >
               <Button size="small" variant="contained" color="primary"
                 onClick={() => {
                   this.handleCreateButton();
@@ -354,7 +282,7 @@ class UserManage extends Component {
             <Table>
               <GrCommonTableHead
                 classes={classes}
-                keyId="clientId"
+                keyId="userId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
@@ -388,12 +316,12 @@ class UserManage extends Component {
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditClick(event, n.userId)}>
+                          onClick={event => this.handleEditClick(event, n.get('userId'))}>
                           <BuildIcon />
                         </Button>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleDeleteClick(event, n.userId)}>
+                          onClick={event => this.handleDeleteClick(event, n.get('userId'))}>
                           <DeleteIcon />
                         </Button>
 
