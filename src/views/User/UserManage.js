@@ -14,6 +14,8 @@ import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, set
 
 import { getMergedObject, arrayContainsArray, getListParam, getListData, getViewItem, getMergedArray } from 'components/GrUtils/GrCommonUtils';
 
+import UserStatusSelect from "views/Options/UserStatusSelect";
+
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
@@ -32,7 +34,10 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+
+
 import FormControl from '@material-ui/core/FormControl';
+import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 
@@ -229,6 +234,14 @@ class UserManage extends Component {
       compId: this.props.match.params.grMenuId
     });
   }
+
+  handleChangeUserStatusSelect = (event) => {
+    this.props.UserActions.changeListParamData({
+      name: 'status', 
+      value: event.target.value,
+      compId: this.props.match.params.grMenuId
+    });
+  }
   
   render() {
     const { classes } = this.props;
@@ -247,8 +260,8 @@ class UserManage extends Component {
             
               <Grid item xs={4} >
                 <FormControl fullWidth={true}>
-                  <InputLabel htmlFor="client-status">단말상태</InputLabel>
-                  <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+                  <InputLabel htmlFor="user-status">사용자상태</InputLabel>
+                  <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>

@@ -37,6 +37,7 @@ const initialState = Map({
     resultMsg: '',
 
     defaultListParam: Map({
+        status: '',
         keyword: '',
         orderDir: 'asc',
         orderColumn: 'chUserName',
@@ -87,6 +88,7 @@ export const readUserListPaged = (module, compId, extParam) => dispatch => {
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readUserListPaged', {
+        status: newListParam.get('status'),
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),
