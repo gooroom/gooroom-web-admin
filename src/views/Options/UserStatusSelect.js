@@ -27,16 +27,16 @@ class UserStatusSelect extends Component {
   }
 
   // Events...
-  handleChangeSelect = event => {
+  handleChangeSelect = (event, child) => {
     const { CommonOptionActions } = this.props;
     CommonOptionActions.changeSelectValue({
-      name: 'selectedClientStatus',
+      name: 'selectedUserStatus',
       value: {
-        statusId: event.target.value,
+        statusVal: event.target.value,
         statusNm: event.target.name
       }
     });
-    this.props.onChangeSelect(event, event.target.value);
+    this.props.onChangeSelect(event);
   };
 
   render() {
@@ -46,12 +46,11 @@ class UserStatusSelect extends Component {
     return (
 
       <Select
-        value={CommonOptionProps.selectedClientStatus.statusId}
+        value={CommonOptionProps.selectedUserStatus.statusVal}
         onChange={this.handleChangeSelect}
-        inputProps={{name: 'clientStatus'}}
       >
-        {CommonOptionProps.clientStatusData.map(x => (
-          <MenuItem value={x.statusId} key={x.statusId}>
+        {CommonOptionProps.userStatusData.map(x => (
+          <MenuItem value={x.statusVal} key={x.statusId}>
             {x.statusNm}
           </MenuItem>
         ))}

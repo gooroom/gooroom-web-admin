@@ -27,6 +27,7 @@ const initialState = {
         { statusId: "DELETE", statusVal: "STAT020", statusNm: "삭제" },
         { statusId: "ALL", statusVal: "ALL", statusNm: "전체" }
     ],
+    selectedUserStatus: { statusId: "NORMAL", statusVal: "STAT010", statusNm: "정상" },
 
     clientStatusData: [
         { statusId: "NORMAL", statusVal: "NORMAL", statusNm: "정상단말" },
