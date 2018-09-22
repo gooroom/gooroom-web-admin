@@ -15,6 +15,7 @@ import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, set
 import { getMergedObject, arrayContainsArray, getListParam, getListData, getViewItem, getMergedArray } from 'components/GrUtils/GrCommonUtils';
 
 import UserStatusSelect from "views/Options/UserStatusSelect";
+import KeywordOption from "views/Options/KeywordOption";
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -34,11 +35,8 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-
-
 import FormControl from '@material-ui/core/FormControl';
-import InputLabel from "@material-ui/core/InputLabel";
-import TextField from "@material-ui/core/TextField";
+
 import Checkbox from "@material-ui/core/Checkbox";
 
 import Button from "@material-ui/core/Button";
@@ -227,10 +225,10 @@ class UserManage extends Component {
 
 
   // .................................................
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.UserActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   }
@@ -260,13 +258,12 @@ class UserManage extends Component {
             
               <Grid item xs={4} >
                 <FormControl fullWidth={true}>
-                  <InputLabel htmlFor="user-status">사용자상태</InputLabel>
                   <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
                 <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
+                  <KeywordOption handleKeywordChange={this.handleKeywordChange} />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
