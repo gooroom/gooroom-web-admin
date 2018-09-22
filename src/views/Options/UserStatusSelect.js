@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
-import * as CommonOptionActions from 'modules/CommonOptionModule';
-
+import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 
@@ -16,58 +12,45 @@ class UserStatusSelect extends Component {
     super(props);
 
     this.state = {
-      loading: true,
+      userStatusData: [
+        { statusId: "NORMAL", statusVal: "STAT010", statusNm: "정상" },
+        { statusId: "DELETE", statusVal: "STAT020", statusNm: "삭제" },
+        { statusId: "ALL", statusVal: "ALL", statusNm: "전체" }
+      ],
+      selectedUserStatus: { statusId: "NORMAL", statusVal: "STAT010", statusNm: "정상" },
     };
   }
-
-  componentDidMount() {
-
-    // const { CommonOptionActions, CommonOptionProps } = this.props;
-    // CommonOptionActions.readClientStatusList(CommonOptionProps.listParam);
-  }
-
+  
   // Events...
   handleChangeSelect = (event, child) => {
-    const { CommonOptionActions } = this.props;
-    CommonOptionActions.changeSelectValue({
-      name: 'selectedUserStatus',
-      value: {
+    this.setState({ 
+      selectedUserStatus: {
         statusVal: event.target.value,
         statusNm: event.target.name
-      }
+      } 
     });
     this.props.onChangeSelect(event);
   };
 
   render() {
-
-    const { CommonOptionProps } = this.props;
-
     return (
-
+      <React.Fragment>
+      <InputLabel htmlFor="user-status">사용자상태</InputLabel>
       <Select
-        value={CommonOptionProps.selectedUserStatus.statusVal}
+        value={this.state.selectedUserStatus.statusVal}
         onChange={this.handleChangeSelect}
       >
-        {CommonOptionProps.userStatusData.map(x => (
+        {this.state.userStatusData.map(x => (
           <MenuItem value={x.statusVal} key={x.statusId}>
             {x.statusNm}
           </MenuItem>
         ))}
       </Select>
-
+      </React.Fragment>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  CommonOptionProps: state.CommonOptionModule
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  CommonOptionActions: bindActionCreators(CommonOptionActions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserStatusSelect);
+export default UserStatusSelect;
 
 

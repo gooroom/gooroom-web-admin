@@ -37,7 +37,7 @@ const initialState = Map({
     resultMsg: '',
 
     defaultListParam: Map({
-        status: '',
+        status: 'STAT010',
         keyword: '',
         orderDir: 'asc',
         orderColumn: 'chUserName',
@@ -275,11 +275,12 @@ export default handleActions({
     },
 
     [GET_USER_LISTPAGED_SUCCESS]: (state, action) => {
-
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
+        const oldListParam = (state.getIn(['viewItems', action.compId, 'listParam'])) ? state.getIn(['viewItems', action.compId, 'listParam']) : state.get('defaultListParam');
+
         return state.setIn(['viewItems', action.compId], Map({
             'listData': List(data.map((e) => {return Map(e)})),
-            'listParam': state.get('defaultListParam').merge({
+            'listParam': oldListParam.merge({
                 rowsFiltered: parseInt(recordsFiltered, 10),
                 rowsTotal: parseInt(recordsTotal, 10),
                 page: parseInt(draw, 10),
