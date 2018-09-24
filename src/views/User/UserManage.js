@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as UserActions from 'modules/UserModule';
+import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
@@ -104,18 +105,28 @@ class UserManage extends Component {
   };
 
   handleRowClick = (event, id) => {
+    console.log('handleRowClick ......................... ');
     const { UserProps, UserActions } = this.props;
+    const { BrowserRuleSettingActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
     const newSelectedIds = setSelectedIdsInComp(UserProps, compId, id);
 
+    // check select box
     UserActions.changeCompVariable({
       name: 'selectedIds',
       value: newSelectedIds,
       compId: compId
     });
 
+    // get browser rule info
+    BrowserRuleSettingActions.getBrowserRuleSettingByUserId({
+      compId: compId,
+      userId: clickedRowObject.get('userId')
+    });   
+
+    // show user inform pane.
     UserActions.showInform({
       compId: compId,
       selectedViewItem: clickedRowObject,
@@ -383,6 +394,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
+  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

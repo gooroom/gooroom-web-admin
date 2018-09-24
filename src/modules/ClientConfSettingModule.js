@@ -176,6 +176,7 @@ const makeParameter = (param) => {
         objId: param.get('objId'),
         objName: param.get('objNm'),
         objComment: param.get('comment'),
+
         AGENTPOLLINGTIME: param.get('pollingTime'),
         USEHYPERVISOR: param.get('useHypervisor'),
         NTPSELECTADDRESS: (param.get('selectedNtpIndex') > -1) ? param.getIn(['ntpAddress', param.get('selectedNtpIndex')]) : '',
@@ -226,7 +227,6 @@ export const editClientConfSettingData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
-                    console.log('error(1) :::: ', error);
                 });
 
                 // change object array for selector
