@@ -86,7 +86,7 @@ class BrowserRuleSettingDialog extends Component {
                     if(viewItems) {
                         viewItems.forEach((element) => {
                             if(element && element.get('listParam')) {
-                                BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, element.get('_COMPID_'), {});
+                                BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, element.get('_COMPID_'), {});
                             }
                         });
                     }
@@ -113,7 +113,7 @@ class BrowserRuleSettingDialog extends Component {
                     const viewItems = BrowserRuleSettingProps.get('viewItems');
                     viewItems.forEach((element) => {
                         if(element && element.get('listParam')) {
-                            BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, element.get('_COMPID_'), {});
+                            BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, element.get('_COMPID_'), {});
                         }
                     });
                     this.handleClose();

@@ -72,14 +72,14 @@ class BrowserRuleSetting extends Component {
 
   handleChangePage = (event, page) => {
     const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: 0
     });
@@ -91,7 +91,7 @@ class BrowserRuleSetting extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -100,7 +100,7 @@ class BrowserRuleSetting extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, this.props.match.params.grMenuId);
+    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId);
   };
 
   handleKeywordChange = name => event => {
@@ -173,7 +173,7 @@ class BrowserRuleSetting extends Component {
         const viewItems = BrowserRuleSettingProps.get('viewItems');
         viewItems.forEach((element) => {
             if(element && element.get('listParam')) {
-                BrowserRuleSettingActions.readBrowserRuleSettingList(BrowserRuleSettingProps, element.get('_COMPID_'), {});
+                BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, element.get('_COMPID_'), {});
             }
         });
       });

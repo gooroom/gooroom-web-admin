@@ -6,7 +6,7 @@ import { requestPostAPI } from 'components/GrUtils/GrRequester';
 const COMMON_PENDING = 'browserRule/COMMON_PENDING';
 const COMMON_FAILURE = 'browserRule/COMMON_FAILURE';
 
-const GET_BROWSERRULE_LIST_SUCCESS = 'browserRule/GET_BROWSERRULE_LIST_SUCCESS';
+const GET_BROWSERRULE_LISTPAGED_SUCCESS = 'browserRule/GET_BROWSERRULE_LISTPAGED_SUCCESS';
 const GET_BROWSERRULE_SUCCESS = 'browserRule/GET_BROWSERRULE_SUCCESS';
 const CREATE_BROWSERRULE_SUCCESS = 'browserRule/CREATE_BROWSERRULE_SUCCESS';
 const EDIT_BROWSERRULE_SUCCESS = 'browserRule/EDIT_BROWSERRULE_SUCCESS';
@@ -77,20 +77,10 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readBrowserRuleSettingList = (module, compId, extParam) => dispatch => {
-    let newListParam;
-    if(module.get('viewItems')) {
-        const viewIndex = module.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == compId;
-        });
-        if(viewIndex < 0) {
-            newListParam = module.get('defaultListParam');
-        } else {
-            newListParam = module.getIn(['viewItems', viewIndex, 'listParam']).merge(extParam);
-        }
-    } else {
-        newListParam = module.get('defaultListParam');
-    }
+export const readBrowserRuleListPaged = (module, compId, extParam) => dispatch => {
+    const newListParam = (module.getIn(['viewItems', compId])) ? 
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readBrowserRuleListPaged', {
@@ -103,7 +93,7 @@ export const readBrowserRuleSettingList = (module, compId, extParam) => dispatch
     }).then(
         (response) => {
             dispatch({
-                type: GET_BROWSERRULE_LIST_SUCCESS,
+                type: GET_BROWSERRULE_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
                 response: response
@@ -121,6 +111,25 @@ export const getBrowserRuleSetting = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readBrowserRule', {'objId': param.objId}).then(
+        (response) => {
+            dispatch({
+                type: GET_BROWSERRULE_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+export const getBrowserRuleSettingByUserId = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readBrowserRuleByUserId', {'userId': param.userId}).then(
         (response) => {
             dispatch({
                 type: GET_BROWSERRULE_SUCCESS,
@@ -209,6 +218,7 @@ export const editBrowserRuleSettingData = (itemObj) => dispatch => {
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
+                // change selected object
                 requestPostAPI('readBrowserRule', {'objId': itemObj.get('objId')}).then(
                     (response) => {
                         dispatch({
@@ -219,6 +229,21 @@ export const editBrowserRuleSettingData = (itemObj) => dispatch => {
                     }
                 ).catch(error => {
                 });
+
+                // change object array for selector
+                requestPostAPI('readClientConfList', {
+                }).then(
+                    (response) => {
+                        dispatch({
+                            type: GET_BROWSERRULE_LIST_SUCCESS,
+                            compId: compId,
+                            response: response
+                        });
+                    }
+                ).catch(error => {
+                    console.log('error(2) :::: ', error);
+                });
+
             } else {
                 // alarm ... fail
                 dispatch({
@@ -293,7 +318,7 @@ export default handleActions({
         });
     },
 
-    [GET_BROWSERRULE_LIST_SUCCESS]: (state, action) => {
+    [GET_BROWSERRULE_LISTPAGED_SUCCESS]: (state, action) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
 
         if(state.get('viewItems')) {

@@ -5,20 +5,19 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { getViewItem } from 'components/GrUtils/GrCommonUtils';
 
 import * as UserActions from 'modules/UserModule';
 
+import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import BrowserRuleSettingInform from 'views/Rules/UserConfig/BrowserRuleSettingComp';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -43,23 +42,23 @@ class UserManageInform extends Component {
       {(informOpen && selectedViewItem) &&
         <Card>
           <CardHeader
-            title="사용자 정보"
+            title={selectedViewItem.get('userNm')}
+            subheader={selectedViewItem.get('userId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
           />
-          <CardContent >
-            <Divider />
-            <br />
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 사용자 이름</TableCell>
-                  <TableCell numeric>{selectedViewItem.get('userNm')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 사용자 아이디</TableCell>
-                  <TableCell numeric>{selectedViewItem.get('userId')}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+          <CardContent />
+          <Divider />
 
-          </CardContent>
+          <Grid container spacing={16}>
+            <Grid item xs={12} sm={6} >
+              <BrowserRuleSettingInform
+                compId={compId}
+                objId={selectedViewItem.get('clientConfigId')} 
+                objNm={selectedViewItem.get('clientConfigNm')} 
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} >
+            </Grid>
+          </Grid>
         </Card>
       }
       </div>
