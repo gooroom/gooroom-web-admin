@@ -8,7 +8,7 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
-import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils'; 
+import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";

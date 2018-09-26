@@ -240,9 +240,11 @@ export const editClientConfSettingData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
-                    console.log('error(2) :::: ', error);
+                    dispatch({
+                        type: COMMON_FAILURE,
+                        error: error
+                    });
                 });
-
             } else {
                 // alarm ... fail
                 dispatch({

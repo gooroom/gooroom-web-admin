@@ -8,6 +8,7 @@ import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
+import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -82,14 +83,7 @@ class BrowserRuleSettingDialog extends Component {
             const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
             BrowserRuleSettingActions.createBrowserRuleSettingData(BrowserRuleSettingProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = BrowserRuleSettingProps.get('viewItems');
-                    if(viewItems) {
-                        viewItems.forEach((element) => {
-                            if(element && element.get('listParam')) {
-                                BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, element.get('_COMPID_'), {});
-                            }
-                        });
-                    }
+                    refreshDataListInComp(BrowserRuleSettingProps, BrowserRuleSettingActions.readBrowserRuleListPaged);
                     this.handleClose();
                 });
         }
@@ -110,12 +104,7 @@ class BrowserRuleSettingDialog extends Component {
             const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
             BrowserRuleSettingActions.editBrowserRuleSettingData(BrowserRuleSettingProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = BrowserRuleSettingProps.get('viewItems');
-                    viewItems.forEach((element) => {
-                        if(element && element.get('listParam')) {
-                            BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, element.get('_COMPID_'), {});
-                        }
-                    });
+                    refreshDataListInComp(BrowserRuleSettingProps, BrowserRuleSettingActions.readBrowserRuleListPaged);
                     this.handleClose();
                 });
         }

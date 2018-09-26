@@ -10,7 +10,7 @@ import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { generateConfigObject } from './BrowserRuleSettingInform';
 
@@ -185,7 +185,8 @@ class BrowserRuleSetting extends Component {
     const { BrowserRuleSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//BrowserRuleSettingProps.listParam.rowsPerPage - BrowserRuleSettingProps.listData.length;
-    const listObj = getDataObjectInComp(BrowserRuleSettingProps, compId);
+
+    const listObj = BrowserRuleSettingProps.getIn(['viewItems', compId]);
 
     return (
       <div>
