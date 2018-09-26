@@ -3,9 +3,12 @@ import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
+import * as commonHandleActions from 'modules/commons/commonHandleActions';
+
 const COMMON_PENDING = 'browserRule/COMMON_PENDING';
 const COMMON_FAILURE = 'browserRule/COMMON_FAILURE';
 
+const GET_BROWSERRULE_LIST_SUCCESS = 'browserRule/GET_BROWSERRULE_LIST_SUCCESS';
 const GET_BROWSERRULE_LISTPAGED_SUCCESS = 'browserRule/GET_BROWSERRULE_LISTPAGED_SUCCESS';
 const GET_BROWSERRULE_SUCCESS = 'browserRule/GET_BROWSERRULE_SUCCESS';
 const CREATE_BROWSERRULE_SUCCESS = 'browserRule/CREATE_BROWSERRULE_SUCCESS';
@@ -231,7 +234,7 @@ export const editBrowserRuleSettingData = (itemObj) => dispatch => {
                 });
 
                 // change object array for selector
-                requestPostAPI('readClientConfList', {
+                requestPostAPI('readBrowserRuleList', {
                 }).then(
                     (response) => {
                         dispatch({
@@ -241,9 +244,11 @@ export const editBrowserRuleSettingData = (itemObj) => dispatch => {
                         });
                     }
                 ).catch(error => {
-                    console.log('error(2) :::: ', error);
+                    dispatch({
+                        type: COMMON_FAILURE,
+                        error: error
+                    });
                 });
-
             } else {
                 // alarm ... fail
                 dispatch({
@@ -317,125 +322,26 @@ export default handleActions({
             ex: (action.ex) ? action.ex : ''
         });
     },
-
+    [GET_BROWSERRULE_LIST_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleListAction(state, action);
+    }, 
     [GET_BROWSERRULE_LISTPAGED_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
-
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            if(viewIndex > -1) {
-                const newListParam = state.getIn(['viewItems', viewIndex, 'listParam']).merge({
-                    rowsFiltered: parseInt(recordsFiltered, 10),
-                    rowsTotal: parseInt(recordsTotal, 10),
-                    page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10),
-                    orderColumn: orderColumn,
-                    orderDir: orderDir
-                });
-                return state
-                        .setIn(['viewItems', viewIndex, 'listData'], List(data.map((e) => {return Map(e)})))
-                        .setIn(['viewItems', viewIndex, 'listParam'], newListParam);
-            } else {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'listData': List(data.map((e) => {return Map(e)})),
-                    'listParam': state.get('defaultListParam').merge({
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10),
-                        orderColumn: orderColumn,
-                        orderDir: orderDir
-                    })
-                })));
-            }
-        } else {
-            return state.set('viewItems', List([Map({
-                '_COMPID_': action.compId,
-                'listData': List(data.map((e) => {return Map(e)})),
-                'listParam': state.get('defaultListParam').merge({
-                    rowsFiltered: parseInt(recordsFiltered, 10),
-                    rowsTotal: parseInt(recordsTotal, 10),
-                    page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10),
-                    orderColumn: orderColumn,
-                    orderDir: orderDir
-                })
-            })]));
-        }
+        return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_BROWSERRULE_SUCCESS]: (state, action) => {
-        const { data } = action.response.data;
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-
-            if(viewIndex < 0) {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'informOpen': true,
-                    'selectedViewItem': fromJS(data[0])
-                })));
-            } else {
-                return state
-                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], fromJS(data[0]))
-                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
-            }
-        } else {
-            return state.set('viewItems', List([Map({
-                '_COMPID_': action.compId,
-                'selectedViewItem': fromJS(data[0]),
-                'informOpen': true
-            })]));
-        }
+        return commonHandleActions.handleGetObjectAction(state, action);
     },
     [SHOW_BROWSERRULE_DIALOG]: (state, action) => {
-        return state.merge({
-            editingItem: action.selectedViewItem,
-            dialogOpen: true,
-            dialogType: action.dialogType
-        });
+        return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_BROWSERRULE_DIALOG]: (state, action) => {
-        return state.merge({
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleCloseDialogAction(state, action);
     },
     [SHOW_BROWSERRULE_INFORM]: (state, action) => {
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            if(viewIndex < 0) {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'informOpen': true,
-                    'selectedViewItem': action.selectedViewItem
-                })));
-            } else {
-                return state
-                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], action.selectedViewItem)
-                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
-            }
-        } else {
-            // no occure this event
-        }
-        return state;
+        return commonHandleActions.handleShowInformAction(state, action);
     },
     [CLOSE_BROWSERRULE_INFORM]: (state, action) => {
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            return state
-                    .setIn(['viewItems', viewIndex, 'informOpen'], false)
-                    .deleteIn(['viewItems', viewIndex, 'selectedViewItem'])
-        }
-        return state;
+        return commonHandleActions.handleCloseInformAction(state, action);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
@@ -443,16 +349,10 @@ export default handleActions({
         });
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.compId;
-        });
-        return state.setIn(['viewItems', viewIndex, 'listParam', action.name], action.value);
+        return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CHG_COMPVARIABLE_DATA]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.compId;
-        });
-        return state.setIn(['viewItems', viewIndex, action.name], action.value);
+        return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
     [CREATE_BROWSERRULE_SUCCESS]: (state, action) => {
         return state.merge({
@@ -461,42 +361,10 @@ export default handleActions({
         });
     },
     [EDIT_BROWSERRULE_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
-                        // replace
-                        newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_BROWSERRULE_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
-                        // replace
-                        newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleDeleteSuccessAction(state, action);
     },
     [SET_WHITELIST_ITEM]: (state, action) => {
         const newWhiteList = state.getIn(['editingItem', 'trustUrlList']).set(action.index, action.value);

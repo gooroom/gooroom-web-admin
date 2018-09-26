@@ -39,12 +39,12 @@ class BrowserRuleSettingInform extends Component {
     const bull = <span className={classes.bullet}>•</span>;
 
     const { BrowserRuleSettingProps, compId } = this.props;
-    const viewItem = getDataObjectInComp(BrowserRuleSettingProps, compId);
-    const selectedViewItem = (viewItem.get('selectedViewItem')) ? generateConfigObject(viewItem.get('selectedViewItem')) : null;
+    const informOpen = BrowserRuleSettingProps.getIn(['viewItems', compId, 'informOpen']);
+    const selectedViewItem = generateConfigObject(BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedViewItem']));
 
     return (
       <div>
-      {(viewItem.get('informOpen') && selectedViewItem) &&
+      {(informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.get('objNm') : ''}

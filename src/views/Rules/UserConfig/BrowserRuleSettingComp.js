@@ -21,9 +21,11 @@ import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'component
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 
 import Grid from '@material-ui/core/Grid';
+
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -109,23 +111,23 @@ class BrowserRuleSettingInform extends Component {
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} Web Socket 사용</TableCell>
-                  <TableCell numeric>{selectedViewItem.get('webSocket')}</TableCell>
+                  <TableCell numeric>{viewCompItem.get('webSocket')}</TableCell>
                   <TableCell component="th" scope="row">{bull} Web Worker 사용</TableCell>
-                  <TableCell numeric>{selectedViewItem.get('webWorker')}</TableCell>
+                  <TableCell numeric>{viewCompItem.get('webWorker')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{selectedViewItem.get('trustSetupId')}</pre></TableCell>
+                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewCompItem.get('trustSetupId')}</pre></TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 비신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{selectedViewItem.get('untrustSetupId')}</pre></TableCell>
+                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewCompItem.get('untrustSetupId')}</pre></TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} White List</TableCell>
-                  <TableCell colSpan={3} numeric>{selectedViewItem.get('trustUrlList').map(function(prop, index) {
+                  <TableCell colSpan={3} numeric>{viewCompItem.get('trustUrlList').map(function(prop, index) {
                     return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
                 </TableRow>
