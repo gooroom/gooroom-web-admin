@@ -118,7 +118,6 @@ export const getSecurityRuleByUserId = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        console.log('error ................. ', error);
         dispatch({
             type: COMMON_FAILURE,
             error: error
