@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { fromJS } from 'immutable';
 import { Map, List } from 'immutable';
 
 import PropTypes from "prop-types";
@@ -8,13 +7,14 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
+import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
 
-import BrowserRuleSettingDialog from './BrowserRuleSettingDialog';
-import { generateConfigObject } from './BrowserRuleSettingInform';
+import MediaControlSettingDialog from './MediaControlSettingDialog';
+import { generateConfigObject } from './MediaControlSettingInform';
 import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
 
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
@@ -36,15 +36,15 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class BrowserRuleSettingComp extends Component {
+class MediaControlSettingComp extends Component {
 
   handleEditBtnClick = (objId, compType) => {
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleSettingProps, compId, 'objId') : getSelectedObjectInComp(BrowserRuleSettingProps, compId);
+    const { MediaControlSettingProps, MediaControlSettingActions, compId } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaControlSettingProps, compId, 'objId') : getSelectedObjectInComp(MediaControlSettingProps, compId);
 
-    BrowserRuleSettingActions.showDialog({
+    MediaControlSettingActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
-      dialogType: BrowserRuleSettingDialog.TYPE_EDIT
+      dialogType: MediaControlSettingDialog.TYPE_EDIT
     });
   };
 
@@ -53,13 +53,13 @@ class BrowserRuleSettingComp extends Component {
   render() {
 
     const { classes } = this.props;
-    const { BrowserRuleSettingProps, compId, compType } = this.props;
+    const { MediaControlSettingProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
-    const selectedViewItem = BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = BrowserRuleSettingProps.getIn(['viewItems', compId, 'listAllData']);
-    const selectedOptionItemId = BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedViewItem = MediaControlSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = MediaControlSettingProps.getIn(['viewItems', compId, 'listAllData']);
+    const selectedOptionItemId = MediaControlSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -74,7 +74,7 @@ class BrowserRuleSettingComp extends Component {
         }
       })()
     ;
-    
+
     return (
       <React.Fragment>
       <Card elevation={0}>
@@ -82,7 +82,7 @@ class BrowserRuleSettingComp extends Component {
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>
-                {(compType == 'VIEW') ? '상세내용' : '브라우져제어정책'}
+                {(compType == 'VIEW') ? '상세내용' : '매체제어정책'}
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -94,6 +94,7 @@ class BrowserRuleSettingComp extends Component {
               </Grid>
             </Grid>
           </Grid>
+
           <Typography variant="headline" component="h2">
             {viewCompItem.get('objNm')}
           </Typography>
@@ -106,24 +107,44 @@ class BrowserRuleSettingComp extends Component {
               <TableBody>
 
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} Web Socket 사용</TableCell>
-                  <TableCell numeric>{viewCompItem.get('webSocket')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} Web Worker 사용</TableCell>
-                  <TableCell numeric>{viewCompItem.get('webWorker')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} USB메모리</TableCell>
+                  <TableCell numeric>{viewCompItem.get('usbMemory')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} CD/DVD</TableCell>
+                  <TableCell numeric>{viewCompItem.get('cdAndDvd')}</TableCell>
                 </TableRow>
 
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewCompItem.get('trustSetupId')}</pre></TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 비신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewCompItem.get('untrustSetupId')}</pre></TableCell>
+                  <TableCell component="th" scope="row">{bull} 프린터</TableCell>
+                  <TableCell numeric>{viewCompItem.get('printer')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 화면캡쳐</TableCell>
+                  <TableCell numeric>{viewCompItem.get('screenCapture')}</TableCell>
                 </TableRow>
 
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} White List</TableCell>
-                  <TableCell colSpan={3} numeric>{viewCompItem.get('trustUrlList').map(function(prop, index) {
+                  <TableCell component="th" scope="row">{bull} 사운드(소리,마이크)</TableCell>
+                  <TableCell numeric>{viewCompItem.get('sound')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 카메라</TableCell>
+                  <TableCell numeric>{viewCompItem.get('camera')}</TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} USB키보드</TableCell>
+                  <TableCell numeric>{viewCompItem.get('keyboard')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} USB마우스</TableCell>
+                  <TableCell numeric>{viewCompItem.get('mouse')}</TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 무선랜</TableCell>
+                  <TableCell numeric>{viewCompItem.get('wireless')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 블루투스</TableCell>
+                  <TableCell numeric>{viewCompItem.get('bluetoothState')}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row"></TableCell>
+                  <TableCell numeric></TableCell>
+                  <TableCell component="th" scope="row">{bull} 맥주소(블루투스)</TableCell>
+                  <TableCell numeric>{viewCompItem.get('macAddress').map(function(prop, index) {
                     return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
                 </TableRow>
@@ -134,19 +155,18 @@ class BrowserRuleSettingComp extends Component {
           </CardContent>
         }
       </Card>
-      <BrowserRuleSettingDialog compId={compId} />
+      <MediaControlSettingDialog compId={compId} />
       </React.Fragment>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  BrowserRuleSettingProps: state.BrowserRuleSettingModule
+  MediaControlSettingProps: state.MediaControlSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch)
+  MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleSettingComp));
-
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaControlSettingComp));

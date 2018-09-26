@@ -8,8 +8,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp } from 'components/GrUtils/GrTableListUtils';
-
 import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 
 import Card from '@material-ui/core/Card';

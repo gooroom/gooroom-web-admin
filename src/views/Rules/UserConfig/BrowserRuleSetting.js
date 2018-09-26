@@ -10,7 +10,7 @@ import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { generateConfigObject } from './BrowserRuleSettingInform';
 
