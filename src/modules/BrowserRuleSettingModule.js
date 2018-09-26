@@ -2,7 +2,6 @@ import { handleActions } from 'redux-actions';
 import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
-
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'browserRule/COMMON_PENDING';
@@ -31,25 +30,7 @@ const DELETE_WHITELIST_ITEM = 'browserRule/DELETE_WHITELIST_ITEM';
 
 
 // ...
-const initialState = Map({
-    pending: false,
-    error: false,
-    resultMsg: '',
-
-    defaultListParam: Map({
-        keyword: '',
-        orderDir: 'desc',
-        orderColumn: 'chConfId',
-        page: 0,
-        rowsPerPage: 10,
-        rowsPerPageOptions: List([5, 10, 25]),
-        rowsTotal: 0,
-        rowsFiltered: 0
-    }),
-
-    dialogOpen: false,
-    dialogType: '',
-});
+const initialState = commonHandleActions.getCommonInitialState('chConfId');
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
