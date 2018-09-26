@@ -244,10 +244,10 @@ class UserManage extends Component {
     });
   }
 
-  handleChangeUserStatusSelect = (event) => {
+  handleChangeUserStatusSelect = (value) => {
     this.props.UserActions.changeListParamData({
       name: 'status', 
-      value: event.target.value,
+      value: (value == 'ALL') ? '' : value,
       compId: this.props.match.params.grMenuId
     });
   }
