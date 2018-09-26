@@ -10,7 +10,7 @@ import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { refreshDataListInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { generateConfigObject } from './MediaControlSettingInform';
 
@@ -169,12 +169,7 @@ class MediaControlSetting extends Component {
         objId: paramObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        const viewItems = MediaControlSettingProps.get('viewItems');
-        viewItems.forEach((element) => {
-            if(element && element.get('listParam')) {
-                MediaControlSettingActions.readMediaControlSettingListPaged(MediaControlSettingProps, element.get('_COMPID_'), {});
-            }
-        });
+        refreshDataListInComp(MediaControlSettingProps, MediaControlSettingActions.readMediaControlSettingListPaged);
       });
     }
   };

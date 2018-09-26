@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -40,24 +40,24 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class ClientSecuSettingDialog extends Component {
+class SecurityRuleDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.ClientSecuSettingActions.closeDialog();
+        this.props.SecurityRuleActions.closeDialog();
     }
 
     handleValueChange = name => event => {
         if(event.target.type === 'checkbox') {
-            this.props.ClientSecuSettingActions.setEditingItemValue({
+            this.props.SecurityRuleActions.setEditingItemValue({
                 name: name,
                 value: (event.target.checked) ? 'allow' : 'disallow'
             });
         } else {
-            this.props.ClientSecuSettingActions.setEditingItemValue({
+            this.props.SecurityRuleActions.setEditingItemValue({
                 name: name,
                 value: event.target.value
             });
@@ -65,21 +65,21 @@ class ClientSecuSettingDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { ClientSecuSettingProps, GrConfirmActions } = this.props;
+        const { SecurityRuleProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
             confirmTitle: '단말보안정책정보 등록',
             confirmMsg: '단말보안정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientSecuSettingProps.get('editingItem')
+            confirmObject: SecurityRuleProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
-            ClientSecuSettingActions.createClientSecuSettingData(ClientSecuSettingProps.get('editingItem'))
+            const { SecurityRuleProps, SecurityRuleActions } = this.props;
+            SecurityRuleActions.createSecurityRule(SecurityRuleProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(ClientSecuSettingProps, ClientSecuSettingActions.readClientSecuSettingListPaged);
+                    refreshDataListInComp(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
                     this.handleClose();
                 }, (res) => {
             })
@@ -87,22 +87,22 @@ class ClientSecuSettingDialog extends Component {
     }
 
     handleEditData = (event, id) => {
-        const { ClientSecuSettingProps, GrConfirmActions } = this.props;
+        const { SecurityRuleProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
             confirmTitle: '단말보안정책정보 수정',
             confirmMsg: '단말보안정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientSecuSettingProps.get('editingItem')
+            confirmObject: SecurityRuleProps.get('editingItem')
         });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
+            const { SecurityRuleProps, SecurityRuleActions } = this.props;
 
-            ClientSecuSettingActions.editClientSecuSettingData(ClientSecuSettingProps.get('editingItem'))
+            SecurityRuleActions.editSecurityRule(SecurityRuleProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(ClientSecuSettingProps, ClientSecuSettingActions.readClientSecuSettingListPaged);
+                    refreshDataListInComp(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
                     this.handleClose();
                 });
         }
@@ -116,23 +116,23 @@ class ClientSecuSettingDialog extends Component {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
 
-        const { ClientSecuSettingProps } = this.props;
-        const dialogType = ClientSecuSettingProps.get('dialogType');
-        const editingItem = (ClientSecuSettingProps.get('editingItem')) ? ClientSecuSettingProps.get('editingItem') : null;
+        const { SecurityRuleProps } = this.props;
+        const dialogType = SecurityRuleProps.get('dialogType');
+        const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
 
         let title = "";
-        if(dialogType === ClientSecuSettingDialog.TYPE_ADD) {
+        if(dialogType === SecurityRuleDialog.TYPE_ADD) {
             title = "단말보안정책설정 등록";
-        } else if(dialogType === ClientSecuSettingDialog.TYPE_VIEW) {
+        } else if(dialogType === SecurityRuleDialog.TYPE_VIEW) {
             title = "단말보안정책설정 정보";
-        } else if(dialogType === ClientSecuSettingDialog.TYPE_EDIT) {
+        } else if(dialogType === SecurityRuleDialog.TYPE_EDIT) {
             title = "단말보안정책설정 수정";
         }
 
         return (
             <div>
-            {(ClientSecuSettingProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={ClientSecuSettingProps.get('dialogOpen')}>
+            {(SecurityRuleProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={SecurityRuleProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
@@ -142,7 +142,7 @@ class ClientSecuSettingDialog extends Component {
                         value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
-                        disabled={(dialogType === ClientSecuSettingDialog.TYPE_VIEW)}
+                        disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
                     />
                     <TextField
                         id="comment"
@@ -150,9 +150,9 @@ class ClientSecuSettingDialog extends Component {
                         value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === ClientSecuSettingDialog.TYPE_VIEW)}
+                        disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
                     />
-                    {(dialogType === ClientSecuSettingDialog.TYPE_VIEW) &&
+                    {(dialogType === SecurityRuleDialog.TYPE_VIEW) &&
                         <div>
                             <Grid container spacing={24} className={classes.grNormalTableRow}>
                                 <Grid item xs={12}>
@@ -160,7 +160,7 @@ class ClientSecuSettingDialog extends Component {
                             </Grid>
                         </div>                        
                     }
-                    {(dialogType === ClientSecuSettingDialog.TYPE_EDIT || dialogType === ClientSecuSettingDialog.TYPE_ADD) &&
+                    {(dialogType === SecurityRuleDialog.TYPE_EDIT || dialogType === SecurityRuleDialog.TYPE_ADD) &&
                         <div className={classes.dialogItemRowBig}>
 
                             <Grid item xs={12} container 
@@ -214,10 +214,10 @@ class ClientSecuSettingDialog extends Component {
                 </form>
 
                 <DialogActions>
-                {(dialogType === ClientSecuSettingDialog.TYPE_ADD) &&
+                {(dialogType === SecurityRuleDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
                 }
-                {(dialogType === ClientSecuSettingDialog.TYPE_EDIT) &&
+                {(dialogType === SecurityRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
@@ -232,13 +232,13 @@ class ClientSecuSettingDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientSecuSettingProps: state.ClientSecuSettingModule
+    SecurityRuleProps: state.SecurityRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    ClientSecuSettingActions: bindActionCreators(ClientSecuSettingActions, dispatch),
+    SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientSecuSettingDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(SecurityRuleDialog));
 
