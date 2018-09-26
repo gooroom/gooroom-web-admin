@@ -8,6 +8,7 @@ import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
+import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -30,8 +31,6 @@ import Input from '@material-ui/core/Input';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import AddIcon from '@material-ui/icons/Add';
-
-import Radio from '@material-ui/core/Radio';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -85,14 +84,7 @@ class MediaControlSettingDialog extends Component {
             const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
             MediaControlSettingActions.createMediaControlSettingData(MediaControlSettingProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = MediaControlSettingProps.get('viewItems');
-                    if(viewItems) {
-                        viewItems.forEach((element) => {
-                            if(element && element.get('listParam')) {
-                                MediaControlSettingActions.readMediaControlSettingList(MediaControlSettingProps, element.get('_COMPID_'), {});
-                            }
-                        });
-                    }
+                    refreshDataListInComp(MediaControlSettingProps, MediaControlSettingActions.readMediaControlSettingListPaged);
                     this.handleClose();
                 });
         }
@@ -113,12 +105,7 @@ class MediaControlSettingDialog extends Component {
             const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
             MediaControlSettingActions.editMediaControlSettingData(MediaControlSettingProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = MediaControlSettingProps.get('viewItems');
-                    viewItems.forEach((element) => {
-                        if(element && element.get('listParam')) {
-                            MediaControlSettingActions.readMediaControlSettingList(MediaControlSettingProps, element.get('_COMPID_'), {});
-                        }
-                    });
+                    refreshDataListInComp(MediaControlSettingProps, MediaControlSettingActions.readMediaControlSettingListPaged);
                     this.handleClose();
                 });
         }

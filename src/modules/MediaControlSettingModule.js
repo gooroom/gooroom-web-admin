@@ -2,11 +2,13 @@ import { handleActions } from 'redux-actions';
 import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'mediaControlSetting/COMMON_PENDING';
 const COMMON_FAILURE = 'mediaControlSetting/COMMON_FAILURE';
 
-const GET_MEDIACONTROL_LIST_SUCCESS = 'mediaControlSetting/GET_LIST_SUCCESS';
+const GET_MEDIACONTROL_LIST_SUCCESS = 'mediaControlSetting/GET_MEDIACONTROL_LIST_SUCCESS';
+const GET_MEDIACONTROL_LISTPAGED_SUCCESS = 'mediaControlSetting/GET_MEDIACONTROL_LISTPAGED_SUCCESS';
 const GET_MEDIACONTROL_SUCCESS = 'mediaControlSetting/GET_MEDIACONTROL_SUCCESS';
 const CREATE_MEDIACONTROL_SUCCESS = 'mediaControlSetting/CREATE_MEDIACONTROL_SUCCESS';
 const EDIT_MEDIACONTROL_SUCCESS = 'mediaControlSetting/EDIT_MEDIACONTROL_SUCCESS';
@@ -28,25 +30,7 @@ const DELETE_BLUETOOTHMAC_ITEM = 'mediaControlSetting/DELETE_BLUETOOTHMAC_ITEM';
 
 
 // ...
-const initialState = Map({
-    pending: false,
-    error: false,
-    resultMsg: '',
-
-    defaultListParam: Map({
-        keyword: '',
-        orderDir: 'desc',
-        orderColumn: 'chConfId',
-        page: 0,
-        rowsPerPage: 10,
-        rowsPerPageOptions: List([5, 10, 25]),
-        rowsTotal: 0,
-        rowsFiltered: 0
-    }),
-
-    dialogOpen: false,
-    dialogType: '',
-});
+const initialState = commonHandleActions.getCommonInitialState('chConfId');
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -77,20 +61,10 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readMediaControlSettingList = (module, compId, extParam) => dispatch => {
-    let newListParam;
-    if(module.get('viewItems')) {
-        const viewIndex = module.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == compId;
-        });
-        if(viewIndex < 0) {
-            newListParam = module.get('defaultListParam');
-        } else {
-            newListParam = module.getIn(['viewItems', viewIndex, 'listParam']).merge(extParam);
-        }
-    } else {
-        newListParam = module.get('defaultListParam');
-    }
+export const readMediaControlSettingListPaged = (module, compId, extParam) => dispatch => {
+    const newListParam = (module.getIn(['viewItems', compId])) ? 
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readMediaRuleListPaged', {
@@ -103,7 +77,7 @@ export const readMediaControlSettingList = (module, compId, extParam) => dispatc
     }).then(
         (response) => {
             dispatch({
-                type: GET_MEDIACONTROL_LIST_SUCCESS,
+                type: GET_MEDIACONTROL_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
                 response: response
@@ -121,6 +95,25 @@ export const getMediaControlSetting = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readMediaRule', {'objId': param.objId}).then(
+        (response) => {
+            dispatch({
+                type: GET_MEDIACONTROL_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+export const getMediaControlSettingByUserId = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readMediaRuleByUserId', {'userId': param.userId}).then(
         (response) => {
             dispatch({
                 type: GET_MEDIACONTROL_SUCCESS,
@@ -212,12 +205,12 @@ export const createMediaControlSettingData = (itemObj) => dispatch => {
 
 // edit
 export const editMediaControlSettingData = (itemObj) => dispatch => {
-
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateMediaRule', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
+                // change selected object
                 requestPostAPI('readMediaRule', {'objId': itemObj.get('objId')}).then(
                     (response) => {
                         dispatch({
@@ -228,6 +221,23 @@ export const editMediaControlSettingData = (itemObj) => dispatch => {
                     }
                 ).catch(error => {
                 });
+
+                // change object array for selector
+                requestPostAPI('readMediaRuleList', {
+                }).then(
+                    (response) => {
+                        dispatch({
+                            type: GET_MEDIACONTROL_LIST_SUCCESS,
+                            compId: compId,
+                            response: response
+                        });
+                    }
+                ).catch(error => {
+                    dispatch({
+                        type: COMMON_FAILURE,
+                        error: error
+                    });
+                });                
             } else {
                 // alarm ... fail
                 dispatch({
@@ -301,125 +311,26 @@ export default handleActions({
             ex: (action.ex) ? action.ex : ''
         });
     },
-
     [GET_MEDIACONTROL_LIST_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
-
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            if(viewIndex > -1) {
-                const newListParam = state.getIn(['viewItems', viewIndex, 'listParam']).merge({
-                    rowsFiltered: parseInt(recordsFiltered, 10),
-                    rowsTotal: parseInt(recordsTotal, 10),
-                    page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10),
-                    orderColumn: orderColumn,
-                    orderDir: orderDir
-                });
-                return state
-                        .setIn(['viewItems', viewIndex, 'listData'], List(data.map((e) => {return Map(e)})))
-                        .setIn(['viewItems', viewIndex, 'listParam'], newListParam);
-            } else {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'listData': List(data.map((e) => {return Map(e)})),
-                    'listParam': state.get('defaultListParam').merge({
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10),
-                        orderColumn: orderColumn,
-                        orderDir: orderDir
-                    })
-                })));
-            }
-        } else {
-            return state.set('viewItems', List([Map({
-                '_COMPID_': action.compId,
-                'listData': List(data.map((e) => {return Map(e)})),
-                'listParam': state.get('defaultListParam').merge({
-                    rowsFiltered: parseInt(recordsFiltered, 10),
-                    rowsTotal: parseInt(recordsTotal, 10),
-                    page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10),
-                    orderColumn: orderColumn,
-                    orderDir: orderDir
-                })
-            })]));
-        }
+        return commonHandleActions.handleListAction(state, action);
+    }, 
+    [GET_MEDIACONTROL_LISTPAGED_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_MEDIACONTROL_SUCCESS]: (state, action) => {
-        const { data } = action.response.data;
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-
-            if(viewIndex < 0) {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'informOpen': true,
-                    'selectedViewItem': fromJS(data[0])
-                })));
-            } else {
-                return state
-                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], fromJS(data[0]))
-                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
-            }
-        } else {
-            return state.set('viewItems', List([Map({
-                '_COMPID_': action.compId,
-                'selectedViewItem': fromJS(data[0]),
-                'informOpen': true
-            })]));
-        }
+        return commonHandleActions.handleGetObjectAction(state, action);
     },
     [SHOW_MEDIACONTROL_DIALOG]: (state, action) => {
-        return state.merge({
-            editingItem: action.selectedViewItem,
-            dialogOpen: true,
-            dialogType: action.dialogType
-        });
+        return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_MEDIACONTROL_DIALOG]: (state, action) => {
-        return state.merge({
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleCloseDialogAction(state, action);
     },
     [SHOW_MEDIACONTROL_INFORM]: (state, action) => {
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            if(viewIndex < 0) {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'informOpen': true,
-                    'selectedViewItem': action.selectedViewItem
-                })));
-            } else {
-                return state
-                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], action.selectedViewItem)
-                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
-            }
-        } else {
-            // no occure this event
-        }
-        return state;
+        return commonHandleActions.handleShowInformAction(state, action);
     },
     [CLOSE_MEDIACONTROL_INFORM]: (state, action) => {
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            return state
-                    .setIn(['viewItems', viewIndex, 'informOpen'], false)
-                    .deleteIn(['viewItems', viewIndex, 'selectedViewItem'])
-        }
-        return state;
+        return commonHandleActions.handleCloseInformAction(state, action);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
@@ -427,16 +338,10 @@ export default handleActions({
         });
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.compId;
-        });
-        return state.setIn(['viewItems', viewIndex, 'listParam', action.name], action.value);
+        return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CHG_COMPVARIABLE_DATA]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.compId;
-        });
-        return state.setIn(['viewItems', viewIndex, action.name], action.value);
+        return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
     [CREATE_MEDIACONTROL_SUCCESS]: (state, action) => {
         return state.merge({
@@ -445,42 +350,10 @@ export default handleActions({
         });
     },
     [EDIT_MEDIACONTROL_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
-                        // replace
-                        newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_MEDIACONTROL_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
-                        // replace
-                        newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleDeleteSuccessAction(state, action);
     },
     [SET_BLUETOOTHMAC_ITEM]: (state, action) => {
         const newBluetoothMac = state.getIn(['editingItem', 'macAddress']).set(action.index, action.value);

@@ -72,14 +72,14 @@ class MediaControlSetting extends Component {
 
   handleChangePage = (event, page) => {
     const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
-    MediaControlSettingActions.readMediaControlSettingList(MediaControlSettingProps, this.props.match.params.grMenuId, {
+    MediaControlSettingActions.readMediaControlSettingListPaged(MediaControlSettingProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
-    MediaControlSettingActions.readMediaControlSettingList(MediaControlSettingProps, this.props.match.params.grMenuId, {
+    MediaControlSettingActions.readMediaControlSettingListPaged(MediaControlSettingProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: 0
     });
@@ -91,7 +91,7 @@ class MediaControlSetting extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    MediaControlSettingActions.readMediaControlSettingList(MediaControlSettingProps, this.props.match.params.grMenuId, {
+    MediaControlSettingActions.readMediaControlSettingListPaged(MediaControlSettingProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -100,7 +100,7 @@ class MediaControlSetting extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
-    MediaControlSettingActions.readMediaControlSettingList(MediaControlSettingProps, this.props.match.params.grMenuId);
+    MediaControlSettingActions.readMediaControlSettingListPaged(MediaControlSettingProps, this.props.match.params.grMenuId);
   };
   
   handleKeywordChange = name => event => {
@@ -172,7 +172,7 @@ class MediaControlSetting extends Component {
         const viewItems = MediaControlSettingProps.get('viewItems');
         viewItems.forEach((element) => {
             if(element && element.get('listParam')) {
-                MediaControlSettingActions.readMediaControlSettingList(MediaControlSettingProps, element.get('_COMPID_'), {});
+                MediaControlSettingActions.readMediaControlSettingListPaged(MediaControlSettingProps, element.get('_COMPID_'), {});
             }
         });
       });
@@ -184,7 +184,8 @@ class MediaControlSetting extends Component {
     const { MediaControlSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;
-    const listObj = getDataObjectInComp(MediaControlSettingProps, compId);
+
+    const listObj = MediaControlSettingProps.getIn(['viewItems', compId]);
 
     return (
       <div>

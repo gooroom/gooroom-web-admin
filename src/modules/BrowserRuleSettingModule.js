@@ -249,7 +249,7 @@ export const editBrowserRuleSettingData = (itemObj) => dispatch => {
 // delete
 export const deleteBrowserRuleSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteBrowserRuleConf', {'objId': param.objId}).then(
+    return requestPostAPI('deleteBrowserRule', {'objId': param.objId}).then(
         (response) => {
             dispatch({
                 type: DELETE_BROWSERRULE_SUCCESS,

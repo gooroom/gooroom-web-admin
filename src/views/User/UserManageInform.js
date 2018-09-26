@@ -17,7 +17,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-import BrowserRuleSettingInform from 'views/Rules/UserConfig/BrowserRuleSettingComp';
+import BrowserRuleSettingComp from 'views/Rules/UserConfig/BrowserRuleSettingComp';
+import MediaControlSettingComp from 'views/Rules/UserConfig/MediaControlSettingComp';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -50,13 +51,18 @@ class UserManageInform extends Component {
 
           <Grid container spacing={16}>
             <Grid item xs={12} sm={6} >
-              <BrowserRuleSettingInform
+              <BrowserRuleSettingComp
                 compId={compId}
                 objId={selectedViewItem.get('clientConfigId')} 
                 objNm={selectedViewItem.get('clientConfigNm')} 
               />
             </Grid>
             <Grid item xs={12} sm={6} >
+              <MediaControlSettingComp
+                compId={compId}
+                objId={selectedViewItem.get('clientConfigId')} 
+                objNm={selectedViewItem.get('clientConfigNm')} 
+              />
             </Grid>
           </Grid>
         </Card>
