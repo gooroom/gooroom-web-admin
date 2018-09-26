@@ -7,10 +7,10 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
-import ClientSecuSettingDialog from './ClientSecuSettingDialog';
-import { generateConfigObject } from './ClientSecuSettingInform';
+import SecurityRuleDialog from './SecurityRuleDialog';
+import { generateConfigObject } from './SecurityRuleInform';
 import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
 
 import Card from '@material-ui/core/Card';
@@ -36,28 +36,28 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientSecuSettingComp extends Component {
+class SecurityRuleComp extends Component {
 
   handleEditBtnClick = (objId, compType) => {
-    const { ClientSecuSettingProps, ClientSecuSettingActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientSecuSettingProps, compId, 'objId') : getSelectedObjectInComp(ClientSecuSettingProps, compId);
+    const { SecurityRuleProps, SecurityRuleActions, compId } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SecurityRuleProps, compId, 'objId') : getSelectedObjectInComp(SecurityRuleProps, compId);
 
-    ClientSecuSettingActions.showDialog({
+    SecurityRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
-      dialogType: ClientSecuSettingDialog.TYPE_EDIT
+      dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
 
   render() {
 
     const { classes } = this.props;
-    const { ClientSecuSettingProps, compId, compType } = this.props;
+    const { SecurityRuleProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
-    const selectedViewItem = ClientSecuSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = ClientSecuSettingProps.getIn(['viewItems', compId, 'listAllData']);
-    const selectedOptionItemId = ClientSecuSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedViewItem = SecurityRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = SecurityRuleProps.getIn(['viewItems', compId, 'listAllData']);
+    const selectedOptionItemId = SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -130,7 +130,7 @@ class ClientSecuSettingComp extends Component {
           </CardContent>
         }
       </Card>
-      <ClientSecuSettingDialog compId={compId} />
+      <SecurityRuleDialog compId={compId} />
       </React.Fragment>
     );
   }
@@ -138,12 +138,12 @@ class ClientSecuSettingComp extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientSecuSettingProps: state.ClientSecuSettingModule
+  SecurityRuleProps: state.SecurityRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientSecuSettingActions: bindActionCreators(ClientSecuSettingActions, dispatch)
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientSecuSettingComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(SecurityRuleComp));
 

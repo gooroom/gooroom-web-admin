@@ -4,25 +4,25 @@ import { List } from 'immutable';
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
-const COMMON_PENDING = 'clientSecuSetting/COMMON_PENDING';
-const COMMON_FAILURE = 'clientSecuSetting/COMMON_FAILURE';
+const COMMON_PENDING = 'securityRule/COMMON_PENDING';
+const COMMON_FAILURE = 'securityRule/COMMON_FAILURE';
 
-const GET_CLIENTSECU_LIST_SUCCESS = 'clientSecuSetting/GET_CLIENTSECU_LIST_SUCCESS';
-const GET_CLIENTSECU_LISTPAGED_SUCCESS = 'clientSecuSetting/GET_CLIENTSECU_LISTPAGED_SUCCESS';
-const GET_CLIENTSECU_SUCCESS = 'clientSecuSetting/GET_CLIENTSECU_SUCCESS';
-const CREATE_CLIENTSECU_SUCCESS = 'clientSecuSetting/CREATE_CLIENTSECU_SUCCESS';
-const EDIT_CLIENTSECU_SUCCESS = 'clientSecuSetting/EDIT_CLIENTSECU_SUCCESS';
-const DELETE_CLIENTSECU_SUCCESS = 'clientSecuSetting/DELETE_CLIENTSECU_SUCCESS';
+const GET_SECURITYRULE_LIST_SUCCESS = 'securityRule/GET_SECURITYRULE_LIST_SUCCESS';
+const GET_SECURITYRULE_LISTPAGED_SUCCESS = 'securityRule/GET_SECURITYRULE_LISTPAGED_SUCCESS';
+const GET_SECURITYRULE_SUCCESS = 'securityRule/GET_SECURITYRULE_SUCCESS';
+const CREATE_SECURITYRULE_SUCCESS = 'securityRule/CREATE_SECURITYRULE_SUCCESS';
+const EDIT_SECURITYRULE_SUCCESS = 'securityRule/EDIT_SECURITYRULE_SUCCESS';
+const DELETE_SECURITYRULE_SUCCESS = 'securityRule/DELETE_SECURITYRULE_SUCCESS';
 
-const SHOW_CLIENTSECU_INFORM = 'clientSecuSetting/SHOW_CLIENTSECU_INFORM';
-const CLOSE_CLIENTSECU_INFORM = 'clientSecuSetting/CLOSE_CLIENTSECU_INFORM';
-const SHOW_CLIENTSECU_DIALOG = 'clientSecuSetting/SHOW_CLIENTSECU_DIALOG';
-const CLOSE_CLIENTSECU_DIALOG = 'clientSecuSetting/CLOSE_CLIENTSECU_DIALOG';
+const SHOW_SECURITYRULE_INFORM = 'securityRule/SHOW_SECURITYRULE_INFORM';
+const CLOSE_SECURITYRULE_INFORM = 'securityRule/CLOSE_SECURITYRULE_INFORM';
+const SHOW_SECURITYRULE_DIALOG = 'securityRule/SHOW_SECURITYRULE_DIALOG';
+const CLOSE_SECURITYRULE_DIALOG = 'securityRule/CLOSE_SECURITYRULE_DIALOG';
 
-const SET_EDITING_ITEM_VALUE = 'clientSecuSetting/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_ITEM_VALUE = 'securityRule/SET_EDITING_ITEM_VALUE';
 
-const CHG_LISTPARAM_DATA = 'clientSecuSetting/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'clientSecuSetting/CHG_COMPVARIABLE_DATA';
+const CHG_LISTPARAM_DATA = 'securityRule/CHG_LISTPARAM_DATA';
+const CHG_COMPVARIABLE_DATA = 'securityRule/CHG_COMPVARIABLE_DATA';
 
 
 // ...
@@ -30,7 +30,7 @@ const initialState = commonHandleActions.getCommonInitialState('chConfId');
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
-        type: SHOW_CLIENTSECU_DIALOG,
+        type: SHOW_SECURITYRULE_DIALOG,
         selectedViewItem: param.selectedViewItem,
         dialogType: param.dialogType
     });
@@ -38,13 +38,13 @@ export const showDialog = (param) => dispatch => {
 
 export const closeDialog = () => dispatch => {
     return dispatch({
-        type: CLOSE_CLIENTSECU_DIALOG
+        type: CLOSE_SECURITYRULE_DIALOG
     });
 };
 
 export const showInform = (param) => dispatch => {
     return dispatch({
-        type: SHOW_CLIENTSECU_INFORM,
+        type: SHOW_SECURITYRULE_INFORM,
         compId: param.compId,
         selectedViewItem: param.selectedViewItem
     });
@@ -52,18 +52,18 @@ export const showInform = (param) => dispatch => {
 
 export const closeInform = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_CLIENTSECU_INFORM,
+        type: CLOSE_SECURITYRULE_INFORM,
         compId: param.compId
     });
 };
 
-export const readClientSecuSettingListPaged = (module, compId, extParam) => dispatch => {
+export const readSecurityRuleListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientSecuListPaged', {
+    return requestPostAPI('readSecurityRuleListPaged', {
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),
@@ -73,7 +73,7 @@ export const readClientSecuSettingListPaged = (module, compId, extParam) => disp
     }).then(
         (response) => {
             dispatch({
-                type: GET_CLIENTSECU_LISTPAGED_SUCCESS,
+                type: GET_SECURITYRULE_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
                 response: response
@@ -87,13 +87,13 @@ export const readClientSecuSettingListPaged = (module, compId, extParam) => disp
     });
 };
 
-export const getClientSecuSetting = (param) => dispatch => {
+export const getSecurityRule = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientSecuRule', {'objId': param.objId}).then(
+    return requestPostAPI('readSecurityRule', {'objId': param.objId}).then(
         (response) => {
             dispatch({
-                type: GET_CLIENTSECU_SUCCESS,
+                type: GET_SECURITYRULE_SUCCESS,
                 compId: compId,
                 response: response
             });
@@ -106,13 +106,13 @@ export const getClientSecuSetting = (param) => dispatch => {
     });
 };
 
-export const getClientSecuSettingByUserId = (param) => dispatch => {
+export const getSecurityRuleByUserId = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientSecuRuleByUserId', {'objId': param.objId}).then(
+    return requestPostAPI('readSecurityRuleByUserId', {'objId': param.objId}).then(
         (response) => {
             dispatch({
-                type: GET_CLIENTSECU_SUCCESS,
+                type: GET_SECURITYRULE_SUCCESS,
                 compId: compId,
                 response: response
             });
@@ -166,14 +166,14 @@ const makeParameter = (param) => {
 }
 
 // create (add)
-export const createClientSecuSettingData = (itemObj) => dispatch => {
+export const createSecurityRule = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClientSecuConf', makeParameter(itemObj)).then(
+    return requestPostAPI('createSecurityRule', makeParameter(itemObj)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_CLIENTSECU_SUCCESS
+                        type: CREATE_SECURITYRULE_SUCCESS
                     });
                 }    
             } catch(ex) {
@@ -192,17 +192,17 @@ export const createClientSecuSettingData = (itemObj) => dispatch => {
 };
 
 // edit
-export const editClientSecuSettingData = (itemObj) => dispatch => {
+export const editSecurityRule = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateClientSecuConf', makeParameter(itemObj)).then(
+    return requestPostAPI('updateSecurityRule', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
                 // change selected object
-                requestPostAPI('readClientSecuRule', {'objId': itemObj.get('objId')}).then(
+                requestPostAPI('readSecurityRule', {'objId': itemObj.get('objId')}).then(
                     (response) => {
                         dispatch({
-                            type: EDIT_CLIENTSECU_SUCCESS,
+                            type: EDIT_SECURITYRULE_SUCCESS,
                             objId: itemObj.get('objId'),
                             response: response
                         });
@@ -211,11 +211,11 @@ export const editClientSecuSettingData = (itemObj) => dispatch => {
                 });
 
                 // change object array for selector
-                requestPostAPI('readClientSecuRuleList', {
+                requestPostAPI('readSecurityRuleList', {
                 }).then(
                     (response) => {
                         dispatch({
-                            type: GET_CLIENTSECU_LIST_SUCCESS,
+                            type: GET_SECURITYRULE_LIST_SUCCESS,
                             compId: compId,
                             response: response
                         });
@@ -244,12 +244,12 @@ export const editClientSecuSettingData = (itemObj) => dispatch => {
 };
 
 // delete
-export const deleteClientSecuSettingData = (param) => dispatch => {
+export const deleteSecurityRule = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteClientSecuConf', {'objId': param.objId}).then(
+    return requestPostAPI('deleteSecurityRule', {'objId': param.objId}).then(
         (response) => {
             dispatch({
-                type: DELETE_CLIENTSECU_SUCCESS,
+                type: DELETE_SECURITYRULE_SUCCESS,
                 compId: param.compId,
                 objId: param.objId
             });
@@ -279,25 +279,25 @@ export default handleActions({
             ex: (action.ex) ? action.ex : ''
         });
     },
-    [GET_CLIENTSECU_LIST_SUCCESS]: (state, action) => {
+    [GET_SECURITYRULE_LIST_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListAction(state, action);
     }, 
-    [GET_CLIENTSECU_LISTPAGED_SUCCESS]: (state, action) => {
+    [GET_SECURITYRULE_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
-    [GET_CLIENTSECU_SUCCESS]: (state, action) => {
+    [GET_SECURITYRULE_SUCCESS]: (state, action) => {
         return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.securityResult.data);
     },
-    [SHOW_CLIENTSECU_DIALOG]: (state, action) => {
+    [SHOW_SECURITYRULE_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
     },
-    [CLOSE_CLIENTSECU_DIALOG]: (state, action) => {
+    [CLOSE_SECURITYRULE_DIALOG]: (state, action) => {
         return commonHandleActions.handleCloseDialogAction(state, action);
     },
-    [SHOW_CLIENTSECU_INFORM]: (state, action) => {
+    [SHOW_SECURITYRULE_INFORM]: (state, action) => {
         return commonHandleActions.handleShowInformAction(state, action);
     },
-    [CLOSE_CLIENTSECU_INFORM]: (state, action) => {
+    [CLOSE_SECURITYRULE_INFORM]: (state, action) => {
         return commonHandleActions.handleCloseInformAction(state, action);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
@@ -311,16 +311,16 @@ export default handleActions({
     [CHG_COMPVARIABLE_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
-    [CREATE_CLIENTSECU_SUCCESS]: (state, action) => {
+    [CREATE_SECURITYRULE_SUCCESS]: (state, action) => {
         return state.merge({
             pending: false,
             error: false
         });
     },
-    [EDIT_CLIENTSECU_SUCCESS]: (state, action) => {
+    [EDIT_SECURITYRULE_SUCCESS]: (state, action) => {
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
-    [DELETE_CLIENTSECU_SUCCESS]: (state, action) => {
+    [DELETE_SECURITYRULE_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action);
     }
 

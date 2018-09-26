@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 
 import ClientHostNameComp from './ClientHostNameComp';
-import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';

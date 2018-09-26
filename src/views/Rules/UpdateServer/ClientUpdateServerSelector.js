@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 
 import ClientUpdateServerComp from './ClientUpdateServerComp';
-import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';

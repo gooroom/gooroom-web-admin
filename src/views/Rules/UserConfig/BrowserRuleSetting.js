@@ -10,7 +10,7 @@ import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { refreshDataListInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import { generateConfigObject } from './BrowserRuleSettingInform';
 
@@ -170,12 +170,7 @@ class BrowserRuleSetting extends Component {
         objId: paramObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        const viewItems = BrowserRuleSettingProps.get('viewItems');
-        viewItems.forEach((element) => {
-            if(element && element.get('listParam')) {
-                BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, element.get('_COMPID_'), {});
-            }
-        });
+        refreshDataListInComp(BrowserRuleSettingProps, BrowserRuleSettingActions.readBrowserRuleListPaged);
       });
     }
   };

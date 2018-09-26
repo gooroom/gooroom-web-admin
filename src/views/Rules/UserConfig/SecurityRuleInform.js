@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
-import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -28,7 +28,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientSecuSettingInform extends Component {
+class SecurityRuleInform extends Component {
 
   // .................................................
 
@@ -37,9 +37,9 @@ class ClientSecuSettingInform extends Component {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const { ClientSecuSettingProps, compId } = this.props;
-    const informOpen = ClientSecuSettingProps.getIn(['viewItems', compId, 'informOpen']);
-    const selectedViewItem = generateConfigObject(ClientSecuSettingProps.getIn(['viewItems', compId, 'selectedViewItem']));
+    const { SecurityRuleProps, compId } = this.props;
+    const informOpen = SecurityRuleProps.getIn(['viewItems', compId, 'informOpen']);
+    const selectedViewItem = generateConfigObject(SecurityRuleProps.getIn(['viewItems', compId, 'selectedViewItem']));
 
     return (
       <div>
@@ -93,14 +93,14 @@ class ClientSecuSettingInform extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientSecuSettingProps: state.ClientSecuSettingModule
+  SecurityRuleProps: state.SecurityRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientSecuSettingActions: bindActionCreators(ClientSecuSettingActions, dispatch)
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientSecuSettingInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(SecurityRuleInform));
 
 export const generateConfigObject = (param) => {
 

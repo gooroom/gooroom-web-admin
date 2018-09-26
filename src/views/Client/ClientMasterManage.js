@@ -13,7 +13,7 @@ import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { getDataObjectInComp, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
+import { getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';

@@ -6,21 +6,21 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { refreshDataListInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
-import { generateConfigObject } from './BrowserRuleSettingInform';
+import { generateConfigObject } from './SecurityRuleInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
-import BrowserRuleSettingDialog from './BrowserRuleSettingDialog';
-import BrowserRuleSettingInform from './BrowserRuleSettingInform';
+import SecurityRuleDialog from './SecurityRuleDialog';
+import SecurityRuleInform from './SecurityRuleInform';
 import GrPane from 'containers/GrContent/GrPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -47,7 +47,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class CommonConfig extends Component {
+class SecurityRuleManage extends Component {
 
   columnHeaders = [
     { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
@@ -71,27 +71,27 @@ class CommonConfig extends Component {
   }
 
   handleChangePage = (event, page) => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+    const { SecurityRuleActions, SecurityRuleProps } = this.props;
+    SecurityRuleActions.readSecurityRuleListPaged(SecurityRuleProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+    const { SecurityRuleActions, SecurityRuleProps } = this.props;
+    SecurityRuleActions.readSecurityRuleListPaged(SecurityRuleProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    const { SecurityRuleActions, SecurityRuleProps } = this.props;
     let orderDir = "desc";
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+    SecurityRuleActions.readSecurityRuleListPaged(SecurityRuleProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -99,34 +99,34 @@ class CommonConfig extends Component {
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId);
+    const { SecurityRuleActions, SecurityRuleProps } = this.props;
+    SecurityRuleActions.readSecurityRuleListPaged(SecurityRuleProps, this.props.match.params.grMenuId);
   };
 
   handleKeywordChange = name => event => {
-    this.props.BrowserRuleSettingActions.changeListParamData({
+    this.props.SecurityRuleActions.changeListParamData({
       name: 'keyword', 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
     });
   }
-  
+    
   handleRowClick = (event, id) => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    const { SecurityRuleActions, SecurityRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedViewItem = getRowObjectById(BrowserRuleSettingProps, compId, id, 'objId');
+    const selectedViewItem = getRowObjectById(SecurityRuleProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
-    // BrowserRuleSettingActions.showDialog({
+    // SecurityRuleActions.showDialog({
     //   selectedViewItem: viewObject,
-    //   dialogType: BrowserRuleSettingDialog.TYPE_VIEW,
+    //   dialogType: SecurityRuleDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    BrowserRuleSettingActions.showInform({
+    SecurityRuleActions.showInform({
       compId: compId,
       selectedViewItem: selectedViewItem
     });
@@ -134,59 +134,56 @@ class CommonConfig extends Component {
   };
 
   handleCreateButton = () => {
-    this.props.BrowserRuleSettingActions.showDialog({
+    this.props.SecurityRuleActions.showDialog({
       selectedViewItem: Map(),
-      dialogType: BrowserRuleSettingDialog.TYPE_ADD
+      dialogType: SecurityRuleDialog.TYPE_ADD
     });
   }
 
   handleEditClick = (event, id) => { 
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
-    const selectedViewItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const { SecurityRuleActions, SecurityRuleProps } = this.props;
+    const selectedViewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
-    BrowserRuleSettingActions.showDialog({
+    SecurityRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
-      dialogType: BrowserRuleSettingDialog.TYPE_EDIT
+      dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { BrowserRuleSettingProps, GrConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const { SecurityRuleProps, GrConfirmActions } = this.props;
+    const selectedViewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
-      confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmTitle: '단말보안정책정보 삭제',
+      confirmMsg: '단말보안정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
-    if(confirmValue) {
-      const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
 
-      BrowserRuleSettingActions.deleteBrowserRuleSettingData({
+    if(confirmValue) {
+      const { SecurityRuleProps, SecurityRuleActions } = this.props;
+
+      SecurityRuleActions.deleteSecurityRule({
         objId: paramObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        const viewItems = BrowserRuleSettingProps.get('viewItems');
-        viewItems.forEach((element) => {
-            if(element && element.get('listParam')) {
-                BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, element.get('_COMPID_'), {});
-            }
-        });
+        refreshDataListInComp(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
       });
     }
   };
 
   render() {
     const { classes } = this.props;
-    const { BrowserRuleSettingProps } = this.props;
+    const { SecurityRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;//BrowserRuleSettingProps.listParam.rowsPerPage - BrowserRuleSettingProps.listData.length;
-    const listObj = getDataObjectInComp(BrowserRuleSettingProps, compId);
+    const emptyRows = 0;//SecurityRuleProps.listParam.rowsPerPage - SecurityRuleProps.listData.length;
 
+    const listObj = SecurityRuleProps.getIn(['viewItems', compId]);
+    
     return (
       <div>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
@@ -197,7 +194,7 @@ class CommonConfig extends Component {
 
               <Grid item xs={6}>
                 <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} />
+                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} margin='dense' />
                 </FormControl>
               </Grid>
 
@@ -268,11 +265,12 @@ class CommonConfig extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell colSpan={BrowserRuleSettingHead.columnData.length + 1} className={classes.grSmallAndClickCell} />
+                    <TableCell colSpan={this.columnHeaders.columnData.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
             </Table>
+
             <TablePagination
               component='div'
               count={listObj.getIn(['listParam', 'rowsFiltered'])}
@@ -292,8 +290,8 @@ class CommonConfig extends Component {
         }
         </GrPane>
         {/* dialog(popup) component area */}
-        <BrowserRuleSettingInform compId={compId} />
-        <BrowserRuleSettingDialog compId={compId} />
+        <SecurityRuleInform compId={compId} />
+        <SecurityRuleDialog compId={compId} />
         <GrConfirm />
       </div>
     );
@@ -301,15 +299,15 @@ class CommonConfig extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  BrowserRuleSettingProps: state.BrowserRuleSettingModule
+  SecurityRuleProps: state.SecurityRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default (CommonConfig);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(SecurityRuleManage));
 
 
 

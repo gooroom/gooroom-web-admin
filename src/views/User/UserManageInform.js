@@ -19,7 +19,7 @@ import Divider from '@material-ui/core/Divider';
 
 import BrowserRuleSettingComp from 'views/Rules/UserConfig/BrowserRuleSettingComp';
 import MediaControlSettingComp from 'views/Rules/UserConfig/MediaControlSettingComp';
-import ClientSecuSettingComp from 'views/Rules/UserConfig/ClientSecuSettingComp';
+import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -68,7 +68,7 @@ class UserManageInform extends Component {
           </Grid>
           <Grid container spacing={16}>
             <Grid item xs={12} sm={12} lg={6}>
-              <ClientSecuSettingComp
+              <SecurityRuleComp
                 compId={compId}
                 objId={selectedViewItem.get('clientConfigId')} 
                 objNm={selectedViewItem.get('clientConfigNm')} 
