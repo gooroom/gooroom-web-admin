@@ -8,13 +8,12 @@ import { connect } from 'react-redux';
 import * as UserActions from 'modules/UserModule';
 import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
 import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
+import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
-
-import { getMergedObject, arrayContainsArray, getListParam, getListData, getViewItem, getMergedArray } from 'components/GrUtils/GrCommonUtils';
+import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
 
 import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
@@ -106,9 +105,8 @@ class UserManage extends Component {
   };
 
   handleRowClick = (event, id) => {
-    console.log('handleRowClick ......................... ');
     const { UserProps, UserActions } = this.props;
-    const { BrowserRuleSettingActions, MediaControlSettingActions } = this.props;
+    const { BrowserRuleSettingActions, MediaControlSettingActions, ClientSecuSettingActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
@@ -120,19 +118,25 @@ class UserManage extends Component {
       value: newSelectedIds,
       compId: compId
     });
-
+    
     // get browser rule info
     BrowserRuleSettingActions.getBrowserRuleSettingByUserId({
       compId: compId,
       userId: clickedRowObject.get('userId')
-    });   
+    });
 
     // get media control setting info
     MediaControlSettingActions.getMediaControlSettingByUserId({
       compId: compId,
       userId: clickedRowObject.get('userId')
-    });   
-    
+    });
+
+    // get client secu info
+    ClientSecuSettingActions.getClientSecuSettingByUserId({
+      compId: compId,
+      userId: clickedRowObject.get('userId')
+    });
+
     // show user inform pane.
     UserActions.showInform({
       compId: compId,
@@ -403,6 +407,7 @@ const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
   BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch),
   MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch),
+  ClientSecuSettingActions: bindActionCreators(ClientSecuSettingActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

@@ -72,14 +72,14 @@ class ClientSecuSetting extends Component {
 
   handleChangePage = (event, page) => {
     const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId, {
+    ClientSecuSettingActions.readClientSecuSettingListPaged(ClientSecuSettingProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId, {
+    ClientSecuSettingActions.readClientSecuSettingListPaged(ClientSecuSettingProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: 0
     });
@@ -91,7 +91,7 @@ class ClientSecuSetting extends Component {
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId, {
+    ClientSecuSettingActions.readClientSecuSettingListPaged(ClientSecuSettingProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -100,7 +100,7 @@ class ClientSecuSetting extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { ClientSecuSettingActions, ClientSecuSettingProps } = this.props;
-    ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, this.props.match.params.grMenuId);
+    ClientSecuSettingActions.readClientSecuSettingListPaged(ClientSecuSettingProps, this.props.match.params.grMenuId);
   };
 
   handleKeywordChange = name => event => {
@@ -174,7 +174,7 @@ class ClientSecuSetting extends Component {
         const viewItems = ClientSecuSettingProps.get('viewItems');
         viewItems.forEach((element) => {
           if(element && element.get('listParam')) {
-            ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, element.get('_COMPID_'), {});
+            ClientSecuSettingActions.readClientSecuSettingListPaged(ClientSecuSettingProps, element.get('_COMPID_'), {});
           }
         });
       });
@@ -186,7 +186,8 @@ class ClientSecuSetting extends Component {
     const { ClientSecuSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientSecuSettingProps.listParam.rowsPerPage - ClientSecuSettingProps.listData.length;
-    const listObj = getDataObjectInComp(ClientSecuSettingProps, compId);
+
+    const listObj = ClientSecuSettingProps.getIn(['viewItems', compId]);
     
     return (
       <div>
@@ -225,7 +226,6 @@ class ClientSecuSetting extends Component {
           {(listObj) &&
           <div>
             <Table>
-
               <GrCommonTableHead
                 classes={classes}
                 keyId="objId"
@@ -234,7 +234,6 @@ class ClientSecuSetting extends Component {
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
-
               <TableBody>
                 {listObj.get('listData').map(n => {
                   return (

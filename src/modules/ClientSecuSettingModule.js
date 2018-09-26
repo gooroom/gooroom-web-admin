@@ -1,12 +1,14 @@
 import { handleActions } from 'redux-actions';
-import { Map, List, fromJS } from 'immutable';
+import { List } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'clientSecuSetting/COMMON_PENDING';
 const COMMON_FAILURE = 'clientSecuSetting/COMMON_FAILURE';
 
 const GET_CLIENTSECU_LIST_SUCCESS = 'clientSecuSetting/GET_CLIENTSECU_LIST_SUCCESS';
+const GET_CLIENTSECU_LISTPAGED_SUCCESS = 'clientSecuSetting/GET_CLIENTSECU_LISTPAGED_SUCCESS';
 const GET_CLIENTSECU_SUCCESS = 'clientSecuSetting/GET_CLIENTSECU_SUCCESS';
 const CREATE_CLIENTSECU_SUCCESS = 'clientSecuSetting/CREATE_CLIENTSECU_SUCCESS';
 const EDIT_CLIENTSECU_SUCCESS = 'clientSecuSetting/EDIT_CLIENTSECU_SUCCESS';
@@ -24,25 +26,7 @@ const CHG_COMPVARIABLE_DATA = 'clientSecuSetting/CHG_COMPVARIABLE_DATA';
 
 
 // ...
-const initialState = Map({
-    pending: false,
-    error: false,
-    resultMsg: '',
-
-    defaultListParam: Map({
-        keyword: '',
-        orderDir: 'desc',
-        orderColumn: 'chConfId',
-        page: 0,
-        rowsPerPage: 10,
-        rowsPerPageOptions: List([5, 10, 25]),
-        rowsTotal: 0,
-        rowsFiltered: 0
-    }),
-
-    dialogOpen: false,
-    dialogType: '',
-});
+const initialState = commonHandleActions.getCommonInitialState('chConfId');
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -73,21 +57,10 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readClientSecuSettingList = (module, compId, extParam) => dispatch => {
-
-    let newListParam;
-    if(module.get('viewItems')) {
-        const viewIndex = module.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == compId;
-        });
-        if(viewIndex < 0) {
-            newListParam = module.get('defaultListParam');
-        } else {
-            newListParam = module.getIn(['viewItems', viewIndex, 'listParam']).merge(extParam);
-        }
-    } else {
-        newListParam = module.get('defaultListParam');
-    }
+export const readClientSecuSettingListPaged = (module, compId, extParam) => dispatch => {
+    const newListParam = (module.getIn(['viewItems', compId])) ? 
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientSecuListPaged', {
@@ -100,7 +73,7 @@ export const readClientSecuSettingList = (module, compId, extParam) => dispatch 
     }).then(
         (response) => {
             dispatch({
-                type: GET_CLIENTSECU_LIST_SUCCESS,
+                type: GET_CLIENTSECU_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
                 response: response
@@ -126,6 +99,26 @@ export const getClientSecuSetting = (param) => dispatch => {
             });
         }
     ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+export const getClientSecuSettingByUserId = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readClientSecuRuleByUserId', {'objId': param.objId}).then(
+        (response) => {
+            dispatch({
+                type: GET_CLIENTSECU_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        console.log('error ................. ', error);
         dispatch({
             type: COMMON_FAILURE,
             error: error
@@ -205,6 +198,7 @@ export const editClientSecuSettingData = (itemObj) => dispatch => {
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
+                // change selected object
                 requestPostAPI('readClientSecuRule', {'objId': itemObj.get('objId')}).then(
                     (response) => {
                         dispatch({
@@ -215,6 +209,24 @@ export const editClientSecuSettingData = (itemObj) => dispatch => {
                     }
                 ).catch(error => {
                 });
+
+                // change object array for selector
+                requestPostAPI('readClientSecuRuleList', {
+                }).then(
+                    (response) => {
+                        dispatch({
+                            type: GET_CLIENTSECU_LIST_SUCCESS,
+                            compId: compId,
+                            response: response
+                        });
+                    }
+                ).catch(error => {
+                    dispatch({
+                        type: COMMON_FAILURE,
+                        error: error
+                    });
+                });
+                
             } else {
                 // alarm ... fail
                 dispatch({
@@ -267,125 +279,26 @@ export default handleActions({
             ex: (action.ex) ? action.ex : ''
         });
     },
-
     [GET_CLIENTSECU_LIST_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
-
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            if(viewIndex > -1) {
-                const newListParam = state.getIn(['viewItems', viewIndex, 'listParam']).merge({
-                    rowsFiltered: parseInt(recordsFiltered, 10),
-                    rowsTotal: parseInt(recordsTotal, 10),
-                    page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10),
-                    orderColumn: orderColumn,
-                    orderDir: orderDir
-                });
-                return state
-                        .setIn(['viewItems', viewIndex, 'listData'], List(data.map((e) => {return Map(e)})))
-                        .setIn(['viewItems', viewIndex, 'listParam'], newListParam);
-            } else {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'listData': List(data.map((e) => {return Map(e)})),
-                    'listParam': state.get('defaultListParam').merge({
-                        rowsFiltered: parseInt(recordsFiltered, 10),
-                        rowsTotal: parseInt(recordsTotal, 10),
-                        page: parseInt(draw, 10),
-                        rowsPerPage: parseInt(rowLength, 10),
-                        orderColumn: orderColumn,
-                        orderDir: orderDir
-                    })
-                })));
-            }
-        } else {
-            return state.set('viewItems', List([Map({
-                '_COMPID_': action.compId,
-                'listData': List(data.map((e) => {return Map(e)})),
-                'listParam': state.get('defaultListParam').merge({
-                    rowsFiltered: parseInt(recordsFiltered, 10),
-                    rowsTotal: parseInt(recordsTotal, 10),
-                    page: parseInt(draw, 10),
-                    rowsPerPage: parseInt(rowLength, 10),
-                    orderColumn: orderColumn,
-                    orderDir: orderDir
-                })
-            })]));
-        }
+        return commonHandleActions.handleListAction(state, action);
+    }, 
+    [GET_CLIENTSECU_LISTPAGED_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_CLIENTSECU_SUCCESS]: (state, action) => {
-        const { data } = action.response.data;
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-
-            if(viewIndex < 0) {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'informOpen': true,
-                    'selectedViewItem': fromJS(data[0])
-                })));
-            } else {
-                return state
-                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], fromJS(data[0]))
-                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
-            }
-        } else {
-            return state.set('viewItems', List([Map({
-                '_COMPID_': action.compId,
-                'selectedViewItem': fromJS(data[0]),
-                'informOpen': true
-            })]));
-        }
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.securityResult.data);
     },
     [SHOW_CLIENTSECU_DIALOG]: (state, action) => {
-        return state.merge({
-            editingItem: action.selectedViewItem,
-            dialogOpen: true,
-            dialogType: action.dialogType
-        });
+        return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_CLIENTSECU_DIALOG]: (state, action) => {
-        return state.merge({
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleCloseDialogAction(state, action);
     },
     [SHOW_CLIENTSECU_INFORM]: (state, action) => {
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            if(viewIndex < 0) {
-                return state.set('viewItems', state.get('viewItems').push(Map({
-                    '_COMPID_': action.compId,
-                    'informOpen': true,
-                    'selectedViewItem': action.selectedViewItem
-                })));
-            } else {
-                return state
-                    .setIn(['viewItems', viewIndex, 'selectedViewItem'], action.selectedViewItem)
-                    .setIn(['viewItems', viewIndex, 'informOpen'], true);
-            }
-        } else {
-            // no occure this event
-        }
-        return state;
+        return commonHandleActions.handleShowInformAction(state, action);
     },
     [CLOSE_CLIENTSECU_INFORM]: (state, action) => {
-        if(state.get('viewItems')) {
-            const viewIndex = state.get('viewItems').findIndex((e) => {
-                return e.get('_COMPID_') == action.compId;
-            });
-            return state
-                    .setIn(['viewItems', viewIndex, 'informOpen'], false)
-                    .deleteIn(['viewItems', viewIndex, 'selectedViewItem'])
-        }
-        return state;
+        return commonHandleActions.handleCloseInformAction(state, action);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
@@ -393,16 +306,10 @@ export default handleActions({
         });
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.compId;
-        });
-        return state.setIn(['viewItems', viewIndex, 'listParam', action.name], action.value);
+        return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CHG_COMPVARIABLE_DATA]: (state, action) => {
-        const viewIndex = state.get('viewItems').findIndex((e) => {
-            return e.get('_COMPID_') == action.compId;
-        });
-        return state.setIn(['viewItems', viewIndex, action.name], action.value);
+        return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
     [CREATE_CLIENTSECU_SUCCESS]: (state, action) => {
         return state.merge({
@@ -411,42 +318,10 @@ export default handleActions({
         });
     },
     [EDIT_CLIENTSECU_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
-                        // replace
-                        newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_CLIENTSECU_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
-                        // replace
-                        newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleDeleteSuccessAction(state, action);
     }
 
 }, initialState);
