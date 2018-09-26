@@ -1,5 +1,27 @@
 import { Map, List, fromJS } from 'immutable';
 
+export const getCommonInitialState = (initOrderColumn, initOrder) => {
+    return Map({
+        pending: false,
+        error: false,
+        resultMsg: '',
+    
+        defaultListParam: Map({
+            keyword: '',
+            orderDir: (initOrder) ? initOrder : 'desc',
+            orderColumn: initOrderColumn,
+            page: 0,
+            rowsPerPage: 10,
+            rowsPerPageOptions: List([5, 10, 25]),
+            rowsTotal: 0,
+            rowsFiltered: 0
+        }),
+    
+        dialogOpen: false,
+        dialogType: ''
+    });
+}
+
 export const handleListAction = (state, action) => {
     const { data } = action.response.data;
     if(data && data.length > 0) {
