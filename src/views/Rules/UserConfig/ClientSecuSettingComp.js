@@ -7,13 +7,14 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
+import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
 
-import BrowserRuleSettingDialog from './BrowserRuleSettingDialog';
-import { generateConfigObject } from './BrowserRuleSettingInform';
+import ClientSecuSettingDialog from './ClientSecuSettingDialog';
+import { generateConfigObject } from './ClientSecuSettingInform';
 import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
 
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
@@ -35,28 +36,28 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class BrowserRuleSettingComp extends Component {
+class ClientSecuSettingComp extends Component {
 
   handleEditBtnClick = (objId, compType) => {
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleSettingProps, compId, 'objId') : getSelectedObjectInComp(BrowserRuleSettingProps, compId);
+    const { ClientSecuSettingProps, ClientSecuSettingActions, compId } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ClientSecuSettingProps, compId, 'objId') : getSelectedObjectInComp(ClientSecuSettingProps, compId);
 
-    BrowserRuleSettingActions.showDialog({
+    ClientSecuSettingActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
-      dialogType: BrowserRuleSettingDialog.TYPE_EDIT
+      dialogType: ClientSecuSettingDialog.TYPE_EDIT
     });
   };
 
   render() {
 
     const { classes } = this.props;
-    const { BrowserRuleSettingProps, compId, compType } = this.props;
+    const { ClientSecuSettingProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
-    const selectedViewItem = BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = BrowserRuleSettingProps.getIn(['viewItems', compId, 'listAllData']);
-    const selectedOptionItemId = BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedViewItem = ClientSecuSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = ClientSecuSettingProps.getIn(['viewItems', compId, 'listAllData']);
+    const selectedOptionItemId = ClientSecuSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -71,7 +72,7 @@ class BrowserRuleSettingComp extends Component {
         }
       })()
     ;
-    
+
     return (
       <React.Fragment>
       <Card elevation={0}>
@@ -79,7 +80,7 @@ class BrowserRuleSettingComp extends Component {
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>
-                {(compType == 'VIEW') ? '상세내용' : '브라우져제어정책'}
+                {(compType == 'VIEW') ? '상세내용' : '단말보안정책'}
               </Typography>
             </Grid>
             <Grid item xs={6}>
@@ -103,26 +104,24 @@ class BrowserRuleSettingComp extends Component {
               <TableBody>
 
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} Web Socket 사용</TableCell>
-                  <TableCell numeric>{viewCompItem.get('webSocket')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} Web Worker 사용</TableCell>
-                  <TableCell numeric>{viewCompItem.get('webWorker')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 화면보호기 설정시간(분)</TableCell>
+                  <TableCell numeric>{viewCompItem.get('screenTime')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 패스워드 변경주기(일)</TableCell>
+                  <TableCell numeric>{viewCompItem.get('passwordTime')}</TableCell>
                 </TableRow>
 
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewCompItem.get('trustSetupId')}</pre></TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 비신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewCompItem.get('untrustSetupId')}</pre></TableCell>
+                  <TableCell component="th" scope="row">{bull} 패키지추가/삭제 기능</TableCell>
+                  <TableCell numeric>{viewCompItem.get('packageHandle')}</TableCell>
+                  <TableCell component="th" scope="row"></TableCell>
+                  <TableCell numeric></TableCell>
                 </TableRow>
 
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} White List</TableCell>
-                  <TableCell colSpan={3} numeric>{viewCompItem.get('trustUrlList').map(function(prop, index) {
-                    return <span key={index}>{prop}<br/></span>;
-                  })}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 전체네트워크허용</TableCell>
+                  <TableCell numeric>{viewCompItem.get('state')}</TableCell>
+                  <TableCell component="th" scope="row"></TableCell>
+                  <TableCell numeric></TableCell>
                 </TableRow>
 
               </TableBody>
@@ -131,19 +130,20 @@ class BrowserRuleSettingComp extends Component {
           </CardContent>
         }
       </Card>
-      <BrowserRuleSettingDialog compId={compId} />
+      <ClientSecuSettingDialog compId={compId} />
       </React.Fragment>
     );
   }
 }
 
+
 const mapStateToProps = (state) => ({
-  BrowserRuleSettingProps: state.BrowserRuleSettingModule
+  ClientSecuSettingProps: state.ClientSecuSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch)
+  ClientSecuSettingActions: bindActionCreators(ClientSecuSettingActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleSettingComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientSecuSettingComp));
 

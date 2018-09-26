@@ -68,11 +68,14 @@ export const handleListPagedAction = (state, action) => {
         }));
 }
 
-export const handleGetObjectAction = (state, action) => {
-    const { data } = action.response.data;
+export const handleGetObjectAction = (state, compId, data) => {
+    if(data && data.length > 0) {
         return state
-            .setIn(['viewItems', action.compId, 'selectedViewItem'], fromJS(data[0]))
-            .setIn(['viewItems', action.compId, 'informOpen'], true);
+            .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
+            .setIn(['viewItems', compId, 'informOpen'], true);
+    } else  {
+        return state;
+    }
 }
 
 export const handleShowDialogAction = (state, action) => {

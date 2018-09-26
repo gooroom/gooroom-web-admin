@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { Map, List, fromJS } from 'immutable';
+import { List } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -310,7 +310,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_BROWSERRULE_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data);
     },
     [SHOW_BROWSERRULE_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);

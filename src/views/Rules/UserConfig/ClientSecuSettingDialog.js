@@ -8,6 +8,7 @@ import * as ClientSecuSettingActions from 'modules/ClientSecuSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
+import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -78,14 +79,7 @@ class ClientSecuSettingDialog extends Component {
             const { ClientSecuSettingProps, ClientSecuSettingActions } = this.props;
             ClientSecuSettingActions.createClientSecuSettingData(ClientSecuSettingProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = ClientSecuSettingProps.get('viewItems');
-                    if(viewItems) {
-                        viewItems.forEach((element) => {
-                            if(element && element.get('listParam')) {
-                                ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, element.get('_COMPID_'), {});
-                            }
-                        });
-                    }
+                    refreshDataListInComp(ClientSecuSettingProps, ClientSecuSettingActions.readClientSecuSettingListPaged);
                     this.handleClose();
                 }, (res) => {
             })
@@ -108,12 +102,7 @@ class ClientSecuSettingDialog extends Component {
 
             ClientSecuSettingActions.editClientSecuSettingData(ClientSecuSettingProps.get('editingItem'))
                 .then((res) => {
-                    const viewItems = ClientSecuSettingProps.get('viewItems');
-                    viewItems.forEach((element) => {
-                        if(element && element.get('listParam')) {
-                            ClientSecuSettingActions.readClientSecuSettingList(ClientSecuSettingProps, element.get('_COMPID_'), {});
-                        }
-                    });
+                    refreshDataListInComp(ClientSecuSettingProps, ClientSecuSettingActions.readClientSecuSettingListPaged);
                     this.handleClose();
                 });
         }

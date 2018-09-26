@@ -318,7 +318,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_MEDIACONTROL_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data);
     },
     [SHOW_MEDIACONTROL_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
