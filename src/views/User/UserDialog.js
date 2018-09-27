@@ -5,12 +5,11 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
 import * as UserActions from 'modules/UserModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
-
-import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -133,60 +132,58 @@ class UserDialog extends Component {
         return (
             <div>
             {(UserProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={UserProps.get('dialogOpen')}>
-                <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={classes.dialogContainer}>
+                <Dialog open={UserProps.get('dialogOpen')}>
+                    <DialogTitle>{title}</DialogTitle>
+                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
+                        <TextField
+                            id="userId"
+                            label="사용자아이디"
+                            value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
+                            onChange={this.handleValueChange("userId")}
+                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                            disabled={(dialogType == UserDialog.TYPE_EDIT) ? true : false}
+                        />
 
-                    <TextField
-                        id="userId"
-                        label="사용자아이디"
-                        value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
-                        onChange={this.handleValueChange("userId")}
-                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType == UserDialog.TYPE_EDIT) ? true : false}
-                    />
+                        <TextField
+                            id="userName"
+                            label="사용자이름"
+                            value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
+                            onChange={this.handleValueChange("userNm")}
+                            className={classes.fullWidth}
+                        />
+                        <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
+                            <InputLabel htmlFor="adornment-password">Password</InputLabel>
+                            <Input
+                                id="userPassword"
+                                type={(editingItem && editingItem.get('showPassword')) ? 'text' : 'password'}
+                                value={(editingItem.get('userPassword')) ? editingItem.get('userPassword') : ''}
+                                onChange={this.handleValueChange('userPassword')}
+                                endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                    aria-label="Toggle password visibility"
+                                    onClick={this.handleClickShowPassword}
+                                    onMouseDown={this.handleMouseDownPassword}
+                                    >
+                                    {(editingItem && editingItem.get('showPassword')) ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    </form>
 
-                    <TextField
-                        id="userName"
-                        label="사용자이름"
-                        value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
-                        onChange={this.handleValueChange("userNm")}
-                        className={classes.fullWidth}
-                    />
-
-                    <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
-          <InputLabel htmlFor="adornment-password">Password</InputLabel>
-          <Input
-            id="userPassword"
-            type={(editingItem && editingItem.get('showPassword')) ? 'text' : 'password'}
-            value={(editingItem.get('userPassword')) ? editingItem.get('userPassword') : ''}
-            onChange={this.handleValueChange('userPassword')}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="Toggle password visibility"
-                  onClick={this.handleClickShowPassword}
-                  onMouseDown={this.handleMouseDownPassword}
-                >
-                  {(editingItem && editingItem.get('showPassword')) ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-          </FormControl>
-          </form>
-
-                <DialogActions>
-                {(dialogType === UserDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
-                }
-                {(dialogType === UserDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
-                }
-                <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
-                </DialogActions>
-                <GrConfirm />
-            </Dialog>
+                    <DialogActions>
+                        {(dialogType === UserDialog.TYPE_ADD) &&
+                            <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
+                        }
+                        {(dialogType === UserDialog.TYPE_EDIT) &&
+                            <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
+                        }
+                        <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
+                    </DialogActions>
+                    <GrConfirm />
+                </Dialog>
             }
             </div>
         );

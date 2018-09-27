@@ -132,9 +132,6 @@ class GrTreeList extends Component {
   }
 
   handleClickNode(listItem, index) {
-
-    console.log('handleClickNode > listItem', listItem);
-
     if (listItem.children) {
       // fetch children data
       // request to server if children array is empty.
@@ -181,7 +178,6 @@ class GrTreeList extends Component {
   }
 
   updateParentNode = (nodeKey, isChecked, newChecked, newImperfect) => {
-
     const { treeData } = this.state;
     const targetNode = treeData.filter(obj => obj.key === nodeKey)[0];
     let isCheckList = null;
@@ -227,11 +223,9 @@ class GrTreeList extends Component {
         newChecked: newChecked,
         newImperfect: newImperfect
     };
-
   }
 
   updateChildrenNode = (subNodes, isChecked, newChecked, newImperfect) => {
-
     const { treeData } = this.state;
     if(subNodes && subNodes.length > 0) {
       for(var i = 0; i < subNodes.length; i++) {
@@ -259,7 +253,6 @@ class GrTreeList extends Component {
   }
 
   handleChange = nodeKey => event => {
-
     const { checked, imperfect, treeData } = this.state;
 
     let newChecked = checked;
@@ -292,6 +285,8 @@ class GrTreeList extends Component {
       imperfect: newStatus.newImperfect
     });
 
+    // call select node event
+    if (this.props.onCheckedNode) this.props.onCheckedNode(newStatus.newChecked, newStatus.newImperfect);
   };
 
   render() {

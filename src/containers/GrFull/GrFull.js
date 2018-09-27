@@ -1,6 +1,12 @@
 import React, { Component } from "react";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import * as GlobalActions from 'modules/GlobalModule';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -12,8 +18,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-
-import GrAlert from "components/GrComponents/GrAlert";
 
 import GrHeader from "containers/GrHeader/";
 import GrFooter from "containers/GrFooter/";
@@ -27,6 +31,10 @@ import GrRouters from "containers/GrContent/";
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
+import Popover from '@material-ui/core/Popover';
+import Typography from '@material-ui/core/Typography';
+
+
 const theme = createMuiTheme({
   overrides: {
     // Name of the component ⚛️ / style sheet
@@ -39,7 +47,7 @@ const theme = createMuiTheme({
   },
 });
 
-class Full extends Component {
+class GrFull extends Component {
 
   constructor(props) {
     super(props);
@@ -69,51 +77,60 @@ class Full extends Component {
   };
 
   handleClickAdmin = () => {
-    console.log("handleClickAdmin...........");
+    //console.log("handleClickAdmin...........");
     this.setState({
       rightDrawer: true,
     });
   }
 
   handleClickSystem = () => {
-    console.log("handleClickSystem...........");
+    //console.log("handleClickSystem...........");
     this.setState(state => ({ popMenu: !state.popMenu }));
+  }
+
+  handlePopoverClose = () => {
+    const { GlobalActions } = this.props;
+    GlobalActions.closeElementMsg();
   }
 
   render() {
     const { classes } = this.props;
-
-    const sideList = (
-      <div > ..........RIGHT SIDE......... </div>
-    );
+    const { GlobalProps } = this.props;
+    const anchorEl = GlobalProps.get('popoverElement');
 
     return (
       <MuiThemeProvider theme={theme}>
-      <div>
         <CssBaseline />
-          <div className={classes.fullRoot} >
-            <GrHeader toggleDrawer={this.toggleDrawer} onAdminClick={this.handleClickAdmin} onSystemClick={this.handleClickSystem} />
-            <GrAlert />
-            <div className={classes.appBody}>
-              <GrSideMenu sideOpen={this.state.sideOpen} />
-              <main className={classNames({[classes.fullMain]: !this.state.isMainWide}, {[classes.fullWideMain]: this.state.isMainWide})}>
-                <div>
-                  <GrBreadcrumb />
-                  <GrRouters />
-                </div>
-                <GrFooter />
-              </main>
-            </div>
+        <div className={classes.fullRoot} >
+          <GrHeader toggleDrawer={this.toggleDrawer} onAdminClick={this.handleClickAdmin} onSystemClick={this.handleClickSystem} />
+          <div className={classes.appBody}>
+            <GrSideMenu sideOpen={this.state.sideOpen} />
+            <main className={classNames({[classes.fullMain]: !this.state.isMainWide}, {[classes.fullWideMain]: this.state.isMainWide})}>
+              <div>
+                <GrBreadcrumb />
+                <GrRouters />
+              </div>
+              <GrFooter />
+            </main>
           </div>
-      </div>
+        </div>
 
-      <Drawer anchor="right" open={this.state.rightDrawer} onClose={this.toggleRightDrawer('rightDrawer', false)}>
+        <Drawer anchor="right" open={this.state.rightDrawer} onClose={this.toggleRightDrawer('rightDrawer', false)}>
           <AdminInform 
             role="button"
             onClick={this.toggleRightDrawer('rightDrawer', false)}
             onKeyDown={this.toggleRightDrawer('rightDrawer', false)}
           />
-      </Drawer>
+        </Drawer>
+
+        <Popover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={this.handlePopoverClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          transformOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Typography className={classes.popoverMsg}>
+            {GlobalProps.get('popoverText')}
+          </Typography>
+        </Popover>          
         
       </MuiThemeProvider>
 
@@ -121,5 +138,14 @@ class Full extends Component {
   }
 }
 
-export default withStyles(GrCommonStyle)(Full);
+const mapStateToProps = (state) => ({
+  GlobalProps: state.GlobalModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  GlobalActions: bindActionCreators(GlobalActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(GrFull));
+
 

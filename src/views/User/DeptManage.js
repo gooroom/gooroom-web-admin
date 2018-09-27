@@ -5,6 +5,8 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import * as GlobalActions from 'modules/GlobalModule';
+import * as DeptActions from 'modules/DeptModule';
 import * as UserActions from 'modules/UserModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
@@ -12,8 +14,10 @@ import GrPageHeader from "containers/GrContent/GrPageHeader";
 
 import GrTreeList from "components/GrTree/GrTreeList";
 import GrPane from "containers/GrContent/GrPane";
+import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import UserListComp from 'views/User/UserListComp';
+import DeptDialog from "views/User/DeptDialog";
 
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
@@ -32,9 +36,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 class DeptManage extends Component {
   
   handleSelectDept = (node) => {
-
-    console.log('handleSelectDept >> ', node);
-    console.log('this.props >> ', this.props);
+    console.log('handleSelectDept................... ', node);
 
     const { UserProps, UserActions } = this.props;
     const compId = this.props.match.params.grMenuId;
@@ -49,16 +51,42 @@ class DeptManage extends Component {
     // });
   }
 
-  handleDeleteButtonForDept = () => {
-    console.log('handleDeleteButtonForDept............');
-  }
-  handleDeleteButtonForClientGroupConfirmResult = (confirmValue, confirmObject) => {
+  handleCheckedDept = (checked, imperfect) => {
+    console.log('handleCheckedDept: checked ........ ', checked);
+
   }
 
   handleCreateButtonForDept = () => {
-    console.log('handleCreateButtonForDept............');
+    //console.log('handleCreateButtonForDept............');
+
+    if(this.props.DeptProps.get('selectedDeptCd') !== '') {
+
+    } else {
+
+    }
+
+    console.log('click....', this.props.DeptProps.toJS());
+
+
+    return;
+
+    this.props.DeptActions.showDialog({
+      selectedViewItem: {
+        deptCd: '',
+        deptNm: ''
+      },
+      dialogType: DeptDialog.TYPE_ADD
+    });
   }
 
+  handleDeleteButtonForDept = (event) => {
+    const { GlobalActions } = this.props;
+
+    GlobalActions.showElementMsg(event.currentTarget, '테스트 문장입니다.');
+    console.log('handleDeleteButtonForDept............', event.currentTarget);
+  }
+  handleDeleteButtonForClientGroupConfirmResult = (confirmValue, confirmObject) => {
+  }
 
   render() {
     const { classes } = this.props;
@@ -78,7 +106,7 @@ class DeptManage extends Component {
                 <AddIcon />
                 등록
               </Button>
-              <Button size="small" variant="contained" color="primary" onClick={() => {this.handleDeleteButtonForDept();}} style={{marginLeft: "10px"}} >
+              <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} style={{marginLeft: "10px"}} >
                 <RemoveIcon />
                 삭제
               </Button>
@@ -94,7 +122,9 @@ class DeptManage extends Component {
                   keyName="key"
                   title="title"
                   startingDepth="2"
+                  compId={compId}
                   onSelectNode={this.handleSelectDept}
+                  onCheckedNode={this.handleCheckedDept}
                 />
               </Card>
             </Grid>
@@ -131,16 +161,22 @@ class DeptManage extends Component {
             </Grid>
           </Grid>
         </GrPane>
+        <DeptDialog compId={compId} />
+        <GrConfirm />
       </React.Fragment>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
+  GlobalProps: state.GlobalModule,
+  DeptProps: state.DeptModule,
   UserProps: state.UserModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  GlobalActions: bindActionCreators(GlobalActions, dispatch),
+  DeptActions: bindActionCreators(DeptActions, dispatch),
   UserActions: bindActionCreators(UserActions, dispatch)
 });
 
