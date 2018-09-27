@@ -112,7 +112,7 @@ class ClientGroupManage extends Component {
     });
     
     // '단말정책설정' : 정책 정보 변경
-    ClientConfSettingActions.getClientConfSetting({
+    ClientConfSettingActions.getClientConf({
       compId: compId,
       objId: clickedRowObject.get('clientConfigId')
     });   

@@ -52,12 +52,6 @@ class ClientMasterManage extends Component {
     };
   }
 
-  // .................................................
-
-  handleSelectBtnClick = () => {
-    console.log('ClientMasterManage Buttons................');
-  };
-
   // Select Group Item
   handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
@@ -66,27 +60,21 @@ class ClientMasterManage extends Component {
 
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      groupId: selectedGroupIdArray.join(','), 
-      page:0
-    }, true);
+      groupId: selectedGroupIdArray.join(','), page:0
+    });
 
     // show client group info.
     if(selectedGroupObj) {
-      ClientManageActions.closeClientManageInform({
-        compId: compId
-      });
+      ClientManageActions.closeClientManageInform({compId: compId});
       ClientGroupActions.showClientGroupInform({
-        compId: compId,
-        selectedViewItem: selectedGroupObj,
+        compId: compId, selectedViewItem: selectedGroupObj,
       });
     }
   };
 
   // Select Client Item
   handleClientSelect = (selectedClientObj, selectedClientIdArray) => {
-    const { ClientMasterManageProps, ClientMasterManageActions } = this.props;
-    const { ClientManageProps, ClientManageActions } = this.props;
-    const { ClientGroupActions } = this.props;
+    const { ClientManageActions, ClientGroupActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     // show client info.

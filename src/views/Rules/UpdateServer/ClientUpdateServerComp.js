@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientUpdateServerDialog from './ClientUpdateServerManageDialog';
 import { generateConfigObject } from './ClientUpdateServerManageInform';
@@ -140,8 +139,7 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientUpdateServerComp));

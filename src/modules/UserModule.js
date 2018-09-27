@@ -3,8 +3,7 @@ import { handleActions } from 'redux-actions';
 import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
-
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'user/COMMON_PENDING';
 const COMMON_FAILURE = 'user/COMMON_FAILURE';
@@ -23,34 +22,13 @@ const CLOSE_USER_DIALOG = 'user/CLOSE_USER_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'user/SET_EDITING_ITEM_VALUE';
 
-const CHG_VIEWITEM_DATA = 'user/CHG_VIEWITEM_DATA';
-
-
 const CHG_LISTPARAM_DATA = 'user/CHG_LISTPARAM_DATA';
 const CHG_COMPVARIABLE_DATA = 'user/CHG_COMPVARIABLE_DATA';
+
 const CHG_STORE_DATA = 'user/CHG_STORE_DATA';
 
 // ...
-const initialState = Map({
-    pending: false,
-    error: false,
-    resultMsg: '',
-
-    defaultListParam: Map({
-        status: 'STAT010',
-        keyword: '',
-        orderDir: 'asc',
-        orderColumn: 'chUserName',
-        page: 0,
-        rowsPerPage: 10,
-        rowsPerPageOptions: List([5, 10, 25]),
-        rowsTotal: 0,
-        rowsFiltered: 0
-    }),
-
-    dialogOpen: false,
-    dialogType: ''
-});
+const initialState = commonHandleActions.getCommonInitialState('chUserName', 'asc', {}, {status: 'STAT010', deptCd: '', keyword: ''});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -87,8 +65,9 @@ export const readUserListPaged = (module, compId, extParam) => dispatch => {
         module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readUserListPaged', {
+    return requestPostAPI('readUserListPagedInDept', {
         status: newListParam.get('status'),
+        deptCd: newListParam.get('deptCd'),
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),
@@ -158,14 +137,12 @@ export const createUserData = (param) => dispatch => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_USER_SUCCESS,
-                        response: response
+                        type: CREATE_USER_SUCCESS
                     });
                 }
             } catch(ex) {
                 dispatch({
                     type: COMMON_FAILURE,
-                    error: null,
                     ex: ex
                 });
             }
@@ -210,7 +187,7 @@ export const editUserData = (param) => dispatch => {
     ).catch(error => {
         dispatch({
             type: COMMON_FAILURE,
-            payload: error
+            error: error
         });
     });
 };
@@ -234,29 +211,6 @@ export const deleteUserData = (param) => dispatch => {
     });
 };
 
-
-// export const getUserData = (param) => dispatch => {
-//     dispatch({type: COMMON_PENDING});
-//     return requestPostAPI('readUserData', param).then(
-//         (response) => {
-//             dispatch({
-//                 type: GET_USER_SUCCESS,
-//                 compId: param.compId,
-//                 payload: response
-//             });
-//         }
-//     ).catch(error => {
-//         dispatch({
-//             type: COMMON_FAILURE,
-//             payload: error
-//         });
-//     });
-// };
-
-
-
-
-
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
@@ -275,43 +229,19 @@ export default handleActions({
     },
 
     [GET_USER_LISTPAGED_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
-        const oldListParam = (state.getIn(['viewItems', action.compId, 'listParam'])) ? state.getIn(['viewItems', action.compId, 'listParam']) : state.get('defaultListParam');
-
-        return state.setIn(['viewItems', action.compId], Map({
-            'listData': List(data.map((e) => {return Map(e)})),
-            'listParam': oldListParam.merge({
-                rowsFiltered: parseInt(recordsFiltered, 10),
-                rowsTotal: parseInt(recordsTotal, 10),
-                page: parseInt(draw, 10),
-                rowsPerPage: parseInt(rowLength, 10),
-                orderColumn: orderColumn,
-                orderDir: orderDir
-            })
-        }));
+        return commonHandleActions.handleListPagedAction(state, action);
     },
     [SHOW_USER_DIALOG]: (state, action) => {
-        return state.merge({
-            editingItem: action.selectedViewItem,
-            dialogOpen: true,
-            dialogType: action.dialogType,
-        });
+        return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_USER_DIALOG]: (state, action) => {
-        return state.merge({
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleCloseDialogAction(state, action);
     },
     [SHOW_USER_INFORM]: (state, action) => {
-        return state
-                .setIn(['viewItems', action.compId, 'selectedViewItem'], action.selectedViewItem)
-                .setIn(['viewItems', action.compId, 'informOpen'], true);
+        return commonHandleActions.handleShowInformAction(state, action);
     },
     [CLOSE_USER_INFORM]: (state, action) => {
-        return state
-                .setIn(['viewItems', action.compId, 'informOpen'], false)
-                .deleteIn(['viewItems', action.compId, 'selectedViewItem']);
+        return commonHandleActions.handleCloseInformAction(state, action);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
@@ -336,45 +266,11 @@ export default handleActions({
         });
     },
     [EDIT_USER_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'userId']) == action.grpId) {
-                        // replace
-                        newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_USER_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'userId']) == action.grpId) {
-                        // replace
-                        newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleDeleteSuccessAction(state, action);
     },
-
-    
 
 }, initialState);
 

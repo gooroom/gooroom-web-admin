@@ -2,6 +2,7 @@ import { handleActions } from 'redux-actions';
 import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'clientConfSetting/COMMON_PENDING';
 const COMMON_FAILURE = 'clientConfSetting/COMMON_FAILURE';
@@ -28,25 +29,7 @@ const ADD_NTPADDRESS_ITEM = 'clientConfSetting/ADD_NTPADDRESS_ITEM';
 const DELETE_NTPADDRESS_ITEM = 'clientConfSetting/DELETE_NTPADDRESS_ITEM';
 
 // ...
-const initialState = Map({
-    pending: false,
-    error: false,
-    resultMsg: '',
-
-    defaultListParam: Map({
-        keyword: '',
-        orderDir: 'desc',
-        orderColumn: 'chConfId',
-        page: 0,
-        rowsPerPage: 10,
-        rowsPerPageOptions: List([5, 10, 25]),
-        rowsTotal: 0,
-        rowsFiltered: 0
-    }),
-
-    dialogOpen: false,
-    dialogType: '',
-});
+const initialState = commonHandleActions.getCommonInitialState('chConfId');
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -56,7 +39,7 @@ export const showDialog = (param) => dispatch => {
     });
 };
 
-export const closeDialog = (param) => dispatch => {
+export const closeDialog = () => dispatch => {
     return dispatch({
         type: CLOSE_CONFSETTING_DIALOG
     });
@@ -126,7 +109,7 @@ export const readClientConfSettingListPaged = (module, compId, extParam) => disp
     });
 };
 
-export const getClientConfSetting = (param) => dispatch => {
+export const getClientConf = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientConf', {'objId': param.objId}).then(
@@ -318,77 +301,25 @@ export default handleActions({
         });
     },
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
-        const { data } = action.response.data;
-        if(data && data.length > 0) {
-            if(state.hasIn(['viewItems', action.compId])) {
-                const beforeItemId = state.getIn(['viewItems', action.compId, 'selectedOptionItemId']);
-                const pos = (beforeItemId) ? data.map((e) => (e.objId)).indexOf(beforeItemId) : -1;
-                if(pos < 0) {
-                    // no exist or selected id was deleted
-                    return state
-                        .setIn(['viewItems', action.compId, 'listAllData'], List(data.map((e) => {return Map(e)})))
-                        .setIn(['viewItems', action.compId, 'selectedOptionItemId'], data[0].objId);
-                } else {
-                    // before exist and selected id is exist
-                    return state
-                        .setIn(['viewItems', action.compId, 'listAllData'], List(data.map((e) => {return Map(e)})))
-                        .setIn(['viewItems', action.compId, 'selectedOptionItemId'], beforeItemId);
-                }
-            }
-
-            return state.setIn(['viewItems', action.compId], Map({
-                'listAllData': List(data.map((e) => {return Map(e)})),
-                'selectedOptionItemId': data[0].objId
-            }));
-            
-        } else {
-            return state
-            .deleteIn(['viewItems', action.compId, 'listAllData'])
-            .deleteIn(['viewItems', action.compId, 'selectedOptionItemId']);
-        }
+        return commonHandleActions.handleListAction(state, action);
     }, 
     [GET_CONFSETTING_LISTPAGED_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
-        return state.setIn(['viewItems', action.compId], Map({
-            'listData': List(data.map((e) => {return Map(e)})),
-            'listParam': state.get('defaultListParam').merge({
-                rowsFiltered: parseInt(recordsFiltered, 10),
-                rowsTotal: parseInt(recordsTotal, 10),
-                page: parseInt(draw, 10),
-                rowsPerPage: parseInt(rowLength, 10),
-                orderColumn: orderColumn,
-                orderDir: orderDir
-            })
-        }));
+        return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
-        const { data } = action.response.data;
-        return state
-                .setIn(['viewItems', action.compId, 'selectedViewItem'], fromJS(data[0]))
-                .setIn(['viewItems', action.compId, 'informOpen'], true);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data);
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
-        return state.merge({
-            editingItem: action.selectedViewItem,
-            dialogOpen: true,
-            dialogType: action.dialogType
-        });
+        return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_CONFSETTING_DIALOG]: (state, action) => {
-        return state.merge({
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleCloseDialogAction(state, action);
     },
     [SHOW_CONFSETTING_INFORM]: (state, action) => {
-        return state
-                .setIn(['viewItems', action.compId, 'selectedViewItem'], action.selectedViewItem)
-                .setIn(['viewItems', action.compId, 'informOpen'], true);
+        return commonHandleActions.handleShowInformAction(state, action);
     },
     [CLOSE_CONFSETTING_INFORM]: (state, action) => {
-        return state
-                .setIn(['viewItems', action.compId, 'informOpen'], false)
-                .deleteIn(['viewItems', action.compId, 'selectedViewItem']);
+        return commonHandleActions.handleCloseInformAction(state, action);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
@@ -408,42 +339,10 @@ export default handleActions({
         });
     },
     [EDIT_CONFSETTING_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
-                        // replace
-                        newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_CONFSETTING_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
-                        // replace
-                        newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleDeleteSuccessAction(state, action);
     },
     [SET_NTP_VALUE]: (state, action) => {
         const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).set(action.index, action.value);
