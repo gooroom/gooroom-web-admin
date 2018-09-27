@@ -43,52 +43,29 @@ class ClientGroupComp extends Component {
     { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
-
   componentDidMount() {
-    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
+    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId);
   }
 
   handleChangePage = (event, page) => {
-    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId, {
-      page: page
-    });
+    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {page: page});
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId, {
-      rowsPerPage: event.target.value,
-      page: 0
+    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {
+      rowsPerPage: event.target.value, page: 0
     });
   };
 
-  // .................................................
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
   
   handleSelectAllClick = (event, checked) => {
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-
     const newSelectedIds = setAllSelectedIdsInComp(ClientGroupProps, compId, 'grpId', checked);
-
     ClientGroupActions.changeCompVariable({
       name: 'selectedIds',
       value: newSelectedIds,
@@ -114,7 +91,7 @@ class ClientGroupComp extends Component {
     }
 
     // '단말정책설정' : 정책 정보 변경
-    ClientConfSettingActions.getClientConfSetting({
+    ClientConfSettingActions.getClientConf({
       compId: compId,
       objId: clickedRowObject.get('clientConfigId')
     });   

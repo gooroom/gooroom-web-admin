@@ -127,21 +127,6 @@ class ClientManageComp extends Component {
     }    
   }
 
-  // handleKeywordChange = name => event => {
-  //   const { ClientManageActions, ClientManageProps, compId } = this.props;
-  //   const { [compId + '__listParam'] : compListParam } = ClientManageProps;
-
-  //   const newParam = getMergedObject(compListParam, {
-  //     keyword: event.target.value,
-  //     page:0,
-  //     compId: this.props.compId
-  //   });
-  //   ClientManageActions.changeStoreData({
-  //     name: compId + '__listParam',
-  //     value: newParam
-  //   });
-  // };
-
   render() {
     const { classes } = this.props;
     const { ClientManageProps, compId } = this.props;

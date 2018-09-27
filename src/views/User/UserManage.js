@@ -21,8 +21,8 @@ import KeywordOption from "views/Options/KeywordOption";
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import UserManageDialog from "views/User/UserManageDialog";
-import UserManageInform from "views/User/UserManageInform";
+import UserDialog from "views/User/UserDialog";
+import UserInform from "views/User/UserInform";
 import GrPane from "containers/GrContent/GrPane";
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
@@ -64,43 +64,23 @@ class UserManage extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    }
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
 
-  // .................................................
   handleChangePage = (event, page) => {
-    const { UserActions, UserProps } = this.props;
-    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {
-      page: page
-    });
+    this.props.UserActions.readUserListPaged(this.props.UserProps, this.props.match.params.grMenuId, {page: page});
   };
 
   handleChangeRowsPerPage = event => {
-    const { UserActions, UserProps } = this.props;
-    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value, 
-      page:0
+    this.props.UserActions.readUserListPaged(this.props.UserProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value, page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { UserActions, UserProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
-    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {
-      orderColumn: property, 
-      orderDir: orderDir
+    this.props.UserActions.readUserListPaged(this.props.UserProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
@@ -162,7 +142,7 @@ class UserManage extends Component {
         userPassword: '',
         showPassword: false
       },
-      dialogType: UserManageDialog.TYPE_ADD
+      dialogType: UserDialog.TYPE_ADD
     });
   };
   
@@ -196,7 +176,7 @@ class UserManage extends Component {
     const selectedViewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
     UserActions.showDialog({
       selectedViewItem: selectedViewItem,
-      dialogType: UserManageDialog.TYPE_EDIT
+      dialogType: UserDialog.TYPE_EDIT
     });
 
 
@@ -216,7 +196,7 @@ class UserManage extends Component {
     //     userName: selectedViewItem.userNm,
     //     userPassword: selectedViewItem.userPasswd
     //   },
-    //   dialogType: UserManageDialog.TYPE_EDIT,
+    //   dialogType: UserDialog.TYPE_EDIT,
     // });
   };
 
@@ -391,8 +371,8 @@ class UserManage extends Component {
           </div>
           }
         </GrPane>
-        <UserManageInform compId={compId} />
-        <UserManageDialog compId={compId} />
+        <UserInform compId={compId} />
+        <UserDialog compId={compId} />
         <GrConfirm />
       </React.Fragment>
     );

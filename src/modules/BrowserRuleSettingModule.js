@@ -61,6 +61,25 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
+export const readBrowserRuleList = (module, compId) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readBrowserRuleList', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_BROWSERRULE_LIST_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
 export const readBrowserRuleListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
@@ -91,7 +110,7 @@ export const readBrowserRuleListPaged = (module, compId, extParam) => dispatch =
     });
 };
 
-export const getBrowserRuleSetting = (param) => dispatch => {
+export const getBrowserRule = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readBrowserRule', {'objId': param.objId}).then(

@@ -1,7 +1,8 @@
 import { Map, List, fromJS } from 'immutable';
 
-export const getCommonInitialState = (initOrderColumn, initOrder) => {
-    return Map({
+export const getCommonInitialState = (initOrderColumn, initOrder = '', extValue = {}, extParam = {}) => {
+
+    const initialState = Map({
         pending: false,
         error: false,
         resultMsg: '',
@@ -20,6 +21,8 @@ export const getCommonInitialState = (initOrderColumn, initOrder) => {
         dialogOpen: false,
         dialogType: ''
     });
+
+    return initialState.merge(fromJS(extValue)).set('defaultListParam', initialState.get('defaultListParam').merge(fromJS(extParam)));
 }
 
 export const handleListAction = (state, action) => {
@@ -55,17 +58,17 @@ export const handleListAction = (state, action) => {
 
 export const handleListPagedAction = (state, action) => {
     const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
-        return state.setIn(['viewItems', action.compId], Map({
-            'listData': List(data.map((e) => {return Map(e)})),
-            'listParam': state.get('defaultListParam').merge({
-                rowsFiltered: parseInt(recordsFiltered, 10),
-                rowsTotal: parseInt(recordsTotal, 10),
-                page: parseInt(draw, 10),
-                rowsPerPage: parseInt(rowLength, 10),
-                orderColumn: orderColumn,
-                orderDir: orderDir
-            })
-        }));
+    return state.setIn(['viewItems', action.compId], Map({
+        'listData': List(data.map((e) => {return Map(e)})),
+        'listParam': action.listParam.merge({
+            rowsFiltered: parseInt(recordsFiltered, 10),
+            rowsTotal: parseInt(recordsTotal, 10),
+            page: parseInt(draw, 10),
+            rowsPerPage: parseInt(rowLength, 10),
+            orderColumn: orderColumn,
+            orderDir: orderDir
+        })
+    }));
 }
 
 export const handleGetObjectAction = (state, compId, data) => {

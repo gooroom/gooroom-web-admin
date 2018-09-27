@@ -33,7 +33,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class UserManageDialog extends Component {
+class UserDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
@@ -122,11 +122,11 @@ class UserManageDialog extends Component {
         const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
 
         let title = "";
-        if(dialogType === UserManageDialog.TYPE_ADD) {
+        if(dialogType === UserDialog.TYPE_ADD) {
             title = "사용자 등록";
-        } else if(dialogType === UserManageDialog.TYPE_VIEW) {
+        } else if(dialogType === UserDialog.TYPE_VIEW) {
             title = "사용자 정보";
-        } else if(dialogType === UserManageDialog.TYPE_EDIT) {
+        } else if(dialogType === UserDialog.TYPE_EDIT) {
             title = "사용자 수정";
         }
 
@@ -143,7 +143,7 @@ class UserManageDialog extends Component {
                         value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
                         onChange={this.handleValueChange("userId")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType == UserManageDialog.TYPE_EDIT) ? true : false}
+                        disabled={(dialogType == UserDialog.TYPE_EDIT) ? true : false}
                     />
 
                     <TextField
@@ -177,10 +177,10 @@ class UserManageDialog extends Component {
           </form>
 
                 <DialogActions>
-                {(dialogType === UserManageDialog.TYPE_ADD) &&
+                {(dialogType === UserDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
                 }
-                {(dialogType === UserManageDialog.TYPE_EDIT) &&
+                {(dialogType === UserDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
@@ -203,6 +203,6 @@ const mapDispatchToProps = (dispatch) => ({
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserManageDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserDialog));
 
 

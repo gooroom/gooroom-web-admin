@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
 import { generateConfigObject } from './ClientConfSettingInform';
@@ -138,8 +137,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSettingComp));

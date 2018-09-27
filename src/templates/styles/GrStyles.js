@@ -208,7 +208,7 @@ export const GrCommonStyle = theme => ({
         marginBottom: "16px",
         fontSize: "14px",
     },
-    deptId: {
+    deptCd: {
         marginBottom: "12px"
     },
     

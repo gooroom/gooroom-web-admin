@@ -8,7 +8,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import ClientHostNameDialog from './ClientHostNameManageDialog';
 import { generateConfigObject } from './ClientHostNameManageInform';
@@ -132,8 +131,7 @@ const mapStateToProps = (state) => ({
 
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientHostNameComp));

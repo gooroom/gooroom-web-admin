@@ -27,7 +27,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class UserManageInform extends Component {
+class UserInform extends Component {
 
   // .................................................
 
@@ -92,5 +92,5 @@ const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserManageInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserInform));
 

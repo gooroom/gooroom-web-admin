@@ -2,6 +2,7 @@ import { handleActions } from 'redux-actions';
 import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'groupComp/COMMON_PENDING';
 const COMMON_FAILURE = 'groupComp/COMMON_FAILURE';
@@ -25,26 +26,7 @@ const CHG_COMPVARIABLE_DATA = 'groupComp/CHG_COMPVARIABLE_DATA';
 const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
 
 // ...
-const initialState = Map({
-    pending: false,
-    error: false,
-    resultMsg: '',
-
-    defaultListParam: Map({
-        keyword: '',
-        orderDir: 'desc',
-        orderColumn: 'chGrpNm',
-        page: 0,
-        rowsPerPage: 10,
-        rowsPerPageOptions: List([5, 10, 25]),
-        rowsTotal: 0,
-        rowsFiltered: 0
-    }),
-
-    dialogOpen: false,
-    dialogType: '',
-    dialogTabValue: 0
-});
+const initialState = commonHandleActions.getCommonInitialState('chGrpNm');
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -271,41 +253,19 @@ export default handleActions({
     },
 
     [GET_GROUP_LISTPAGED_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
-        return state.setIn(['viewItems', action.compId], Map({
-            'listData': List(data.map((e) => {return Map(e)})),
-            'listParam': state.get('defaultListParam').merge({
-                rowsFiltered: parseInt(recordsFiltered, 10),
-                rowsTotal: parseInt(recordsTotal, 10),
-                page: parseInt(draw, 10),
-                rowsPerPage: parseInt(rowLength, 10),
-                orderColumn: orderColumn,
-                orderDir: orderDir
-            })
-        }));
+        return commonHandleActions.handleListPagedAction(state, action);
     },
     [SHOW_CLIENTGROUP_DIALOG]: (state, action) => {
-        return state.merge({
-            editingItem: action.selectedViewItem,
-            dialogOpen: true,
-            dialogType: action.dialogType,
-        });
+        return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_CLIENTGROUP_DIALOG]: (state, action) => {
-        return state.merge({
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleCloseDialogAction(state, action);
     },
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
-        return state
-                .setIn(['viewItems', action.compId, 'selectedViewItem'], action.selectedViewItem)
-                .setIn(['viewItems', action.compId, 'informOpen'], true);
+        return commonHandleActions.handleShowInformAction(state, action);
     },
     [CLOSE_CLIENTGROUP_INFORM]: (state, action) => {
-        return state
-                .setIn(['viewItems', action.compId, 'informOpen'], false)
-                .deleteIn(['viewItems', action.compId, 'selectedViewItem']);
+        return commonHandleActions.handleCloseInformAction(state, action);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
@@ -330,42 +290,10 @@ export default handleActions({
         });
     },
     [EDIT_CLIENTGROUP_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'grpId']) == action.grpId) {
-                        // replace
-                        newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'grpId']) == action.grpId) {
-                        // replace
-                        newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleDeleteSuccessAction(state, action);
     },
 
 }, initialState);
