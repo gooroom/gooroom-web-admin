@@ -1,10 +1,13 @@
 import { combineReducers } from 'redux';
 
+import GlobalModule from './GlobalModule';
+
 import ClientRegKeyModule from './ClientRegKeyModule';
 import ClientProfileSetModule from './ClientProfileSetModule';
 
 import ClientGroupModule from './ClientGroupModule';
 import UserModule from './UserModule';
+import DeptModule from './DeptModule';
 
 import ClientManageModule from './ClientManageModule';
 
@@ -28,6 +31,8 @@ import AdminModule from './AdminModule';
 
 export default combineReducers({
 
+    GlobalModule,
+    
     ClientRegKeyModule, 
     ClientProfileSetModule,
 
@@ -45,6 +50,7 @@ export default combineReducers({
     ClientManageModule,
     ClientGroupModule,
     UserModule,
+    DeptModule,
 
     JobManageModule, 
     

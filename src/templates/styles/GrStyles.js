@@ -228,6 +228,11 @@ export const GrCommonStyle = theme => ({
         minWidth: '34px'
     },
 
+    popoverMsg: {
+        margin: theme.spacing.unit * 2,
+        backgroundColor: theme.palette.error.light
+    },
+
     // Dialog Container and row - common (containerClass)
     dialogContainer: {
         margin: "0px 30px",

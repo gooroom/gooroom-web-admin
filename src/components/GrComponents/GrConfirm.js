@@ -15,14 +15,6 @@ import Dialog from '@material-ui/core/Dialog';
 
 class GrConfirm extends Component {
 
-  state = {
-    open: false,
-  }
-
-  handleClose = (selectValue) => {
-    this.setState({ open: false });
-  };
-
   handleCancel = () => {
     const { GrConfirmActions, GrConfirmProps } = this.props;
     GrConfirmActions.closeConfirm({
@@ -47,7 +39,7 @@ class GrConfirm extends Component {
 
     return (
        <Dialog
-          onClose={this.handleClose}
+          onClose={this.handleCancel}
           open={GrConfirmProps.confirmOpen}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"

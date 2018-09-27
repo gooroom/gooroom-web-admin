@@ -154,8 +154,8 @@ class MediaControlSetting extends Component {
     const { MediaControlSettingProps, GrConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(MediaControlSettingProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
-      confirmTitle: '매체재어정책정보 삭제',
-      confirmMsg: '매체재어정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmTitle: '매체제어정책정보 삭제',
+      confirmMsg: '매체제어정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedViewItem
