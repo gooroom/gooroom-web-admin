@@ -110,13 +110,13 @@ class DeptManage extends Component {
               <Card className={classes.deptTreeCard}>
                 <GrTreeList
                   useFolderIcons={true}
-                  listHeight="24px"
-                  url="readChildrenDeptList"
-                  paramKeyName="deptCd"
-                  rootKeyValue="0"
-                  keyName="key"
-                  title="title"
-                  startingDepth="2"
+                  listHeight='24px'
+                  url='readChildrenDeptList'
+                  paramKeyName='deptCd'
+                  rootKeyValue='0'
+                  keyName='key'
+                  title='title'
+                  startingDepth='2'
                   compId={compId}
                   onSelectNode={this.handleSelectDept}
                   onCheckedNode={this.handleCheckedDept}
