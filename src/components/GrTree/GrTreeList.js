@@ -110,10 +110,13 @@ class GrTreeList extends Component {
         parents = parents.filter(e => e.parentIndex != index);
         // 2. insert new child data
         parents.splice.apply(parents, [index + 1, 0].concat(resData));
+
         // 3. reset parent index 
         parents = parents.map((obj, i) => {
-          if (i > index + resData.length && obj.parentIndex > this.state.startingDepth) {
-            obj.parentIndex = obj.parentIndex + (resData.length - oldChildrenLength);
+          if (i > index + resData.length && obj.parentIndex > 0) {
+            if(obj.parentIndex > index) {
+              obj.parentIndex = obj.parentIndex + resData.length;
+            }
           }
           return obj;
         });
@@ -127,8 +130,6 @@ class GrTreeList extends Component {
                 return obj;
             }
         });
-
-        console.log('newExpandedListItems... ', newExpandedListItems);
 
         this.setState({
             expandedListItems: newExpandedListItems,
@@ -343,8 +344,6 @@ class GrTreeList extends Component {
 
         listItem._shouldRender = // (listItem._shouldRender) ||
           (listItem.depth >= startingDepth && parentsAreExpanded(listItem));
-
-        console.log('>>>> ' + listItem.title + ' : ' + listItem._shouldRender + ' : ' + listItem.parentIndex);
         listItem._primaryText = listItem[contentKey];
 
         return listItem;
@@ -409,7 +408,6 @@ class GrTreeList extends Component {
     function parentsAreExpanded(listItem) {
       if (listItem.depth > startingDepth) {
         if (expandedListItems.indexOf(listItem.parentIndex) === -1) {
-          console.log('>>FF>> ' + listItem.title + ' : ' + listItem.parentIndex);
           return false;
         } else {
           const parent = datas.filter((_listItem, index) => {
