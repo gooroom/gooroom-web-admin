@@ -37,9 +37,7 @@ import Typography from '@material-ui/core/Typography';
 
 const theme = createMuiTheme({
   overrides: {
-    // Name of the component ⚛️ / style sheet
     MuiButton: {
-      // Name of the rule
       sizeSmall: {
         padding: 0
       },

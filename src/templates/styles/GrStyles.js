@@ -3,7 +3,6 @@ import { grLayout } from "templates/default/GrLayout";
 
 export const GrCommonStyle = theme => ({
 
-
     // Full page. - main container
     fullRoot: {
         minHeight: "100vh",
@@ -196,7 +195,7 @@ export const GrCommonStyle = theme => ({
 
     // Department manager
     deptTreeCard: {
-        minHeight: "600px"
+        minHeight: "500px"
     },
     deptInfoCard: {
         marginBottom: "0px"
@@ -230,7 +229,7 @@ export const GrCommonStyle = theme => ({
 
     popoverMsg: {
         margin: theme.spacing.unit * 2,
-        backgroundColor: theme.palette.error.light
+        color: theme.palette.error.light
     },
 
     // Dialog Container and row - common (containerClass)

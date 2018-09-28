@@ -36,65 +36,60 @@ import RemoveIcon from '@material-ui/icons/Remove';
 class DeptManage extends Component {
   
   handleSelectDept = (node) => {
-    console.log('handleSelectDept................... ', node);
-
+    const { DeptProps, DeptActions } = this.props;
     const { UserProps, UserActions } = this.props;
     const compId = this.props.match.params.grMenuId;
     // show user list in dept.
     UserActions.readUserListPaged(UserProps, compId, {
       deptCd: node.key, page:0
     });
-
-    // this.setState({
-    //   deptName: node.title,
-    //   deptCd: node.key
-    // });
-  }
-
-  handleCheckedDept = (checked, imperfect) => {
-    console.log('handleCheckedDept: checked ........ ', checked);
-
-  }
-
-  handleCreateButtonForDept = () => {
-    //console.log('handleCreateButtonForDept............');
-
-    if(this.props.DeptProps.get('selectedDeptCd') !== '') {
-
-    } else {
-
-    }
-
-    console.log('click....', this.props.DeptProps.toJS());
-
-
-    return;
-
-    this.props.DeptActions.showDialog({
-      selectedViewItem: {
-        deptCd: '',
-        deptNm: ''
-      },
-      dialogType: DeptDialog.TYPE_ADD
+    // Check selectedDeptCd
+    DeptActions.changeCompVariableObject({
+      compId: compId,
+      valueObj: {selectedDeptCd: node.key, selectedDeptNm: node.title}
     });
   }
 
-  handleDeleteButtonForDept = (event) => {
-    const { GlobalActions } = this.props;
-
-    GlobalActions.showElementMsg(event.currentTarget, '테스트 문장입니다.');
-    console.log('handleDeleteButtonForDept............', event.currentTarget);
+  handleCheckedDept = (checked, imperfect) => {
+    //console.log('handleCheckedDept: checked ........ ', checked);
   }
-  handleDeleteButtonForClientGroupConfirmResult = (confirmValue, confirmObject) => {
+
+  handleCreateButtonForDept = (event) => {
+    const { DeptProps, DeptActions } = this.props;
+    const compId = this.props.match.params.grMenuId;
+    const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+    if(selectedDeptCd && selectedDeptCd !== '') {
+      this.props.DeptActions.showDialog({
+        selectedViewItem: {
+          deptCd: '',
+          deptNm: '',
+          selectedDeptCd: selectedDeptCd
+        },
+        dialogType: DeptDialog.TYPE_ADD
+      });
+    } else {
+      this.props.GlobalActions.showElementMsg(event.currentTarget, '상위 조직을 선택 하세요.');
+    }
+  }
+
+  handleDeleteButtonForDept = (event) => {
+    //this.props.GlobalActions.showElementMsg(event.currentTarget, '테스트 문장입니다.');
+  }
+  handleDeleteButtonForDeptConfirmResult = (confirmValue, confirmObject) => {
+  }
+
+  handleResetDeptTree = (deptCd) => {
+    this.grTreeList.resetTreeNode(deptCd);
   }
 
   render() {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const deptName = '**조직명';
-    const deptCd = '**조직코드';
 
+    const { DeptProps } = this.props;
     const compId = this.props.match.params.grMenuId;
+    const selectedDeptNm = DeptProps.getIn(['viewItems', compId, 'selectedDeptNm']);
+    const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
     return (
       <React.Fragment>
@@ -102,7 +97,7 @@ class DeptManage extends Component {
         <GrPane>
           <Grid container spacing={24}>
             <Grid item xs={12}>
-              <Button size="small" variant="contained" color="primary" onClick={() => {this.handleCreateButtonForDept();}} >
+              <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForDept} >
                 <AddIcon />
                 등록
               </Button>
@@ -111,7 +106,7 @@ class DeptManage extends Component {
                 삭제
               </Button>
             </Grid>
-            <Grid item xs={12} sm={5}>
+            <Grid item xs={12} sm={12} lg={4}>
               <Card className={classes.deptTreeCard}>
                 <GrTreeList
                   useFolderIcons={true}
@@ -125,43 +120,29 @@ class DeptManage extends Component {
                   compId={compId}
                   onSelectNode={this.handleSelectDept}
                   onCheckedNode={this.handleCheckedDept}
+                  onRef={ref => (this.grTreeList = ref)}
                 />
               </Card>
             </Grid>
-            <Grid item xs={12} sm={7}>
+            <Grid item xs={12} sm={12} lg={8}>
               <Card className={classes.deptInfoCard}>
                 <CardContent>
-                  <Typography className={classes.deptTitle} color="textSecondary">
-                  조직 정보
-                  </Typography>
-                  <Typography variant="headline" component="h2">
-                  {deptName}
-                  </Typography>
-                  <Typography className={classes.deptCd} color="textSecondary">
-                  {bull} ID - {deptCd}
-                  </Typography>
-                  <Typography component="p">
-                    {bull} {'"이 조직에 대한 설명 또는 상세 정보"'}
-                  </Typography>
-                
+                  <Typography className={classes.deptTitle} color="textSecondary">조직 정보</Typography>
+                  <Typography variant="headline" component="h2">{selectedDeptNm}</Typography>
+                  <Typography className={classes.deptCd} color="textSecondary">{bull} 부서코드 - {selectedDeptCd}</Typography>
+                  <Typography component="p">{bull} {'"이 조직에 대한 설명 또는 상세 정보"'}</Typography>
                 </CardContent>
               </Card>
               <Card className={classes.deptUserCard}>
                 <CardContent>
-                  <Typography className={classes.deptTitle} color="textSecondary">
-                  사용자 정보
-                  </Typography>
-                  <UserListComp 
-                    name='UserListComp'
-                    compId={compId}
-                    deptCd=''
-                  />
+                  <Typography className={classes.deptTitle} color="textSecondary">사용자 정보</Typography>
+                  <UserListComp name='UserListComp' compId={compId} deptCd='' />
                 </CardContent>
               </Card>
             </Grid>
           </Grid>
         </GrPane>
-        <DeptDialog compId={compId} />
+        <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
         <GrConfirm />
       </React.Fragment>
     );

@@ -61,19 +61,6 @@ class DeptDialog extends Component {
         });
     }
 
-    handleMouseDownPassword = event => {
-        event.preventDefault();
-    };
-
-    handleClickShowPassword = () => {
-        const { DeptProps, DeptActions } = this.props;
-        const editingItem = DeptProps.get('editingItem');
-        DeptActions.setEditingItemValue({
-            name: 'showPassword',
-            value: !editingItem.get('showPassword')
-        });
-    };
-
     // 데이타 생성
     handleCreateData = (event) => {
         const { DeptProps, GrConfirmActions } = this.props;
@@ -87,13 +74,15 @@ class DeptDialog extends Component {
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { DeptProps, DeptActions, compId } = this.props;
-            DeptActions.createDeptData({
+            const { DeptProps, DeptActions, compId, resetCallback } = this.props;
+            DeptActions.createDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
-                userPasswd: DeptProps.getIn(['editingItem', 'userPasswd']),
-                deptNm: DeptProps.getIn(['editingItem', 'deptNm'])
+                deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
+                uprDeptCd: DeptProps.getIn(['editingItem', 'selectedDeptCd'])
             }).then((res) => {
-                DeptActions.readDeptListPaged(DeptProps, compId);
+                // DeptActions.readDeptListPaged(DeptProps, compId);
+                // tree refresh
+                resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
                 this.handleClose();
             });
         }
@@ -113,12 +102,13 @@ class DeptDialog extends Component {
         if(confirmValue) {
             const { DeptProps, DeptActions, compId } = this.props;
 
-            DeptActions.editDeptData({
+            DeptActions.editDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                 userPasswd: DeptProps.getIn(['editingItem', 'userPasswd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm'])
             }).then((res) => {
-                DeptActions.readDeptListPaged(DeptProps, compId);
+                // DeptActions.readDeptListPaged(DeptProps, compId);
+                // tree refresh
                 this.handleClose();
             });
         }
@@ -140,12 +130,23 @@ class DeptDialog extends Component {
             title = "조직 수정";
         }
 
+        const upperDeptInfo = DeptProps.getIn(['viewItems', compId, 'selectedDeptNm']) +
+            ' (' + DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']) + ')';
+
         return (
             <div>
             {(DeptProps.get('dialogOpen') && editingItem) &&
                 <Dialog open={DeptProps.get('dialogOpen')}>
                     <DialogTitle>{title}</DialogTitle>
                     <form noValidate autoComplete="off" className={classes.dialogContainer}>
+                    
+                        <TextField
+                            label="상위조직"
+                            value={upperDeptInfo}
+                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                            disabled={true}
+                        />
+
                         <TextField
                             label="조직아이디"
                             value={(editingItem.get('deptCd')) ? editingItem.get('deptCd') : ''}
