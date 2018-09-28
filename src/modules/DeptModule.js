@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { List } from 'immutable';
+import { List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -24,10 +24,11 @@ const SET_EDITING_ITEM_VALUE = 'dept/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'dept/CHG_LISTPARAM_DATA';
 const CHG_COMPVARIABLE_DATA = 'dept/CHG_COMPVARIABLE_DATA';
+const CHG_COMPVARIABLE_OBJECT = 'dept/CHG_COMPVARIABLE_OBJECT';
 
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chConfId', 'desc', {selectedDeptCd: ''});
+const initialState = commonHandleActions.getCommonInitialState('chConfId', 'desc');
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -171,24 +172,31 @@ export const changeCompVariable = (param) => dispatch => {
     });
 };
 
+export const changeCompVariableObject = (param) => dispatch => {
+    return dispatch({
+        type: CHG_COMPVARIABLE_OBJECT,
+        compId: param.compId,
+        valueObj: param.valueObj
+    });
+};
+
 const makeParameter = (param) => {
     return {
-        objId: param.get('objId'),
-        objName: param.get('objNm'),
-        objComment: param.get('comment'),
+        deptCd: param.deptCd,
+        deptNm: param.deptNm,
+        uprDeptCd: param.uprDeptCd,
 
-        webSocket: param.get('webSocket'),
-        webWorker: param.get('webWorker'),
-        trustSetupId: param.get('trustSetupId'),
-        untrustSetupId: param.get('untrustSetupId'),
-        trustUrlList: (param.get('trustUrlList')) ? param.get('trustUrlList').toArray() : []
+        optYn: 'Y', //param.get('deptCd'),
+        sortOrder: 1, //param.get('deptCd'),
+
+        desktopConfId: ''//param.get('deptCd')
     };
 }
 
 // create (add)
-export const createDeptSettingData = (itemObj) => dispatch => {
+export const createDeptInfo = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createDeptConf', makeParameter(itemObj)).then(
+    return requestPostAPI('createDeptInfo', makeParameter(itemObj)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
@@ -212,7 +220,7 @@ export const createDeptSettingData = (itemObj) => dispatch => {
 };
 
 // edit
-export const editDeptSettingData = (itemObj) => dispatch => {
+export const editDeptInfo = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptConf', makeParameter(itemObj)).then(
         (response) => {
@@ -263,7 +271,7 @@ export const editDeptSettingData = (itemObj) => dispatch => {
 };
 
 // delete
-export const deleteDeptSettingData = (param) => dispatch => {
+export const deleteDeptInfo = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteDeptConf', {'objId': param.objId}).then(
         (response) => {
@@ -329,6 +337,14 @@ export default handleActions({
     },
     [CHG_COMPVARIABLE_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
+    },
+    [CHG_COMPVARIABLE_OBJECT]: (state, action) => {
+        const oldValue = state.getIn(['viewItems', action.compId]);
+        if(oldValue) {
+            return state.setIn(['viewItems', action.compId], oldValue.merge(fromJS(action.valueObj)));
+        } else {
+            return state.setIn(['viewItems', action.compId], fromJS(action.valueObj));
+        }        
     },
     [CREATE_DEPT_SUCCESS]: (state, action) => {
         return state.merge({

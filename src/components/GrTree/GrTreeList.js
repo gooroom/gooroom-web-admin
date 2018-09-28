@@ -49,7 +49,12 @@ class GrTreeList extends Component {
   }
 
   componentDidMount() {
+    this.props.onRef(this);
     this.fetchTreeData(this.state.rootKeyValue);
+  }
+
+  componentWillUnmount() {
+    this.props.onRef(undefined)
   }
 
   fetchTreeData(keyValue, index) {
@@ -65,12 +70,14 @@ class GrTreeList extends Component {
         if (x.lazy) {
           children = [];
         }
+
         let node = {
           key: x[keyName],
           depth: (x.whleDeptCd.match(/;/g) || []).length,
           disabled: false,
           title: x[this.state.title],
-          children: children
+          children: children,
+          _shouldRender: true
         };
         if (index !== undefined) {
           node["parentIndex"] = index;
@@ -81,10 +88,11 @@ class GrTreeList extends Component {
       if (this.state.treeData.length > 0) {
         // set children data for stop refetch.
         let parents = this.state.treeData;
+        const oldChildrenLength = (parents[index].children) ? parents[index].children.length : 0;
+
         parents[index].children = resData.map(d => {
           return d.key;
         });
-        
         if(this.state.checked.includes(parents[index].key)) {
           // add checked data, by default checked.
           const newChecked = [...this.state.checked];
@@ -96,13 +104,16 @@ class GrTreeList extends Component {
             checked: newChecked  
           });
         }
+        
         // data merge.
-        // use SPLICE, CONCAT for insert in array
+        // 1. delete children
+        parents = parents.filter(e => e.parentIndex != index);
+        // 2. insert new child data
         parents.splice.apply(parents, [index + 1, 0].concat(resData));
-        // reset parentIndex with node after (index + redData.length)
+        // 3. reset parent index 
         parents = parents.map((obj, i) => {
           if (i > index + resData.length && obj.parentIndex > this.state.startingDepth) {
-            obj.parentIndex = obj.parentIndex + resData.length;
+            obj.parentIndex = obj.parentIndex + (resData.length - oldChildrenLength);
           }
           return obj;
         });
@@ -116,6 +127,8 @@ class GrTreeList extends Component {
                 return obj;
             }
         });
+
+        console.log('newExpandedListItems... ', newExpandedListItems);
 
         this.setState({
             expandedListItems: newExpandedListItems,
@@ -160,6 +173,17 @@ class GrTreeList extends Component {
     });
     // call select node event
     if (this.props.onSelectNode) this.props.onSelectNode(listItem);
+  }
+
+  resetTreeNode(keyValue) {
+    const index = this.state.treeData.findIndex((e) => {
+      return e.key == keyValue;
+    })
+    this.fetchTreeData(keyValue, index);
+    // select node
+    this.setState({
+      activeListItem: index
+    });
   }
 
   updateCheckStatus = (nodeKey, tempChecked, isChecked) => {
@@ -317,8 +341,10 @@ class GrTreeList extends Component {
           }
         };
 
-        listItem._shouldRender = //(listItem._shouldRender) ||
+        listItem._shouldRender = // (listItem._shouldRender) ||
           (listItem.depth >= startingDepth && parentsAreExpanded(listItem));
+
+        console.log('>>>> ' + listItem.title + ' : ' + listItem._shouldRender + ' : ' + listItem.parentIndex);
         listItem._primaryText = listItem[contentKey];
 
         return listItem;
@@ -380,13 +406,14 @@ class GrTreeList extends Component {
       }
     }
 
-    function parentsAreExpanded(listitem) {
-      if (listitem.depth > startingDepth) {
-        if (expandedListItems.indexOf(listitem.parentIndex) === -1) {
+    function parentsAreExpanded(listItem) {
+      if (listItem.depth > startingDepth) {
+        if (expandedListItems.indexOf(listItem.parentIndex) === -1) {
+          console.log('>>FF>> ' + listItem.title + ' : ' + listItem.parentIndex);
           return false;
         } else {
           const parent = datas.filter((_listItem, index) => {
-            return index === listitem.parentIndex;
+            return index === listItem.parentIndex;
           })[0];
           return parentsAreExpanded(parent);
         }
