@@ -17,7 +17,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
-import BrowserRuleSettingComp from 'views/Rules/UserConfig/BrowserRuleSettingComp';
+import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
 import MediaControlSettingComp from 'views/Rules/UserConfig/MediaControlSettingComp';
 import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
 
@@ -52,7 +52,7 @@ class UserInform extends Component {
 
           <Grid container spacing={16}>
             <Grid item xs={12} sm={12} lg={6}>
-              <BrowserRuleSettingComp
+              <BrowserRuleComp
                 compId={compId}
                 objId={selectedViewItem.get('clientConfigId')} 
                 objNm={selectedViewItem.get('clientConfigNm')} 

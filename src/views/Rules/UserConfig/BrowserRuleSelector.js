@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -22,17 +22,17 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-import BrowserRuleSettingComp from 'views/Rules/UserConfig/BrowserRuleSettingComp';
+import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class BrowserRuleSettingSelector extends Component {
+class BrowserRuleSelector extends Component {
 
   componentDidMount() {
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions, compId, initId } = this.props;
-    BrowserRuleSettingActions.readBrowserRuleList(BrowserRuleSettingProps, compId);
-    BrowserRuleSettingActions.changeCompVariable({
+    const { BrowserRuleProps, BrowserRuleActions, compId, initId } = this.props;
+    BrowserRuleActions.readBrowserRuleList(BrowserRuleProps, compId);
+    BrowserRuleActions.changeCompVariable({
       compId: compId,
       name: 'selectedOptionItemId',
       value: initId
@@ -40,8 +40,8 @@ class BrowserRuleSettingSelector extends Component {
   }
 
   handleChange = (event, value) => {
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions, compId } = this.props;
-    BrowserRuleSettingActions.changeCompVariable({
+    const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
+    BrowserRuleActions.changeCompVariable({
       compId: compId,
       name: 'selectedOptionItemId',
       value: event.target.value
@@ -51,11 +51,11 @@ class BrowserRuleSettingSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions, compId } = this.props;
+    const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
 
-    const selectedViewItem = BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = BrowserRuleSettingProps.getIn(['viewItems', compId, 'listAllData']);
-    let selectedOptionItemId = BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedViewItem = BrowserRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
+    let selectedOptionItemId = BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = listAllData.getIn([0, 'objId']);
     }
@@ -77,7 +77,7 @@ class BrowserRuleSettingSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <BrowserRuleSettingComp
+          <BrowserRuleComp
             compId={compId}
             objId={selectedOptionItemId}
             compType="VIEW"
@@ -90,13 +90,13 @@ class BrowserRuleSettingSelector extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  BrowserRuleSettingProps: state.BrowserRuleSettingModule
+  BrowserRuleProps: state.BrowserRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch)
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleSettingSelector));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleSelector));
 
 

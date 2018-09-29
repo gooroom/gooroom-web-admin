@@ -129,7 +129,7 @@ export const getBrowserRule = (param) => dispatch => {
     });
 };
 
-export const getBrowserRuleSettingByUserId = (param) => dispatch => {
+export const getBrowserRuleByUserId = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readBrowserRuleByUserId', {'userId': param.userId}).then(
@@ -189,7 +189,7 @@ const makeParameter = (param) => {
 }
 
 // create (add)
-export const createBrowserRuleSettingData = (itemObj) => dispatch => {
+export const createBrowserRuleData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('createBrowserRuleConf', makeParameter(itemObj)).then(
         (response) => {
@@ -215,7 +215,7 @@ export const createBrowserRuleSettingData = (itemObj) => dispatch => {
 };
 
 // edit
-export const editBrowserRuleSettingData = (itemObj) => dispatch => {
+export const editBrowserRuleData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateBrowserRuleConf', makeParameter(itemObj)).then(
         (response) => {
@@ -266,7 +266,7 @@ export const editBrowserRuleSettingData = (itemObj) => dispatch => {
 };
 
 // delete
-export const deleteBrowserRuleSettingData = (param) => dispatch => {
+export const deleteBrowserRuleData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteBrowserRuleConf', {'objId': param.objId}).then(
         (response) => {

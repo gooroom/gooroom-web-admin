@@ -36,7 +36,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-import BrowserRuleSettingSelector from 'views/Rules/UserConfig/BrowserRuleSettingSelector';
+import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaControlSettingSelector from 'views/Rules/UserConfig/MediaControlSettingSelector';
 
 
@@ -83,14 +83,14 @@ class DeptDialog extends Component {
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-            const { BrowserRuleSettingProps, MediaControlSettingProps, SecurityRuleProps } = this.props;
+            const { BrowserRuleProps, MediaControlSettingProps, SecurityRuleProps } = this.props;
 
             DeptActions.createDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
                 uprDeptCd: DeptProps.getIn(['editingItem', 'selectedDeptCd']),
 
-                browserRuleId: BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
+                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
                 mediaRuleId: MediaControlSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
                 clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
             }).then((res) => {
@@ -115,14 +115,14 @@ class DeptDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { DeptProps, DeptActions, compId } = this.props;
-            const { BrowserRuleSettingProps, MediaControlSettingProps, SecurityRuleProps } = this.props;
+            const { BrowserRuleProps, MediaControlSettingProps, SecurityRuleProps } = this.props;
 
             DeptActions.editDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                 userPasswd: DeptProps.getIn(['editingItem', 'userPasswd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
 
-                browserRuleId: BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
+                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
                 mediaRuleId: MediaControlSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
                 clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
             }).then((res) => {
@@ -191,9 +191,9 @@ class DeptDialog extends Component {
                                 <Tab label="단말보안정책" />
                             </Tabs>
                         </AppBar>
-                        {tabValue === 0 && <BrowserRuleSettingSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
-                        {tabValue === 1 && <BrowserRuleSettingSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
-                        {tabValue === 2 && <BrowserRuleSettingSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
+                        {tabValue === 0 && <BrowserRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
+                        {tabValue === 1 && <BrowserRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
+                        {tabValue === 2 && <BrowserRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
 
                     </form>
 
@@ -217,7 +217,7 @@ class DeptDialog extends Component {
 
 const mapStateToProps = (state) => ({
     DeptProps: state.DeptModule,
-    BrowserRuleSettingProps: state.BrowserRuleSettingModule,
+    BrowserRuleProps: state.BrowserRuleModule,
     MediaControlSettingProps: state.MediaControlSettingModule,
     SecurityRuleProps: state.SecurityRuleModule
 });

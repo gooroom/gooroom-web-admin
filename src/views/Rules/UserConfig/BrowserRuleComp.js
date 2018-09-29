@@ -7,10 +7,10 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 
-import BrowserRuleSettingDialog from './BrowserRuleSettingDialog';
-import { generateConfigObject } from './BrowserRuleSettingInform';
+import BrowserRuleDialog from './BrowserRuleDialog';
+import { generateConfigObject } from './BrowserRuleInform';
 import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
 
 import Card from '@material-ui/core/Card';
@@ -35,28 +35,28 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class BrowserRuleSettingComp extends Component {
+class BrowserRuleComp extends Component {
 
   handleEditBtnClick = (objId, compType) => {
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleSettingProps, compId, 'objId') : getSelectedObjectInComp(BrowserRuleSettingProps, compId);
+    const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId') : getSelectedObjectInComp(BrowserRuleProps, compId);
 
-    BrowserRuleSettingActions.showDialog({
+    BrowserRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
-      dialogType: BrowserRuleSettingDialog.TYPE_EDIT
+      dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
 
   render() {
 
     const { classes } = this.props;
-    const { BrowserRuleSettingProps, compId, compType } = this.props;
+    const { BrowserRuleProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
-    const selectedViewItem = BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = BrowserRuleSettingProps.getIn(['viewItems', compId, 'listAllData']);
-    const selectedOptionItemId = BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedViewItem = BrowserRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
+    const selectedOptionItemId = BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -131,19 +131,19 @@ class BrowserRuleSettingComp extends Component {
           </CardContent>
         }
       </Card>
-      <BrowserRuleSettingDialog compId={compId} />
+      <BrowserRuleDialog compId={compId} />
       </React.Fragment>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  BrowserRuleSettingProps: state.BrowserRuleSettingModule
+  BrowserRuleProps: state.BrowserRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch)
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleSettingComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleComp));
 

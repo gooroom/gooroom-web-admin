@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as UserActions from 'modules/UserModule';
-import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
@@ -86,7 +86,7 @@ class UserManage extends Component {
 
   handleRowClick = (event, id) => {
     const { UserProps, UserActions } = this.props;
-    const { BrowserRuleSettingActions, MediaControlSettingActions, SecurityRuleActions } = this.props;
+    const { BrowserRuleActions, MediaControlSettingActions, SecurityRuleActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
@@ -100,7 +100,7 @@ class UserManage extends Component {
     });
     
     // get browser rule info
-    BrowserRuleSettingActions.getBrowserRuleSettingByUserId({
+    BrowserRuleActions.getBrowserRuleByUserId({
       compId: compId,
       userId: clickedRowObject.get('userId')
     });
@@ -385,7 +385,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
-  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch),
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
