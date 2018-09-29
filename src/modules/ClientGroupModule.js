@@ -22,7 +22,7 @@ const CLOSE_CLIENTGROUP_DIALOG = 'groupComp/CLOSE_CLIENTGROUP_DIALOG';
 const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'groupComp/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'groupComp/CHG_COMPVARIABLE_DATA';
+const CHG_COMPDATA_VALUE = 'groupComp/CHG_COMPDATA_VALUE';
 const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
 
 // ...
@@ -107,7 +107,7 @@ export const changeListParamData = (param) => dispatch => {
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_DATA,
+        type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
         value: param.value
@@ -275,7 +275,7 @@ export default handleActions({
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
-    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+    [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
     [CHG_STORE_DATA]: (state, action) => {
