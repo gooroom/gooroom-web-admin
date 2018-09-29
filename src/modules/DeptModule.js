@@ -319,7 +319,7 @@ export default handleActions({
         return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_DEPT_DIALOG]: (state, action) => {
-        return commonHandleActions.handleCloseDialogAction(state, action);
+        return commonHandleActions.handleCloseDialogAction(state.set('dialogTabValue', 0), action);
     },
     [SHOW_DEPT_INFORM]: (state, action) => {
         return commonHandleActions.handleShowInformAction(state, action);
