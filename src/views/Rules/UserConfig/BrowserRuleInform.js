@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -27,7 +27,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class BrowserRuleSettingInform extends Component {
+class BrowserRuleInform extends Component {
 
   // .................................................
 
@@ -36,9 +36,9 @@ class BrowserRuleSettingInform extends Component {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const { BrowserRuleSettingProps, compId } = this.props;
-    const informOpen = BrowserRuleSettingProps.getIn(['viewItems', compId, 'informOpen']);
-    const selectedViewItem = generateConfigObject(BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedViewItem']));
+    const { BrowserRuleProps, compId } = this.props;
+    const informOpen = BrowserRuleProps.getIn(['viewItems', compId, 'informOpen']);
+    const selectedViewItem = generateConfigObject(BrowserRuleProps.getIn(['viewItems', compId, 'selectedViewItem']));
 
     return (
       <div>
@@ -94,14 +94,14 @@ class BrowserRuleSettingInform extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  BrowserRuleSettingProps: state.BrowserRuleSettingModule
+  BrowserRuleProps: state.BrowserRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch)
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleSettingInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleInform));
 
 export const generateConfigObject = (param) => {
 

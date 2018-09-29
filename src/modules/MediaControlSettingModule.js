@@ -61,6 +61,25 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
+export const readMediaControlSettingList = (module, compId) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readMediaRuleList', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_MEDIACONTROL_LIST_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
 export const readMediaControlSettingListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 

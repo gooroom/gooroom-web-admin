@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -37,24 +37,24 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class BrowserRuleSettingDialog extends Component {
+class BrowserRuleDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.BrowserRuleSettingActions.closeDialog();
+        this.props.BrowserRuleActions.closeDialog();
     }
 
     handleValueChange = name => event => {
         if(event.target.type === 'checkbox') {
-            this.props.BrowserRuleSettingActions.setEditingItemValue({
+            this.props.BrowserRuleActions.setEditingItemValue({
                 name: name,
                 value: (event.target.checked) ? 'allow' : 'disallow'
             });
         } else {
-            this.props.BrowserRuleSettingActions.setEditingItemValue({
+            this.props.BrowserRuleActions.setEditingItemValue({
                 name: name,
                 value: event.target.value
             });
@@ -62,62 +62,62 @@ class BrowserRuleSettingDialog extends Component {
     }
 
     handleWhiteListValueChange = index => event => {
-        this.props.BrowserRuleSettingActions.setWhiteList({
+        this.props.BrowserRuleActions.setWhiteList({
             index: index,
             value: event.target.value
         });
     }
 
     handleCreateData = (event) => {
-        const { BrowserRuleSettingProps, GrConfirmActions } = this.props;
+        const { BrowserRuleProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
             confirmTitle: '브라우저제어정보 등록',
             confirmMsg: '브라우저제어정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: BrowserRuleSettingProps.get('editingItem')
+            confirmObject: BrowserRuleProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
-            BrowserRuleSettingActions.createBrowserRuleSettingData(BrowserRuleSettingProps.get('editingItem'))
+            const { BrowserRuleProps, BrowserRuleActions } = this.props;
+            BrowserRuleActions.createBrowserRuleData(BrowserRuleProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(BrowserRuleSettingProps, BrowserRuleSettingActions.readBrowserRuleListPaged);
+                    refreshDataListInComp(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
                     this.handleClose();
                 });
         }
     }
 
     handleEditData = (event, id) => {
-        const { BrowserRuleSettingProps, GrConfirmActions } = this.props;
+        const { BrowserRuleProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
             confirmTitle: '브라우저제어정보 수정',
             confirmMsg: '브라우저제어정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            confirmObject: BrowserRuleSettingProps.get('editingItem')
+            confirmObject: BrowserRuleProps.get('editingItem')
         });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
-            BrowserRuleSettingActions.editBrowserRuleSettingData(BrowserRuleSettingProps.get('editingItem'))
+            const { BrowserRuleProps, BrowserRuleActions } = this.props;
+            BrowserRuleActions.editBrowserRuleData(BrowserRuleProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(BrowserRuleSettingProps, BrowserRuleSettingActions.readBrowserRuleListPaged);
+                    refreshDataListInComp(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
                     this.handleClose();
                 });
         }
     }
 
     handleAddWhiteList = () => {
-        const { BrowserRuleSettingActions } = this.props;
-        BrowserRuleSettingActions.addWhiteList();
+        const { BrowserRuleActions } = this.props;
+        BrowserRuleActions.addWhiteList();
     }
 
     handleDeleteWhiteList = index => event => {
-        const { BrowserRuleSettingActions } = this.props;
-        BrowserRuleSettingActions.deleteWhiteList(index);
+        const { BrowserRuleActions } = this.props;
+        BrowserRuleActions.deleteWhiteList(index);
     }
 
     checkAllow = value => {
@@ -128,23 +128,23 @@ class BrowserRuleSettingDialog extends Component {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
 
-        const { BrowserRuleSettingProps } = this.props;
-        const dialogType = BrowserRuleSettingProps.get('dialogType');
-        const editingItem = (BrowserRuleSettingProps.get('editingItem')) ? BrowserRuleSettingProps.get('editingItem') : null;
+        const { BrowserRuleProps } = this.props;
+        const dialogType = BrowserRuleProps.get('dialogType');
+        const editingItem = (BrowserRuleProps.get('editingItem')) ? BrowserRuleProps.get('editingItem') : null;
 
         let title = "";
-        if(dialogType === BrowserRuleSettingDialog.TYPE_ADD) {
+        if(dialogType === BrowserRuleDialog.TYPE_ADD) {
             title = "브라우저제어설정 등록";
-        } else if(dialogType === BrowserRuleSettingDialog.TYPE_VIEW) {
+        } else if(dialogType === BrowserRuleDialog.TYPE_VIEW) {
             title = "브라우저제어설정 정보";
-        } else if(dialogType === BrowserRuleSettingDialog.TYPE_EDIT) {
+        } else if(dialogType === BrowserRuleDialog.TYPE_EDIT) {
             title = "브라우저제어설정 수정";
         }
 
         return (
             <div>
-            {(BrowserRuleSettingProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={BrowserRuleSettingProps.get('dialogOpen')}>
+            {(BrowserRuleProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={BrowserRuleProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
@@ -154,7 +154,7 @@ class BrowserRuleSettingDialog extends Component {
                         value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
-                        disabled={(dialogType === BrowserRuleSettingDialog.TYPE_VIEW)}
+                        disabled={(dialogType === BrowserRuleDialog.TYPE_VIEW)}
                     />
                     <TextField
                         id="comment"
@@ -162,9 +162,9 @@ class BrowserRuleSettingDialog extends Component {
                         value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === BrowserRuleSettingDialog.TYPE_VIEW)}
+                        disabled={(dialogType === BrowserRuleDialog.TYPE_VIEW)}
                     />
-                    {(dialogType === BrowserRuleSettingDialog.TYPE_VIEW) &&
+                    {(dialogType === BrowserRuleDialog.TYPE_VIEW) &&
                         <div>
                             <Grid container spacing={24} className={classes.grNormalTableRow}>
                                 <Grid item xs={12}>
@@ -172,7 +172,7 @@ class BrowserRuleSettingDialog extends Component {
                             </Grid>
                         </div>                        
                     }
-                    {(dialogType === BrowserRuleSettingDialog.TYPE_EDIT || dialogType === BrowserRuleSettingDialog.TYPE_ADD) &&
+                    {(dialogType === BrowserRuleDialog.TYPE_EDIT || dialogType === BrowserRuleDialog.TYPE_ADD) &&
                         <div className={classes.dialogItemRowBig}>
                             <Grid item xs={12} container 
                                 alignItems="flex-end" direction="row" justify="space-between" 
@@ -249,10 +249,10 @@ class BrowserRuleSettingDialog extends Component {
                 </form>
 
                 <DialogActions>
-                {(dialogType === BrowserRuleSettingDialog.TYPE_ADD) &&
+                {(dialogType === BrowserRuleDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
                 }
-                {(dialogType === BrowserRuleSettingDialog.TYPE_EDIT) &&
+                {(dialogType === BrowserRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
@@ -267,13 +267,13 @@ class BrowserRuleSettingDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    BrowserRuleSettingProps: state.BrowserRuleSettingModule
+    BrowserRuleProps: state.BrowserRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch),
+    BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleSettingDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleDialog));
 

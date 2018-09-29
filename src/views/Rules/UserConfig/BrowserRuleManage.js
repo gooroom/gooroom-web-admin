@@ -6,21 +6,21 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { refreshDataListInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
-import { generateConfigObject } from './BrowserRuleSettingInform';
+import { generateConfigObject } from './BrowserRuleInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
-import BrowserRuleSettingDialog from './BrowserRuleSettingDialog';
-import BrowserRuleSettingInform from './BrowserRuleSettingInform';
+import BrowserRuleDialog from './BrowserRuleDialog';
+import BrowserRuleInform from './BrowserRuleInform';
 import GrPane from 'containers/GrContent/GrPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -47,7 +47,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class BrowserRuleSetting extends Component {
+class BrowserRuleManage extends Component {
 
   columnHeaders = [
     { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
@@ -71,27 +71,27 @@ class BrowserRuleSetting extends Component {
   }
 
   handleChangePage = (event, page) => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+    const { BrowserRuleActions, BrowserRuleProps } = this.props;
+    BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+    const { BrowserRuleActions, BrowserRuleProps } = this.props;
+    BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    const { BrowserRuleActions, BrowserRuleProps } = this.props;
     let orderDir = "desc";
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId, {
+    BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -99,12 +99,12 @@ class BrowserRuleSetting extends Component {
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
-    BrowserRuleSettingActions.readBrowserRuleListPaged(BrowserRuleSettingProps, this.props.match.params.grMenuId);
+    const { BrowserRuleActions, BrowserRuleProps } = this.props;
+    BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId);
   };
 
   handleKeywordChange = name => event => {
-    this.props.BrowserRuleSettingActions.changeListParamData({
+    this.props.BrowserRuleActions.changeListParamData({
       name: 'keyword', 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
@@ -112,21 +112,21 @@ class BrowserRuleSetting extends Component {
   }
   
   handleRowClick = (event, id) => {
-    const { BrowserRuleSettingActions, BrowserRuleSettingProps } = this.props;
+    const { BrowserRuleActions, BrowserRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedViewItem = getRowObjectById(BrowserRuleSettingProps, compId, id, 'objId');
+    const selectedViewItem = getRowObjectById(BrowserRuleProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
-    // BrowserRuleSettingActions.showDialog({
+    // BrowserRuleActions.showDialog({
     //   selectedViewItem: viewObject,
-    //   dialogType: BrowserRuleSettingDialog.TYPE_VIEW,
+    //   dialogType: BrowserRuleDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    BrowserRuleSettingActions.showInform({
+    BrowserRuleActions.showInform({
       compId: compId,
       selectedViewItem: selectedViewItem
     });
@@ -134,26 +134,26 @@ class BrowserRuleSetting extends Component {
   };
 
   handleCreateButton = () => {
-    this.props.BrowserRuleSettingActions.showDialog({
+    this.props.BrowserRuleActions.showDialog({
       selectedViewItem: Map(),
-      dialogType: BrowserRuleSettingDialog.TYPE_ADD
+      dialogType: BrowserRuleDialog.TYPE_ADD
     });
   }
 
   handleEditClick = (event, id) => { 
-    const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
-    const selectedViewItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const { BrowserRuleProps, BrowserRuleActions } = this.props;
+    const selectedViewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
-    BrowserRuleSettingActions.showDialog({
+    BrowserRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
-      dialogType: BrowserRuleSettingDialog.TYPE_EDIT
+      dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { BrowserRuleSettingProps, GrConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(BrowserRuleSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const { BrowserRuleProps, GrConfirmActions } = this.props;
+    const selectedViewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
       confirmMsg: '단말정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
@@ -164,24 +164,24 @@ class BrowserRuleSetting extends Component {
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
     if(confirmValue) {
-      const { BrowserRuleSettingProps, BrowserRuleSettingActions } = this.props;
+      const { BrowserRuleProps, BrowserRuleActions } = this.props;
 
-      BrowserRuleSettingActions.deleteBrowserRuleSettingData({
+      BrowserRuleActions.deleteBrowserRuleData({
         objId: paramObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComp(BrowserRuleSettingProps, BrowserRuleSettingActions.readBrowserRuleListPaged);
+        refreshDataListInComp(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
       });
     }
   };
 
   render() {
     const { classes } = this.props;
-    const { BrowserRuleSettingProps } = this.props;
+    const { BrowserRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;//BrowserRuleSettingProps.listParam.rowsPerPage - BrowserRuleSettingProps.listData.length;
+    const emptyRows = 0;//BrowserRuleProps.listParam.rowsPerPage - BrowserRuleProps.listData.length;
 
-    const listObj = BrowserRuleSettingProps.getIn(['viewItems', compId]);
+    const listObj = BrowserRuleProps.getIn(['viewItems', compId]);
 
     return (
       <div>
@@ -288,8 +288,8 @@ class BrowserRuleSetting extends Component {
         }
         </GrPane>
         {/* dialog(popup) component area */}
-        <BrowserRuleSettingInform compId={compId} />
-        <BrowserRuleSettingDialog compId={compId} />
+        <BrowserRuleInform compId={compId} />
+        <BrowserRuleDialog compId={compId} />
         <GrConfirm />
       </div>
     );
@@ -297,15 +297,15 @@ class BrowserRuleSetting extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  BrowserRuleSettingProps: state.BrowserRuleSettingModule
+  BrowserRuleProps: state.BrowserRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch),
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleSetting));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleManage));
 
 
 
