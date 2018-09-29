@@ -49,11 +49,16 @@ class GrTreeList extends Component {
   }
 
   componentDidMount() {
+    console.log('TREE ::: componentDidMount');
+    if(this.props.onInitTreeData) {
+      this.props.onInitTreeData();
+    }
     this.props.onRef(this);
     this.fetchTreeData(this.state.rootKeyValue);
   }
 
   componentWillUnmount() {
+    console.log('TREE ::: componentWillUnmount');
     this.props.onRef(undefined)
   }
 

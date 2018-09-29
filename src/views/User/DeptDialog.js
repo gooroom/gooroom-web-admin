@@ -63,6 +63,13 @@ class DeptDialog extends Component {
         this.props.DeptActions.closeDialog();
     }
 
+    handleChangeTabs = (event, value) => {
+        this.props.DeptActions.changeStoreData({
+            name: 'dialogTabValue',
+            value: value
+        });
+    };
+
     handleValueChange = name => event => {
         const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
         this.props.DeptActions.setEditingItemValue({

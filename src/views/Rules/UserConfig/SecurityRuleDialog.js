@@ -100,7 +100,7 @@ class SecurityRuleDialog extends Component {
         if(confirmValue) {
             const { SecurityRuleProps, SecurityRuleActions } = this.props;
 
-            SecurityRuleActions.editSecurityRule(SecurityRuleProps.get('editingItem'))
+            SecurityRuleActions.editSecurityRule(SecurityRuleProps.get('editingItem'), this.props.compId)
                 .then((res) => {
                     refreshDataListInComp(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
                     this.handleClose();

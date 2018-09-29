@@ -26,6 +26,7 @@ const CHG_LISTPARAM_DATA = 'dept/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'dept/CHG_COMPDATA_VALUE';
 const CHG_COMPDATA_OBJECT = 'dept/CHG_COMPDATA_OBJECT';
 
+const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId', 'desc', {dialogTabValue: 0});
@@ -193,6 +194,14 @@ const makeParameter = (param) => {
     };
 }
 
+export const changeStoreData = (param) => dispatch => {
+    return dispatch({
+        type: CHG_STORE_DATA,
+        name: param.name,
+        value: param.value
+    });
+};
+
 // create (add)
 export const createDeptInfo = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
@@ -345,6 +354,11 @@ export default handleActions({
         } else {
             return state.setIn(['viewItems', action.compId], fromJS(action.valueObj));
         }        
+    },
+    [CHG_STORE_DATA]: (state, action) => {
+        return state.merge({
+            [action.name]: action.value
+        });
     },
     [CREATE_DEPT_SUCCESS]: (state, action) => {
         return state.merge({

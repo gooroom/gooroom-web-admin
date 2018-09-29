@@ -103,7 +103,7 @@ class MediaRuleDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { MediaRuleProps, MediaRuleActions } = this.props;
-            MediaRuleActions.editMediaRuleData(MediaRuleProps.get('editingItem'))
+            MediaRuleActions.editMediaRuleData(MediaRuleProps.get('editingItem'), this.props.compId)
                 .then((res) => {
                     refreshDataListInComp(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
                     this.handleClose();
