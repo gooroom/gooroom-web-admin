@@ -22,7 +22,7 @@ const CLOSE_MEDIACONTROL_DIALOG = 'mediaRule/CLOSE_MEDIACONTROL_DIALOG';
 const SET_EDITING_ITEM_VALUE = 'mediaRule/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'mediaRule/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'mediaRule/CHG_COMPVARIABLE_DATA';
+const CHG_COMPDATA_VALUE = 'mediaRule/CHG_COMPDATA_VALUE';
 
 const SET_BLUETOOTHMAC_ITEM = 'mediaRule/SET_BLUETOOTHMAC_ITEM';
 const ADD_BLUETOOTHMAC_ITEM = 'mediaRule/ADD_BLUETOOTHMAC_ITEM';
@@ -167,7 +167,7 @@ export const changeListParamData = (param) => dispatch => {
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_DATA,
+        type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
         value: param.value
@@ -359,7 +359,7 @@ export default handleActions({
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
-    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+    [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
     [CREATE_MEDIACONTROL_SUCCESS]: (state, action) => {

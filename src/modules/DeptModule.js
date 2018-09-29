@@ -23,8 +23,8 @@ const CLOSE_DEPT_DIALOG = 'dept/CLOSE_DEPT_DIALOG';
 const SET_EDITING_ITEM_VALUE = 'dept/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'dept/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'dept/CHG_COMPVARIABLE_DATA';
-const CHG_COMPVARIABLE_OBJECT = 'dept/CHG_COMPVARIABLE_OBJECT';
+const CHG_COMPDATA_VALUE = 'dept/CHG_COMPDATA_VALUE';
+const CHG_COMPDATA_OBJECT = 'dept/CHG_COMPDATA_OBJECT';
 
 
 // ...
@@ -165,7 +165,7 @@ export const changeListParamData = (param) => dispatch => {
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_DATA,
+        type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
         value: param.value
@@ -174,7 +174,7 @@ export const changeCompVariable = (param) => dispatch => {
 
 export const changeCompVariableObject = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_OBJECT,
+        type: CHG_COMPDATA_OBJECT,
         compId: param.compId,
         valueObj: param.valueObj
     });
@@ -335,10 +335,10 @@ export default handleActions({
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
-    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+    [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
-    [CHG_COMPVARIABLE_OBJECT]: (state, action) => {
+    [CHG_COMPDATA_OBJECT]: (state, action) => {
         const oldValue = state.getIn(['viewItems', action.compId]);
         if(oldValue) {
             return state.setIn(['viewItems', action.compId], oldValue.merge(fromJS(action.valueObj)));

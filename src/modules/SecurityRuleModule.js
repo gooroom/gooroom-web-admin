@@ -22,7 +22,7 @@ const CLOSE_SECURITYRULE_DIALOG = 'securityRule/CLOSE_SECURITYRULE_DIALOG';
 const SET_EDITING_ITEM_VALUE = 'securityRule/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'securityRule/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'securityRule/CHG_COMPVARIABLE_DATA';
+const CHG_COMPDATA_VALUE = 'securityRule/CHG_COMPDATA_VALUE';
 
 
 // ...
@@ -144,7 +144,7 @@ export const changeListParamData = (param) => dispatch => {
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_DATA,
+        type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
         value: param.value
@@ -307,7 +307,7 @@ export default handleActions({
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
-    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+    [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
     [CREATE_SECURITYRULE_SUCCESS]: (state, action) => {

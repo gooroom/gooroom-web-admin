@@ -22,7 +22,7 @@ const CLOSE_UPDATESERVER_DIALOG = 'clientUpdateServer/CLOSE_UPDATESERVER_DIALOG'
 const SET_EDITING_ITEM_VALUE = 'clientUpdateServer/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'clientUpdateServer/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'clientUpdateServer/CHG_COMPVARIABLE_DATA';
+const CHG_COMPDATA_VALUE = 'clientUpdateServer/CHG_COMPDATA_VALUE';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId');
@@ -143,7 +143,7 @@ export const changeListParamData = (param) => dispatch => {
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_DATA,
+        type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
         value: param.value
@@ -301,7 +301,7 @@ export default handleActions({
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
-    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+    [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
     [CREATE_UPDATESERVER_SUCCESS]: (state, action) => {
