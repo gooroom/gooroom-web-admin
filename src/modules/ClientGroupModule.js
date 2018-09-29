@@ -259,7 +259,7 @@ export default handleActions({
         return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_CLIENTGROUP_DIALOG]: (state, action) => {
-        return commonHandleActions.handleCloseDialogAction(state, action);
+        return commonHandleActions.handleCloseDialogAction(state.set('dialogTabValue', 0), action);
     },
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
         return commonHandleActions.handleShowInformAction(state, action);
