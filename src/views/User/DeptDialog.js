@@ -38,6 +38,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
+import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
 
 
 
@@ -192,8 +193,8 @@ class DeptDialog extends Component {
                             </Tabs>
                         </AppBar>
                         {tabValue === 0 && <BrowserRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
-                        {tabValue === 1 && <BrowserRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
-                        {tabValue === 2 && <BrowserRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
+                        {tabValue === 1 && <MediaRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'mediaRuleId'])} />}
+                        {tabValue === 2 && <SecurityRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'clientSecuRuleId'])} />}
 
                     </form>
 
