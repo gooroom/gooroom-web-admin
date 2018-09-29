@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { Map, List, fromJS } from 'immutable';
+import { List } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -223,7 +223,7 @@ export const createMediaRuleData = (itemObj) => dispatch => {
 };
 
 // edit
-export const editMediaRuleData = (itemObj) => dispatch => {
+export const editMediaRuleData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateMediaRule', makeParameter(itemObj)).then(
         (response) => {

@@ -102,7 +102,7 @@ class BrowserRuleDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { BrowserRuleProps, BrowserRuleActions } = this.props;
-            BrowserRuleActions.editBrowserRuleData(BrowserRuleProps.get('editingItem'))
+            BrowserRuleActions.editBrowserRuleData(BrowserRuleProps.get('editingItem'), this.props.compId)
                 .then((res) => {
                     refreshDataListInComp(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
                     this.handleClose();

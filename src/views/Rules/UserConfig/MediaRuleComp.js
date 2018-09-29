@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Map, List } from 'immutable';
+import { fromJS } from 'immutable';
 
 import PropTypes from "prop-types";
 import classNames from "classnames";

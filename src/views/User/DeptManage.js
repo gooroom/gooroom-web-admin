@@ -34,6 +34,14 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 class DeptManage extends Component {
+
+  handleInitTreeData = () => {
+    // Check selectedDeptCd
+    this.props.DeptActions.changeCompVariableObject({
+      compId: this.props.match.params.grMenuId,
+      valueObj: {selectedDeptCd: '', selectedDeptNm: ''}
+    });
+  }
   
   handleSelectDept = (node) => {
     const { DeptProps, DeptActions } = this.props;
@@ -118,6 +126,7 @@ class DeptManage extends Component {
                   title='title'
                   startingDepth='2'
                   compId={compId}
+                  onInitTreeData={this.handleInitTreeData}
                   onSelectNode={this.handleSelectDept}
                   onCheckedNode={this.handleCheckedDept}
                   onRef={ref => (this.grTreeList = ref)}

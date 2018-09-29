@@ -128,7 +128,7 @@ class ClientGroupDialog extends Component {
             name: 'dialogTabValue',
             value: value
         });
-          };
+    };
 
     render() {
         const { classes } = this.props;

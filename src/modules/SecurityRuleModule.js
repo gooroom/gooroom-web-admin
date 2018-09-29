@@ -57,6 +57,25 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
+export const readSecurityRuleList = (module, compId) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readSecurityRuleList', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_SECURITYRULE_LIST_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
 export const readSecurityRuleListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
@@ -191,7 +210,7 @@ export const createSecurityRule = (itemObj) => dispatch => {
 };
 
 // edit
-export const editSecurityRule = (itemObj) => dispatch => {
+export const editSecurityRule = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateSecurityRule', makeParameter(itemObj)).then(
         (response) => {
@@ -220,6 +239,7 @@ export const editSecurityRule = (itemObj) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    console.log('error ::::::::::::::::: ', error);
                     dispatch({
                         type: COMMON_FAILURE,
                         error: error

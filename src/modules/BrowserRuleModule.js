@@ -215,7 +215,7 @@ export const createBrowserRuleData = (itemObj) => dispatch => {
 };
 
 // edit
-export const editBrowserRuleData = (itemObj) => dispatch => {
+export const editBrowserRuleData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateBrowserRuleConf', makeParameter(itemObj)).then(
         (response) => {
