@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -22,17 +22,17 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-import MediaControlSettingComp from 'views/Rules/UserConfig/MediaControlSettingComp';
+import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class MediaControlSettingSelector extends Component {
+class MediaRuleSelector extends Component {
 
   componentDidMount() {
-    const { MediaControlSettingProps, MediaControlSettingActions, compId, initId } = this.props;
-    MediaControlSettingActions.readMediaControlSettingList(MediaControlSettingProps, compId);
-    MediaControlSettingActions.changeCompVariable({
+    const { MediaRuleProps, MediaRuleActions, compId, initId } = this.props;
+    MediaRuleActions.readMediaRuleList(MediaRuleProps, compId);
+    MediaRuleActions.changeCompVariable({
       compId: compId,
       name: 'selectedOptionItemId',
       value: initId
@@ -40,8 +40,8 @@ class MediaControlSettingSelector extends Component {
   }
 
   handleChange = (event, value) => {
-    const { MediaControlSettingProps, MediaControlSettingActions, compId } = this.props;
-    MediaControlSettingActions.changeCompVariable({
+    const { MediaRuleProps, MediaRuleActions, compId } = this.props;
+    MediaRuleActions.changeCompVariable({
       compId: compId,
       name: 'selectedOptionItemId',
       value: event.target.value
@@ -51,11 +51,11 @@ class MediaControlSettingSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { MediaControlSettingProps, MediaControlSettingActions, compId } = this.props;
+    const { MediaRuleProps, MediaRuleActions, compId } = this.props;
 
-    const selectedViewItem = MediaControlSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = MediaControlSettingProps.getIn(['viewItems', compId, 'listAllData']);
-    let selectedOptionItemId = MediaControlSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedViewItem = MediaRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = MediaRuleProps.getIn(['viewItems', compId, 'listAllData']);
+    let selectedOptionItemId = MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = listAllData.getIn([0, 'objId']);
     }
@@ -77,7 +77,7 @@ class MediaControlSettingSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <MediaControlSettingComp
+          <MediaRuleComp
             compId={compId}
             objId={selectedOptionItemId}
             compType="VIEW"
@@ -90,13 +90,13 @@ class MediaControlSettingSelector extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  MediaControlSettingProps: state.MediaControlSettingModule
+  MediaRuleProps: state.MediaRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch)
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaControlSettingSelector));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaRuleSelector));
 
 

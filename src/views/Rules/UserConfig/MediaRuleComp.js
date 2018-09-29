@@ -7,10 +7,10 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
 
-import MediaControlSettingDialog from './MediaControlSettingDialog';
-import { generateConfigObject } from './MediaControlSettingInform';
+import MediaRuleDialog from './MediaRuleDialog';
+import { generateConfigObject } from './MediaRuleInform';
 import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
 
 import Card from '@material-ui/core/Card';
@@ -36,15 +36,15 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class MediaControlSettingComp extends Component {
+class MediaRuleComp extends Component {
 
   handleEditBtnClick = (objId, compType) => {
-    const { MediaControlSettingProps, MediaControlSettingActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaControlSettingProps, compId, 'objId') : getSelectedObjectInComp(MediaControlSettingProps, compId);
+    const { MediaRuleProps, MediaRuleActions, compId } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId') : getSelectedObjectInComp(MediaRuleProps, compId);
 
-    MediaControlSettingActions.showDialog({
+    MediaRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
-      dialogType: MediaControlSettingDialog.TYPE_EDIT
+      dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
 
@@ -53,13 +53,13 @@ class MediaControlSettingComp extends Component {
   render() {
 
     const { classes } = this.props;
-    const { MediaControlSettingProps, compId, compType } = this.props;
+    const { MediaRuleProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
-    const selectedViewItem = MediaControlSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = MediaControlSettingProps.getIn(['viewItems', compId, 'listAllData']);
-    const selectedOptionItemId = MediaControlSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedViewItem = MediaRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = MediaRuleProps.getIn(['viewItems', compId, 'listAllData']);
+    const selectedOptionItemId = MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -155,18 +155,18 @@ class MediaControlSettingComp extends Component {
           </CardContent>
         }
       </Card>
-      <MediaControlSettingDialog compId={compId} />
+      <MediaRuleDialog compId={compId} />
       </React.Fragment>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  MediaControlSettingProps: state.MediaControlSettingModule
+  MediaRuleProps: state.MediaRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch)
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaControlSettingComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaRuleComp));

@@ -18,7 +18,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
 import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
-import MediaControlSettingComp from 'views/Rules/UserConfig/MediaControlSettingComp';
+import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
 import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -59,7 +59,7 @@ class UserInform extends Component {
               />
             </Grid>
             <Grid item xs={12} sm={12} lg={6}>
-              <MediaControlSettingComp
+              <MediaRuleComp
                 compId={compId}
                 objId={selectedViewItem.get('clientConfigId')} 
                 objNm={selectedViewItem.get('clientConfigNm')} 

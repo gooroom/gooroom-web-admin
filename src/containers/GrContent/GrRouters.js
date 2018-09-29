@@ -17,7 +17,7 @@ import ClientConfSetting from "views/Rules/ClientConfig/ClientConfSetting";
 import ClientHostNameManage from "views/Rules/HostName/ClientHostNameManage";
 import ClientUpdateServerManage from "views/Rules/UpdateServer/ClientUpdateServerManage";
 
-import MediaControlSetting from "views/Rules/UserConfig/MediaControlSetting";
+import MediaRuleManage from "views/Rules/UserConfig/MediaRuleManage";
 import BrowserRuleManage from "views/Rules/UserConfig/BrowserRuleManage";
 import SecurityRuleManage from "views/Rules/UserConfig/SecurityRuleManage";
 
@@ -54,7 +54,7 @@ class GrRouters extends Component {
           <Route path="/clientconfig/setting/:grMenuId/:grMenuName" component={ClientConfSetting} />
           <Route path="/clientconfig/host/:grMenuId/:grMenuName" component={ClientHostNameManage} />
           <Route path="/clientconfig/update/:grMenuId/:grMenuName" component={ClientUpdateServerManage} />
-          <Route path="/userconfig/media/:grMenuId/:grMenuName" component={MediaControlSetting} />
+          <Route path="/userconfig/media/:grMenuId/:grMenuName" component={MediaRuleManage} />
           <Route path="/userconfig/browser/:grMenuId/:grMenuName" component={BrowserRuleManage} />
           <Route path="/userconfig/security/:grMenuId/:grMenuName" component={SecurityRuleManage} />
           <Route path="/jobs/jobmanage/:grMenuId/:grMenuName" component={JobManage} />
