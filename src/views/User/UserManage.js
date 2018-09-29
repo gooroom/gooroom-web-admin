@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import * as UserActions from 'modules/UserModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
-import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
@@ -86,7 +86,7 @@ class UserManage extends Component {
 
   handleRowClick = (event, id) => {
     const { UserProps, UserActions } = this.props;
-    const { BrowserRuleActions, MediaControlSettingActions, SecurityRuleActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
@@ -106,7 +106,7 @@ class UserManage extends Component {
     });
 
     // get media control setting info
-    MediaControlSettingActions.getMediaControlSettingByUserId({
+    MediaRuleActions.getMediaRuleByUserId({
       compId: compId,
       userId: clickedRowObject.get('userId')
     });
@@ -386,7 +386,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
-  MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });

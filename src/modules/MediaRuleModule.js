@@ -4,29 +4,29 @@ import { Map, List, fromJS } from 'immutable';
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
-const COMMON_PENDING = 'mediaControlSetting/COMMON_PENDING';
-const COMMON_FAILURE = 'mediaControlSetting/COMMON_FAILURE';
+const COMMON_PENDING = 'mediaRule/COMMON_PENDING';
+const COMMON_FAILURE = 'mediaRule/COMMON_FAILURE';
 
-const GET_MEDIACONTROL_LIST_SUCCESS = 'mediaControlSetting/GET_MEDIACONTROL_LIST_SUCCESS';
-const GET_MEDIACONTROL_LISTPAGED_SUCCESS = 'mediaControlSetting/GET_MEDIACONTROL_LISTPAGED_SUCCESS';
-const GET_MEDIACONTROL_SUCCESS = 'mediaControlSetting/GET_MEDIACONTROL_SUCCESS';
-const CREATE_MEDIACONTROL_SUCCESS = 'mediaControlSetting/CREATE_MEDIACONTROL_SUCCESS';
-const EDIT_MEDIACONTROL_SUCCESS = 'mediaControlSetting/EDIT_MEDIACONTROL_SUCCESS';
-const DELETE_MEDIACONTROL_SUCCESS = 'mediaControlSetting/DELETE_MEDIACONTROL_SUCCESS';
+const GET_MEDIACONTROL_LIST_SUCCESS = 'mediaRule/GET_MEDIACONTROL_LIST_SUCCESS';
+const GET_MEDIACONTROL_LISTPAGED_SUCCESS = 'mediaRule/GET_MEDIACONTROL_LISTPAGED_SUCCESS';
+const GET_MEDIACONTROL_SUCCESS = 'mediaRule/GET_MEDIACONTROL_SUCCESS';
+const CREATE_MEDIACONTROL_SUCCESS = 'mediaRule/CREATE_MEDIACONTROL_SUCCESS';
+const EDIT_MEDIACONTROL_SUCCESS = 'mediaRule/EDIT_MEDIACONTROL_SUCCESS';
+const DELETE_MEDIACONTROL_SUCCESS = 'mediaRule/DELETE_MEDIACONTROL_SUCCESS';
 
-const SHOW_MEDIACONTROL_INFORM = 'mediaControlSetting/SHOW_MEDIACONTROL_INFORM';
-const CLOSE_MEDIACONTROL_INFORM = 'mediaControlSetting/CLOSE_MEDIACONTROL_INFORM';
-const SHOW_MEDIACONTROL_DIALOG = 'mediaControlSetting/SHOW_MEDIACONTROL_DIALOG';
-const CLOSE_MEDIACONTROL_DIALOG = 'mediaControlSetting/CLOSE_MEDIACONTROL_DIALOG';
+const SHOW_MEDIACONTROL_INFORM = 'mediaRule/SHOW_MEDIACONTROL_INFORM';
+const CLOSE_MEDIACONTROL_INFORM = 'mediaRule/CLOSE_MEDIACONTROL_INFORM';
+const SHOW_MEDIACONTROL_DIALOG = 'mediaRule/SHOW_MEDIACONTROL_DIALOG';
+const CLOSE_MEDIACONTROL_DIALOG = 'mediaRule/CLOSE_MEDIACONTROL_DIALOG';
 
-const SET_EDITING_ITEM_VALUE = 'mediaControlSetting/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_ITEM_VALUE = 'mediaRule/SET_EDITING_ITEM_VALUE';
 
-const CHG_LISTPARAM_DATA = 'mediaControlSetting/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'mediaControlSetting/CHG_COMPVARIABLE_DATA';
+const CHG_LISTPARAM_DATA = 'mediaRule/CHG_LISTPARAM_DATA';
+const CHG_COMPVARIABLE_DATA = 'mediaRule/CHG_COMPVARIABLE_DATA';
 
-const SET_BLUETOOTHMAC_ITEM = 'mediaControlSetting/SET_BLUETOOTHMAC_ITEM';
-const ADD_BLUETOOTHMAC_ITEM = 'mediaControlSetting/ADD_BLUETOOTHMAC_ITEM';
-const DELETE_BLUETOOTHMAC_ITEM = 'mediaControlSetting/DELETE_BLUETOOTHMAC_ITEM';
+const SET_BLUETOOTHMAC_ITEM = 'mediaRule/SET_BLUETOOTHMAC_ITEM';
+const ADD_BLUETOOTHMAC_ITEM = 'mediaRule/ADD_BLUETOOTHMAC_ITEM';
+const DELETE_BLUETOOTHMAC_ITEM = 'mediaRule/DELETE_BLUETOOTHMAC_ITEM';
 
 
 // ...
@@ -61,7 +61,7 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readMediaControlSettingList = (module, compId) => dispatch => {
+export const readMediaRuleList = (module, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readMediaRuleList', {
     }).then(
@@ -80,7 +80,7 @@ export const readMediaControlSettingList = (module, compId) => dispatch => {
     });
 };
 
-export const readMediaControlSettingListPaged = (module, compId, extParam) => dispatch => {
+export const readMediaRuleListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
@@ -110,7 +110,7 @@ export const readMediaControlSettingListPaged = (module, compId, extParam) => di
     });
 };
 
-export const getMediaControlSetting = (param) => dispatch => {
+export const getMediaRule = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readMediaRule', {'objId': param.objId}).then(
@@ -129,7 +129,7 @@ export const getMediaControlSetting = (param) => dispatch => {
     });
 };
 
-export const getMediaControlSettingByUserId = (param) => dispatch => {
+export const getMediaRuleByUserId = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readMediaRuleByUserId', {'userId': param.userId}).then(
@@ -197,7 +197,7 @@ const makeParameter = (param) => {
 }
 
 // create (add)
-export const createMediaControlSettingData = (itemObj) => dispatch => {
+export const createMediaRuleData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('createMediaRule', makeParameter(itemObj)).then(
         (response) => {
@@ -223,7 +223,7 @@ export const createMediaControlSettingData = (itemObj) => dispatch => {
 };
 
 // edit
-export const editMediaControlSettingData = (itemObj) => dispatch => {
+export const editMediaRuleData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateMediaRule', makeParameter(itemObj)).then(
         (response) => {
@@ -274,7 +274,7 @@ export const editMediaControlSettingData = (itemObj) => dispatch => {
 };
 
 // delete
-export const deleteMediaControlSettingData = (param) => dispatch => {
+export const deleteMediaRuleData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteMediaRule', {'objId': param.objId}).then(
         (response) => {

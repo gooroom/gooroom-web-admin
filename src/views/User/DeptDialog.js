@@ -37,7 +37,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
-import MediaControlSettingSelector from 'views/Rules/UserConfig/MediaControlSettingSelector';
+import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
 
 
 
@@ -83,7 +83,7 @@ class DeptDialog extends Component {
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-            const { BrowserRuleProps, MediaControlSettingProps, SecurityRuleProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
 
             DeptActions.createDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
@@ -91,7 +91,7 @@ class DeptDialog extends Component {
                 uprDeptCd: DeptProps.getIn(['editingItem', 'selectedDeptCd']),
 
                 browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                mediaRuleId: MediaControlSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
+                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
                 clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
@@ -115,7 +115,7 @@ class DeptDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { DeptProps, DeptActions, compId } = this.props;
-            const { BrowserRuleProps, MediaControlSettingProps, SecurityRuleProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
 
             DeptActions.editDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
@@ -123,7 +123,7 @@ class DeptDialog extends Component {
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
 
                 browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                mediaRuleId: MediaControlSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
+                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
                 clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
@@ -218,7 +218,7 @@ class DeptDialog extends Component {
 const mapStateToProps = (state) => ({
     DeptProps: state.DeptModule,
     BrowserRuleProps: state.BrowserRuleModule,
-    MediaControlSettingProps: state.MediaControlSettingModule,
+    MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule
 });
 

@@ -6,21 +6,21 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
 import { refreshDataListInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
-import { generateConfigObject } from './MediaControlSettingInform';
+import { generateConfigObject } from './MediaRuleInform';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
-import MediaControlSettingDialog from './MediaControlSettingDialog';
-import MediaControlSettingInform from './MediaControlSettingInform';
+import MediaRuleDialog from './MediaRuleDialog';
+import MediaRuleInform from './MediaRuleInform';
 import GrPane from 'containers/GrContent/GrPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -47,7 +47,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class MediaControlSetting extends Component {
+class MediaRuleManage extends Component {
 
   columnHeaders = [
     { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
@@ -71,27 +71,27 @@ class MediaControlSetting extends Component {
   }
 
   handleChangePage = (event, page) => {
-    const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
-    MediaControlSettingActions.readMediaControlSettingListPaged(MediaControlSettingProps, this.props.match.params.grMenuId, {
+    const { MediaRuleActions, MediaRuleProps } = this.props;
+    MediaRuleActions.readMediaRuleListPaged(MediaRuleProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
-    MediaControlSettingActions.readMediaControlSettingListPaged(MediaControlSettingProps, this.props.match.params.grMenuId, {
+    const { MediaRuleActions, MediaRuleProps } = this.props;
+    MediaRuleActions.readMediaRuleListPaged(MediaRuleProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value,
       page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
+    const { MediaRuleActions, MediaRuleProps } = this.props;
     let orderDir = "desc";
     if (currOrderDir === "desc") {
       orderDir = "asc";
     }
-    MediaControlSettingActions.readMediaControlSettingListPaged(MediaControlSettingProps, this.props.match.params.grMenuId, {
+    MediaRuleActions.readMediaRuleListPaged(MediaRuleProps, this.props.match.params.grMenuId, {
       orderColumn: columnId,
       orderDir: orderDir
     });
@@ -99,12 +99,12 @@ class MediaControlSetting extends Component {
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
-    MediaControlSettingActions.readMediaControlSettingListPaged(MediaControlSettingProps, this.props.match.params.grMenuId);
+    const { MediaRuleActions, MediaRuleProps } = this.props;
+    MediaRuleActions.readMediaRuleListPaged(MediaRuleProps, this.props.match.params.grMenuId);
   };
   
   handleKeywordChange = name => event => {
-    this.props.MediaControlSettingActions.changeListParamData({
+    this.props.MediaRuleActions.changeListParamData({
       name: 'keyword', 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
@@ -112,47 +112,47 @@ class MediaControlSetting extends Component {
   }
 
   handleRowClick = (event, id) => {
-    const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
+    const { MediaRuleActions, MediaRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedViewItem = getRowObjectById(MediaControlSettingProps, compId, id, 'objId');
+    const selectedViewItem = getRowObjectById(MediaRuleProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
-    // MediaControlSettingActions.showDialog({
+    // MediaRuleActions.showDialog({
     //   selectedViewItem: viewObject,
-    //   dialogType: MediaControlSettingDialog.TYPE_VIEW,
+    //   dialogType: MediaRuleDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    MediaControlSettingActions.showInform({
+    MediaRuleActions.showInform({
       compId: compId,
       selectedViewItem: selectedViewItem
     });
   };
 
   handleCreateButton = () => {
-    this.props.MediaControlSettingActions.showDialog({
+    this.props.MediaRuleActions.showDialog({
       selectedViewItem: Map(),
-      dialogType: MediaControlSettingDialog.TYPE_ADD
+      dialogType: MediaRuleDialog.TYPE_ADD
     });
   }
   
   handleEditClick = (event, id) => {
-    const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
-    const selectedViewItem = getRowObjectById(MediaControlSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const { MediaRuleActions, MediaRuleProps } = this.props;
+    const selectedViewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
-    MediaControlSettingActions.showDialog({
+    MediaRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
-      dialogType: MediaControlSettingDialog.TYPE_EDIT
+      dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { MediaControlSettingProps, GrConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(MediaControlSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const { MediaRuleProps, GrConfirmActions } = this.props;
+    const selectedViewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GrConfirmActions.showConfirm({
       confirmTitle: '매체제어정책정보 삭제',
       confirmMsg: '매체제어정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
@@ -163,24 +163,24 @@ class MediaControlSetting extends Component {
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
     if(confirmValue) {
-      const { MediaControlSettingActions, MediaControlSettingProps } = this.props;
+      const { MediaRuleActions, MediaRuleProps } = this.props;
 
-      MediaControlSettingActions.deleteMediaControlSettingData({
+      MediaRuleActions.deleteMediaRuleData({
         objId: paramObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComp(MediaControlSettingProps, MediaControlSettingActions.readMediaControlSettingListPaged);
+        refreshDataListInComp(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
       });
     }
   };
 
   render() {
     const { classes } = this.props;
-    const { MediaControlSettingProps } = this.props;
+    const { MediaRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;
 
-    const listObj = MediaControlSettingProps.getIn(['viewItems', compId]);
+    const listObj = MediaRuleProps.getIn(['viewItems', compId]);
 
     return (
       <div>
@@ -287,8 +287,8 @@ class MediaControlSetting extends Component {
         }
         </GrPane>
         {/* dialog(popup) component area */}
-        <MediaControlSettingInform compId={compId} />
-        <MediaControlSettingDialog compId={compId} />
+        <MediaRuleInform compId={compId} />
+        <MediaRuleDialog compId={compId} />
         <GrConfirm />
         
       </div>
@@ -297,15 +297,15 @@ class MediaControlSetting extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  MediaControlSettingProps: state.MediaControlSettingModule
+  MediaRuleProps: state.MediaRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaControlSetting));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaRuleManage));
 
 
 

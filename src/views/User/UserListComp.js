@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import * as UserActions from 'modules/UserModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
-import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
@@ -196,7 +196,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
-  MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });

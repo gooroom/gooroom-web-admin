@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -38,24 +38,24 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class MediaControlSettingDialog extends Component {
+class MediaRuleDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.MediaControlSettingActions.closeDialog();
+        this.props.MediaRuleActions.closeDialog();
     }
 
     handleValueChange = name => event => {
         if(event.target.type === 'checkbox') {
-            this.props.MediaControlSettingActions.setEditingItemValue({
+            this.props.MediaRuleActions.setEditingItemValue({
                 name: name,
                 value: (event.target.checked) ? 'allow' : 'disallow'
             });
         } else {
-            this.props.MediaControlSettingActions.setEditingItemValue({
+            this.props.MediaRuleActions.setEditingItemValue({
                 name: name,
                 value: event.target.value
             });
@@ -63,62 +63,62 @@ class MediaControlSettingDialog extends Component {
     }
 
     handleBluetoothMacValueChange = index => event => {
-        this.props.MediaControlSettingActions.setBluetoothMac({
+        this.props.MediaRuleActions.setBluetoothMac({
             index: index,
             value: event.target.value
         });
     }
 
     handleCreateData = (event) => {
-        const { MediaControlSettingProps, GrConfirmActions } = this.props;
+        const { MediaRuleProps, GrConfirmActions } = this.props;
         const re = GrConfirmActions.showConfirm({
             confirmTitle: '매체제어정책정보 등록',
             confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: MediaControlSettingProps.get('editingItem')
+            confirmObject: MediaRuleProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
-            MediaControlSettingActions.createMediaControlSettingData(MediaControlSettingProps.get('editingItem'))
+            const { MediaRuleProps, MediaRuleActions } = this.props;
+            MediaRuleActions.createMediaRuleData(MediaRuleProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(MediaControlSettingProps, MediaControlSettingActions.readMediaControlSettingListPaged);
+                    refreshDataListInComp(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
                     this.handleClose();
                 });
         }
     }
 
     handleEditData = (event, id) => {
-        const { MediaControlSettingProps, GrConfirmActions } = this.props;
+        const { MediaRuleProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
             confirmTitle: '매체제어정책정보 수정',
             confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            confirmObject: MediaControlSettingProps.get('editingItem')
+            confirmObject: MediaRuleProps.get('editingItem')
         });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { MediaControlSettingProps, MediaControlSettingActions } = this.props;
-            MediaControlSettingActions.editMediaControlSettingData(MediaControlSettingProps.get('editingItem'))
+            const { MediaRuleProps, MediaRuleActions } = this.props;
+            MediaRuleActions.editMediaRuleData(MediaRuleProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(MediaControlSettingProps, MediaControlSettingActions.readMediaControlSettingListPaged);
+                    refreshDataListInComp(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
                     this.handleClose();
                 });
         }
     }
 
     handleAddBluetoothMac = () => {
-        const { MediaControlSettingActions } = this.props;
-        MediaControlSettingActions.addBluetoothMac();
+        const { MediaRuleActions } = this.props;
+        MediaRuleActions.addBluetoothMac();
     }
 
     handleDeleteBluetoothMac = index => event => {
-        const { MediaControlSettingActions } = this.props;
-        MediaControlSettingActions.deleteBluetoothMac(index);
+        const { MediaRuleActions } = this.props;
+        MediaRuleActions.deleteBluetoothMac(index);
     }
 
     checkAllow = value => {
@@ -129,23 +129,23 @@ class MediaControlSettingDialog extends Component {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
 
-        const { MediaControlSettingProps } = this.props;
-        const dialogType = MediaControlSettingProps.get('dialogType');
-        const editingItem = (MediaControlSettingProps.get('editingItem')) ? MediaControlSettingProps.get('editingItem') : null;
+        const { MediaRuleProps } = this.props;
+        const dialogType = MediaRuleProps.get('dialogType');
+        const editingItem = (MediaRuleProps.get('editingItem')) ? MediaRuleProps.get('editingItem') : null;
 
         let title = "";
-        if(dialogType === MediaControlSettingDialog.TYPE_ADD) {
+        if(dialogType === MediaRuleDialog.TYPE_ADD) {
             title = "매체제어정책설정 등록";
-        } else if(dialogType === MediaControlSettingDialog.TYPE_VIEW) {
+        } else if(dialogType === MediaRuleDialog.TYPE_VIEW) {
             title = "매체제어정책설정 정보";
-        } else if(dialogType === MediaControlSettingDialog.TYPE_EDIT) {
+        } else if(dialogType === MediaRuleDialog.TYPE_EDIT) {
             title = "매체제어정책설정 수정";
         }
 
         return (
             <div>
-            {(MediaControlSettingProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={MediaControlSettingProps.get('dialogOpen')} scroll="paper">
+            {(MediaRuleProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={MediaRuleProps.get('dialogOpen')} scroll="paper">
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
@@ -155,7 +155,7 @@ class MediaControlSettingDialog extends Component {
                         value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
-                        disabled={(dialogType === MediaControlSettingDialog.TYPE_VIEW)}
+                        disabled={(dialogType === MediaRuleDialog.TYPE_VIEW)}
                     />
                     <TextField
                         id="comment"
@@ -163,9 +163,9 @@ class MediaControlSettingDialog extends Component {
                         value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === MediaControlSettingDialog.TYPE_VIEW)}
+                        disabled={(dialogType === MediaRuleDialog.TYPE_VIEW)}
                     />
-                    {(dialogType === MediaControlSettingDialog.TYPE_VIEW) &&
+                    {(dialogType === MediaRuleDialog.TYPE_VIEW) &&
                         <div>
                             <Grid container spacing={24} className={classes.grNormalTableRow}>
                                 <Grid item xs={12}>
@@ -173,7 +173,7 @@ class MediaControlSettingDialog extends Component {
                             </Grid>
                         </div>                        
                     }
-                    {(dialogType === MediaControlSettingDialog.TYPE_EDIT || dialogType === MediaControlSettingDialog.TYPE_ADD) &&
+                    {(dialogType === MediaRuleDialog.TYPE_EDIT || dialogType === MediaRuleDialog.TYPE_ADD) &&
                         <div className={classes.dialogItemRowBig}>
                         
                         <Grid item xs={12} container 
@@ -347,10 +347,10 @@ class MediaControlSettingDialog extends Component {
                 </form>
 
                 <DialogActions>
-                {(dialogType === MediaControlSettingDialog.TYPE_ADD) &&
+                {(dialogType === MediaRuleDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
                 }
-                {(dialogType === MediaControlSettingDialog.TYPE_EDIT) &&
+                {(dialogType === MediaRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
@@ -365,13 +365,13 @@ class MediaControlSettingDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    MediaControlSettingProps: state.MediaControlSettingModule
+    MediaRuleProps: state.MediaRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch),
+    MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaControlSettingDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaRuleDialog));
 

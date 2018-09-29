@@ -8,7 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import * as MediaControlSettingActions from 'modules/MediaControlSettingModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -27,7 +27,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class MediaControlSettingInform extends Component {
+class MediaRuleInform extends Component {
 
   // .................................................
 
@@ -36,9 +36,9 @@ class MediaControlSettingInform extends Component {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const { MediaControlSettingProps, compId } = this.props;
-    const informOpen = MediaControlSettingProps.getIn(['viewItems', compId, 'informOpen']);
-    const selectedViewItem = generateConfigObject(MediaControlSettingProps.getIn(['viewItems', compId, 'selectedViewItem']));
+    const { MediaRuleProps, compId } = this.props;
+    const informOpen = MediaRuleProps.getIn(['viewItems', compId, 'informOpen']);
+    const selectedViewItem = generateConfigObject(MediaRuleProps.getIn(['viewItems', compId, 'selectedViewItem']));
 
     return (
       <div>
@@ -114,14 +114,14 @@ class MediaControlSettingInform extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  MediaControlSettingProps: state.MediaControlSettingModule
+  MediaRuleProps: state.MediaRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  MediaControlSettingActions: bindActionCreators(MediaControlSettingActions, dispatch)
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaControlSettingInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaRuleInform));
 
 export const generateConfigObject = (param) => {
 
