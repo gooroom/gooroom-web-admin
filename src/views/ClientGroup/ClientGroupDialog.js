@@ -16,9 +16,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-
 import Divider from '@material-ui/core/Divider';
 
 import Button from "@material-ui/core/Button";
@@ -34,7 +31,6 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 import ClientConfSettingSelector from 'views/Rules/ClientConfig/ClientConfSettingSelector'
 import ClientHostNameSelector from 'views/Rules/HostName/ClientHostNameSelector'
 import ClientUpdateServerSelector from 'views/Rules/UpdateServer/ClientUpdateServerSelector'
-
 
 
 function TabContainer(props) {
@@ -84,8 +80,8 @@ class ClientGroupDialog extends Component {
             ClientGroupActions.createClientGroupData({
                 groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                 groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
-                clientConfigId: ClientGroupProps.getIn(['editingItem', 'clientConfigId']),
                 isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
+                
                 clientConfigId: configIds.clientConfigId,
                 hostNameConfigId: configIds.hostNameConfigId,
                 updateServerConfigId: configIds.updateServerConfigId
@@ -115,8 +111,8 @@ class ClientGroupDialog extends Component {
                 groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                 groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                 groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
-                clientConfigId: ClientGroupProps.getIn(['editingItem', 'clientConfigId']),
                 isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
+
                 clientConfigId: configIds.clientConfigId,
                 hostNameConfigId: configIds.hostNameConfigId,
                 updateServerConfigId: configIds.updateServerConfigId
@@ -142,8 +138,7 @@ class ClientGroupDialog extends Component {
         const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem') : null;
 
         const tabValue = ClientGroupProps.get('dialogTabValue');
-
-        const tempLabel = <div><InputLabel>단말정책</InputLabel><Divider /><InputLabel>'없음'</InputLabel></div>;
+const tempLabel = <div><InputLabel>단말정책</InputLabel><Divider /><InputLabel>'없음'</InputLabel></div>;
 
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
@@ -192,13 +187,13 @@ class ClientGroupDialog extends Component {
                 </form>
 
                 <DialogActions>
-                {(dialogType === ClientGroupDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
-                }
-                {(dialogType === ClientGroupDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
-                }
-                <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
+                    {(dialogType === ClientGroupDialog.TYPE_ADD) &&
+                        <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
+                    }
+                    {(dialogType === ClientGroupDialog.TYPE_EDIT) &&
+                        <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
+                    }
+                    <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
                 </DialogActions>
             </Dialog>
             }
@@ -209,9 +204,9 @@ class ClientGroupDialog extends Component {
 
 const mapStateToProps = (state) => ({
     ClientGroupProps: state.ClientGroupModule,
-    ClientConfSettingProps: state.ClientConfSettingModule,
     ClientHostNameProps: state.ClientHostNameModule,
-    ClientUpdateServerProps: state.ClientUpdateServerModule
+    ClientUpdateServerProps: state.ClientUpdateServerModule,
+    ClientConfSettingProps: state.ClientConfSettingModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

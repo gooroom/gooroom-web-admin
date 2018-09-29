@@ -9,11 +9,14 @@ import { connect } from 'react-redux';
 import * as DeptActions from 'modules/DeptModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
+import { getConfigIdsInComp } from 'components/GrUtils/GrTableListUtils';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
+
+import Divider from '@material-ui/core/Divider';
 
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
@@ -25,10 +28,16 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
+
+import BrowserRuleSettingSelector from 'views/Rules/UserConfig/BrowserRuleSettingSelector';
+import MediaControlSettingSelector from 'views/Rules/UserConfig/MediaControlSettingSelector';
 
 
 
@@ -61,7 +70,6 @@ class DeptDialog extends Component {
         });
     }
 
-    // 데이타 생성
     handleCreateData = (event) => {
         const { DeptProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
@@ -75,10 +83,16 @@ class DeptDialog extends Component {
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { DeptProps, DeptActions, compId, resetCallback } = this.props;
+            const { BrowserRuleSettingProps, MediaControlSettingProps, SecurityRuleProps } = this.props;
+
             DeptActions.createDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-                uprDeptCd: DeptProps.getIn(['editingItem', 'selectedDeptCd'])
+                uprDeptCd: DeptProps.getIn(['editingItem', 'selectedDeptCd']),
+
+                browserRuleId: BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
+                mediaRuleId: MediaControlSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
+                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
@@ -101,14 +115,20 @@ class DeptDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { DeptProps, DeptActions, compId } = this.props;
+            const { BrowserRuleSettingProps, MediaControlSettingProps, SecurityRuleProps } = this.props;
 
             DeptActions.editDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                 userPasswd: DeptProps.getIn(['editingItem', 'userPasswd']),
-                deptNm: DeptProps.getIn(['editingItem', 'deptNm'])
+                deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
+
+                browserRuleId: BrowserRuleSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
+                mediaRuleId: MediaControlSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
+                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
+                resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
                 this.handleClose();
             });
         }
@@ -120,6 +140,8 @@ class DeptDialog extends Component {
 
         const dialogType = DeptProps.get('dialogType');
         const editingItem = (DeptProps.get('editingItem')) ? DeptProps.get('editingItem') : null;
+
+        const tabValue = DeptProps.get('dialogTabValue');
 
         let title = "";
         if(dialogType === DeptDialog.TYPE_ADD) {
@@ -160,6 +182,19 @@ class DeptDialog extends Component {
                             onChange={this.handleValueChange("deptNm")}
                             className={classes.fullWidth}
                         />
+
+                        <Divider style={{marginBottom: 10}} />        
+                        <AppBar position="static" color="default">
+                            <Tabs value={tabValue} onChange={this.handleChangeTabs}>
+                                <Tab label="브라우져정책" />
+                                <Tab label="매체제어정책" />
+                                <Tab label="단말보안정책" />
+                            </Tabs>
+                        </AppBar>
+                        {tabValue === 0 && <BrowserRuleSettingSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
+                        {tabValue === 1 && <BrowserRuleSettingSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
+                        {tabValue === 2 && <BrowserRuleSettingSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
+
                     </form>
 
                     <DialogActions>
@@ -181,7 +216,10 @@ class DeptDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    DeptProps: state.DeptModule
+    DeptProps: state.DeptModule,
+    BrowserRuleSettingProps: state.BrowserRuleSettingModule,
+    MediaControlSettingProps: state.MediaControlSettingModule,
+    SecurityRuleProps: state.SecurityRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

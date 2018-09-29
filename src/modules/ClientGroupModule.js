@@ -26,7 +26,7 @@ const CHG_COMPVARIABLE_DATA = 'groupComp/CHG_COMPVARIABLE_DATA';
 const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chGrpNm');
+const initialState = commonHandleActions.getCommonInitialState('chGrpNm', 'asc', {dialogTabValue: 0});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({

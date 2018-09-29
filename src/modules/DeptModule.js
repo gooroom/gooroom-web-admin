@@ -28,7 +28,7 @@ const CHG_COMPVARIABLE_OBJECT = 'dept/CHG_COMPVARIABLE_OBJECT';
 
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chConfId', 'desc');
+const initialState = commonHandleActions.getCommonInitialState('chConfId', 'desc', {dialogTabValue: 0});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
