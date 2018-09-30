@@ -49,17 +49,20 @@ class GrTreeList extends Component {
   }
 
   componentDidMount() {
-    console.log('TREE ::: componentDidMount');
     if(this.props.onInitTreeData) {
       this.props.onInitTreeData();
     }
-    this.props.onRef(this);
+    if(this.props.onRef) {
+      this.props.onRef(this);
+    }
+    
     this.fetchTreeData(this.state.rootKeyValue);
   }
 
   componentWillUnmount() {
-    console.log('TREE ::: componentWillUnmount');
-    this.props.onRef(undefined)
+    if(this.props.onRef) {
+      this.props.onRef(undefined)
+    }
   }
 
   fetchTreeData(keyValue, index) {
@@ -323,7 +326,7 @@ class GrTreeList extends Component {
     const contentKey = "title";
 
     const startingDepth = this.state.startingDepth;
-    const listHeight = this.props.listHeight ? this.props.listHeight : "36px";
+    const listHeight = this.props.listHeight ? this.props.listHeight : "24px";
     const activeListItem = this.props.activeListItem
       ? this.props.activeListItem
       : this.state.activeListItem;
@@ -337,7 +340,7 @@ class GrTreeList extends Component {
       (listItem, i, inputArray) => {
         listItem._styles = {
           root: {
-            paddingLeft: (listItem.depth - startingDepth) * 16,
+            paddingLeft: (listItem.depth - startingDepth) * 8,
             backgroundColor: activeListItem === i ? "rgba(0,0,0,0.2)" : null,
             height: listHeight,
             cursor: listItem.disabled ? "not-allowed" : "pointer",

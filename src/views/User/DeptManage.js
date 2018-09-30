@@ -18,6 +18,8 @@ import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import UserListComp from 'views/User/UserListComp';
 import DeptDialog from "views/User/DeptDialog";
+import UserSelectDialog from "views/User/UserSelectDialog";
+
 
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
@@ -34,6 +36,14 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 class DeptManage extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isOpenUserSelect: false,
+    };
+  }
 
   handleInitTreeData = () => {
     // Check selectedDeptCd
@@ -90,6 +100,34 @@ class DeptManage extends Component {
     this.grTreeList.resetTreeNode(deptCd);
   }
 
+  handleAddUserInDept = (event) => {
+    const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
+    if(selectedDeptCd && selectedDeptCd !== '') {
+      this.setState({
+        isOpenUserSelect: true
+      })
+    } else {
+      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 추가할 조직을 선택 하세요.');
+    }
+  }
+
+  handleUserSelectSave = (selectedUsers) => {
+
+    const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
+
+    console.log('handleUserSelectSave........................');
+
+        console.log('deptCd : ' + selectedDeptCd);
+        console.log('selectedUsers : ' + selectedUsers);
+
+  }
+
+  handleUserSelectClose = () => {
+    this.setState({
+      isOpenUserSelect: false
+    })
+  }
+
   render() {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
@@ -114,7 +152,7 @@ class DeptManage extends Component {
                 삭제
               </Button>
             </Grid>
-            <Grid item xs={12} sm={12} lg={4}>
+            <Grid item xs={12} sm={4} lg={4}>
               <Card className={classes.deptTreeCard}>
                 <GrTreeList
                   useFolderIcons={true}
@@ -133,7 +171,7 @@ class DeptManage extends Component {
                 />
               </Card>
             </Grid>
-            <Grid item xs={12} sm={12} lg={8}>
+            <Grid item xs={12} sm={8} lg={8}>
               <Card className={classes.deptInfoCard}>
                 <CardContent>
                   <Typography className={classes.deptTitle} color="textSecondary">조직 정보</Typography>
@@ -144,7 +182,21 @@ class DeptManage extends Component {
               </Card>
               <Card className={classes.deptUserCard}>
                 <CardContent>
+                  <Grid container spacing={8}>
+                  <Grid item xs={6} sm={6} lg={6}>
                   <Typography className={classes.deptTitle} color="textSecondary">사용자 정보</Typography>
+                  </Grid>
+                  <Grid item xs={6} sm={6} lg={6}>
+                  <Button size="small" variant="contained" color="primary" onClick={this.handleAddUserInDept} >
+                  <AddIcon />
+                    추가
+                  </Button>
+                  <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteUserInDept} style={{marginLeft: "10px"}} >
+                  <RemoveIcon />
+                    삭제
+                  </Button>
+                  </Grid>
+                  </Grid>
                   <UserListComp name='UserListComp' compId={compId} deptCd='' />
                 </CardContent>
               </Card>
@@ -153,6 +205,7 @@ class DeptManage extends Component {
         </GrPane>
         <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
         <GrConfirm />
+        <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectClose} />
       </React.Fragment>
     );
   }
