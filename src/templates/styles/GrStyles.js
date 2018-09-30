@@ -195,7 +195,7 @@ export const GrCommonStyle = theme => ({
 
     // Department manager
     deptTreeCard: {
-        minHeight: "500px"
+        maxHeight: "300px"
     },
     deptInfoCard: {
         marginBottom: "0px"
