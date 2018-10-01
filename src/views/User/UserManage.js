@@ -58,6 +58,7 @@ class UserManage extends Component {
     { id: "chCheckbox", isCheckbox: true},
     { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
     { id: "chUserName", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
+    { id: "chDeptName", isOrder: true, numeric: false, disablePadding: true, label: "조직" },
     { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
     { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: "최근로그인날짜" },
     { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
@@ -128,9 +129,6 @@ class UserManage extends Component {
     const { UserActions, UserProps } = this.props;
     UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId);
   };
-
-
-
 
 
   handleCreateButton = value => {
@@ -321,6 +319,7 @@ class UserManage extends Component {
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>

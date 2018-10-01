@@ -128,7 +128,26 @@ export const getSecurityRule = (param) => dispatch => {
 export const getSecurityRuleByUserId = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readSecurityRuleByUserId', {'objId': param.objId}).then(
+    return requestPostAPI('readSecurityRuleByUserId', {'userId': param.userId}).then(
+        (response) => {
+            dispatch({
+                type: GET_SECURITYRULE_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+export const getSecurityRuleByDeptCd = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readSecurityRuleByDeptCd', {'deptCd': param.deptCd}).then(
         (response) => {
             dispatch({
                 type: GET_SECURITYRULE_SUCCESS,
@@ -239,7 +258,6 @@ export const editSecurityRule = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
-                    console.log('error ::::::::::::::::: ', error);
                     dispatch({
                         type: COMMON_FAILURE,
                         error: error
@@ -305,7 +323,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_SECURITYRULE_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.securityResult.data);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data);
     },
     [SHOW_SECURITYRULE_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);

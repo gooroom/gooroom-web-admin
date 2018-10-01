@@ -8,6 +8,10 @@ import { connect } from 'react-redux';
 import * as GlobalActions from 'modules/GlobalModule';
 import * as DeptActions from 'modules/DeptModule';
 import * as UserActions from 'modules/UserModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
@@ -17,9 +21,9 @@ import GrPane from "containers/GrContent/GrPane";
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import UserListComp from 'views/User/UserListComp';
+import DeptRuleInform from "views/User/DeptRuleInform";
 import DeptDialog from "views/User/DeptDialog";
 import UserSelectDialog from "views/User/UserSelectDialog";
-
 
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
@@ -56,6 +60,7 @@ class DeptManage extends Component {
   handleSelectDept = (node) => {
     const { DeptProps, DeptActions } = this.props;
     const { UserProps, UserActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
     const compId = this.props.match.params.grMenuId;
     // show user list in dept.
     UserActions.readUserListPaged(UserProps, compId, {
@@ -65,6 +70,29 @@ class DeptManage extends Component {
     DeptActions.changeCompVariableObject({
       compId: compId,
       valueObj: {selectedDeptCd: node.key, selectedDeptNm: node.title}
+    });
+
+    // show rules
+    // get browser rule info
+    BrowserRuleActions.getBrowserRuleByDeptCd({
+      compId: compId,
+      deptCd: node.key
+    });
+    // get media control setting info
+    MediaRuleActions.getMediaRuleByDeptCd({
+      compId: compId,
+      deptCd: node.key
+    });
+    // get client secu info
+    SecurityRuleActions.getSecurityRuleByDeptCd({
+      compId: compId,
+      deptCd: node.key
+    });
+
+    // show user inform pane.
+    UserActions.showInform({
+      compId: compId,
+      selectedViewItem: null
     });
   }
 
@@ -105,21 +133,78 @@ class DeptManage extends Component {
     if(selectedDeptCd && selectedDeptCd !== '') {
       this.setState({
         isOpenUserSelect: true
-      })
+      });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 추가할 조직을 선택 하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 추가할 조직을 선택하세요.');
     }
   }
 
+  handleDeleteUserInDept = (event) => {
+    const { UserProps, DeptProps, GrConfirmActions } = this.props;
+    const selectedDeptCd = DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
+    const selectedUsers = UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    if(selectedUsers && selectedUsers !== '') {
+      GrConfirmActions.showConfirm({
+        confirmTitle: '사용자 삭제',
+        confirmMsg: '선택하신 사용자를 조직에서 삭제하시겠습니까?',
+        handleConfirmResult: this.handleDeleteUserInDeptConfirmResult,
+        confirmOpen: true,
+        confirmObject: {
+          selectedDeptCd: selectedDeptCd,
+          selectedUsers: selectedUsers
+        }
+      });
+    } else {
+      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 선택하세요.');
+    }
+  }
+  handleDeleteUserInDeptConfirmResult = (confirmValue, paramObject) => {
+    if(confirmValue) {
+      const { DeptProps, DeptActions, UserActions, UserProps } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      DeptActions.deleteUsersInDept({
+        users: paramObject.selectedUsers.join(',')
+      }).then(() => {
+        // show user list in dept.
+        UserActions.readUserListPaged(UserProps, compId, {
+          deptCd: paramObject.selectedDeptCd, page:0
+        });
+        // close dialog
+        this.setState({ isOpenUserSelect: false });
+      });
+    }
+  };
+
   handleUserSelectSave = (selectedUsers) => {
-
     const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
-
-    console.log('handleUserSelectSave........................');
-
-        console.log('deptCd : ' + selectedDeptCd);
-        console.log('selectedUsers : ' + selectedUsers);
-
+    const { DeptProps, GrConfirmActions } = this.props;
+    GrConfirmActions.showConfirm({
+        confirmTitle: '사용자 추가',
+        confirmMsg: '사용자정보를 조직에 추가하시겠습니까?',
+        handleConfirmResult: this.handleUserSelectSaveConfirmResult,
+        confirmOpen: true,
+        confirmObject: {
+          selectedDeptCd: selectedDeptCd,
+          selectedUsers: selectedUsers
+        }
+    });
+  }
+  handleUserSelectSaveConfirmResult = (confirmValue, paramObject) => {
+    if(confirmValue) {
+      const { DeptProps, DeptActions, UserActions, UserProps } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      DeptActions.createUsersInDept({
+          deptCd: paramObject.selectedDeptCd,
+          users: paramObject.selectedUsers.join(',')
+      }).then((res) => {
+        // show user list in dept.
+        UserActions.readUserListPaged(UserProps, compId, {
+          deptCd: paramObject.selectedDeptCd, page:0
+        });
+        // close dialog
+        this.setState({ isOpenUserSelect: false });
+      });
+    }
   }
 
   handleUserSelectClose = () => {
@@ -139,7 +224,7 @@ class DeptManage extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} style={{border: "1px sold red"}} />
+        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
           <Grid container spacing={24}>
             <Grid item xs={12}>
@@ -183,19 +268,19 @@ class DeptManage extends Component {
               <Card className={classes.deptUserCard}>
                 <CardContent>
                   <Grid container spacing={8}>
-                  <Grid item xs={6} sm={6} lg={6}>
-                  <Typography className={classes.deptTitle} color="textSecondary">사용자 정보</Typography>
-                  </Grid>
-                  <Grid item xs={6} sm={6} lg={6}>
-                  <Button size="small" variant="contained" color="primary" onClick={this.handleAddUserInDept} >
-                  <AddIcon />
-                    추가
-                  </Button>
-                  <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteUserInDept} style={{marginLeft: "10px"}} >
-                  <RemoveIcon />
-                    삭제
-                  </Button>
-                  </Grid>
+                    <Grid item xs={6} sm={6} lg={6}>
+                      <Typography className={classes.deptTitle} color="textSecondary">사용자 정보</Typography>
+                    </Grid>
+                    <Grid item xs={6} sm={6} lg={6} style={{textAlign: 'right'}}>
+                      <Button size="small" variant="contained" color="primary" onClick={this.handleAddUserInDept} >
+                        <AddIcon />
+                          추가
+                      </Button>
+                      <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteUserInDept} style={{marginLeft: "10px"}} >
+                        <RemoveIcon />
+                          삭제
+                      </Button>
+                    </Grid>
                   </Grid>
                   <UserListComp name='UserListComp' compId={compId} deptCd='' />
                 </CardContent>
@@ -204,8 +289,9 @@ class DeptManage extends Component {
           </Grid>
         </GrPane>
         <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
-        <GrConfirm />
         <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectClose} />
+        <GrConfirm />
+        <DeptRuleInform compId={compId} />
       </React.Fragment>
     );
   }
@@ -220,7 +306,11 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   GlobalActions: bindActionCreators(GlobalActions, dispatch),
   DeptActions: bindActionCreators(DeptActions, dispatch),
-  UserActions: bindActionCreators(UserActions, dispatch)
+  UserActions: bindActionCreators(UserActions, dispatch),
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(DeptManage));

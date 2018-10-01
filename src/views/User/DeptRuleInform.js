@@ -28,7 +28,7 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class UserInform extends Component {
+class DeptRuleInform extends Component {
 
   // .................................................
 
@@ -38,32 +38,20 @@ class UserInform extends Component {
 
     const { UserProps, compId } = this.props;
     const informOpen = UserProps.getIn(['viewItems', compId, 'informOpen']);
-    const selectedViewItem = UserProps.getIn(['viewItems', compId, 'selectedViewItem']);
 
     return (
       <div style={{marginTop: 10}} >
-      {(informOpen && selectedViewItem) &&
+      {informOpen &&
         <Card>
-          <CardHeader
-            title={selectedViewItem.get('userNm')}
-            subheader={selectedViewItem.get('userId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
-          />
-          <CardContent />
-          <Divider />
-
           <Grid container spacing={16}>
             <Grid item xs={12} sm={12} lg={6}>
               <BrowserRuleComp
                 compId={compId}
-                objId={selectedViewItem.get('clientConfigId')} 
-                objNm={selectedViewItem.get('clientConfigNm')} 
               />
             </Grid>
             <Grid item xs={12} sm={12} lg={6}>
               <MediaRuleComp
                 compId={compId}
-                objId={selectedViewItem.get('clientConfigId')} 
-                objNm={selectedViewItem.get('clientConfigNm')} 
               />
             </Grid>
           </Grid>
@@ -71,8 +59,6 @@ class UserInform extends Component {
             <Grid item xs={12} sm={12} lg={6}>
               <SecurityRuleComp
                 compId={compId}
-                objId={selectedViewItem.get('clientConfigId')} 
-                objNm={selectedViewItem.get('clientConfigNm')} 
               />
             </Grid>
           </Grid>
@@ -93,5 +79,5 @@ const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(DeptRuleInform));
 

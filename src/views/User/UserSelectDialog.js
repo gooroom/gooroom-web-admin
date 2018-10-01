@@ -39,7 +39,7 @@ class UserSelectDialog extends Component {
     }
 
     componentDidMount() {
-        console.log('props :::::::::: ', this.props);
+        //console.log('props :::::::::: ', this.props);
     }
 
     handleSelectDept = (node) => {
@@ -186,10 +186,10 @@ class UserSelectDialog extends Component {
         return (
             <div>
             {(isOpen) &&
-                <Dialog open={isOpen}>
+                <Dialog open={isOpen} fullWidth={true} >
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent>
-                        <Grid container spacing={24}>
+                        <Grid container spacing={8}>
                             {/* <Grid item xs={12} sm={12} lg={4}>
                                 <Card className={classNames(classes.deptTreeCard)}>
                                     <GrTreeList
@@ -205,7 +205,7 @@ class UserSelectDialog extends Component {
                                     />
                                 </Card>
                             </Grid> */}
-                            <Grid item xs={12} sm={12} lg={8}>
+                            <Grid item xs={12} sm={12} lg={12}>
                                 <Card className={classes.deptUserCard}>
                                     <CardContent>
                                         <UserListInDept name='UserListInDept' deptCd={this.state.selectedDeptCd} 
