@@ -101,10 +101,19 @@ class DeptManage extends Component {
     //console.log('handleCheckedDept: checked ........ ', checked);
   }
 
+  handleEditDept = (listItem, i) => { 
+
+    this.props.DeptActions.showDialog({
+      selectedViewItem: {
+        selectedDept: listItem
+      },
+      dialogType: DeptDialog.TYPE_EDIT
+    });
+  };
+
   handleCreateButtonForDept = (event) => {
-    const { DeptProps, DeptActions } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+    const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
     if(selectedDeptCd && selectedDeptCd !== '') {
       this.props.DeptActions.showDialog({
         selectedViewItem: {
@@ -252,6 +261,7 @@ class DeptManage extends Component {
                 onInitTreeData={this.handleInitTreeData}
                 onSelectNode={this.handleSelectDept}
                 onCheckedNode={this.handleCheckedDept}
+                onEditNode={this.handleEditDept}
                 onRef={ref => (this.grTreeList = ref)}
               />
             </Grid>
