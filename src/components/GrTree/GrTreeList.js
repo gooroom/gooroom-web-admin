@@ -16,6 +16,7 @@ import OpenIcon from "@material-ui/icons/ExpandMore";
 import CloseIcon from "@material-ui/icons/ExpandLess";
 import FolderIcon from "@material-ui/icons/Folder";
 import FileIcon from "@material-ui/icons/InsertDriveFile";
+import BuildIcon from '@material-ui/icons/Build';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -322,6 +323,12 @@ class GrTreeList extends Component {
     if (this.props.onCheckedNode) this.props.onCheckedNode(newStatus.newChecked, newStatus.newImperfect);
   };
 
+  handleEditClickNode = (listItem, i) => {
+    if(this.props.onEditNode) {
+      this.props.onEditNode(listItem, i);
+    }
+  }
+
   render() {
     const contentKey = "title";
 
@@ -358,6 +365,11 @@ class GrTreeList extends Component {
       }
     );
 
+  //   const editButton = <Button color="secondary" size="small" className={classes.buttonInTableRow}
+  //   onClick={this.handleEditClick(event, n.get('userId'))}>
+  //   <BuildIcon />
+  // </Button>;
+
     // Search Node...
 
     // JSX: array of listItems
@@ -373,6 +385,7 @@ class GrTreeList extends Component {
             checked={this.state.checked}
             imperfect={this.state.imperfect}
             leftIcon={getLeftIcon(listItem, this.props)}
+            editIcon={<BuildIcon style={{color: 'darkgray', fontSize: 18}} onClick={() => this.handleEditClickNode(listItem, i)} />}
             rightIcon={
               !listItem.children ? null : expandedListItems.indexOf(i) ===
               -1 ? (
