@@ -148,6 +148,25 @@ export const getMediaRuleByUserId = (param) => dispatch => {
     });
 };
 
+export const getMediaRuleByDeptCd = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readMediaRuleByDeptCd', {'deptCd': param.deptCd}).then(
+        (response) => {
+            dispatch({
+                type: GET_MEDIACONTROL_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,

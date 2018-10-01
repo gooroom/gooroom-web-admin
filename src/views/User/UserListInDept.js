@@ -58,9 +58,6 @@ class UserListInDept extends Component {
 
   constructor(props) {
     super(props);
-
-    console.log('props ::::::::::', props);
-
     this.state = {
       stateData: Map({
         listData: List([]),
@@ -91,7 +88,7 @@ class UserListInDept extends Component {
   ];
 
   handleGetUserList = (newListParam) => {
-    console.log('handleGetUserList........................');
+
     requestPostAPI('readUserListPagedInDept', {
       deptCd: newListParam.get('deptCd'),
       keyword: newListParam.get('keyword'),

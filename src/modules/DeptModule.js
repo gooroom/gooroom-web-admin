@@ -26,7 +26,9 @@ const CHG_LISTPARAM_DATA = 'dept/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'dept/CHG_COMPDATA_VALUE';
 const CHG_COMPDATA_OBJECT = 'dept/CHG_COMPDATA_OBJECT';
 
-const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
+const CHG_STORE_DATA = 'dept/CHG_STORE_DATA';
+const ADD_USERINDEPT_SUCCESS = 'dept/ADD_USERINDEPT_SUCCESS';
+const DELETE_USERINDEPT_SUCCESS = 'dept/DELETE_USERINDEPT_SUCCESS';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId', 'desc', {dialogTabValue: 0});
@@ -181,6 +183,14 @@ export const changeCompVariableObject = (param) => dispatch => {
     });
 };
 
+export const changeStoreData = (param) => dispatch => {
+    return dispatch({
+        type: CHG_STORE_DATA,
+        name: param.name,
+        value: param.value
+    });
+};
+
 const makeParameter = (param) => {
     return {
         deptCd: param.deptCd,
@@ -193,14 +203,6 @@ const makeParameter = (param) => {
         desktopConfId: ''//param.get('deptCd')
     };
 }
-
-export const changeStoreData = (param) => dispatch => {
-    return dispatch({
-        type: CHG_STORE_DATA,
-        name: param.name,
-        value: param.value
-    });
-};
 
 // create (add)
 export const createDeptInfo = (itemObj) => dispatch => {
@@ -298,6 +300,45 @@ export const deleteDeptInfo = (param) => dispatch => {
     });
 };
 
+// add user in dept
+export const createUsersInDept = (itemObj) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createUsersInDept', itemObj).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: ADD_USERINDEPT_SUCCESS
+                    });
+                }    
+            } catch(ex) {
+                dispatch({ type: COMMON_FAILURE, ex: ex });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// delete user in dept
+export const deleteUsersInDept = (itemObj) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('deleteUsersInDept', itemObj).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: DELETE_USERINDEPT_SUCCESS
+                    });
+                }    
+            } catch(ex) {
+                dispatch({ type: COMMON_FAILURE, ex: ex });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
 
 export default handleActions({
 
@@ -371,6 +412,18 @@ export default handleActions({
     },
     [DELETE_DEPT_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action);
+    },
+    [ADD_USERINDEPT_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false,
+            error: false
+        });
+    },
+    [DELETE_USERINDEPT_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false,
+            error: false
+        });
     }
 
 }, initialState);
