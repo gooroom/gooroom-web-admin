@@ -36,33 +36,47 @@ class DeptRuleInform extends Component {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const { UserProps, compId } = this.props;
+    const { UserProps, DeptProps, compId } = this.props;
     const informOpen = UserProps.getIn(['viewItems', compId, 'informOpen']);
+    const selectedDept = DeptProps.getIn(['viewItems', compId]);
 
     return (
       <div style={{marginTop: 10}} >
       {informOpen &&
         <Card>
+        <CardContent>
           <Grid container spacing={16}>
-            <Grid item xs={12} sm={12} lg={6}>
-              <BrowserRuleComp
-                compId={compId}
-              />
+            <Grid item xs={12} sm={6} lg={6}>
+              <Card elevation={0}>
+                <CardHeader
+                  title={selectedDept.get('selectedDeptNm')}
+                  subheader={selectedDept.get('selectedDeptCd')}
+                ></CardHeader>
+                {/* <CardContent></CardContent> */}
+              </Card>
             </Grid>
-            <Grid item xs={12} sm={12} lg={6}>
-              <MediaRuleComp
-                compId={compId}
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={16}>
-            <Grid item xs={12} sm={12} lg={6}>
-              <SecurityRuleComp
-                compId={compId}
-              />
+            <Grid item xs={12} sm={6} lg={6}>
+              <Card elevation={0}>
+                <CardContent style={{textAlign: 'right'}}>
+                </CardContent>
+              </Card>
             </Grid>
           </Grid>
 
+          <Grid container spacing={16}>
+            <Grid item xs={12} sm={12} lg={6}>
+              <BrowserRuleComp compId={compId} />
+            </Grid>
+            <Grid item xs={12} sm={12} lg={6}>
+              <MediaRuleComp compId={compId} />
+            </Grid>
+          </Grid>
+          <Grid container spacing={16}>
+            <Grid item xs={12} sm={12} lg={6}>
+              <SecurityRuleComp compId={compId} />
+            </Grid>
+          </Grid>
+        </CardContent>
         </Card>
       }
       </div>
@@ -72,7 +86,8 @@ class DeptRuleInform extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  UserProps: state.UserModule
+  UserProps: state.UserModule,
+  DeptProps: state.DeptModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

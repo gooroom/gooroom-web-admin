@@ -17,6 +17,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+
 import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
 import ClientHostNameComp from 'views/Rules/HostName/ClientHostNameComp';
 import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
@@ -41,47 +44,49 @@ class ClientGroupInform extends Component {
       <div>
       {(informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
-          <CardHeader
-            title={selectedViewItem.get('grpNm')}
-            subheader={selectedViewItem.get('grpId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
-          />
           <CardContent>
-            <Typography component="pre">"{selectedViewItem.get('comment')}"</Typography>
+
+            <Grid container spacing={16}>
+              <Grid item xs={12} sm={6} lg={6}>
+                <Card elevation={0}>
+                  <CardHeader
+                    title={selectedViewItem.get('grpNm')}
+                    subheader={selectedViewItem.get('grpId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
+                  ></CardHeader>
+                  <CardContent>
+                    <Typography component="pre">"{selectedViewItem.get('comment')}"</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+              <Grid item xs={12} sm={6} lg={6}>
+
+                <Card elevation={0}>
+                  <CardContent style={{textAlign: 'right'}}>
+
+                  </CardContent>
+                </Card>
+              
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={16}>
+              <Grid item xs={12} sm={6} >
+                <ClientConfSettingComp compId={compId} />
+              </Grid>
+              <Grid item xs={12} sm={6} >
+                <DesktopConfigComp compId={compId} />
+              </Grid>
+            </Grid>
+            <Grid container spacing={16}>
+              <Grid item xs={12} sm={6} >
+                <ClientHostNameComp compId={compId} />
+              </Grid>
+              <Grid item xs={12} sm={6} >
+                <ClientUpdateServerComp compId={compId} />
+              </Grid>
+            </Grid>
+
           </CardContent>
-          <Divider />
-          
-          <Grid container spacing={16}>
-            <Grid item xs={12} sm={6} >
-              <ClientConfSettingComp
-                compId={compId}
-                objId={selectedViewItem.get('clientConfigId')} 
-                objNm={selectedViewItem.get('clientConfigNm')} 
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} >
-              <DesktopConfigComp 
-                compId={compId}
-                objId={selectedViewItem.get('desktopConfigId')} 
-                objNm={selectedViewItem.get('desktopConfigNm')} 
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={16}>
-            <Grid item xs={12} sm={6} >
-              <ClientHostNameComp
-                compId={compId}
-                objId={selectedViewItem.get('hostNameConfigId')} 
-                objNm={selectedViewItem.get('hostNameConfigNm')} 
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} >
-              <ClientUpdateServerComp
-                compId={compId}
-                objId={selectedViewItem.get('updateServerConfigId')} 
-                objNm={selectedViewItem.get('updateServerConfigNm')} 
-              />
-            </Grid>
-          </Grid>
         </Card>
       }
       </div>
