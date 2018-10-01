@@ -27,6 +27,7 @@ import UserSelectDialog from "views/User/UserSelectDialog";
 
 import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
+import Toolbar from '@material-ui/core/Toolbar';
 
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -226,72 +227,56 @@ class DeptManage extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
-          <Grid container spacing={24}>
-            <Grid item xs={12}>
-              <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForDept} >
-                <AddIcon />
-                등록
-              </Button>
-              <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} style={{marginLeft: "10px"}} >
-                <RemoveIcon />
-                삭제
-              </Button>
+
+          <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
+
+            <Grid item xs={12} sm={4} lg={4} >
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+                <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForDept} >
+                  <AddIcon />등록
+                </Button>
+                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} style={{marginLeft: "10px"}} >
+                  <RemoveIcon />삭제
+                </Button>
+              </Toolbar>
+              <GrTreeList
+                useFolderIcons={true}
+                listHeight='24px'
+                url='readChildrenDeptList'
+                paramKeyName='deptCd'
+                rootKeyValue='0'
+                keyName='key'
+                title='title'
+                startingDepth='2'
+                compId={compId}
+                onInitTreeData={this.handleInitTreeData}
+                onSelectNode={this.handleSelectDept}
+                onCheckedNode={this.handleCheckedDept}
+                onRef={ref => (this.grTreeList = ref)}
+              />
             </Grid>
-            <Grid item xs={12} sm={4} lg={4}>
-              <Card className={classes.deptTreeCard}>
-                <GrTreeList
-                  useFolderIcons={true}
-                  listHeight='24px'
-                  url='readChildrenDeptList'
-                  paramKeyName='deptCd'
-                  rootKeyValue='0'
-                  keyName='key'
-                  title='title'
-                  startingDepth='2'
-                  compId={compId}
-                  onInitTreeData={this.handleInitTreeData}
-                  onSelectNode={this.handleSelectDept}
-                  onCheckedNode={this.handleCheckedDept}
-                  onRef={ref => (this.grTreeList = ref)}
-                />
-              </Card>
+
+            <Grid item xs={12} sm={8} lg={8} >
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+                <Button size="small" variant="contained" color="primary" onClick={this.handleAddUserInDept} >
+                  <AddIcon />추가
+                </Button>
+                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteUserInDept} style={{marginLeft: "10px"}} >
+                  <RemoveIcon />삭제
+                </Button>
+              </Toolbar>
+              <UserListComp name='UserListComp' compId={compId} deptCd='' />
             </Grid>
-            <Grid item xs={12} sm={8} lg={8}>
-              <Card className={classes.deptInfoCard}>
-                <CardContent>
-                  <Typography className={classes.deptTitle} color="textSecondary">조직 정보</Typography>
-                  <Typography variant="headline" component="h2">{selectedDeptNm}</Typography>
-                  <Typography className={classes.deptCd} color="textSecondary">{bull} 부서코드 - {selectedDeptCd}</Typography>
-                  <Typography component="p">{bull} {'"이 조직에 대한 설명 또는 상세 정보"'}</Typography>
-                </CardContent>
-              </Card>
-              <Card className={classes.deptUserCard}>
-                <CardContent>
-                  <Grid container spacing={8}>
-                    <Grid item xs={6} sm={6} lg={6}>
-                      <Typography className={classes.deptTitle} color="textSecondary">사용자 정보</Typography>
-                    </Grid>
-                    <Grid item xs={6} sm={6} lg={6} style={{textAlign: 'right'}}>
-                      <Button size="small" variant="contained" color="primary" onClick={this.handleAddUserInDept} >
-                        <AddIcon />
-                          추가
-                      </Button>
-                      <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteUserInDept} style={{marginLeft: "10px"}} >
-                        <RemoveIcon />
-                          삭제
-                      </Button>
-                    </Grid>
-                  </Grid>
-                  <UserListComp name='UserListComp' compId={compId} deptCd='' />
-                </CardContent>
-              </Card>
-            </Grid>
+
           </Grid>
+
+          <DeptRuleInform compId={compId} />
+  
         </GrPane>
         <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
         <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectClose} />
         <GrConfirm />
-        <DeptRuleInform compId={compId} />
+
       </React.Fragment>
     );
   }

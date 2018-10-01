@@ -20,6 +20,7 @@ import GrPane from 'containers/GrContent/GrPane';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import Grid from '@material-ui/core/Grid';
+import Toolbar from '@material-ui/core/Toolbar';
 
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
@@ -144,11 +145,6 @@ class ClientMasterManage extends Component {
     return !(selectedIds && selectedIds.size > 0);
   }
 
-  handleClientDeleteButton = () => {
-    
-  }
-
-
 
   render() {
     const { classes } = this.props;
@@ -161,60 +157,38 @@ class ClientMasterManage extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
-          {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+          
+          <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             
-              <Grid item xs={6}>
-                <Button size="small" variant="contained" color="primary" onClick={() => {this.handleCreateButtonForClientGroup();}} >
-                  <AddIcon />
-                  등록
+            <Grid item xs={12} sm={4} lg={4} >
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+                <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
+                  <AddIcon />등록
                 </Button>
-                <Button size="small" variant="contained" color="primary" onClick={() => {this.handleDeleteButtonForClientGroup();}} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
-                  <RemoveIcon />
-                  삭제
+                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
+                  <RemoveIcon />삭제
                 </Button>
-              </Grid>
+              </Toolbar>
+              <ClientGroupComp compId={compId}
+                onSelectAll={this.handleClientGroupSelectAll}
+                onSelect={this.handleClientGroupSelect}
+              />
+            </Grid>
 
-            </Grid>
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button size="small" variant="contained" color="primary" onClick={() => {this.handleClientDeleteButton();}} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}} >
-                <RemoveIcon />
-                삭제
-              </Button>
-          </Grid>
-          </Grid>
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-          &nbsp;
-          </Grid>
-          <Grid container spacing={24} style={{border:"0px solid red",minWidth:"990px"}}>
-            <Grid item xs={4} sm={3}>
-              <Card style={{minWidth:"240px",boxShadow:"0px"}}>
-                <ClientGroupComp compId={compId}
-                  onSelectAll={this.handleClientGroupSelectAll}
-                  onSelect={this.handleClientGroupSelect}
-                />
-              </Card>
-            </Grid>
-            <Grid item xs>
-              <Card style={{minWidth:"710px",boxShadow:"0px"}}>
-                <ClientManageComp compId={compId}
+            <Grid item xs={12} sm={8} lg={8} >
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+                <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} style={{minWidth: 100}} >
+                  <AddIcon />단말추가
+                </Button>
+                <Button size="small" variant="contained" color="primary" onClick={this.handleClientDeleteButton} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}} >
+                  <RemoveIcon />삭제
+                </Button>
+              </Toolbar>
+              <ClientManageComp compId={compId}
                 onSelectAll={this.handleClientSelectAll}
                 onSelect={this.handleClientSelect}
-                />
-              </Card>
-            </Grid>
-          </Grid>
-          <Grid container spacing={24} style={{marginTop:"0px",minWidth:"990px"}}>
-            <Grid item xs={4} sm={3}>
-              {(isGroupInformOpen) &&
-              <GetAppIcon />
-              }
-            </Grid>
-            <Grid item xs style={{textAlign:"right"}}>
-              {(ClientManageProps.informOpen) &&
-              <GetAppIcon />
-              }
+              />
+
             </Grid>
           </Grid>
           

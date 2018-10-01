@@ -18,6 +18,8 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GrConfirm from 'components/GrComponents/GrConfirm';
+import ClientGroupDialog from './ClientGroupDialog';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -28,6 +30,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import Checkbox from "@material-ui/core/Checkbox";
+import Button from '@material-ui/core/Button';
+import BuildIcon from '@material-ui/icons/Build';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -41,6 +45,7 @@ class ClientGroupComp extends Component {
     { id: "chCheckbox", isCheckbox: true},
     { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
     { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정' },
   ];
 
   componentDidMount() {
@@ -60,6 +65,16 @@ class ClientGroupComp extends Component {
   handleChangeSort = (event, columnId, currOrderDir) => {
     this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
+    });
+  };
+
+  // edit
+  handleEditClick = (event, id) => {
+    const { ClientGroupProps, ClientGroupActions, compId } = this.props;
+    const selectedViewItem = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+    ClientGroupActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
   
@@ -171,6 +186,14 @@ class ClientGroupComp extends Component {
                 <TableCell className={classes.grSmallAndClickCell}>
                   {n.get('clientCount')}
                 </TableCell>
+
+                <TableCell className={classes.grSmallAndClickCell}>
+                  <Button color='secondary' size="small" 
+                    className={classes.buttonInTableRow} 
+                    onClick={event => this.handleEditClick(event, n.get('grpId'))}>
+                    <BuildIcon />
+                  </Button>
+                </TableCell>
               </TableRow>
             );
           })}
@@ -205,6 +228,8 @@ class ClientGroupComp extends Component {
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
         }
+        <ClientGroupDialog compId={compId} />
+        <GrConfirm />
       </div>
     );
   }
