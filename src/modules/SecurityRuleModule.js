@@ -23,7 +23,8 @@ const SET_EDITING_ITEM_VALUE = 'securityRule/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'securityRule/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'securityRule/CHG_COMPDATA_VALUE';
-
+const DELETE_COMPDATA = 'securityRule/DELETE_COMPDATA';
+const DELETE_COMPDATA_ITEM = 'clientHostName/DELETE_COMPDATA_ITEM';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId');
@@ -108,21 +109,30 @@ export const readSecurityRuleListPaged = (module, compId, extParam) => dispatch 
 
 export const getSecurityRule = (param) => dispatch => {
     const compId = param.compId;
-    dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readSecurityRule', {'objId': param.objId}).then(
-        (response) => {
+    if(param.objId && param.objId !== '') {
+        dispatch({type: COMMON_PENDING});
+        return requestPostAPI('readSecurityRule', {'objId': param.objId}).then(
+            (response) => {
+                dispatch({
+                    type: GET_SECURITYRULE_SUCCESS,
+                    compId: compId,
+                    response: response
+                });
+            }
+        ).catch(error => {
             dispatch({
-                type: GET_SECURITYRULE_SUCCESS,
-                compId: compId,
-                response: response
+                type: COMMON_FAILURE,
+                error: error
             });
-        }
-    ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
         });
-    });
+    } else {
+        return dispatch({
+            type: DELETE_COMPDATA_ITEM,
+            compId: compId,
+            itemName: 'selectedViewItem'
+        });      
+    }
+
 };
 
 export const getSecurityRuleByUserId = (param) => dispatch => {
@@ -186,6 +196,13 @@ export const changeCompVariable = (param) => dispatch => {
         compId: param.compId,
         name: param.name,
         value: param.value
+    });
+};
+
+export const deleteCompData = (param) => dispatch => {
+    return dispatch({
+        type: DELETE_COMPDATA,
+        compId: param.compId
     });
 };
 
@@ -347,6 +364,12 @@ export default handleActions({
     },
     [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
+    },
+    [DELETE_COMPDATA]: (state, action) => {
+        return state.deleteIn(['viewItems', action.compId]);
+    },
+    [DELETE_COMPDATA_ITEM]: (state, action) => {
+        return state.deleteIn(['viewItems', action.compId, action.itemName]);
     },
     [CREATE_SECURITYRULE_SUCCESS]: (state, action) => {
         return state.merge({

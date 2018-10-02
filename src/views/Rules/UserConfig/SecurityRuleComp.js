@@ -53,7 +53,6 @@ class SecurityRuleComp extends Component {
     const { classes } = this.props;
     const { SecurityRuleProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
     const selectedViewItem = SecurityRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = SecurityRuleProps.getIn(['viewItems', compId, 'listAllData']);
@@ -76,7 +75,7 @@ class SecurityRuleComp extends Component {
     return (
       <React.Fragment>
       <Card elevation={0}>
-        {(viewCompItem) && <CardContent style={contentStyle}>
+        {(viewCompItem) && <CardContent style={{padding: 0}}>
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>

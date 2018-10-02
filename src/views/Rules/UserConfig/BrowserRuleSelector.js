@@ -57,18 +57,19 @@ class BrowserRuleSelector extends Component {
     const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
-      selectedOptionItemId = listAllData.getIn([0, 'objId']);
+      selectedOptionItemId = '-';
     }
 
     return (
       <Card className={classes.card}>
-        <CardContent>
+        <CardContent style={{padding: 0}}>
         {listAllData && 
-        <FormControl className={classes.formControl} style={{width: '100%'}}>
+        <FormControl className={classes.formControl} style={{width: '100%', marginBottom: 24, marginTop: 8, border: 'dotted 1px lightGray'}}>
           <InputLabel htmlFor="cfg-helper"></InputLabel>
           <Select value={selectedOptionItemId}
             onChange={this.handleChange}
           >
+          <MenuItem key={'-'} value={'-'}>없음</MenuItem>
           {listAllData.map(item => (
             <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
           ))}
