@@ -102,10 +102,10 @@ class DeptManage extends Component {
   }
 
   handleEditDept = (listItem, i) => { 
-
     this.props.DeptActions.showDialog({
       selectedViewItem: {
-        selectedDept: listItem
+        deptCd: listItem.key,
+        deptNm: listItem.title
       },
       dialogType: DeptDialog.TYPE_EDIT
     });

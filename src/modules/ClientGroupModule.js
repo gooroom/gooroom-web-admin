@@ -128,9 +128,12 @@ export const createClientGroupData = (param) => dispatch => {
     return requestPostAPI('createClientGroup', {
         groupName: param.groupName,
         groupComment: param.groupComment,
-        clientConfigId: param.clientConfigId,
-        hostNameConfigId: param.hostNameConfigId,
-        updateServerConfigId: param.updateServerConfigId
+        clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
+        hostNameConfigId: (param.hostNameConfigId == '-') ? '' : param.hostNameConfigId,
+        updateServerConfigId: (param.updateServerConfigId == '-') ? '' : param.updateServerConfigId,
+        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
     }).then(
         (response) => {
             try {
@@ -163,9 +166,12 @@ export const editClientGroupData = (param) => dispatch => {
         groupId: param.groupId,
         groupName: param.groupName,
         groupComment: param.groupComment,
-        clientConfigId: param.clientConfigId,
-        hostNameConfigId: param.hostNameConfigId,
-        updateServerConfigId: param.updateServerConfigId
+        clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
+        hostNameConfigId: (param.hostNameConfigId == '-') ? '' : param.hostNameConfigId,
+        updateServerConfigId: (param.updateServerConfigId == '-') ? '' : param.updateServerConfigId,
+        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
     }).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {

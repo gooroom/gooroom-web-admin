@@ -81,3 +81,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientDesktopConfigInform));
 
+export const generateConfigObject = (param) => {
+  return param;
+
+
+};

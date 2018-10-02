@@ -39,12 +39,15 @@ class ClientConfSettingSelector extends Component {
   }
 
   componentDidMount() {
+    const { ClientConfSettingProps, compId } = this.props;
     this.props.ClientConfSettingActions.readClientConfSettingList(this.props.ClientConfSettingProps, this.props.compId);
-    this.props.ClientConfSettingActions.changeCompVariable({
-      compId: this.props.compId,
-      name: 'selectedOptionItemId',
-      value: this.props.initId
-    });
+    if(!ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+      this.props.ClientConfSettingActions.changeCompVariable({
+        compId: this.props.compId,
+        name: 'selectedOptionItemId',
+        value: this.props.initId
+      });
+    }
   }
 
   handleChange = (event, value) => {
@@ -63,19 +66,21 @@ class ClientConfSettingSelector extends Component {
     const selectedViewItem = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = ClientConfSettingProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = listAllData.getIn([0, 'objId']);
     }
 
     return (
       <Card className={classes.card}>
-        <CardContent>
+        <CardContent style={{padding: 0}}>
         {listAllData && 
-        <FormControl className={classes.formControl} style={{width: '100%'}}>
+        <FormControl className={classes.formControl} style={{width: '100%', marginBottom: 24, marginTop: 8, border: 'dotted 1px lightGray'}}>
           <InputLabel htmlFor="cfg-helper"></InputLabel>
           <Select value={selectedOptionItemId}
             onChange={this.handleChange}
           >
+          <MenuItem key={'-'} value={'-'}>없음</MenuItem>
           {listAllData.map(item => (
             <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
           ))}

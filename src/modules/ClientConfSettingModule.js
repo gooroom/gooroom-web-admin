@@ -23,6 +23,8 @@ const SET_EDITING_ITEM_VALUE = 'clientConfSetting/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'clientConfSetting/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'clientConfSetting/CHG_COMPDATA_VALUE';
+const DELETE_COMPDATA = 'clientConfSetting/DELETE_COMPDATA';
+const DELETE_COMPDATA_ITEM = 'clientHostName/DELETE_COMPDATA_ITEM';
 
 const SET_NTP_VALUE = 'clientConfSetting/SET_NTP_VALUE';
 const ADD_NTPADDRESS_ITEM = 'clientConfSetting/ADD_NTPADDRESS_ITEM';
@@ -111,21 +113,29 @@ export const readClientConfSettingListPaged = (module, compId, extParam) => disp
 
 export const getClientConf = (param) => dispatch => {
     const compId = param.compId;
-    dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readClientConf', {'objId': param.objId}).then(
-        (response) => {
+    if(param.objId && param.objId !== '') {
+        dispatch({type: COMMON_PENDING});
+        return requestPostAPI('readClientConf', {'objId': param.objId}).then(
+            (response) => {
+                dispatch({
+                    type: GET_CONFSETTING_SUCCESS,
+                    compId: compId,
+                    response: response
+                });
+            }
+        ).catch(error => {
             dispatch({
-                type: GET_CONFSETTING_SUCCESS,
-                compId: compId,
-                response: response
+                type: COMMON_FAILURE,
+                error: error
             });
-        }
-    ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
         });
-    });
+    } else {
+        return dispatch({
+            type: DELETE_COMPDATA_ITEM,
+            compId: compId,
+            itemName: 'selectedViewItem'
+        });      
+    }
 };
 
 export const setEditingItemValue = (param) => dispatch => {
@@ -151,6 +161,13 @@ export const changeCompVariable = (param) => dispatch => {
         compId: param.compId,
         name: param.name,
         value: param.value
+    });
+};
+
+export const deleteCompData = (param) => dispatch => {
+    return dispatch({
+        type: DELETE_COMPDATA,
+        compId: param.compId
     });
 };
 
@@ -331,6 +348,12 @@ export default handleActions({
     },
     [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
+    },
+    [DELETE_COMPDATA]: (state, action) => {
+        return state.deleteIn(['viewItems', action.compId]);
+    },
+    [DELETE_COMPDATA_ITEM]: (state, action) => {
+        return state.deleteIn(['viewItems', action.compId, action.itemName]);
     },
     [CREATE_CONFSETTING_SUCCESS]: (state, action) => {
         return state.merge({

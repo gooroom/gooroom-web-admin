@@ -22,8 +22,14 @@ import AddIcon from '@material-ui/icons/Add';
 
 import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
 import ClientHostNameComp from 'views/Rules/HostName/ClientHostNameComp';
-import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
 import ClientUpdateServerComp from 'views/Rules/UpdateServer/ClientUpdateServerComp';
+
+import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
+
+import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
+import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
+import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
+
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -69,22 +75,39 @@ class ClientGroupInform extends Component {
               </Grid>
             </Grid>
 
-            <Grid container spacing={16}>
-              <Grid item xs={12} sm={6} >
+            <Grid container spacing={32}>
+              <Grid item xs={12} sm={6}>
                 <ClientConfSettingComp compId={compId} />
               </Grid>
               <Grid item xs={12} sm={6} >
-                <DesktopConfigComp compId={compId} />
-              </Grid>
-            </Grid>
-            <Grid container spacing={16}>
-              <Grid item xs={12} sm={6} >
                 <ClientHostNameComp compId={compId} />
               </Grid>
+            </Grid>
+
+            <Grid container spacing={32}>
               <Grid item xs={12} sm={6} >
                 <ClientUpdateServerComp compId={compId} />
               </Grid>
+              <Grid item xs={12} sm={6} >
+                <BrowserRuleComp compId={compId} />
+              </Grid>
             </Grid>
+
+            <Grid container spacing={32}>
+              <Grid item xs={12} sm={6} >
+                <MediaRuleComp compId={compId} />
+              </Grid>
+              <Grid item xs={12} sm={6} >
+                <SecurityRuleComp compId={compId} />
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={32}>
+              <Grid item xs={12} sm={12} >
+                <DesktopConfigComp compId={compId} />
+              </Grid>
+            </Grid>
+
 
           </CardContent>
         </Card>

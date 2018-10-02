@@ -52,7 +52,6 @@ class BrowserRuleComp extends Component {
     const { classes } = this.props;
     const { BrowserRuleProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
     const selectedViewItem = BrowserRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
@@ -75,7 +74,7 @@ class BrowserRuleComp extends Component {
     return (
       <React.Fragment>
       <Card elevation={0}>
-        {(viewCompItem) && <CardContent style={contentStyle}>
+        {(viewCompItem) && <CardContent style={{padding: 0}}>
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>

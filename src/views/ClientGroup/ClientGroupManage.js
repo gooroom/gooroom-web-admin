@@ -8,9 +8,15 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
+
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+
 import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
@@ -102,37 +108,42 @@ class ClientGroupManage extends Component {
   handleRowClick = (event, id) => {
     const { ClientGroupProps } = this.props;
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+
+    console.log('>>>> clickedRowObject ::: ', clickedRowObject.toJS());
 
     ClientGroupActions.showClientGroupInform({
       compId: compId,
       selectedViewItem: clickedRowObject,
     });
     
-    // '단말정책설정' : 정책 정보 변경
+    // 정책 조회
     ClientConfSettingActions.getClientConf({
-      compId: compId,
-      objId: clickedRowObject.get('clientConfigId')
+      compId: compId, objId: clickedRowObject.get('clientConfigId')
     });   
-
-    // 'Hosts설정' : 정책 정보 변경
     ClientHostNameActions.getClientHostName({
-      compId: compId,
-      objId: clickedRowObject.get('hostNameConfigId')
+      compId: compId, objId: clickedRowObject.get('hostNameConfigId')
+    });   
+    ClientUpdateServerActions.getClientUpdateServer({
+      compId: compId, objId: clickedRowObject.get('updateServerConfigId')
     });   
 
-    // '업데이트서버설정' : 정책 정보 변경
-    ClientUpdateServerActions.getClientUpdateServer({
-      compId: compId,
-      objId: clickedRowObject.get('updateServerConfigId')
+    BrowserRuleActions.getBrowserRule({
+      compId: compId, objId: clickedRowObject.get('browserRuleId')
+    });   
+    MediaRuleActions.getMediaRule({
+      compId: compId, objId: clickedRowObject.get('mediaRuleId')
+    });   
+    SecurityRuleActions.getSecurityRule({
+      compId: compId, objId: clickedRowObject.get('securityRuleId')
     });   
 
     // '데스크톱 정보설정' : 정책 정보 변경
     ClientDesktopConfigActions.getClientDesktopConfig({
-      compId: compId,
-      desktopConfId: clickedRowObject.get('desktopConfigId')
+      compId: compId, desktopConfId: clickedRowObject.get('desktopConfigId')
     });   
   };
   // .................................................
@@ -334,6 +345,11 @@ const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
   ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+
   ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch),
 
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)

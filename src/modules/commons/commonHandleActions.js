@@ -35,7 +35,7 @@ export const handleListAction = (state, action) => {
                 // no exist or selected id was deleted
                 return state
                     .setIn(['viewItems', action.compId, 'listAllData'], List(data.map((e) => {return Map(e)})))
-                    .setIn(['viewItems', action.compId, 'selectedOptionItemId'], data[0].objId);
+                    .setIn(['viewItems', action.compId, 'selectedOptionItemId'], '-');
             } else {
                 // before exist and selected id is exist
                 return state
