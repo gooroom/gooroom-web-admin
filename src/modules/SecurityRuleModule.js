@@ -24,7 +24,7 @@ const SET_EDITING_ITEM_VALUE = 'securityRule/SET_EDITING_ITEM_VALUE';
 const CHG_LISTPARAM_DATA = 'securityRule/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'securityRule/CHG_COMPDATA_VALUE';
 const DELETE_COMPDATA = 'securityRule/DELETE_COMPDATA';
-const DELETE_COMPDATA_ITEM = 'clientHostName/DELETE_COMPDATA_ITEM';
+const DELETE_COMPDATA_ITEM = 'securityRule/DELETE_COMPDATA_ITEM';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId');

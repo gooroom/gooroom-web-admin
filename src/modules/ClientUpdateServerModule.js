@@ -24,7 +24,7 @@ const SET_EDITING_ITEM_VALUE = 'clientUpdateServer/SET_EDITING_ITEM_VALUE';
 const CHG_LISTPARAM_DATA = 'clientUpdateServer/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'clientUpdateServer/CHG_COMPDATA_VALUE';
 const DELETE_COMPDATA = 'clientUpdateServer/DELETE_COMPDATA';
-const DELETE_COMPDATA_ITEM = 'clientHostName/DELETE_COMPDATA_ITEM';
+const DELETE_COMPDATA_ITEM = 'clientUpdateServer/DELETE_COMPDATA_ITEM';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId');
