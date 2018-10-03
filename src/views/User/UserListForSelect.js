@@ -54,7 +54,7 @@ import { requestPostAPI } from 'components/GrUtils/GrRequester';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class UserListInDept extends Component {
+class UserListForSelect extends Component {
 
   constructor(props) {
     super(props);
@@ -180,6 +180,9 @@ class UserListInDept extends Component {
     const newListParam = (stateData.get('listParam')).merge({
       status: value, page: 0
     });
+    this.setState({
+      stateData: stateData.set('listParam', newListParam)
+    });
     this.handleGetUserList(newListParam);
   }
 
@@ -187,6 +190,9 @@ class UserListInDept extends Component {
     const { stateData } = this.state;
     const newListParam = (stateData.get('listParam')).merge({
       keyword: value, page: 0
+    });
+    this.setState({
+      stateData: stateData.set('listParam', newListParam)
     });
     // 아래 커멘트 제거시, 타이프 칠때마다 조회
     //this.handleGetUserList(newListParam);
@@ -318,5 +324,5 @@ class UserListInDept extends Component {
   }
 }
 
-export default withStyles(GrCommonStyle)(UserListInDept);
+export default withStyles(GrCommonStyle)(UserListForSelect);
 

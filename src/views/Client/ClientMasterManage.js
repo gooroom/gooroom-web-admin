@@ -7,6 +7,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import * as GlobalActions from 'modules/GlobalModule';
 import * as ClientMasterManageActions from 'modules/ClientMasterManageModule';
 import * as ClientManageActions from 'modules/ClientManageModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
@@ -18,6 +19,7 @@ import { getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
 import GrConfirm from 'components/GrComponents/GrConfirm';
+import ClientSelectDialog from "views/Client/ClientSelectDialog";
 
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -49,7 +51,7 @@ class ClientMasterManage extends Component {
     super(props);
 
     this.state = {
-      loading: true,
+      isOpenClientSelect: false,
     };
   }
 
@@ -132,19 +134,105 @@ class ClientMasterManage extends Component {
   }
 
   // CLIENT COMPONENT
-  // add client group
-  handleCreateButtonForClientGroup = () => {
-    this.props.ClientGroupActions.showDialog({
-      selectedViewItem: Map(),
-      dialogType: ClientGroupDialog.TYPE_ADD
-    });
+  // add client in group
+  handleAddClientInGroup = (event) => {
+    const selectedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    if(selectedIds && selectedIds.size > 0) {
+      if(selectedIds.size > 1) {
+        this.props.GlobalActions.showElementMsg(event.currentTarget, '단말을 추가할 그룹을 하나만 선택하세요.');
+      } else {
+        this.setState({
+          isOpenClientSelect: true
+        });
+      }
+    } else {
+      this.props.GlobalActions.showElementMsg(event.currentTarget, '단말을 추가할 그룹을 선택하세요.');
+    }
+
+    // this.props.ClientGroupActions.showDialog({
+    //   selectedViewItem: Map(),
+    //   dialogType: ClientGroupDialog.TYPE_ADD
+    // });
   }
 
   isClientRemovable = () => {
-    const selectedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
+    const selectedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    // const selectedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
     return !(selectedIds && selectedIds.size > 0);
   }
 
+  handleClientSelectSave = (selectedClients) => {
+    const { ClientGroupProps, GrConfirmActions } = this.props;
+    const selectedGroupIds = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    GrConfirmActions.showConfirm({
+        confirmTitle: '그룹에 단말 추가',
+        confirmMsg: '단말을 그룹 추가하시겠습니까?',
+        handleConfirmResult: this.handleClientSelectSaveConfirmResult,
+        confirmOpen: true,
+        confirmObject: {
+          selectedGroupId: selectedGroupIds.get(0),
+          selectedClients: selectedClients
+        }
+    });
+  }
+  handleClientSelectSaveConfirmResult = (confirmValue, paramObject) => {
+    if(confirmValue) {
+      const { ClientGroupActions, ClientManageActions, ClientManageProps } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      ClientGroupActions.addClientsInGroup({
+          groupId: paramObject.selectedGroupId,
+          clients: paramObject.selectedClients.join(',')
+      }).then((res) => {
+        // show clients list in group
+        ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+          groupId: paramObject.selectedGroupId, page:0
+        });
+        
+        // close dialog
+        this.setState({ isOpenClientSelect: false });
+      });
+    }
+  }
+
+  handleRemoveClientInGroup = (event) => {
+    const { ClientManageProps, GrConfirmActions } = this.props;
+    const selectedClients = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    if(selectedClients && selectedClients !== '') {
+      GrConfirmActions.showConfirm({
+        confirmTitle: '그룹에서 단말 삭제',
+        confirmMsg: '선택하신 단말을 그룹에서 삭제하시겠습니까?',
+        handleConfirmResult: this.handleRemoveClientInGroupConfirmResult,
+        confirmOpen: true,
+        confirmObject: {
+          selectedClients: selectedClients
+        }
+      });
+    } else {
+      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 선택하세요.');
+    }
+  }
+  handleRemoveClientInGroupConfirmResult = (confirmValue, paramObject) => {
+    if(confirmValue) {
+      const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      ClientGroupActions.removeClientsInGroup({
+        clients: paramObject.selectedClients.join(',')
+      }).then(() => {
+        // show user list in dept.
+        ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+          page:0
+        });
+        // close dialog
+        this.setState({ isOpenClientSelect: false });
+      });
+    }
+  };
+
+  handleClientSelectClose = () => {
+    this.setState({
+      isOpenClientSelect: false
+    })
+  }
 
   render() {
     const { classes } = this.props;
@@ -177,10 +265,10 @@ class ClientMasterManage extends Component {
 
             <Grid item xs={12} sm={8} lg={8} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} style={{minWidth: 100}} >
+                <Button size="small" variant="contained" color="primary" onClick={this.handleAddClientInGroup} style={{minWidth: 100}} >
                   <AddIcon />단말추가
                 </Button>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleClientDeleteButton} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}} >
+                <Button size="small" variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}} >
                   <RemoveIcon />삭제
                 </Button>
               </Toolbar>
@@ -195,6 +283,7 @@ class ClientMasterManage extends Component {
           <ClientGroupInform compId={compId} onSelect={this.handleClientGroupSelect} />
           <ClientManageInform compId={compId} onSelect={this.handleClientSelect}  />
           <ClientGroupDialog compId={compId} />
+          <ClientSelectDialog isOpen={this.state.isOpenClientSelect} onSaveHandle={this.handleClientSelectSave} onClose={this.handleClientSelectClose} />
           <GrConfirm />
           
         </GrPane>
@@ -211,6 +300,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  GlobalActions: bindActionCreators(GlobalActions, dispatch),
   ClientMasterManageActions: bindActionCreators(ClientMasterManageActions, dispatch),
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),

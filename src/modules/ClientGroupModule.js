@@ -24,6 +24,8 @@ const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
 const CHG_LISTPARAM_DATA = 'groupComp/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'groupComp/CHG_COMPDATA_VALUE';
 const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
+const ADD_CLIENTINGROUP_SUCCESS = 'groupComp/ADD_CLIENTINGROUP_SUCCESS';
+const REMOVE_CLIENTINGROUP_SUCCESS = 'groupComp/REMOVE_CLIENTINGROUP_SUCCESS';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chGrpNm', 'asc', {dialogTabValue: 0});
@@ -241,6 +243,47 @@ export const deleteSelectedClientGroupData = (param) => dispatch => {
 };
 
 
+// add clients in group
+export const addClientsInGroup = (itemObj) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('addClientsInGroup', itemObj).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: ADD_CLIENTINGROUP_SUCCESS
+                    });
+                }    
+            } catch(ex) {
+                dispatch({ type: COMMON_FAILURE, ex: ex });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// delete clients in group
+export const removeClientsInGroup = (itemObj) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('removeClientsInGroup', itemObj).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: REMOVE_CLIENTINGROUP_SUCCESS
+                    });
+                }    
+            } catch(ex) {
+                dispatch({ type: COMMON_FAILURE, ex: ex });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
@@ -301,6 +344,18 @@ export default handleActions({
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action);
     },
+    [ADD_CLIENTINGROUP_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false,
+            error: false
+        });
+    },
+    [REMOVE_CLIENTINGROUP_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false,
+            error: false
+        });
+    }
 
 }, initialState);
 

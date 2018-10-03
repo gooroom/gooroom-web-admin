@@ -76,34 +76,34 @@ class ClientGroupInform extends Component {
             </Grid>
 
             <Grid container spacing={32}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={12} lg={6}>
                 <ClientConfSettingComp compId={compId} />
               </Grid>
-              <Grid item xs={12} sm={6} >
+              <Grid item xs={12} sm={12} lg={6}>
                 <ClientHostNameComp compId={compId} />
               </Grid>
             </Grid>
 
             <Grid container spacing={32}>
-              <Grid item xs={12} sm={6} >
+              <Grid item xs={12} sm={12} lg={6}>
                 <ClientUpdateServerComp compId={compId} />
               </Grid>
-              <Grid item xs={12} sm={6} >
+              <Grid item xs={12} sm={12} lg={6}>
                 <BrowserRuleComp compId={compId} />
               </Grid>
             </Grid>
 
             <Grid container spacing={32}>
-              <Grid item xs={12} sm={6} >
+              <Grid item xs={12} sm={12} lg={6}>
                 <MediaRuleComp compId={compId} />
               </Grid>
-              <Grid item xs={12} sm={6} >
+              <Grid item xs={12} sm={12} lg={6}>
                 <SecurityRuleComp compId={compId} />
               </Grid>
             </Grid>
 
             <Grid container spacing={32}>
-              <Grid item xs={12} sm={12} >
+              <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfigComp compId={compId} />
               </Grid>
             </Grid>

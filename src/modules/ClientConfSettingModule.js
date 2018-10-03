@@ -24,7 +24,7 @@ const SET_EDITING_ITEM_VALUE = 'clientConfSetting/SET_EDITING_ITEM_VALUE';
 const CHG_LISTPARAM_DATA = 'clientConfSetting/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'clientConfSetting/CHG_COMPDATA_VALUE';
 const DELETE_COMPDATA = 'clientConfSetting/DELETE_COMPDATA';
-const DELETE_COMPDATA_ITEM = 'clientHostName/DELETE_COMPDATA_ITEM';
+const DELETE_COMPDATA_ITEM = 'clientConfSetting/DELETE_COMPDATA_ITEM';
 
 const SET_NTP_VALUE = 'clientConfSetting/SET_NTP_VALUE';
 const ADD_NTPADDRESS_ITEM = 'clientConfSetting/ADD_NTPADDRESS_ITEM';

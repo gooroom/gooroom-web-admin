@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -6,7 +7,7 @@ import classNames from "classnames";
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrTreeList from "components/GrTree/GrTreeList";
-import UserListForSelect from 'views/User/UserListForSelect';
+import ClientListForSelect from 'views/Client/ClientListForSelect';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -26,15 +27,17 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class UserSelectDialog extends Component {
+class ClientSelectDialog extends Component {
 
     constructor(props) {
         super(props);
     
         this.state = {
-          selectedDeptCd: '',
-          selectedDeptNm: '',
-          selectedUser: []
+            stateData: Map({
+                selectedGroupId: '',
+                selectedGroupNm: '',
+                selectedClient: List([])
+            })
         };
     }
 
@@ -43,31 +46,30 @@ class UserSelectDialog extends Component {
     }
 
     handleSelectDept = (node) => {
-        this.setState({
-            selectedDeptCd: node.key, 
-            selectedDeptNm: node.title
-        });
+        this.setState(({stateData}) => ({
+            stateData: stateData.set('selectedGroupId', node.key).set('selectedGroupNm', node.title)
+        }));
     }
 
-    handleSelectUser = (newSelectedIds) => {
-        this.setState({
-            selectedUser: newSelectedIds
-        })
+    handleSelectClient = (newSelectedIds) => {
+        this.setState(({stateData}) => ({
+            stateData: stateData.set('selectedClient', List(newSelectedIds))
+        }));
     }
 
     handleAddButton = (event) => {
 
         // console.log('handleAddButton........................');
 
-        // console.log('deptCd : ' + this.state.selectedDeptCd);
-        // console.log('users : ' + this.state.selectedUser);
+        // console.log('groupId : ' + this.state.selectedGroupId);
+        // console.log('users : ' + this.state.selectedClient);
 
         if(this.props.onSaveHandle) {
-            this.props.onSaveHandle(this.state.selectedUser);
+            this.props.onSaveHandle(this.state.stateData.get('selectedClient'));
         }
 
         // requestPostAPI('readUserListPagedInDept', {
-        //   deptCd: newListParam.get('deptCd'),
+        //   groupId: newListParam.get('groupId'),
         //   keyword: newListParam.get('keyword'),
         //   status: newListParam.get('status'),
         //   page: newListParam.get('page'),
@@ -181,13 +183,11 @@ class UserSelectDialog extends Component {
         const { classes } = this.props;
         const { isOpen, UserProps } = this.props;
 
-        let title = '사용자 선택';
-
         return (
             <div>
             {(isOpen) &&
                 <Dialog open={isOpen} fullWidth={true} >
-                    <DialogTitle>{title}</DialogTitle>
+                    <DialogTitle>단말 선택</DialogTitle>
                     <DialogContent>
                         <Grid container spacing={8}>
                             {/* <Grid item xs={12} sm={12} lg={4}>
@@ -196,7 +196,7 @@ class UserSelectDialog extends Component {
                                         useFolderIcons={true}
                                         listHeight='24px'
                                         url='readChildrenDeptList'
-                                        paramKeyName='deptCd'
+                                        paramKeyName='groupId'
                                         rootKeyValue='0'
                                         keyName='key'
                                         title='title'
@@ -208,8 +208,8 @@ class UserSelectDialog extends Component {
                             <Grid item xs={12} sm={12} lg={12}>
                                 <Card className={classes.deptUserCard}>
                                     <CardContent>
-                                        <UserListForSelect name='UserListForSelect' deptCd={this.state.selectedDeptCd} 
-                                            onSelectUser={this.handleSelectUser}
+                                        <ClientListForSelect name='ClientListForSelect' groupId={this.state.stateData.get('selectedGroupId')} 
+                                            onSelectClient={this.handleSelectClient}
                                         />
                                     </CardContent>
                                 </Card>
@@ -228,4 +228,4 @@ class UserSelectDialog extends Component {
     }
 }
 
-export default withStyles(GrCommonStyle)(UserSelectDialog);
+export default withStyles(GrCommonStyle)(ClientSelectDialog);
