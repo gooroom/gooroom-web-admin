@@ -45,8 +45,7 @@ export const handleListAction = (state, action) => {
         }
 
         return state.setIn(['viewItems', action.compId], Map({
-            'listAllData': List(data.map((e) => {return Map(e)})),
-            'selectedOptionItemId': data[0].objId
+            'listAllData': List(data.map((e) => {return Map(e)}))
         }));
         
     } else {
@@ -88,8 +87,9 @@ export const handleListPagedAction = (state, action) => {
 export const handleGetObjectAction = (state, compId, data) => {
     if(data && data.length > 0) {
         return state
-            .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
-            .setIn(['viewItems', compId, 'informOpen'], true);
+        .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
+        .setIn(['viewItems', compId, 'selectedOptionItemId'], data[0].objId)
+        .setIn(['viewItems', compId, 'informOpen'], true);
     } else  {
         return state.deleteIn(['viewItems', compId]);
     }

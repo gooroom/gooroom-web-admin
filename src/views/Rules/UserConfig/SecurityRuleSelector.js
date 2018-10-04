@@ -53,9 +53,8 @@ class SecurityRuleSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { SecurityRuleProps, SecurityRuleActions, compId } = this.props;
+    const { SecurityRuleProps, compId } = this.props;
 
-    const selectedViewItem = SecurityRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = SecurityRuleProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
