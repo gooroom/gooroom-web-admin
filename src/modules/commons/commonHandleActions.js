@@ -91,7 +91,7 @@ export const handleGetObjectAction = (state, compId, data) => {
             .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
             .setIn(['viewItems', compId, 'informOpen'], true);
     } else  {
-        return state;
+        return state.deleteIn(['viewItems', compId]);
     }
 }
 

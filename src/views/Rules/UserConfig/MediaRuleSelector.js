@@ -32,13 +32,15 @@ class MediaRuleSelector extends Component {
   componentDidMount() {
     const { MediaRuleProps, MediaRuleActions, compId, initId } = this.props;
     MediaRuleActions.readMediaRuleList(MediaRuleProps, compId);
-    MediaRuleActions.changeCompVariable({
-      compId: compId,
-      name: 'selectedOptionItemId',
-      value: initId
-    });
+    if(!MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+      MediaRuleActions.changeCompVariable({
+        compId: compId,
+        name: 'selectedOptionItemId',
+        value: initId
+      });
+    }
   }
-
+  
   handleChange = (event, value) => {
     const { MediaRuleProps, MediaRuleActions, compId } = this.props;
     MediaRuleActions.changeCompVariable({

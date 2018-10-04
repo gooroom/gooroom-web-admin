@@ -48,34 +48,21 @@ class UserInform extends Component {
             title={selectedViewItem.get('userNm')}
             subheader={selectedViewItem.get('userId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
           />
-          <CardContent />
           <Divider />
 
-          <Grid container spacing={16}>
-            <Grid item xs={12} sm={12} lg={6}>
-              <BrowserRuleComp
-                compId={compId}
-                objId={selectedViewItem.get('clientConfigId')} 
-                objNm={selectedViewItem.get('clientConfigNm')} 
-              />
+          <CardContent style={{padding:10}}>
+            <Grid container spacing={16}>
+              <Grid item xs={12} sm={12} lg={6} >
+                <BrowserRuleComp compId={compId} />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={6} >
+                <MediaRuleComp compId={compId} />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={6} >
+                <SecurityRuleComp compId={compId} />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={12} lg={6}>
-              <MediaRuleComp
-                compId={compId}
-                objId={selectedViewItem.get('clientConfigId')} 
-                objNm={selectedViewItem.get('clientConfigNm')} 
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={16}>
-            <Grid item xs={12} sm={12} lg={6}>
-              <SecurityRuleComp
-                compId={compId}
-                objId={selectedViewItem.get('clientConfigId')} 
-                objNm={selectedViewItem.get('clientConfigNm')} 
-              />
-            </Grid>
-          </Grid>
+          </CardContent>
 
         </Card>
       }

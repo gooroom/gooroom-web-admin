@@ -24,7 +24,8 @@ class RuleSelector extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedTab: 0
+            ruleType: this.props.ruleType,
+            selectedTab: (this.props.ruleType == 'GROUP') ? 0 : 3
         };
     }
 
@@ -35,8 +36,11 @@ class RuleSelector extends Component {
     }
 
     render() {
-        const { selectedTab } = this.state;
+        const { selectedTab, ruleType } = this.state;
         const { compId, module } = this.props;
+
+        console.log('ruleType :::::::::: ' + ruleType);
+
         return (
             <React.Fragment>
                 <AppBar elevation={0} position="static" color="default">
@@ -47,12 +51,18 @@ class RuleSelector extends Component {
                         textColor="primary"
                         onChange={this.handleChangeTabs}
                     >
-                        <Tab label="단말정책" />
-                        <Tab label="Hosts정보" />
-                        <Tab label="업데이트서버정보" />
-                        <Tab label="브라우져정책" />
-                        <Tab label="매체제어정책" />
-                        <Tab label="단말보안정책" />
+                    {(ruleType == 'GROUP') && 
+                        <Tab label="단말정책" value={0}/>
+                    }
+                    {(ruleType == 'GROUP') && 
+                        <Tab label="Hosts정보" value={1} />
+                    }
+                    {(ruleType == 'GROUP') && 
+                        <Tab label="업데이트서버정보" value={2} />
+                    } 
+                        <Tab label="브라우져정책" value={3} />
+                        <Tab label="매체제어정책" value={4} />
+                        <Tab label="단말보안정책" value={5} />
                     </Tabs>
                 </AppBar>
                 <Paper elevation={0} style={{ maxHeight: 400, overflow: 'auto' }} >

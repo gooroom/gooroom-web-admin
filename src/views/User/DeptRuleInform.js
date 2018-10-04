@@ -44,39 +44,24 @@ class DeptRuleInform extends Component {
       <div style={{marginTop: 10}} >
       {informOpen &&
         <Card>
-        <CardContent>
-          <Grid container spacing={16}>
-            <Grid item xs={12} sm={6} lg={6}>
-              <Card elevation={0}>
-                <CardHeader
-                  title={selectedDept.get('selectedDeptNm')}
-                  subheader={selectedDept.get('selectedDeptCd')}
-                ></CardHeader>
-                {/* <CardContent></CardContent> */}
-              </Card>
+          <CardHeader
+            title={selectedDept.get('selectedDeptNm')}
+            subheader={selectedDept.get('selectedDeptCd')}
+          ></CardHeader>
+          <Divider />
+          <CardContent style={{padding:10}}>
+            <Grid container spacing={16}>
+              <Grid item xs={12} sm={12} lg={6} >
+                <BrowserRuleComp compId={compId} />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={6} >
+                <MediaRuleComp compId={compId} />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={6} >
+                <SecurityRuleComp compId={compId} />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6} lg={6}>
-              <Card elevation={0}>
-                <CardContent style={{textAlign: 'right'}}>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={16}>
-            <Grid item xs={12} sm={12} lg={6}>
-              <BrowserRuleComp compId={compId} />
-            </Grid>
-            <Grid item xs={12} sm={12} lg={6}>
-              <MediaRuleComp compId={compId} />
-            </Grid>
-          </Grid>
-          <Grid container spacing={16}>
-            <Grid item xs={12} sm={12} lg={6}>
-              <SecurityRuleComp compId={compId} />
-            </Grid>
-          </Grid>
-        </CardContent>
+          </CardContent>
         </Card>
       }
       </div>

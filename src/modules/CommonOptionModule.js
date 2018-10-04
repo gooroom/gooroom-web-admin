@@ -42,11 +42,7 @@ const initialState = {
         statusVal: ''
     },
 
-
 };
-
-
-
 
 
 

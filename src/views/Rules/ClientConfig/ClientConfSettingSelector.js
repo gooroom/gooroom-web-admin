@@ -39,13 +39,13 @@ class ClientConfSettingSelector extends Component {
   }
 
   componentDidMount() {
-    const { ClientConfSettingProps, compId } = this.props;
-    this.props.ClientConfSettingActions.readClientConfSettingList(this.props.ClientConfSettingProps, this.props.compId);
+    const { ClientConfSettingProps, ClientConfSettingActions, compId, initId } = this.props;
+    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, compId);
     if(!ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
-      this.props.ClientConfSettingActions.changeCompVariable({
-        compId: this.props.compId,
+      ClientConfSettingActions.changeCompVariable({
+        compId: compId,
         name: 'selectedOptionItemId',
-        value: this.props.initId
+        value: initId
       });
     }
   }

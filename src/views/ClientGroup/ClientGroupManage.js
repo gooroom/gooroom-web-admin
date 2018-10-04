@@ -113,8 +113,6 @@ class ClientGroupManage extends Component {
 
     const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
 
-    console.log('>>>> clickedRowObject ::: ', clickedRowObject.toJS());
-
     ClientGroupActions.showClientGroupInform({
       compId: compId,
       selectedViewItem: clickedRowObject,

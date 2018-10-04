@@ -32,17 +32,18 @@ class BrowserRuleSelector extends Component {
   componentDidMount() {
     const { BrowserRuleProps, BrowserRuleActions, compId, initId } = this.props;
     BrowserRuleActions.readBrowserRuleList(BrowserRuleProps, compId);
-    BrowserRuleActions.changeCompVariable({
-      compId: compId,
-      name: 'selectedOptionItemId',
-      value: initId
-    });
+    if(!BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+      BrowserRuleActions.changeCompVariable({
+        compId: compId,
+        name: 'selectedOptionItemId',
+        value: initId
+      });
+    }
   }
 
   handleChange = (event, value) => {
-    const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
-    BrowserRuleActions.changeCompVariable({
-      compId: compId,
+    this.props.BrowserRuleActions.changeCompVariable({
+      compId: this.props.compId,
       name: 'selectedOptionItemId',
       value: event.target.value
     });

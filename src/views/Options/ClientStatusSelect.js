@@ -40,11 +40,8 @@ class ClientStatusSelect extends Component {
   };
 
   render() {
-
     const { CommonOptionProps } = this.props;
-
     return (
-
       <Select
         value={CommonOptionProps.selectedClientStatus.statusId}
         onChange={this.handleChangeSelect}
@@ -56,7 +53,6 @@ class ClientStatusSelect extends Component {
           </MenuItem>
         ))}
       </Select>
-
     );
   }
 }

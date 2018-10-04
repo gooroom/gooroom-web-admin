@@ -46,68 +46,50 @@ class ClientGroupInform extends Component {
     const informOpen = ClientGroupProps.getIn(['viewItems', compId, 'informOpen']);
     const selectedViewItem = ClientGroupProps.getIn(['viewItems', compId, 'selectedViewItem']);
 
+    let groupInfo = '';
+    if(selectedViewItem) {
+      groupInfo = selectedViewItem.get('grpId');
+      if(selectedViewItem.get('regDate') && selectedViewItem.get('regDate') !== '') {
+        groupInfo += ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD');
+      }
+      if(selectedViewItem.get('comment') && selectedViewItem.get('comment') !== '') {
+        groupInfo += ', ' + selectedViewItem.get('comment');
+      }
+    }
+
     return (
-      <div>
+      <div style={{marginTop: 10}} >
       {(informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
-          <CardContent>
-
-            <Grid container spacing={16}>
-              <Grid item xs={12} sm={6} lg={6}>
-                <Card elevation={0}>
-                  <CardHeader
-                    title={selectedViewItem.get('grpNm')}
-                    subheader={selectedViewItem.get('grpId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
-                  ></CardHeader>
-                  <CardContent>
-                    <Typography component="pre">"{selectedViewItem.get('comment')}"</Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-              <Grid item xs={12} sm={6} lg={6}>
-
-                <Card elevation={0}>
-                  <CardContent style={{textAlign: 'right'}}>
-
-                  </CardContent>
-                </Card>
-              
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={32}>
+          <CardHeader
+            title={selectedViewItem.get('grpNm')}
+            subheader={groupInfo}
+          ></CardHeader>
+          <Divider />
+          <CardContent style={{padding:10}}>
+            <Grid container spacing={0}>
               <Grid item xs={12} sm={12} lg={6}>
                 <ClientConfSettingComp compId={compId} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
                 <ClientHostNameComp compId={compId} />
               </Grid>
-            </Grid>
-
-            <Grid container spacing={32}>
               <Grid item xs={12} sm={12} lg={6}>
                 <ClientUpdateServerComp compId={compId} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
                 <BrowserRuleComp compId={compId} />
               </Grid>
-            </Grid>
-
-            <Grid container spacing={32}>
               <Grid item xs={12} sm={12} lg={6}>
                 <MediaRuleComp compId={compId} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
                 <SecurityRuleComp compId={compId} />
               </Grid>
-            </Grid>
-
-            <Grid container spacing={32}>
               <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfigComp compId={compId} />
               </Grid>
             </Grid>
-
 
           </CardContent>
         </Card>
