@@ -37,7 +37,7 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-import RuleSelector from 'components/GrOptions/RuleSelector';
+import ClientRuleSelector from 'components/GrOptions/ClientRuleSelector';
 
 import ClientConfSettingSelector from 'views/Rules/ClientConfig/ClientConfSettingSelector'
 import ClientHostNameSelector from 'views/Rules/HostName/ClientHostNameSelector'
@@ -202,7 +202,7 @@ const tempLabel = <div><InputLabel>단말정책</InputLabel><Divider /><InputLab
                             className={classes.fullWidth}
                         />
                         <Divider style={{marginBottom: 10}} />
-                        <RuleSelector type="GROUP" compId={compId} module={ClientGroupProps.get('editingItem').toJS()} />
+                        <ClientRuleSelector compId={compId} module={ClientGroupProps.get('editingItem').toJS()} />
                     </form>
 
                 </DialogContent>

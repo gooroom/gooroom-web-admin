@@ -52,9 +52,8 @@ class BrowserRuleSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
+    const { BrowserRuleProps, compId } = this.props;
 
-    const selectedViewItem = BrowserRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {

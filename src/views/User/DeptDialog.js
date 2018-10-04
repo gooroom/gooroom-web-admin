@@ -14,6 +14,7 @@ import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Divider from '@material-ui/core/Divider';
@@ -40,7 +41,7 @@ import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
 import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
 
-import RuleSelector from 'components/GrOptions/RuleSelector';
+import UserRuleSelector from 'components/GrOptions/UserRuleSelector';
 
 
 function TabContainer(props) {
@@ -132,7 +133,7 @@ class DeptDialog extends Component {
 
                 browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
                 mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                SecurityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
+                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
@@ -166,6 +167,7 @@ class DeptDialog extends Component {
             {(DeptProps.get('dialogOpen') && editingItem) &&
                 <Dialog open={DeptProps.get('dialogOpen')} >
                     <DialogTitle>{title}</DialogTitle>
+                    <DialogContent>
                     <form noValidate autoComplete="off" className={classes.dialogContainer}>
                         {(dialogType === DeptDialog.TYPE_ADD) &&
                         <TextField
@@ -190,10 +192,10 @@ class DeptDialog extends Component {
                         />
 
                         <Divider style={{marginBottom: 10}} />
-                        <RuleSelector ruleType="DEPT" compId={compId} module={(editingItem) ? editingItem.toJS() : null} />
-
+                        
+                        <UserRuleSelector compId={compId} module={(editingItem) ? editingItem.toJS() : null} />
                     </form>
-
+                    </DialogContent>
                     <DialogActions>
                         {(dialogType === DeptDialog.TYPE_ADD) &&
                             <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>

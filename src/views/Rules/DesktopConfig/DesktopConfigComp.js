@@ -73,7 +73,7 @@ class DesktopConfigComp extends Component {
     return (
       <React.Fragment>
       <Card elevation={0}>
-        <CardContent style={{padding: 0}}>
+        <CardContent style={{padding: 10}}>
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>

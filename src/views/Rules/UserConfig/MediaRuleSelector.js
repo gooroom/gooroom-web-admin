@@ -53,9 +53,8 @@ class MediaRuleSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { MediaRuleProps, MediaRuleActions, compId } = this.props;
+    const { MediaRuleProps, compId } = this.props;
 
-    const selectedViewItem = MediaRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = MediaRuleProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {

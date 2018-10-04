@@ -19,13 +19,12 @@ import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 
 
-class RuleSelector extends Component {
+class UserRuleSelector extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            ruleType: this.props.ruleType,
-            selectedTab: (this.props.ruleType == 'GROUP') ? 0 : 3
+            selectedTab: 0
         };
     }
 
@@ -36,10 +35,8 @@ class RuleSelector extends Component {
     }
 
     render() {
-        const { selectedTab, ruleType } = this.state;
+        const { selectedTab } = this.state;
         const { compId, module } = this.props;
-
-        console.log('ruleType :::::::::: ' + ruleType);
 
         return (
             <React.Fragment>
@@ -51,27 +48,15 @@ class RuleSelector extends Component {
                         textColor="primary"
                         onChange={this.handleChangeTabs}
                     >
-                    {(ruleType == 'GROUP') && 
-                        <Tab label="단말정책" value={0}/>
-                    }
-                    {(ruleType == 'GROUP') && 
-                        <Tab label="Hosts정보" value={1} />
-                    }
-                    {(ruleType == 'GROUP') && 
-                        <Tab label="업데이트서버정보" value={2} />
-                    } 
-                        <Tab label="브라우져정책" value={3} />
-                        <Tab label="매체제어정책" value={4} />
-                        <Tab label="단말보안정책" value={5} />
+                        <Tab label="브라우져정책" value={0} />
+                        <Tab label="매체제어정책" value={1} />
+                        <Tab label="단말보안정책" value={2} />
                     </Tabs>
                 </AppBar>
                 <Paper elevation={0} style={{ maxHeight: 400, overflow: 'auto' }} >
-                {selectedTab === 0 && <ClientConfSettingSelector compId={compId} initId={module ? module.clientConfigId : '-'} />}
-                {selectedTab === 1 && <ClientHostNameSelector compId={compId} initId={module ? module.hostNameConfigId : '-'} />}
-                {selectedTab === 2 && <ClientUpdateServerSelector compId={compId} initId={module ? module.updateServerConfigId : '-'} />}
-                {selectedTab === 3 && <BrowserRuleSelector compId={compId} initId={module ? module.browserRuleId : '-'} />}
-                {selectedTab === 4 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} />}
-                {selectedTab === 5 && <SecurityRuleSelector compId={compId} initId={module ? module.clientSecuRuleId : '-'} />}
+                {selectedTab === 0 && <BrowserRuleSelector compId={compId} initId={module ? module.browserRuleId : '-'} />}
+                {selectedTab === 1 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} />}
+                {selectedTab === 2 && <SecurityRuleSelector compId={compId} initId={module ? module.clientSecuRuleId : '-'} />}
                 </Paper>
             
             </React.Fragment>
@@ -79,6 +64,6 @@ class RuleSelector extends Component {
     }
 }
 
-export default withStyles(GrCommonStyle)(RuleSelector);
+export default withStyles(GrCommonStyle)(UserRuleSelector);
 
 
