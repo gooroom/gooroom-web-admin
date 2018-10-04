@@ -32,11 +32,13 @@ class SecurityRuleSelector extends Component {
   componentDidMount() {
     const { SecurityRuleProps, SecurityRuleActions, compId, initId } = this.props;
     SecurityRuleActions.readSecurityRuleList(SecurityRuleProps, compId);
-    SecurityRuleActions.changeCompVariable({
-      compId: compId,
-      name: 'selectedOptionItemId',
-      value: initId
-    });
+    if(!SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+      SecurityRuleActions.changeCompVariable({
+        compId: compId,
+        name: 'selectedOptionItemId',
+        value: initId
+      });
+    }
   }
 
   handleChange = (event, value) => {

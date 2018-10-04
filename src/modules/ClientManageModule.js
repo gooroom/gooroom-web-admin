@@ -96,6 +96,24 @@ export const readClientListPaged = (module, compId, extParam) => dispatch => {
     });
 };
 
+// delete client(s) selected
+export const deleteClientData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('deleteClientsCertToRevoke', {'clientIds': param.clientIds}).then(
+        (response) => {
+            dispatch({
+                type: DELETE_CLIENT_SUCCESS
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+
 
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
@@ -181,9 +199,10 @@ export default handleActions({
     // [EDIT_CLIENT_SUCCESS]: (state, action) => {
     //     return commonHandleActions.handleEditSuccessAction(state, action);
     // },
-    // [DELETE_CLIENT_SUCCESS]: (state, action) => {
-    //     return commonHandleActions.handleDeleteSuccessAction(state, action);
-    // },
+    
+    [DELETE_CLIENT_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleDeleteSuccessAction(state, action);
+    },
 
 }, initialState);
 

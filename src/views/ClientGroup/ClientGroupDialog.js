@@ -202,7 +202,7 @@ const tempLabel = <div><InputLabel>단말정책</InputLabel><Divider /><InputLab
                             className={classes.fullWidth}
                         />
                         <Divider style={{marginBottom: 10}} />
-                        <RuleSelector compId={compId} module={ClientGroupProps.get('editingItem').toJS()} />
+                        <RuleSelector type="GROUP" compId={compId} module={ClientGroupProps.get('editingItem').toJS()} />
                     </form>
 
                 </DialogContent>

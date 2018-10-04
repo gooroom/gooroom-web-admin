@@ -196,11 +196,13 @@ const makeParameter = (param) => {
         deptCd: param.deptCd,
         deptNm: param.deptNm,
         uprDeptCd: param.uprDeptCd,
+        
+        optYn: (param.optYn && param.optYn != '') ? param.optYn : 'Y',
+        sortOrder: (param.sortOrder && param.sortOrder != '') ? param.sortOrder : '1',
 
-        optYn: 'Y', //param.get('deptCd'),
-        sortOrder: 1, //param.get('deptCd'),
-
-        desktopConfId: ''//param.get('deptCd')
+        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
     };
 }
 
@@ -233,7 +235,7 @@ export const createDeptInfo = (itemObj) => dispatch => {
 // edit
 export const editDeptInfo = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateDeptConf', makeParameter(itemObj)).then(
+    return requestPostAPI('updateDeptInfo', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success

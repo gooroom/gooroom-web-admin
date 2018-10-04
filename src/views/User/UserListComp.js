@@ -58,8 +58,9 @@ class UserListComp extends Component {
   columnHeaders = [
     { id: "chCheckbox", isCheckbox: true},
     { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
-    { id: "chUserName", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
+    { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
     { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
+    { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
@@ -183,6 +184,7 @@ class UserListComp extends Component {
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>
                     <Button color="secondary" size="small" 

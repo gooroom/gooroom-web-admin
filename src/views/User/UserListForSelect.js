@@ -66,7 +66,7 @@ class UserListForSelect extends Component {
           keyword: '',
           deptCd: props.deptCd,
           orderDir: 'asc',
-          orderColumn: 'chUserName',
+          orderColumn: 'chUserNm',
           page: 0,
           rowsPerPage: 10,
           rowsPerPageOptions: List([5, 10, 25]),
@@ -81,7 +81,7 @@ class UserListForSelect extends Component {
   columnHeaders = [
     { id: 'chCheckbox', isCheckbox: true},
     { id: 'chUserId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
-    { id: 'chUserName', isOrder: true, numeric: false, disablePadding: true, label: '사용자이름' },
+    { id: 'chUserNm', isOrder: true, numeric: false, disablePadding: true, label: '사용자이름' },
     { id: 'chDeptNm', isOrder: true, numeric: false, disablePadding: true, label: '조직' },
     { id: 'chStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' }
     

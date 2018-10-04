@@ -76,32 +76,48 @@ class MediaRuleComp extends Component {
 
     return (
       <React.Fragment>
-      <Card elevation={0}>
-        {(viewCompItem) && <CardContent style={{padding: 0}}>
+      {(!viewCompItem) && 
+        <Card elevation={0}>
+        <CardContent style={{padding: 10}}>
           <Grid container>
             <Grid item xs={6}>
-              <Typography className={classes.compTitle}>
-                {(compType == 'VIEW') ? '상세내용' : '매체제어정책'}
-              </Typography>
+              <Typography className={classes.compTitleForEmpty}>매체제어정책</Typography>
             </Grid>
             <Grid item xs={6}>
               <Grid container justify="flex-end">
-                <Button size="small"
-                  variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                ><SettingsApplicationsIcon />수정</Button>
+              없음
               </Grid>
             </Grid>
           </Grid>
+        </CardContent>
+        </Card>
+      }
+        {(viewCompItem) && 
+          <Card elevation={0}>
+            <CardContent style={{padding: 10}}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Typography className={classes.compTitle}>
+                  {(compType == 'VIEW') ? '상세내용' : '매체제어정책'}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container justify="flex-end">
+                  <Button size="small"
+                    variant="outlined" color="primary"
+                    onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
+                  ><SettingsApplicationsIcon />수정</Button>
+                </Grid>
+              </Grid>
+            </Grid>
 
-          <Typography variant="headline" component="h2">
-            {viewCompItem.get('objNm')}
-          </Typography>
-          <Typography color="textSecondary">
-            {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
-          </Typography>
-          <Divider />
-          {(viewCompItem && viewCompItem.get('objId') != '') &&
+            <Typography variant="headline" component="h2">
+              {viewCompItem.get('objNm')}
+            </Typography>
+            <Typography color="textSecondary">
+              {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
+            </Typography>
+            <Divider />
             <Table>
               <TableBody>
 
@@ -150,10 +166,9 @@ class MediaRuleComp extends Component {
 
               </TableBody>
             </Table>
-          }
-          </CardContent>
+            </CardContent>
+          </Card>
         }
-      </Card>
       <MediaRuleDialog compId={compId} />
       </React.Fragment>
     );

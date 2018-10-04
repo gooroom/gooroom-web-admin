@@ -57,7 +57,7 @@ class UserManage extends Component {
   columnHeaders = [
     { id: "chCheckbox", isCheckbox: true},
     { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
-    { id: "chUserName", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
+    { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
     { id: "chDeptName", isOrder: true, numeric: false, disablePadding: true, label: "조직" },
     { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
     { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: "최근로그인날짜" },

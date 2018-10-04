@@ -128,16 +128,15 @@ class DeptDialog extends Component {
 
             DeptActions.editDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
-                userPasswd: DeptProps.getIn(['editingItem', 'userPasswd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
 
                 browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
                 mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
+                SecurityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
-                resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
+                // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
                 this.handleClose();
             });
         }
@@ -149,8 +148,6 @@ class DeptDialog extends Component {
 
         const dialogType = DeptProps.get('dialogType');
         const editingItem = (DeptProps.get('editingItem')) ? DeptProps.get('editingItem') : null;
-
-        const tabValue = DeptProps.get('dialogTabValue');
 
         let title = "";
         if(dialogType === DeptDialog.TYPE_ADD) {
@@ -193,7 +190,7 @@ class DeptDialog extends Component {
                         />
 
                         <Divider style={{marginBottom: 10}} />
-                        <RuleSelector />   
+                        <RuleSelector ruleType="DEPT" compId={compId} module={(editingItem) ? editingItem.toJS() : null} />
 
                     </form>
 

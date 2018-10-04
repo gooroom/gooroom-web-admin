@@ -80,31 +80,31 @@ class ClientUpdateServerComp extends Component {
 
     return (
       <React.Fragment>
-      <Card elevation={0}>
-        {(viewCompItem) && <CardContent style={{padding: 0}}>
-          <Grid container>
-            <Grid item xs={6}>
-              <Typography className={classes.compTitle}>
-                {(compType == 'VIEW') ? '상세내용' : '업데이트서버설정'}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Grid container justify="flex-end">
-                <Button size="small"
-                  variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                ><SettingsApplicationsIcon />수정</Button>
+        {(viewCompItem) && 
+          <Card elevation={0}>
+            <CardContent style={{padding: 10}}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Typography className={classes.compTitle}>
+                  {(compType == 'VIEW') ? '상세내용' : '업데이트서버설정'}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container justify="flex-end">
+                  <Button size="small"
+                    variant="outlined" color="primary"
+                    onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
+                  ><SettingsApplicationsIcon />수정</Button>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-          <Typography variant="headline" component="h2">
-            {viewCompItem.get('objNm')}
-          </Typography>
-          <Typography color="textSecondary">
-            {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
-          </Typography>
-          <Divider />
-          {(viewCompItem && viewCompItem.get('objId') != '') &&
+            <Typography variant="headline" component="h2">
+              {viewCompItem.get('objNm')}
+            </Typography>
+            <Typography color="textSecondary">
+              {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
+            </Typography>
+            <Divider />
             <Table>
               <TableBody>
                 <TableRow>
@@ -121,10 +121,9 @@ class ClientUpdateServerComp extends Component {
                 </TableRow>
               </TableBody>
             </Table>
-          }
-        </CardContent>
-      }
-      </Card>
+            </CardContent>
+          </Card>
+        }
       <ClientUpdateServerDialog compId={compId} />
       </React.Fragment>
     );

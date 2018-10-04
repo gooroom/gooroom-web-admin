@@ -58,6 +58,7 @@ class DeptManage extends Component {
     });
   }
   
+  // click dept row (in tree)
   handleSelectDept = (node) => {
     const { DeptProps, DeptActions } = this.props;
     const { UserProps, UserActions } = this.props;
@@ -102,6 +103,7 @@ class DeptManage extends Component {
   }
 
   handleEditDept = (listItem, i) => { 
+    console.log('handleEditDept ::::::::::::: ', listItem);
     this.props.DeptActions.showDialog({
       selectedViewItem: {
         deptCd: listItem.key,
@@ -224,13 +226,7 @@ class DeptManage extends Component {
   }
 
   render() {
-    const { classes } = this.props;
-    const bull = <span className={classes.bullet}>•</span>;
-
-    const { DeptProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const selectedDeptNm = DeptProps.getIn(['viewItems', compId, 'selectedDeptNm']);
-    const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
     return (
       <React.Fragment>

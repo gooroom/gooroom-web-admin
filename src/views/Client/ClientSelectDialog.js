@@ -208,7 +208,8 @@ class ClientSelectDialog extends Component {
                             <Grid item xs={12} sm={12} lg={12}>
                                 <Card className={classes.deptUserCard}>
                                     <CardContent>
-                                        <ClientListForSelect name='ClientListForSelect' groupId={this.state.stateData.get('selectedGroupId')} 
+                                        <ClientListForSelect name='ClientListForSelect' 
+                                            groupId={this.state.stateData.get('selectedGroupId')} 
                                             onSelectClient={this.handleSelectClient}
                                         />
                                     </CardContent>

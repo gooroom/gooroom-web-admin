@@ -28,7 +28,7 @@ const CHG_COMPDATA_VALUE = 'user/CHG_COMPDATA_VALUE';
 const CHG_STORE_DATA = 'user/CHG_STORE_DATA';
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chUserName', 'asc', {}, {status: 'STAT010', deptCd: '', keyword: ''});
+const initialState = commonHandleActions.getCommonInitialState('chUserNm', 'asc', {}, {status: 'STAT010', deptCd: '', keyword: ''});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({

@@ -126,6 +126,11 @@ export const GrCommonStyle = theme => ({
     // Rule Component
     compTitle: {
         backgroundColor:"lightBlue",
+        color:"blue",
+        fontWeight:"bold"
+    },
+    compTitleForEmpty: {
+        backgroundColor:"lightBlue",
         color:"white",
         fontWeight:"bold"
     },
