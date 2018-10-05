@@ -11,6 +11,7 @@ import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
@@ -34,48 +35,65 @@ class ClientRegKeyDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.ClientRegKeyActions.closeDialog({
-            dialogOpen: false
-        });
+        this.props.ClientRegKeyActions.closeDialog(this.props.compId);
     }
 
-    handleChange = name => event => {
-        this.props.ClientRegKeyActions.changeParamValue({
+    handleValueChange = name => event => {
+        this.props.ClientRegKeyActions.setEditingItemValue({
             name: name,
             value: event.target.value
         });
     }
 
     handleCreateData = (event) => {
-        const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-        ClientRegKeyActions.createClientRegKeyData(ClientRegKeyProps.selectedViewItem)
-            .then(() => {
-                ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
+        const { ClientRegKeyProps, GrConfirmActions } = this.props;
+        GrConfirmActions.showConfirm({
+            confirmTitle: '단말등록키 등록',
+            confirmMsg: '단말등록키를 등록하시겠습니까?',
+            handleConfirmResult: this.handleCreateDataConfirmResult,
+            confirmOpen: true,
+            confirmObject: ClientRegKeyProps.get('editingItem')
+        });
+    }
+    handleCreateDataConfirmResult = (confirmValue, paramObject) => {
+        if(confirmValue) {
+            const { ClientRegKeyProps, ClientRegKeyActions, compId } = this.props;
+            ClientRegKeyActions.createClientRegKeyData({
+                comment: paramObject.get('comment'),
+                ipRange: paramObject.get('ipRange'),
+                regKeyNo: paramObject.get('regKeyNo'),
+                validDate: paramObject.get('validDate'),
+                expireDate: paramObject.get('expireDate')
+            }).then((res) => {
+                ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, compId);
                 this.handleClose();
-        }, (res) => {
-
-        })
+            });
+        }
     }
 
     handleEditData = (event) => {
-        const { GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        const { ClientRegKeyProps, GrConfirmActions } = this.props;
+        GrConfirmActions.showConfirm({
             confirmTitle: '단말등록키 수정',
             confirmMsg: '단말등록키를 수정하시겠습니까?',
             confirmOpen: true,
-            handleConfirmResult: this.handleEditConfirmResult
-          });
+            handleConfirmResult: this.handleEditDataConfirmResult,
+            confirmObject: ClientRegKeyProps.get('editingItem')
+        });
     }
-    handleEditConfirmResult = (confirmValue) => {
+    handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-            ClientRegKeyActions.editClientRegKeyData(ClientRegKeyProps.selectedViewItem)
-                .then((res) => {
-                ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
+            const { ClientRegKeyProps, ClientRegKeyActions, compId } = this.props;
+            ClientRegKeyActions.editClientRegKeyData({
+                comment: paramObject.get('comment'),
+                ipRange: paramObject.get('ipRange'),
+                regKeyNo: paramObject.get('regKeyNo'),
+                validDate: paramObject.get('validDate'),
+                expireDate: paramObject.get('expireDate')
+            }).then((res) => {
+                ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, compId);
                 this.handleClose();
-            }, (res) => {
-
-            })
+            });
         }
     }
 
@@ -85,10 +103,11 @@ class ClientRegKeyDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { ClientRegKeyProps } = this.props;
-        const { dialogType } = ClientRegKeyProps;
-        let title = "";
+        const { ClientRegKeyProps, compId } = this.props;
+        const dialogType = ClientRegKeyProps.get('dialogType');
+        const editingItem = (ClientRegKeyProps.get('editingItem')) ? ClientRegKeyProps.get('editingItem') : null;
 
+        let title = "";
         if(dialogType === ClientRegKeyDialog.TYPE_ADD) {
             title = "단말 등록키 등록";
         } else if(dialogType === ClientRegKeyDialog.TYPE_VIEW) {
@@ -98,75 +117,57 @@ class ClientRegKeyDialog extends Component {
         }
 
         return (
-            <Dialog open={ClientRegKeyProps.dialogOpen}>
+            <div>
+            {(ClientRegKeyProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={ClientRegKeyProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={classes.dialogContainer}>
-
+                <DialogContent>
+                
+                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
                     <Grid container spacing={16}>
                         <Grid item xs={8}>
-                            <TextField
-                                id="regKeyNo"
-                                label="등록키"
-                                value={(ClientRegKeyProps.selectedViewItem) ? ClientRegKeyProps.selectedViewItem.regKeyNo: ''}
-                                onChange={this.handleChange("regKeyNo")}
-                                margin="normal"
-                                className={classes.fullWidth}
-                                disabled
+                            <TextField label="등록키"
+                                value={(editingItem.get('regKeyNo')) ? editingItem.get('regKeyNo'): ''}
+                                onChange={this.handleValueChange("regKeyNo")}
+                                className={classes.fullWidth} disabled
                             />
                         </Grid>
                         <Grid item xs={4} className={classes.createButton}>
                         {(dialogType === ClientRegKeyDialog.TYPE_ADD) && 
-                           <Button size="small"
-                           variant="contained"
-                            color="secondary"
-                            onClick={() => {
-                                this.handleKeyGenerate();
-                            }}
+                          <Button size="small" variant="contained" color="secondary"
+                            onClick={() => { this.handleKeyGenerate(); }}
                             ><Add />키생성
-                            </Button>
+                          </Button>
                         }
                         </Grid>
-                  </Grid>
-
+                    </Grid>
                     <Grid container spacing={16}>
                         <Grid item xs={6}>
                         <TextField
-                            id="validDate"
-                            label="유효날짜"
-                            type="date"
-                            margin="normal"
-                            value={(ClientRegKeyProps.selectedViewItem) ? formatDateToSimple(ClientRegKeyProps.selectedViewItem.validDate, 'YYYY-MM-DD') : ''}
-                            onChange={this.handleChange("validDate")}
+                            label="유효날짜" type="date"
+                            value={(editingItem.get('validDate')) ? formatDateToSimple(editingItem.get('validDate'), 'YYYY-MM-DD') : ''}
+                            onChange={this.handleValueChange("validDate")}
                             className={classes.fullWidth}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
+                            InputLabelProps={{ shrink: true, }}
                             disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                         />
                         </Grid>
                         <Grid item xs={6}>
                         <TextField
-                            id="date"
-                            label="인증서만료날짜"
-                            type="date"
-                            margin="normal"
-                            value={(ClientRegKeyProps.selectedViewItem) ? formatDateToSimple(ClientRegKeyProps.selectedViewItem.expireDate, 'YYYY-MM-DD') : ''}
-                            onChange={this.handleChange("expireDate")}
+                            label="인증서만료날짜" type="date"
+                            value={(editingItem.get('expireDate')) ? formatDateToSimple(editingItem.get('expireDate'), 'YYYY-MM-DD') : ''}
+                            onChange={this.handleValueChange("expireDate")}
                             className={classes.fullWidth}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
+                            InputLabelProps={{ shrink: true }}
                             disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                         />
                         </Grid>
                     </Grid>
 
                     <TextField
-                        id="ipRange"
                         label="유효 IP 범위"
-                        value={(ClientRegKeyProps.selectedViewItem) ? ClientRegKeyProps.selectedViewItem.ipRange : ''}
-                        onChange={this.handleChange("ipRange")}
-                        margin="normal"
+                        value={(editingItem.get('ipRange')) ? editingItem.get('ipRange') : ''}
+                        onChange={this.handleValueChange("ipRange")}
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                     />
@@ -177,17 +178,14 @@ class ClientRegKeyDialog extends Component {
                         <i>(샘플) "127.0.0.1, 169.0.0.1" 또는 "127.0.0.1 - 127.0.0.10"</i>
                     </FormLabel>
                     <TextField
-                        id="comment"
                         label="설명"
-                        margin="normal"
-                        value={(ClientRegKeyProps.selectedViewItem) ? ClientRegKeyProps.selectedViewItem.comment : ''}
-                        onChange={this.handleChange("comment")}
+                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                        onChange={this.handleValueChange("comment")}
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                     />
-
                 </form>
-
+                </DialogContent>
                 <DialogActions>
                     
                 {(dialogType === ClientRegKeyDialog.TYPE_ADD) &&
@@ -200,9 +198,10 @@ class ClientRegKeyDialog extends Component {
 
                 </DialogActions>
             </Dialog>
+            }
+            </div>
         );
     }
-
 }
 
 const mapStateToProps = (state) => ({

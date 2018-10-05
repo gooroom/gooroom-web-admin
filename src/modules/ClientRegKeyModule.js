@@ -1,195 +1,179 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
+import { requestPostAPI } from 'components/GrUtils/GrRequester';
 import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
-const GET_REGKEY_LIST_PENDING = 'clientRegKey/GET_LIST_PENDING';
-const GET_REGKEY_LIST_SUCCESS = 'clientRegKey/GET_LIST_SUCCESS';
-const GET_REGKEY_LIST_FAILURE = 'clientRegKey/GET_LIST_FAILURE';
+import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
-const CREATE_REGKEY_NEWKEY = 'clientRegKey/CREATE_REGKEY_NEWKEY';
-const CREATE_REGKEY_PENDING = 'clientRegKey/CREATE_REGKEY_PENDING';
+const COMMON_PENDING = 'clientRegKey/COMMON_PENDING';
+const COMMON_FAILURE = 'clientRegKey/COMMON_FAILURE';
+
+const GET_REGKEY_LISTPAGED_SUCCESS = 'clientRegKey/GET_REGKEY_LISTPAGED_SUCCESS';
+
 const CREATE_REGKEY_SUCCESS = 'clientRegKey/CREATE_REGKEY_SUCCESS';
-const CREATE_REGKEY_FAILURE = 'clientRegKey/CREATE_REGKEY_FAILURE';
 
-const EDIT_REGKEY_PENDING = 'clientRegKey/EDIT_REGKEY_PENDING';
 const EDIT_REGKEY_SUCCESS = 'clientRegKey/EDIT_REGKEY_SUCCESS';
-const EDIT_REGKEY_FAILURE = 'clientRegKey/EDIT_REGKEY_FAILURE';
-
-const DELETE_REGKEY_PENDING = 'clientRegKey/DELETE_REGKEY_PENDING';
 const DELETE_REGKEY_SUCCESS = 'clientRegKey/DELETE_REGKEY_SUCCESS';
-const DELETE_REGKEY_FAILURE = 'clientRegKey/DELETE_REGKEY_FAILURE';
+
+const CHG_LISTPARAM_DATA = 'clientRegKey/CHG_LISTPARAM_DATA';
 
 const SHOW_REGKEY_DIALOG = 'clientRegKey/SHOW_REGKEY_DIALOG';
 const CLOSE_REGKEY_DIALOG = 'clientRegKey/CLOSE_REGKEY_DIALOG';
-const CHG_REGKEY_PARAM = 'clientRegKey/CHG_REGKEY_PARAM';
 
-const REGKEY_COMMON_PENDING = 'clientRegKey/REGKEY_COMMON_PENDING';
-const REGKEY_COMMON_FAILURE = 'clientRegKey/REGKEY_COMMON_FAILURE';
+const SET_EDITING_ITEM_VALUE = 'clientRegKey/SET_EDITING_ITEM_VALUE';
 
 // ...
-const initialState = {
-    pending: false,
-    error: false,
-    resultMsg: '',
-
-    listData: [],
-    listParam: {
-        keyword: '',
-        orderDir: 'desc',
-        orderColumn: 'chModDate',
-        page: 0,
-        rowsPerPage: 10,
-        // rowsPerPageOptions: [5, 10, 25],
-        rowsTotal: 0,
-        rowsFiltered: 0
-    },
-
-    selectedViewItem: {
-        regKeyNo: '',
-        validDate: '',
-        expireDate: '',
-        ipRange: '',
-        comment: ''
-    },
-
-    dialogOpen: false,
-    dialogType: '',
-};
+const initialState = commonHandleActions.getCommonInitialState('chModDate', 'desc');
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_REGKEY_DIALOG,
-        payload: param
+        selectedViewItem: param.selectedViewItem,
+        dialogType: param.dialogType
     });
 };
 
-export const closeDialog = (param) => dispatch => {
+export const closeDialog = () => dispatch => {
     return dispatch({
-        type: CLOSE_REGKEY_DIALOG,
-        payload: param
+        type: CLOSE_REGKEY_DIALOG
     });
 };
 
 // ...
-export const readClientRegkeyList = (param) => dispatch => {
-    const resetParam = {
-        keyword: param.keyword,
-        page: param.page,
-        start: param.page * param.rowsPerPage,
-        length: param.rowsPerPage,
-        orderColumn: param.orderColumn,
-        orderDir: param.orderDir
-    };
+export const readClientRegkeyListPaged = (module, compId, extParam) => dispatch => {
+    const newListParam = (module.getIn(['viewItems', compId])) ? 
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam');
 
-    dispatch({type: GET_REGKEY_LIST_PENDING});
-    return requestPostAPI('readRegKeyInfoList', resetParam).then(
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readRegKeyInfoListPaged', {
+        keyword: newListParam.get('keyword'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
+    }).then(
         (response) => {
             dispatch({
-                type: GET_REGKEY_LIST_SUCCESS,
-                payload: response
+                type: GET_REGKEY_LISTPAGED_SUCCESS,
+                compId: compId,
+                listParam: newListParam,
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
-            type: GET_REGKEY_LIST_FAILURE,
-            payload: error
+            type: COMMON_FAILURE,
+            error: error
         });
     });
 };
 
-export const changeParamValue = (param) => dispatch => {
+export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
-        type: CHG_REGKEY_PARAM,
-        payload: param
+        type: SET_EDITING_ITEM_VALUE,
+        name: param.name,
+        value: param.value
+    });
+};
+
+export const changeListParamData = (param) => dispatch => {
+    return dispatch({
+        type: CHG_LISTPARAM_DATA,
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
 export const generateClientRegkey = (param) => dispatch => {
-    dispatch({type: REGKEY_COMMON_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('generateRegKeyNumber', param).then(
         (response) => {
             try {
                 if(response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_REGKEY_NEWKEY,
-                        payload: response.data.data[0]
+                        type: SET_EDITING_ITEM_VALUE,
+                        name: 'regKeyNo',
+                        value: response.data.data[0].key
                     });
                 }
             } catch(ex) {
                 dispatch({
-                    type: REGKEY_COMMON_FAILURE,
-                    payload: error
+                    type: COMMON_FAILURE,
+                    error: error
                 });
             }
         }
     ).catch(error => {
         dispatch({
-            type: REGKEY_COMMON_FAILURE,
-            payload: error
+            type: COMMON_FAILURE,
+            error: error
         });
     });
 };
 
 // create (add)
 export const createClientRegKeyData = (param) => dispatch => {
-    dispatch({type: CREATE_REGKEY_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('createRegKeyData', param).then(
         (response) => {
             try {
                 if(response.data.status.result === 'success') {
                     dispatch({
                         type: CREATE_REGKEY_SUCCESS,
-                        payload: response
+                        response: response
                     });
                 }    
             } catch(ex) {
                 dispatch({
-                    type: CREATE_REGKEY_FAILURE,
-                    payload: response
+                    type: COMMON_FAILURE,
+                    error: null,
+                    ex: ex
                 });
             }
         }
     ).catch(error => {
         dispatch({
-            type: CREATE_REGKEY_FAILURE,
-            payload: error
+            type: COMMON_FAILURE,
+            error: error
         });
     });
 };
 
 // edit
 export const editClientRegKeyData = (param) => dispatch => {
-    dispatch({type: EDIT_REGKEY_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('editRegKeyData', param).then(
         (response) => {
             dispatch({
                 type: EDIT_REGKEY_SUCCESS,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
-            type: EDIT_REGKEY_FAILURE,
-            payload: error
+            type: COMMON_FAILURE,
+            error: error
         });
     });
 };
 
 // delete
 export const deleteClientRegKeyData = (param) => dispatch => {
-    dispatch({type: DELETE_REGKEY_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteRegKeyData', param).then(
         (response) => {
             dispatch({
                 type: DELETE_REGKEY_SUCCESS,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
         dispatch({
-            type: DELETE_REGKEY_FAILURE,
-            payload: error
+            type: COMMON_FAILURE,
+            error: error
         });
     });
 };
@@ -197,141 +181,49 @@ export const deleteClientRegKeyData = (param) => dispatch => {
 
 export default handleActions({
 
-    [GET_REGKEY_LIST_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
+    [COMMON_PENDING]: (state, action) => {
+        return state.merge({
+            pending: true, 
             error: false
-        };
-    },
-    [GET_REGKEY_LIST_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength } = action.payload.data;
-        let tempListParam = state.listParam;
-        Object.assign(tempListParam, {
-            rowsFiltered: parseInt(recordsFiltered, 10),
-            rowsTotal: parseInt(recordsTotal, 10),
-            page: parseInt(draw, 10),
-            rowsPerPage: parseInt(rowLength, 10),
         });
-
-        return {
-            ...state,
-            pending: false,
-            error: false,
-            listData: data,
-            listParam: tempListParam
-        };
-    },  
-    [GET_REGKEY_LIST_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true
-        };
     },
+    [COMMON_FAILURE]: (state, action) => {
+        return state.merge({
+            pending: false, 
+            error: true,
+            resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
+            ex: (action.ex) ? action.ex : ''
+        });
+    },
+
+    [GET_REGKEY_LISTPAGED_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleListPagedAction(state, action);
+    },  
     [SHOW_REGKEY_DIALOG]: (state, action) => {
-        return {
-            ...state,
-            selectedViewItem: action.payload.selectedViewItem,
-            dialogOpen: action.payload.dialogOpen,
-            dialogType: action.payload.dialogType,
-        };
+        return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_REGKEY_DIALOG]: (state, action) => {
-        return {
-            ...state,
-            dialogOpen: action.payload.dialogOpen
-        }
+        return commonHandleActions.handleCloseDialogAction(state.set('dialogTabValue', 0), action);
     },
-    [CHG_REGKEY_PARAM]: (state, action) => {
-        const newSelectedItem = getMergedObject(state.selectedViewItem, {[action.payload.name]: action.payload.value});
-        return {
-            ...state,
-            selectedViewItem: newSelectedItem
-        }
+    [SET_EDITING_ITEM_VALUE]: (state, action) => {
+        return state.merge({
+            editingItem: state.get('editingItem').merge({[action.name]: action.value})
+        });
     },
-    [CREATE_REGKEY_NEWKEY]: (state, action) => {
-        const newSelectedItem = getMergedObject(state.selectedViewItem, {regKeyNo: action.payload.key});
-        return {
-            ...state,
-            selectedViewItem: newSelectedItem
-        }
-    },
-    [CREATE_REGKEY_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
+    [CHG_LISTPARAM_DATA]: (state, action) => {
+        return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CREATE_REGKEY_SUCCESS]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: false,
-        };
-    },
-    [CREATE_REGKEY_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true
-        };
-    },
-    [REGKEY_COMMON_PENDING]: (state, action) => {
-        return {
-            ...state
-        }
-    },
-    [REGKEY_COMMON_FAILURE]: (state, action) => {
-        return {
-            ...state
-        }
-    },
-    [EDIT_REGKEY_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
+        return state.merge({
+            pending: false, error: false
+        });
     },
     [EDIT_REGKEY_SUCCESS]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: false,
-        };
-    },
-    [EDIT_REGKEY_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true,
-            resultMsg: action.payload.data.status.message
-        };
-    },
-    [DELETE_REGKEY_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
+        return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_REGKEY_SUCCESS]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: false,
-        };
-    },
-    [DELETE_REGKEY_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true,
-            resultMsg: action.payload.data.status.message
-        };
-    },
+        return commonHandleActions.handleDeleteSuccessAction(state, action);
+    }
 
 }, initialState);
 

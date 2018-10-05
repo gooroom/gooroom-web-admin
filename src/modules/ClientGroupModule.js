@@ -23,7 +23,6 @@ const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'groupComp/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'groupComp/CHG_COMPDATA_VALUE';
-const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
 const ADD_CLIENTINGROUP_SUCCESS = 'groupComp/ADD_CLIENTINGROUP_SUCCESS';
 const REMOVE_CLIENTINGROUP_SUCCESS = 'groupComp/REMOVE_CLIENTINGROUP_SUCCESS';
 
@@ -110,14 +109,6 @@ export const changeCompVariable = (param) => dispatch => {
     return dispatch({
         type: CHG_COMPDATA_VALUE,
         compId: param.compId,
-        name: param.name,
-        value: param.value
-    });
-};
-
-export const changeStoreData = (param) => dispatch => {
-    return dispatch({
-        type: CHG_STORE_DATA,
         name: param.name,
         value: param.value
     });
@@ -296,7 +287,7 @@ export default handleActions({
             pending: false, 
             error: true,
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
-            ex:  (action.ex) ? action.ex : ''
+            ex: (action.ex) ? action.ex : ''
         });
     },
 
@@ -326,15 +317,9 @@ export default handleActions({
     [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
-    [CHG_STORE_DATA]: (state, action) => {
-        return state.merge({
-            [action.name]: action.value
-        });
-    },
     [CREATE_CLIENTGROUP_SUCCESS]: (state, action) => {
         return state.merge({
-            pending: false,
-            error: false
+            pending: false, error: false
         });
     },
     [EDIT_CLIENTGROUP_SUCCESS]: (state, action) => {

@@ -194,10 +194,7 @@ class JobManage extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell
-                      colSpan={this.columnHeaders.length + 1}
-                      className={classes.grSmallAndClickCell}
-                    />
+                    <TableCell colSpan={this.columnHeaders.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
