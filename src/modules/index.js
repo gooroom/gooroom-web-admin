@@ -26,6 +26,8 @@ import SecurityRuleModule from './SecurityRuleModule';
 
 import ClientMasterManageModule from './ClientMasterManageModule';
 
+import DesktopAppModule from './DesktopAppModule';
+
 import AdminModule from './AdminModule';
 
 
@@ -56,6 +58,8 @@ export default combineReducers({
     
     GrConfirmModule,
     CommonOptionModule,
+
+    DesktopAppModule,
 
     AdminModule
 

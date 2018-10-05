@@ -27,6 +27,8 @@ import PackageManage from 'views/Package/PackageManage';
 import DeptManage from "views/User/DeptManage";
 import UserManage from "views/User/UserManage";
 
+import DesktopAppManage from "views/Desktop/DesktopAppManage";
+
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
@@ -61,6 +63,9 @@ class GrRouters extends Component {
           <Route path="/package/packagemanage/:grMenuId/:grMenuName" component={PackageManage} />
           <Route path="/user/deptmanage/:grMenuId/:grMenuName" component={DeptManage} />
           <Route path="/user/usermanage/:grMenuId/:grMenuName" component={UserManage} />
+
+          <Route path="/desktopconfig/desktopapp/:grMenuId/:grMenuName" component={DesktopAppManage} />
+
           <Route path="/test/components/:grMenuId/:grMenuName" component={ComponentTests} />
         </Switch>
       </div>
