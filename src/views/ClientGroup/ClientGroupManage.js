@@ -144,6 +144,7 @@ class ClientGroupManage extends Component {
 
   // edit
   handleEditClick = (event, id) => {
+    event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     ClientGroupActions.showDialog({
@@ -154,6 +155,7 @@ class ClientGroupManage extends Component {
 
   // delete
   handleDeleteClick = (event, id) => {
+    event.stopPropagation();
     const { ClientGroupProps, GrConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     GrConfirmActions.showConfirm({
@@ -208,14 +210,12 @@ class ClientGroupManage extends Component {
                   <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
                 </FormControl>
               </Grid>
-
               <Grid item xs={6} >
                 <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
                   <Search />조회
                 </Button>
               </Grid>
             </Grid>
-
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
               <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />등록

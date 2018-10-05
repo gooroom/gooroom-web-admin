@@ -17,8 +17,6 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
-import { getConfigIdsInComp } from 'components/GrUtils/GrTableListUtils';
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -29,22 +27,12 @@ import Divider from '@material-ui/core/Divider';
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 import ClientRuleSelector from 'components/GrOptions/ClientRuleSelector';
-
-import ClientConfSettingSelector from 'views/Rules/ClientConfig/ClientConfSettingSelector'
-import ClientHostNameSelector from 'views/Rules/HostName/ClientHostNameSelector'
-import ClientUpdateServerSelector from 'views/Rules/UpdateServer/ClientUpdateServerSelector'
-import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
-import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
-import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
 
 function TabContainer(props) {
     return (
@@ -66,6 +54,7 @@ class ClientGroupDialog extends Component {
     handleClose = (event) => {
         const { ClientGroupActions, compId } = this.props;
         const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props; 
+        // ?????
         ClientConfSettingActions.deleteCompData({compId: compId});
         ClientHostNameActions.deleteCompData({compId: compId});
         ClientUpdateServerActions.deleteCompData({compId: compId});
@@ -88,12 +77,12 @@ class ClientGroupDialog extends Component {
         GrConfirmActions.showConfirm({
             confirmTitle: '단말그룹 등록',
             confirmMsg: '단말그룹을 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
+            handleConfirmResult: this.handleCreateDataConfirmResult,
             confirmOpen: true,
             confirmObject: ClientGroupProps.get('editingItem')
         });
     }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
+    handleCreateDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
             const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
@@ -153,22 +142,12 @@ class ClientGroupDialog extends Component {
         }
     }
 
-    handleChangeTabs = (event, value) => {
-        this.props.ClientGroupActions.changeStoreData({
-            name: 'dialogTabValue',
-            value: value
-        });
-    };
-
     render() {
         const { classes } = this.props;
         const { ClientGroupProps, compId } = this.props;
         
         const dialogType = ClientGroupProps.get('dialogType');
         const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem') : null;
-
-        const tabValue = ClientGroupProps.get('dialogTabValue');
-const tempLabel = <div><InputLabel>단말정책</InputLabel><Divider /><InputLabel>'없음'</InputLabel></div>;
 
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
