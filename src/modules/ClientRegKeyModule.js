@@ -1,7 +1,6 @@
 import { handleActions } from 'redux-actions';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
 
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 

@@ -8,10 +8,12 @@ import * as ClientProfileSetActions from 'modules/ClientProfileSetModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
+
+import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import ClientProfileSetDialog from './ClientProfileSetDialog';
 import GrPane from 'containers/GrContent/GrPane';
@@ -38,17 +40,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-
-//
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class ClientProfileSetHead extends Component {
-
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
+class ClientProfileSet extends Component {
+  
+  columnHeaders = [
     { id: 'chProfileSetNo', isOrder: true, numeric: false, disablePadding: true, label: '번호' },
     { id: 'chProfileSetName', isOrder: true, numeric: false, disablePadding: true, label: '이름' },
     { id: 'chClientId', isOrder: true, numeric: false, disablePadding: true, label: 'Ref단말아이디' },
@@ -58,66 +52,44 @@ class ClientProfileSetHead extends Component {
     { id: 'chProfile', isOrder: false, numeric: false, disablePadding: true, label: '프로파일' },
   ];
 
-  render() {
-    const { classes } = this.props;
-    const { orderDir, orderColumn } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {ClientProfileSetHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
-class ClientProfileSet extends Component {
-  
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    }
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
 
-
   // .................................................
+  handleChangePage = (event, page) => {
+    this.props.ClientProfileSetActions.readClientProfileSetListPaged(this.props.ClientProfileSetProps, this.props.match.params.grMenuId, {
+      page: page
+    });
+  };
+
+  handleChangeRowsPerPage = event => {
+    this.props.ClientProfileSetActions.readClientProfileSetListPaged(this.props.ClientProfileSetProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value, page: 0
+    });
+  };
+
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    this.props.ClientProfileSetActions.readClientProfileSetListPaged(this.props.ClientProfileSetProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
+    });
+  };
+
   handleSelectBtnClick = () => {
     const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(getMergedObject(ClientProfileSetProps.listParam, {
-      page: 0
-    }));
+    ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, this.props.match.params.grMenuId);
   };
-  
+
+  handleRowClick = (event, id) => {
+    const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
+    const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
+    ClientProfileSetActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: ClientProfileSetDialog.TYPE_VIEW
+    });
+  };
+
+  // create dialog
   handleCreateButton = () => {
     this.props.ClientProfileSetActions.showDialog({
       selectedViewItem: {
@@ -131,212 +103,150 @@ class ClientProfileSet extends Component {
         targetGroupIdArray: [],
         isRemoval: 'false'
       },
-      dialogType: ClientProfileSetDialog.TYPE_ADD,
-      dialogOpen: true
+      dialogType: ClientProfileSetDialog.TYPE_ADD
     });
   }
   
-  handleRowClick = (event, id) => {
-    const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-    const selectedViewItem = ClientProfileSetProps.listData.find(function(element) {
-      return element.profileNo == id;
-    });
-    ClientProfileSetActions.showDialog({
-      selectedViewItem: Object.assign({}, selectedViewItem),
-      dialogType: ClientProfileSetDialog.TYPE_VIEW,
-      dialogOpen: true
-    });
-  };
-
   handleEditClick = (event, id) => {
     event.stopPropagation();
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-    const selectedViewItem = ClientProfileSetProps.listData.find(function(element) {
-      return element.profileNo == id;
-    });
-    
+    const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     ClientProfileSetActions.showDialog({
-      selectedViewItem: Object.assign({}, selectedViewItem),
-      dialogType: ClientProfileSetDialog.TYPE_EDIT,
-      dialogOpen: true
+      selectedViewItem: selectedViewItem,
+      dialogType: ClientProfileSetDialog.TYPE_EDIT
     });
   };
 
   handleProfileClick = (event, id) => {
     event.stopPropagation();
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-    const selectedViewItem = ClientProfileSetProps.listData.find(function(element) {
-      return element.profileNo == id;
-    });
+    const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     ClientProfileSetActions.showDialog({
-      selectedViewItem: Object.assign({
+      selectedViewItem: {
+        profileNo: selectedViewItem.get('profileNo'),
+        profileNm: selectedViewItem.get('profileNm'),
+        profileCmt: selectedViewItem.get('profileCmt'),
         targetClientIds: '',
         targetClientIdArray: [],
         targetGroupIds: '',
         targetGroupIdArray: [],
         isRemoval: 'false'
-      }, selectedViewItem),
-      dialogType: ClientProfileSetDialog.TYPE_PROFILE,
-      dialogOpen: true
+      },
+      dialogType: ClientProfileSetDialog.TYPE_PROFILE
     });
   };
 
+  // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientProfileSetProps, ClientProfileSetActions, GrConfirmActions } = this.props;
-    const selectedViewItem = ClientProfileSetProps.listData.find(function(element) {
-      return element.profileNo == id;
-    });
-    ClientProfileSetActions.changeParamValue({
-      name: 'profileNo',
-      value: selectedViewItem.profileNo
-    });
-    const re = GrConfirmActions.showConfirm({
+    const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
+    GrConfirmActions.showConfirm({
       confirmTitle: '단말프로파일 삭제',
-      confirmMsg: '단말프로파일(' + selectedViewItem.profileNo + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말프로파일(' + selectedViewItem.get('profileNo') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true
+      confirmOpen: true,
+      confirmObject: selectedViewItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue) => {
-    const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
+  handleDeleteConfirmResult = (confirmValue, confirmObject) => {
     if(confirmValue) {
-      this.props.ClientProfileSetActions.deleteClientProfileSetData({
-        profileNo: ClientProfileSetProps.selectedViewItem.profileNo
+      const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      ClientProfileSetActions.deleteClientProfileSetData({
+        compId: compId,
+        profileNo: confirmObject.get('profileNo')
       }).then(() => {
-          ClientProfileSetActions.readClientProfileSetList(getMergedObject(ClientProfileSetProps.listParam, {}));
-        }, () => {
+          ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, compId);
       });
     }
   };
   
-  // 페이지 번호 변경
-  handleChangePage = (event, page) => {
-    const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(getMergedObject(ClientProfileSetProps.listParam, {page: page}));
-  };
-
-  // 페이지당 레코드수 변경
-  handleChangeRowsPerPage = (event) => {
-    const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
-    ClientProfileSetActions.readClientProfileSetList(getMergedObject(ClientProfileSetProps.listParam, {rowsPerPage: event.target.value,page: 0}));
-  };
-  
   // .................................................
-  handleRequestSort = (event, property) => {
-    const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-    let orderDir = "desc";
-    if (ClientProfileSetProps.listParam.orderColumn === property && ClientProfileSetProps.listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-    ClientProfileSetActions.readClientProfileSetList(getMergedObject(ClientProfileSetProps.listParam, {orderColumn: property, orderDir: orderDir}));
-  }
-  // .................................................
-
   handleKeywordChange = name => event => {
-    const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
-    const newParam = getMergedObject(ClientProfileSetProps.listParam, {keyword: event.target.value});
-    ClientProfileSetActions.changeParamValue({
-      name: 'listParam',
-      value: newParam
+    this.props.ClientProfileSetActions.changeListParamData({
+      name: 'keyword', 
+      value: event.target.value,
+      compId: this.props.match.params.grMenuId
     });
   }
 
   render() {
     const { classes } = this.props;
     const { ClientProfileSetProps } = this.props;
-    const emptyRows = ClientProfileSetProps.listParam.rowsPerPage - ClientProfileSetProps.listData.length;
+    const compId = this.props.match.params.grMenuId;
+    const emptyRows = 0;
+
+    const listObj = ClientProfileSetProps.getIn(['viewItems', compId]);
 
     return (
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
           {/* data option area */}
-
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-
-              <Grid item xs={6}>
+              <Grid item xs={6} >
                 <FormControl fullWidth={true}>
-                  <TextField
-                    id='keyword'
-                    label='검색어'
-                    value={ClientProfileSetProps.listParam.keyword}
-                    onChange={this.handleKeywordChange('keyword')}
-                  />
+                  <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
                 </FormControl>
               </Grid>
-
-              <Grid item xs={6}>
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={ () => this.handleSelectBtnClick() }
-                >
-                  <Search />
-                  조회
+              <Grid item xs={6} >
+                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                  <Search />조회
                 </Button>
               </Grid>
             </Grid>
-
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
+              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
+                <AddIcon />등록
               </Button>
             </Grid>
           </Grid>
 
           {/* data area */}
-          <div>
+          {(listObj) &&
+            <div>
             <Table>
-
-              <ClientProfileSetHead
+              <GrCommonTableHead
                 classes={classes}
-                orderDir={ClientProfileSetProps.listParam.orderDir}
-                orderColumn={ClientProfileSetProps.listParam.orderColumn}
-                onRequestSort={this.handleRequestSort}
+                keyId="profileNo"
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                onRequestSort={this.handleChangeSort}
+                columnData={this.columnHeaders}
               />
-
               <TableBody>
-                {ClientProfileSetProps.listData.map(n => {
+                {listObj.get('listData').map(n => {
                   return (
                     <TableRow
                       className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.profileNo)}
-                      key={n.profileNo}
+                      onClick={event => this.handleRowClick(event, n.get('profileNo'))}
+                      key={n.get('profileNo')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.profileNo}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.profileNm}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.clientId}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.regDate, 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.modDate, 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('profileNo')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('profileNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditClick(event, n.profileNo)}>
+                          onClick={event => this.handleEditClick(event, n.get('profileNo'))}>
                           <BuildIcon />
                         </Button>
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleDeleteClick(event, n.profileNo)}>
+                          onClick={event => this.handleDeleteClick(event, n.get('profileNo'))}>
                           <DeleteIcon />
                         </Button>                        
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleProfileClick(event, n.profileNo)}>
+                          onClick={event => this.handleProfileClick(event, n.get('profileNo'))}>
                           <AssignmentIcon />
                         </Button>                        
                       </TableCell>
@@ -346,34 +256,31 @@ class ClientProfileSet extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell
-                      colSpan={ClientProfileSetHead.columnData.length + 1}
-                      
-                    />
+                    <TableCell colSpan={this.columnHeaders.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <TablePagination
-            component='div'
-            count={ClientProfileSetProps.listParam.rowsFiltered}
-            rowsPerPage={ClientProfileSetProps.listParam.rowsPerPage}
-            page={ClientProfileSetProps.listParam.page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
-
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+            </div>
+          }
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientProfileSetDialog />
+        <ClientProfileSetDialog compId={compId} />
         <GrConfirm />
       </React.Fragment>
     );

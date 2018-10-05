@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Map, List } from 'immutable';
-
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -41,61 +39,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-
-//
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class ClientRegKeyHead extends Component {
-
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
-    { id: 'chRegKey', isOrder: true, numeric: false, disablePadding: true, label: '단말등록키' },
-    { id: 'chValidDate', isOrder: true, numeric: false, disablePadding: true, label: '유효날짜' },
-    { id: 'chExpireDate', isOrder: true, numeric: false, disablePadding: true, label: '인증서만료날짜' },
-    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
-  ];
-
-  render() {
-    const { classes } = this.props;
-    const { orderDir, orderColumn } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {ClientRegKeyHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class ClientRegKey extends Component {
 
   columnHeaders = [
@@ -215,7 +158,6 @@ class ClientRegKey extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
-
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
