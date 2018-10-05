@@ -84,11 +84,13 @@ export const handleListPagedAction = (state, action) => {
     }
 }
 
-export const handleGetObjectAction = (state, compId, data) => {
+export const handleGetObjectAction = (state, compId, data, extend) => {
     if(data && data.length > 0) {
+        const isDefault = (extend && extend.length > 0 && extend[0] === 'DEFAULT') ? true: false;
         return state
         .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
-        .setIn(['viewItems', compId, 'selectedOptionItemId'], data[0].objId)
+        .setIn(['viewItems', compId, 'selectedOptionItemId'], (isDefault) ? '' : data[0].objId)
+        .setIn(['viewItems', compId, 'isDefault'], isDefault)
         .setIn(['viewItems', compId, 'informOpen'], true);
     } else  {
         return state.deleteIn(['viewItems', compId]);

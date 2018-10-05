@@ -57,6 +57,8 @@ class SecurityRuleComp extends Component {
     const selectedViewItem = SecurityRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = SecurityRuleProps.getIn(['viewItems', compId, 'listAllData']);
     const selectedOptionItemId = SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const isDefault = SecurityRuleProps.getIn(['viewItems', compId, 'isDefault']);
+
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -96,15 +98,15 @@ class SecurityRuleComp extends Component {
             <Grid container>
               <Grid item xs={6}>
                 <Typography className={classes.compTitle}>
-                  {(compType == 'VIEW') ? '상세내용' : '단말보안정책'}
+                  {(compType == 'VIEW') ? '상세내용' : '단말보안정책'} {(isDefault) ? '*no' : ''}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Grid container justify="flex-end">
                   <Button size="small"
-                    variant="outlined" color="primary"
+                    variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                  ><SettingsApplicationsIcon />수정</Button>
+                  ><SettingsApplicationsIcon /></Button>
                 </Grid>
               </Grid>
             </Grid>

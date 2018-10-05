@@ -27,13 +27,6 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientHostNameSelector extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true
-    };
-  }
 
   componentDidMount() {
     this.props.ClientHostNameActions.readClientHostNameList(this.props.ClientHostNameProps, this.props.compId);
@@ -57,7 +50,6 @@ class ClientHostNameSelector extends Component {
     const { classes } = this.props;
     const { ClientHostNameProps, compId } = this.props;
 
-    const selectedViewItem = ClientHostNameProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = ClientHostNameProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = ClientHostNameProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {

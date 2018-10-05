@@ -42,6 +42,16 @@ const theme = createMuiTheme({
         padding: 0
       },
     },
+    MuiTableCell: {
+      root: {
+        padding: '0 6 0 0'
+      }
+    },
+    MuiTableRow: {
+      root: {
+        height: 32
+      }
+    }
   },
 });
 
