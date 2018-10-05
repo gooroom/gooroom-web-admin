@@ -56,6 +56,8 @@ class BrowserRuleComp extends Component {
     const selectedViewItem = BrowserRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
     const selectedOptionItemId = BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const isDefault = BrowserRuleProps.getIn(['viewItems', compId, 'isDefault']);
+
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -95,15 +97,15 @@ class BrowserRuleComp extends Component {
             <Grid container>
               <Grid item xs={6}>
                 <Typography className={classes.compTitle}>
-                  {(compType == 'VIEW') ? '상세내용' : '브라우져제어정책'}
+                  {(compType == 'VIEW') ? '상세내용' : '브라우져제어정책'} {(isDefault) ? '*no' : ''}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Grid container justify="flex-end">
                   <Button size="small"
-                    variant="outlined" color="primary"
+                    variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                  ><SettingsApplicationsIcon />수정</Button>
+                  ><SettingsApplicationsIcon /></Button>
                 </Grid>
               </Grid>
             </Grid>

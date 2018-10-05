@@ -58,6 +58,8 @@ class ClientConfSettingComp extends Component {
     const selectedViewItem = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = ClientConfSettingProps.getIn(['viewItems', compId, 'listAllData']);
     const selectedOptionItemId = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const isDefault = ClientConfSettingProps.getIn(['viewItems', compId, 'isDefault']);
+
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -81,15 +83,15 @@ class ClientConfSettingComp extends Component {
             <Grid container>
               <Grid item xs={6}>
                 <Typography className={classes.compTitle}>
-                  {(compType == 'VIEW') ? '상세내용' : '단말정책설정'}
+                  {(compType == 'VIEW') ? '상세내용' : '단말정책설정'} {(isDefault) ? '*no' : ''}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Grid container justify="flex-end">
                   <Button size="small"
-                    variant="outlined" color="primary"
+                    variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                  ><SettingsApplicationsIcon />수정</Button>
+                  ><SettingsApplicationsIcon /></Button>
                 </Grid>
               </Grid>
             </Grid>

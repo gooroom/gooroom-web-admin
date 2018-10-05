@@ -77,24 +77,20 @@ class DeptManage extends Component {
     // show rules
     // get browser rule info
     BrowserRuleActions.getBrowserRuleByDeptCd({
-      compId: compId,
-      deptCd: node.key
+      compId: compId, deptCd: node.key
     });
     // get media control setting info
     MediaRuleActions.getMediaRuleByDeptCd({
-      compId: compId,
-      deptCd: node.key
+      compId: compId, deptCd: node.key
     });
     // get client secu info
     SecurityRuleActions.getSecurityRuleByDeptCd({
-      compId: compId,
-      deptCd: node.key
+      compId: compId, deptCd: node.key
     });
 
     // show user inform pane.
     UserActions.showInform({
-      compId: compId,
-      selectedViewItem: null
+      compId: compId, selectedViewItem: null
     });
   }
 

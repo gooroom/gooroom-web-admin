@@ -138,6 +138,25 @@ export const getClientConf = (param) => dispatch => {
     }
 };
 
+export const getClientConfByGroupId = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readClientConfByGroupId', {'groupId': param.groupId}).then(
+        (response) => {
+            dispatch({
+                type: GET_CONFSETTING_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,
@@ -324,7 +343,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend);
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);

@@ -63,6 +63,8 @@ class ClientHostNameComp extends Component {
     const selectedViewItem = ClientHostNameProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = ClientHostNameProps.getIn(['viewItems', compId, 'listAllData']);
     const selectedOptionItemId = ClientHostNameProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const isDefault = ClientHostNameProps.getIn(['viewItems', compId, 'isDefault']);
+    
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -86,15 +88,15 @@ class ClientHostNameComp extends Component {
             <Grid container>
               <Grid item xs={6}>
                 <Typography className={classes.compTitle}>
-                  {(compType == 'VIEW') ? '상세내용' : 'Hosts설정'}
+                  {(compType == 'VIEW') ? '상세내용' : 'Hosts설정'} {(isDefault) ? '*no' : ''}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Grid container justify="flex-end">
                   <Button size="small"
-                    variant="outlined" color="primary"
+                    variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                  ><SettingsApplicationsIcon />수정</Button>
+                  ><SettingsApplicationsIcon /></Button>
                 </Grid>
               </Grid>
             </Grid>

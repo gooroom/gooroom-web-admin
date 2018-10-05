@@ -59,6 +59,8 @@ class MediaRuleComp extends Component {
     const selectedViewItem = MediaRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = MediaRuleProps.getIn(['viewItems', compId, 'listAllData']);
     const selectedOptionItemId = MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const isDefault = MediaRuleProps.getIn(['viewItems', compId, 'isDefault']);
+
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -96,17 +98,17 @@ class MediaRuleComp extends Component {
           <Card elevation={0}>
             <CardContent style={{padding: 10}}>
             <Grid container>
-              <Grid item xs={6}>
+              <Grid item xs={9}>
                 <Typography className={classes.compTitle}>
-                  {(compType == 'VIEW') ? '상세내용' : '매체제어정책'}
+                  {(compType == 'VIEW') ? '상세내용' : '매체제어정책'} {(isDefault) ? '*no' : ''}
                 </Typography>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={3}>
                 <Grid container justify="flex-end">
                   <Button size="small"
-                    variant="outlined" color="primary"
+                    variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                  ><SettingsApplicationsIcon />수정</Button>
+                  ><SettingsApplicationsIcon /></Button>
                 </Grid>
               </Grid>
             </Grid>
