@@ -168,28 +168,6 @@ class ClientManage extends Component {
     //console.log('handleCreateButton...............');
   }
 
-  // // .................................................
-  // handleClientDialogClose = value => {
-  //   this.setState({ 
-  //     clientInfos: value, 
-  //     clientDialogOpen: false 
-  //   });
-  // };
-
-  // handleInfoClick = (event, clientId, clientGroupId) => {
-  //   event.stopPropagation();
-  //   const { ClientManageActions, ClientManageProps } = this.props;
-  //   const selectedViewItem = ClientManageProps.listData.find(function(element) {
-  //     return element.clientId == clientId;
-  //   });
-
-  //   ClientManageActions.showDialog({
-  //     selectedViewItem: Object.assign({}, selectedViewItem),
-  //     dialogType: ClientDialog.TYPE_VIEW,
-  //     dialogOpen: true,
-  //     compId: ''
-  //   });
-  // };
 
   handleSelectAllClick = (event, checked) => {
     const { ClientManageActions, ClientManageProps } = this.props;
@@ -243,21 +221,15 @@ class ClientManage extends Component {
 
               <Grid item xs={3} >
                 <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />
-                  조회
+                  <Search />조회
                 </Button>
-
               </Grid>
+
             </Grid>
 
             <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button size="small" variant="contained" color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
+                <AddIcon />등록
               </Button>
             </Grid>
           </Grid>

@@ -27,111 +27,49 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-//
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class JobTargetListHead extends Component {
 
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
+  // static columnData = [
+  //   { id: "chClientId", isOrder: true, numeric: false, disablePadding: true, label: "단말아이디" },
+  //   { id: "chJobStatus", isOrder: true, numeric: false, disablePadding: true, label: "작업상태" },
+  //   { id: "chGroupNm", isOrder: true, numeric: false, disablePadding: true, label: "단말그룹" },
+  //   { id: "chClientStatus", isOrder: true, numeric: false, disablePadding: true, label: "단말상태" }
+  // ];
 
-  static columnData = [
-    { id: "chClientId", isOrder: true, numeric: false, disablePadding: true, label: "단말아이디" },
-    { id: "chJobStatus", isOrder: true, numeric: false, disablePadding: true, label: "작업상태" },
-    { id: "chGroupNm", isOrder: true, numeric: false, disablePadding: true, label: "단말그룹" },
-    { id: "chClientStatus", isOrder: true, numeric: false, disablePadding: true, label: "단말상태" }
-  ];
-
-  render() {
-    const { classes } = this.props;
-    const {
-      orderDir,
-      orderColumn,
-    } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {JobTargetListHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? "none" : "default"}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(column.isOrder) &&
-                <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >
-                  {column.label}
-                </TableSortLabel>
-              }
-              {(!column.isOrder) &&
-                <p>{column.label}</p>
-              }
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class JobInform extends Component {
 
-  // .................................................
-  handleRequestSort = (event, property) => {
-
-    const { jobManageModule, JobManageActions } = this.props;
-    let orderDir = "desc";
-    if (jobManageModule.listParam.orderColumn === property && jobManageModule.listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-    JobManageActions.readJobTargetList(getMergedObject(jobManageModule.targetListParam, {orderColumn: property, orderDir: orderDir}));
-  };
-
   render() {
-    const { classes } = this.props;
-    const { jobManageModule } = this.props;
-
-    const emptyRows = jobManageModule.targetListParam.rowsPerPage - jobManageModule.targetListData.length;
+    const { compId, JobManageProps } = this.props;
+    const informOpen = JobManageProps.getIn(['viewItems', compId, 'informOpen']);
+    const selectedViewItem = JobManageProps.getIn(['viewItems', compId, 'selectedViewItem']);
 
     return (
       <div>
+      {(informOpen && selectedViewItem) &&
         <Card >
           <CardHeader
-            title={jobManageModule.selectedViewItem.jobName}
-            subheader={jobManageModule.selectedViewItem.jobNo + ', ' + formatDateToSimple(jobManageModule.selectedViewItem.regDate, 'YYYY-MM-DD')}
+            title={selectedViewItem.get('jobName')}
+            subheader={selectedViewItem.get('jobNo') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
           />
           <Grid container spacing={24}>
           <Grid item xs={12} sm={5}>
             <CardContent>
               <Typography component="pre">
-                {jobManageModule.selectedViewItem.jobData}
+                {selectedViewItem.get('jobData')}
               </Typography>
             </CardContent>
           </Grid>
           <Grid item xs={12} sm={7}>
           <CardContent>
+{/*
           <Table >
             <JobTargetListHead
               classes={classes}
-              orderDir={jobManageModule.targetListParam.orderDir}
-              orderColumn={jobManageModule.targetListParam.orderColumn}
+              orderDir={JobManageProps.targetListParam.orderDir}
+              orderColumn={JobManageProps.targetListParam.orderColumn}
               onRequestSort={this.handleRequestSort}
             />
             <TableBody>
-              {jobManageModule.targetListData.map(n => {
+              {JobManageProps.targetListData.map(n => {
                 return (
                   <TableRow
                     className={classes.grNormalTableRow}
@@ -164,10 +102,12 @@ class JobInform extends Component {
               )}
             </TableBody>
           </Table>
+*/}
           </CardContent>
           </Grid>
           </Grid>
         </Card>
+      }
       </div>
     );
 
@@ -176,18 +116,12 @@ class JobInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-
-  jobManageModule: state.JobManageModule,
-  grConfirmModule: state.GrConfirmModule,
-
+  JobManageProps: state.JobManageModule
 });
 
-
 const mapDispatchToProps = (dispatch) => ({
-
   JobManageActions: bindActionCreators(JobManageActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(JobInform));
