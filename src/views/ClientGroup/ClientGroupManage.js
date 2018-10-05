@@ -65,44 +65,32 @@ class ClientGroupManage extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
 
   // .................................................
   handleChangePage = (event, page) => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {
+    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value,
-      page: 0
+    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {
+      rowsPerPage: event.target.value, page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
+  };
+
+  handleSelectBtnClick = () => {
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId);
   };
 
   handleRowClick = (event, id) => {
@@ -190,11 +178,6 @@ class ClientGroupManage extends Component {
   };
 
   // .................................................
-  handleSelectBtnClick = () => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId);
-  };
-  
   handleKeywordChange = name => event => {
     this.props.ClientGroupActions.changeListParamData({
       name: 'keyword', 
@@ -220,7 +203,6 @@ class ClientGroupManage extends Component {
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-
               <Grid item xs={6} >
                 <FormControl fullWidth={true}>
                   <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
@@ -228,22 +210,15 @@ class ClientGroupManage extends Component {
               </Grid>
 
               <Grid item xs={6} >
-                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />
-                  조회
+                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                  <Search />조회
                 </Button>
-
               </Grid>
             </Grid>
 
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button size="small" variant="contained" color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
+                <AddIcon />등록
               </Button>
             </Grid>
           </Grid>
@@ -323,7 +298,6 @@ class ClientGroupManage extends Component {
         <ClientGroupDialog compId={compId} />
         <GrConfirm />
       </React.Fragment>
-
 
     );
   }

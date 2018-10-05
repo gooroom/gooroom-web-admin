@@ -11,13 +11,13 @@ import MenuItem from "@material-ui/core/MenuItem";
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientStatusSelect extends Component {
+class JobStatusSelect extends Component {
 
   // Events...
   handleChangeSelect = event => {
     const { CommonOptionActions } = this.props;
     CommonOptionActions.changeSelectValue({
-      name: 'selectedClientStatus',
+      name: 'selectedJobStatus',
       value: {
         statusId: event.target.value,
         statusNm: event.target.name
@@ -30,11 +30,11 @@ class ClientStatusSelect extends Component {
     const { CommonOptionProps } = this.props;
     return (
       <Select
-        value={CommonOptionProps.selectedClientStatus.statusId}
+        value={CommonOptionProps.selectedJobStatus.statusId}
         onChange={this.handleChangeSelect}
-        inputProps={{name: 'clientStatus'}}
+        inputProps={{name: 'jobStatus'}}
       >
-        {CommonOptionProps.clientStatusData.map(x => (
+        {CommonOptionProps.jobStatusData.map(x => (
           <MenuItem value={x.statusId} key={x.statusId}>
             {x.statusNm}
           </MenuItem>
@@ -52,6 +52,6 @@ const mapDispatchToProps = (dispatch) => ({
   CommonOptionActions: bindActionCreators(CommonOptionActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientStatusSelect);
+export default connect(mapStateToProps, mapDispatchToProps)(JobStatusSelect);
 
 

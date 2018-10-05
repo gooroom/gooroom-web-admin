@@ -59,7 +59,9 @@ class ClientGroupComp extends Component {
   }
 
   handleChangePage = (event, page) => {
-    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {page: page});
+    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {
+      page: page
+    });
   };
 
   handleChangeRowsPerPage = event => {

@@ -60,7 +60,6 @@ export const closeClientGroupInform = (param) => dispatch => {
 };
 
 export const readClientGroupListPaged = (module, compId, extParam) => dispatch => {
-
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
