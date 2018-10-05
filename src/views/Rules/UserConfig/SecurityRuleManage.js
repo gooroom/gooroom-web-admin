@@ -80,20 +80,14 @@ class SecurityRuleManage extends Component {
   handleChangeRowsPerPage = event => {
     const { SecurityRuleActions, SecurityRuleProps } = this.props;
     SecurityRuleActions.readSecurityRuleListPaged(SecurityRuleProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value,
-      page: 0
+      rowsPerPage: event.target.value, page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { SecurityRuleActions, SecurityRuleProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
     SecurityRuleActions.readSecurityRuleListPaged(SecurityRuleProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 

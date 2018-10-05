@@ -86,20 +86,14 @@ class ClientManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps } = this.props;
     ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value, 
-      page:0
+      rowsPerPage: event.target.value, page:0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
-    ClientManageActions.readClientListPaged(ClientManagePropsget, this.props.match.params.grMenuId, {
-      orderColumn: property, 
-      orderDir: orderDir
+    ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
@@ -228,9 +222,11 @@ class ClientManage extends Component {
             </Grid>
 
             <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
+            {/*
               <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />등록
               </Button>
+            */}
             </Grid>
           </Grid>
           {/* data area */}

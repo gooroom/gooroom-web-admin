@@ -80,20 +80,14 @@ class ClientHostNameManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value,
-      page: page
+      rowsPerPage: event.target.value, page: page
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
     ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 

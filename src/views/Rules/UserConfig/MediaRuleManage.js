@@ -80,20 +80,14 @@ class MediaRuleManage extends Component {
   handleChangeRowsPerPage = event => {
     const { MediaRuleActions, MediaRuleProps } = this.props;
     MediaRuleActions.readMediaRuleListPaged(MediaRuleProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value,
-      page: 0
+      rowsPerPage: event.target.value, page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { MediaRuleActions, MediaRuleProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
     MediaRuleActions.readMediaRuleListPaged(MediaRuleProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
