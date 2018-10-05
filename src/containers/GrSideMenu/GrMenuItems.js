@@ -68,13 +68,7 @@ export default {
           url: '/user/usermanage/GRM0502/사용자정보',
           icon: 'icon-folder',
           level: 2,
-        },
-        {
-          name: '???사용자롤관리',
-          url: '/user/role/GRM0503/사용자롤관리',
-          icon: 'icon-layers',
-          level: 2,
-        },
+        }
       ]
     }, {
       name: '단말사용정책',
@@ -82,12 +76,6 @@ export default {
       icon: 'icon-screen-desktop',
       level: 1,
       children: [
-        {
-          name: '통합관리',
-          url: '/userconfig/totalmng/GRM0401/통합관리',
-          icon: 'icon-wrench',
-          level: 2,
-        },
         {
           name: '매체제어정책',
           url: '/userconfig/media/GRM0402/매체제어정책',
@@ -115,10 +103,16 @@ export default {
       children: [
         {
           name: '데스크톱정보',
-          url: '/desktopconfig/desktop/GRM0301/데스크톱정보',
+          url: '/desktopconfig/desktopmng/GRM0301/데스크톱정보',
           icon: 'icon-wrench',
           level: 2,
-        }
+        },
+        {
+          name: '데스크톱앱관리',
+          url: '/desktopconfig/desktopapp/GRM0302/데스크톱앱관리',
+          icon: 'icon-wrench',
+          level: 2,
+        },
       ]
     }, {
       name: '작업',
