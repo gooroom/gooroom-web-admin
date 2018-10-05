@@ -66,19 +66,19 @@ class JobManage extends Component {
 
   // .................................................
   handleChangePage = (event, page) => {
-    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.compId, {
+    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.compId, {
+    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value, page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
-    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.compId, {
+    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.match.params.grMenuId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
