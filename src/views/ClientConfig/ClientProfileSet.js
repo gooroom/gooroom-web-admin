@@ -58,19 +58,22 @@ class ClientProfileSet extends Component {
 
   // .................................................
   handleChangePage = (event, page) => {
-    this.props.ClientProfileSetActions.readClientProfileSetListPaged(this.props.ClientProfileSetProps, this.props.match.params.grMenuId, {
+    const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
+    ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    this.props.ClientProfileSetActions.readClientProfileSetListPaged(this.props.ClientProfileSetProps, this.props.match.params.grMenuId, {
+    const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
+    ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value, page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
-    this.props.ClientProfileSetActions.readClientProfileSetListPaged(this.props.ClientProfileSetProps, this.props.match.params.grMenuId, {
+    const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
+    ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, this.props.match.params.grMenuId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };

@@ -58,14 +58,6 @@ class ClientUpdateServerManage extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    }
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
@@ -80,20 +72,14 @@ class ClientUpdateServerManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
     ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value,
-      page: page
+      rowsPerPage: event.target.value, page: page
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
     ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 

@@ -55,19 +55,22 @@ class ClientRegKey extends Component {
 
   // .................................................
   handleChangePage = (event, page) => {
-    this.props.ClientRegKeyActions.readClientRegkeyListPaged(this.props.ClientRegKeyProps, this.props.match.params.grMenuId, {
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    this.props.ClientRegKeyActions.readClientRegkeyListPaged(this.props.ClientRegKeyProps, this.props.match.params.grMenuId, {
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value, page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
-    this.props.ClientRegKeyActions.readClientRegkeyListPaged(this.props.ClientRegKeyProps, this.props.match.params.grMenuId, {
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, this.props.match.params.grMenuId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
