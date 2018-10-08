@@ -1,5 +1,4 @@
 import { handleActions } from 'redux-actions';
-import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -7,7 +6,6 @@ import * as commonHandleActions from 'modules/commons/commonHandleActions';
 const COMMON_PENDING = 'groupComp/COMMON_PENDING';
 const COMMON_FAILURE = 'groupComp/COMMON_FAILURE';
 
-const GET_GROUP_LIST_SUCCESS = 'groupComp/GET_GROUP_LIST_SUCCESS';
 const GET_GROUP_LISTPAGED_SUCCESS = 'groupComp/GET_GROUP_LISTPAGED_SUCCESS';
 
 const CREATE_CLIENTGROUP_SUCCESS = 'groupComp/CREATE_CLIENTGROUP_SUCCESS';
