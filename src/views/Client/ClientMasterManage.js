@@ -328,7 +328,7 @@ class ClientMasterManage extends Component {
                 onSelectAll={this.handleClientSelectAll}
                 onSelect={this.handleClientSelect}
               />
-
+            
             </Grid>
           </Grid>
           

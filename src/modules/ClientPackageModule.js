@@ -55,6 +55,37 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
+export const readPackageListPagedInClient = (module, compId, extParam) => dispatch => {
+    const newListParam = (module.getIn(['viewItems', compId])) ? 
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam');
+
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readPackageListPagedInClient', {
+        keyword: newListParam.get('keyword'),
+        clientId: newListParam.get('clientId'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_CLIENTPACKAGE_LISTPAGED_SUCCESS,
+                compId: compId,
+                listParam: newListParam,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
 export const readClientPackageListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
