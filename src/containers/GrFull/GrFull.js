@@ -39,7 +39,9 @@ const theme = createMuiTheme({
   overrides: {
     MuiButton: {
       sizeSmall: {
-        padding: 0
+        padding: 0,
+        minWidth: 48,
+        minHeight: 24
       },
     },
     MuiTableCell: {
@@ -50,6 +52,11 @@ const theme = createMuiTheme({
     MuiTableRow: {
       root: {
         height: 32
+      }
+    },
+    MuiSvgIcon: {
+      root: {
+        fontSize: 16
       }
     }
   },

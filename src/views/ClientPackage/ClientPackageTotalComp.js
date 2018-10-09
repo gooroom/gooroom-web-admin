@@ -43,31 +43,29 @@ class ClientPackageComp extends Component {
 
   columnHeaders = [
     { id: "chCheckbox", isCheckbox: true},
-    { id: "chClientId", isOrder: true, numeric: false, disablePadding: true, label: "단말아이디" },
     { id: "chPackageId", isOrder: true, numeric: false, disablePadding: true, label: "패키지이름" },
     { id: "chPackageArch", isOrder: true, numeric: false, disablePadding: true, label: "아키텍쳐" },
-    { id: "chInstallVer", isOrder: true, numeric: false, disablePadding: true, label: "설치버전" },
-    { id: "chPackageLastVer", isOrder: true, numeric: false, disablePadding: true, label: "업데이트가능버전" }
+    { id: "chPackageLastVer", isOrder: true, numeric: false, disablePadding: true, label: "버전" }
   ];
 
   componentDidMount() {
-    this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId);
+    this.props.ClientPackageActions.readClientPackageListPaged(this.props.ClientPackageProps, this.props.compId);
   }
 
   handleChangePage = (event, page) => {
-    this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
+    this.props.ClientPackageActions.readClientPackageListPaged(this.props.ClientPackageProps, this.props.compId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
+    this.props.ClientPackageActions.readClientPackageListPaged(this.props.ClientPackageProps, this.props.compId, {
       rowsPerPage: event.target.value, page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
-    this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
+    this.props.ClientPackageActions.readClientPackageListPaged(this.props.ClientPackageProps, this.props.compId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
@@ -95,7 +93,7 @@ class ClientPackageComp extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientPackageActions, ClientPackageProps, compId } = this.props;
-    ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId);
+    ClientPackageActions.readClientPackageListPaged(ClientPackageProps, compId);
   };
 
   handleRowClick = (event, id) => {
@@ -196,10 +194,8 @@ class ClientPackageComp extends Component {
                 <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
                   <Checkbox checked={isSelected} className={classes.grObjInCell} />
                 </TableCell>
-                <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('packageId')}</TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('packageArch')}</TableCell>
-                <TableCell className={classes.grSmallAndClickCell}>{n.get('installVer')}</TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('packageLastVer')}</TableCell>
               </TableRow>
             );

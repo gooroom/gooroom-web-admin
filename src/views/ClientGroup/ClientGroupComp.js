@@ -27,6 +27,7 @@ import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 import ClientGroupDialog from './ClientGroupDialog';
 
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -35,9 +36,12 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+import TextField from '@material-ui/core/TextField';
+import FormControl from '@material-ui/core/FormControl';
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from '@material-ui/core/Button';
 import BuildIcon from '@material-ui/icons/Build';
+import Search from '@material-ui/icons/Search'; 
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -158,15 +162,47 @@ class ClientGroupComp extends Component {
     }    
   }
 
+  // .................................................
+  handleKeywordChange = name => event => {
+    this.props.ClientGroupActions.changeListParamData({
+      name: 'keyword', 
+      value: event.target.value,
+      compId: this.props.match.params.grMenuId
+    });
+  }
+
+  handleSelectBtnClick = () => {
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId);
+  };
+
   render() {
     const { classes } = this.props;
     const { ClientGroupProps, compId } = this.props;
-    const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
+
     const listObj = ClientGroupProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
 
       <div>
+        {/* data option area */}
+        <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
+          <Grid item xs={4} >
+            <FormControl fullWidth={true}>
+              <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={4} >
+            <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+              <Search />조회
+            </Button>
+          </Grid>
+        </Grid>
+
         {listObj &&
         <Table>
           <GrCommonTableHead
@@ -214,14 +250,14 @@ class ClientGroupComp extends Component {
             );
           })}
 
-          {emptyRows > 0 && (
-            <TableRow >
+          {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+            <TableRow key={e}>
               <TableCell
                 colSpan={this.columnHeaders.length + 1}
                 className={classes.grSmallAndClickCell}
               />
             </TableRow>
-          )}
+          )}))}
           </TableBody>
         </Table>
         }

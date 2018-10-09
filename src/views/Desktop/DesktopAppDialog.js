@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as appIdActions from 'modules/appIdModule';
+import * as DesktopAppActions from 'modules/DesktopAppModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
@@ -37,24 +37,24 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class appIdDialog extends Component {
+class DesktopAppDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.appIdActions.closeDialog();
+        this.props.DesktopAppActions.closeDialog();
     }
 
     handleValueChange = name => event => {
         if(event.target.type === 'checkbox') {
-            this.props.appIdActions.setEditingItemValue({
+            this.props.DesktopAppActions.setEditingItemValue({
                 name: name,
                 value: (event.target.checked) ? 'allow' : 'disallow'
             });
         } else {
-            this.props.appIdActions.setEditingItemValue({
+            this.props.DesktopAppActions.setEditingItemValue({
                 name: name,
                 value: event.target.value
             });
@@ -62,62 +62,62 @@ class appIdDialog extends Component {
     }
 
     handleWhiteListValueChange = index => event => {
-        this.props.appIdActions.setWhiteList({
+        this.props.DesktopAppActions.setWhiteList({
             index: index,
             value: event.target.value
         });
     }
 
     handleCreateData = (event) => {
-        const { appIdProps, GrConfirmActions } = this.props;
+        const { DesktopAppProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
             confirmTitle: '데스크톱앱 등록',
             confirmMsg: '데스크톱앱을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: appIdProps.get('editingItem')
+            confirmObject: DesktopAppProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { appIdProps, appIdActions } = this.props;
-            appIdActions.createappIdData(appIdProps.get('editingItem'))
+            const { DesktopAppProps, DesktopAppActions } = this.props;
+            DesktopAppActions.createDesktopAppData(DesktopAppProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(appIdProps, appIdActions.readDesktopAppListPaged);
+                    refreshDataListInComp(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
                     this.handleClose();
                 });
         }
     }
 
     handleEditData = (event, id) => {
-        const { appIdProps, GrConfirmActions } = this.props;
+        const { DesktopAppProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
             confirmTitle: '데스크톱앱 수정',
             confirmMsg: '데스크톱앱을 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmOpen: true,
-            confirmObject: appIdProps.get('editingItem')
+            confirmObject: DesktopAppProps.get('editingItem')
         });
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { appIdProps, appIdActions } = this.props;
-            appIdActions.editappIdData(appIdProps.get('editingItem'), this.props.compId)
+            const { DesktopAppProps, DesktopAppActions } = this.props;
+            DesktopAppActions.editDesktopAppData(DesktopAppProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComp(appIdProps, appIdActions.readDesktopAppListPaged);
+                    refreshDataListInComp(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
                     this.handleClose();
                 });
         }
     }
 
     handleAddWhiteList = () => {
-        const { appIdActions } = this.props;
-        appIdActions.addWhiteList();
+        const { DesktopAppActions } = this.props;
+        DesktopAppActions.addWhiteList();
     }
 
     handleDeleteWhiteList = index => event => {
-        const { appIdActions } = this.props;
-        appIdActions.deleteWhiteList(index);
+        const { DesktopAppActions } = this.props;
+        DesktopAppActions.deleteWhiteList(index);
     }
 
     checkAllow = value => {
@@ -128,23 +128,23 @@ class appIdDialog extends Component {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
 
-        const { appIdProps } = this.props;
-        const dialogType = appIdProps.get('dialogType');
-        const editingItem = (appIdProps.get('editingItem')) ? appIdProps.get('editingItem') : null;
+        const { DesktopAppProps } = this.props;
+        const dialogType = DesktopAppProps.get('dialogType');
+        const editingItem = (DesktopAppProps.get('editingItem')) ? DesktopAppProps.get('editingItem') : null;
 
         let title = "";
-        if(dialogType === appIdDialog.TYPE_ADD) {
+        if(dialogType === DesktopAppDialog.TYPE_ADD) {
             title = "데스크톱앱 등록";
-        } else if(dialogType === appIdDialog.TYPE_VIEW) {
+        } else if(dialogType === DesktopAppDialog.TYPE_VIEW) {
             title = "데스크톱앱 정보";
-        } else if(dialogType === appIdDialog.TYPE_EDIT) {
+        } else if(dialogType === DesktopAppDialog.TYPE_EDIT) {
             title = "데스크톱앱 수정";
         }
 
         return (
             <div>
-            {(appIdProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={appIdProps.get('dialogOpen')}>
+            {(DesktopAppProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={DesktopAppProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <form noValidate autoComplete="off" className={classes.dialogContainer}>
 
@@ -153,16 +153,16 @@ class appIdDialog extends Component {
                         value={(editingItem.get('appNm')) ? editingItem.get('appNm') : ''}
                         onChange={this.handleValueChange("appNm")}
                         className={classes.fullWidth}
-                        disabled={(dialogType === appIdDialog.TYPE_VIEW)}
+                        disabled={(dialogType === DesktopAppDialog.TYPE_VIEW)}
                     />
                     <TextField
                         label="설명"
                         value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === appIdDialog.TYPE_VIEW)}
+                        disabled={(dialogType === DesktopAppDialog.TYPE_VIEW)}
                     />
-                    {(dialogType === appIdDialog.TYPE_VIEW) &&
+                    {(dialogType === DesktopAppDialog.TYPE_VIEW) &&
                         <div>
                             <Grid container spacing={24} className={classes.grNormalTableRow}>
                                 <Grid item xs={12}>
@@ -170,7 +170,7 @@ class appIdDialog extends Component {
                             </Grid>
                         </div>                        
                     }
-                    {(dialogType === appIdDialog.TYPE_EDIT || dialogType === appIdDialog.TYPE_ADD) &&
+                    {(dialogType === DesktopAppDialog.TYPE_EDIT || dialogType === DesktopAppDialog.TYPE_ADD) &&
                         <div className={classes.dialogItemRowBig}>
                             <Grid item xs={12} container 
                                 alignItems="flex-end" direction="row" justify="space-between" 
@@ -247,10 +247,10 @@ class appIdDialog extends Component {
                 </form>
 
                 <DialogActions>
-                {(dialogType === appIdDialog.TYPE_ADD) &&
+                {(dialogType === DesktopAppDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
                 }
-                {(dialogType === appIdDialog.TYPE_EDIT) &&
+                {(dialogType === DesktopAppDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
                 }
                 <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
@@ -265,13 +265,13 @@ class appIdDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    appIdProps: state.appIdModule
+    DesktopAppProps: state.DesktopAppModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    appIdActions: bindActionCreators(appIdActions, dispatch),
+    DesktopAppActions: bindActionCreators(DesktopAppActions, dispatch),
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(appIdDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(DesktopAppDialog));
 

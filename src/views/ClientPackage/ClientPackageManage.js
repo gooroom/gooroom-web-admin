@@ -7,7 +7,10 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import * as GlobalActions from 'modules/GlobalModule';
 import * as ClientPackageActions from 'modules/ClientPackageModule';
+import * as ClientManageActions from 'modules/ClientManageModule';
+import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
@@ -17,9 +20,14 @@ import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrPane from 'containers/GrContent/GrPane';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
+import ClientSelectDialog from "views/Client/ClientSelectDialog";
+import ClientStatusSelect from "views/Options/ClientStatusSelect";
+
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
+import Toolbar from '@material-ui/core/Toolbar';
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -35,8 +43,19 @@ import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search'; 
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
+import InputLabel from "@material-ui/core/InputLabel";
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
+
+import ClientWithPackageComp from 'views/Client/ClientWithPackageComp';
+import ClientManageInform from 'views/Client/ClientManageInform';
+
+import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
+import ClientGroupInform from 'views/ClientGroup/ClientGroupInform';
+import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
+
+import ClientPackageComp from 'views/ClientPackage/ClientPackageComp';
 
 import ClientPackageDialog from './ClientPackageDialog';
 import ClientPackageInform from './ClientPackageInform';
@@ -47,114 +66,223 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 class ClientPackageManage extends Component {
 
-  columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
-    { id: "chPackageId", isOrder: true, numeric: false, disablePadding: true, label: "패키지이름" },
-    { id: "chPackageArch", isOrder: true, numeric: false, disablePadding: true, label: "아키텍쳐" },
-    { id: "chPackageLastVer", isOrder: true, numeric: false, disablePadding: true, label: "버전" }
-  ];
+  // Select Group Item
+  handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
+    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const { ClientManageProps, ClientManageActions } = this.props;
+    const compId = this.props.match.params.grMenuId; 
 
-  componentDidMount() {
-    this.handleSelectBtnClick();
-  }
-
-  // .................................................
-  handleChangePage = (event, page) => {
-    const { ClientPackageActions, ClientPackageProps } = this.props;
-    ClientPackageActions.readClientPackageListPaged(ClientPackageProps, this.props.match.params.grMenuId, {
-      page: page
+    // show client list
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+      groupId: selectedGroupIdArray.join(','), page:0
     });
+
+    // show client group info.
+    if(selectedGroupObj) {
+      ClientManageActions.closeClientManageInform({compId: compId});
+      ClientGroupActions.showClientGroupInform({
+        compId: compId, selectedViewItem: selectedGroupObj,
+      });
+    }
   };
 
-  handleChangeRowsPerPage = event => {
-    const { ClientPackageActions, ClientPackageProps } = this.props;
-    ClientPackageActions.readClientPackageListPaged(ClientPackageProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value, page: 0
-    });
-  };
-
-  handleChangeSort = (event, columnId, currOrderDir) => {
-    const { ClientPackageActions, ClientPackageProps } = this.props;
-    ClientPackageActions.readClientPackageListPaged(ClientPackageProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
-    });
-  };
-
-  handleSelectBtnClick = () => {
-    const { ClientPackageActions, ClientPackageProps } = this.props;
-    ClientPackageActions.readClientPackageListPaged(ClientPackageProps, this.props.match.params.grMenuId);
-  };
-
-  handleRowClick = (event, id) => {
+  // Select Client Item
+  handleClientSelect = (selectedClientObj, selectedClientIdArray) => {
+    const { ClientManageActions, ClientGroupActions } = this.props;
     const { ClientPackageProps, ClientPackageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    // const clickedRowObject = getRowObjectById(ClientPackageProps, compId, id, 'packageId');
-    const newSelectedIds = setSelectedIdsInComp(ClientPackageProps, compId, id);
-
-    ClientPackageActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
-      compId: compId
+    // show package list by client id
+    ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {
+      clientId: selectedClientObj.get('clientId'), page:0
     });
 
-    // if(this.props.onSelect) {
-    //   this.props.onSelect(clickedRowObject, newSelectedIds);
-    // }
 
-    // ClientPackageActions.showInform({
-    //   compId: compId,
-    //   selectedViewItem: clickedRowObject,
+    // ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+    //   groupId: selectedGroupIdArray.join(','), page:0
     // });
+
+    // // show client info.
+    // if(selectedClientObj) {
+    //   ClientGroupActions.closeClientGroupInform({
+    //     compId: compId
+    //   });
+    //   ClientManageActions.showClientManageInform({
+    //     compId: compId,
+    //     selectedViewItem: selectedClientObj,
+    //   });
+    // }
   };
-  // .................................................
 
-  // add
-  // handleCreateButton = () => {
-  //   this.props.ClientPackageActions.showDialog({
-  //     selectedViewItem: Map(),
-  //     dialogType: ClientPackageDialog.TYPE_ADD
-  //   });
-  // }
+  // GROUP COMPONENT --------------------------------
 
-  // edit
-  // handleEditClick = (event, id) => {
-  //   event.stopPropagation();
-  //   const { ClientPackageProps, ClientPackageActions } = this.props;
-  //   const selectedViewItem = getRowObjectById(ClientPackageProps, this.props.match.params.grMenuId, id, 'packageId');
-  //   ClientPackageActions.showDialog({
-  //     selectedViewItem: selectedViewItem,
-  //     dialogType: ClientPackageDialog.TYPE_EDIT
-  //   });
-  // };
-
-  handleSelectAllClick = (event, checked) => {
-    const { ClientPackageActions, ClientPackageProps, compId } = this.props;
-    const newSelectedIds = setAllSelectedIdsInComp(ClientPackageProps, compId, 'packageId', checked);
-    ClientPackageActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
-      compId: compId
+  // create group
+  handleCreateButtonForClientGroup = () => {
+    this.props.ClientGroupActions.showDialog({
+      selectedViewItem: Map(),
+      dialogType: ClientGroupDialog.TYPE_ADD
     });
-  };
-
-  isSelected = id => {
-    const { ClientPackageProps } = this.props;
-    const selectedIds = getDataObjectVariableInComp(ClientPackageProps, this.props.match.params.grMenuId, 'selectedIds');
-
-    if(selectedIds) {
-      return selectedIds.includes(id);
-    } else {
-      return false;
-    }    
   }
-  // .................................................
-  handleKeywordChange = name => event => {
-    this.props.ClientPackageActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
-      compId: this.props.match.params.grMenuId
+
+  isClientGroupRemovable = () => {
+    const selectedIds = getDataObjectVariableInComp(this.props.ClientGroupProps, this.props.match.params.grMenuId, 'selectedIds');
+    return !(selectedIds && selectedIds.size > 0);
+  }
+
+  // delete group
+  handleDeleteButtonForClientGroup = () => {
+    const selectedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    if(selectedIds && selectedIds.size > 0) {
+      this.props.GrConfirmActions.showConfirm({
+        confirmTitle: '단말그룹 삭제',
+        confirmMsg: '단말그룹(' + selectedIds.size + '개)을 삭제하시겠습니까?',
+        handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
+        confirmOpen: true,
+        confirmObject: null
+      });
+    }
+  }
+  handleDeleteButtonForClientGroupConfirmResult = (confirmValue, confirmObject) => {
+    if(confirmValue) {
+      const { ClientGroupProps, ClientGroupActions } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      const selectedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
+      if(selectedIds && selectedIds.size > 0) {
+        ClientGroupActions.deleteSelectedClientGroupData({
+          grpIds: selectedIds.toArray()
+        }).then(() => {
+          ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
+        });
+      }
+    }
+  }
+
+  // CLIENT COMPONENT --------------------------------
+
+  // add client in group
+  handleAddClientInGroup = (event) => {
+    const selectedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    if(selectedIds && selectedIds.size > 0) {
+      if(selectedIds.size > 1) {
+        this.props.GlobalActions.showElementMsg(event.currentTarget, '단말을 추가할 그룹을 하나만 선택하세요.');
+      } else {
+        this.setState({
+          isOpenClientSelect: true
+        });
+      }
+    } else {
+      this.props.GlobalActions.showElementMsg(event.currentTarget, '단말을 추가할 그룹을 선택하세요.');
+    }
+  }
+
+  isClientRemovable = () => {
+    const selectedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    // const selectedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
+    return !(selectedIds && selectedIds.size > 0);
+  }
+
+  // add client in group - save
+  handleClientSelectSave = (selectedClients) => {
+    const { ClientGroupProps, GrConfirmActions } = this.props;
+    const selectedGroupIds = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    GrConfirmActions.showConfirm({
+        confirmTitle: '그룹에 단말 추가',
+        confirmMsg: '단말을 그룹 추가하시겠습니까?',
+        handleConfirmResult: this.handleClientSelectSaveConfirmResult,
+        confirmOpen: true,
+        confirmObject: {
+          selectedGroupId: selectedGroupIds.get(0),
+          selectedClients: selectedClients
+        }
     });
+  }
+  handleClientSelectSaveConfirmResult = (confirmValue, paramObject) => {
+    if(confirmValue) {
+      const { ClientGroupActions, ClientGroupProps } = this.props;
+      const { ClientManageActions, ClientManageProps } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      ClientGroupActions.addClientsInGroup({
+          groupId: paramObject.selectedGroupId,
+          clients: paramObject.selectedClients.join(',')
+      }).then((res) => {
+        // show clients list in group
+        ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+          groupId: paramObject.selectedGroupId, page:0
+        });
+        ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
+        // close dialog
+        this.setState({ isOpenClientSelect: false });
+      });
+    }
+  }
+
+  // remove client in group - save
+  handleRemoveClientInGroup = (event) => {
+    const { ClientManageProps, GrConfirmActions } = this.props;
+    const selectedClients = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    if(selectedClients && selectedClients !== '') {
+      GrConfirmActions.showConfirm({
+        confirmTitle: '그룹에서 단말 삭제',
+        confirmMsg: '선택하신 단말을 그룹에서 삭제하시겠습니까?',
+        handleConfirmResult: this.handleRemoveClientInGroupConfirmResult,
+        confirmOpen: true,
+        confirmObject: {
+          selectedClients: selectedClients
+        }
+      });
+    } else {
+      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 선택하세요.');
+    }
+  }
+  handleRemoveClientInGroupConfirmResult = (confirmValue, paramObject) => {
+    if(confirmValue) {
+      const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      ClientGroupActions.removeClientsInGroup({
+        clients: paramObject.selectedClients.join(',')
+      }).then(() => {
+        // show user list in dept.
+        ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+          page:0
+        });
+        // close dialog
+        this.setState({ isOpenClientSelect: false });
+      });
+    }
+  };
+
+  // delete client
+  handleDeleteClient = () => {
+    const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
+    const selectedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    if(selectedClientIds && selectedClientIds.size > 0) {
+      this.props.GrConfirmActions.showConfirm({
+        confirmTitle: '단말 삭제',
+        confirmMsg: '단말(' + selectedClientIds.size + '개)을 삭제하시겠습니까?',
+        handleConfirmResult: this.handleDeleteClientConfirmResult,
+        confirmOpen: true,
+        confirmObject: {selectedClientIds: selectedClientIds}
+      });
+    }
+  }
+  handleDeleteClientConfirmResult = (confirmValue, confirmObject) => {
+    if(confirmValue) {
+      const { ClientManageProps, ClientManageActions } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      ClientManageActions.deleteClientData({
+        clientIds: confirmObject.selectedClientIds.join(',')
+      }).then(() => {
+        ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+          page:0
+        });
+      });
+    }
+  }
+
+  handleClientSelectClose = () => {
+    this.setState({
+      isOpenClientSelect: false
+    })
   }
 
   render() {
@@ -170,99 +298,80 @@ class ClientPackageManage extends Component {
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
+          <Grid container spacing={24}>
 
-          {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-              <Grid item xs={6} >
-                <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={6} >
-                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />조회
+            <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #abcdef'}}>
+
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+                <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
+                  <AddIcon />등록
                 </Button>
-              </Grid>
+                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
+                  <RemoveIcon />삭제
+                </Button>
+              </Toolbar>
+
+              <ClientGroupComp compId={compId} onSelectAll={this.handleClientGroupSelectAll} onSelect={this.handleClientGroupSelect} />
             </Grid>
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
-            {/*
-              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-                <AddIcon />등록
-              </Button>
-            */}
+
+            <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #abcdef'}}>
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+                <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
+                  <Grid item xs={12} sm={6} lg={6} >
+                    <Button size="small" variant="contained" color="primary" onClick={this.handleAddClientInGroup} >
+                      <AddIcon />추가
+                    </Button>
+                    <Button size="small" variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}} >
+                      <RemoveIcon />제거
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={6} lg={6} >
+                    <Button size="small" variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}}>
+                      <AddIcon />삭제
+                    </Button>
+
+                    <Button size="small" variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}}>
+                      <AddIcon />삭제
+                    </Button>
+
+                    <Button size="small" variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}}>
+                      <AddIcon />삭제
+                    </Button>
+
+                  </Grid>
+                </Grid>
+              </Toolbar>
+
+              <ClientWithPackageComp compId={compId} onSelectAll={this.handleClientSelectAll} onSelect={this.handleClientSelect} />
             </Grid>
+
+            <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #abcdef'}}>
+              {/*
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+                <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
+                  <Grid item xs={12} sm={6} lg={6} >
+                    <Button size="small" variant="contained" color="primary" onClick={this.handleAddClientInGroup} >
+                      <AddIcon />추가
+                    </Button>
+                    <Button size="small" variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}} >
+                      <RemoveIcon />제거
+                    </Button>
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} lg={6} >
+                    <Button size="small" variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}}>
+                      <AddIcon />삭제
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Toolbar>
+              */}
+              <ClientPackageComp compId={compId} onSelectAll={this.handleClientPackageSelectAll} onSelect={this.handleClientPackageSelect} />
+            </Grid>
+
           </Grid>
 
-          {/* data area */}
-          {(listObj) && 
-            <div>
-            <Table>
-              <GrCommonTableHead
-                classes={classes}
-                keyId="packageId"
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
-                onRequestSort={this.handleChangeSort}
-                onSelectAllClick={this.handleSelectAllClick}
-                selectedIds={listObj.get('selectedIds')}
-                listData={listObj.get('listData')}
-                columnData={this.columnHeaders}
-              />
-              <TableBody>
-                {listObj.get('listData').map(n => {
-                  const isSelected = this.isSelected(n.get('packageId'));
-                  return (
-                    <TableRow
-                      className={classes.grNormalTableRow}
-                      hover
-                      onClick={event => this.handleRowClick(event, n.get('packageId'))}
-                      role="checkbox"
-                      aria-checked={isSelected}
-                      key={n.get('packageId')}
-                      selected={isSelected}
-                    >
-                      <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                        <Checkbox checked={isSelected} className={classes.grObjInCell} />
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('packageId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('packageArch')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('packageLastVer')}</TableCell>
-                    </TableRow>
-                  );
-                })}
-
-                {emptyRows > 0 && (
-                <TableRow >
-                  <TableCell
-                    colSpan={this.columnHeaders.length + 1}
-                    className={classes.grSmallAndClickCell}
-                  />
-                </TableRow>
-                )}
-              </TableBody>
-            </Table>
-            <TablePagination
-              component='div'
-              count={listObj.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={listObj.getIn(['listParam', 'page'])}
-              backIconButtonProps={{
-                'aria-label': 'Previous Page'
-              }}
-              nextIconButtonProps={{
-                'aria-label': 'Next Page'
-              }}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
-            </div>
-          }
-
         </GrPane>
-        <ClientPackageInform compId={compId} />
-        <ClientPackageDialog compId={compId} />
         <GrConfirm />
       </React.Fragment>
 
@@ -271,11 +380,16 @@ class ClientPackageManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientPackageProps: state.ClientPackageModule
+  ClientPackageProps: state.ClientPackageModule,
+  ClientManageProps: state.ClientManageModule,
+  ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  GlobalActions: bindActionCreators(GlobalActions, dispatch),
   ClientPackageActions: bindActionCreators(ClientPackageActions, dispatch),
+  ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
+  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 
