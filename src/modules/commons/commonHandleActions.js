@@ -58,7 +58,6 @@ export const handleListAction = (state, action) => {
 export const handleListPagedAction = (state, action) => {
     const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
     if(state.getIn(['viewItems', action.compId])) {
-
         return state
             .setIn(['viewItems', action.compId, 'listData'], List(data.map((e) => {return Map(e)})))
             .setIn(['viewItems', action.compId, 'listParam'], action.listParam.merge({
@@ -73,10 +72,10 @@ export const handleListPagedAction = (state, action) => {
         return state.setIn(['viewItems', action.compId], Map({
             'listData': List(data.map((e) => {return Map(e)})),
             'listParam': action.listParam.merge({
-                rowsFiltered: parseInt(recordsFiltered, 10),
-                rowsTotal: parseInt(recordsTotal, 10),
-                page: parseInt(draw, 10),
-                rowsPerPage: parseInt(rowLength, 10),
+                rowsFiltered: parseInt(((recordsFiltered) ? recordsFiltered: 0), 10),
+                rowsTotal: parseInt(((recordsTotal) ? recordsTotal: 0), 10),
+                page: parseInt(((draw) ? draw: 0), 10),
+                rowsPerPage: parseInt(((rowLength) ? rowLength: 0), 10),
                 orderColumn: orderColumn,
                 orderDir: orderDir
             })
