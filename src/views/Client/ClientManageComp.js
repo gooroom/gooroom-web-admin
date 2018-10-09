@@ -43,14 +43,6 @@ class ClientManageComp extends Component {
     { id: 'regDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' }
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
-
   componentDidMount() {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
     ClientManageActions.readClientListPaged(ClientManageProps, compId);
@@ -159,28 +151,17 @@ class ClientManageComp extends Component {
                     onClick={event => this.handleRowClick(event, n.get('clientId'))}
                     role="checkbox"
                     aria-checked={isSelected}
-                    tabIndex={-1}
                     key={n.get('clientId')}
                     selected={isSelected}
                   >
                     <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                       <Checkbox checked={isSelected} className={classes.grObjInCell} />
                     </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.get('clientStatus')}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.get('clientName')}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.get('loginId')}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.get('clientGroupName')}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}
-                    </TableCell>
+                    <TableCell className={classes.grSmallAndClickCell}>{n.get('clientStatus')}</TableCell>
+                    <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
+                    <TableCell className={classes.grSmallAndClickCell}>{n.get('loginId')}</TableCell>
+                    <TableCell className={classes.grSmallAndClickCell}>{n.get('clientGroupName')}</TableCell>
+                    <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                   </TableRow>
                 );
               })}
