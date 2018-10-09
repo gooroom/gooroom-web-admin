@@ -155,12 +155,12 @@ class ClientManage extends Component {
     } else {
       return false;
     }    
-  }
+  };
 
 
   handleCreateButton = () => {
     //console.log('handleCreateButton...............');
-  }
+  };
 
 
   handleSelectAllClick = (event, checked) => {
