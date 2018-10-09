@@ -22,7 +22,7 @@ import BrowserRuleManage from "views/Rules/UserConfig/BrowserRuleManage";
 import SecurityRuleManage from "views/Rules/UserConfig/SecurityRuleManage";
 
 import JobManage from "views/Job/JobManage";
-import PackageManage from 'views/Package/PackageManage';
+import PackageManage from 'views/ClientPackage/ClientPackageManage';
 
 import DeptManage from "views/User/DeptManage";
 import UserManage from "views/User/UserManage";
