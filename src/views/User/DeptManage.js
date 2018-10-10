@@ -146,6 +146,10 @@ class DeptManage extends Component {
     }
   }
 
+  isUserAddible = () => {
+    return (this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd'])) ? false : true;
+  }
+
   handleDeleteUserInDept = (event) => {
     const { UserProps, DeptProps, GrConfirmActions } = this.props;
     const selectedDeptCd = DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
@@ -220,6 +224,9 @@ class DeptManage extends Component {
     })
   }
 
+  
+
+
   render() {
     const compId = this.props.match.params.grMenuId;
 
@@ -230,12 +237,12 @@ class DeptManage extends Component {
 
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
 
-            <Grid item xs={12} sm={4} lg={4} >
+            <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForDept} >
+                <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForDept} disabled={this.isUserAddible()} >
                   <AddIcon />등록
                 </Button>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} style={{marginLeft: "10px"}} >
+                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
                   <RemoveIcon />삭제
                 </Button>
               </Toolbar>
@@ -257,22 +264,23 @@ class DeptManage extends Component {
               />
             </Grid>
 
-            <Grid item xs={12} sm={8} lg={8} >
+            <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleAddUserInDept} >
+                <Button size="small" variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserAddible()} >
                   <AddIcon />추가
                 </Button>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteUserInDept} style={{marginLeft: "10px"}} >
+                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
                   <RemoveIcon />삭제
                 </Button>
               </Toolbar>
               <UserListComp name='UserListComp' compId={compId} deptCd='' />
             </Grid>
 
-          </Grid>
+            <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef'}} >
+              <DeptRuleInform compId={compId} />
+            </Grid>
 
-          <DeptRuleInform compId={compId} />
-  
+          </Grid>
         </GrPane>
         <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
         <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectClose} />

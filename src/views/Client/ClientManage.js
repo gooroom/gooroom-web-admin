@@ -17,6 +17,7 @@ import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
 
 import Grid from '@material-ui/core/Grid';
 
@@ -121,10 +122,10 @@ class ClientManage extends Component {
     ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId);
   };
 
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.ClientManageActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   };
@@ -209,12 +210,12 @@ class ClientManage extends Component {
 
               <Grid item xs={3} >
                 <FormControl fullWidth={true}>
-                <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
+                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
 
               <Grid item xs={3} >
-                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                   <Search />조회
                 </Button>
               </Grid>

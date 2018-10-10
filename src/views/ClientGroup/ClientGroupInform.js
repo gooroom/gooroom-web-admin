@@ -58,7 +58,7 @@ class ClientGroupInform extends Component {
     }
 
     return (
-      <div style={{marginTop: 10}} >
+      <div>
       {(informOpen && selectedViewItem) &&
         <Card style={{boxShadow:this.props.compShadow}} >
           <CardHeader

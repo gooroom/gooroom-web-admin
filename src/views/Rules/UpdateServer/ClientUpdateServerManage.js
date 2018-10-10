@@ -18,6 +18,7 @@ import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
 
 import ClientUpdateServerManageDialog from './ClientUpdateServerManageDialog';
 import ClientUpdateServerManageInform from './ClientUpdateServerManageInform';
@@ -58,6 +59,14 @@ class ClientUpdateServerManage extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+    }
+  }
+
   componentDidMount() {
     this.handleSelectBtnClick();
   }
@@ -87,14 +96,6 @@ class ClientUpdateServerManage extends Component {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
     ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId);
   };
-
-  handleKeywordChange = name => event => {
-    this.props.ClientUpdateServerActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
-      compId: this.props.match.params.grMenuId
-    });
-  }
 
   handleRowClick = (event, id) => {
     const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
@@ -160,6 +161,14 @@ class ClientUpdateServerManage extends Component {
     }
   };
 
+  handleKeywordChange = (name, value) => {
+    this.props.ClientUpdateServerActions.changeListParamData({
+      name: name, 
+      value: value,
+      compId: this.props.match.params.grMenuId
+    });
+  }
+
   // ..............................................
   render() {
     const { classes } = this.props;
@@ -179,12 +188,12 @@ class ClientUpdateServerManage extends Component {
 
               <Grid item xs={6} >
                 <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} />
+                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
 
               <Grid item xs={6} >
-                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                   <Search />조회
                 </Button>
               </Grid>
@@ -212,7 +221,7 @@ class ClientUpdateServerManage extends Component {
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData').map(n => {
+                {listObj.get('listData') && listObj.get('listData').map(n => {
                   return (
                     <TableRow
                       className={classes.grNormalTableRow}

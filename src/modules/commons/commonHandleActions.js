@@ -57,8 +57,9 @@ export const handleListAction = (state, action) => {
 
 export const handleListPagedAction = (state, action) => {
     const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
+    let newState = null;
     if(state.getIn(['viewItems', action.compId])) {
-        return state
+        newState = state
             .setIn(['viewItems', action.compId, 'listData'], List(data.map((e) => {return Map(e)})))
             .setIn(['viewItems', action.compId, 'listParam'], action.listParam.merge({
                 rowsFiltered: parseInt(recordsFiltered, 10),
@@ -69,7 +70,7 @@ export const handleListPagedAction = (state, action) => {
                 orderDir: orderDir
             }));
     } else {
-        return state.setIn(['viewItems', action.compId], Map({
+        newState = state.setIn(['viewItems', action.compId], Map({
             'listData': List(data.map((e) => {return Map(e)})),
             'listParam': action.listParam.merge({
                 rowsFiltered: parseInt(((recordsFiltered) ? recordsFiltered: 0), 10),
@@ -80,6 +81,12 @@ export const handleListPagedAction = (state, action) => {
                 orderDir: orderDir
             })
         }));
+    }
+
+    if(action.isResetSelect) {
+        return newState.deleteIn(['viewItems', action.compId, 'selectedIds']);
+    } else {
+        return newState;
     }
 }
 

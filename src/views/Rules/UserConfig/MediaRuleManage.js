@@ -18,6 +18,7 @@ import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
 
 import MediaRuleDialog from './MediaRuleDialog';
 import MediaRuleInform from './MediaRuleInform';
@@ -97,10 +98,10 @@ class MediaRuleManage extends Component {
     MediaRuleActions.readMediaRuleListPaged(MediaRuleProps, this.props.match.params.grMenuId);
   };
   
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.MediaRuleActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   }
@@ -186,12 +187,12 @@ class MediaRuleManage extends Component {
 
               <Grid item xs={6}>
                 <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} margin='dense' />
+                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
 
               <Grid item xs={6}>
-                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                   <Search />조회
                 </Button>
               </Grid>

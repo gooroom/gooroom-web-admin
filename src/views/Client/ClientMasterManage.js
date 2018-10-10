@@ -67,7 +67,7 @@ class ClientMasterManage extends Component {
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       groupId: selectedGroupIdArray.join(','), page:0
-    });
+    }, true);
 
     // show client group info.
     if(selectedGroupObj) {
@@ -142,15 +142,11 @@ class ClientMasterManage extends Component {
 
   // add client in group
   handleAddClientInGroup = (event) => {
-    const selectedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
-    if(selectedIds && selectedIds.size > 0) {
-      if(selectedIds.size > 1) {
-        this.props.GlobalActions.showElementMsg(event.currentTarget, '단말을 추가할 그룹을 하나만 선택하세요.');
-      } else {
-        this.setState({
-          isOpenClientSelect: true
-        });
-      }
+    const selectedGroupItem = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedViewItem']);
+    if(selectedGroupItem) {
+      this.setState({
+        isOpenClientSelect: true
+      });
     } else {
       this.props.GlobalActions.showElementMsg(event.currentTarget, '단말을 추가할 그룹을 선택하세요.');
     }
@@ -165,14 +161,14 @@ class ClientMasterManage extends Component {
   // add client in group - save
   handleClientSelectSave = (selectedClients) => {
     const { ClientGroupProps, GrConfirmActions } = this.props;
-    const selectedGroupIds = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    const selectedGroupItem = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedViewItem']);
     GrConfirmActions.showConfirm({
         confirmTitle: '그룹에 단말 추가',
         confirmMsg: '단말을 그룹 추가하시겠습니까?',
         handleConfirmResult: this.handleClientSelectSaveConfirmResult,
         confirmOpen: true,
         confirmObject: {
-          selectedGroupId: selectedGroupIds.get(0),
+          selectedGroupId: selectedGroupItem.get('grpId'),
           selectedClients: selectedClients
         }
     });
@@ -189,7 +185,7 @@ class ClientMasterManage extends Component {
         // show clients list in group
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
           groupId: paramObject.selectedGroupId, page:0
-        });
+        }, true);
         ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
         // close dialog
         this.setState({ isOpenClientSelect: false });
@@ -225,7 +221,7 @@ class ClientMasterManage extends Component {
         // show user list in dept.
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
           page:0
-        });
+        }, true);
         // close dialog
         this.setState({ isOpenClientSelect: false });
       });
@@ -255,17 +251,9 @@ class ClientMasterManage extends Component {
       }).then(() => {
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
           page:0
-        });
+        }, true);
       });
     }
-  }
-
-  handleChangeClientStatusSelect = (event, property) => {
-    const { ClientManageProps, ClientManageActions } = this.props;
-    const compId = this.props.match.params.grMenuId;
-    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      clientType: property, page:0
-    });
   }
 
   handleClientSelectClose = () => {
@@ -288,7 +276,7 @@ class ClientMasterManage extends Component {
           
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             
-            <Grid item xs={12} sm={4} lg={4} >
+            <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}}>
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
                   <AddIcon />등록
@@ -303,7 +291,7 @@ class ClientMasterManage extends Component {
               />
             </Grid>
 
-            <Grid item xs={12} sm={8} lg={8} >
+            <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
@@ -316,8 +304,6 @@ class ClientMasterManage extends Component {
                   </Grid>
 
                   <Grid item xs={12} sm={6} lg={6} >
-                    <InputLabel htmlFor="client-status">상태</InputLabel>
-                    <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
                     <Button size="small" variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}}>
                       <AddIcon />삭제
                     </Button>
@@ -328,12 +314,13 @@ class ClientMasterManage extends Component {
                 onSelectAll={this.handleClientSelectAll}
                 onSelect={this.handleClientSelect}
               />
-            
+            </Grid>
+
+            <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef', padding: 0}}>
+              <ClientGroupInform compId={compId} onSelect={this.handleClientGroupSelect} />
+              <ClientManageInform compId={compId} onSelect={this.handleClientSelect}  />
             </Grid>
           </Grid>
-          
-          <ClientGroupInform compId={compId} onSelect={this.handleClientGroupSelect} />
-          <ClientManageInform compId={compId} onSelect={this.handleClientSelect}  />
           <ClientGroupDialog compId={compId} />
           <ClientSelectDialog isOpen={this.state.isOpenClientSelect} onSaveHandle={this.handleClientSelectSave} onClose={this.handleClientSelectClose} />
           <GrConfirm />

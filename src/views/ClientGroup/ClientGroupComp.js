@@ -24,6 +24,8 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
+
 import GrConfirm from 'components/GrComponents/GrConfirm';
 import ClientGroupDialog from './ClientGroupDialog';
 
@@ -100,12 +102,8 @@ class ClientGroupComp extends Component {
     });
   };
 
-  handleRowClick = (event, id) => {
-    const { ClientGroupProps, compId } = this.props;
-    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
-
-    const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+  handleSelectGroup = (event, id) => {
+    const { ClientGroupProps, ClientGroupActions, compId } = this.props;
     const newSelectedIds = setSelectedIdsInComp(ClientGroupProps, compId, id);
 
     ClientGroupActions.changeCompVariable({
@@ -113,6 +111,18 @@ class ClientGroupComp extends Component {
       value: newSelectedIds,
       compId: compId
     });
+
+    this.handleRowClick(event, id);
+  }
+
+  handleRowClick = (event, id) => {
+    event.stopPropagation();
+    const { ClientGroupProps, compId } = this.props;
+    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
+
+    const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+    const newSelectedIds = setSelectedIdsInComp(ClientGroupProps, compId, id);
 
     if(this.props.onSelect) {
       this.props.onSelect(clickedRowObject, newSelectedIds);
@@ -163,10 +173,10 @@ class ClientGroupComp extends Component {
   }
 
   // .................................................
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.ClientGroupActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   }
@@ -191,13 +201,13 @@ class ClientGroupComp extends Component {
       <div>
         {/* data option area */}
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
-          <Grid item xs={4} >
+          <Grid item xs={6} >
             <FormControl fullWidth={true}>
-              <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
+              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
             </FormControl>
           </Grid>
-          <Grid item xs={4} >
-            <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+          <Grid item xs={6} >
+            <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
               <Search />조회
             </Button>
           </Grid>
@@ -230,7 +240,7 @@ class ClientGroupComp extends Component {
                 selected={isSelected}
               >
                 <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                  <Checkbox checked={isSelected} className={classes.grObjInCell} />
+                  <Checkbox checked={isSelected} className={classes.grObjInCell} onClick={event => this.handleSelectGroup(event, n.get('grpId'))} />
                 </TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>
                   {n.get('grpNm')}

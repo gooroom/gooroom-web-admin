@@ -10,16 +10,24 @@ class KeywordOption extends Component {
     super(props);
 
     this.state = {
+      paramName: (props.paramName) ? props.paramName : "keyword",
+      label: (props.label) ? props.label : "검색어"
     };
   }
   
   handleKeywordChange = name => event => {
-    this.props.handleKeywordChange('keyword', event.target.value);
+    this.props.handleKeywordChange(this.state.paramName, event.target.value);
   }
+
+  handleKeyPress = name => event => {
+    if(event.keyCode == 13 && this.props.handleSubmit) {
+      this.props.handleSubmit();
+    }
+  };
 
   render() {
     return (
-      <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange()} />
+      <TextField label={this.state.label} onChange={this.handleKeywordChange()} onKeyDown={this.handleKeyPress()} />
     );
   }
 }
