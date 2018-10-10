@@ -151,36 +151,27 @@ class ClientPackageComp extends Component {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
 
-    const aa = ClientPackageProps.getIn(['viewItems', compId, 'listParam', 'clientId']);
+    const selectedClientId = ClientPackageProps.getIn(['viewItems', compId, 'listParam', 'clientId']);
 
     return (
 
       <div>
         {/* data option area */}
-        <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-          <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-            <Grid item xs={4} >
-              <FormControl fullWidth={true}>
-                <TextField label="단말아이디" value={(aa) ? aa : ""} />
-              </FormControl>
-            </Grid>
-            <Grid item xs={4} >
-              <FormControl fullWidth={true}>
-                <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
-              </FormControl>
-            </Grid>
-            <Grid item xs={4} >
-              <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                <Search />조회
-              </Button>
-            </Grid>
+        <Grid item xs={12} spacing={16} container alignItems="flex-end" direction="row" justify="space-between" >
+          <Grid item xs={4} >
+            <FormControl fullWidth={true}>
+              <TextField label="단말아이디" value={(selectedClientId) ? selectedClientId : ""} disabled={true} />
+            </FormControl>
           </Grid>
-          <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
-          {/*
-            <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-              <AddIcon />등록
+          <Grid item xs={4} >
+            <FormControl fullWidth={true}>
+              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={4} >
+            <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+              <Search />조회
             </Button>
-          */}
           </Grid>
         </Grid>
 

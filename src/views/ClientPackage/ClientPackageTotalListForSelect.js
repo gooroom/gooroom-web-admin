@@ -4,25 +4,7 @@ import { Map, List, fromJS } from 'immutable';
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import * as UserActions from 'modules/UserModule';
-import * as BrowserRuleActions from 'modules/BrowserRuleModule';
-import * as MediaRuleActions from 'modules/MediaRuleModule';
-import * as SecurityRuleActions from 'modules/SecurityRuleModule';
-
-import * as GrConfirmActions from 'modules/GrConfirmModule';
-
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
-
-import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
-
-import GrPageHeader from "containers/GrContent/GrPageHeader";
-import GrConfirm from 'components/GrComponents/GrConfirm';
-
-import UserDialog from "views/User/UserDialog";
-import UserInform from "views/User/UserInform";
-import GrPane from "containers/GrContent/GrPane";
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
@@ -41,9 +23,6 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
-import AddIcon from "@material-ui/icons/Add";
-import BuildIcon from '@material-ui/icons/Build';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -196,7 +175,7 @@ class ClientPackageTotalListForSelect extends Component {
     return (
       <div>
         {/* data option area */}
-        <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
+        <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
               <Grid item xs={6}>
                 <FormControl fullWidth={true}>
                   <KeywordOption handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
