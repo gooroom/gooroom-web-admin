@@ -28,6 +28,7 @@ import SecurityRuleModule from './SecurityRuleModule';
 import ClientMasterManageModule from './ClientMasterManageModule';
 
 import DesktopAppModule from './DesktopAppModule';
+import AdminUserModule from './AdminUserModule';
 
 import AdminModule from './AdminModule';
 
@@ -62,6 +63,7 @@ export default combineReducers({
     CommonOptionModule,
 
     DesktopAppModule,
+    AdminUserModule,
 
     AdminModule
 
