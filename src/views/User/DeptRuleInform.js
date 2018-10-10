@@ -41,7 +41,7 @@ class DeptRuleInform extends Component {
     const selectedDept = DeptProps.getIn(['viewItems', compId]);
 
     return (
-      <div style={{marginTop: 10}} >
+      <div >
       {informOpen &&
         <Card>
           <CardHeader

@@ -18,6 +18,7 @@ import GrConfirm from 'components/GrComponents/GrConfirm';
 import GrPane from 'containers/GrContent/GrPane';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
 
 // option components
 import JobStatusSelect from 'views/Options/JobStatusSelect';
@@ -101,10 +102,10 @@ class JobManage extends Component {
   };
 
   // .................................................
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.JobManageActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   }
@@ -143,11 +144,11 @@ class JobManage extends Component {
               </Grid>
               <Grid item xs={4} >
                 <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
+                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
               <Grid item xs={4} >
-                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                   <Search />조회
                 </Button>
               </Grid>

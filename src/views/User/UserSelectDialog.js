@@ -38,12 +38,12 @@ class UserSelectDialog extends Component {
         };
     }
 
-    handleSelectDept = (node) => {
-        this.setState({
-            selectedDeptCd: node.key, 
-            selectedDeptNm: node.title
-        });
-    }
+    // handleSelectDept = (node) => {
+    //     this.setState({
+    //         selectedDeptCd: node.key, 
+    //         selectedDeptNm: node.title
+    //     });
+    // }
 
     handleSelectUser = (newSelectedIds) => {
         this.setState({
@@ -59,15 +59,13 @@ class UserSelectDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { isOpen, UserProps } = this.props;
-
-        let title = '사용자 선택';
+        const { isOpen } = this.props;
 
         return (
             <div>
             {(isOpen) &&
                 <Dialog open={isOpen} fullWidth={true} >
-                    <DialogTitle>{title}</DialogTitle>
+                    <DialogTitle>{"사용자 선택"}</DialogTitle>
                     <DialogContent>
                         <Grid container spacing={8}>
                             {/* <Grid item xs={12} sm={12} lg={4}>

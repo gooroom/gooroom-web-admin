@@ -15,6 +15,7 @@ import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, se
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
 import ClientStatusSelect from 'views/Options/ClientStatusSelect';
+import KeywordOption from "views/Options/KeywordOption";
 
 import Grid from '@material-ui/core/Grid';
 
@@ -67,27 +68,19 @@ class ClientWithPackageComp extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      rowsPerPage: event.target.value, 
-      page:0
+      rowsPerPage: event.target.value, page:0
     });
   };
 
-  // .................................................
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
   handleSelectAllClick = (event, checked) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    
     const newSelectedIds = setAllSelectedIdsInComp(ClientManageProps, compId, 'clientId', checked);
 
     ClientManageActions.changeCompVariable({
@@ -142,29 +135,12 @@ class ClientWithPackageComp extends Component {
 
   };
 
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.ClientManageActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.compId
     });
-  };
-
-// //   keyPress(e){
-// //     if(e.keyCode == 13){
-// //        console.log('value', e.target.value);
-// //        // put the login here
-// //     }
-// //  }
-
-  handleKeyPress = name => event => {
-    console.log('event.keyCode ::::', event.keyCode);
-    console.log('event.target.value ::::', event.target.value);
-    // this.props.ClientManageActions.changeListParamData({
-    //   name: 'keyword', 
-    //   value: event.target.value,
-    //   compId: this.props.compId
-    // });
   };
 
   handleSelectBtnClick = () => {
@@ -195,11 +171,11 @@ class ClientWithPackageComp extends Component {
           </Grid>
           <Grid item xs={4} >
             <FormControl fullWidth={true}>
-              <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} onKeyDown={this.handleKeyPress} />
+              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
             </FormControl>
           </Grid>
           <Grid item xs={4} >
-            <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+            <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
               <Search />조회
             </Button>
           </Grid>
@@ -221,28 +197,28 @@ class ClientWithPackageComp extends Component {
           />
           <TableBody>
             {listObj.get('listData').map(n => {
-                const isSelected = this.isSelected(n.get('clientId'));
-                return (
-                  <TableRow
-                    className={classes.grNormalTableRow}
-                    hover
-                    onClick={event => this.handleRowClick(event, n.get('clientId'))}
-                    role="checkbox"
-                    aria-checked={isSelected}
-                    key={n.get('clientId')}
-                    selected={isSelected}
-                  >
-                    <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                      <Checkbox checked={isSelected} className={classes.grObjInCell} />
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>{n.get('clientGroupName')}</TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>{n.get('totalCnt')}</TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>{n.get('updateTargetCnt')}, {n.get('updateMainOsCnt')}</TableCell>
-                  </TableRow>
-                );
-              })}
+              const isSelected = this.isSelected(n.get('clientId'));
+              return (
+                <TableRow
+                  className={classes.grNormalTableRow}
+                  hover
+                  onClick={event => this.handleRowClick(event, n.get('clientId'))}
+                  role="checkbox"
+                  aria-checked={isSelected}
+                  key={n.get('clientId')}
+                  selected={isSelected}
+                >
+                  <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
+                    <Checkbox checked={isSelected} className={classes.grObjInCell} />
+                  </TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('clientGroupName')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('totalCnt')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{Number(n.get('updateTargetCnt')) + Number(n.get('updateMainOsCnt'))}</TableCell>
+                </TableRow>
+              );
+            })}
 
             {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
               <TableRow key={e}>

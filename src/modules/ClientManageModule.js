@@ -64,7 +64,7 @@ export const closeClientManageInform = (param) => dispatch => {
 };
 
 // ...
-export const readClientListPaged = (module, compId, extParam) => dispatch => {
+export const readClientListPaged = (module, compId, extParam, isResetSelect=false) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
@@ -85,6 +85,7 @@ export const readClientListPaged = (module, compId, extParam) => dispatch => {
                 type: GET_CLIENT_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
+                isResetSelect: isResetSelect,
                 response: response
             });
         }

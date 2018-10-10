@@ -13,6 +13,8 @@ import * as GrConfirmActions from 'modules/GrConfirmModule';
 import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
+
 import GrConfirm from 'components/GrComponents/GrConfirm';
 import ClientPackageDialog from './ClientPackageDialog';
 
@@ -30,6 +32,8 @@ import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Checkbox from "@material-ui/core/Checkbox";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
 
 import Search from '@material-ui/icons/Search'; 
 
@@ -115,7 +119,7 @@ class ClientPackageComp extends Component {
     if(this.props.onSelect) {
       this.props.onSelect(clickedRowObject, newSelectedIds);
     }
-  };
+  };  
 
   isSelected = id => {
     const { ClientPackageProps, compId } = this.props;
@@ -129,10 +133,10 @@ class ClientPackageComp extends Component {
   }
 
   // .................................................
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.ClientPackageActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.compId
     });
   }
@@ -140,8 +144,14 @@ class ClientPackageComp extends Component {
   render() {
     const { classes } = this.props;
     const { ClientPackageProps, compId } = this.props;
-    const emptyRows = 0;// = ClientPackageProps.listParam.rowsPerPage - ClientPackageProps.listData.length;
+
     const listObj = ClientPackageProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
+
+    const aa = ClientPackageProps.getIn(['viewItems', compId, 'listParam', 'clientId']);
 
     return (
 
@@ -149,13 +159,18 @@ class ClientPackageComp extends Component {
         {/* data option area */}
         <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-            <Grid item xs={6} >
+            <Grid item xs={4} >
               <FormControl fullWidth={true}>
-                <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
+                <TextField label="단말아이디" value={(aa) ? aa : ""} />
               </FormControl>
             </Grid>
-            <Grid item xs={6} >
-              <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+            <Grid item xs={4} >
+              <FormControl fullWidth={true}>
+                <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+              </FormControl>
+            </Grid>
+            <Grid item xs={4} >
+              <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                 <Search />조회
               </Button>
             </Grid>
@@ -204,14 +219,14 @@ class ClientPackageComp extends Component {
               </TableRow>
             );
           })}
-
-          {emptyRows > 0 && (
-            <TableRow >
-              <TableCell colSpan={this.columnHeaders.length + 1}
+          {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+            <TableRow key={e}>
+              <TableCell
+                colSpan={this.columnHeaders.length + 1}
                 className={classes.grSmallAndClickCell}
               />
             </TableRow>
-          )}
+          )}))}
           </TableBody>
         </Table>
         }
