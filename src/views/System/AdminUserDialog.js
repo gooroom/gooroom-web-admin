@@ -4,7 +4,7 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientRegKeyActions from 'modules/ClientRegKeyModule';
+import * as AdminUserActions from 'modules/AdminUserModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
@@ -17,9 +17,14 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import FormLabel from '@material-ui/core/FormLabel';
-import Grid from '@material-ui/core/Grid';
-import Add from "@material-ui/icons/Add";
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -35,156 +40,137 @@ class AdminUserDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.ClientRegKeyActions.closeDialog(this.props.compId);
+        this.props.AdminUserActions.closeDialog(this.props.compId);
     }
 
     handleValueChange = name => event => {
-        this.props.ClientRegKeyActions.setEditingItemValue({
+        this.props.AdminUserActions.setEditingItemValue({
             name: name,
             value: event.target.value
         });
     }
 
+    // 생성
     handleCreateData = (event) => {
-        const { ClientRegKeyProps, GrConfirmActions } = this.props;
+        const { AdminUserProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
-            confirmTitle: '단말등록키 등록',
-            confirmMsg: '단말등록키를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateDataConfirmResult,
+            confirmTitle: '관리자계정 등록',
+            confirmMsg: '관리자계정을 등록하시겠습니까?',
+            handleConfirmResult: this.handleCreateConfirmResult,
             confirmOpen: true,
-            confirmObject: ClientRegKeyProps.get('editingItem')
+            confirmObject: AdminUserProps.get('editingItem')
         });
     }
-    handleCreateDataConfirmResult = (confirmValue, paramObject) => {
+    handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { ClientRegKeyProps, ClientRegKeyActions, compId } = this.props;
-            ClientRegKeyActions.createClientRegKeyData({
-                comment: paramObject.get('comment'),
-                ipRange: paramObject.get('ipRange'),
-                regKeyNo: paramObject.get('regKeyNo'),
-                validDate: paramObject.get('validDate'),
-                expireDate: paramObject.get('expireDate')
+            const { AdminUserProps, AdminUserActions, compId } = this.props;
+            AdminUserActions.createAdminUserData({
+                adminId: paramObject.get('adminId'),
+                adminPw: paramObject.get('adminPw'),
+                adminNm: paramObject.get('adminNm')
             }).then((res) => {
-                ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, compId);
+                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
                 this.handleClose();
             });
         }
     }
 
+    // 수정
     handleEditData = (event) => {
-        const { ClientRegKeyProps, GrConfirmActions } = this.props;
+        const { AdminUserProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
-            confirmTitle: '단말등록키 수정',
-            confirmMsg: '단말등록키를 수정하시겠습니까?',
+            confirmTitle: '관리자계정 수정',
+            confirmMsg: '관리자계정을 수정하시겠습니까?',
             confirmOpen: true,
             handleConfirmResult: this.handleEditDataConfirmResult,
-            confirmObject: ClientRegKeyProps.get('editingItem')
+            confirmObject: AdminUserProps.get('editingItem')
         });
     }
     handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { ClientRegKeyProps, ClientRegKeyActions, compId } = this.props;
-            ClientRegKeyActions.editClientRegKeyData({
-                comment: paramObject.get('comment'),
-                ipRange: paramObject.get('ipRange'),
-                regKeyNo: paramObject.get('regKeyNo'),
-                validDate: paramObject.get('validDate'),
-                expireDate: paramObject.get('expireDate')
+            const { AdminUserProps, AdminUserActions, compId } = this.props;
+            AdminUserActions.editAdminUserData({
+                adminId: paramObject.get('adminId'),
+                adminPw: paramObject.get('adminPw'),
+                adminNm: paramObject.get('adminNm')
             }).then((res) => {
-                ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, compId);
+                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
                 this.handleClose();
             });
         }
     }
 
-    handleKeyGenerate = () => {
-        this.props.ClientRegKeyActions.generateClientRegkey();
-    }
+    handleMouseDownPassword = event => {
+        event.preventDefault();
+    };
+
+    handleClickShowPassword = () => {
+        const { AdminUserProps, AdminUserActions } = this.props;
+        const editingItem = AdminUserProps.get('editingItem');
+        AdminUserActions.setEditingItemValue({
+            name: 'showPassword',
+            value: !editingItem.get('showPassword')
+        });
+    };
 
     render() {
         const { classes } = this.props;
-        const { ClientRegKeyProps, compId } = this.props;
-        const dialogType = ClientRegKeyProps.get('dialogType');
-        const editingItem = (ClientRegKeyProps.get('editingItem')) ? ClientRegKeyProps.get('editingItem') : null;
+        const { AdminUserProps, compId } = this.props;
+
+        const dialogType = AdminUserProps.get('dialogType');
+        const editingItem = (AdminUserProps.get('editingItem')) ? AdminUserProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === AdminUserDialog.TYPE_ADD) {
-            title = "단말 등록키 등록";
+            title = "관리자계정 등록";
         } else if(dialogType === AdminUserDialog.TYPE_VIEW) {
-            title = "단말 등록키 정보";
+            title = "관리자계정 정보";
         } else if(dialogType === AdminUserDialog.TYPE_EDIT) {
-            title = "단말 등록키 수정";
+            title = "관리자계정 수정";
         }
 
         return (
             <div>
-            {(ClientRegKeyProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={ClientRegKeyProps.get('dialogOpen')}>
+            {(AdminUserProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={AdminUserProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
-                
-                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
-                    <Grid container spacing={16}>
-                        <Grid item xs={8}>
-                            <TextField label="등록키"
-                                value={(editingItem.get('regKeyNo')) ? editingItem.get('regKeyNo'): ''}
-                                onChange={this.handleValueChange("regKeyNo")}
-                                className={classes.fullWidth} disabled
-                            />
-                        </Grid>
-                        <Grid item xs={4} className={classes.createButton}>
-                        {(dialogType === AdminUserDialog.TYPE_ADD) && 
-                          <Button size="small" variant="contained" color="secondary"
-                            onClick={() => { this.handleKeyGenerate(); }}
-                            ><Add />키생성
-                          </Button>
-                        }
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={16}>
-                        <Grid item xs={6}>
-                        <TextField
-                            label="유효날짜" type="date"
-                            value={(editingItem.get('validDate')) ? formatDateToSimple(editingItem.get('validDate'), 'YYYY-MM-DD') : ''}
-                            onChange={this.handleValueChange("validDate")}
-                            className={classes.fullWidth}
-                            InputLabelProps={{ shrink: true, }}
-                            disabled={(dialogType === AdminUserDialog.TYPE_VIEW)}
-                        />
-                        </Grid>
-                        <Grid item xs={6}>
-                        <TextField
-                            label="인증서만료날짜" type="date"
-                            value={(editingItem.get('expireDate')) ? formatDateToSimple(editingItem.get('expireDate'), 'YYYY-MM-DD') : ''}
-                            onChange={this.handleValueChange("expireDate")}
-                            className={classes.fullWidth}
-                            InputLabelProps={{ shrink: true }}
-                            disabled={(dialogType === AdminUserDialog.TYPE_VIEW)}
-                        />
-                        </Grid>
-                    </Grid>
 
-                    <TextField
-                        label="유효 IP 범위"
-                        value={(editingItem.get('ipRange')) ? editingItem.get('ipRange') : ''}
-                        onChange={this.handleValueChange("ipRange")}
-                        className={classes.fullWidth}
-                        disabled={(dialogType === AdminUserDialog.TYPE_VIEW)}
-                    />
-                    <FormLabel disabled={true}>
-                        <i>여러개인 경우 콤마(.) 로 구분, 또는 "-" 로 영역 설정 가능합니다.</i>
-                    </FormLabel><br />
-                    <FormLabel disabled={true}>
-                        <i>(샘플) "127.0.0.1, 169.0.0.1" 또는 "127.0.0.1 - 127.0.0.10"</i>
-                    </FormLabel>
-                    <TextField
-                        label="설명"
-                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                        onChange={this.handleValueChange("comment")}
-                        className={classes.fullWidth}
-                        disabled={(dialogType === AdminUserDialog.TYPE_VIEW)}
-                    />
-                </form>
+                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
+                        <TextField
+                            label="관리자아이디"
+                            value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
+                            onChange={this.handleValueChange("adminId")}
+                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                            disabled={(dialogType == AdminUserDialog.TYPE_EDIT) ? true : false}
+                        />
+                        <TextField
+                            label="관리자이름"
+                            value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
+                            onChange={this.handleValueChange("adminNm")}
+                            className={classes.fullWidth}
+                        />
+                        <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
+                            <InputLabel htmlFor="adornment-password">Password</InputLabel>
+                            <Input
+                                type={(editingItem && editingItem.get('showPassword')) ? 'text' : 'password'}
+                                value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
+                                onChange={this.handleValueChange('adminPw')}
+                                endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                    aria-label="Toggle password visibility"
+                                    onClick={this.handleClickShowPassword}
+                                    onMouseDown={this.handleMouseDownPassword}
+                                    >
+                                    {(editingItem && editingItem.get('showPassword')) ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                                }
+                            />
+                        </FormControl>
+                    </form>
+
                 </DialogContent>
                 <DialogActions>
                     
@@ -205,11 +191,11 @@ class AdminUserDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientRegKeyProps: state.ClientRegKeyModule
+    AdminUserProps: state.AdminUserModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    ClientRegKeyActions: bindActionCreators(ClientRegKeyActions, dispatch),
+    AdminUserActions: bindActionCreators(AdminUserActions, dispatch),
     GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
 });
 

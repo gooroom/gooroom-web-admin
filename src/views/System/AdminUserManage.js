@@ -14,9 +14,12 @@ import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
 import AdminUserDialog from './AdminUserDialog';
+import AdminRecordDialog from './AdminRecordDialog';
+
 import GrPane from 'containers/GrContent/GrPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -28,12 +31,12 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 import BuildIcon from '@material-ui/icons/Build';
 import ListIcon from '@material-ui/icons/List';
 
@@ -42,13 +45,21 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 
 class AdminUserManage extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      openRecordDialog: false,
+      recordAdminId: ''
+    };
+  }
+
   columnHeaders = [
-    { id: 'chAdminNm', isOrder: true, numeric: false, disablePadding: true, label: '단말등록키' },
-    { id: 'chAdminId', isOrder: true, numeric: false, disablePadding: true, label: '유효날짜' },
-    { id: 'chStatus', isOrder: true, numeric: false, disablePadding: true, label: '인증서만료날짜' },
+    { id: 'chAdminNm', isOrder: true, numeric: false, disablePadding: true, label: '이름' },
+    { id: 'chAdminId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
+    { id: 'chStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
     { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '작업이력' }
+    { id: 'chRecord', isOrder: false, numeric: false, disablePadding: true, label: '작업이력' }
   ];
 
   componentDidMount() {
@@ -91,6 +102,22 @@ class AdminUserManage extends Component {
     });
   };
 
+  // show admin records
+  handleShowRecord = (event, id) => {
+    event.stopPropagation();
+    this.setState({
+      openRecordDialog: true,
+      recordAdminId: id
+    });
+  };
+  
+  handleCloseRecord = (event, id) => {
+    this.setState({
+      openRecordDialog: false,
+      recordAdminId: ''
+    });
+  };
+      
   // create dialog
   handleCreateButton = () => {
     this.props.AdminUserActions.showDialog({
@@ -118,8 +145,8 @@ class AdminUserManage extends Component {
     const { AdminUserProps, GrConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
     GrConfirmActions.showConfirm({
-      confirmTitle: '관리자정보 삭제',
-      confirmMsg: '관리자정보(' + selectedViewItem.get('adminId') + ')를 삭제하시겠습니까?',
+      confirmTitle: '관리자계정 삭제',
+      confirmMsg: '관리자계정(' + selectedViewItem.get('adminId') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedViewItem
@@ -164,19 +191,25 @@ class AdminUserManage extends Component {
         <GrPane>
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-              <Grid item xs={6} >
+            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+
+              <Grid item xs={4} >
+                <FormControl fullWidth={true}>
+                  <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
+                </FormControl>
+              </Grid>
+              <Grid item xs={4} >
                 <FormControl fullWidth={true}>
                   <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
-              <Grid item xs={6} >
+              <Grid item xs={4} >
                 <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                   <Search />조회
                 </Button>
               </Grid>
             </Grid>
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
+            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
               <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />등록
               </Button>
@@ -206,7 +239,7 @@ class AdminUserManage extends Component {
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('statusCd')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
                         <Button size="small" color="secondary" 
@@ -216,7 +249,7 @@ class AdminUserManage extends Component {
                         </Button>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
-                          onClick={event => this.handleDeleteClick(event, n.get('regKeyNo'))}>
+                          onClick={event => this.handleDeleteClick(event, n.get('adminId'))}>
                           <DeleteIcon />
                         </Button>
                       </TableCell>
@@ -261,6 +294,10 @@ class AdminUserManage extends Component {
         </GrPane>
         {/* dialog(popup) component area */}
         <AdminUserDialog compId={compId} />
+        <AdminRecordDialog compId={compId} 
+          isOpen={this.state.openRecordDialog} 
+          adminId={this.state.recordAdminId} 
+          onClose={this.handleCloseRecord} />
         <GrConfirm />
       </React.Fragment>
     );
