@@ -69,8 +69,8 @@ class ClientPackageSelectDialog extends Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleInstallButton} variant='raised' color="secondary">설치</Button>
-                        <Button onClick={this.props.onClose} variant='raised' color="primary">닫기</Button>
+                        <Button onClick={this.handleInstallButton} variant='contained' color="secondary">설치</Button>
+                        <Button onClick={this.props.onClose} variant='contained' color="primary">닫기</Button>
                     </DialogActions>
                     <GrConfirm />
                 </Dialog>

@@ -13,10 +13,14 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 
+import { withStyles } from '@material-ui/core/styles';
+import { GrCommonStyle } from 'templates/styles/GrStyles';
+
 class GrConfirm extends Component {
 
   handleCancel = () => {
     const { GrConfirmActions, GrConfirmProps } = this.props;
+    GrConfirmProps.handleConfirmResult(false);
     GrConfirmActions.closeConfirm({
       confirmResult: false,
       confirmOpen: false,
@@ -71,6 +75,4 @@ const mapDispatchToProps = (dispatch) => ({
   GrConfirmActions: bindActionCreators(grConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GrConfirm);
-
-
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(GrConfirm));

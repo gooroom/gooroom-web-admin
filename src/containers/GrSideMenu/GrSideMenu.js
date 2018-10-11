@@ -132,7 +132,7 @@ class GrSideMenu extends React.Component {
           <ListItemIcon className={classes.iconClass}>
             <SendIcon />
           </ListItemIcon>
-          <Typography variant="button" color="textSecondary">
+          <Typography variant="subtitle1" color="textSecondary">
             {item.name}
           </Typography>
         </MenuItem>
