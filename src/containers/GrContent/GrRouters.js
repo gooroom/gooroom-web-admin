@@ -28,6 +28,7 @@ import DeptManage from "views/User/DeptManage";
 import UserManage from "views/User/UserManage";
 
 import AdminUserManage from "views/System/AdminUserManage";
+import ServerUrlInfo from "views/System/ServerUrlInfo";
 
 
 import DesktopAppManage from "views/Desktop/DesktopAppManage";
@@ -70,8 +71,8 @@ class GrRouters extends Component {
           <Route path="/desktopconfig/desktopapp/:grMenuId/:grMenuName" component={DesktopAppManage} />
 
           <Route path="/system/adminusermng/:grMenuId/:grMenuName" component={AdminUserManage} />
+          <Route path="/system/serverurl/:grMenuId/:grMenuName" component={ServerUrlInfo} />
           
-
           <Route path="/test/components/:grMenuId/:grMenuName" component={ComponentTests} />
         </Switch>
       </div>
