@@ -167,7 +167,7 @@ class MediaRuleDialog extends Component {
                     />
                     {(dialogType === MediaRuleDialog.TYPE_VIEW) &&
                         <div>
-                            <Grid container spacing={24} className={classes.grNormalTableRow}>
+                            <Grid container spacing={24} >
                                 <Grid item xs={12}>
                                 </Grid> 
                             </Grid>
@@ -178,7 +178,7 @@ class MediaRuleDialog extends Component {
                         
                         <Grid item xs={12} container 
                             alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            className={classes.dialogItemRow}>
                             <Grid item xs={6}>
                             <FormControlLabel
                                 control={
@@ -203,7 +203,7 @@ class MediaRuleDialog extends Component {
 
                         <Grid item xs={12} container 
                             alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            className={classes.dialogItemRow}>
                             <Grid item xs={6}>
                                 <FormControlLabel
                                     control={
@@ -228,7 +228,7 @@ class MediaRuleDialog extends Component {
 
                         <Grid item xs={12} container 
                             alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            className={classes.dialogItemRow}>
                             <Grid item xs={6}>
                                 <FormControlLabel
                                     control={
@@ -254,7 +254,7 @@ class MediaRuleDialog extends Component {
 
                         <Grid item xs={12} container 
                             alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            className={classes.dialogItemRow}>
                             <Grid item xs={6}>
                                 <FormControlLabel
                                     control={
@@ -280,7 +280,7 @@ class MediaRuleDialog extends Component {
 
                         <Grid item xs={12} container 
                             alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            className={classes.dialogItemRow}>
                             <Grid item xs={6}>
                                 <FormControlLabel
                                     control={
@@ -306,7 +306,7 @@ class MediaRuleDialog extends Component {
                         
                         <Grid item xs={12} container 
                             alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                            className={classes.dialogItemRow}>
                             <Grid item xs={4}>
                                 <FormControlLabel
                                     control={

@@ -250,7 +250,6 @@ class ClientManage extends Component {
                   const isSelected = this.isSelected(n.get('clientId'));
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.get('clientId'))}
                       role="checkbox"

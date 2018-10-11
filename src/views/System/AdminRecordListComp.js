@@ -217,7 +217,6 @@ class AdminRecordListComp extends Component {
             {listObj.get('listData').map(n => {
               return (
                 <TableRow
-                  className={classes.grNormalTableRow}
                   hover
                   onClick={event => this.handleRowClick(event, n.get('logSeq'))}
                   key={n.get('logSeq')}

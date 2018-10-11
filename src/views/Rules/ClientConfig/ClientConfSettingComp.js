@@ -95,7 +95,7 @@ class ClientConfSettingComp extends Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Typography variant="headline" component="h2">
+            <Typography variant="h5" component="h2">
               {viewCompItem.get('objNm')} {(viewCompItem.get('objId') && viewCompItem.get('objId') != '') ? ' (' + viewCompItem.get('objId') + ')' : ''}
             </Typography>
             <Typography color="textSecondary">

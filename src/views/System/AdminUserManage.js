@@ -232,7 +232,6 @@ class AdminUserManage extends Component {
                 {listObj.get('listData').map(n => {
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.get('adminId'))}
                       key={n.get('adminId')}

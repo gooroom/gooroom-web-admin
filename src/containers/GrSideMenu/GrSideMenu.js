@@ -175,7 +175,7 @@ class GrSideMenu extends React.Component {
         <div style={{position: "relative", flex: "1"}}>
           <AppBar position="static" style={{height:grLayout.sideMenuHeaderHeight, backgroundColor:"gray"}}>
             <Toolbar style={{minHeight:"100%"}}>
-              <Typography variant="title" color="inherit">
+              <Typography variant="h6" color="inherit">
               SIDE HEADER
               </Typography>
             </Toolbar>
@@ -186,7 +186,7 @@ class GrSideMenu extends React.Component {
         </div>
         <AppBar position="static" style={{backgroundColor:"gray"}}>
           <Toolbar>
-            <Typography variant="title" color="inherit">
+            <Typography variant="h6" color="inherit">
             SIDE FOOTER
             </Typography>
           </Toolbar>

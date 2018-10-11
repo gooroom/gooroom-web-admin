@@ -221,7 +221,6 @@ class ClientHostNameManage extends Component {
                 {listObj.get('listData') && listObj.get('listData').map(n => {
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.get('objId'))}
                       key={n.get('objId')}

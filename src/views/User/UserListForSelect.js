@@ -258,7 +258,6 @@ class UserListForSelect extends Component {
               const isSelected = this.isSelected(n.get('userId'));
               return (
                 <TableRow
-                  className={classes.grNormalTableRow}
                   hover
                   onClick={event => this.handleRowClick(event, n.get('userId'))}
                   role="checkbox"

@@ -222,7 +222,6 @@ class MediaRuleManage extends Component {
                 {listObj.get('listData').map(n => {
                   return (
                     <TableRow 
-                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.get('objId'))}
                       tabIndex={-1}

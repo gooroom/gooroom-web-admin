@@ -199,7 +199,6 @@ class ClientRegKey extends Component {
                 {listObj.get('listData').map(n => {
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.get('regKeyNo'))}
                       key={n.get('regKeyNo')}
