@@ -30,6 +30,7 @@ import ClientMasterManageModule from './ClientMasterManageModule';
 
 import DesktopAppModule from './DesktopAppModule';
 import AdminUserModule from './AdminUserModule';
+import GcspManageModule from './GcspManageModule';
 
 import AdminModule from './AdminModule';
 
@@ -66,6 +67,7 @@ export default combineReducers({
 
     DesktopAppModule,
     AdminUserModule,
+    GcspManageModule,
 
     AdminModule
 
