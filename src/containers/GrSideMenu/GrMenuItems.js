@@ -177,7 +177,7 @@ export default {
         },
         {
           name: '구름관리서버설정',
-          url: '/system/gpmsurl/GRM0902/구름관리서버설정',
+          url: '/system/serverurl/GRM0902/구름관리서버설정',
           icon: 'icon-notebook',
           level: 2,
         },

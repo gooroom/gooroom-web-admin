@@ -194,7 +194,6 @@ class ClientPackageComp extends Component {
             const isSelected = this.isSelected(n.get('packageId'));
             return (
               <TableRow
-                className={classes.grNormalTableRow}
                 hover
                 onClick={event => this.handleRowClick(event, n.get('packageId'))}
                 key={n.get('packageId')}

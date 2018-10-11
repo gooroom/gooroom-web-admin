@@ -6,7 +6,6 @@ import classNames from "classnames";
 
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
-import GrTreeList from "components/GrTree/GrTreeList";
 import ClientListForSelect from 'views/Client/ClientListForSelect';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -14,7 +13,6 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
@@ -102,8 +100,8 @@ class ClientSelectDialog extends Component {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleAddButton} variant='raised' color="secondary">추가</Button>
-                        <Button onClick={this.props.onClose} variant='raised' color="primary">닫기</Button>
+                        <Button onClick={this.handleAddButton} variant='contained' color="secondary">추가</Button>
+                        <Button onClick={this.props.onClose} variant='contained' color="primary">닫기</Button>
                     </DialogActions>
                     <GrConfirm />
                 </Dialog>

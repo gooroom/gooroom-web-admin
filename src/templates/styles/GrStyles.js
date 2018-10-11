@@ -268,10 +268,7 @@ export const GrCommonStyle = theme => ({
     },
     grObjInCell: {
         height: "inherit"
-    },
-    grNormalTableRow: {
-        height: '32px',
-    },
+    }
 
 });
 
