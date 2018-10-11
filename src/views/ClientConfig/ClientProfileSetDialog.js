@@ -248,15 +248,15 @@ class ClientProfileSetDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                 {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                    <Button onClick={this.handleProfileJob} variant='raised' color="secondary">생성</Button>
+                    <Button onClick={this.handleProfileJob} variant='contained' color="secondary">생성</Button>
                 }
                 {(dialogType === ClientProfileSetDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
+                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
                 }
                 {(dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
-                <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
+                <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
 
                 </DialogActions>
             </Dialog>

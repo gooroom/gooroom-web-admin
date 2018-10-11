@@ -65,10 +65,7 @@ const theme = createMuiTheme({
         fontSize: 16
       }
     }
-  },
-  typography: {
-    useNextVariants: true,
-  },
+  }
 });
 
 class GrFull extends Component {

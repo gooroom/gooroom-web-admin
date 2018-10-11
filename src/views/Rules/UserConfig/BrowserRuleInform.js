@@ -49,7 +49,7 @@ class BrowserRuleInform extends Component {
             subheader={selectedViewItem.get('objId') + ', ' + formatDateToSimple(selectedViewItem.get('modDate'), 'YYYY-MM-DD')}
           />
           <CardContent>
-            <Typography component="pre">
+            <Typography variant="subtitle1" component="pre">
               "{selectedViewItem.get('comment')}"
             </Typography>
             
