@@ -164,7 +164,7 @@ class DesktopAppDialog extends Component {
                     />
                     {(dialogType === DesktopAppDialog.TYPE_VIEW) &&
                         <div>
-                            <Grid container spacing={24} className={classes.grNormalTableRow}>
+                            <Grid container spacing={24} >
                                 <Grid item xs={12}>
                                 </Grid> 
                             </Grid>
@@ -174,7 +174,7 @@ class DesktopAppDialog extends Component {
                         <div className={classes.dialogItemRowBig}>
                             <Grid item xs={12} container 
                                 alignItems="flex-end" direction="row" justify="space-between" 
-                                className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                                className={classes.dialogItemRow}>
                                 <Grid item xs={5}>
                                     <FormControlLabel
                                         control={

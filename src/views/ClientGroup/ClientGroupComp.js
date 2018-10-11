@@ -231,7 +231,6 @@ class ClientGroupComp extends Component {
             const isSelected = this.isSelected(n.get('grpId'));
             return (
               <TableRow
-                className={classes.grNormalTableRow}
                 hover
                 onClick={event => this.handleRowClick(event, n.get('grpId'))}
                 role="checkbox"

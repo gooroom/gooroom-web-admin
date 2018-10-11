@@ -72,7 +72,6 @@ class JobInform extends Component {
               {JobManageProps.targetListData.map(n => {
                 return (
                   <TableRow
-                    className={classes.grNormalTableRow}
                     hover
                     key={n.clientId}
                   >

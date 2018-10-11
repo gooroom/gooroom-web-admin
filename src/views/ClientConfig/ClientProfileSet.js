@@ -224,7 +224,6 @@ class ClientProfileSet extends Component {
                 {listObj.get('listData').map(n => {
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.get('profileNo'))}
                       key={n.get('profileNo')}

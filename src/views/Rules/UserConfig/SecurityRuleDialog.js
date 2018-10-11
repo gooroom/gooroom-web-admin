@@ -154,7 +154,7 @@ class SecurityRuleDialog extends Component {
                     />
                     {(dialogType === SecurityRuleDialog.TYPE_VIEW) &&
                         <div>
-                            <Grid container spacing={24} className={classes.grNormalTableRow}>
+                            <Grid container spacing={24} >
                                 <Grid item xs={12}>
                                 </Grid> 
                             </Grid>
@@ -165,7 +165,7 @@ class SecurityRuleDialog extends Component {
 
                             <Grid item xs={12} container 
                                 alignItems="flex-end" direction="row" justify="space-between" 
-                                className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                                className={classes.dialogItemRow}>
                                 <Grid item xs={5}>
                                     <TextField
                                         label="화면보호기 설정시간(분)"

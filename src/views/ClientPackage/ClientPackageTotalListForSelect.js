@@ -206,7 +206,6 @@ class ClientPackageTotalListForSelect extends Component {
               const isSelected = this.isSelected(n.get('packageId'));
               return (
                 <TableRow
-                  className={classes.grNormalTableRow}
                   hover
                   onClick={event => this.handleRowClick(event, n.get('packageId'))}
                   role="checkbox"
