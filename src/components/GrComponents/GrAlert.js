@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as grAlertActions from 'modules/GrAlertModule';
+
 import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -11,9 +15,14 @@ import Dialog from '@material-ui/core/Dialog';
 
 class GrAlert extends Component {
 
-    state = {
-        open: false,
-    };
+  handleOk = () => {
+    const { GrAlertActions, GrAlertProps } = this.props;
+    GrAlertActions.closeConfirm({
+      alertResult: true,
+      alertOpen: false
+    });
+  };
+
 
   handleClickOpen = () => {
     this.setState({ open: true });
@@ -24,37 +33,39 @@ class GrAlert extends Component {
   };
 
   render() {
+    const { GrAlertProps } = this.props;
 
     return (
-      <div>
-        <Button onClick={this.handleClickOpen}>Open alert dialog</Button>
-        <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
+       <Dialog
+          onClose={this.handleCancel}
+          open={GrAlertProps.alertOpen}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">{GrAlertProps.alertTitle}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Let Google help apps determine location. This means sending anonymous location data to
-              Google, even when no apps are running.
+              {GrAlertProps.alertMsg}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary">
-              Disagree
-            </Button>
-            <Button onClick={this.handleClose} color="primary" autoFocus>
-              Agree
+            <Button onClick={this.handleOk} color="primary">
+              확인
             </Button>
           </DialogActions>
         </Dialog>
-      </div>
     );
   }
 }
 
-export default GrAlert;
+const mapStateToProps = (state) => ({
+  GrAlertProps: state.GrAlertModule,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  GrAlertActions: bindActionCreators(grAlertActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GrAlert);
 
 

@@ -2,6 +2,7 @@ import axios from "axios";
 import qs from "qs";
 
 export const GPMS_URL = 'http://localhost:8080/gpms/';
+//export const GPMS_URL = 'http://ain.gooroom.kr:8080/gpms/';
 //export const GPMS_URL = 'https://gpms.gooroom.kr/gpms/';
 
 function collection() {
@@ -85,7 +86,7 @@ export function requestPostAPI(url, param, headers) {
         }
       ],
       data: param,
-      withCredentials: true
+      withCredentials: false
     });
 };
 

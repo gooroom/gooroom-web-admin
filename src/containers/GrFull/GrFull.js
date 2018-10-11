@@ -44,6 +44,12 @@ const theme = createMuiTheme({
         minHeight: 24
       },
     },
+    MuiIconButton: {
+      root: {
+        paddingTop: 0,
+        paddingBottom: 0
+      }
+    },
     MuiTableCell: {
       root: {
         padding: '0 6 0 0'
@@ -59,7 +65,7 @@ const theme = createMuiTheme({
         fontSize: 16
       }
     }
-  },
+  }
 });
 
 class GrFull extends Component {

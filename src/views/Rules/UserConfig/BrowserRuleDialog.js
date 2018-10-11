@@ -166,7 +166,7 @@ class BrowserRuleDialog extends Component {
                     />
                     {(dialogType === BrowserRuleDialog.TYPE_VIEW) &&
                         <div>
-                            <Grid container spacing={24} className={classes.grNormalTableRow}>
+                            <Grid container spacing={24} >
                                 <Grid item xs={12}>
                                 </Grid> 
                             </Grid>
@@ -176,7 +176,7 @@ class BrowserRuleDialog extends Component {
                         <div className={classes.dialogItemRowBig}>
                             <Grid item xs={12} container 
                                 alignItems="flex-end" direction="row" justify="space-between" 
-                                className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                                className={classes.dialogItemRow}>
                                 <Grid item xs={5}>
                                     <FormControlLabel
                                         control={
@@ -250,12 +250,12 @@ class BrowserRuleDialog extends Component {
 
                 <DialogActions>
                 {(dialogType === BrowserRuleDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
+                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
                 }
                 {(dialogType === BrowserRuleDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
-                <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
+                <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
                 <GrConfirm />
             </Dialog>

@@ -113,7 +113,7 @@ class MediaRuleComp extends Component {
               </Grid>
             </Grid>
 
-            <Typography variant="headline" component="h2">
+            <Typography variant="h5" component="h2">
               {viewCompItem.get('objNm')}
             </Typography>
             <Typography color="textSecondary">

@@ -72,7 +72,7 @@ class ClientDialog extends Component {
           </AppBar>
 
           <DialogActions>
-            <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
+            <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
           </DialogActions>
         </Dialog>
       );

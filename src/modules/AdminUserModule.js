@@ -21,7 +21,7 @@ const CLOSE_ADMINUSER_DIALOG = 'adminUser/CLOSE_ADMINUSER_DIALOG';
 
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chModDate', 'desc');
+const initialState = commonHandleActions.getCommonInitialState('chAdminNm', 'asc', {}, {status: 'STAT010', keyword: ''});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -44,8 +44,9 @@ export const readAdminUserListPaged = (module, compId, extParam) => dispatch => 
         module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readRegKeyInfoListPaged', {
+    return requestPostAPI('readAdminUserListPaged', {
         keyword: newListParam.get('keyword'),
+        status: newListParam.get('status'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),
         length: newListParam.get('rowsPerPage'),
@@ -143,7 +144,7 @@ export const createAdminUserData = (param) => dispatch => {
 // edit
 export const editAdminUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('editAdminUser', param).then(
+    return requestPostAPI('updateAdminUserData', param).then(
         (response) => {
             dispatch({
                 type: EDIT_ADMINUSER_SUCCESS,
@@ -161,7 +162,7 @@ export const editAdminUserData = (param) => dispatch => {
 // delete
 export const deleteAdminUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteAdminUser', param).then(
+    return requestPostAPI('deleteAdminUserData', param).then(
         (response) => {
             dispatch({
                 type: DELETE_ADMINUSER_SUCCESS,

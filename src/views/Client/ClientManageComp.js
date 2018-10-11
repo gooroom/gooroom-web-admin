@@ -28,7 +28,6 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Checkbox from "@material-ui/core/Checkbox";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -196,7 +195,6 @@ class ClientManageComp extends Component {
               const isSelected = this.isSelected(n.get('clientId'));
               return (
                 <TableRow
-                  className={classes.grNormalTableRow}
                   hover
                   onClick={event => this.handleRowClick(event, n.get('clientId'))}
                   role="checkbox"
