@@ -98,12 +98,12 @@ class MediaRuleComp extends Component {
           <Card elevation={0}>
             <CardContent style={{padding: 10}}>
             <Grid container>
-              <Grid item xs={9}>
-                <Typography className={classes.compTitle}>
+              <Grid item xs={6}>
+                <Typography className={(isDefault) ? classes.compTitleForBasic : classes.compTitle}>
                   {(compType == 'VIEW') ? '상세내용' : '매체제어정책'} {(isDefault) ? '*no' : ''}
                 </Typography>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={6}>
                 <Grid container justify="flex-end">
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}

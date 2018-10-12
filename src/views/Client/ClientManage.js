@@ -40,7 +40,6 @@ import AddIcon from '@material-ui/icons/Add';
 import Checkbox from "@material-ui/core/Checkbox";
 import InputLabel from "@material-ui/core/InputLabel";
 
-import ClientDialog from "./ClientDialog";
 import ClientManageInform from "./ClientManageInform";
 // option components
 import ClientGroupSelect from 'views/Options/ClientGroupSelect';

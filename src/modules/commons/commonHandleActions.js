@@ -137,7 +137,9 @@ export const handleEditSuccessAction = (state, action) => {
             if(e.get('selectedViewItem')) {
                 if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
                     // replace
-                    newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
+                    newState = newState
+                        .setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]))
+                        .setIn(['viewItems', i, 'informOpen'], false);
                 }
             }
         });

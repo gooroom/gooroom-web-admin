@@ -53,15 +53,6 @@ class ClientGroupDialog extends Component {
     
     handleClose = (event) => {
         const { ClientGroupActions, compId } = this.props;
-        const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props; 
-        // ?????
-        ClientConfSettingActions.deleteCompData({compId: compId});
-        ClientHostNameActions.deleteCompData({compId: compId});
-        ClientUpdateServerActions.deleteCompData({compId: compId});
-        BrowserRuleActions.deleteCompData({compId: compId});
-        MediaRuleActions.deleteCompData({compId: compId});
-        SecurityRuleActions.deleteCompData({compId: compId});
-
         ClientGroupActions.closeDialog(compId);
     }
 
