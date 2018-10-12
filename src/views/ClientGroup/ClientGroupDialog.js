@@ -9,42 +9,22 @@ import { connect } from 'react-redux';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
-import * as ClientHostNameActions from 'modules/ClientHostNameModule';
-import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
-
-import * as BrowserRuleActions from 'modules/BrowserRuleModule';
-import * as MediaRuleActions from 'modules/MediaRuleModule';
-import * as SecurityRuleActions from 'modules/SecurityRuleModule';
-
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
-import InputLabel from '@material-ui/core/InputLabel';
 import Divider from '@material-ui/core/Divider';
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import ClientRuleSelector from 'components/GROptions/ClientRuleSelector';
 
-function TabContainer(props) {
-    return (
-      <Typography component="div" style={{ padding: 8 * 3 }}>
-        {props.children}
-      </Typography>
-    );
-  }
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class ClientGroupDialog extends Component {
     
     static TYPE_ADD = 'ADD';
@@ -52,14 +32,14 @@ class ClientGroupDialog extends Component {
     static TYPE_EDIT = 'EDIT';
     
     handleClose = (event) => {
-        const { ClientGroupActions, compId } = this.props;
-        ClientGroupActions.closeDialog(compId);
+        this.props.ClientGroupActions.closeDialog();
     }
 
     handleValueChange = name => event => {
+        const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
         this.props.ClientGroupActions.setEditingItemValue({
             name: name,
-            value: event.target.value
+            value: value
         });
     }
 
@@ -154,27 +134,21 @@ class ClientGroupDialog extends Component {
             {(ClientGroupProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientGroupProps.get('dialogOpen')} >
                 <DialogTitle >{title}</DialogTitle>
-                <DialogContent style={{height:600,minHeight:600,padding:0}}>
-
-                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
-                        <TextField
-                            id="grpNm"
-                            label="단말그룹이름"
-                            value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
-                            onChange={this.handleValueChange('grpNm')}
-                            className={classes.fullWidth}
-                        />
-                        <TextField
-                            id="comment"
-                            label="단말그룹설명"
-                            value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                            onChange={this.handleValueChange('comment')}
-                            className={classes.fullWidth}
-                        />
-                        <Divider style={{marginBottom: 10}} />
-                        <ClientRuleSelector compId={compId} module={ClientGroupProps.get('editingItem').toJS()} />
-                    </form>
-
+                <DialogContent>
+                    <TextField
+                        label="단말그룹이름"
+                        value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
+                        onChange={this.handleValueChange('grpNm')}
+                        className={classes.fullWidth}
+                    />
+                    <TextField
+                        label="단말그룹설명"
+                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                        onChange={this.handleValueChange('comment')}
+                        className={classes.fullWidth}
+                    />
+                    <Divider style={{marginBottom: 10}} />
+                    <ClientRuleSelector compId={compId} module={ClientGroupProps.get('editingItem').toJS()} />
                 </DialogContent>
                 <DialogActions>
                     {(dialogType === ClientGroupDialog.TYPE_ADD) &&
@@ -207,14 +181,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
-
-    ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
-    ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
-    ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
-
-    BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
-    MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
-    SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
 });
 
 

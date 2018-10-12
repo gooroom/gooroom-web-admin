@@ -36,17 +36,11 @@ class ClientUpdateServerManageDialog extends Component {
     }
 
     handleValueChange = name => event => {
-        if(event.target.type === 'checkbox') {
-            this.props.ClientUpdateServerActions.setEditingItemValue({
-                name: name,
-                value: event.target.checked
-            });
-        } else {
-            this.props.ClientUpdateServerActions.setEditingItemValue({
-                name: name,
-                value: event.target.value
-            });
-        }
+        const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
+        this.props.ClientUpdateServerActions.setEditingItemValue({
+            name: name,
+            value: value
+        });
     }
 
     handleCreateData = (event) => {

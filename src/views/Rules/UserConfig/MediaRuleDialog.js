@@ -50,17 +50,11 @@ class MediaRuleDialog extends Component {
     }
 
     handleValueChange = name => event => {
-        if(event.target.type === 'checkbox') {
-            this.props.MediaRuleActions.setEditingItemValue({
-                name: name,
-                value: (event.target.checked) ? 'allow' : 'disallow'
-            });
-        } else {
-            this.props.MediaRuleActions.setEditingItemValue({
-                name: name,
-                value: event.target.value
-            });
-        }
+        const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'allow' : 'disallow') : event.target.value;
+        this.props.MediaRuleActions.setEditingItemValue({
+            name: name,
+            value: value
+        });
     }
 
     handleBluetoothMacValueChange = index => event => {

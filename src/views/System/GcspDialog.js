@@ -45,17 +45,11 @@ class GcspDialog extends Component {
     }
 
     handleValueChange = name => event => {
-        if(event.target.type === 'checkbox') {
-            this.props.GcspManageActions.setEditingItemValue({
-                name: name,
-                value: (event.target.checked) ? '' : 'disallow'
-            });
-        } else {
-            this.props.GcspManageActions.setEditingItemValue({
-                name: name,
-                value: event.target.value
-            });
-        }
+        const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? '' : 'disallow') : event.target.value;
+        this.props.GcspManageActions.setEditingItemValue({
+            name: name,
+            value: value
+        });
     }
 
     // 생성
