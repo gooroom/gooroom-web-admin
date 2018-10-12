@@ -96,8 +96,8 @@ class BrowserRuleComp extends Component {
           <CardContent style={{padding: 10}}>
             <Grid container>
               <Grid item xs={6}>
-                <Typography className={classes.compTitle}>
-                  {(compType == 'VIEW') ? '상세내용' : '브라우져제어정책'} {(isDefault) ? '*no' : ''}
+                <Typography className={(isDefault) ? classes.compTitleForBasic : classes.compTitle}>
+                  {(compType == 'VIEW') ? '상세내용' : '브라우져제어정책'}
                 </Typography>
               </Grid>
               <Grid item xs={6}>

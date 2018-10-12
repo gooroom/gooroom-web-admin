@@ -100,7 +100,7 @@ class MediaRuleComp extends Component {
             <Grid container>
               <Grid item xs={6}>
                 <Typography className={(isDefault) ? classes.compTitleForBasic : classes.compTitle}>
-                  {(compType == 'VIEW') ? '상세내용' : '매체제어정책'} {(isDefault) ? '*no' : ''}
+                  {(compType == 'VIEW') ? '상세내용' : '매체제어정책'}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
