@@ -10,8 +10,8 @@ import ClientMasterManage from "views/Client/ClientMasterManage";
 import ClientManage from "views/Client/ClientManage";
 import ClientGroupManage from "views/ClientGroup/ClientGroupManage";
 
-import ClientRegKey from "views/ClientConfig/ClientRegKey";
-import ClientProfileSet from "views/ClientConfig/ClientProfileSet";
+import ClientRegKey from "views/ClientSupport/ClientRegKey";
+import ClientProfileSet from "views/ClientSupport/ClientProfileSet";
 
 import ClientConfSetting from "views/Rules/ClientConfig/ClientConfSetting";
 import ClientHostNameManage from "views/Rules/HostName/ClientHostNameManage";
