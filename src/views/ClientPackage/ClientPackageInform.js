@@ -45,7 +45,7 @@ class ClientPackageInform extends Component {
     return (
       <div style={{marginTop: 10}} >
       {(informOpen && selectedViewItem) &&
-        <Card style={{boxShadow:this.props.compShadow}} >
+        <Card >
           <CardHeader
             title={selectedViewItem.get('packageId')}
             subheader={packageInfo}

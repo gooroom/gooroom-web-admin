@@ -43,7 +43,7 @@ class DesktopAppInform extends Component {
     return (
       <div>
       {(informOpen && selectedViewItem) &&
-        <Card style={{boxShadow:this.props.compShadow}} >
+        <Card >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.get('appNm') : ''}
             subheader={selectedViewItem.get('appId') + ', ' + formatDateToSimple(selectedViewItem.get('modDate'), 'YYYY-MM-DD')}

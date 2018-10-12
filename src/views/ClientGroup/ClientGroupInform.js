@@ -60,7 +60,7 @@ class ClientGroupInform extends Component {
     return (
       <div>
       {(informOpen && selectedViewItem) &&
-        <Card style={{boxShadow:this.props.compShadow}} >
+        <Card >
           <CardHeader
             title={selectedViewItem.get('grpNm')}
             subheader={groupInfo}

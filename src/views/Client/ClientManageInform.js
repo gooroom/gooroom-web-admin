@@ -43,7 +43,7 @@ class ClientManageInform extends Component {
     return (
       <div>
       {(informOpen && selectedViewItem) &&
-        <Card style={{boxShadow:this.props.compShadow}} >
+        <Card >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.get('clientName') : ''}
             subheader={selectedViewItem.get('clientId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
