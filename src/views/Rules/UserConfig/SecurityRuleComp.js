@@ -97,8 +97,8 @@ class SecurityRuleComp extends Component {
             <CardContent style={{padding: 10}}>
             <Grid container>
               <Grid item xs={6}>
-                <Typography className={classes.compTitle}>
-                  {(compType == 'VIEW') ? '상세내용' : '단말보안정책'} {(isDefault) ? '*no' : ''}
+                <Typography className={(isDefault) ? classes.compTitleForBasic : classes.compTitle}>
+                  {(compType == 'VIEW') ? '상세내용' : '단말보안정책'}
                 </Typography>
               </Grid>
               <Grid item xs={6}>

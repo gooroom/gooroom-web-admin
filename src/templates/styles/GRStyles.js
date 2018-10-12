@@ -130,7 +130,7 @@ export const GRCommonStyle = theme => ({
         fontWeight:"bold"
     },
     compTitleForBasic: {
-        backgroundColor:"lightRed",
+        backgroundColor:"lightPink",
         color:"red",
         fontWeight:"bold"
     },
