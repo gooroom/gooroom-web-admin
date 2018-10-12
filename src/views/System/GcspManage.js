@@ -53,10 +53,10 @@ class GcspManage extends Component {
   }
 
   columnHeaders = [
-    { id: 'chAdminNm', isOrder: true, numeric: false, disablePadding: true, label: '이름' },
-    { id: 'chAdminId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
+    { id: 'chGcspNm', isOrder: true, numeric: false, disablePadding: true, label: '이름' },
+    { id: 'chGcspId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
     { id: 'chStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
+    { id: 'chRegDt', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
     { id: 'chRecord', isOrder: false, numeric: false, disablePadding: true, label: '작업이력' }
   ];
@@ -94,7 +94,7 @@ class GcspManage extends Component {
   
   handleRowClick = (event, id) => {
     const { GcspManageProps, GcspManageActions } = this.props;
-    const selectedViewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'adminId');
+    const selectedViewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
     GcspManageActions.showDialog({
       selectedViewItem: selectedViewItem,
       dialogType: GcspDialog.TYPE_VIEW
@@ -121,7 +121,8 @@ class GcspManage extends Component {
   handleCreateButton = () => {
     this.props.GcspManageActions.showDialog({
       selectedViewItem: {
-        adminId: ''
+        gcspId: '',
+        certGubun: 'cert1'
       },
       dialogType: GcspDialog.TYPE_ADD
     });
@@ -131,7 +132,7 @@ class GcspManage extends Component {
   handleEditClick = (event, id) => {
     event.stopPropagation();
     const { GcspManageProps, GcspManageActions } = this.props;
-    const selectedViewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'adminId');
+    const selectedViewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
     GcspManageActions.showDialog({
       selectedViewItem: selectedViewItem,
       dialogType: GcspDialog.TYPE_EDIT
@@ -142,10 +143,10 @@ class GcspManage extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { GcspManageProps, GrConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'adminId');
+    const selectedViewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
     GrConfirmActions.showConfirm({
       confirmTitle: '관리자계정 삭제',
-      confirmMsg: '관리자계정(' + selectedViewItem.get('adminId') + ')을 삭제하시겠습니까?',
+      confirmMsg: '관리자계정(' + selectedViewItem.get('gcspId') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedViewItem
@@ -157,7 +158,7 @@ class GcspManage extends Component {
       const compId = this.props.match.params.grMenuId;
       GcspManageActions.deleteAdminUserData({
         compId: compId,
-        adminId: confirmObject.get('adminId')
+        gcspId: confirmObject.get('gcspId')
       }).then(() => {
         GcspManageActions.readGcspListPaged(GcspManageProps, compId);
       });
@@ -221,7 +222,7 @@ class GcspManage extends Component {
             <Table>
               <GrCommonTableHead
                 classes={classes}
-                keyId="adminId"
+                keyId="gcspId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
@@ -232,29 +233,29 @@ class GcspManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('adminId'))}
-                      key={n.get('adminId')}
+                      onClick={event => this.handleRowClick(event, n.get('gcspId'))}
+                      key={n.get('gcspId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('adminId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('statusCd')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
-                          onClick={event => this.handleEditClick(event, n.get('adminId'))}>
+                          onClick={event => this.handleEditClick(event, n.get('gcspId'))}>
                           <BuildIcon />
                         </Button>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
-                          onClick={event => this.handleDeleteClick(event, n.get('adminId'))}>
+                          onClick={event => this.handleDeleteClick(event, n.get('gcspId'))}>
                           <DeleteIcon />
                         </Button>
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
-                          onClick={event => this.handleShowRecord(event, n.get('adminId'))}>
+                          onClick={event => this.handleShowRecord(event, n.get('gcspId'))}>
                           <ListIcon />
                         </Button>
                       </TableCell>
