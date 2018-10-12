@@ -15,6 +15,7 @@ import Radio from "@material-ui/core/Radio";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import InputLabel from "@material-ui/core/InputLabel";
@@ -39,104 +40,120 @@ class ClientProfileSetDialog extends Component {
     static TYPE_PROFILE = 'PROFILE';
     
     handleClose = (event) => {
-        this.props.ClientProfileSetActions.closeDialog({
-            dialogOpen: false
-        });
+        this.props.ClientProfileSetActions.closeDialog(this.props.compId);
     }
 
     handleCreateData = (event) => {
-        const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-        ClientProfileSetActions.createClientProfileSetData(ClientProfileSetProps.selectedViewItem)
-        .then(() => {
-            ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
-            this.handleClose();
-        }, (res) => {
-
-        })
-    }
-
-    handleEditData = (event) => {
-        const { GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
-            confirmTitle: '단말 프로파일 수정',
-            confirmMsg: '단말 프로파일을 수정하시겠습니까?',
+        const { ClientProfileSetProps, GrConfirmActions } = this.props;
+        GrConfirmActions.showConfirm({
+            confirmTitle: '단말 프로파일 등록',
+            confirmMsg: '단말 프로파일을 등록하시겠습니까?',
+            handleConfirmResult: this.handleCreateDataConfirmResult,
             confirmOpen: true,
-            handleConfirmResult: this.handleEditConfirmResult
+            confirmObject: ClientProfileSetProps.get('editingItem')
         });
     }
-    handleEditConfirmResult = (confirmValue) => {
+    handleCreateDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-            ClientProfileSetActions.editClientProfileSetData(ClientProfileSetProps.selectedViewItem)
-                .then((res) => {
-                ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
+            const { ClientProfileSetProps, ClientProfileSetActions, compId } = this.props;
+            ClientProfileSetActions.createClientProfileSetData({
+                clientId: paramObject.get('clientId'),
+                profileNm: paramObject.get('profileNm'),
+                profileCmt: paramObject.get('profileCmt')
+            }).then((res) => {
+                ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, compId);
                 this.handleClose();
-            }, (res) => {
-
-            })
-        }
-    }
-
-    handleProfileJob = (event) => {
-
-        const { GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
-            confirmTitle: '단말 프로파일 실행',
-            confirmMsg: '단말 프로파일을 실행하시겠습니까?',
-            confirmOpen: true,
-            handleConfirmResult: this.handleProfileJobConfirmResult
-        });
-    }
-    handleProfileJobConfirmResult = (confirmValue) => {
-        if(confirmValue) {
-            const { ClientProfileSetProps } = this.props;
-            const targetClientIds = (ClientProfileSetProps.selectedViewItem.targetClientIdArray).map((v) => (v.clientId)).join(',');
-            const targetGroupIds = (ClientProfileSetProps.selectedViewItem.targetGroupIdArray).map((v) => (v.grpId)).join(',');
-            const newSelectedItem = getMergedObject(ClientProfileSetProps.selectedViewItem, {targetClientIds: targetClientIds, targetGroupIds: targetGroupIds});
-            this.props.ClientProfileSetActions.createClientProfileSetJob(newSelectedItem)
-                .then((res) => {
-                this.props.ClientProfileSetActions.readClientProfileSetList(ClientProfileSetProps.listParam);
-                this.handleClose();
-            }, (res) => {
-
             });
         }
     }
 
-    handleChange = name => event => {
-        this.props.ClientProfileSetActions.changeParamValue({
+    handleEditData = (event) => {
+        const { ClientProfileSetProps, GrConfirmActions } = this.props;
+        GrConfirmActions.showConfirm({
+            confirmTitle: '단말 프로파일 수정',
+            confirmMsg: '단말 프로파일을 수정하시겠습니까?',
+            confirmOpen: true,
+            handleConfirmResult: this.handleEditConfirmResult,
+            confirmObject: ClientProfileSetProps.get('editingItem')
+        });
+    }
+    handleEditConfirmResult = (confirmValue, paramObject) => {
+        if(confirmValue) {
+            const { ClientProfileSetProps, ClientProfileSetActions, compId } = this.props;
+            ClientProfileSetActions.editClientProfileSetData({
+                profileNo: paramObject.get('profileNo'),
+                clientId: paramObject.get('clientId'),
+                profileNm: paramObject.get('profileNm'),
+                profileCmt: paramObject.get('profileCmt')
+            }).then((res) => {
+                ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, compId);
+                this.handleClose();
+            });
+        }
+    }
+
+    handleProfileJob = (event) => {
+        const { ClientProfileSetProps, GrConfirmActions } = this.props;
+        GrConfirmActions.showConfirm({
+            confirmTitle: '단말 프로파일 실행',
+            confirmMsg: '단말 프로파일을 실행하시겠습니까?',
+            confirmOpen: true,
+            handleConfirmResult: this.handleProfileJobConfirmResult,
+            confirmObject: ClientProfileSetProps.get('editingItem')
+        });
+    }
+    handleProfileJobConfirmResult = (confirmValue, paramObject) => {
+        if(confirmValue) {
+            const { ClientProfileSetProps, ClientProfileSetActions, compId } = this.props;
+            const targetClientIds = (paramObject.get('targetClientIdArray')).map((v) => (v.get('clientId'))).join(',');
+            const targetGroupIds = (paramObject.get('targetGroupIdArray')).map((v) => (v.get('grpId'))).join(',');
+
+            ClientProfileSetActions.createClientProfileSetJob({
+                profileNo: paramObject.get('profileNo'),
+                targetClientIds: targetClientIds,
+                targetClientGroupIds: targetGroupIds,
+                isRemoval: paramObject.get('isRemoval')
+            }).then((res) => {
+                ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, compId);
+                this.handleClose();
+            });
+        }
+    }
+
+    handleValueChange = name => event => {
+        this.props.ClientProfileSetActions.setEditingItemValue({
             name: name,
             value: event.target.value
         });
     }
 
     handleSelectClient = (value) => {
-        this.props.ClientProfileSetActions.changeParamValue({
+        this.props.ClientProfileSetActions.setEditingItemValue({
             name: 'clientId',
             value: value.clientId
         });
-        this.props.ClientProfileSetActions.changeParamValue({
+        this.props.ClientProfileSetActions.setEditingItemValue({
             name: 'clientNm',
             value: value.clientName
         });
     }
 
     handleSelectClientArray = (value) => {
-        this.props.ClientProfileSetActions.changeParamValue({
+        this.props.ClientProfileSetActions.setEditingItemValue({
           name: 'targetClientIdArray',
           value: value
         });
     }
 
     handleSelectGroupArray = (value) => {
-        this.props.ClientProfileSetActions.changeParamValue({
+        this.props.ClientProfileSetActions.setEditingItemValue({
           name: 'targetGroupIdArray',
           value: value
         });
     }
 
     handleChangeRemoval = key => (event, value) => {
-        this.props.ClientProfileSetActions.changeParamValue({
+        this.props.ClientProfileSetActions.setEditingItemValue({
             name: 'isRemoval',
             value: value
         });
@@ -145,9 +162,9 @@ class ClientProfileSetDialog extends Component {
 
     render() {
         const { classes } = this.props;
-
         const { ClientProfileSetProps } = this.props;
-        const { dialogType } = ClientProfileSetProps;
+        const dialogType = ClientProfileSetProps.get('dialogType');
+        const editingItem = (ClientProfileSetProps.get('editingItem')) ? ClientProfileSetProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === ClientProfileSetDialog.TYPE_ADD) {
@@ -161,30 +178,30 @@ class ClientProfileSetDialog extends Component {
         }
 
         return (
-            <Dialog open={ClientProfileSetProps.dialogOpen}>
+            <div>
+            {(ClientProfileSetProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={ClientProfileSetProps.get('dialogOpen')}>
                 <DialogTitle >{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={classes.dialogContainer}>
-
+                <DialogContent>
+                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
                     <TextField  
-                        id="profileNm"
                         label="프로파일 이름"
-                        value={(ClientProfileSetProps.selectedViewItem) ? ClientProfileSetProps.selectedViewItem.profileNm : ''}
-                        onChange={this.handleChange("profileNm")}
+                        value={(editingItem.get('profileNm')) ? editingItem.get('profileNm') : ''}
+                        onChange={this.handleValueChange("profileNm")}
                         className={classNames(classes.fullWidthfullWidth)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     <TextField
-                        id="profileCmt"
                         label="프로파일 설명"
-                        value={(ClientProfileSetProps.selectedViewItem) ? ClientProfileSetProps.selectedViewItem.profileCmt : ''}
-                        onChange={this.handleChange("profileCmt")}
+                        value={(editingItem.get('profileCmt')) ? editingItem.get('profileCmt') : ''}
+                        onChange={this.handleValueChange("profileCmt")}
                         className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
                         <div className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}>
                             <FormLabel>기타 패키지 처리방식</FormLabel>
-                            <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={ClientProfileSetProps.selectedViewItem.isRemoval} row>
+                            <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={editingItem.get('isRemoval')} row>
                                 <FormControlLabel value="true" control={<Radio />} label="삭제함" />
                                 <FormControlLabel value="false" control={<Radio />} label="삭제안함" />
                             </RadioGroup>
@@ -192,10 +209,9 @@ class ClientProfileSetDialog extends Component {
                     }
                     {(dialogType === ClientProfileSetDialog.TYPE_VIEW || dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
                         <TextField
-                            id="clientId"
                             label="레퍼런스 단말"
-                            value={(ClientProfileSetProps.selectedViewItem) ? ClientProfileSetProps.selectedViewItem.clientNm + ' (' + ClientProfileSetProps.selectedViewItem.clientId + ')' : ''}
-                            onChange={this.handleChange("clientId")}
+                            value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
+                            onChange={this.handleValueChange("clientId")}
                             className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
                             disabled
                         />
@@ -205,9 +221,9 @@ class ClientProfileSetDialog extends Component {
                             <TextField
                                 id="clientId"
                                 label="레퍼런스 단말"
-                                value={(ClientProfileSetProps.selectedViewItem && ClientProfileSetProps.selectedViewItem.clientNm) ? ClientProfileSetProps.selectedViewItem.clientNm + ' (' + ClientProfileSetProps.selectedViewItem.clientId + ')' : ''}
+                                value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
                                 placeholder="아래 목록에서 단말을 선택하세요."
-                                onChange={this.handleChange("clientId")}
+                                onChange={this.handleValueChange("clientId")}
                                 className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
                             />
                             <div className={classes.profileItemRow}>
@@ -228,22 +244,24 @@ class ClientProfileSetDialog extends Component {
                                 height='220' />
                         </div>
                     }
-    
-                </form>
+                    </form>
+                </DialogContent>
                 <DialogActions>
                 {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                    <Button onClick={this.handleProfileJob} variant='raised' color="secondary">생성</Button>
+                    <Button onClick={this.handleProfileJob} variant='contained' color="secondary">생성</Button>
                 }
                 {(dialogType === ClientProfileSetDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
+                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
                 }
                 {(dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
-                <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
+                <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
 
                 </DialogActions>
             </Dialog>
+            }
+            </div>
         );
     }
 }

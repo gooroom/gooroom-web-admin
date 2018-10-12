@@ -16,6 +16,7 @@ import OpenIcon from "@material-ui/icons/ExpandMore";
 import CloseIcon from "@material-ui/icons/ExpandLess";
 import FolderIcon from "@material-ui/icons/Folder";
 import FileIcon from "@material-ui/icons/InsertDriveFile";
+import BuildIcon from '@material-ui/icons/Build';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -49,12 +50,20 @@ class GrTreeList extends Component {
   }
 
   componentDidMount() {
-    this.props.onRef(this);
+    if(this.props.onInitTreeData) {
+      this.props.onInitTreeData();
+    }
+    if(this.props.onRef) {
+      this.props.onRef(this);
+    }
+    
     this.fetchTreeData(this.state.rootKeyValue);
   }
 
   componentWillUnmount() {
-    this.props.onRef(undefined)
+    if(this.props.onRef) {
+      this.props.onRef(undefined)
+    }
   }
 
   fetchTreeData(keyValue, index) {
@@ -314,11 +323,17 @@ class GrTreeList extends Component {
     if (this.props.onCheckedNode) this.props.onCheckedNode(newStatus.newChecked, newStatus.newImperfect);
   };
 
+  handleEditClickNode = (listItem, i) => {
+    if(this.props.onEditNode) {
+      this.props.onEditNode(listItem, i);
+    }
+  }
+
   render() {
     const contentKey = "title";
 
     const startingDepth = this.state.startingDepth;
-    const listHeight = this.props.listHeight ? this.props.listHeight : "36px";
+    const listHeight = this.props.listHeight ? this.props.listHeight : "24px";
     const activeListItem = this.props.activeListItem
       ? this.props.activeListItem
       : this.state.activeListItem;
@@ -332,7 +347,7 @@ class GrTreeList extends Component {
       (listItem, i, inputArray) => {
         listItem._styles = {
           root: {
-            paddingLeft: (listItem.depth - startingDepth) * 16,
+            paddingLeft: (listItem.depth - startingDepth) * 8,
             backgroundColor: activeListItem === i ? "rgba(0,0,0,0.2)" : null,
             height: listHeight,
             cursor: listItem.disabled ? "not-allowed" : "pointer",
@@ -350,6 +365,11 @@ class GrTreeList extends Component {
       }
     );
 
+  //   const editButton = <Button color="secondary" size="small" className={classes.buttonInTableRow}
+  //   onClick={this.handleEditClick(event, n.get('userId'))}>
+  //   <BuildIcon />
+  // </Button>;
+
     // Search Node...
 
     // JSX: array of listItems
@@ -365,6 +385,7 @@ class GrTreeList extends Component {
             checked={this.state.checked}
             imperfect={this.state.imperfect}
             leftIcon={getLeftIcon(listItem, this.props)}
+            editIcon={<BuildIcon style={{color: 'darkgray', fontSize: 18}} onClick={() => this.handleEditClickNode(listItem, i)} />}
             rightIcon={
               !listItem.children ? null : expandedListItems.indexOf(i) ===
               -1 ? (

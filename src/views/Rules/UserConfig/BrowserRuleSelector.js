@@ -32,17 +32,18 @@ class BrowserRuleSelector extends Component {
   componentDidMount() {
     const { BrowserRuleProps, BrowserRuleActions, compId, initId } = this.props;
     BrowserRuleActions.readBrowserRuleList(BrowserRuleProps, compId);
-    BrowserRuleActions.changeCompVariable({
-      compId: compId,
-      name: 'selectedOptionItemId',
-      value: initId
-    });
+    if(!BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+      BrowserRuleActions.changeCompVariable({
+        compId: compId,
+        name: 'selectedOptionItemId',
+        value: initId
+      });
+    }
   }
 
   handleChange = (event, value) => {
-    const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
-    BrowserRuleActions.changeCompVariable({
-      compId: compId,
+    this.props.BrowserRuleActions.changeCompVariable({
+      compId: this.props.compId,
       name: 'selectedOptionItemId',
       value: event.target.value
     });
@@ -51,24 +52,24 @@ class BrowserRuleSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
+    const { BrowserRuleProps, compId } = this.props;
 
-    const selectedViewItem = BrowserRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
-      selectedOptionItemId = listAllData.getIn([0, 'objId']);
+      selectedOptionItemId = '-';
     }
 
     return (
       <Card className={classes.card}>
-        <CardContent>
+        <CardContent style={{padding: 0}}>
         {listAllData && 
-        <FormControl className={classes.formControl} style={{width: '100%'}}>
+        <FormControl className={classes.formControl} style={{width: '100%', marginBottom: 24, marginTop: 8, border: 'dotted 1px lightGray'}}>
           <InputLabel htmlFor="cfg-helper"></InputLabel>
           <Select value={selectedOptionItemId}
             onChange={this.handleChange}
           >
+          <MenuItem key={'-'} value={'-'}>없음</MenuItem>
           {listAllData.map(item => (
             <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
           ))}

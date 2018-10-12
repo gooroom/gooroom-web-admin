@@ -1,29 +1,28 @@
 import { handleActions } from 'redux-actions';
-import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GrUtils/GrRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
-const COMMON_PENDING = 'groupComp/COMMON_PENDING';
-const COMMON_FAILURE = 'groupComp/COMMON_FAILURE';
+const COMMON_PENDING = 'clientGroup/COMMON_PENDING';
+const COMMON_FAILURE = 'clientGroup/COMMON_FAILURE';
 
-const GET_GROUP_LIST_SUCCESS = 'groupComp/GET_GROUP_LIST_SUCCESS';
-const GET_GROUP_LISTPAGED_SUCCESS = 'groupComp/GET_GROUP_LISTPAGED_SUCCESS';
+const GET_GROUP_LISTPAGED_SUCCESS = 'clientGroup/GET_GROUP_LISTPAGED_SUCCESS';
 
-const CREATE_CLIENTGROUP_SUCCESS = 'groupComp/CREATE_CLIENTGROUP_SUCCESS';
-const EDIT_CLIENTGROUP_SUCCESS = 'groupComp/EDIT_CLIENTGROUP_SUCCESS';
-const DELETE_CLIENTGROUP_SUCCESS = 'groupComp/DELETE_CLIENTGROUP_SUCCESS';
+const CREATE_CLIENTGROUP_SUCCESS = 'clientGroup/CREATE_CLIENTGROUP_SUCCESS';
+const EDIT_CLIENTGROUP_SUCCESS = 'clientGroup/EDIT_CLIENTGROUP_SUCCESS';
+const DELETE_CLIENTGROUP_SUCCESS = 'clientGroup/DELETE_CLIENTGROUP_SUCCESS';
 
-const SHOW_CLIENTGROUP_INFORM = 'groupComp/SHOW_CLIENTGROUP_INFORM';
-const CLOSE_CLIENTGROUP_INFORM = 'groupComp/CLOSE_CLIENTGROUP_INFORM';
-const SHOW_CLIENTGROUP_DIALOG = 'groupComp/SHOW_CLIENTGROUP_DIALOG';
-const CLOSE_CLIENTGROUP_DIALOG = 'groupComp/CLOSE_CLIENTGROUP_DIALOG';
+const SHOW_CLIENTGROUP_INFORM = 'clientGroup/SHOW_CLIENTGROUP_INFORM';
+const CLOSE_CLIENTGROUP_INFORM = 'clientGroup/CLOSE_CLIENTGROUP_INFORM';
+const SHOW_CLIENTGROUP_DIALOG = 'clientGroup/SHOW_CLIENTGROUP_DIALOG';
+const CLOSE_CLIENTGROUP_DIALOG = 'clientGroup/CLOSE_CLIENTGROUP_DIALOG';
 
-const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_ITEM_VALUE = 'clientGroup/SET_EDITING_ITEM_VALUE';
 
-const CHG_LISTPARAM_DATA = 'groupComp/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'groupComp/CHG_COMPVARIABLE_DATA';
-const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
+const CHG_LISTPARAM_DATA = 'clientGroup/CHG_LISTPARAM_DATA';
+const CHG_COMPDATA_VALUE = 'clientGroup/CHG_COMPDATA_VALUE';
+const ADD_CLIENTINGROUP_SUCCESS = 'clientGroup/ADD_CLIENTINGROUP_SUCCESS';
+const REMOVE_CLIENTINGROUP_SUCCESS = 'clientGroup/REMOVE_CLIENTINGROUP_SUCCESS';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chGrpNm', 'asc', {dialogTabValue: 0});
@@ -58,7 +57,6 @@ export const closeClientGroupInform = (param) => dispatch => {
 };
 
 export const readClientGroupListPaged = (module, compId, extParam) => dispatch => {
-
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
@@ -107,16 +105,8 @@ export const changeListParamData = (param) => dispatch => {
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_DATA,
+        type: CHG_COMPDATA_VALUE,
         compId: param.compId,
-        name: param.name,
-        value: param.value
-    });
-};
-
-export const changeStoreData = (param) => dispatch => {
-    return dispatch({
-        type: CHG_STORE_DATA,
         name: param.name,
         value: param.value
     });
@@ -128,9 +118,12 @@ export const createClientGroupData = (param) => dispatch => {
     return requestPostAPI('createClientGroup', {
         groupName: param.groupName,
         groupComment: param.groupComment,
-        clientConfigId: param.clientConfigId,
-        hostNameConfigId: param.hostNameConfigId,
-        updateServerConfigId: param.updateServerConfigId
+        clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
+        hostNameConfigId: (param.hostNameConfigId == '-') ? '' : param.hostNameConfigId,
+        updateServerConfigId: (param.updateServerConfigId == '-') ? '' : param.updateServerConfigId,
+        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
     }).then(
         (response) => {
             try {
@@ -163,9 +156,12 @@ export const editClientGroupData = (param) => dispatch => {
         groupId: param.groupId,
         groupName: param.groupName,
         groupComment: param.groupComment,
-        clientConfigId: param.clientConfigId,
-        hostNameConfigId: param.hostNameConfigId,
-        updateServerConfigId: param.updateServerConfigId
+        clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
+        hostNameConfigId: (param.hostNameConfigId == '-') ? '' : param.hostNameConfigId,
+        updateServerConfigId: (param.updateServerConfigId == '-') ? '' : param.updateServerConfigId,
+        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
     }).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
@@ -235,6 +231,47 @@ export const deleteSelectedClientGroupData = (param) => dispatch => {
 };
 
 
+// add clients in group
+export const addClientsInGroup = (itemObj) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('addClientsInGroup', itemObj).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: ADD_CLIENTINGROUP_SUCCESS
+                    });
+                }    
+            } catch(ex) {
+                dispatch({ type: COMMON_FAILURE, ex: ex });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// delete clients in group
+export const removeClientsInGroup = (itemObj) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('removeClientsInGroup', itemObj).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: REMOVE_CLIENTINGROUP_SUCCESS
+                    });
+                }    
+            } catch(ex) {
+                dispatch({ type: COMMON_FAILURE, ex: ex });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
@@ -248,7 +285,7 @@ export default handleActions({
             pending: false, 
             error: true,
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
-            ex:  (action.ex) ? action.ex : ''
+            ex: (action.ex) ? action.ex : ''
         });
     },
 
@@ -259,7 +296,7 @@ export default handleActions({
         return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_CLIENTGROUP_DIALOG]: (state, action) => {
-        return commonHandleActions.handleCloseDialogAction(state, action);
+        return commonHandleActions.handleCloseDialogAction(state.set('dialogTabValue', 0), action);
     },
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
         return commonHandleActions.handleShowInformAction(state, action);
@@ -275,18 +312,12 @@ export default handleActions({
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
-    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+    [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
-    },
-    [CHG_STORE_DATA]: (state, action) => {
-        return state.merge({
-            [action.name]: action.value
-        });
     },
     [CREATE_CLIENTGROUP_SUCCESS]: (state, action) => {
         return state.merge({
-            pending: false,
-            error: false
+            pending: false, error: false
         });
     },
     [EDIT_CLIENTGROUP_SUCCESS]: (state, action) => {
@@ -295,6 +326,18 @@ export default handleActions({
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action);
     },
+    [ADD_CLIENTINGROUP_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false,
+            error: false
+        });
+    },
+    [REMOVE_CLIENTINGROUP_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false,
+            error: false
+        });
+    }
 
 }, initialState);
 

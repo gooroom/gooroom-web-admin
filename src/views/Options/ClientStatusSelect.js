@@ -12,19 +12,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientStatusSelect extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
-
-  componentDidMount() {
-
-    // const { CommonOptionActions, CommonOptionProps } = this.props;
-    // CommonOptionActions.readClientStatusList(CommonOptionProps.listParam);
-  }
 
   // Events...
   handleChangeSelect = event => {
@@ -40,11 +27,8 @@ class ClientStatusSelect extends Component {
   };
 
   render() {
-
     const { CommonOptionProps } = this.props;
-
     return (
-
       <Select
         value={CommonOptionProps.selectedClientStatus.statusId}
         onChange={this.handleChangeSelect}
@@ -56,7 +40,6 @@ class ClientStatusSelect extends Component {
           </MenuItem>
         ))}
       </Select>
-
     );
   }
 }

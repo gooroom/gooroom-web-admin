@@ -58,8 +58,9 @@ class UserListComp extends Component {
   columnHeaders = [
     { id: "chCheckbox", isCheckbox: true},
     { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
-    { id: "chUserName", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
+    { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
     { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
+    { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
@@ -83,6 +84,52 @@ class UserListComp extends Component {
     });
   };
   // .................................................
+
+  handleRowClick = (event, id) => {
+    const { UserProps, UserActions, compId } = this.props;
+    const newSelectedIds = setSelectedIdsInComp(UserProps, compId, id);
+
+    // check select box
+    UserActions.changeCompVariable({
+      name: 'selectedIds',
+      value: newSelectedIds,
+      compId: compId
+    });
+  };
+
+  // edit
+  handleEditClick = (event, id) => { 
+    const { UserProps, UserActions, compId } = this.props;
+    const selectedViewItem = getRowObjectById(UserProps, compId, id, 'userId');
+    UserActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: UserDialog.TYPE_EDIT
+    });
+  };
+
+  // delete
+  handleDeleteClick = (event, id) => {
+    const { UserProps, GrConfirmActions, compId } = this.props;
+    const selectedViewItem = getRowObjectById(UserProps, compId, id, 'userId');
+    GrConfirmActions.showConfirm({
+      confirmTitle: '사용자정보 삭제',
+      confirmMsg: '사용자정보(' + selectedViewItem.get('userNm') + ')을 삭제하시겠습니까?',
+      handleConfirmResult: this.handleDeleteConfirmResult,
+      confirmOpen: true,
+      confirmObject: selectedViewItem
+    });
+  };
+  handleDeleteConfirmResult = (confirmValue, confirmObject) => {
+    if(confirmValue) {
+      const { UserProps, UserActions, compId } = this.props;
+      UserActions.deleteUserData({
+        compId: compId,
+        userId: confirmObject.get('userId')
+      }).then(() => {
+        UserActions.readUserListPaged(UserProps, compId);
+      });
+    }
+  };
 
 
   isSelected = id => {
@@ -124,7 +171,6 @@ class UserListComp extends Component {
               const isSelected = this.isSelected(n.get('userId'));
               return (
                 <TableRow
-                  className={classes.grNormalTableRow}
                   hover
                   onClick={event => this.handleRowClick(event, n.get('userId'))}
                   role="checkbox"
@@ -137,6 +183,7 @@ class UserListComp extends Component {
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>
                     <Button color="secondary" size="small" 
@@ -183,6 +230,7 @@ class UserListComp extends Component {
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
       }
+      <UserDialog compId={compId} />
       </div>
     );
 

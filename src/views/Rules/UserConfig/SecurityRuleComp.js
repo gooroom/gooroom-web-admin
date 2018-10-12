@@ -53,11 +53,12 @@ class SecurityRuleComp extends Component {
     const { classes } = this.props;
     const { SecurityRuleProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
     const selectedViewItem = SecurityRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = SecurityRuleProps.getIn(['viewItems', compId, 'listAllData']);
     const selectedOptionItemId = SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const isDefault = SecurityRuleProps.getIn(['viewItems', compId, 'isDefault']);
+
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -75,31 +76,47 @@ class SecurityRuleComp extends Component {
 
     return (
       <React.Fragment>
-      <Card elevation={0}>
-        {(viewCompItem) && <CardContent style={contentStyle}>
+      {(!viewCompItem) && 
+        <Card elevation={0}>
+        <CardContent style={{padding: 10}}>
           <Grid container>
             <Grid item xs={6}>
-              <Typography className={classes.compTitle}>
-                {(compType == 'VIEW') ? '상세내용' : '단말보안정책'}
-              </Typography>
+              <Typography className={classes.compTitleForEmpty}>단말보안정책</Typography>
             </Grid>
             <Grid item xs={6}>
               <Grid container justify="flex-end">
-                <Button size="small"
-                  variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                ><SettingsApplicationsIcon />수정</Button>
+              없음
               </Grid>
             </Grid>
           </Grid>
-          <Typography variant="headline" component="h2">
-            {viewCompItem.get('objNm')}
-          </Typography>
-          <Typography color="textSecondary">
-            {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
-          </Typography>
-          <Divider />
-          {(viewCompItem && viewCompItem.get('objId') != '') &&
+        </CardContent>
+        </Card>
+      }
+        {(viewCompItem) && 
+          <Card elevation={0}>
+            <CardContent style={{padding: 10}}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Typography className={classes.compTitle}>
+                  {(compType == 'VIEW') ? '상세내용' : '단말보안정책'} {(isDefault) ? '*no' : ''}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container justify="flex-end">
+                  <Button size="small"
+                    variant="outlined" color="primary" style={{minWidth:32}}
+                    onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
+                  ><SettingsApplicationsIcon /></Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Typography variant="h5" component="h2">
+              {viewCompItem.get('objNm')}
+            </Typography>
+            <Typography color="textSecondary">
+              {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
+            </Typography>
+            <Divider />
             <Table>
               <TableBody>
 
@@ -126,10 +143,9 @@ class SecurityRuleComp extends Component {
 
               </TableBody>
             </Table>
-          }
-          </CardContent>
+            </CardContent>
+          </Card>
         }
-      </Card>
       <SecurityRuleDialog compId={compId} />
       </React.Fragment>
     );

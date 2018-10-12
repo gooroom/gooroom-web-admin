@@ -16,7 +16,7 @@ class GrTreeItem extends Component {
 
     render() {
         const {nodeKey, primaryText, style, checked, imperfect} = this.props
-        const {onClickNode, leftIcon, rightIcon, onCheckNode} = this.props
+        const {onClickNode, leftIcon, editIcon, rightIcon, onCheckNode} = this.props
 
         const styles = {
             root: {
@@ -42,6 +42,7 @@ class GrTreeItem extends Component {
                 />
                 {leftIcon}
                 <ListItemText inset primary={primaryText} />
+                {editIcon}
                 {rightIcon}
             </ListItem>
 

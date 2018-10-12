@@ -59,11 +59,12 @@ class ClientHostNameComp extends Component {
     const { classes } = this.props;
     const { ClientHostNameProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
     const selectedViewItem = ClientHostNameProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = ClientHostNameProps.getIn(['viewItems', compId, 'listAllData']);
     const selectedOptionItemId = ClientHostNameProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const isDefault = ClientHostNameProps.getIn(['viewItems', compId, 'isDefault']);
+    
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -81,31 +82,31 @@ class ClientHostNameComp extends Component {
 
     return (
       <React.Fragment>
-      <Card elevation={0}>
-        {(viewCompItem) && <CardContent style={contentStyle}>
-          <Grid container>
-            <Grid item xs={6}>
-              <Typography className={classes.compTitle}>
-                {(compType == 'VIEW') ? '상세내용' : 'Hosts설정'}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Grid container justify="flex-end">
-                <Button size="small"
-                  variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                ><SettingsApplicationsIcon />수정</Button>
+        {(viewCompItem) && 
+          <Card elevation={0}>
+            <CardContent style={{padding: 10}}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Typography className={classes.compTitle}>
+                  {(compType == 'VIEW') ? '상세내용' : 'Hosts설정'} {(isDefault) ? '*no' : ''}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container justify="flex-end">
+                  <Button size="small"
+                    variant="outlined" color="primary" style={{minWidth:32}}
+                    onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
+                  ><SettingsApplicationsIcon /></Button>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-          <Typography variant="headline" component="h2">
-            {viewCompItem.get('objNm')}
-          </Typography>
-          <Typography color="textSecondary">
-            {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
-          </Typography>
-          <Divider />
-          {(viewCompItem && viewCompItem.get('objId') != '') &&
+            <Typography variant="h5" component="h2">
+              {viewCompItem.get('objNm')}
+            </Typography>
+            <Typography color="textSecondary">
+              {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
+            </Typography>
+            <Divider />
             <Table>
               <TableBody>
                 <TableRow>
@@ -114,10 +115,9 @@ class ClientHostNameComp extends Component {
                 </TableRow>
               </TableBody>
             </Table>
-          }
-        </CardContent>
-      }
-      </Card>
+            </CardContent>
+          </Card>
+        }
       <ClientHostNameDialog compId={compId} />
       </React.Fragment>
     );

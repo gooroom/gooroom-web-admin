@@ -8,10 +8,13 @@ import * as ClientRegKeyActions from 'modules/ClientRegKeyModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
+
+import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
 
 import ClientRegKeyDialog from './ClientRegKeyDialog';
 import GrPane from 'containers/GrContent/GrPane';
@@ -37,17 +40,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
+class ClientRegKey extends Component {
 
-//
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class ClientRegKeyHead extends Component {
-
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
+  columnHeaders = [
     { id: 'chRegKey', isOrder: true, numeric: false, disablePadding: true, label: '단말등록키' },
     { id: 'chValidDate', isOrder: true, numeric: false, disablePadding: true, label: '유효날짜' },
     { id: 'chExpireDate', isOrder: true, numeric: false, disablePadding: true, label: '인증서만료날짜' },
@@ -55,70 +50,49 @@ class ClientRegKeyHead extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
   ];
 
-  render() {
-    const { classes } = this.props;
-    const { orderDir, orderColumn } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {ClientRegKeyHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(() => {
-                if(column.isOrder) {
-                  return <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >{column.label}</TableSortLabel>
-                } else {
-                  return <p>{column.label}</p>
-                }
-              })()}
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
-class ClientRegKey extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    }
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
 
-
   // .................................................
+  handleChangePage = (event, page) => {
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, this.props.match.params.grMenuId, {
+      page: page
+    });
+  };
+
+  handleChangeRowsPerPage = event => {
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value, page: 0
+    });
+  };
+
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+    ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
+    });
+  };
+
   handleSelectBtnClick = () => {
     const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {
-      page: 0,
-      compId: ''
-    }));
+    ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, this.props.match.params.grMenuId);
   };
   
-  handleCreateButton = () => {
-    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
+  handleRowClick = (event, id) => {
+    const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
+    const selectedViewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
     ClientRegKeyActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: ClientRegKeyDialog.TYPE_VIEW
+    });
+  };
+
+  // create dialog
+  handleCreateButton = () => {
+    this.props.ClientRegKeyActions.showDialog({
       selectedViewItem: {
         regKeyNo: '',
         validDate: (new Date()).setMonth((new Date()).getMonth() + 1),
@@ -126,191 +100,122 @@ class ClientRegKey extends Component {
         ipRange: '',
         comment: '' 
       },
-      dialogType: ClientRegKeyDialog.TYPE_ADD,
-      dialogOpen: true
+      dialogType: ClientRegKeyDialog.TYPE_ADD
     });
   }
   
-  handleRowClick = (event, id) => {
-    const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-    const selectedViewItem = ClientRegKeyProps.listData.find(function(element) {
-      return element.regKeyNo == id;
-    });
-    ClientRegKeyActions.showDialog({
-      selectedViewItem: Object.assign({}, selectedViewItem),
-      dialogType: ClientRegKeyDialog.TYPE_VIEW,
-      dialogOpen: true
-    });
-  };
-
+  // edit dialog
   handleEditClick = (event, id) => {
     event.stopPropagation();
     const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-    const selectedViewItem = ClientRegKeyProps.listData.find(function(element) {
-      return element.regKeyNo == id;
-    });
+    const selectedViewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
     ClientRegKeyActions.showDialog({
-      selectedViewItem: Object.assign({}, selectedViewItem),
-      dialogType: ClientRegKeyDialog.TYPE_EDIT,
-      dialogOpen: true
+      selectedViewItem: selectedViewItem,
+      dialogType: ClientRegKeyDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientRegKeyProps, ClientRegKeyActions, GrConfirmActions } = this.props;
-    const selectedViewItem = ClientRegKeyProps.listData.find(function(element) {
-      return element.regKeyNo == id;
-    });
-    ClientRegKeyActions.changeParamValue({
-      name: 'regKeyNo',
-      value: selectedViewItem.regKeyNo
-    });
-    const re = GrConfirmActions.showConfirm({
+    const { ClientRegKeyProps, GrConfirmActions } = this.props;
+    const selectedViewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
+    GrConfirmActions.showConfirm({
       confirmTitle: '단말등록키 삭제',
-      confirmMsg: '단말등록키(' + selectedViewItem.regKeyNo + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말등록키(' + selectedViewItem.get('regKeyNo') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true
+      confirmOpen: true,
+      confirmObject: selectedViewItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue) => {
-    const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
+  handleDeleteConfirmResult = (confirmValue, confirmObject) => {
     if(confirmValue) {
-      ClientRegKeyActions.deleteClientRegKeyData({
-        regKeyNo: ClientRegKeyProps.selectedViewItem.regKeyNo
+      const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
+      const compId = this.props.match.params.grMenuId;
+      ClientRegKeyActions.deleteClientGroupData({
+        compId: compId,
+        regKeyNo: confirmObject.get('regKeyNo')
       }).then(() => {
-        ClientRegKeyActions.readClientRegkeyList(ClientRegKeyProps.listParam);
-        }, () => {
+        ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, compId);
       });
     }
   };
 
-  // 페이지 번호 변경
-  handleChangePage = (event, page) => {
-    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {page: page}));
-  };
-
-  // 페이지당 레코드수 변경
-  handleChangeRowsPerPage = event => {
-    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {rowsPerPage: event.target.value, page: 0}));
-  };
-  
   // .................................................
-  handleRequestSort = (event, property) => {
-    const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-    let orderDir = "desc";
-    if (ClientRegKeyProps.listParam.orderColumn === property && ClientRegKeyProps.listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-    ClientRegKeyActions.readClientRegkeyList(getMergedObject(ClientRegKeyProps.listParam, {orderColumn: property, orderDir: orderDir}));
-  };
-  // .................................................
-
-  // .................................................
-  handleKeywordChange = name => event => {
-    const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    const newParam = getMergedObject(ClientRegKeyProps.listParam, {keyword: event.target.value});
-    ClientRegKeyActions.changeParamValue({
-      name: 'listParam',
-      value: newParam
+  handleKeywordChange = (name, value) => {
+    this.props.ClientRegKeyActions.changeListParamData({
+      name: name, 
+      value: value,
+      compId: this.props.match.params.grMenuId
     });
   }
 
   render() {
     const { classes } = this.props;
     const { ClientRegKeyProps } = this.props;
-    const emptyRows = ClientRegKeyProps.listParam.rowsPerPage - ClientRegKeyProps.listData.length;
+    const compId = this.props.match.params.grMenuId;
+    const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
+
+    const listObj = ClientRegKeyProps.getIn(['viewItems', compId]);
 
     return (
       <React.Fragment>
         <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GrPane>
-
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-
-              <Grid item xs={3} >
+            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+              <Grid item xs={6} >
                 <FormControl fullWidth={true}>
-                <TextField
-                  id='keyword'
-                  label='검색어'
-                  value={ClientRegKeyProps.listParam.keyword}
-                  onChange={this.handleKeywordChange('keyword')}
-                />
+                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
-
-              <Grid item xs={3} >
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={ () => this.handleSelectBtnClick() }
-                >
-                  <Search />
-                  조회
+              <Grid item xs={6} >
+                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                  <Search />조회
                 </Button>
-
               </Grid>
             </Grid>
-
-            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
+              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
+                <AddIcon />등록
               </Button>
             </Grid>
           </Grid>
 
           {/* data area */}
-          <div>
+          {(listObj) &&
+            <div>
             <Table>
-
-              <ClientRegKeyHead
+              <GrCommonTableHead
                 classes={classes}
-                orderDir={ClientRegKeyProps.listParam.orderDir}
-                orderColumn={ClientRegKeyProps.listParam.orderColumn}
-                onRequestSort={this.handleRequestSort}
+                keyId="regKeyNo"
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                onRequestSort={this.handleChangeSort}
+                columnData={this.columnHeaders}
               />
-
               <TableBody>
-                {ClientRegKeyProps.listData.map(n => {
+                {listObj.get('listData').map(n => {
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.regKeyNo)}
-                      tabIndex={-1}
-                      key={n.regKeyNo}
+                      onClick={event => this.handleRowClick(event, n.get('regKeyNo'))}
+                      key={n.get('regKeyNo')}
                     >
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('regKeyNo')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('validDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('expireDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
-                        {n.regKeyNo}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {formatDateToSimple(n.validDate, 'YYYY-MM-DD')}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {formatDateToSimple(n.expireDate, 'YYYY-MM-DD')}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {formatDateToSimple(n.modDate, 'YYYY-MM-DD')}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        <Button size="small" color="secondary" aria-label="edit" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.regKeyNo)}>
+                        <Button size="small" color="secondary" 
+                          className={classes.buttonInTableRow} 
+                          onClick={event => this.handleEditClick(event, n.get('regKeyNo'))}>
                           <BuildIcon />
                         </Button>
-                        <Button size="small" color="secondary" aria-label="delete" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.regKeyNo)}>
+                        <Button size="small" color="secondary" 
+                          className={classes.buttonInTableRow} 
+                          onClick={event => this.handleDeleteClick(event, n.get('regKeyNo'))}>
                           <DeleteIcon />
                         </Button>
                       </TableCell>
@@ -320,35 +225,31 @@ class ClientRegKey extends Component {
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell
-                      colSpan={ClientRegKeyHead.columnData.length + 1}
-                      className={classes.grSmallAndClickCell}
-                    />
+                    <TableCell colSpan={this.columnHeaders.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
             </Table>
-          </div>
-
-          <TablePagination
-            component="div"
-            count={ClientRegKeyProps.listParam.rowsFiltered}
-            rowsPerPage={ClientRegKeyProps.listParam.rowsPerPage}
-            rowsPerPageOptions={ClientRegKeyProps.listParam.rowsPerPageOptions}
-            page={ClientRegKeyProps.listParam.page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
-
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
+            </div>
+          }
         </GrPane>
         {/* dialog(popup) component area */}
-        <ClientRegKeyDialog />
+        <ClientRegKeyDialog compId={compId} />
         <GrConfirm />
       </React.Fragment>
     );

@@ -27,13 +27,6 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientHostNameSelector extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true
-    };
-  }
 
   componentDidMount() {
     this.props.ClientHostNameActions.readClientHostNameList(this.props.ClientHostNameProps, this.props.compId);
@@ -57,7 +50,6 @@ class ClientHostNameSelector extends Component {
     const { classes } = this.props;
     const { ClientHostNameProps, compId } = this.props;
 
-    const selectedViewItem = ClientHostNameProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = ClientHostNameProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = ClientHostNameProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
@@ -66,13 +58,14 @@ class ClientHostNameSelector extends Component {
 
     return (
       <Card className={classes.card}>
-        <CardContent>
+        <CardContent style={{padding: 0}}>
         {listAllData && 
-        <FormControl className={classes.formControl} style={{width: '100%'}}>
+        <FormControl className={classes.formControl} style={{width: '100%', marginBottom: 24, marginTop: 8, border: 'dotted 1px lightGray'}}>
           <InputLabel htmlFor="cfg-helper"></InputLabel>
           <Select value={selectedOptionItemId}
             onChange={this.handleChange}
           >
+          <MenuItem key={'-'} value={'-'}>없음</MenuItem>
           {listAllData.map(item => (
             <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
           ))}

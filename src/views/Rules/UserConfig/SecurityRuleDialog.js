@@ -100,7 +100,7 @@ class SecurityRuleDialog extends Component {
         if(confirmValue) {
             const { SecurityRuleProps, SecurityRuleActions } = this.props;
 
-            SecurityRuleActions.editSecurityRule(SecurityRuleProps.get('editingItem'))
+            SecurityRuleActions.editSecurityRule(SecurityRuleProps.get('editingItem'), this.props.compId)
                 .then((res) => {
                     refreshDataListInComp(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
                     this.handleClose();
@@ -154,7 +154,7 @@ class SecurityRuleDialog extends Component {
                     />
                     {(dialogType === SecurityRuleDialog.TYPE_VIEW) &&
                         <div>
-                            <Grid container spacing={24} className={classes.grNormalTableRow}>
+                            <Grid container spacing={24} >
                                 <Grid item xs={12}>
                                 </Grid> 
                             </Grid>
@@ -165,7 +165,7 @@ class SecurityRuleDialog extends Component {
 
                             <Grid item xs={12} container 
                                 alignItems="flex-end" direction="row" justify="space-between" 
-                                className={classNames(classes.grNormalTableRow, classes.dialogItemRow)}>
+                                className={classes.dialogItemRow}>
                                 <Grid item xs={5}>
                                     <TextField
                                         label="화면보호기 설정시간(분)"
@@ -215,12 +215,12 @@ class SecurityRuleDialog extends Component {
 
                 <DialogActions>
                 {(dialogType === SecurityRuleDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
+                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
                 }
                 {(dialogType === SecurityRuleDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
-                <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
+                <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
                 <GrConfirm />
             </Dialog>

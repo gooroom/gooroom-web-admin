@@ -22,10 +22,17 @@ import BrowserRuleManage from "views/Rules/UserConfig/BrowserRuleManage";
 import SecurityRuleManage from "views/Rules/UserConfig/SecurityRuleManage";
 
 import JobManage from "views/Job/JobManage";
-import PackageManage from 'views/Package/PackageManage';
+import PackageManage from 'views/ClientPackage/ClientPackageManage';
 
 import DeptManage from "views/User/DeptManage";
 import UserManage from "views/User/UserManage";
+
+import AdminUserManage from "views/System/AdminUserManage";
+import ServerUrlInfo from "views/System/ServerUrlInfo";
+import GcspManage from "views/System/GcspManage";
+
+
+import DesktopAppManage from "views/Desktop/DesktopAppManage";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -61,6 +68,14 @@ class GrRouters extends Component {
           <Route path="/package/packagemanage/:grMenuId/:grMenuName" component={PackageManage} />
           <Route path="/user/deptmanage/:grMenuId/:grMenuName" component={DeptManage} />
           <Route path="/user/usermanage/:grMenuId/:grMenuName" component={UserManage} />
+
+          <Route path="/desktopconfig/desktopapp/:grMenuId/:grMenuName" component={DesktopAppManage} />
+
+          <Route path="/system/adminusermng/:grMenuId/:grMenuName" component={AdminUserManage} />
+          <Route path="/system/serverurl/:grMenuId/:grMenuName" component={ServerUrlInfo} />
+          <Route path="/system/cloudservicemng/:grMenuId/:grMenuName" component={GcspManage} />
+          
+          
           <Route path="/test/components/:grMenuId/:grMenuName" component={ComponentTests} />
         </Switch>
       </div>

@@ -40,7 +40,7 @@ class ClientDesktopConfigInform extends Component {
     return (
       <div>
       {(ClientHostNameProps.informOpen) &&
-        <Card style={{boxShadow:this.props.compShadow}} >
+        <Card >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.objNm : ''}
             subheader={selectedViewItem.objId + ', ' + formatDateToSimple(selectedViewItem.modDate, 'YYYY-MM-DD')}
@@ -81,3 +81,8 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientDesktopConfigInform));
 
+export const generateConfigObject = (param) => {
+  return param;
+
+
+};

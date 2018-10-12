@@ -32,13 +32,15 @@ class MediaRuleSelector extends Component {
   componentDidMount() {
     const { MediaRuleProps, MediaRuleActions, compId, initId } = this.props;
     MediaRuleActions.readMediaRuleList(MediaRuleProps, compId);
-    MediaRuleActions.changeCompVariable({
-      compId: compId,
-      name: 'selectedOptionItemId',
-      value: initId
-    });
+    if(!MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+      MediaRuleActions.changeCompVariable({
+        compId: compId,
+        name: 'selectedOptionItemId',
+        value: initId
+      });
+    }
   }
-
+  
   handleChange = (event, value) => {
     const { MediaRuleProps, MediaRuleActions, compId } = this.props;
     MediaRuleActions.changeCompVariable({
@@ -51,9 +53,8 @@ class MediaRuleSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { MediaRuleProps, MediaRuleActions, compId } = this.props;
+    const { MediaRuleProps, compId } = this.props;
 
-    const selectedViewItem = MediaRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = MediaRuleProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
@@ -62,13 +63,14 @@ class MediaRuleSelector extends Component {
 
     return (
       <Card className={classes.card}>
-        <CardContent>
+        <CardContent style={{padding: 0}}>
         {listAllData && 
-        <FormControl className={classes.formControl} style={{width: '100%'}}>
+        <FormControl className={classes.formControl} style={{width: '100%', marginBottom: 24, marginTop: 8, border: 'dotted 1px lightGray'}}>
           <InputLabel htmlFor="cfg-helper"></InputLabel>
           <Select value={selectedOptionItemId}
             onChange={this.handleChange}
           >
+          <MenuItem key={'-'} value={'-'}>없음</MenuItem>
           {listAllData.map(item => (
             <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
           ))}

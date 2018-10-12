@@ -52,11 +52,12 @@ class BrowserRuleComp extends Component {
     const { classes } = this.props;
     const { BrowserRuleProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const contentStyle = (compType == 'VIEW') ? {paddingRight: 0, paddingLeft: 0, paddingTop: 40, paddingBottom: 0} : {};
 
     const selectedViewItem = BrowserRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
     const selectedOptionItemId = BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const isDefault = BrowserRuleProps.getIn(['viewItems', compId, 'isDefault']);
+
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
         if(listAllData && selectedOptionItemId != null) {
@@ -74,41 +75,55 @@ class BrowserRuleComp extends Component {
     
     return (
       <React.Fragment>
-      <Card elevation={0}>
-        {(viewCompItem) && <CardContent style={contentStyle}>
-          <Grid container>
-            <Grid item xs={6}>
-              <Typography className={classes.compTitle}>
-                {(compType == 'VIEW') ? '상세내용' : '브라우져제어정책'}
-              </Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Grid container justify="flex-end">
-                <Button size="small"
-                  variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                ><SettingsApplicationsIcon />수정</Button>
+        {(!viewCompItem) && 
+          <Card elevation={0}>
+          <CardContent style={{padding: 10}}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Typography className={classes.compTitleForEmpty}>브라우져제어정책</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container justify="flex-end">
+                없음
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-          <Typography variant="headline" component="h2">
-            {viewCompItem.get('objNm')}
-          </Typography>
-          <Typography color="textSecondary">
-            {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
-          </Typography>
-          <Divider />
-          {(viewCompItem && viewCompItem.get('objId') != '') &&
+          </CardContent>
+          </Card>
+        }
+        {(viewCompItem) && 
+          <Card elevation={0}>
+          <CardContent style={{padding: 10}}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Typography className={classes.compTitle}>
+                  {(compType == 'VIEW') ? '상세내용' : '브라우져제어정책'} {(isDefault) ? '*no' : ''}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container justify="flex-end">
+                  <Button size="small"
+                    variant="outlined" color="primary" style={{minWidth:32}}
+                    onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
+                  ><SettingsApplicationsIcon /></Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Typography variant="h5" component="h2">
+              {viewCompItem.get('objNm')}
+            </Typography>
+            <Typography color="textSecondary">
+              {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
+            </Typography>
+            <Divider />
             <Table>
               <TableBody>
-
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} Web Socket 사용</TableCell>
                   <TableCell numeric>{viewCompItem.get('webSocket')}</TableCell>
                   <TableCell component="th" scope="row">{bull} Web Worker 사용</TableCell>
                   <TableCell numeric>{viewCompItem.get('webWorker')}</TableCell>
                 </TableRow>
-
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 신뢰사이트 설정정보</TableCell>
                   <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewCompItem.get('trustSetupId')}</pre></TableCell>
@@ -117,20 +132,17 @@ class BrowserRuleComp extends Component {
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 비신뢰사이트 설정정보</TableCell>
                   <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewCompItem.get('untrustSetupId')}</pre></TableCell>
                 </TableRow>
-
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} White List</TableCell>
                   <TableCell colSpan={3} numeric>{viewCompItem.get('trustUrlList').map(function(prop, index) {
                     return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
                 </TableRow>
-
               </TableBody>
             </Table>
-          }
-          </CardContent>
+            </CardContent>
+          </Card>
         }
-      </Card>
       <BrowserRuleDialog compId={compId} />
       </React.Fragment>
     );

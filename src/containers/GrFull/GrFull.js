@@ -36,13 +36,39 @@ import Typography from '@material-ui/core/Typography';
 
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
   overrides: {
     MuiButton: {
       sizeSmall: {
-        padding: 0
+        padding: 0,
+        minWidth: 48,
+        minHeight: 24
       },
     },
-  },
+    MuiIconButton: {
+      root: {
+        paddingTop: 0,
+        paddingBottom: 0
+      }
+    },
+    MuiTableCell: {
+      root: {
+        padding: '0 6 0 0'
+      }
+    },
+    MuiTableRow: {
+      root: {
+        height: 32
+      }
+    },
+    MuiSvgIcon: {
+      root: {
+        fontSize: 16
+      }
+    }
+  }
 });
 
 class GrFull extends Component {
