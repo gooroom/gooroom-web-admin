@@ -5,7 +5,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
@@ -21,7 +21,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -79,7 +79,7 @@ const mapDispatchToProps = (dispatch) => ({
   ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientDesktopConfigInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientDesktopConfigInform));
 
 export const generateConfigObject = (param) => {
   return param;

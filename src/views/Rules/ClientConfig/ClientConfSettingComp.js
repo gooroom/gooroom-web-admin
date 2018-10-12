@@ -11,7 +11,7 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
 import { generateConfigObject } from './ClientConfSettingInform';
-import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
+import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GRUtils/GRTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -30,7 +30,7 @@ import Divider from '@material-ui/core/Divider';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { CardHeader } from '@material-ui/core';
 
 
@@ -141,6 +141,6 @@ const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSettingComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingComp));
 
 

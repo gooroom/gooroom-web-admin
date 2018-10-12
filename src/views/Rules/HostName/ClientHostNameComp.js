@@ -11,7 +11,7 @@ import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 
 import ClientHostNameDialog from './ClientHostNameManageDialog';
 import { generateConfigObject } from './ClientHostNameManageInform';
-import { getSelectedObjectInCompAndId, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import { getSelectedObjectInCompAndId, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -30,7 +30,7 @@ import Divider from '@material-ui/core/Divider';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -134,6 +134,6 @@ const mapDispatchToProps = (dispatch) => ({
   ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientHostNameComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameComp));
 
 

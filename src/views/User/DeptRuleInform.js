@@ -6,8 +6,8 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getViewItem } from 'components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getViewItem } from 'components/GRUtils/GRCommonUtils';
 
 import * as UserActions from 'modules/UserModule';
 
@@ -23,7 +23,7 @@ import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
 import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -79,5 +79,5 @@ const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(DeptRuleInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptRuleInform));
 

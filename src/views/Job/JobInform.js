@@ -5,11 +5,11 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getMergedObject } from 'components/GRUtils/GRCommonUtils';
 
 import * as JobManageActions from 'modules/JobManageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -25,7 +25,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
   // static columnData = [
@@ -120,8 +120,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   JobManageActions: bindActionCreators(JobManageActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(JobInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(JobInform));
 

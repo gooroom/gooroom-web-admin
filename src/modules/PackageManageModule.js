@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
 const GET_JOB_LIST_PENDING = 'jobManage/GET_LIST_PENDING';
 const GET_JOB_LIST_SUCCESS = 'jobManage/GET_LIST_SUCCESS';

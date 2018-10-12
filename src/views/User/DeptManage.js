@@ -12,13 +12,13 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import GrPageHeader from "containers/GrContent/GrPageHeader";
+import GRPageHeader from "containers/GRContent/GRPageHeader";
 
-import GrTreeList from "components/GrTree/GrTreeList";
-import GrPane from "containers/GrContent/GrPane";
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRTreeList from "components/GRTree/GRTreeList";
+import GRPane from "containers/GRContent/GRPane";
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import UserListComp from 'views/User/UserListComp';
 import DeptRuleInform from "views/User/DeptRuleInform";
@@ -33,7 +33,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import Button from '@material-ui/core/Button';
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -151,11 +151,11 @@ class DeptManage extends Component {
   }
 
   handleDeleteUserInDept = (event) => {
-    const { UserProps, DeptProps, GrConfirmActions } = this.props;
+    const { UserProps, DeptProps, GRConfirmActions } = this.props;
     const selectedDeptCd = DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
     const selectedUsers = UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
     if(selectedUsers && selectedUsers !== '') {
-      GrConfirmActions.showConfirm({
+      GRConfirmActions.showConfirm({
         confirmTitle: '사용자 삭제',
         confirmMsg: '선택하신 사용자를 조직에서 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteUserInDeptConfirmResult,
@@ -188,8 +188,8 @@ class DeptManage extends Component {
 
   handleUserSelectSave = (selectedUsers) => {
     const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
-    const { DeptProps, GrConfirmActions } = this.props;
-    GrConfirmActions.showConfirm({
+    const { DeptProps, GRConfirmActions } = this.props;
+    GRConfirmActions.showConfirm({
         confirmTitle: '사용자 추가',
         confirmMsg: '사용자정보를 조직에 추가하시겠습니까?',
         handleConfirmResult: this.handleUserSelectSaveConfirmResult,
@@ -232,8 +232,8 @@ class DeptManage extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
 
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
 
@@ -246,7 +246,7 @@ class DeptManage extends Component {
                   <RemoveIcon />삭제
                 </Button>
               </Toolbar>
-              <GrTreeList
+              <GRTreeList
                 useFolderIcons={true}
                 listHeight='24px'
                 url='readChildrenDeptList'
@@ -281,10 +281,10 @@ class DeptManage extends Component {
             </Grid>
 
           </Grid>
-        </GrPane>
+        </GRPane>
         <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
         <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectClose} />
-        <GrConfirm />
+        <GRConfirm />
 
       </React.Fragment>
     );
@@ -304,9 +304,9 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(DeptManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptManage));
 
 

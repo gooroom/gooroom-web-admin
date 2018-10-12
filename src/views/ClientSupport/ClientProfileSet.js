@@ -5,19 +5,19 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientProfileSetActions from 'modules/ClientProfileSetModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import ClientProfileSetDialog from './ClientProfileSetDialog';
-import GrPane from 'containers/GrContent/GrPane';
+import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -38,7 +38,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class ClientProfileSet extends Component {
   
@@ -142,9 +142,9 @@ class ClientProfileSet extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientProfileSetProps, ClientProfileSetActions, GrConfirmActions } = this.props;
+    const { ClientProfileSetProps, ClientProfileSetActions, GRConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
-    GrConfirmActions.showConfirm({
+    GRConfirmActions.showConfirm({
       confirmTitle: '단말프로파일 삭제',
       confirmMsg: '단말프로파일(' + selectedViewItem.get('profileNo') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
@@ -184,8 +184,8 @@ class ClientProfileSet extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
@@ -211,7 +211,7 @@ class ClientProfileSet extends Component {
           {(listObj) &&
             <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="profileNo"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -280,10 +280,10 @@ class ClientProfileSet extends Component {
             />
             </div>
           }
-        </GrPane>
+        </GRPane>
         {/* dialog(popup) component area */}
         <ClientProfileSetDialog compId={compId} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
     );
   }
@@ -296,7 +296,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientProfileSetActions: bindActionCreators(ClientProfileSetActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientProfileSet));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfileSet));

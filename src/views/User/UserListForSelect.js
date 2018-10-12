@@ -9,21 +9,21 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
 
 import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
-import GrPageHeader from "containers/GrContent/GrPageHeader";
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from "containers/GRContent/GRPageHeader";
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import UserDialog from "views/User/UserDialog";
 import UserInform from "views/User/UserInform";
-import GrPane from "containers/GrContent/GrPane";
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRPane from "containers/GRContent/GRPane";
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -46,9 +46,9 @@ import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
 
 //
@@ -242,7 +242,7 @@ class UserListForSelect extends Component {
         </Grid>
       {(listObj) &&
         <Table>
-          <GrCommonTableHead
+          <GRCommonTableHead
             classes={classes}
             keyId="userId"
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -323,5 +323,5 @@ class UserListForSelect extends Component {
   }
 }
 
-export default withStyles(GrCommonStyle)(UserListForSelect);
+export default withStyles(GRCommonStyle)(UserListForSelect);
 

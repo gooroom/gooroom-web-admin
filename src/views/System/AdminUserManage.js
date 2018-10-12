@@ -5,22 +5,22 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as AdminUserActions from 'modules/AdminUserModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
 import AdminUserDialog from './AdminUserDialog';
 import AdminRecordDialog from './AdminRecordDialog';
 
-import GrPane from 'containers/GrContent/GrPane';
+import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -41,7 +41,7 @@ import BuildIcon from '@material-ui/icons/Build';
 import ListIcon from '@material-ui/icons/List';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class AdminUserManage extends Component {
 
@@ -142,9 +142,9 @@ class AdminUserManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { AdminUserProps, GrConfirmActions } = this.props;
+    const { AdminUserProps, GRConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
-    GrConfirmActions.showConfirm({
+    GRConfirmActions.showConfirm({
       confirmTitle: '관리자계정 삭제',
       confirmMsg: '관리자계정(' + selectedViewItem.get('adminId') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
@@ -187,8 +187,8 @@ class AdminUserManage extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
@@ -220,7 +220,7 @@ class AdminUserManage extends Component {
           {(listObj) &&
             <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="adminId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -290,14 +290,14 @@ class AdminUserManage extends Component {
             />
             </div>
           }
-        </GrPane>
+        </GRPane>
         {/* dialog(popup) component area */}
         <AdminUserDialog compId={compId} />
         <AdminRecordDialog compId={compId} 
           isOpen={this.state.openRecordDialog} 
           adminId={this.state.recordAdminId} 
           onClose={this.handleCloseRecord} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
     );
   }
@@ -309,7 +309,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   AdminUserActions: bindActionCreators(AdminUserActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(AdminUserManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminUserManage));

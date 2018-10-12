@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import { grRequestPromise } from "components/GrUtils/GrRequester";
+import { grRequestPromise } from "components/GRUtils/GRRequester";
 
 import Table, {
   TableBody,

@@ -5,11 +5,11 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
-import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -35,7 +35,7 @@ import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -128,8 +128,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientGroupInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupInform));
 

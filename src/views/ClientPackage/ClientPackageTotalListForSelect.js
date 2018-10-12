@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import KeywordOption from "views/Options/KeywordOption";
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -25,9 +25,9 @@ import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
 
 //
@@ -190,7 +190,7 @@ class ClientPackageTotalListForSelect extends Component {
         </Grid>
       {(listObj) &&
         <Table>
-          <GrCommonTableHead
+          <GRCommonTableHead
             classes={classes}
             keyId="userId"
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -257,5 +257,5 @@ class ClientPackageTotalListForSelect extends Component {
   }
 }
 
-export default withStyles(GrCommonStyle)(ClientPackageTotalListForSelect);
+export default withStyles(GRCommonStyle)(ClientPackageTotalListForSelect);
 

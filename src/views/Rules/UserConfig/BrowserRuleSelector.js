@@ -20,7 +20,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
 
@@ -98,6 +98,6 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleSelector));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleSelector));
 
 

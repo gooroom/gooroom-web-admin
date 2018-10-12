@@ -20,7 +20,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
 
@@ -99,6 +99,6 @@ const mapDispatchToProps = (dispatch) => ({
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaRuleSelector));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(MediaRuleSelector));
 
 

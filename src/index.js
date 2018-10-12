@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import './scss/main.scss'
 
 // Containers
-import GrFull from 'containers/GrFull/'
+import GRFull from 'containers/GRFull/'
 
 ReactDOM.render(
   <Provider store={store}>
@@ -17,7 +17,7 @@ ReactDOM.render(
 
       {/* list up another pages like 404, 500 error pages. */}
 
-      <Route path="/" name="Home" component={GrFull} />
+      <Route path="/" name="Home" component={GRFull} />
     </Switch>
   </HashRouter>
   </Provider>,

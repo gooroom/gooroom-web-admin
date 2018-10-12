@@ -8,12 +8,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientManageActions from 'modules/ClientManageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import ClientStatusSelect from 'views/Options/ClientStatusSelect';
 import KeywordOption from "views/Options/KeywordOption";
 
@@ -35,7 +35,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Search from '@material-ui/icons/Search'; 
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -179,7 +179,7 @@ class ClientManageComp extends Component {
         {/* data area */}
         {listObj &&
         <Table>
-          <GrCommonTableHead
+          <GRCommonTableHead
             classes={classes}
             keyId="clientId"
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -255,8 +255,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientManageComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageComp));
 

@@ -4,7 +4,7 @@ import { Map, List, fromJS } from 'immutable';
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import ClientListForSelect from 'views/Client/ClientListForSelect';
 
@@ -19,7 +19,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -74,7 +74,7 @@ class ClientSelectDialog extends Component {
                         <Grid container spacing={8}>
                             {/* <Grid item xs={12} sm={12} lg={4}>
                                 <Card className={classNames(classes.deptTreeCard)}>
-                                    <GrTreeList
+                                    <GRTreeList
                                         useFolderIcons={true}
                                         listHeight='24px'
                                         url='readChildrenDeptList'
@@ -103,7 +103,7 @@ class ClientSelectDialog extends Component {
                         <Button onClick={this.handleAddButton} variant='contained' color="secondary">추가</Button>
                         <Button onClick={this.props.onClose} variant='contained' color="primary">닫기</Button>
                     </DialogActions>
-                    <GrConfirm />
+                    <GRConfirm />
                 </Dialog>
             }
             </div>
@@ -111,4 +111,4 @@ class ClientSelectDialog extends Component {
     }
 }
 
-export default withStyles(GrCommonStyle)(ClientSelectDialog);
+export default withStyles(GRCommonStyle)(ClientSelectDialog);

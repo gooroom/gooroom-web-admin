@@ -5,10 +5,10 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import GrConfirm from 'components/GrComponents/GrConfirm';
-import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils';
+import GRConfirm from 'components/GRComponents/GRConfirm';
+import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -32,7 +32,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -69,8 +69,8 @@ class BrowserRuleDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { BrowserRuleProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { BrowserRuleProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '브라우저제어정보 등록',
             confirmMsg: '브라우저제어정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
@@ -90,8 +90,8 @@ class BrowserRuleDialog extends Component {
     }
 
     handleEditData = (event, id) => {
-        const { BrowserRuleProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { BrowserRuleProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '브라우저제어정보 수정',
             confirmMsg: '브라우저제어정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
@@ -257,7 +257,7 @@ class BrowserRuleDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
-                <GrConfirm />
+                <GRConfirm />
             </Dialog>
             }
             </div>
@@ -272,8 +272,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(BrowserRuleDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleDialog));
 

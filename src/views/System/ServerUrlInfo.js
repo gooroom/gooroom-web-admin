@@ -4,19 +4,19 @@ import { Map, List } from 'immutable';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as GrConfirmActions from 'modules/GrConfirmModule';
-import * as GrAlertActions from 'modules/GrAlertModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrConfirm from 'components/GrComponents/GrConfirm';
-import GrAlert from 'components/GrComponents/GrAlert';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRAlert from 'components/GRComponents/GRAlert';
 
-import GrPane from 'containers/GrContent/GrPane';
+import GRPane from 'containers/GRContent/GRPane';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -28,7 +28,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class ServerUrlInfo extends Component {
 
@@ -68,8 +68,8 @@ class ServerUrlInfo extends Component {
   };
 
   handleSaveData = (event) => {
-    const { GrConfirmActions } = this.props;
-    GrConfirmActions.showConfirm({
+    const { GRConfirmActions } = this.props;
+    GRConfirmActions.showConfirm({
         confirmTitle: '구름관리서버설정 저장',
         confirmMsg: '구름관리서버설정을 저장하시겠습니까?',
         confirmOpen: true,
@@ -89,7 +89,7 @@ class ServerUrlInfo extends Component {
           }).then(
             (response) => {
               if(response.data.status.result !== 'success') {
-                this.props.GrAlertActions.showAlert({
+                this.props.GRAlertActions.showAlert({
                     alertTitle: '시스템오류',
                     alertMsg: '구름관리서버설정을 저장되지 않았습니다.'
                 });
@@ -115,8 +115,8 @@ class ServerUrlInfo extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
 
         <AppBar position="static" elevation={0} color="default">
           <Toolbar variant="dense">
@@ -191,9 +191,9 @@ class ServerUrlInfo extends Component {
           </CardContent>
         </Card>
           
-        </GrPane>
-        <GrConfirm />
-        <GrAlert />
+        </GRPane>
+        <GRConfirm />
+        <GRAlert />
       </React.Fragment>
     );
   }
@@ -203,9 +203,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch),
-  GrAlertActions: bindActionCreators(GrAlertActions, dispatch),
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+  GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ServerUrlInfo));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ServerUrlInfo));
 

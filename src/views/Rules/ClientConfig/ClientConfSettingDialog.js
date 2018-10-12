@@ -5,10 +5,10 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import GrConfirm from 'components/GrComponents/GrConfirm';
-import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils';
+import GRConfirm from 'components/GRComponents/GRConfirm';
+import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -32,7 +32,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Radio from '@material-ui/core/Radio';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -76,8 +76,8 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { ClientConfSettingProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientConfSettingProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말정책정보 등록',
             confirmMsg: '단말정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
@@ -97,8 +97,8 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleEditData = (event, id) => {
-        const { ClientConfSettingProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientConfSettingProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말정책정보 수정',
             confirmMsg: '단말정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
@@ -254,7 +254,7 @@ class ClientConfSettingDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
-                <GrConfirm />
+                <GRConfirm />
             </Dialog>
             }
             </div>
@@ -269,8 +269,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSettingDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingDialog));
 

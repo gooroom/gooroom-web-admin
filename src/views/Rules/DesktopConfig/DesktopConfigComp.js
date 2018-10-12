@@ -8,10 +8,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { generateConfigObject } from './ClientDesktopConfigInform';
-import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
+import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GRUtils/GRTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -30,7 +30,7 @@ import Divider from '@material-ui/core/Divider';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -125,9 +125,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(DesktopConfigComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopConfigComp));
 
 

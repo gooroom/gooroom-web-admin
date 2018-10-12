@@ -2,7 +2,7 @@
 import { handleActions } from 'redux-actions';
 import { Map, List, fromJS } from 'immutable';
 
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'clientManageComp/COMMON_PENDING';

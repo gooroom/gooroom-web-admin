@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
@@ -23,7 +23,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -100,7 +100,7 @@ const mapDispatchToProps = (dispatch) => ({
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(SecurityRuleInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityRuleInform));
 
 export const generateConfigObject = (param) => {
 

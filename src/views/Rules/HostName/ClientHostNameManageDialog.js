@@ -6,10 +6,10 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import GrConfirm from 'components/GrComponents/GrConfirm';
-import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils'; 
+import GRConfirm from 'components/GRComponents/GRConfirm';
+import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils'; 
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -19,7 +19,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -50,8 +50,8 @@ class ClientHostNameManageDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { ClientHostNameProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientHostNameProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: 'Hosts 정보 등록',
             confirmMsg: 'Hosts 정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
@@ -71,8 +71,8 @@ class ClientHostNameManageDialog extends Component {
     }
 
     handleEditData = (event, id) => {
-        const { ClientHostNameProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientHostNameProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: 'Hosts 정보 수정',
             confirmMsg: 'Hosts 정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
@@ -161,7 +161,7 @@ class ClientHostNameManageDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
-                <GrConfirm />
+                <GRConfirm />
             </Dialog>
             }
             </div>
@@ -176,8 +176,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientHostNameManageDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameManageDialog));
 

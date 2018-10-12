@@ -4,11 +4,11 @@ import { Map, List, fromJS } from 'immutable';
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import KeywordOption from "views/Options/KeywordOption";
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -27,9 +27,9 @@ import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
 class AdminRecordListComp extends Component {
 
@@ -205,7 +205,7 @@ class AdminRecordListComp extends Component {
         </Grid>
       {(listObj) &&
         <Table>
-          <GrCommonTableHead
+          <GRCommonTableHead
             classes={classes}
             keyId="logSeq"
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -264,5 +264,5 @@ class AdminRecordListComp extends Component {
   }
 }
 
-export default withStyles(GrCommonStyle)(AdminRecordListComp);
+export default withStyles(GRCommonStyle)(AdminRecordListComp);
 

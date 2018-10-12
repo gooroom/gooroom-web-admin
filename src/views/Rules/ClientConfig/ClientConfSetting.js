@@ -7,22 +7,22 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { refreshDataListInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import { generateConfigObject } from './ClientConfSettingInform';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
 import ClientConfSettingInform from './ClientConfSettingInform';
-import GrPane from 'containers/GrContent/GrPane';
+import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -43,7 +43,7 @@ import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -145,9 +145,9 @@ class ClientConfSetting extends Component {
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { ClientConfSettingProps, GrConfirmActions } = this.props;
+    const { ClientConfSettingProps, GRConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
-    GrConfirmActions.showConfirm({
+    GRConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
       confirmMsg: '단말정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
@@ -178,8 +178,8 @@ class ClientConfSetting extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
@@ -208,7 +208,7 @@ class ClientConfSetting extends Component {
           {(listObj) && 
           <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="objId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -268,11 +268,11 @@ class ClientConfSetting extends Component {
             />
             </div>
           }
-        </GrPane>
+        </GRPane>
         {/* dialog(popup) component area */}
         <ClientConfSettingInform compId={compId} />
         <ClientConfSettingDialog compId={compId} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
     );
   }
@@ -284,10 +284,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSetting));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSetting));
 
 
 

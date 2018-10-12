@@ -20,7 +20,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
 
@@ -109,6 +109,6 @@ const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSettingSelector));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingSelector));
 
 

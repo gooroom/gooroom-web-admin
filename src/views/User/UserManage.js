@@ -10,21 +10,21 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
 
 import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
-import GrPageHeader from "containers/GrContent/GrPageHeader";
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from "containers/GRContent/GRPageHeader";
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import UserDialog from "views/User/UserDialog";
 import UserInform from "views/User/UserInform";
-import GrPane from "containers/GrContent/GrPane";
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRPane from "containers/GRContent/GRPane";
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -47,7 +47,7 @@ import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -200,9 +200,9 @@ class UserManage extends Component {
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { UserProps, GrConfirmActions } = this.props;
+    const { UserProps, GRConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
-    GrConfirmActions.showConfirm({
+    GRConfirmActions.showConfirm({
       confirmTitle: '사용자정보 삭제',
       confirmMsg: '사용자정보(' + selectedViewItem.get('userNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
@@ -250,8 +250,8 @@ class UserManage extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
@@ -284,7 +284,7 @@ class UserManage extends Component {
           {(listObj) && 
           <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="userId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -362,10 +362,10 @@ class UserManage extends Component {
             />
           </div>
           }
-        </GrPane>
+        </GRPane>
         <UserInform compId={compId} />
         <UserDialog compId={compId} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
     );
   }
@@ -380,8 +380,8 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserManage));
 
