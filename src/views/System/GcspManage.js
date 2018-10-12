@@ -57,8 +57,8 @@ class GcspManage extends Component {
     { id: 'chGcspId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
     { id: 'chStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
     { id: 'chRegDt', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
-    { id: 'chRecord', isOrder: false, numeric: false, disablePadding: true, label: '작업이력' }
+    { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: '등록자' },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
   componentDidMount() {
@@ -240,6 +240,7 @@ class GcspManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('statusCd')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
@@ -250,13 +251,6 @@ class GcspManage extends Component {
                           className={classes.buttonInTableRow} 
                           onClick={event => this.handleDeleteClick(event, n.get('gcspId'))}>
                           <DeleteIcon />
-                        </Button>
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        <Button size="small" color="secondary" 
-                          className={classes.buttonInTableRow} 
-                          onClick={event => this.handleShowRecord(event, n.get('gcspId'))}>
-                          <ListIcon />
                         </Button>
                       </TableCell>
                     </TableRow>

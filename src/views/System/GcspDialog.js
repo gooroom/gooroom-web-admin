@@ -166,7 +166,7 @@ class GcspDialog extends Component {
                                 label="서비스아이디"
                                 value={(editingItem.get('gcspId')) ? editingItem.get('gcspId') : ''}
                                 onChange={
-                                    (dialogType == GcspDialog.TYPE_VIEW) ? null : this.handleValueChange("gcspId")
+                                    (dialogType == GcspDialog.TYPE_VIEW || dialogType == GcspDialog.TYPE_EDIT) ? null : this.handleValueChange("gcspId")
                                 }
                                 className={classes.fullWidth}
                             />
@@ -208,36 +208,62 @@ class GcspDialog extends Component {
                         className={classes.fullWidth}
                     />
 
-                    <FormControl component="fieldset" style={{marginTop:20}}>
-                        <FormLabel component="legend">인증서 생성 방법</FormLabel>
-                        <RadioGroup row={true}
-                            aria-label="gender"
-                            name="gender2"
-                            style={{marginTop:20}}
-                            value={(editingItem.get('certGubun')) ? editingItem.get('certGubun') : ''}
-                            onChange={this.handleValueChange('certGubun')}
-                        >
-                            <FormControlLabel value="cert1" control={<Radio />} label="자동 생성" />
-                            <FormControlLabel value="cert2" control={<Radio />} label="CSR 생성" />
-                        </RadioGroup>
-                        <FormHelperText>
-                        {
-                            (editingItem.get('certGubun') === 'cert1') ? "구름서버에서 인증서를 자동으로 생성합니다." : "CSR정보를 이용하여 인증서를 승인합니다."
-                        }
-                        </FormHelperText>
-                    </FormControl>
-                    {(editingItem.get('certGubun') === 'cert2') && 
-
-                    <TextField label="CSR 정보"
-                        margin="normal"
-                        multiline={true}
-                        rows={5}
-                        fullWidth={true}
-                        variant="outlined"
-                        onChange={this.handleValueChange("gcspCsr")}
-                    />
-
+                    {(dialogType == GcspDialog.TYPE_ADD) &&
+                        <div>
+                            <FormControl component="fieldset" style={{marginTop:20}}>
+                                <FormLabel component="legend">인증서 생성 방법</FormLabel>
+                                <RadioGroup row={true}
+                                    aria-label="gender"
+                                    name="gender2"
+                                    style={{marginTop:20}}
+                                    value={(editingItem.get('certGubun')) ? editingItem.get('certGubun') : ''}
+                                    onChange={this.handleValueChange('certGubun')}
+                                >
+                                    <FormControlLabel value="cert1" control={<Radio />} label="자동 생성" />
+                                    <FormControlLabel value="cert2" control={<Radio />} label="CSR 생성" />
+                                </RadioGroup>
+                                <FormHelperText>
+                                {
+                                    (editingItem.get('certGubun') === 'cert1') ? "구름서버에서 인증서를 자동으로 생성합니다." : "CSR정보를 이용하여 인증서를 승인합니다."
+                                }
+                                </FormHelperText>
+                            </FormControl>
+                            {(editingItem.get('certGubun') === 'cert2') && 
+                                <TextField label="CSR 정보"
+                                    margin="normal"
+                                    multiline={true}
+                                    rows={5}
+                                    fullWidth={true}
+                                    variant="outlined"
+                                    onChange={this.handleValueChange("gcspCsr")}
+                                />
+                            }
+                        </div>
                     }
+                    {(dialogType == GcspDialog.TYPE_VIEW) && 
+                        <div style={{marginTop:20}}>
+                           <FormLabel component="legend">인증서 정보</FormLabel>
+                           <TextField label="인증서"
+                                margin="normal"
+                                multiline={true}
+                                rows={5}
+                                fullWidth={true}
+                                variant="outlined"
+                                value={(editingItem.get('cert')) ? editingItem.get('cert') : ''}
+                           />
+                           <TextField label="개인키"
+                                margin="normal"
+                                multiline={true}
+                                rows={5}
+                                fullWidth={true}
+                                variant="outlined"
+                                value={(editingItem.get('priv')) ? editingItem.get('priv') : ''}
+                           />
+                       </div>
+                     
+                    }
+
+
 
 
                 </DialogContent>
