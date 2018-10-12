@@ -20,8 +20,6 @@ const CREATE_GCSP_SUCCESS = 'adminUser/CREATE_GCSP_SUCCESS';
 const EDIT_GCSP_SUCCESS = 'adminUser/EDIT_GCSP_SUCCESS';
 const DELETE_GCSP_SUCCESS = 'adminUser/DELETE_GCSP_SUCCESS';
 
-const UPDATE_PACKAGETOCLIENT_SUCCESS = 'gcspManage/UPDATE_PACKAGETOCLIENT_SUCCESS';
-
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chPackageId', 'asc', {dialogTabValue: 0});
 
@@ -140,27 +138,15 @@ export const createGcspData = (param) => dispatch => {
     });
 };
 
-
-
-export const updatePackageInClient = (param) => dispatch => {
+// edit
+export const editGcspData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updatePackageInClient', {
-        clientId: param.clientIds,
-        packageIds: param.packageIds
-    }).then(
+    return requestPostAPI('updateGcspData', param).then(
         (response) => {
-            try {
-                if(response.data.status && response.data.status.result === 'success') {
-                    dispatch({
-                        type: UPDATE_PACKAGETOCLIENT_SUCCESS,
-                        response: response
-                    });
-                }
-            } catch(ex) {
-                dispatch({
-                    type: COMMON_FAILURE, error: null, ex: ex
-                });
-            }
+            dispatch({
+                type: EDIT_GCSP_SUCCESS,
+                response: response
+            });
         }
     ).catch(error => {
         dispatch({
@@ -170,24 +156,23 @@ export const updatePackageInClient = (param) => dispatch => {
     });
 };
 
-export const updateAllPackage = (param) => dispatch => {
-    // dispatch({type: COMMON_PENDING});
-    // return requestPostAPI('createPackageAllUpgrade', {'groupId': param.grpId}).then(
-    //     (response) => {
-    //         dispatch({
-    //             type: DELETE_GCSP_SUCCESS,
-    //             compId: param.compId,
-    //             grpId: param.grpId
-    //         });
-    //     }
-    // ).catch(error => {
-    //     dispatch({
-    //         type: COMMON_FAILURE,
-    //         error: error
-    //     });
-    // });
+// delete
+export const deleteGcspData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('deleteGcspData', param).then(
+        (response) => {
+            dispatch({
+                type: DELETE_GCSP_SUCCESS,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
 };
-
 
 export default handleActions({
 
@@ -226,14 +211,14 @@ export default handleActions({
             pending: false, error: false
         });
     },
-
+    [EDIT_GCSP_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleEditSuccessAction(state, action);
+    },
+    [DELETE_GCSP_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleDeleteSuccessAction(state, action);
+    },
     [GET_GCSP_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
-    },
-    [UPDATE_PACKAGETOCLIENT_SUCCESS]: (state, action) => {
-        return state.merge({
-            pending: false, error: false
-        });
     }
 
 }, initialState);

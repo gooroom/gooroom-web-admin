@@ -104,8 +104,8 @@ class GcspDialog extends Component {
     handleEditData = (event) => {
         const { GcspManageProps, GrConfirmActions } = this.props;
         GrConfirmActions.showConfirm({
-            confirmTitle: '관리자계정 수정',
-            confirmMsg: '관리자계정을 수정하시겠습니까?',
+            confirmTitle: '클라우드서비스 수정',
+            confirmMsg: '클라우드서비스를 수정하시겠습니까?',
             confirmOpen: true,
             handleConfirmResult: this.handleEditDataConfirmResult,
             confirmObject: GcspManageProps.get('editingItem')
@@ -114,12 +114,14 @@ class GcspDialog extends Component {
     handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { GcspManageProps, GcspManageActions, compId } = this.props;
-            GcspManageActions.editAdminUserData({
+            GcspManageActions.editGcspData({
                 gcspId: paramObject.get('gcspId'),
-                adminPw: paramObject.get('adminPw'),
-                gcspNm: paramObject.get('gcspNm')
+                gcspNm: paramObject.get('gcspNm'),
+                comment: paramObject.get('comment'),
+                ipRanges: paramObject.get('ipRanges'),
+                url: paramObject.get('url')
             }).then((res) => {
-                GcspManageActions.readAdminUserListPaged(GcspManageProps, compId);
+                GcspManageActions.readGcspListPaged(GcspManageProps, compId);
                 this.handleClose();
             });
         }
@@ -147,11 +149,11 @@ class GcspDialog extends Component {
 
         let title = "";
         if(dialogType === GcspDialog.TYPE_ADD) {
-            title = "관리자계정 등록";
+            title = "클라우드서비스 등록";
         } else if(dialogType === GcspDialog.TYPE_VIEW) {
-            title = "관리자계정 정보";
+            title = "클라우드서비스 정보";
         } else if(dialogType === GcspDialog.TYPE_EDIT) {
-            title = "관리자계정 수정";
+            title = "클라우드서비스 수정";
         }
 
         return (
@@ -262,21 +264,15 @@ class GcspDialog extends Component {
                        </div>
                      
                     }
-
-
-
-
                 </DialogContent>
                 <DialogActions>
-                    
-                {(dialogType === GcspDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
-                }
-                {(dialogType === GcspDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
-                }
-                <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
-
+                    {(dialogType === GcspDialog.TYPE_ADD) &&
+                        <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
+                    }
+                    {(dialogType === GcspDialog.TYPE_EDIT) &&
+                        <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                    }
+                    <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
             </Dialog>
             }

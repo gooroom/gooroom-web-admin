@@ -37,7 +37,6 @@ import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import BuildIcon from '@material-ui/icons/Build';
-import ListIcon from '@material-ui/icons/List';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -55,7 +54,6 @@ class GcspManage extends Component {
   columnHeaders = [
     { id: 'chGcspNm', isOrder: true, numeric: false, disablePadding: true, label: '이름' },
     { id: 'chGcspId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
-    { id: 'chStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
     { id: 'chRegDt', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
     { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: '등록자' },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
@@ -100,22 +98,6 @@ class GcspManage extends Component {
       dialogType: GcspDialog.TYPE_VIEW
     });
   };
-
-  // show admin records
-  handleShowRecord = (event, id) => {
-    event.stopPropagation();
-    this.setState({
-      openRecordDialog: true,
-      recordAdminId: id
-    });
-  };
-  
-  handleCloseRecord = (event, id) => {
-    this.setState({
-      openRecordDialog: false,
-      recordAdminId: ''
-    });
-  };
       
   // create dialog
   handleCreateButton = () => {
@@ -145,8 +127,8 @@ class GcspManage extends Component {
     const { GcspManageProps, GrConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
     GrConfirmActions.showConfirm({
-      confirmTitle: '관리자계정 삭제',
-      confirmMsg: '관리자계정(' + selectedViewItem.get('gcspId') + ')을 삭제하시겠습니까?',
+      confirmTitle: '클라우드서비스 삭제',
+      confirmMsg: '클라우드서비스(' + selectedViewItem.get('gcspId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmOpen: true,
       confirmObject: selectedViewItem
@@ -156,8 +138,7 @@ class GcspManage extends Component {
     if(confirmValue) {
       const { GcspManageProps, GcspManageActions } = this.props;
       const compId = this.props.match.params.grMenuId;
-      GcspManageActions.deleteAdminUserData({
-        compId: compId,
+      GcspManageActions.deleteGcspData({
         gcspId: confirmObject.get('gcspId')
       }).then(() => {
         GcspManageActions.readGcspListPaged(GcspManageProps, compId);
@@ -238,7 +219,6 @@ class GcspManage extends Component {
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('statusCd')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
