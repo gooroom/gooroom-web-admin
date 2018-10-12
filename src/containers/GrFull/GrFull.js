@@ -62,11 +62,6 @@ const theme = createMuiTheme({
       root: {
         height: 32
       }
-    },
-    MuiSvgIcon: {
-      root: {
-        fontSize: 16
-      }
     }
   }
 });

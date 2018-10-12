@@ -166,18 +166,17 @@ export const editClientGroupData = (param) => dispatch => {
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
-                requestPostAPI('readClientGroupData', {'groupId': item.get('grpId')}).then(
+                requestPostAPI('readClientGroupData', {'groupId': param.groupId}).then(
                     (response) => {
                         dispatch({
                             type: EDIT_CLIENTGROUP_SUCCESS,
-                            grpId: item.get('grpId'),
+                            grpId: param.groupId,
                             response: response
                         });
                     }
                 ).catch(error => {
                 });
             } else {
-                // alarm ... fail
                 dispatch({
                     type: COMMON_FAILURE,
                     error: error

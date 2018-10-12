@@ -9,6 +9,7 @@ import { formatDateToSimple } from 'components/GrUtils/GrDates';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
+import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -20,16 +21,18 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 
+import ClientGroupDialog from './ClientGroupDialog';
+
 import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
 import ClientHostNameComp from 'views/Rules/HostName/ClientHostNameComp';
 import ClientUpdateServerComp from 'views/Rules/UpdateServer/ClientUpdateServerComp';
-
-import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
-
 import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
 import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
 import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
 
+import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
+
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
@@ -39,6 +42,16 @@ import { GrCommonStyle } from 'templates/styles/GrStyles';
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientGroupInform extends Component {
+
+  // edit
+  handleEditClick = (id) => {
+    const { ClientGroupProps, ClientGroupActions, compId } = this.props;
+    const selectedViewItem = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+    ClientGroupActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: ClientGroupDialog.TYPE_EDIT
+    });
+  };
 
   render() {
 
@@ -64,6 +77,14 @@ class ClientGroupInform extends Component {
           <CardHeader
             title={selectedViewItem.get('grpNm')}
             subheader={groupInfo}
+            action={
+              <div style={{width:48,paddingTop:10}}>
+                <Button size="small"
+                      variant="outlined" color="primary" style={{minWidth:32}}
+                      onClick={() => this.handleEditClick(selectedViewItem.get('grpId'))}
+                    ><SettingsApplicationsIcon /></Button>
+              </div>
+            }
           ></CardHeader>
           <Divider />
           <CardContent style={{padding:10}}>

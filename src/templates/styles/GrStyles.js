@@ -129,6 +129,11 @@ export const GrCommonStyle = theme => ({
         color:"blue",
         fontWeight:"bold"
     },
+    compTitleForBasic: {
+        backgroundColor:"lightRed",
+        color:"red",
+        fontWeight:"bold"
+    },
     compTitleForEmpty: {
         backgroundColor:"lightBlue",
         color:"white",
@@ -244,10 +249,10 @@ export const GrCommonStyle = theme => ({
         minWidth: 500
     },
     dialogItemRow: {
-        marginTop: "10px",
+        marginTop: "0px",
     },
     dialogItemRowBig: {
-        marginTop: "30px",
+        marginTop: "10px",
     },
 
     buttonInTableRow: {

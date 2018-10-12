@@ -17,6 +17,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
+import Button from '@material-ui/core/Button';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -43,7 +46,7 @@ class ClientManageInform extends Component {
     return (
       <div>
       {(informOpen && selectedViewItem) &&
-        <Card >
+        <Card style={{marginBottom: 20}}>
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.get('clientName') : ''}
             subheader={selectedViewItem.get('clientId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
@@ -61,7 +64,9 @@ class ClientManageInform extends Component {
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 단말그룹</TableCell>
-                      <TableCell numeric>{selectedViewItem.get('clientGroupName')} ({selectedViewItem.get('clientGroupId')})</TableCell>
+                      <TableCell numeric>
+                        {selectedViewItem.get('clientGroupName')} ({selectedViewItem.get('clientGroupId')})
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                         <TableCell component="th" scope="row">{bull} 단말설명</TableCell>

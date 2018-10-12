@@ -11,10 +11,17 @@ import * as GlobalActions from 'modules/GlobalModule';
 import * as ClientMasterManageActions from 'modules/ClientMasterManageModule';
 import * as ClientManageActions from 'modules/ClientManageModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
-import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
-import { getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+
+import { getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
@@ -80,7 +87,12 @@ class ClientMasterManage extends Component {
 
   // Select Client Item
   handleClientSelect = (selectedClientObj, selectedClientIdArray) => {
+    const { ClientGroupProps } = this.props;
     const { ClientManageActions, ClientGroupActions } = this.props;
+
+    const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
+
     const compId = this.props.match.params.grMenuId;
 
     // show client info.
@@ -92,6 +104,40 @@ class ClientMasterManage extends Component {
         compId: compId,
         selectedViewItem: selectedClientObj,
       });
+
+      // show client group info.
+      const groupId = selectedClientObj.get('clientGroupId');
+      const selectedGroupObj = getRowObjectById(ClientGroupProps, compId, groupId, 'grpId');
+      if(selectedGroupObj) {
+
+        ClientConfSettingActions.getClientConfByGroupId({
+          compId: compId, groupId: groupId
+        });   
+        ClientHostNameActions.getClientHostNameByGroupId({
+          compId: compId, groupId: groupId
+        });   
+        ClientUpdateServerActions.getClientUpdateServerByGroupId({
+          compId: compId, groupId: groupId
+        });   
+
+        // show rules
+        // get browser rule info
+        BrowserRuleActions.getBrowserRuleByGroupId({
+          compId: compId, groupId: groupId
+        });
+        // get media control setting info
+        MediaRuleActions.getMediaRuleByGroupId({
+          compId: compId, groupId: groupId
+        });
+        // get client secu info
+        SecurityRuleActions.getSecurityRuleByGroupId({
+          compId: compId, groupId: groupId
+        });   
+
+        ClientGroupActions.showClientGroupInform({
+          compId: compId, selectedViewItem: selectedGroupObj,
+        });
+      }
     }
   };
 
@@ -303,7 +349,7 @@ class ClientMasterManage extends Component {
                     </Button>
                   </Grid>
 
-                  <Grid item xs={12} sm={6} lg={6} >
+                  <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
                     <Button size="small" variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}}>
                       <AddIcon />삭제
                     </Button>
@@ -316,9 +362,9 @@ class ClientMasterManage extends Component {
               />
             </Grid>
 
-            <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef', padding: 0}}>
-              <ClientGroupInform compId={compId} onSelect={this.handleClientGroupSelect} />
+            <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef', padding: 0, marginTop: 20}}>
               <ClientManageInform compId={compId} onSelect={this.handleClientSelect}  />
+              <ClientGroupInform compId={compId} onSelect={this.handleClientGroupSelect} />
             </Grid>
           </Grid>
           <ClientGroupDialog compId={compId} />
@@ -344,7 +390,16 @@ const mapDispatchToProps = (dispatch) => ({
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch),
+
+  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientMasterManage));

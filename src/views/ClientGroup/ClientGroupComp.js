@@ -122,8 +122,8 @@ class ClientGroupComp extends Component {
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
 
     const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+    
     const newSelectedIds = setSelectedIdsInComp(ClientGroupProps, compId, id);
-
     if(this.props.onSelect) {
       this.props.onSelect(clickedRowObject, newSelectedIds);
     }

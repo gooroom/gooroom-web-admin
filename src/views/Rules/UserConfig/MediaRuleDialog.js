@@ -12,6 +12,7 @@ import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
@@ -145,12 +146,11 @@ class MediaRuleDialog extends Component {
         return (
             <div>
             {(MediaRuleProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={MediaRuleProps.get('dialogOpen')} scroll="paper">
+            <Dialog open={MediaRuleProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={classes.dialogContainer}>
+                <DialogContent>
 
                     <TextField
-                        id="objNm"
                         label="이름"
                         value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
@@ -158,7 +158,6 @@ class MediaRuleDialog extends Component {
                         disabled={(dialogType === MediaRuleDialog.TYPE_VIEW)}
                     />
                     <TextField
-                        id="comment"
                         label="설명"
                         value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
@@ -174,177 +173,128 @@ class MediaRuleDialog extends Component {
                         </div>                        
                     }
                     {(dialogType === MediaRuleDialog.TYPE_EDIT || dialogType === MediaRuleDialog.TYPE_ADD) &&
-                        <div className={classes.dialogItemRowBig}>
-                        
-                        <Grid container 
-                            alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classes.dialogItemRow}>
+                        <div>
+                        <Grid container alignItems="center" direction="row" justify="space-between" >
                             <Grid item xs={6}>
                             <FormControlLabel
-                                control={
-                                <Switch onChange={this.handleValueChange('usbMemory')}
+                                control={<Switch onChange={this.handleValueChange('usbMemory')}
                                     checked={this.checkAllow(editingItem.get('usbMemory'))}
-                                    color="primary" />
-                                }
+                                    color="primary" />}
                                 label={(editingItem.get('usbMemory')) ? 'USB 메모리 허가' : 'USB 메모리 금지'}
                             />
                             </Grid>
                             <Grid item xs={6}>
-                            <FormControlLabel
-                                control={
-                                <Checkbox onChange={this.handleValueChange('usbReadonly')}
+                            <FormControlLabel label="Readonly"
+                                control={<Checkbox onChange={this.handleValueChange('usbReadonly')}
                                     checked={this.checkAllow(editingItem.get('usbReadonly'))}
-                                />
-                                }
-                                label="Readonly"
+                                />}                                
                             />
                             </Grid>
                         </Grid>
 
-                        <Grid container 
-                            alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classes.dialogItemRow}>
+                        <Grid container alignItems="center" direction="row" justify="space-between" >
                             <Grid item xs={6}>
                                 <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('cdAndDvd')} 
+                                    control={<Switch onChange={this.handleValueChange('cdAndDvd')} 
                                         checked={this.checkAllow(editingItem.get('cdAndDvd'))}
-                                        color="primary" />
-                                    }
+                                        color="primary" />}
                                     label={(editingItem.get('cdAndDvd') == 'allow') ? 'CD/DVD 허가' : 'CD/DVD 금지'}
                                 />
                             </Grid>
                             <Grid item xs={6} >
                                 <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('printer')} 
+                                    control={<Switch onChange={this.handleValueChange('printer')} 
                                         checked={this.checkAllow(editingItem.get('printer'))}
-                                        color="primary" />
-                                    }
+                                        color="primary" />}
                                     label={(editingItem.get('printer') == 'allow') ? '프린터 허가' : '프린터 금지'}
                                 />
                             </Grid>
                         </Grid>
 
-                        <Grid container 
-                            alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classes.dialogItemRow}>
+                        <Grid container alignItems="center" direction="row" justify="space-between" >
                             <Grid item xs={6}>
                                 <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('screenCapture')} 
+                                    control={<Switch onChange={this.handleValueChange('screenCapture')} 
                                         checked={this.checkAllow(editingItem.get('screenCapture'))}
-                                        color="primary" />
-                                    }
+                                        color="primary" />}
                                     label={(editingItem.get('screenCapture') == 'allow') ? '화면캡쳐 허가' : '화면캡쳐 금지'}
                                 />
                             </Grid>
-
                             <Grid item xs={6} >
                                 <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('camera')} 
+                                    control={<Switch onChange={this.handleValueChange('camera')} 
                                         checked={this.checkAllow(editingItem.get('camera'))}
-                                        color="primary" />
-                                    }
+                                        color="primary" />}
                                     label={(editingItem.get('camera') == 'allow') ? '카메라 허가' : '카메라 금지'}
                                 />
                             </Grid>
                         </Grid>
 
-                        <Grid container 
-                            alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classes.dialogItemRow}>
+                        <Grid container alignItems="center" direction="row" justify="space-between" >
                             <Grid item xs={6}>
                                 <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('sound')} 
+                                    control={<Switch onChange={this.handleValueChange('sound')} 
                                         checked={this.checkAllow(editingItem.get('sound'))}
-                                        color="primary" />
-                                    }
+                                        color="primary" />}
                                     label={(editingItem.get('sound') == 'allow') ? '사운드(소리, 마이크) 허가' : '사운드(소리, 마이크) 금지'}
                                 />
                             </Grid>
-
                             <Grid item xs={6} >
                                 <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('wireless')} 
+                                    control={<Switch onChange={this.handleValueChange('wireless')} 
                                         checked={this.checkAllow(editingItem.get('wireless'))}
-                                        color="primary" />
-                                    }
+                                        color="primary" />}
                                     label={(editingItem.get('wireless') == 'allow') ? '무선랜 허가' : '무선랜 금지'}
                                 />
                             </Grid>
                         </Grid>
 
-                        <Grid container 
-                            alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classes.dialogItemRow}>
+                        <Grid container alignItems="center" direction="row" justify="space-between" >
                             <Grid item xs={6}>
                                 <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('keyboard')} 
+                                    control={<Switch onChange={this.handleValueChange('keyboard')} 
                                         checked={this.checkAllow(editingItem.get('keyboard'))}
-                                        color="primary" />
-                                    }
+                                        color="primary" />}
                                     label={(editingItem.get('keyboard') == 'allow') ? 'USB키보드 허가' : 'USB키보드 금지'}
                                 />
                             </Grid>
-
                             <Grid item xs={6} >
                                 <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('mouse')} 
+                                    control={<Switch onChange={this.handleValueChange('mouse')} 
                                         checked={this.checkAllow(editingItem.get('mouse'))}
-                                        color="primary" />
-                                    }
+                                        color="primary" />}
                                     label={(editingItem.get('mouse') == 'allow') ? 'USB마우스 허가' : 'USB마우스 금지'}
                                 />
                             </Grid>
                         </Grid>
-                        
-                        <Grid container 
-                            alignItems="flex-end" direction="row" justify="space-between" 
-                            className={classes.dialogItemRow}>
-                            <Grid item xs={4}>
-                                <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('bluetoothState')} 
-                                        checked={this.checkAllow(editingItem.get('bluetoothState'))}
-                                        color="primary" />
-                                    }
-                                    label={(editingItem.get('bluetoothState') == 'allow') ? '블루투스 허가' : '블루투스 금지'}
-                                />
-                            </Grid>
-                            <Grid item xs={8} >
-                                <FormLabel >{bull} 연결가능 블루투스 Mac 주소</FormLabel>
-                                <Button size="small" variant="contained" color="primary" 
+
+                        <FormControlLabel
+                            control={<Switch onChange={this.handleValueChange('bluetoothState')} 
+                            checked={this.checkAllow(editingItem.get('bluetoothState'))}
+                            color="primary" />}
+                            label={(editingItem.get('bluetoothState') == 'allow') ? '블루투스 허가' : '블루투스 금지'}
+                        />
+
+                        <FormLabel component="legend">연결가능 블루투스 Mac 주소
+                            <Button size="small" variant="contained" color="primary" style={{marginLeft:30}}
                                     className={classes.smallIconButton}
                                     onClick={this.handleAddBluetoothMac}
-                                >
-                                    <AddIcon />
-                                </Button>
-                                <div>
-                                    <List>
-                                    {editingItem.get('macAddress') && editingItem.get('macAddress').size > 0 && editingItem.get('macAddress').map((value, index) => (
-                                        <ListItem key={index} >
-                                            <Input value={value} onChange={this.handleBluetoothMacValueChange(index)}/>
-                                            <ListItemSecondaryAction>
-                                                <IconButton onClick={this.handleDeleteBluetoothMac(index)}>
-                                                    <DeleteForeverIcon />
-                                                </IconButton>
-                                            </ListItemSecondaryAction>
-                                        </ListItem>
-                                    ))}
-                                    </List>
-                                </div>
-                            </Grid>
-                        </Grid>
+                            ><AddIcon /></Button>
+                        </FormLabel>
+                        <List>
+                        {editingItem.get('macAddress') && editingItem.get('macAddress').size > 0 && editingItem.get('macAddress').map((value, index) => (
+                            <ListItem key={index} style={{padding:0}} >
+                                <Input value={value} onChange={this.handleBluetoothMacValueChange(index)} fullWidth={true} style={{padding:0}} />
+                                <IconButton onClick={this.handleDeleteBluetoothMac(index)}>
+                                    <DeleteForeverIcon />
+                                </IconButton>
+                            </ListItem>
+                        ))}
+                        </List>
 
                         </div>
                     }
-                </form>
+                </DialogContent>
 
                 <DialogActions>
                 {(dialogType === MediaRuleDialog.TYPE_ADD) &&
