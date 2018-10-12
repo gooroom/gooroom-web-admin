@@ -44,17 +44,6 @@ import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
 import UserRuleSelector from 'components/GROptions/UserRuleSelector';
 
 
-function TabContainer(props) {
-    return (
-      <Typography component="div" style={{ padding: 8 * 3 }}>
-        {props.children}
-      </Typography>
-    );
-  }
-
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class DeptDialog extends Component {
     
     static TYPE_VIEW = 'VIEW';
@@ -64,13 +53,6 @@ class DeptDialog extends Component {
     handleClose = (event) => {
         this.props.DeptActions.closeDialog();
     }
-
-    handleChangeTabs = (event, value) => {
-        this.props.DeptActions.changeStoreData({
-            name: 'dialogTabValue',
-            value: value
-        });
-    };
 
     handleValueChange = name => event => {
         const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
@@ -168,20 +150,18 @@ class DeptDialog extends Component {
                 <Dialog open={DeptProps.get('dialogOpen')} >
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent>
-                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
                         {(dialogType === DeptDialog.TYPE_ADD) &&
                         <TextField
                             label="상위조직"
                             value={upperDeptInfo}
-                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            disabled={true}
+                            className={classes.fullWidth}
                         />
                         }
                         <TextField
                             label="조직아이디"
                             value={(editingItem.get('deptCd')) ? editingItem.get('deptCd') : ''}
                             onChange={this.handleValueChange("deptCd")}
-                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                            className={classes.fullWidth}
                             disabled={(dialogType == DeptDialog.TYPE_EDIT) ? true : false}
                         />
                         <TextField
@@ -190,11 +170,8 @@ class DeptDialog extends Component {
                             onChange={this.handleValueChange("deptNm")}
                             className={classes.fullWidth}
                         />
-
                         <Divider style={{marginBottom: 10}} />
-                        
                         <UserRuleSelector compId={compId} module={(editingItem) ? editingItem.toJS() : null} />
-                    </form>
                     </DialogContent>
                     <DialogActions>
                         {(dialogType === DeptDialog.TYPE_ADD) &&

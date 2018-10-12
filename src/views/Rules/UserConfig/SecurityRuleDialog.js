@@ -51,17 +51,11 @@ class SecurityRuleDialog extends Component {
     }
 
     handleValueChange = name => event => {
-        if(event.target.type === 'checkbox') {
-            this.props.SecurityRuleActions.setEditingItemValue({
-                name: name,
-                value: (event.target.checked) ? 'allow' : 'disallow'
-            });
-        } else {
-            this.props.SecurityRuleActions.setEditingItemValue({
-                name: name,
-                value: event.target.value
-            });
-        }
+        const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'allow' : 'disallow') : event.target.value;
+        this.props.SecurityRuleActions.setEditingItemValue({
+            name: name,
+            value: value
+        });
     }
 
     handleCreateData = (event) => {

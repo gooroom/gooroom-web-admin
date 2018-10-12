@@ -48,17 +48,11 @@ class BrowserRuleDialog extends Component {
     }
 
     handleValueChange = name => event => {
-        if(event.target.type === 'checkbox') {
-            this.props.BrowserRuleActions.setEditingItemValue({
-                name: name,
-                value: (event.target.checked) ? 'allow' : 'disallow'
-            });
-        } else {
-            this.props.BrowserRuleActions.setEditingItemValue({
-                name: name,
-                value: event.target.value
-            });
-        }
+        const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'allow' : 'disallow') : event.target.value;
+        this.props.BrowserRuleActions.setEditingItemValue({
+            name: name,
+            value: value
+        });
     }
 
     handleWhiteListValueChange = index => event => {

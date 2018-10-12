@@ -289,7 +289,6 @@ class ClientGroupComp extends Component {
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
         }
-        <ClientGroupDialog compId={compId} />
         <GRConfirm />
       </div>
     );

@@ -111,6 +111,12 @@ class BrowserRuleComp extends Component {
             </Grid>
             <Typography variant="h5" component="h2">
               {viewCompItem.get('objNm')}
+
+                  <Button size="small"
+                    variant="outlined" color="primary" style={{minWidth:32}}
+                    onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
+                  ><SettingsApplicationsIcon /></Button>
+
             </Typography>
             <Typography color="textSecondary">
               {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
