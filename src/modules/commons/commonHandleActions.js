@@ -35,7 +35,7 @@ export const handleListAction = (state, action) => {
                 // no exist or selected id was deleted
                 return state
                     .setIn(['viewItems', action.compId, 'listAllData'], List(data.map((e) => {return Map(e)})))
-                    .setIn(['viewItems', action.compId, 'selectedOptionItemId'], data[0].objId);
+                    .setIn(['viewItems', action.compId, 'selectedOptionItemId'], '-');
             } else {
                 // before exist and selected id is exist
                 return state
@@ -45,8 +45,7 @@ export const handleListAction = (state, action) => {
         }
 
         return state.setIn(['viewItems', action.compId], Map({
-            'listAllData': List(data.map((e) => {return Map(e)})),
-            'selectedOptionItemId': data[0].objId
+            'listAllData': List(data.map((e) => {return Map(e)}))
         }));
         
     } else {
@@ -58,26 +57,49 @@ export const handleListAction = (state, action) => {
 
 export const handleListPagedAction = (state, action) => {
     const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
-    return state.setIn(['viewItems', action.compId], Map({
-        'listData': List(data.map((e) => {return Map(e)})),
-        'listParam': action.listParam.merge({
-            rowsFiltered: parseInt(recordsFiltered, 10),
-            rowsTotal: parseInt(recordsTotal, 10),
-            page: parseInt(draw, 10),
-            rowsPerPage: parseInt(rowLength, 10),
-            orderColumn: orderColumn,
-            orderDir: orderDir
-        })
-    }));
+    let newState = null;
+    if(state.getIn(['viewItems', action.compId])) {
+        newState = state
+            .setIn(['viewItems', action.compId, 'listData'], List(data.map((e) => {return Map(e)})))
+            .setIn(['viewItems', action.compId, 'listParam'], action.listParam.merge({
+                rowsFiltered: parseInt(recordsFiltered, 10),
+                rowsTotal: parseInt(recordsTotal, 10),
+                page: parseInt(draw, 10),
+                rowsPerPage: parseInt(rowLength, 10),
+                orderColumn: orderColumn,
+                orderDir: orderDir
+            }));
+    } else {
+        newState = state.setIn(['viewItems', action.compId], Map({
+            'listData': List(data.map((e) => {return Map(e)})),
+            'listParam': action.listParam.merge({
+                rowsFiltered: parseInt(((recordsFiltered) ? recordsFiltered: 0), 10),
+                rowsTotal: parseInt(((recordsTotal) ? recordsTotal: 0), 10),
+                page: parseInt(((draw) ? draw: 0), 10),
+                rowsPerPage: parseInt(((rowLength) ? rowLength: 0), 10),
+                orderColumn: orderColumn,
+                orderDir: orderDir
+            })
+        }));
+    }
+
+    if(action.isResetSelect) {
+        return newState.deleteIn(['viewItems', action.compId, 'selectedIds']);
+    } else {
+        return newState;
+    }
 }
 
-export const handleGetObjectAction = (state, compId, data) => {
+export const handleGetObjectAction = (state, compId, data, extend) => {
     if(data && data.length > 0) {
+        const isDefault = (extend && extend.length > 0 && extend[0] === 'DEFAULT') ? true: false;
         return state
-            .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
-            .setIn(['viewItems', compId, 'informOpen'], true);
+        .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
+        .setIn(['viewItems', compId, 'selectedOptionItemId'], (isDefault) ? '' : data[0].objId)
+        .setIn(['viewItems', compId, 'isDefault'], isDefault)
+        .setIn(['viewItems', compId, 'informOpen'], true);
     } else  {
-        return state;
+        return state.deleteIn(['viewItems', compId]);
     }
 }
 

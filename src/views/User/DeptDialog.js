@@ -14,6 +14,7 @@ import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Divider from '@material-ui/core/Divider';
@@ -40,6 +41,7 @@ import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
 import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
 
+import UserRuleSelector from 'components/GrOptions/UserRuleSelector';
 
 
 function TabContainer(props) {
@@ -62,6 +64,13 @@ class DeptDialog extends Component {
     handleClose = (event) => {
         this.props.DeptActions.closeDialog();
     }
+
+    handleChangeTabs = (event, value) => {
+        this.props.DeptActions.changeStoreData({
+            name: 'dialogTabValue',
+            value: value
+        });
+    };
 
     handleValueChange = name => event => {
         const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
@@ -120,16 +129,15 @@ class DeptDialog extends Component {
 
             DeptActions.editDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
-                userPasswd: DeptProps.getIn(['editingItem', 'userPasswd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
 
                 browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
                 mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
+                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
-                resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
+                // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
                 this.handleClose();
             });
         }
@@ -141,8 +149,6 @@ class DeptDialog extends Component {
 
         const dialogType = DeptProps.get('dialogType');
         const editingItem = (DeptProps.get('editingItem')) ? DeptProps.get('editingItem') : null;
-
-        const tabValue = DeptProps.get('dialogTabValue');
 
         let title = "";
         if(dialogType === DeptDialog.TYPE_ADD) {
@@ -159,17 +165,18 @@ class DeptDialog extends Component {
         return (
             <div>
             {(DeptProps.get('dialogOpen') && editingItem) &&
-                <Dialog open={DeptProps.get('dialogOpen')}>
+                <Dialog open={DeptProps.get('dialogOpen')} >
                     <DialogTitle>{title}</DialogTitle>
+                    <DialogContent>
                     <form noValidate autoComplete="off" className={classes.dialogContainer}>
-                    
+                        {(dialogType === DeptDialog.TYPE_ADD) &&
                         <TextField
                             label="상위조직"
                             value={upperDeptInfo}
                             className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             disabled={true}
                         />
-
+                        }
                         <TextField
                             label="조직아이디"
                             value={(editingItem.get('deptCd')) ? editingItem.get('deptCd') : ''}
@@ -184,28 +191,19 @@ class DeptDialog extends Component {
                             className={classes.fullWidth}
                         />
 
-                        <Divider style={{marginBottom: 10}} />        
-                        <AppBar position="static" color="default">
-                            <Tabs value={tabValue} onChange={this.handleChangeTabs}>
-                                <Tab label="브라우져정책" />
-                                <Tab label="매체제어정책" />
-                                <Tab label="단말보안정책" />
-                            </Tabs>
-                        </AppBar>
-                        {tabValue === 0 && <BrowserRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'browserRuleId'])} />}
-                        {tabValue === 1 && <MediaRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'mediaRuleId'])} />}
-                        {tabValue === 2 && <SecurityRuleSelector compId={compId} initId={DeptProps.getIn(['editingItem', 'clientSecuRuleId'])} />}
-
+                        <Divider style={{marginBottom: 10}} />
+                        
+                        <UserRuleSelector compId={compId} module={(editingItem) ? editingItem.toJS() : null} />
                     </form>
-
+                    </DialogContent>
                     <DialogActions>
                         {(dialogType === DeptDialog.TYPE_ADD) &&
-                            <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
+                            <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
                         }
                         {(dialogType === DeptDialog.TYPE_EDIT) &&
-                            <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
+                            <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                         }
-                        <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
+                        <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                     </DialogActions>
                     <GrConfirm />
                 </Dialog>

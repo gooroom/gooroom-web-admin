@@ -18,6 +18,7 @@ import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
 
 import BrowserRuleDialog from './BrowserRuleDialog';
 import BrowserRuleInform from './BrowserRuleInform';
@@ -80,20 +81,14 @@ class BrowserRuleManage extends Component {
   handleChangeRowsPerPage = event => {
     const { BrowserRuleActions, BrowserRuleProps } = this.props;
     BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value,
-      page: 0
+      rowsPerPage: event.target.value, page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { BrowserRuleActions, BrowserRuleProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
     BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
@@ -103,10 +98,10 @@ class BrowserRuleManage extends Component {
     BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId);
   };
 
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.BrowserRuleActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   }
@@ -193,25 +188,21 @@ class BrowserRuleManage extends Component {
 
               <Grid item xs={6}>
                 <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} />
+                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
 
               <Grid item xs={6}>
-                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search /> 조회
+                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                  <Search />조회
                 </Button>
               </Grid>
 
             </Grid>
 
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button size="small" variant="contained" color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon /> 등록
+              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
+                <AddIcon />등록
               </Button>
             </Grid>
           </Grid>            
@@ -232,7 +223,6 @@ class BrowserRuleManage extends Component {
                 {listObj.get('listData').map(n => {
                   return (
                     <TableRow 
-                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.get('objId'))}
                       tabIndex={-1}

@@ -8,9 +8,15 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
+
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+
 import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
 import * as GrConfirmActions from 'modules/GrConfirmModule';
@@ -23,6 +29,7 @@ import GrPane from 'containers/GrContent/GrPane';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -59,14 +66,6 @@ class ClientGroupManage extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
@@ -82,26 +81,26 @@ class ClientGroupManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
     ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value,
-      page: 0
+      rowsPerPage: event.target.value, page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
     ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
+  };
+
+  handleSelectBtnClick = () => {
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId);
   };
 
   handleRowClick = (event, id) => {
     const { ClientGroupProps } = this.props;
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
@@ -111,28 +110,30 @@ class ClientGroupManage extends Component {
       selectedViewItem: clickedRowObject,
     });
     
-    // '단말정책설정' : 정책 정보 변경
+    // 정책 조회
     ClientConfSettingActions.getClientConf({
-      compId: compId,
-      objId: clickedRowObject.get('clientConfigId')
+      compId: compId, objId: clickedRowObject.get('clientConfigId')
     });   
-
-    // 'Hosts설정' : 정책 정보 변경
     ClientHostNameActions.getClientHostName({
-      compId: compId,
-      objId: clickedRowObject.get('hostNameConfigId')
+      compId: compId, objId: clickedRowObject.get('hostNameConfigId')
+    });   
+    ClientUpdateServerActions.getClientUpdateServer({
+      compId: compId, objId: clickedRowObject.get('updateServerConfigId')
     });   
 
-    // '업데이트서버설정' : 정책 정보 변경
-    ClientUpdateServerActions.getClientUpdateServer({
-      compId: compId,
-      objId: clickedRowObject.get('updateServerConfigId')
+    BrowserRuleActions.getBrowserRule({
+      compId: compId, objId: clickedRowObject.get('browserRuleId')
+    });   
+    MediaRuleActions.getMediaRule({
+      compId: compId, objId: clickedRowObject.get('mediaRuleId')
+    });   
+    SecurityRuleActions.getSecurityRule({
+      compId: compId, objId: clickedRowObject.get('securityRuleId')
     });   
 
     // '데스크톱 정보설정' : 정책 정보 변경
     ClientDesktopConfigActions.getClientDesktopConfig({
-      compId: compId,
-      desktopConfId: clickedRowObject.get('desktopConfigId')
+      compId: compId, desktopConfId: clickedRowObject.get('desktopConfigId')
     });   
   };
   // .................................................
@@ -147,6 +148,7 @@ class ClientGroupManage extends Component {
 
   // edit
   handleEditClick = (event, id) => {
+    event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     ClientGroupActions.showDialog({
@@ -157,6 +159,7 @@ class ClientGroupManage extends Component {
 
   // delete
   handleDeleteClick = (event, id) => {
+    event.stopPropagation();
     const { ClientGroupProps, GrConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     GrConfirmActions.showConfirm({
@@ -181,15 +184,10 @@ class ClientGroupManage extends Component {
   };
 
   // .................................................
-  handleSelectBtnClick = () => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId);
-  };
-  
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.ClientGroupActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   }
@@ -211,30 +209,20 @@ class ClientGroupManage extends Component {
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-
               <Grid item xs={6} >
                 <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
+                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
-
               <Grid item xs={6} >
-                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />
-                  조회
+                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                  <Search />조회
                 </Button>
-
               </Grid>
             </Grid>
-
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button size="small" variant="contained" color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
+                <AddIcon />등록
               </Button>
             </Grid>
           </Grid>
@@ -255,7 +243,6 @@ class ClientGroupManage extends Component {
                 {listObj.get('listData').map(n => {
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.get('grpId'))}
                       key={n.get('grpId')}
@@ -315,7 +302,6 @@ class ClientGroupManage extends Component {
         <GrConfirm />
       </React.Fragment>
 
-
     );
   }
 }
@@ -334,6 +320,11 @@ const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
   ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+
   ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch),
 
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)

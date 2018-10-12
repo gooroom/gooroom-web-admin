@@ -126,6 +126,11 @@ export const GrCommonStyle = theme => ({
     // Rule Component
     compTitle: {
         backgroundColor:"lightBlue",
+        color:"blue",
+        fontWeight:"bold"
+    },
+    compTitleForEmpty: {
+        backgroundColor:"lightBlue",
         color:"white",
         fontWeight:"bold"
     },
@@ -195,7 +200,7 @@ export const GrCommonStyle = theme => ({
 
     // Department manager
     deptTreeCard: {
-        minHeight: "500px"
+        maxHeight: "300px"
     },
     deptInfoCard: {
         marginBottom: "0px"
@@ -263,10 +268,7 @@ export const GrCommonStyle = theme => ({
     },
     grObjInCell: {
         height: "inherit"
-    },
-    grNormalTableRow: {
-        height: '32px',
-    },
+    }
 
 });
 

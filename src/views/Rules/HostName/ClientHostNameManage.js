@@ -18,6 +18,7 @@ import GrPageHeader from 'containers/GrContent/GrPageHeader';
 import GrConfirm from 'components/GrComponents/GrConfirm';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
 
 import ClientHostNameManageDialog from './ClientHostNameManageDialog';
 import ClientHostNameManageInform from './ClientHostNameManageInform';
@@ -80,20 +81,14 @@ class ClientHostNameManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value,
-      page: page
+      rowsPerPage: event.target.value, page: page
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
     ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
@@ -102,10 +97,10 @@ class ClientHostNameManage extends Component {
     ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId);
   };
 
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.ClientHostNameActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   }
@@ -192,26 +187,20 @@ class ClientHostNameManage extends Component {
 
               <Grid item xs={6} >
                 <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' value={this.state.keyword} onChange={this.handleKeywordChange('keyword')} />
+                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
 
               <Grid item xs={6} >
-                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />
-                  조회
+                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                  <Search />조회
                 </Button>
               </Grid>
             </Grid>
 
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button size="small" variant="contained" color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
+                <AddIcon />등록
               </Button>
             </Grid>
           </Grid>
@@ -229,10 +218,9 @@ class ClientHostNameManage extends Component {
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData').map(n => {
+                {listObj.get('listData') && listObj.get('listData').map(n => {
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.get('objId'))}
                       key={n.get('objId')}

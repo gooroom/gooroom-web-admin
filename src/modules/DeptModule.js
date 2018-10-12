@@ -23,9 +23,12 @@ const CLOSE_DEPT_DIALOG = 'dept/CLOSE_DEPT_DIALOG';
 const SET_EDITING_ITEM_VALUE = 'dept/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'dept/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'dept/CHG_COMPVARIABLE_DATA';
-const CHG_COMPVARIABLE_OBJECT = 'dept/CHG_COMPVARIABLE_OBJECT';
+const CHG_COMPDATA_VALUE = 'dept/CHG_COMPDATA_VALUE';
+const CHG_COMPDATA_OBJECT = 'dept/CHG_COMPDATA_OBJECT';
 
+const CHG_STORE_DATA = 'dept/CHG_STORE_DATA';
+const ADD_USERINDEPT_SUCCESS = 'dept/ADD_USERINDEPT_SUCCESS';
+const DELETE_USERINDEPT_SUCCESS = 'dept/DELETE_USERINDEPT_SUCCESS';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId', 'desc', {dialogTabValue: 0});
@@ -165,7 +168,7 @@ export const changeListParamData = (param) => dispatch => {
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_DATA,
+        type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
         value: param.value
@@ -174,9 +177,17 @@ export const changeCompVariable = (param) => dispatch => {
 
 export const changeCompVariableObject = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_OBJECT,
+        type: CHG_COMPDATA_OBJECT,
         compId: param.compId,
         valueObj: param.valueObj
+    });
+};
+
+export const changeStoreData = (param) => dispatch => {
+    return dispatch({
+        type: CHG_STORE_DATA,
+        name: param.name,
+        value: param.value
     });
 };
 
@@ -185,11 +196,13 @@ const makeParameter = (param) => {
         deptCd: param.deptCd,
         deptNm: param.deptNm,
         uprDeptCd: param.uprDeptCd,
+        
+        optYn: (param.optYn && param.optYn != '') ? param.optYn : 'Y',
+        sortOrder: (param.sortOrder && param.sortOrder != '') ? param.sortOrder : '1',
 
-        optYn: 'Y', //param.get('deptCd'),
-        sortOrder: 1, //param.get('deptCd'),
-
-        desktopConfId: ''//param.get('deptCd')
+        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
     };
 }
 
@@ -222,7 +235,7 @@ export const createDeptInfo = (itemObj) => dispatch => {
 // edit
 export const editDeptInfo = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateDeptConf', makeParameter(itemObj)).then(
+    return requestPostAPI('updateDeptInfo', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
@@ -289,6 +302,45 @@ export const deleteDeptInfo = (param) => dispatch => {
     });
 };
 
+// add user in dept
+export const createUsersInDept = (itemObj) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createUsersInDept', itemObj).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: ADD_USERINDEPT_SUCCESS
+                    });
+                }    
+            } catch(ex) {
+                dispatch({ type: COMMON_FAILURE, ex: ex });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// delete user in dept
+export const deleteUsersInDept = (itemObj) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('deleteUsersInDept', itemObj).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: DELETE_USERINDEPT_SUCCESS
+                    });
+                }    
+            } catch(ex) {
+                dispatch({ type: COMMON_FAILURE, ex: ex });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
 
 export default handleActions({
 
@@ -319,7 +371,7 @@ export default handleActions({
         return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_DEPT_DIALOG]: (state, action) => {
-        return commonHandleActions.handleCloseDialogAction(state, action);
+        return commonHandleActions.handleCloseDialogAction(state.set('dialogTabValue', 0), action);
     },
     [SHOW_DEPT_INFORM]: (state, action) => {
         return commonHandleActions.handleShowInformAction(state, action);
@@ -335,16 +387,21 @@ export default handleActions({
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
-    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+    [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
     },
-    [CHG_COMPVARIABLE_OBJECT]: (state, action) => {
+    [CHG_COMPDATA_OBJECT]: (state, action) => {
         const oldValue = state.getIn(['viewItems', action.compId]);
         if(oldValue) {
             return state.setIn(['viewItems', action.compId], oldValue.merge(fromJS(action.valueObj)));
         } else {
             return state.setIn(['viewItems', action.compId], fromJS(action.valueObj));
         }        
+    },
+    [CHG_STORE_DATA]: (state, action) => {
+        return state.merge({
+            [action.name]: action.value
+        });
     },
     [CREATE_DEPT_SUCCESS]: (state, action) => {
         return state.merge({
@@ -357,6 +414,18 @@ export default handleActions({
     },
     [DELETE_DEPT_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action);
+    },
+    [ADD_USERINDEPT_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false,
+            error: false
+        });
+    },
+    [DELETE_USERINDEPT_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false,
+            error: false
+        });
     }
 
 }, initialState);

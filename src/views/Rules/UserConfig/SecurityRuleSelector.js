@@ -32,11 +32,13 @@ class SecurityRuleSelector extends Component {
   componentDidMount() {
     const { SecurityRuleProps, SecurityRuleActions, compId, initId } = this.props;
     SecurityRuleActions.readSecurityRuleList(SecurityRuleProps, compId);
-    SecurityRuleActions.changeCompVariable({
-      compId: compId,
-      name: 'selectedOptionItemId',
-      value: initId
-    });
+    if(!SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+      SecurityRuleActions.changeCompVariable({
+        compId: compId,
+        name: 'selectedOptionItemId',
+        value: initId
+      });
+    }
   }
 
   handleChange = (event, value) => {
@@ -51,9 +53,8 @@ class SecurityRuleSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { SecurityRuleProps, SecurityRuleActions, compId } = this.props;
+    const { SecurityRuleProps, compId } = this.props;
 
-    const selectedViewItem = SecurityRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = SecurityRuleProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
@@ -62,13 +63,14 @@ class SecurityRuleSelector extends Component {
 
     return (
       <Card className={classes.card}>
-        <CardContent>
+        <CardContent style={{padding: 0}}>
         {listAllData && 
-        <FormControl className={classes.formControl} style={{width: '100%'}}>
+        <FormControl className={classes.formControl} style={{width: '100%', marginBottom: 24, marginTop: 8, border: 'dotted 1px lightGray'}}>
           <InputLabel htmlFor="cfg-helper"></InputLabel>
           <Select value={selectedOptionItemId}
             onChange={this.handleChange}
           >
+          <MenuItem key={'-'} value={'-'}>없음</MenuItem>
           {listAllData.map(item => (
             <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
           ))}

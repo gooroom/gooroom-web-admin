@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Map, List } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -9,13 +11,17 @@ import * as JobManageActions from 'modules/JobManageModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
 
 import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
 
 import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrConfirm from 'components/GrComponents/GrConfirm';
 import GrPane from 'containers/GrContent/GrPane';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
+
+// option components
+import JobStatusSelect from 'views/Options/JobStatusSelect';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -41,9 +47,7 @@ import JobInform from './JobInform';
 import { withStyles } from '@material-ui/core/styles';
 import { GrCommonStyle } from 'templates/styles/GrStyles';
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class JobManage extends Component {
 
   columnHeaders = [
@@ -57,95 +61,71 @@ class JobManage extends Component {
     { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
 
-
   // .................................................
+  handleChangePage = (event, page) => {
+    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.match.params.grMenuId, {
+      page: page
+    });
+  };
+
+  handleChangeRowsPerPage = event => {
+    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value, page: 0
+    });
+  };
+
+  handleChangeSort = (event, columnId, currOrderDir) => {
+    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
+    });
+  };
+  
   handleSelectBtnClick = () => {
-    const { JobManageActions, jobManageModule } = this.props;
-    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {
-      page: 0,
-      compId: ''
-    }));
+    const { JobManageActions, JobManageProps } = this.props;
+    JobManageActions.readJobManageListPaged(JobManageProps, this.props.match.params.grMenuId);
   };
 
   handleRowClick = (event, id) => {
-    const selectedViewItem = this.props.jobManageModule.listData.find(function(element) {
-      return element.jobNo == id;
+    const { JobManageProps, JobManageActions } = this.props;
+    const compId = this.props.match.params.grMenuId;
+
+    const clickedRowObject = getRowObjectById(JobManageProps, compId, id, 'jobNo');
+
+    JobManageActions.showJobInform({
+      compId: compId,
+      selectedViewItem: clickedRowObject,
     });
-
-    this.props.JobManageActions.showJobInform({
-      selectedViewItem: selectedViewItem,
-    });
-  };
-
-  
-  // 페이지 번호 변경
-  handleChangePage = (event, page) => {
-
-    const { JobManageActions, jobManageModule } = this.props;
-    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {page: page}));
-  };
-
-  // 페이지당 레코드수 변경
-  handleChangeRowsPerPage = (event) => {
-
-    const { JobManageActions, jobManageModule } = this.props;
-    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {rowsPerPage: event.target.value, page: 0}));
   };
 
   // .................................................
-  handleRequestSort = (event, property) => {
-
-    const { jobManageModule, JobManageActions } = this.props;
-    let orderDir = "desc";
-    if (jobManageModule.listParam.orderColumn === property && jobManageModule.listParam.orderDir === "desc") {
-      orderDir = "asc";
-    }
-    JobManageActions.readJobManageList(getMergedObject(jobManageModule.listParam, {orderColumn: property, orderDir: orderDir}));
-  };
-
-  isSelected = id => this.state.selected.indexOf(id) !== -1;
-  // .................................................
-
-  // Events...
-  handleStatusChange = event => {
-
-    const { JobManageActions, jobManageModule } = this.props;
-    const paramName = event.target.name;
-    const newParam = getMergedObject(jobManageModule.listParam, {[paramName]: event.target.value});
-    JobManageActions.changeParamValue({
-      name: 'listParam',
-      value: newParam
-    });
-  };
-
-  handleKeywordChange = name => event => {
-
-    const { JobManageActions, jobManageModule } = this.props;
-    const newParam = getMergedObject(jobManageModule.listParam, {keyword: event.target.value});
-    JobManageActions.changeParamValue({
-      name: 'listParam',
-      value: newParam
+  handleKeywordChange = (name, value) => {
+    this.props.JobManageActions.changeListParamData({
+      name: name, 
+      value: value,
+      compId: this.props.match.params.grMenuId
     });
   }
 
+  handleChangeJobStatusSelect = (event, property) => {
+    this.props.JobManageActions.changeListParamData({
+      name: 'jobStatus', 
+      value: property,
+      compId: this.props.match.params.grMenuId
+    });
+  };
 
 
   render() {
     const { classes } = this.props;
-    const { jobManageModule, grConfirmModule } = this.props;
-    const emptyRows = jobManageModule.listParam.rowsPerPage - jobManageModule.listData.length;
+    const { JobManageProps } = this.props;
+    const compId = this.props.match.params.grMenuId;
+    const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
+
+    const listObj = JobManageProps.getIn(['viewItems', compId]);
 
     return (
 
@@ -156,166 +136,102 @@ class JobManage extends Component {
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-
-              <Grid item xs={3} >
+              <Grid item xs={4} >
                 <FormControl fullWidth={true}>
                   <InputLabel htmlFor="job-status">작업상태</InputLabel>
-                  <Select
-                    value={jobManageModule.listParam.jobStatus}
-                    onChange={this.handleStatusChange}
-                    inputProps={{ name: "jobStatus", id: "job-status" }}
-                  >
-                  {jobManageModule.jobStatusOptionList.map(x => (
-                  <MenuItem value={x.value} key={x.id}>
-                    {x.label}
-                  </MenuItem>
-                  ))}
-                  </Select>
+                  <JobStatusSelect onChangeSelect={this.handleChangeJobStatusSelect} />
                 </FormControl>
               </Grid>
-
-              <Grid item xs={3} >
+              <Grid item xs={4} >
                 <FormControl fullWidth={true}>
-                <TextField
-                  id='keyword'
-                  label='검색어'
-                  value={jobManageModule.listParam.keyword}
-                  onChange={this.handleKeywordChange('keyword')}
-                />
+                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
-
-              <Grid item xs={3} >
-                <Button
-                  size="small"
-                  variant="contained"
-                  color="secondary"
-                  onClick={ () => this.handleSelectBtnClick() }
-                >
-                  <Search />
-                  조회
+              <Grid item xs={4} >
+                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                  <Search />조회
                 </Button>
-
               </Grid>
             </Grid>
-
             <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button
-                size="small"
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
+                <AddIcon />등록
               </Button>
             </Grid>
           </Grid>
 
           {/* data area */}
+          {(listObj) && 
           <div>
             <Table>
-            
               <GrCommonTableHead
                 classes={classes}
-                orderDir={jobManageModule.listParam.orderDir}
-                orderColumn={jobManageModule.listParam.orderColumn}
-                onRequestSort={this.handleRequestSort}
+                keyId="jobNo"
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {jobManageModule.listData.map(n => {
+                {listObj.get('listData').map(n => {
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.jobNo)}
-                      key={n.jobNo}
+                      onClick={event => this.handleRowClick(event, n.get('jobNo'))}
+                      key={n.get('jobNo')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {n.jobNo}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {n.jobName}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {n.readyCount}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {n.clientCount}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {n.errorCount}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {n.compCount}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {n.regUserId}
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-                        {formatDateToSimple(n.regDate, 'YYYY-MM-DD')}
-                      </TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('jobNo')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('jobName')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('readyCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('clientCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('errorCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('compCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                     </TableRow>
                   );
                 })}
 
                 {emptyRows > 0 && (
                   <TableRow >
-                    <TableCell
-                      colSpan={this.columnHeaders.length + 1}
-                      className={classes.grSmallAndClickCell}
-                    />
+                    <TableCell colSpan={this.columnHeaders.length + 1} className={classes.grSmallAndClickCell} />
                   </TableRow>
                 )}
               </TableBody>
             </Table>
+            <TablePagination
+              component='div'
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page'
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page'
+              }}
+              onChangePage={this.handleChangePage}
+              onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            />
           </div>
-
-          <TablePagination
-            component='div'
-            count={jobManageModule.listParam.rowsFiltered}
-            rowsPerPage={jobManageModule.listParam.rowsPerPage}
-            page={jobManageModule.listParam.page}
-            backIconButtonProps={{
-              'aria-label': 'Previous Page'
-            }}
-            nextIconButtonProps={{
-              'aria-label': 'Next Page'
-            }}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
-          />
-
+        }
         </GrPane>
-        <JobInform />
-        <GrConfirm
-          open={grConfirmModule.confirmOpen}
-          confirmTitle={grConfirmModule.confirmTitle}
-          confirmMsg={grConfirmModule.confirmMsg}
-        />
+        <JobInform compId={compId} />
+        <GrConfirm />
       </React.Fragment>
       
     );
   }
 }
 
-
 const mapStateToProps = (state) => ({
-
-  jobManageModule: state.JobManageModule,
-  grConfirmModule: state.GrConfirmModule,
-
+  JobManageProps: state.JobManageModule
 });
 
-
 const mapDispatchToProps = (dispatch) => ({
-
   JobManageActions: bindActionCreators(JobManageActions, dispatch),
   GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(JobManage));

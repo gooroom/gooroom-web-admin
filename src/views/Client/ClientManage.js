@@ -17,6 +17,7 @@ import GrPageHeader from "containers/GrContent/GrPageHeader";
 import GrPane from 'containers/GrContent/GrPane';
 
 import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
 
 import Grid from '@material-ui/core/Grid';
 
@@ -86,20 +87,14 @@ class ClientManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps } = this.props;
     ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value, 
-      page:0
+      rowsPerPage: event.target.value, page:0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
-    ClientManageActions.readClientListPaged(ClientManagePropsget, this.props.match.params.grMenuId, {
-      orderColumn: property, 
-      orderDir: orderDir
+    ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
@@ -127,10 +122,10 @@ class ClientManage extends Component {
     ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId);
   };
 
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.ClientManageActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   };
@@ -161,35 +156,13 @@ class ClientManage extends Component {
     } else {
       return false;
     }    
-  }
+  };
 
 
   handleCreateButton = () => {
     //console.log('handleCreateButton...............');
-  }
+  };
 
-  // // .................................................
-  // handleClientDialogClose = value => {
-  //   this.setState({ 
-  //     clientInfos: value, 
-  //     clientDialogOpen: false 
-  //   });
-  // };
-
-  // handleInfoClick = (event, clientId, clientGroupId) => {
-  //   event.stopPropagation();
-  //   const { ClientManageActions, ClientManageProps } = this.props;
-  //   const selectedViewItem = ClientManageProps.listData.find(function(element) {
-  //     return element.clientId == clientId;
-  //   });
-
-  //   ClientManageActions.showDialog({
-  //     selectedViewItem: Object.assign({}, selectedViewItem),
-  //     dialogType: ClientDialog.TYPE_VIEW,
-  //     dialogOpen: true,
-  //     compId: ''
-  //   });
-  // };
 
   handleSelectAllClick = (event, checked) => {
     const { ClientManageActions, ClientManageProps } = this.props;
@@ -237,28 +210,24 @@ class ClientManage extends Component {
 
               <Grid item xs={3} >
                 <FormControl fullWidth={true}>
-                <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
+                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                 </FormControl>
               </Grid>
 
               <Grid item xs={3} >
-                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />
-                  조회
+                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                  <Search />조회
                 </Button>
-
               </Grid>
+
             </Grid>
 
             <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button size="small" variant="contained" color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+            {/*
+              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
+                <AddIcon />등록
               </Button>
+            */}
             </Grid>
           </Grid>
           {/* data area */}
@@ -281,7 +250,6 @@ class ClientManage extends Component {
                   const isSelected = this.isSelected(n.get('clientId'));
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
                       onClick={event => this.handleRowClick(event, n.get('clientId'))}
                       role="checkbox"

@@ -43,7 +43,7 @@ class ClientHostNameInform extends Component {
     return (
       <div>
       {(informOpen && selectedViewItem) &&
-        <Card style={{boxShadow:this.props.compShadow}} >
+        <Card >
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.get('objNm') : ''}
             subheader={selectedViewItem.get('objId') + ', ' + formatDateToSimple(selectedViewItem.get('modDate'), 'YYYY-MM-DD')}

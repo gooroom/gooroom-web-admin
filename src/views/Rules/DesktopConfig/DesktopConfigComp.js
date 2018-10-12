@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { fromJS } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -7,6 +9,9 @@ import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GrConfirmActions from 'modules/GrConfirmModule';
+
+import { generateConfigObject } from './ClientDesktopConfigInform';
+import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GrUtils/GrTableListUtils';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -42,56 +47,71 @@ class DesktopConfigComp extends Component {
 
   // .................................................
   render() {
+
     const { classes } = this.props;
-    const { ClientDesktopConfigProps, compId } = this.props;
+    const { ClientDesktopConfigProps, compId, compType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { [compId + '__editingItem'] : viewItem } = ClientDesktopConfigProps;
 
+    const selectedViewItem = ClientDesktopConfigProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const listAllData = ClientDesktopConfigProps.getIn(['viewItems', compId, 'listAllData']);
+    const selectedOptionItemId = ClientDesktopConfigProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
+      (() => {
+        if(listAllData && selectedOptionItemId != null) {
+          const item = listAllData.find((element) => {
+            return element.get('objId') == selectedOptionItemId;
+          });
+          if(item) {
+            return generateConfigObject(fromJS(item.toJS()));
+          } else {
+            return null;
+          }
+        }
+      })()
+    ;
+    
     return (
-
+      <React.Fragment>
       <Card elevation={0}>
-        {(viewItem) && <CardContent>
+        <CardContent style={{padding: 10}}>
           <Grid container>
             <Grid item xs={6}>
               <Typography className={classes.compTitle}>
-                데스크톱환경
+                {(compType == 'VIEW') ? '상세내용' : '데스크톱환경'}
               </Typography>
             </Grid>
             <Grid item xs={6}>
               <Grid container justify="flex-end">
                 <Button size="small"
                   variant="outlined" color="primary"
-                  onClick={() => this.handleEditBtnClick(viewCompItem.objId)}
+                  onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
                 ><SettingsApplicationsIcon />수정</Button>
               </Grid>
             </Grid>
           </Grid>
-          <Typography variant="headline" component="h2">
-            {viewItem.confNm}
+          <Typography variant="h5" component="h2">
+            name
           </Typography>
           <Typography color="textSecondary">
-            {(viewItem.themeNm && viewItem.themeNm != '') ? '"' + viewItem.themeNm + '"' : ''}
+            comment
           </Typography>
           <Divider />
-          {(viewItem && viewItem.objId != '') &&
+          {(viewCompItem && viewCompItem.get('objId') != '') &&
             <Table>
               <TableBody>
+
                 <TableRow>
                   <TableCell >{bull} 데스크톱환경 정보</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell style={{fontSize:"17px"}}>
-                    <pre style={{width:"64%", height:"135px", overflow:"auto"}}>
-                    {viewItem.confInfo}
-                    </pre>
-                  </TableCell>
                 </TableRow>
+
               </TableBody>
             </Table>
           }
-        </CardContent>
-      }
+          </CardContent>
       </Card>
+      </React.Fragment>
     );
   }
 }

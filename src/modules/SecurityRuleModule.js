@@ -22,8 +22,9 @@ const CLOSE_SECURITYRULE_DIALOG = 'securityRule/CLOSE_SECURITYRULE_DIALOG';
 const SET_EDITING_ITEM_VALUE = 'securityRule/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'securityRule/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'securityRule/CHG_COMPVARIABLE_DATA';
-
+const CHG_COMPDATA_VALUE = 'securityRule/CHG_COMPDATA_VALUE';
+const DELETE_COMPDATA = 'securityRule/DELETE_COMPDATA';
+const DELETE_COMPDATA_ITEM = 'securityRule/DELETE_COMPDATA_ITEM';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId');
@@ -54,6 +55,25 @@ export const closeInform = (param) => dispatch => {
     return dispatch({
         type: CLOSE_SECURITYRULE_INFORM,
         compId: param.compId
+    });
+};
+
+export const readSecurityRuleList = (module, compId) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readSecurityRuleList', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_SECURITYRULE_LIST_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
     });
 };
 
@@ -89,8 +109,36 @@ export const readSecurityRuleListPaged = (module, compId, extParam) => dispatch 
 
 export const getSecurityRule = (param) => dispatch => {
     const compId = param.compId;
+    if(param.objId && param.objId !== '') {
+        dispatch({type: COMMON_PENDING});
+        return requestPostAPI('readSecurityRule', {'objId': param.objId}).then(
+            (response) => {
+                dispatch({
+                    type: GET_SECURITYRULE_SUCCESS,
+                    compId: compId,
+                    response: response
+                });
+            }
+        ).catch(error => {
+            dispatch({
+                type: COMMON_FAILURE,
+                error: error
+            });
+        });
+    } else {
+        return dispatch({
+            type: DELETE_COMPDATA_ITEM,
+            compId: compId,
+            itemName: 'selectedViewItem'
+        });      
+    }
+
+};
+
+export const getSecurityRuleByUserId = (param) => dispatch => {
+    const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readSecurityRule', {'objId': param.objId}).then(
+    return requestPostAPI('readSecurityRuleByUserId', {'userId': param.userId}).then(
         (response) => {
             dispatch({
                 type: GET_SECURITYRULE_SUCCESS,
@@ -106,10 +154,29 @@ export const getSecurityRule = (param) => dispatch => {
     });
 };
 
-export const getSecurityRuleByUserId = (param) => dispatch => {
+export const getSecurityRuleByDeptCd = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readSecurityRuleByUserId', {'objId': param.objId}).then(
+    return requestPostAPI('readSecurityRuleByDeptCd', {'deptCd': param.deptCd}).then(
+        (response) => {
+            dispatch({
+                type: GET_SECURITYRULE_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+export const getSecurityRuleByGroupId = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readSecurityRuleByGroupId', {'groupId': param.groupId}).then(
         (response) => {
             dispatch({
                 type: GET_SECURITYRULE_SUCCESS,
@@ -144,10 +211,17 @@ export const changeListParamData = (param) => dispatch => {
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_DATA,
+        type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
         value: param.value
+    });
+};
+
+export const deleteCompData = (param) => dispatch => {
+    return dispatch({
+        type: DELETE_COMPDATA,
+        compId: param.compId
     });
 };
 
@@ -191,7 +265,7 @@ export const createSecurityRule = (itemObj) => dispatch => {
 };
 
 // edit
-export const editSecurityRule = (itemObj) => dispatch => {
+export const editSecurityRule = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateSecurityRule', makeParameter(itemObj)).then(
         (response) => {
@@ -285,7 +359,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_SECURITYRULE_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.securityResult.data);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend);
     },
     [SHOW_SECURITYRULE_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -307,8 +381,14 @@ export default handleActions({
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
-    [CHG_COMPVARIABLE_DATA]: (state, action) => {
+    [CHG_COMPDATA_VALUE]: (state, action) => {
         return state.setIn(['viewItems', action.compId, action.name], action.value);
+    },
+    [DELETE_COMPDATA]: (state, action) => {
+        return state.deleteIn(['viewItems', action.compId]);
+    },
+    [DELETE_COMPDATA_ITEM]: (state, action) => {
+        return state.deleteIn(['viewItems', action.compId, action.itemName]);
     },
     [CREATE_SECURITYRULE_SUCCESS]: (state, action) => {
         return state.merge({
