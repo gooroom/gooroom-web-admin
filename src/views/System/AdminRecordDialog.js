@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 import AdminRecordListComp from 'views/System/AdminRecordListComp';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -13,7 +13,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class AdminRecordDialog extends Component {
     render() {
@@ -23,10 +23,10 @@ class AdminRecordDialog extends Component {
                     <DialogTitle>관리자({adminId}) 작업 이력</DialogTitle>
                     <DialogContent><AdminRecordListComp adminId={adminId} /></DialogContent>
                     <DialogActions><Button onClick={this.props.onClose} variant='contained' color="primary">닫기</Button></DialogActions>
-                    <GrConfirm />
+                    <GRConfirm />
                 </Dialog>
         );
     }
 }
 
-export default withStyles(GrCommonStyle)(AdminRecordDialog);
+export default withStyles(GRCommonStyle)(AdminRecordDialog);

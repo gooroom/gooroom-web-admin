@@ -11,20 +11,20 @@ import * as GlobalActions from 'modules/GlobalModule';
 import * as ClientPackageActions from 'modules/ClientPackageModule';
 import * as ClientManageActions from 'modules/ClientManageModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrPane from 'containers/GrContent/GrPane';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRPane from 'containers/GRContent/GRPane';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import ClientSelectDialog from "views/Client/ClientSelectDialog";
 import ClientPackageSelectDialog from "views/ClientPackage/ClientPackageSelectDialog";
 import ClientStatusSelect from "views/Options/ClientStatusSelect";
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -62,7 +62,7 @@ import ClientPackageDialog from './ClientPackageDialog';
 import ClientPackageInform from './ClientPackageInform';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 class ClientPackageManage extends Component {
@@ -142,7 +142,7 @@ class ClientPackageManage extends Component {
   handleDeleteButtonForClientGroup = () => {
     const selectedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
     if(selectedIds && selectedIds.size > 0) {
-      this.props.GrConfirmActions.showConfirm({
+      this.props.GRConfirmActions.showConfirm({
         confirmTitle: '단말그룹 삭제',
         confirmMsg: '단말그룹(' + selectedIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
@@ -191,9 +191,9 @@ class ClientPackageManage extends Component {
 
   // install package user selected
   handleClientPackageInstall = (selectedPackage) => {
-    const { ClientManageProps, GrConfirmActions } = this.props;
+    const { ClientManageProps, GRConfirmActions } = this.props;
     const selectedIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
-    GrConfirmActions.showConfirm({
+    GRConfirmActions.showConfirm({
         confirmTitle: '선택한 패키지 설치',
         confirmMsg: '선택한 패키지를 설치하시겠습니까?',
         handleConfirmResult: this.handleClientPackageInstallConfirmResult,
@@ -219,9 +219,9 @@ class ClientPackageManage extends Component {
 
   // add client in group - save
   handleClientSelectSave = (selectedClients) => {
-    const { ClientGroupProps, GrConfirmActions } = this.props;
+    const { ClientGroupProps, GRConfirmActions } = this.props;
     const selectedGroupItem = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedViewItem']);
-    GrConfirmActions.showConfirm({
+    GRConfirmActions.showConfirm({
         confirmTitle: '그룹에 단말 추가',
         confirmMsg: '단말을 그룹 추가하시겠습니까?',
         handleConfirmResult: this.handleClientSelectSaveConfirmResult,
@@ -254,10 +254,10 @@ class ClientPackageManage extends Component {
 
   // remove client in group - save
   handleRemoveClientInGroup = (event) => {
-    const { ClientManageProps, GrConfirmActions } = this.props;
+    const { ClientManageProps, GRConfirmActions } = this.props;
     const selectedClients = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
     if(selectedClients && selectedClients !== '') {
-      GrConfirmActions.showConfirm({
+      GRConfirmActions.showConfirm({
         confirmTitle: '그룹에서 단말 삭제',
         confirmMsg: '선택하신 단말을 그룹에서 삭제하시겠습니까?',
         handleConfirmResult: this.handleRemoveClientInGroupConfirmResult,
@@ -301,8 +301,8 @@ class ClientPackageManage extends Component {
 
   handleAllUpdateForClient = (event) => {
     event.stopPropagation();
-    const { ClientGroupProps, GrConfirmActions } = this.props;
-    GrConfirmActions.showConfirm({
+    const { ClientGroupProps, GRConfirmActions } = this.props;
+    GRConfirmActions.showConfirm({
       confirmTitle: '전체패키지 업데이트',
       confirmMsg: '선택하신 단말의 업데이트 가능 패키지를 모두 업데이트 하겠습니까?',
       handleConfirmResult: this.handleAllUpdateForClientConfirmResult,
@@ -348,8 +348,8 @@ class ClientPackageManage extends Component {
     return (
 
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
           <Grid container spacing={24}>
 
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}}>
@@ -397,11 +397,11 @@ class ClientPackageManage extends Component {
 
           </Grid>
 
-        </GrPane>
+        </GRPane>
         <ClientGroupDialog compId={compId} />
         <ClientSelectDialog isOpen={this.state.isOpenClientSelect} onSaveHandle={this.handleClientSelectSave} onClose={this.handleClientSelectClose} />
         <ClientPackageSelectDialog isOpen={this.state.isOpenClientPackageSelect} onInstallHandle={this.handleClientPackageInstall} onClose={this.handleClientPackageSelectClose} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
 
     );
@@ -419,9 +419,9 @@ const mapDispatchToProps = (dispatch) => ({
   ClientPackageActions: bindActionCreators(ClientPackageActions, dispatch),
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientPackageManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageManage));
 
 

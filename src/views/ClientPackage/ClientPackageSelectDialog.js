@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 
 import * as GlobalActions from 'modules/GlobalModule';
 
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import ClientPackageTotalListForSelect from 'views/ClientPackage/ClientPackageTotalListForSelect';
 
@@ -20,7 +20,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -72,7 +72,7 @@ class ClientPackageSelectDialog extends Component {
                         <Button onClick={this.handleInstallButton} variant='contained' color="secondary">설치</Button>
                         <Button onClick={this.props.onClose} variant='contained' color="primary">닫기</Button>
                     </DialogActions>
-                    <GrConfirm />
+                    <GRConfirm />
                 </Dialog>
             }
             </div>
@@ -87,4 +87,4 @@ const mapDispatchToProps = (dispatch) => ({
     GlobalActions: bindActionCreators(GlobalActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientPackageSelectDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageSelectDialog));

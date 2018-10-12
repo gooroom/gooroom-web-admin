@@ -5,9 +5,9 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as GcspManageActions from 'modules/GcspManageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -28,7 +28,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormLabel from '@material-ui/core/FormLabel';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -60,8 +60,8 @@ class GcspDialog extends Component {
 
     // 생성
     handleCreateData = (event) => {
-        const { GcspManageProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { GcspManageProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '클라우드서비스 등록',
             confirmMsg: '클라우드서비스를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
@@ -89,8 +89,8 @@ class GcspDialog extends Component {
 
     // 수정
     handleEditData = (event) => {
-        const { GcspManageProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { GcspManageProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '클라우드서비스 수정',
             confirmMsg: '클라우드서비스를 수정하시겠습니까?',
             confirmOpen: true,
@@ -274,8 +274,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     GcspManageActions: bindActionCreators(GcspManageActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(GcspDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GcspDialog));
 

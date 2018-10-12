@@ -5,10 +5,10 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import GrConfirm from 'components/GrComponents/GrConfirm';
-import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils';
+import GRConfirm from 'components/GRComponents/GRConfirm';
+import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -34,7 +34,7 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -71,8 +71,8 @@ class MediaRuleDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { MediaRuleProps, GrConfirmActions } = this.props;
-        const re = GrConfirmActions.showConfirm({
+        const { MediaRuleProps, GRConfirmActions } = this.props;
+        const re = GRConfirmActions.showConfirm({
             confirmTitle: '매체제어정책정보 등록',
             confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
@@ -92,8 +92,8 @@ class MediaRuleDialog extends Component {
     }
 
     handleEditData = (event, id) => {
-        const { MediaRuleProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { MediaRuleProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '매체제어정책정보 수정',
             confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
@@ -305,7 +305,7 @@ class MediaRuleDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
-                <GrConfirm />
+                <GRConfirm />
             </Dialog>
             }
             </div>
@@ -320,8 +320,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(MediaRuleDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(MediaRuleDialog));
 

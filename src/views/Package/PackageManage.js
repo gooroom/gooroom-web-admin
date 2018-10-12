@@ -7,10 +7,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as PackageManageActions from 'modules/PackageManageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class PackageManage extends Component {
 
@@ -36,7 +36,7 @@ render() {
 const mapStateToProps = (state) => ({
 
   packageManageModule: state.PackageManageModule,
-  grConfirmModule: state.GrConfirmModule,
+  grConfirmModule: state.GRConfirmModule,
 
 });
 
@@ -44,10 +44,10 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
 
   PackageManageActions: bindActionCreators(PackageManageActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(PackageManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(PackageManage));
 
 

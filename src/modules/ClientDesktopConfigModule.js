@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { getMergedObject } from 'components/GRUtils/GRCommonUtils';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const GET_DESKTOP_LIST_SUCCESS = 'clientDesktopConfig/GET_LIST_SUCCESS';

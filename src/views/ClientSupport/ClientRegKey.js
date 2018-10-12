@@ -5,19 +5,19 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientRegKeyActions from 'modules/ClientRegKeyModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import ClientRegKeyDialog from './ClientRegKeyDialog';
-import GrPane from 'containers/GrContent/GrPane';
+import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -38,7 +38,7 @@ import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class ClientRegKey extends Component {
 
@@ -118,9 +118,9 @@ class ClientRegKey extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientRegKeyProps, GrConfirmActions } = this.props;
+    const { ClientRegKeyProps, GRConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
-    GrConfirmActions.showConfirm({
+    GRConfirmActions.showConfirm({
       confirmTitle: '단말등록키 삭제',
       confirmMsg: '단말등록키(' + selectedViewItem.get('regKeyNo') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
@@ -160,8 +160,8 @@ class ClientRegKey extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
@@ -187,7 +187,7 @@ class ClientRegKey extends Component {
           {(listObj) &&
             <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="regKeyNo"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -247,10 +247,10 @@ class ClientRegKey extends Component {
             />
             </div>
           }
-        </GrPane>
+        </GRPane>
         {/* dialog(popup) component area */}
         <ClientRegKeyDialog compId={compId} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
     );
   }
@@ -262,7 +262,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientRegKeyActions: bindActionCreators(ClientRegKeyActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientRegKey));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientRegKey));

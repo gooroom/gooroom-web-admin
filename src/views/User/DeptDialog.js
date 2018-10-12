@@ -7,10 +7,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as DeptActions from 'modules/DeptModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { getConfigIdsInComp } from 'components/GrUtils/GrTableListUtils';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import { getConfigIdsInComp } from 'components/GRUtils/GRTableListUtils';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -35,13 +35,13 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
 import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
 
-import UserRuleSelector from 'components/GrOptions/UserRuleSelector';
+import UserRuleSelector from 'components/GROptions/UserRuleSelector';
 
 
 function TabContainer(props) {
@@ -81,8 +81,8 @@ class DeptDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { DeptProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { DeptProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '조직정보 등록',
             confirmMsg: '조직정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
@@ -113,8 +113,8 @@ class DeptDialog extends Component {
     }
 
     handleEditData = (event) => {
-        const { DeptProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { DeptProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '조직정보 수정',
             confirmMsg: '조직정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
@@ -205,7 +205,7 @@ class DeptDialog extends Component {
                         }
                         <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                     </DialogActions>
-                    <GrConfirm />
+                    <GRConfirm />
                 </Dialog>
             }
             </div>
@@ -223,7 +223,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     DeptActions: bindActionCreators(DeptActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(DeptDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptDialog));

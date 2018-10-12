@@ -8,14 +8,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientPackageActions from 'modules/ClientPackageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
+import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientPackageDialog from './ClientPackageDialog';
 
 import Grid from '@material-ui/core/Grid';
@@ -36,7 +36,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Search from '@material-ui/icons/Search'; 
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -172,7 +172,7 @@ class ClientPackageComp extends Component {
         {/* data area */}
         {listObj &&
         <Table>
-          <GrCommonTableHead
+          <GRCommonTableHead
             classes={classes}
             keyId="packageId"
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -230,7 +230,7 @@ class ClientPackageComp extends Component {
           />
         }
         <ClientPackageDialog compId={compId} />
-        <GrConfirm />
+        <GRConfirm />
       </div>
     );
   }
@@ -244,9 +244,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientPackageActions: bindActionCreators(ClientPackageActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientPackageComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageComp));
 
 

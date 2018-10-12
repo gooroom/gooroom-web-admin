@@ -11,7 +11,7 @@ import * as GlobalActions from 'modules/GlobalModule';
 import * as ClientMasterManageActions from 'modules/ClientMasterManageModule';
 import * as ClientManageActions from 'modules/ClientManageModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
@@ -21,11 +21,11 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
-import { getRowObjectById, getDataObjectVariableInComp } from 'components/GrUtils/GrTableListUtils';
+import { getRowObjectById, getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
 
-import GrPageHeader from "containers/GrContent/GrPageHeader";
-import GrPane from 'containers/GrContent/GrPane';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from "containers/GRContent/GRPageHeader";
+import GRPane from 'containers/GRContent/GRPane';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientSelectDialog from "views/Client/ClientSelectDialog";
 
 import ClientStatusSelect from "views/Options/ClientStatusSelect";
@@ -50,7 +50,7 @@ import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
 import Card from "@material-ui/core/Card";
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -160,7 +160,7 @@ class ClientMasterManage extends Component {
   handleDeleteButtonForClientGroup = () => {
     const selectedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
     if(selectedIds && selectedIds.size > 0) {
-      this.props.GrConfirmActions.showConfirm({
+      this.props.GRConfirmActions.showConfirm({
         confirmTitle: '단말그룹 삭제',
         confirmMsg: '단말그룹(' + selectedIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
@@ -206,9 +206,9 @@ class ClientMasterManage extends Component {
 
   // add client in group - save
   handleClientSelectSave = (selectedClients) => {
-    const { ClientGroupProps, GrConfirmActions } = this.props;
+    const { ClientGroupProps, GRConfirmActions } = this.props;
     const selectedGroupItem = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedViewItem']);
-    GrConfirmActions.showConfirm({
+    GRConfirmActions.showConfirm({
         confirmTitle: '그룹에 단말 추가',
         confirmMsg: '단말을 그룹 추가하시겠습니까?',
         handleConfirmResult: this.handleClientSelectSaveConfirmResult,
@@ -241,10 +241,10 @@ class ClientMasterManage extends Component {
 
   // remove client in group - save
   handleRemoveClientInGroup = (event) => {
-    const { ClientManageProps, GrConfirmActions } = this.props;
+    const { ClientManageProps, GRConfirmActions } = this.props;
     const selectedClients = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
     if(selectedClients && selectedClients !== '') {
-      GrConfirmActions.showConfirm({
+      GRConfirmActions.showConfirm({
         confirmTitle: '그룹에서 단말 삭제',
         confirmMsg: '선택하신 단말을 그룹에서 삭제하시겠습니까?',
         handleConfirmResult: this.handleRemoveClientInGroupConfirmResult,
@@ -279,7 +279,7 @@ class ClientMasterManage extends Component {
     const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
     const selectedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
     if(selectedClientIds && selectedClientIds.size > 0) {
-      this.props.GrConfirmActions.showConfirm({
+      this.props.GRConfirmActions.showConfirm({
         confirmTitle: '단말 삭제',
         confirmMsg: '단말(' + selectedClientIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteClientConfirmResult,
@@ -317,8 +317,8 @@ class ClientMasterManage extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
           
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             
@@ -369,9 +369,9 @@ class ClientMasterManage extends Component {
           </Grid>
           <ClientGroupDialog compId={compId} />
           <ClientSelectDialog isOpen={this.state.isOpenClientSelect} onSaveHandle={this.handleClientSelectSave} onClose={this.handleClientSelectClose} />
-          <GrConfirm />
+          <GRConfirm />
           
-        </GrPane>
+        </GRPane>
       </React.Fragment>
       
     );
@@ -390,7 +390,7 @@ const mapDispatchToProps = (dispatch) => ({
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch),
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
 
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
@@ -402,5 +402,5 @@ const mapDispatchToProps = (dispatch) => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientMasterManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientMasterManage));
 

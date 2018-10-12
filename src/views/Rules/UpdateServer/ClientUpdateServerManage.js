@@ -7,22 +7,22 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { refreshDataListInComp, getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import { generateConfigObject } from './ClientUpdateServerManageInform';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import ClientUpdateServerManageDialog from './ClientUpdateServerManageDialog';
 import ClientUpdateServerManageInform from './ClientUpdateServerManageInform';
-import GrPane from 'containers/GrContent/GrPane';
+import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -43,7 +43,7 @@ import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -138,9 +138,9 @@ class ClientUpdateServerManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
 
-    const { ClientUpdateServerProps, GrConfirmActions } = this.props;
+    const { ClientUpdateServerProps, GRConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
-    GrConfirmActions.showConfirm({
+    GRConfirmActions.showConfirm({
       confirmTitle: '업데이트서버 정보 삭제',
       confirmMsg: '업데이트서버 정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
@@ -180,8 +180,8 @@ class ClientUpdateServerManage extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
@@ -212,7 +212,7 @@ class ClientUpdateServerManage extends Component {
           {(listObj) &&
           <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="objId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -269,11 +269,11 @@ class ClientUpdateServerManage extends Component {
             />
             </div>
           }
-        </GrPane>
+        </GRPane>
         {/* dialog(popup) component area */}
         <ClientUpdateServerManageInform compId={compId} />
         <ClientUpdateServerManageDialog compId={compId} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
     );
   }
@@ -285,7 +285,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientUpdateServerManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientUpdateServerManage));

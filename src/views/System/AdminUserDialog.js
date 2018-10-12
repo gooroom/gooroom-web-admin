@@ -5,9 +5,9 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as AdminUserActions from 'modules/AdminUserModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -27,7 +27,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -52,8 +52,8 @@ class AdminUserDialog extends Component {
 
     // 생성
     handleCreateData = (event) => {
-        const { AdminUserProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { AdminUserProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '관리자계정 등록',
             confirmMsg: '관리자계정을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
@@ -77,8 +77,8 @@ class AdminUserDialog extends Component {
 
     // 수정
     handleEditData = (event) => {
-        const { AdminUserProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { AdminUserProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '관리자계정 수정',
             confirmMsg: '관리자계정을 수정하시겠습니까?',
             confirmOpen: true,
@@ -196,8 +196,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     AdminUserActions: bindActionCreators(AdminUserActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(AdminUserDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminUserDialog));
 

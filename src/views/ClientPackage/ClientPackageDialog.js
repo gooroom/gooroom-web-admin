@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientPackageActions from 'modules/ClientPackageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -20,7 +20,7 @@ import TextField from "@material-ui/core/TextField";
 import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 function TabContainer(props) {
     return (
@@ -53,8 +53,8 @@ class ClientPackageDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { ClientPackageProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientPackageProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말패키지지 등록',
             confirmMsg: '단말패키지지을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateDataConfirmResult,
@@ -77,8 +77,8 @@ class ClientPackageDialog extends Component {
     }
     
     handleEditData = (event) => {
-        const { GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말패키지지 수정',
             confirmMsg: '단말패키지지을 수정하시겠습니까?',
             confirmOpen: true,
@@ -164,10 +164,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     ClientPackageActions: bindActionCreators(ClientPackageActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientPackageDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageDialog));
 
 

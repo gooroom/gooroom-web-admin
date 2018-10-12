@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
 
 import GlobalModule from './GlobalModule';
-import GrConfirmModule from './GrConfirmModule';
-import GrAlertModule from './GrAlertModule';
+import GRConfirmModule from './GRConfirmModule';
+import GRAlertModule from './GRAlertModule';
 
 import ClientRegKeyModule from './ClientRegKeyModule';
 import ClientProfileSetModule from './ClientProfileSetModule';
@@ -61,8 +61,8 @@ export default combineReducers({
 
     JobManageModule, 
     
-    GrConfirmModule,
-    GrAlertModule,
+    GRConfirmModule,
+    GRAlertModule,
     CommonOptionModule,
 
     DesktopAppModule,

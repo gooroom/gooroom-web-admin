@@ -5,10 +5,10 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import GrConfirm from 'components/GrComponents/GrConfirm';
-import { refreshDataListInComp } from 'components/GrUtils/GrTableListUtils';
+import GRConfirm from 'components/GRComponents/GRConfirm';
+import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -35,7 +35,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Radio from '@material-ui/core/Radio';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -65,8 +65,8 @@ class SecurityRuleDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { SecurityRuleProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { SecurityRuleProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말보안정책정보 등록',
             confirmMsg: '단말보안정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
@@ -87,8 +87,8 @@ class SecurityRuleDialog extends Component {
     }
 
     handleEditData = (event, id) => {
-        const { SecurityRuleProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { SecurityRuleProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말보안정책정보 수정',
             confirmMsg: '단말보안정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
@@ -222,7 +222,7 @@ class SecurityRuleDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
-                <GrConfirm />
+                <GRConfirm />
             </Dialog>
             }
             </div>
@@ -237,8 +237,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(SecurityRuleDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityRuleDialog));
 

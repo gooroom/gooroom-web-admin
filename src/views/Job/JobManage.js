@@ -8,16 +8,16 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as JobManageActions from 'modules/JobManageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import GrPageHeader from "containers/GrContent/GrPageHeader";
-import GrConfirm from 'components/GrComponents/GrConfirm';
-import GrPane from 'containers/GrContent/GrPane';
+import GRPageHeader from "containers/GRContent/GRPageHeader";
+import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRPane from 'containers/GRContent/GRPane';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 // option components
@@ -45,7 +45,7 @@ import AddIcon from '@material-ui/icons/Add';
 import JobInform from './JobInform';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 class JobManage extends Component {
@@ -130,8 +130,8 @@ class JobManage extends Component {
     return (
 
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
 
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
@@ -164,7 +164,7 @@ class JobManage extends Component {
           {(listObj) && 
           <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="jobNo"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -216,9 +216,9 @@ class JobManage extends Component {
             />
           </div>
         }
-        </GrPane>
+        </GRPane>
         <JobInform compId={compId} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
       
     );
@@ -231,8 +231,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   JobManageActions: bindActionCreators(JobManageActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(JobManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(JobManage));
 

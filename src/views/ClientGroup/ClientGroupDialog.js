@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
@@ -30,9 +30,9 @@ import TextField from "@material-ui/core/TextField";
 import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-import ClientRuleSelector from 'components/GrOptions/ClientRuleSelector';
+import ClientRuleSelector from 'components/GROptions/ClientRuleSelector';
 
 function TabContainer(props) {
     return (
@@ -64,8 +64,8 @@ class ClientGroupDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { ClientGroupProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientGroupProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말그룹 등록',
             confirmMsg: '단말그룹을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateDataConfirmResult,
@@ -99,8 +99,8 @@ class ClientGroupDialog extends Component {
     }
     
     handleEditData = (event) => {
-        const { GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말그룹 수정',
             confirmMsg: '단말그룹을 수정하시겠습니까?',
             confirmOpen: true,
@@ -206,7 +206,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch),
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
 
     ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
     ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
@@ -218,6 +218,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientGroupDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupDialog));
 
 

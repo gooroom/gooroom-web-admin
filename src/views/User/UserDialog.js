@@ -7,9 +7,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as UserActions from 'modules/UserModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -26,7 +26,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -65,8 +65,8 @@ class UserDialog extends Component {
 
     // 데이타 생성
     handleCreateData = (event) => {
-        const { UserProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { UserProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '사용자정보 등록',
             confirmMsg: '사용자정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
@@ -89,8 +89,8 @@ class UserDialog extends Component {
     }
 
     handleEditData = (event) => {
-        const { UserProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { UserProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '사용자정보 수정',
             confirmMsg: '사용자정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
@@ -182,7 +182,7 @@ class UserDialog extends Component {
                         }
                         <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                     </DialogActions>
-                    <GrConfirm />
+                    <GRConfirm />
                 </Dialog>
             }
             </div>
@@ -197,9 +197,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     UserActions: bindActionCreators(UserActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserDialog));
 
 

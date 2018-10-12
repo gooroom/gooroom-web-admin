@@ -5,10 +5,10 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientProfileSetActions from 'modules/ClientProfileSetModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import GrClientSelector from 'components/GrComponents/GrClientSelector';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import GRClientSelector from 'components/GRComponents/GRClientSelector';
+import { getMergedObject } from 'components/GRUtils/GRCommonUtils';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
@@ -26,7 +26,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -44,8 +44,8 @@ class ClientProfileSetDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { ClientProfileSetProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientProfileSetProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말 프로파일 등록',
             confirmMsg: '단말 프로파일을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateDataConfirmResult,
@@ -68,8 +68,8 @@ class ClientProfileSetDialog extends Component {
     }
 
     handleEditData = (event) => {
-        const { ClientProfileSetProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientProfileSetProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말 프로파일 수정',
             confirmMsg: '단말 프로파일을 수정하시겠습니까?',
             confirmOpen: true,
@@ -93,8 +93,8 @@ class ClientProfileSetDialog extends Component {
     }
 
     handleProfileJob = (event) => {
-        const { ClientProfileSetProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientProfileSetProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말 프로파일 실행',
             confirmMsg: '단말 프로파일을 실행하시겠습니까?',
             confirmOpen: true,
@@ -227,7 +227,7 @@ class ClientProfileSetDialog extends Component {
                                 className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
                             />
                             <div className={classes.profileItemRow}>
-                                <GrClientSelector selectorType='single' 
+                                <GRClientSelector selectorType='single' 
                                     handleClientSelect={this.handleSelectClient} 
                                     height='220' />
                             </div>
@@ -238,7 +238,7 @@ class ClientProfileSetDialog extends Component {
                             <div className={classes.profileLabel}>
                                 <InputLabel >대상 단말</InputLabel>
                             </div>
-                            <GrClientSelector selectorType='multiple' 
+                            <GRClientSelector selectorType='multiple' 
                                 handleClientSelect={this.handleSelectClientArray} 
                                 handleGroupSelect={this.handleSelectGroupArray} 
                                 height='220' />
@@ -272,8 +272,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     ClientProfileSetActions: bindActionCreators(ClientProfileSetActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientProfileSetDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfileSetDialog));
 

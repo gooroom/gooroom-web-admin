@@ -8,16 +8,16 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientPackageActions from 'modules/ClientPackageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrPane from 'containers/GrContent/GrPane';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRPane from 'containers/GRContent/GRPane';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import Grid from '@material-ui/core/Grid';
@@ -43,7 +43,7 @@ import ClientPackageDialog from './ClientPackageDialog';
 import ClientPackageInform from './ClientPackageInform';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 class ClientPackageMenu extends Component {
@@ -169,8 +169,8 @@ class ClientPackageMenu extends Component {
     return (
 
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
 
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
@@ -199,7 +199,7 @@ class ClientPackageMenu extends Component {
           {(listObj) && 
             <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="packageId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -260,10 +260,10 @@ class ClientPackageMenu extends Component {
             </div>
           }
 
-        </GrPane>
+        </GRPane>
         <ClientPackageInform compId={compId} />
         <ClientPackageDialog compId={compId} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
 
     );
@@ -276,9 +276,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientPackageActions: bindActionCreators(ClientPackageActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientPackageMenu));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageMenu));
 
 

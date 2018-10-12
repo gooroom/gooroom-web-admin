@@ -19,16 +19,16 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
 import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrPane from 'containers/GrContent/GrPane';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRPane from 'containers/GRContent/GRPane';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import Grid from '@material-ui/core/Grid';
@@ -52,7 +52,7 @@ import ClientGroupDialog from './ClientGroupDialog';
 import ClientGroupInform from './ClientGroupInform';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 class ClientGroupManage extends Component {
@@ -160,9 +160,9 @@ class ClientGroupManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientGroupProps, GrConfirmActions } = this.props;
+    const { ClientGroupProps, GRConfirmActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
-    GrConfirmActions.showConfirm({
+    GRConfirmActions.showConfirm({
       confirmTitle: '단말그룹 삭제',
       confirmMsg: '단말그룹(' + selectedViewItem.get('grpNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
@@ -203,8 +203,8 @@ class ClientGroupManage extends Component {
     return (
 
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
 
           {/* data option area */}
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
@@ -231,7 +231,7 @@ class ClientGroupManage extends Component {
           {(listObj) && 
             <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="grpId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -296,10 +296,10 @@ class ClientGroupManage extends Component {
             </div>
           }
 
-        </GrPane>
+        </GRPane>
         <ClientGroupInform compId={compId} />
         <ClientGroupDialog compId={compId} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
 
     );
@@ -327,9 +327,9 @@ const mapDispatchToProps = (dispatch) => ({
 
   ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch),
 
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientGroupManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupManage));
 
 

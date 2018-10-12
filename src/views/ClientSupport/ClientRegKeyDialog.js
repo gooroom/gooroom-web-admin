@@ -5,9 +5,9 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientRegKeyActions from 'modules/ClientRegKeyModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -22,7 +22,7 @@ import Grid from '@material-ui/core/Grid';
 import Add from "@material-ui/icons/Add";
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -46,8 +46,8 @@ class ClientRegKeyDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { ClientRegKeyProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientRegKeyProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말등록키 등록',
             confirmMsg: '단말등록키를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateDataConfirmResult,
@@ -72,8 +72,8 @@ class ClientRegKeyDialog extends Component {
     }
 
     handleEditData = (event) => {
-        const { ClientRegKeyProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
+        const { ClientRegKeyProps, GRConfirmActions } = this.props;
+        GRConfirmActions.showConfirm({
             confirmTitle: '단말등록키 수정',
             confirmMsg: '단말등록키를 수정하시겠습니까?',
             confirmOpen: true,
@@ -210,8 +210,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     ClientRegKeyActions: bindActionCreators(ClientRegKeyActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientRegKeyDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientRegKeyDialog));
 
