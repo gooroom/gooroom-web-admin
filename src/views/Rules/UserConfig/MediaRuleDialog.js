@@ -176,7 +176,7 @@ class MediaRuleDialog extends Component {
                     {(dialogType === MediaRuleDialog.TYPE_EDIT || dialogType === MediaRuleDialog.TYPE_ADD) &&
                         <div className={classes.dialogItemRowBig}>
                         
-                        <Grid item xs={12} container 
+                        <Grid container 
                             alignItems="flex-end" direction="row" justify="space-between" 
                             className={classes.dialogItemRow}>
                             <Grid item xs={6}>
