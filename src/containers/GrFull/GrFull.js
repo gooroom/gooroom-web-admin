@@ -36,6 +36,9 @@ import Typography from '@material-ui/core/Typography';
 
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+  },
   overrides: {
     MuiButton: {
       sizeSmall: {
