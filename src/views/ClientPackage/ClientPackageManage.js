@@ -299,7 +299,7 @@ class ClientPackageManage extends Component {
     })
   }
 
-  handleAllUpdateForClient = () => {
+  handleAllUpdateForClient = (event) => {
     event.stopPropagation();
     const { ClientGroupProps, GrConfirmActions } = this.props;
     GrConfirmActions.showConfirm({
