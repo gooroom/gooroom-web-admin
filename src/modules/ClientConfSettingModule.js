@@ -333,7 +333,7 @@ export default handleActions({
             pending: false, 
             error: true,
             resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
-            ex: (action.ex) ? action.ex : ''
+            errorObj: (action.error) ? action.error : ''
         });
     },
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {

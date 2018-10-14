@@ -206,10 +206,10 @@ export const createClientHostNameData = (itemObj) => dispatch => {
                         type: CREATE_HOSTNAME_SUCCESS
                     });
                 }    
-            } catch(ex) {
+            } catch(error) {
                 dispatch({
                     type: COMMON_FAILURE,
-                    ex: ex
+                    error: error
                 });
             }
         }
@@ -302,7 +302,7 @@ export default handleActions({
             pending: false, 
             error: true,
             resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
-            ex: (action.ex) ? action.ex : ''
+            errorObj: (action.error) ? action.error : ''
         });
     },
     [GET_HOSTNAME_LIST_SUCCESS]: (state, action) => {

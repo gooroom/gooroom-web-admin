@@ -152,9 +152,9 @@ export const updatePackageInClient = (param) => dispatch => {
                         response: response
                     });
                 }
-            } catch(ex) {
+            } catch(error) {
                 dispatch({
-                    type: COMMON_FAILURE, error: null, ex: ex
+                    type: COMMON_FAILURE, error: null, error: error
                 });
             }
         }
@@ -193,7 +193,7 @@ export default handleActions({
     [COMMON_FAILURE]: (state, action) => {
         return state.merge({ pending: false, error: true,
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
-            ex: (action.ex) ? action.ex : ''
+            errorObj: (action.error) ? action.error : ''
         });
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
