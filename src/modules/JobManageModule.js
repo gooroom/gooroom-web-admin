@@ -93,7 +93,7 @@ export default handleActions({
             pending: false, 
             error: true,
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
-            ex:  (action.ex) ? action.ex : ''
+            errorObj: (action.error) ? action.error : ''
         });
     },
     [GET_JOB_LISTPAGED_SUCCESS]: (state, action) => {

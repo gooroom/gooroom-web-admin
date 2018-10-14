@@ -217,10 +217,10 @@ export const createDeptInfo = (itemObj) => dispatch => {
                         type: CREATE_DEPT_SUCCESS
                     });
                 }    
-            } catch(ex) {
+            } catch(error) {
                 dispatch({
                     type: COMMON_FAILURE,
-                    ex: ex
+                    error: error
                 });
             }
         }
@@ -313,8 +313,8 @@ export const createUsersInDept = (itemObj) => dispatch => {
                         type: ADD_USERINDEPT_SUCCESS
                     });
                 }    
-            } catch(ex) {
-                dispatch({ type: COMMON_FAILURE, ex: ex });
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
@@ -333,8 +333,8 @@ export const deleteUsersInDept = (itemObj) => dispatch => {
                         type: DELETE_USERINDEPT_SUCCESS
                     });
                 }    
-            } catch(ex) {
-                dispatch({ type: COMMON_FAILURE, ex: ex });
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
@@ -355,7 +355,7 @@ export default handleActions({
             pending: false, 
             error: true,
             resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
-            ex: (action.ex) ? action.ex : ''
+            errorObj: (action.error) ? action.error : ''
         });
     },
     [GET_DEPT_LIST_SUCCESS]: (state, action) => {

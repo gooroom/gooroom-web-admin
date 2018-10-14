@@ -133,11 +133,11 @@ export const createClientGroupData = (param) => dispatch => {
                         response: response
                     });
                 }
-            } catch(ex) {
+            } catch(error) {
                 dispatch({
                     type: COMMON_FAILURE,
                     error: null,
-                    ex: ex
+                    error: error
                 });
             }
         }
@@ -241,8 +241,8 @@ export const addClientsInGroup = (itemObj) => dispatch => {
                         type: ADD_CLIENTINGROUP_SUCCESS
                     });
                 }    
-            } catch(ex) {
-                dispatch({ type: COMMON_FAILURE, ex: ex });
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
@@ -261,8 +261,8 @@ export const removeClientsInGroup = (itemObj) => dispatch => {
                         type: REMOVE_CLIENTINGROUP_SUCCESS
                     });
                 }    
-            } catch(ex) {
-                dispatch({ type: COMMON_FAILURE, ex: ex });
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
@@ -284,7 +284,7 @@ export default handleActions({
             pending: false, 
             error: true,
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
-            ex: (action.ex) ? action.ex : ''
+            errorObj: (action.error) ? action.error : ''
         });
     },
 

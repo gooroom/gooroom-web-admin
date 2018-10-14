@@ -75,10 +75,7 @@ export const readBrowserRuleList = (module, compId) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -105,10 +102,7 @@ export const readBrowserRuleListPaged = (module, compId, extParam) => dispatch =
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -152,10 +146,7 @@ export const getBrowserRuleByUserId = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -171,10 +162,7 @@ export const getBrowserRuleByDeptCd = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -190,10 +178,7 @@ export const getBrowserRuleByGroupId = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -256,17 +241,11 @@ export const createBrowserRuleData = (itemObj) => dispatch => {
                     });
                 }    
             } catch(ex) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    ex: ex
-                });
+                dispatch({ type: COMMON_FAILURE, ex: ex });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -300,24 +279,15 @@ export const editBrowserRuleData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
-                    dispatch({
-                        type: COMMON_FAILURE,
-                        error: error
-                    });
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
             } else {
                 // alarm ... fail
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -333,10 +303,7 @@ export const deleteBrowserRuleData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -375,7 +342,7 @@ export default handleActions({
             pending: false, 
             error: true,
             resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
-            ex: (action.ex) ? action.ex : ''
+            errorObj: (action.error) ? action.error : ''
         });
     },
     [GET_BROWSERRULE_LIST_SUCCESS]: (state, action) => {

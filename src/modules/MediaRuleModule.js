@@ -263,10 +263,10 @@ export const createMediaRuleData = (itemObj) => dispatch => {
                         type: CREATE_MEDIACONTROL_SUCCESS
                     });
                 }    
-            } catch(ex) {
+            } catch(error) {
                 dispatch({
                     type: COMMON_FAILURE,
-                    ex: ex
+                    error: error
                 });
             }
         }
@@ -383,7 +383,7 @@ export default handleActions({
             pending: false, 
             error: true,
             resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
-            ex: (action.ex) ? action.ex : ''
+            errorObj: (action.error) ? action.error : ''
         });
     },
     [GET_MEDIACONTROL_LIST_SUCCESS]: (state, action) => {
