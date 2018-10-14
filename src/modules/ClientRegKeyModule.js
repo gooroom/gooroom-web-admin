@@ -62,10 +62,7 @@ export const readClientRegkeyListPaged = (module, compId, extParam) => dispatch 
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -99,17 +96,11 @@ export const generateClientRegkey = (param) => dispatch => {
                     });
                 }
             } catch(error) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -126,18 +117,11 @@ export const createClientRegKeyData = (param) => dispatch => {
                     });
                 }    
             } catch(error) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: null,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -152,10 +136,7 @@ export const editClientRegKeyData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -170,10 +151,7 @@ export const deleteClientRegKeyData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -181,15 +159,10 @@ export const deleteClientRegKeyData = (param) => dispatch => {
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        return state.merge({
-            pending: true, 
-            error: false
-        });
+        return state.merge({ pending: true, error: false });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return state.merge({
-            pending: false, 
-            error: true,
+        return state.merge({ pending: false, error: true,
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
             errorObj: (action.error) ? action.error : ''
         });

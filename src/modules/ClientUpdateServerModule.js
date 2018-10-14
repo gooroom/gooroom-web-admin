@@ -70,10 +70,7 @@ export const readClientUpdateServerList = (module, compId) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -100,10 +97,7 @@ export const readClientUpdateServerListPaged = (module, compId, extParam) => dis
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -120,10 +114,7 @@ export const getClientUpdateServer = (param) => dispatch => {
                 });
             }
         ).catch(error => {
-            dispatch({
-                type: COMMON_FAILURE,
-                error: error
-            });
+            dispatch({ type: COMMON_FAILURE, error: error });
         });
     } else {
         return dispatch({
@@ -146,10 +137,7 @@ export const getClientUpdateServerByGroupId = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -209,17 +197,11 @@ export const createClientUpdateServerData = (itemObj) => dispatch => {
                     });
                 }    
             } catch(error) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 
 };
@@ -241,6 +223,7 @@ export const editClientUpdateServerData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
 
                 // change object array for selector
@@ -254,21 +237,15 @@ export const editClientUpdateServerData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
 
             } else {
-                // alarm ... fail
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -284,10 +261,7 @@ export const deleteClientUpdateServerData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -295,15 +269,10 @@ export const deleteClientUpdateServerData = (param) => dispatch => {
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        return state.merge({
-            pending: true, 
-            error: false
-        });
+        return state.merge({ pending: true, error: false });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return state.merge({
-            pending: false, 
-            error: true,
+        return state.merge({ pending: false, error: true,
             resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
             errorObj: (action.error) ? action.error : ''
         });

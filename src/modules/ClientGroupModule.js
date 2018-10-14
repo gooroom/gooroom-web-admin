@@ -79,10 +79,7 @@ export const readClientGroupListPaged = (module, compId, extParam) => dispatch =
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -134,18 +131,11 @@ export const createClientGroupData = (param) => dispatch => {
                     });
                 }
             } catch(error) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: null,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -175,19 +165,14 @@ export const editClientGroupData = (param) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
             } else {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -203,10 +188,7 @@ export const deleteClientGroupData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -222,10 +204,7 @@ export const deleteSelectedClientGroupData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 

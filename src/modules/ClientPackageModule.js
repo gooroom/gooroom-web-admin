@@ -101,10 +101,7 @@ export const readPackageListPagedInClient = (module, compId, extParam) => dispat
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -131,10 +128,7 @@ export const readClientPackageListPaged = (module, compId, extParam) => dispatch
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -153,16 +147,11 @@ export const updatePackageInClient = (param) => dispatch => {
                     });
                 }
             } catch(error) {
-                dispatch({
-                    type: COMMON_FAILURE, error: null, error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 

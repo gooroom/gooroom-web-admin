@@ -74,10 +74,7 @@ export const readClientConfSettingList = (module, compId) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -104,10 +101,7 @@ export const readClientConfSettingListPaged = (module, compId, extParam) => disp
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -124,10 +118,7 @@ export const getClientConf = (param) => dispatch => {
                 });
             }
         ).catch(error => {
-            dispatch({
-                type: COMMON_FAILURE,
-                error: error
-            });
+            dispatch({ type: COMMON_FAILURE, error: error });
         });
     } else {
         return dispatch({
@@ -150,10 +141,7 @@ export const getClientConfByGroupId = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -214,18 +202,12 @@ export const createClientConfSettingData = (itemObj) => dispatch => {
                         type: CREATE_CONFSETTING_SUCCESS
                     });
                 }    
-            } catch(ex) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    ex: ex
-                });
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -246,6 +228,7 @@ export const editClientConfSettingData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
 
                 // change object array for selector
@@ -259,24 +242,14 @@ export const editClientConfSettingData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
-                    dispatch({
-                        type: COMMON_FAILURE,
-                        error: error
-                    });
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
             } else {
-                // alarm ... fail
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -292,10 +265,7 @@ export const deleteClientConfSettingData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 

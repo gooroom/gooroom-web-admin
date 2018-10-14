@@ -70,10 +70,7 @@ export const readSecurityRuleList = (module, compId) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -100,10 +97,7 @@ export const readSecurityRuleListPaged = (module, compId, extParam) => dispatch 
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -120,10 +114,7 @@ export const getSecurityRule = (param) => dispatch => {
                 });
             }
         ).catch(error => {
-            dispatch({
-                type: COMMON_FAILURE,
-                error: error
-            });
+            dispatch({ type: COMMON_FAILURE, error: error });
         });
     } else {
         return dispatch({
@@ -147,10 +138,7 @@ export const getSecurityRuleByUserId = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -166,10 +154,7 @@ export const getSecurityRuleByDeptCd = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -185,10 +170,7 @@ export const getSecurityRuleByGroupId = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -250,17 +232,11 @@ export const createSecurityRule = (itemObj) => dispatch => {
                     });
                 }    
             } catch(error) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -281,6 +257,7 @@ export const editSecurityRule = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
 
                 // change object array for selector
@@ -294,25 +271,15 @@ export const editSecurityRule = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
-                    dispatch({
-                        type: COMMON_FAILURE,
-                        error: error
-                    });
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
                 
             } else {
-                // alarm ... fail
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -328,10 +295,7 @@ export const deleteSecurityRule = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -339,15 +303,10 @@ export const deleteSecurityRule = (param) => dispatch => {
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        return state.merge({
-            pending: true, 
-            error: false
-        });
+        return state.merge({ pending: true, error: false });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return state.merge({
-            pending: false, 
-            error: true,
+        return state.merge({ pending: false, error: true,
             resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
             errorObj: (action.error) ? action.error : ''
         });
