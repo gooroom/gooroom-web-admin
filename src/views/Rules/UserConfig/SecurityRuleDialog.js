@@ -6,17 +6,21 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
+import SecurityRuleViewer from './SecurityRuleViewer';
 import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-
+import Typography from "@material-ui/core/Typography";
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -45,6 +49,7 @@ class SecurityRuleDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+    static TYPE_INHERIT = 'INHERIT';
 
     handleClose = (event) => {
         this.props.SecurityRuleActions.closeDialog();
@@ -102,6 +107,22 @@ class SecurityRuleDialog extends Component {
         }
     }
 
+    handleInheritSaveData = (event, id) => {
+        const { SecurityRuleProps, DeptProps, SecurityRuleActions, compId } = this.props;
+        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+
+        SecurityRuleActions.inheritSecurityRuleData({
+            'objId': SecurityRuleProps.getIn(['editingItem', 'objId']),
+            'deptCd': selectedDeptCd
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: '시스템알림',
+                alertMsg: '단말보안정책이 하위 조직에 적용되었습니다.'
+            });
+            this.handleClose();
+        });
+    }
+
     checkAllow = value => {
         return (value == 'allow');
     }
@@ -121,6 +142,8 @@ class SecurityRuleDialog extends Component {
             title = "단말보안정책설정 정보";
         } else if(dialogType === SecurityRuleDialog.TYPE_EDIT) {
             title = "단말보안정책설정 수정";
+        } else if(dialogType === SecurityRuleDialog.TYPE_INHERIT) {
+            title = "단말보안정책설정 상속";
         }
 
         return (
@@ -128,20 +151,16 @@ class SecurityRuleDialog extends Component {
             {(SecurityRuleProps.get('dialogOpen') && editingItem) &&
             <Dialog open={SecurityRuleProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={classes.dialogContainer}>
+                <DialogContent>
+                    {(dialogType === SecurityRuleDialog.TYPE_EDIT || dialogType === SecurityRuleDialog.TYPE_ADD) &&
+                    <div>
 
-                    <TextField
-                        id="objNm"
-                        label="이름"
-                        value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                    <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
                         disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
                     />
-                    <TextField
-                        id="comment"
-                        label="설명"
-                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                    <TextField label="설명" value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
@@ -205,7 +224,17 @@ class SecurityRuleDialog extends Component {
                             </div>
                         </div>
                     }
-                </form>
+                    </div>
+                    }
+                    {(dialogType === SecurityRuleDialog.TYPE_VIEW || dialogType === SecurityRuleDialog.TYPE_INHERIT) &&
+                        <div>
+                        <Typography variant="body1">
+                            이 정책을 하위 조직에 적용 하시겠습니까?
+                        </Typography>
+                        <SecurityRuleViewer viewItem={editingItem} />
+                        </div>
+                    }
+                </DialogContent>
 
                 <DialogActions>
                 {(dialogType === SecurityRuleDialog.TYPE_ADD) &&
@@ -213,6 +242,9 @@ class SecurityRuleDialog extends Component {
                 }
                 {(dialogType === SecurityRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                }
+                {(dialogType === SecurityRuleDialog.TYPE_INHERIT) &&
+                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">적용</Button>
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
@@ -226,12 +258,14 @@ class SecurityRuleDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    SecurityRuleProps: state.SecurityRuleModule
+    SecurityRuleProps: state.SecurityRuleModule,
+    DeptProps: state.DeptModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
     SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityRuleDialog));

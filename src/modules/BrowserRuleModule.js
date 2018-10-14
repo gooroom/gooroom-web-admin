@@ -318,7 +318,7 @@ export const inheritBrowserRuleData = (param) => dispatch => {
         }).then(
         (response) => {
             dispatch({
-                type: DELETE_BROWSERRULE_SUCCESS,
+                type: EDIT_BROWSERRULE_SUCCESS,
                 compId: param.compId,
                 objId: param.objId
             });

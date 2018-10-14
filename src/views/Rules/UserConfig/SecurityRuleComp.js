@@ -11,7 +11,7 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
 import SecurityRuleDialog from './SecurityRuleDialog';
 import { generateConfigObject } from './SecurityRuleInform';
-import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GRUtils/GRTableListUtils';
+import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getRoleTitleClassName } from 'components/GRUtils/GRTableListUtils';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -29,6 +29,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -48,6 +49,16 @@ class SecurityRuleComp extends Component {
     });
   };
 
+  handleInheritBtnClick = (objId, compType) => {
+    const { SecurityRuleProps, SecurityRuleActions, compId } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SecurityRuleProps, compId, 'objId') : getSelectedObjectInComp(SecurityRuleProps, compId);
+
+    SecurityRuleActions.showDialog({
+      selectedViewItem: generateConfigObject(selectedViewItem),
+      dialogType: SecurityRuleDialog.TYPE_INHERIT
+    });
+  };
+
   render() {
 
     const { classes } = this.props;
@@ -58,6 +69,9 @@ class SecurityRuleComp extends Component {
     const listAllData = SecurityRuleProps.getIn(['viewItems', compId, 'listAllData']);
     const selectedOptionItemId = SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     const isDefault = SecurityRuleProps.getIn(['viewItems', compId, 'isDefault']);
+    const isDeptRole = SecurityRuleProps.getIn(['viewItems', compId, 'isDeptRole']);
+
+    const titleClassName = getRoleTitleClassName(this.props.targetType, isDefault, isDeptRole);
 
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
@@ -97,21 +111,27 @@ class SecurityRuleComp extends Component {
             <CardContent style={{padding: 10}}>
             <Grid container>
               <Grid item xs={6}>
-                <Typography className={(isDefault) ? classes.compTitleForBasic : classes.compTitle}>
+                <Typography className={classes[titleClassName]}>
                   {(compType == 'VIEW') ? '상세내용' : '단말보안정책'}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Grid container justify="flex-end">
+                  {(this.props.inherit) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                  ><SettingsApplicationsIcon /></Button>
+                    onClick={() => this.handleInheritBtnClick(viewCompItem.get('objId'), compType)}
+                  ><ArrowDropDownCircleIcon /></Button>
+                  }
                 </Grid>
               </Grid>
             </Grid>
             <Typography variant="h5" component="h2">
               {viewCompItem.get('objNm')}
+              <Button size="small"
+                variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
+              ><SettingsApplicationsIcon /></Button>
             </Typography>
             <Typography color="textSecondary">
               {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}

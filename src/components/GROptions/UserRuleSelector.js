@@ -6,9 +6,6 @@ import classNames from "classnames";
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-import ClientConfSettingSelector from 'views/Rules/ClientConfig/ClientConfSettingSelector'
-import ClientHostNameSelector from 'views/Rules/HostName/ClientHostNameSelector'
-import ClientUpdateServerSelector from 'views/Rules/UpdateServer/ClientUpdateServerSelector'
 import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
 import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
@@ -20,7 +17,6 @@ import Paper from '@material-ui/core/Paper';
 
 
 class UserRuleSelector extends Component {
-
     constructor(props) {
         super(props);
         this.state = {

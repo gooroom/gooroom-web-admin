@@ -105,10 +105,10 @@ export const readDeptListPaged = (module, compId, extParam) => dispatch => {
     });
 };
 
-export const getDept = (param) => dispatch => {
+export const getDeptInfo = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readDept', {'objId': param.objId}).then(
+    return requestPostAPI('readDeptData', {'deptCd': param.deptCd}).then(
         (response) => {
             dispatch({
                 type: GET_DEPT_SUCCESS,
@@ -215,18 +215,17 @@ export const createDeptInfo = (itemObj) => dispatch => {
 };
 
 // edit
-export const editDeptInfo = (itemObj) => dispatch => {
+export const editDeptInfo = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateDeptInfo', makeParameter(itemObj)).then(
+    return requestPostAPI('updateDeptInfo', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
                 // change selected object
-                requestPostAPI('readDept', {'objId': itemObj.get('objId')}).then(
+                requestPostAPI('readDeptData', {'deptCd': param.deptCd}).then(
                     (response) => {
                         dispatch({
                             type: EDIT_DEPT_SUCCESS,
-                            objId: itemObj.get('objId'),
+                            objId: param.objId,
                             response: response
                         });
                     }
@@ -235,18 +234,18 @@ export const editDeptInfo = (itemObj) => dispatch => {
                 });
 
                 // change object array for selector
-                requestPostAPI('readDeptList', {
-                }).then(
-                    (response) => {
-                        dispatch({
-                            type: GET_DEPT_LIST_SUCCESS,
-                            compId: compId,
-                            response: response
-                        });
-                    }
-                ).catch(error => {
-                    dispatch({ type: COMMON_FAILURE, error: error });
-                });
+                // requestPostAPI('readDeptList', {
+                // }).then(
+                //     (response) => {
+                //         dispatch({
+                //             type: GET_DEPT_LIST_SUCCESS,
+                //             compId: compId,
+                //             response: response
+                //         });
+                //     }
+                // ).catch(error => {
+                //     dispatch({ type: COMMON_FAILURE, error: error });
+                // });
             } else {
                 dispatch({ type: COMMON_FAILURE, error: error });
             }

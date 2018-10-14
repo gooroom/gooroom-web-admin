@@ -31,7 +31,6 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-import { CardHeader } from '@material-ui/core';
 
 
 //
@@ -77,6 +76,22 @@ class ClientConfSettingComp extends Component {
 
     return (
       <React.Fragment>
+        {(!viewCompItem) && 
+          <Card elevation={0}>
+          <CardContent style={{padding: 10}}>
+            <Grid container>
+              <Grid item xs={6}>
+                <Typography className={classes.compTitleForEmpty}>단말정책설정</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Grid container justify="flex-end">
+                없음
+                </Grid>
+              </Grid>
+            </Grid>
+          </CardContent>
+          </Card>
+        }
         {(viewCompItem) && 
         <Card elevation={0}>
           <CardContent style={{padding: 10}}>
@@ -87,19 +102,18 @@ class ClientConfSettingComp extends Component {
                 </Typography>
               </Grid>
               <Grid item xs={6}>
-                <Grid container justify="flex-end">
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                  ><SettingsApplicationsIcon /></Button>
-                </Grid>
               </Grid>
             </Grid>
             <Typography variant="h5" component="h2">
-              {viewCompItem.get('objNm')} {(viewCompItem.get('objId') && viewCompItem.get('objId') != '') ? ' (' + viewCompItem.get('objId') + ')' : ''}
+              {viewCompItem.get('objNm')}
+              <Button size="small"
+                variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
+              ><SettingsApplicationsIcon /></Button>
             </Typography>
             <Typography color="textSecondary">
-              {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
+            {(viewCompItem.get('objId') != '') ? '(' + viewCompItem.get('objId') + ') ' : ''}
+            {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
             </Typography>
             <Divider />
             <Table>
