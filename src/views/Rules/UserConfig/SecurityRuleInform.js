@@ -108,7 +108,7 @@ export const generateConfigObject = (param) => {
     let screenTime = '';
     let passwordTime = '';
     let packageHandle = '';
-    let state = '';
+    let netState = '';
     
     param.get('propList').forEach(function(e) {
       const ename = e.get('propNm');
@@ -120,7 +120,7 @@ export const generateConfigObject = (param) => {
       } else if(ename == 'package_handle') {
         packageHandle = evalue;
       } else if(ename == 'state') {
-        state = evalue;
+        netState = evalue;
       }
     });
   
@@ -133,7 +133,7 @@ export const generateConfigObject = (param) => {
       screenTime: screenTime,
       passwordTime: passwordTime,
       packageHandle: packageHandle,
-      state: state
+      netState: netState
     });
   
   } else {

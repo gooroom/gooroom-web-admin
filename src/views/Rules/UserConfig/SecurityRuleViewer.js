@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
@@ -21,7 +22,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class BrowserRuleViewer extends Component {
+class SecurityRuleViewer extends Component {
 
   render() {
 
@@ -32,7 +33,7 @@ class BrowserRuleViewer extends Component {
       <React.Fragment>
         {(viewItem) && 
           <Card elevation={0} className={classes.ruleViewerCard}>
-          <CardContent style={{padding: 10}}>
+            <CardContent style={{padding: 10}}>
             <Grid container>
               <Grid item xs={6}>
                 <Typography color="default">
@@ -48,26 +49,28 @@ class BrowserRuleViewer extends Component {
             <Divider />
             <Table>
               <TableBody>
+
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} Web Socket 사용</TableCell>
-                  <TableCell numeric>{viewItem.get('webSocket')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} Web Worker 사용</TableCell>
-                  <TableCell numeric>{viewItem.get('webWorker')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 화면보호기 설정시간(분)</TableCell>
+                  <TableCell numeric>{viewItem.get('screenTime')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 패스워드 변경주기(일)</TableCell>
+                  <TableCell numeric>{viewItem.get('passwordTime')}</TableCell>
                 </TableRow>
+
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('trustSetupId')}</pre></TableCell>
+                  <TableCell component="th" scope="row">{bull} 패키지추가/삭제 기능</TableCell>
+                  <TableCell numeric>{viewItem.get('packageHandle')}</TableCell>
+                  <TableCell component="th" scope="row"></TableCell>
+                  <TableCell numeric></TableCell>
                 </TableRow>
+
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 비신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('untrustSetupId')}</pre></TableCell>
+                  <TableCell component="th" scope="row">{bull} 전체네트워크허용</TableCell>
+                  <TableCell numeric>{viewItem.get('state')}</TableCell>
+                  <TableCell component="th" scope="row"></TableCell>
+                  <TableCell numeric></TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} White List</TableCell>
-                  <TableCell colSpan={3} numeric>{viewItem.get('trustUrlList').map(function(prop, index) {
-                    return <span key={index}>{prop}<br/></span>;
-                  })}</TableCell>
-                </TableRow>
+
               </TableBody>
             </Table>
             </CardContent>
@@ -78,5 +81,5 @@ class BrowserRuleViewer extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(BrowserRuleViewer);
+export default withStyles(GRCommonStyle)(SecurityRuleViewer);
 

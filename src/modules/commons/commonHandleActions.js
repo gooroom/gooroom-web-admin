@@ -93,10 +93,12 @@ export const handleListPagedAction = (state, action) => {
 export const handleGetObjectAction = (state, compId, data, extend) => {
     if(data && data.length > 0) {
         const isDefault = (extend && extend.length > 0 && extend[0] === 'DEFAULT') ? true: false;
+        const isDeptRole = (extend && extend.length > 0 && extend[0] === 'DEPT') ? true: false;
         return state
         .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
         .setIn(['viewItems', compId, 'selectedOptionItemId'], (isDefault) ? '' : data[0].objId)
         .setIn(['viewItems', compId, 'isDefault'], isDefault)
+        .setIn(['viewItems', compId, 'isDeptRole'], isDeptRole)
         .setIn(['viewItems', compId, 'informOpen'], true);
     } else  {
         return state.deleteIn(['viewItems', compId]);
@@ -134,14 +136,14 @@ export const handleEditSuccessAction = (state, action) => {
     let newState = state;
     if(newState.get('viewItems')) {
         newState.get('viewItems').forEach((e, i) => {
-            if(e.get('selectedViewItem')) {
-                if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
+            // if(e.get('selectedViewItem')) {
+            //     if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
                     // replace
                     newState = newState
                         .setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]))
                         .setIn(['viewItems', i, 'informOpen'], false);
-                }
-            }
+            //     }
+            // }
         });
     }
     return state.delete('editingItem').merge(newState).merge({

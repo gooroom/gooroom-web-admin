@@ -27,6 +27,7 @@ import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
+import Typography from "@material-ui/core/Typography";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -37,11 +38,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-import { Typography } from "@material-ui/core";
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class BrowserRuleDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -114,11 +111,8 @@ class BrowserRuleDialog extends Component {
         const { BrowserRuleProps, DeptProps, BrowserRuleActions, compId } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
-        console.log('selectedDeptCd :::::', selectedDeptCd);
-
         BrowserRuleActions.inheritBrowserRuleData({
             'objId': BrowserRuleProps.getIn(['editingItem', 'objId']),
-            'confType': 'BROWSERRULE',
             'deptCd': selectedDeptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({

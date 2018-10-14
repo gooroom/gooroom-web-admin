@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import * as DeptActions from 'modules/DeptModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { getConfigIdsInComp } from 'components/GRUtils/GRTableListUtils';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -147,7 +146,7 @@ class DeptDialog extends Component {
         return (
             <div>
             {(DeptProps.get('dialogOpen') && editingItem) &&
-                <Dialog open={DeptProps.get('dialogOpen')} >
+                <Dialog open={DeptProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent>
                         {(dialogType === DeptDialog.TYPE_ADD) &&
@@ -171,7 +170,7 @@ class DeptDialog extends Component {
                             className={classes.fullWidth}
                         />
                         <Divider style={{marginBottom: 10}} />
-                        <UserRuleSelector compId={compId} module={(editingItem) ? editingItem.toJS() : null} />
+                        <UserRuleSelector compId={compId} module={DeptProps.get('editingItem').toJS()} />
                     </DialogContent>
                     <DialogActions>
                         {(dialogType === DeptDialog.TYPE_ADD) &&

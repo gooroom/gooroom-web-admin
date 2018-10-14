@@ -89,7 +89,7 @@ class DeptManage extends Component {
     });
 
     // show user inform pane.
-    UserActions.showInform({
+    DeptActions.showInform({
       compId: compId, selectedViewItem: null
     });
   }

@@ -6,8 +6,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
+import MediaRuleViewer from './MediaRuleViewer';
 import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -23,6 +26,7 @@ import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
+import Typography from "@material-ui/core/Typography";
 import Checkbox from '@material-ui/core/Checkbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -36,14 +40,12 @@ import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class MediaRuleDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+    static TYPE_INHERIT = 'INHERIT';
 
     handleClose = (event) => {
         this.props.MediaRuleActions.closeDialog();
@@ -106,6 +108,23 @@ class MediaRuleDialog extends Component {
         }
     }
 
+    handleInheritSaveData = (event, id) => {
+        const { MediaRuleProps, DeptProps, MediaRuleActions, compId } = this.props;
+        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+
+        MediaRuleActions.inheritMediaRuleData({
+            'objId': MediaRuleProps.getIn(['editingItem', 'objId']),
+            'deptCd': selectedDeptCd
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: '시스템알림',
+                alertMsg: '매체제어설정이 하위 조직에 적용되었습니다.'
+            });
+            this.handleClose();
+        });
+    }
+
+
     handleAddBluetoothMac = () => {
         const { MediaRuleActions } = this.props;
         MediaRuleActions.addBluetoothMac();
@@ -135,6 +154,8 @@ class MediaRuleDialog extends Component {
             title = "매체제어정책설정 정보";
         } else if(dialogType === MediaRuleDialog.TYPE_EDIT) {
             title = "매체제어정책설정 수정";
+        } else if(dialogType === MediaRuleDialog.TYPE_INHERIT) {
+            title = "매체제어정책설정 상속";
         }
 
         return (
@@ -143,17 +164,15 @@ class MediaRuleDialog extends Component {
             <Dialog open={MediaRuleProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
+                    {(dialogType === MediaRuleDialog.TYPE_EDIT || dialogType === MediaRuleDialog.TYPE_ADD) &&
+                    <div>
 
-                    <TextField
-                        label="이름"
-                        value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                    <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
                         disabled={(dialogType === MediaRuleDialog.TYPE_VIEW)}
                     />
-                    <TextField
-                        label="설명"
-                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                    <TextField label="설명" value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === MediaRuleDialog.TYPE_VIEW)}
@@ -288,6 +307,16 @@ class MediaRuleDialog extends Component {
 
                         </div>
                     }
+                    </div>
+                    }
+                    {(dialogType === MediaRuleDialog.TYPE_VIEW || dialogType === MediaRuleDialog.TYPE_INHERIT) &&
+                        <div>
+                        <Typography variant="body1">
+                            이 설정을 하위 조직에 적용 하시겠습니까?
+                        </Typography>
+                        <MediaRuleViewer viewItem={editingItem} />
+                        </div>
+                    }
                 </DialogContent>
 
                 <DialogActions>
@@ -297,11 +326,15 @@ class MediaRuleDialog extends Component {
                 {(dialogType === MediaRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
+                {(dialogType === MediaRuleDialog.TYPE_INHERIT) &&
+                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">적용</Button>
+                }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
                 <GRConfirm />
             </Dialog>
             }
+            <GRAlert />
             </div>
         );
     }
@@ -309,12 +342,14 @@ class MediaRuleDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    MediaRuleProps: state.MediaRuleModule
+    MediaRuleProps: state.MediaRuleModule,
+    DeptProps: state.DeptModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
     MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(MediaRuleDialog));

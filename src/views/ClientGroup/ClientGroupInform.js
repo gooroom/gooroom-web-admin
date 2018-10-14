@@ -80,9 +80,9 @@ class ClientGroupInform extends Component {
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
-                      variant="outlined" color="primary" style={{minWidth:32}}
-                      onClick={() => this.handleEditClick(selectedViewItem.get('grpId'))}
-                    ><SettingsApplicationsIcon /></Button>
+                  variant="outlined" color="primary" style={{minWidth:32}}
+                  onClick={() => this.handleEditClick(selectedViewItem.get('grpId'))}
+                ><SettingsApplicationsIcon /></Button>
               </div>
             }
           ></CardHeader>
@@ -90,25 +90,25 @@ class ClientGroupInform extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={0}>
               <Grid item xs={12} sm={12} lg={6}>
-                <ClientConfSettingComp compId={compId} />
+                <ClientConfSettingComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <ClientHostNameComp compId={compId} />
+                <ClientHostNameComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <ClientUpdateServerComp compId={compId} />
+                <ClientUpdateServerComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <BrowserRuleComp compId={compId} />
+                <BrowserRuleComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <MediaRuleComp compId={compId} />
+                <MediaRuleComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <SecurityRuleComp compId={compId} />
+                <SecurityRuleComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
-                <DesktopConfigComp compId={compId} />
+                <DesktopConfigComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
               </Grid>
             </Grid>
 

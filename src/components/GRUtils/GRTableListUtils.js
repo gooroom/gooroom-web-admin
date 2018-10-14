@@ -73,18 +73,22 @@ export const getSelectedObjectInCompAndId = (propObj, compId, idName) => {
     return null;
 }
 
+export const getRoleTitleClassName = (targetType, isDefault, isDeptRole) => {
 
-
-// ?????
-export const getConfigIdsInComp = (ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, compId) => {
-
-    const clientConfigId = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
-    const hostNameConfigId = ClientHostNameProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
-    const updateServerConfigId = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
-
-    return {
-        clientConfigId: clientConfigId,
-        hostNameConfigId: hostNameConfigId,
-        updateServerConfigId: updateServerConfigId
+    if(isDefault) {
+        return 'compTitleForBasic';
+    } else {
+        if(targetType == 'CLIENTGROUP') {
+            return 'compTitle';
+        } else if(targetType == 'USER') {
+            if(isDeptRole) {
+                return 'compTitle';
+            }
+            return 'compTitleForUserRole';
+        } else if(targetType == 'DEPT') {
+            return 'compTitle';
+        } else {
+            return 'compTitleForBasic';
+        }
     }
 }

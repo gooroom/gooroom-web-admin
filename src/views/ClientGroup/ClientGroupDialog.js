@@ -132,7 +132,7 @@ class ClientGroupDialog extends Component {
         return (
             <div>
             {(ClientGroupProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={ClientGroupProps.get('dialogOpen')} >
+            <Dialog open={ClientGroupProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <DialogTitle >{title}</DialogTitle>
                 <DialogContent>
                     <TextField

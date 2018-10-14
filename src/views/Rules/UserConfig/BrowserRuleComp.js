@@ -11,7 +11,7 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 
 import BrowserRuleDialog from './BrowserRuleDialog';
 import { generateConfigObject } from './BrowserRuleInform';
-import { getSelectedObjectInComp, getSelectedObjectInCompAndId } from 'components/GRUtils/GRTableListUtils';
+import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getRoleTitleClassName } from 'components/GRUtils/GRTableListUtils';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -68,6 +68,9 @@ class BrowserRuleComp extends Component {
     const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
     const selectedOptionItemId = BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     const isDefault = BrowserRuleProps.getIn(['viewItems', compId, 'isDefault']);
+    const isDeptRole = BrowserRuleProps.getIn(['viewItems', compId, 'isDeptRole']);
+
+    const titleClassName = getRoleTitleClassName(this.props.targetType, isDefault, isDeptRole);
 
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
@@ -107,30 +110,31 @@ class BrowserRuleComp extends Component {
           <CardContent style={{padding: 10}}>
             <Grid container>
               <Grid item xs={6}>
-                <Typography className={(isDefault) ? classes.compTitleForBasic : classes.compTitle}>
+                <Typography className={classes[titleClassName]}>
                   {(compType == 'VIEW') ? '상세내용' : '브라우져제어정책'}
                 </Typography>
               </Grid>
               <Grid item xs={6}>
                 <Grid container justify="flex-end">
+                  {(this.props.inherit) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.handleInheritBtnClick(viewCompItem.get('objId'), compType)}
                   ><ArrowDropDownCircleIcon /></Button>
+                  }
                 </Grid>
               </Grid>
             </Grid>
             <Typography variant="h5" component="h2">
               {viewCompItem.get('objNm')}
-
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                  ><SettingsApplicationsIcon /></Button>
-
+              <Button size="small"
+                variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
+              ><SettingsApplicationsIcon /></Button>
             </Typography>
             <Typography color="textSecondary">
-              {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
+            {(viewCompItem.get('objId') != '') ? '(' + viewCompItem.get('objId') + ') ' : ''}
+            {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
             </Typography>
             <Divider />
             <Table>

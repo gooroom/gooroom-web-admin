@@ -138,6 +138,11 @@ export const GRCommonStyle = theme => ({
         color:"red",
         fontWeight:"bold"
     },
+    compTitleForUserRole: {
+        backgroundColor:"Moccasin",
+        color:"Peru",
+        fontWeight:"bold"
+    },
     compTitleForEmpty: {
         backgroundColor:"lightBlue",
         color:"white",

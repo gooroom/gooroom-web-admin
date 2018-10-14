@@ -53,13 +53,13 @@ class UserInform extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
               <Grid item xs={12} sm={12} lg={6} >
-                <BrowserRuleComp compId={compId} />
+                <BrowserRuleComp compId={compId} targetType="USER" />
               </Grid>
               <Grid item xs={12} sm={12} lg={6} >
-                <MediaRuleComp compId={compId} />
+                <MediaRuleComp compId={compId} targetType="USER" />
               </Grid>
               <Grid item xs={12} sm={12} lg={6} >
-                <SecurityRuleComp compId={compId} />
+                <SecurityRuleComp compId={compId} targetType="USER" />
               </Grid>
             </Grid>
           </CardContent>
