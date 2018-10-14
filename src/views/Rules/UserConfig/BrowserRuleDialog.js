@@ -10,8 +10,11 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
 
+import BrowserRuleViewer from './BrowserRuleViewer';
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
@@ -28,7 +31,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
 import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -42,6 +44,7 @@ class BrowserRuleDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+    static TYPE_INHERIT = 'INHERIT';
 
     handleClose = (event) => {
         this.props.BrowserRuleActions.closeDialog();
@@ -133,115 +136,103 @@ class BrowserRuleDialog extends Component {
             title = "브라우저제어설정 정보";
         } else if(dialogType === BrowserRuleDialog.TYPE_EDIT) {
             title = "브라우저제어설정 수정";
+        } else if(dialogType === BrowserRuleDialog.TYPE_INHERIT) {
+            title = "브라우저제어설정 상속";
         }
 
         return (
             <div>
             {(BrowserRuleProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={BrowserRuleProps.get('dialogOpen')}>
+            <Dialog open={BrowserRuleProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={classes.dialogContainer}>
-
-                    <TextField
-                        id="objNm"
-                        label="이름"
-                        value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                        onChange={this.handleValueChange("objNm")}
-                        className={classes.fullWidth}
-                        disabled={(dialogType === BrowserRuleDialog.TYPE_VIEW)}
-                    />
-                    <TextField
-                        id="comment"
-                        label="설명"
-                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                        onChange={this.handleValueChange("comment")}
-                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === BrowserRuleDialog.TYPE_VIEW)}
-                    />
-                    {(dialogType === BrowserRuleDialog.TYPE_VIEW) &&
-                        <div>
-                            <Grid container spacing={24} >
-                                <Grid item xs={12}>
-                                </Grid> 
-                            </Grid>
-                        </div>                        
-                    }
+                <DialogContent>
                     {(dialogType === BrowserRuleDialog.TYPE_EDIT || dialogType === BrowserRuleDialog.TYPE_ADD) &&
-                        <div className={classes.dialogItemRowBig}>
-                            <Grid item xs={12} container 
-                                alignItems="flex-end" direction="row" justify="space-between" 
-                                className={classes.dialogItemRow}>
-                                <Grid item xs={5}>
-                                    <FormControlLabel
-                                        control={
-                                        <Switch onChange={this.handleValueChange('webSocket')} 
-                                            checked={this.checkAllow(editingItem.get('webSocket'))}
-                                            color="primary" />
-                                        }
-                                        label={(editingItem.get('webSocket') == 'allow') ? 'Web Socket 사용' : 'Web Socket 미사용'}
-                                    />                                
-                                </Grid>
-                                <Grid item xs={1}>
-                                </Grid>
-                                <Grid item xs={5} >
-                                    <FormControlLabel
-                                        control={
-                                        <Switch onChange={this.handleValueChange('webWorker')} 
-                                            checked={this.checkAllow(editingItem.get('webWorker'))}
-                                            color="primary" />
-                                        }
-                                        label={(editingItem.get('webWorker') == 'allow') ? 'Web Worker 사용' : 'Web Worker 미사용'}
-                                    />                                
-                                </Grid>
+                    <div>
+                        <TextField label="이름" className={classes.fullWidth}
+                            value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            onChange={this.handleValueChange("objNm")} />
+                        <TextField label="설명" className={classes.fullWidth}
+                            value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                            onChange={this.handleValueChange("comment")} />
+
+                        <Grid item xs={12} container 
+                            alignItems="flex-end" direction="row" justify="space-between" 
+                            className={classes.dialogItemRow}>
+                            <Grid item xs={5}>
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('webSocket')} 
+                                        checked={this.checkAllow(editingItem.get('webSocket'))}
+                                        color="primary" />
+                                    }
+                                    label={(editingItem.get('webSocket') == 'allow') ? 'Web Socket 사용' : 'Web Socket 미사용'}
+                                />                                
                             </Grid>
-                            
-                            <div className={classes.dialogItemRow}>
-                                <TextField
-                                    label="신뢰사이트 설정 (파일로 변경필요~!!!!)"
-                                    multiline
-                                    value={(editingItem.get('trustSetupId')) ? editingItem.get('trustSetupId') : ''}
-                                    onChange={this.handleValueChange("trustSetupId")}
-                                    className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                />
-                            </div>
+                            <Grid item xs={1}>
+                            </Grid>
+                            <Grid item xs={5} >
+                                <FormControlLabel
+                                    control={
+                                    <Switch onChange={this.handleValueChange('webWorker')} 
+                                        checked={this.checkAllow(editingItem.get('webWorker'))}
+                                        color="primary" />
+                                    }
+                                    label={(editingItem.get('webWorker') == 'allow') ? 'Web Worker 사용' : 'Web Worker 미사용'}
+                                />                                
+                            </Grid>
+                        </Grid>
+                        
+                        <div className={classes.dialogItemRow}>
+                            <TextField
+                                label="신뢰사이트 설정 (파일로 변경필요~!!!!)"
+                                multiline
+                                value={(editingItem.get('trustSetupId')) ? editingItem.get('trustSetupId') : ''}
+                                onChange={this.handleValueChange("trustSetupId")}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                            />
+                        </div>
 
-                            <div className={classes.dialogItemRow}>
-                                <TextField
-                                    label="비신뢰사이트 설정 (파일로 변경필요~!!!!)"
-                                    multiline
-                                    value={(editingItem.get('untrustSetupId')) ? editingItem.get('untrustSetupId') : ''}
-                                    onChange={this.handleValueChange("untrustSetupId")}
-                                    className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                />
-                            </div>
-                            <div className={classes.dialogItemRow}>
+                        <div className={classes.dialogItemRow}>
+                            <TextField
+                                label="비신뢰사이트 설정 (파일로 변경필요~!!!!)"
+                                multiline
+                                value={(editingItem.get('untrustSetupId')) ? editingItem.get('untrustSetupId') : ''}
+                                onChange={this.handleValueChange("untrustSetupId")}
+                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                            />
+                        </div>
+                        <div className={classes.dialogItemRow}>
 
-                                <FormLabel >{bull} White Address List</FormLabel>
-                                <Button size="small" variant="contained" color="primary" 
-                                    className={classes.smallIconButton}
-                                    onClick={this.handleAddWhiteList}
-                                >
-                                    <AddIcon />
-                                </Button>
-                                <div>
-                                    <List>
-                                    {editingItem.get('trustUrlList') && editingItem.get('trustUrlList').size > 0 && editingItem.get('trustUrlList').map((value, index) => (
-                                        <ListItem key={index}>
-                                            <Input value={value} style={{width:"100%"}} onChange={this.handleWhiteListValueChange(index)}/>
-                                            <ListItemSecondaryAction>
-                                                <IconButton onClick={this.handleDeleteWhiteList(index)}>
-                                                    <DeleteForeverIcon />
-                                                </IconButton>
-                                            </ListItemSecondaryAction>
-                                        </ListItem>
-                                    ))}
-                                    </List>
-                                </div>
+                            <FormLabel >{bull} White Address List</FormLabel>
+                            <Button size="small" variant="contained" color="primary" 
+                                className={classes.smallIconButton}
+                                onClick={this.handleAddWhiteList}
+                            >
+                                <AddIcon />
+                            </Button>
+                            <div>
+                                <List>
+                                {editingItem.get('trustUrlList') && editingItem.get('trustUrlList').size > 0 && editingItem.get('trustUrlList').map((value, index) => (
+                                    <ListItem key={index}>
+                                        <Input value={value} style={{width:"100%"}} onChange={this.handleWhiteListValueChange(index)}/>
+                                        <ListItemSecondaryAction>
+                                            <IconButton onClick={this.handleDeleteWhiteList(index)}>
+                                                <DeleteForeverIcon />
+                                            </IconButton>
+                                        </ListItemSecondaryAction>
+                                    </ListItem>
+                                ))}
+                                </List>
                             </div>
                         </div>
+                    </div>
                     }
-                </form>
+                    {(dialogType === BrowserRuleDialog.TYPE_VIEW || dialogType === BrowserRuleDialog.TYPE_INHERIT) &&
+                        <BrowserRuleViewer viewItem={editingItem} />
 
+                        
+                    }
+                </DialogContent>
                 <DialogActions>
                 {(dialogType === BrowserRuleDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>

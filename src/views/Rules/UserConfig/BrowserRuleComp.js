@@ -28,6 +28,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -44,6 +45,16 @@ class BrowserRuleComp extends Component {
     BrowserRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
       dialogType: BrowserRuleDialog.TYPE_EDIT
+    });
+  };
+
+  handleInheritBtnClick = (objId, compType) => {
+    const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId') : getSelectedObjectInComp(BrowserRuleProps, compId);
+
+    BrowserRuleActions.showDialog({
+      selectedViewItem: generateConfigObject(selectedViewItem),
+      dialogType: BrowserRuleDialog.TYPE_INHERIT
     });
   };
 
@@ -104,8 +115,8 @@ class BrowserRuleComp extends Component {
                 <Grid container justify="flex-end">
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
-                  ><SettingsApplicationsIcon /></Button>
+                    onClick={() => this.handleInheritBtnClick(viewCompItem.get('objId'), compType)}
+                  ><ArrowDropDownCircleIcon /></Button>
                 </Grid>
               </Grid>
             </Grid>

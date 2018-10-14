@@ -193,7 +193,7 @@ class ClientUpdateServerManage extends Component {
               </Grid>
 
               <Grid item xs={6} >
-                <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                   <Search />조회
                 </Button>
               </Grid>
@@ -201,7 +201,7 @@ class ClientUpdateServerManage extends Component {
             </Grid>
 
             <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button size="small" variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
+              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
                 <AddIcon />등록
               </Button>
             </Grid>

@@ -228,6 +228,7 @@ class DeptManage extends Component {
 
 
   render() {
+    const { classes } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     return (
@@ -239,10 +240,10 @@ class DeptManage extends Component {
 
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForDept} disabled={this.isUserAddible()} >
+                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForDept} disabled={this.isUserAddible()} >
                   <AddIcon />등록
                 </Button>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
+                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
                   <RemoveIcon />삭제
                 </Button>
               </Toolbar>
@@ -266,10 +267,10 @@ class DeptManage extends Component {
 
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserAddible()} >
+                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserAddible()} >
                   <AddIcon />추가
                 </Button>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
+                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
                   <RemoveIcon />삭제
                 </Button>
               </Toolbar>

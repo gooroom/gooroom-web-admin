@@ -355,10 +355,10 @@ class ClientPackageManage extends Component {
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}}>
 
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
+                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
                   <AddIcon />등록
                 </Button>
-                <Button size="small" variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
+                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
                   <RemoveIcon />삭제
                 </Button>
               </Toolbar>
@@ -370,18 +370,18 @@ class ClientPackageManage extends Component {
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
-                    <Button size="small" variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
                       <AddIcon />추가
                     </Button>
-                    <Button size="small" variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
                       <RemoveIcon />제거
                     </Button>
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
-                    <Button size="small" variant="contained" color="secondary" onClick={this.handleAllUpdateForClient} disabled={this.isClientSelected()} style={{marginLeft: "10px"}}>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleAllUpdateForClient} disabled={this.isClientSelected()} style={{marginLeft: "10px"}}>
                       <AddIcon />전체업데이트
                     </Button>
-                    <Button size="small" variant="contained" color="secondary" onClick={this.handleAddPackage} disabled={this.isClientSelected()} style={{marginLeft: "10px"}}>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleAddPackage} disabled={this.isClientSelected()} style={{marginLeft: "10px"}}>
                       <AddIcon />패키지추가
                     </Button>
                   </Grid>
