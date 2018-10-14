@@ -134,7 +134,7 @@ class ClientRegKeyDialog extends Component {
                         </Grid>
                         <Grid item xs={4} className={classes.createButton}>
                         {(dialogType === ClientRegKeyDialog.TYPE_ADD) && 
-                          <Button size="small" variant="contained" color="secondary"
+                          <Button className={classes.GRIconSmallButton} variant="contained" color="secondary"
                             onClick={() => { this.handleKeyGenerate(); }}
                             ><Add />키생성
                           </Button>

@@ -124,6 +124,10 @@ export const GRCommonStyle = theme => ({
     },
 
     // Rule Component
+    ruleViewerCard: {
+        border: "1px solid #efefef",
+        backgroupColor: "#fefefe"
+    },
     compTitle: {
         backgroundColor:"lightBlue",
         color:"blue",
@@ -236,7 +240,12 @@ export const GRCommonStyle = theme => ({
     smallIconButton: {
         minWidth: '34px'
     },
-
+    GRIconSmallButton: {
+        padding: "0 5 0 0",
+        minWidth: "48px",
+        fontSize: "0.8125rem",
+        minHeight: "24px"
+    },
     popoverMsg: {
         margin: theme.spacing.unit * 2,
         color: theme.palette.error.light

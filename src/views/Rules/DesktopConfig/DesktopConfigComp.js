@@ -82,7 +82,7 @@ class DesktopConfigComp extends Component {
             </Grid>
             <Grid item xs={6}>
               <Grid container justify="flex-end">
-                <Button size="small"
+                <Button className={classes.GRIconSmallButton}
                   variant="outlined" color="primary"
                   onClick={() => this.handleEditBtnClick(viewCompItem.get('objId'), compType)}
                 ><SettingsApplicationsIcon />수정</Button>

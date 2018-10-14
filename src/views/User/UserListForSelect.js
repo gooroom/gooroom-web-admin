@@ -234,7 +234,7 @@ class UserListForSelect extends Component {
                 </FormControl>
               </Grid>
               <Grid item xs={3}>
-                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
                   <Search />
                   조회
                 </Button>

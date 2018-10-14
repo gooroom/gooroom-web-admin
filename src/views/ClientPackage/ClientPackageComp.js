@@ -169,7 +169,7 @@ class ClientPackageComp extends Component {
             </FormControl>
           </Grid>
           <Grid item xs={4} >
-            <Button size="small" variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+            <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
               <Search />조회
             </Button>
           </Grid>
