@@ -112,7 +112,7 @@ export const handleShowDialogAction = (state, action) => {
 }
 
 export const handleCloseDialogAction = (state, action) => {
-    return state.merge({
+    return state.delete('editingItem').merge({
         dialogOpen: false,
         dialogType: ''
     });
@@ -144,7 +144,7 @@ export const handleEditSuccessAction = (state, action) => {
             }
         });
     }
-    return state.merge(newState).merge({
+    return state.delete('editingItem').merge(newState).merge({
         pending: false,
         error: false,
         dialogOpen: false,

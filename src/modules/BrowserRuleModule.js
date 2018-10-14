@@ -308,6 +308,26 @@ export const deleteBrowserRuleData = (param) => dispatch => {
     });
 };
 
+// rule inherit
+export const inheritBrowserRuleData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateDeptConfInherit', {
+            'objId': param.objId,
+            'confType': 'BROWSERRULE',
+            'deptCd': param.deptCd
+        }).then(
+        (response) => {
+            dispatch({
+                type: DELETE_BROWSERRULE_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export const addWhiteList = () => dispatch => {
     return dispatch({
         type: ADD_WHITELIST_ITEM

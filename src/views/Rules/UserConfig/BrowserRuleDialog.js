@@ -6,8 +6,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
 
 import BrowserRuleViewer from './BrowserRuleViewer';
@@ -35,6 +37,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { Typography } from "@material-ui/core";
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -105,6 +108,25 @@ class BrowserRuleDialog extends Component {
                     this.handleClose();
                 });
         }
+    }
+
+    handleInheritSaveData = (event, id) => {
+        const { BrowserRuleProps, DeptProps, BrowserRuleActions, compId } = this.props;
+        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+
+        console.log('selectedDeptCd :::::', selectedDeptCd);
+
+        BrowserRuleActions.inheritBrowserRuleData({
+            'objId': BrowserRuleProps.getIn(['editingItem', 'objId']),
+            'confType': 'BROWSERRULE',
+            'deptCd': selectedDeptCd
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: '시스템알림',
+                alertMsg: '브라우저제어설정이 하위 조직에 적용되었습니다.'
+            });
+            this.handleClose();
+        });
     }
 
     handleAddWhiteList = () => {
@@ -228,9 +250,12 @@ class BrowserRuleDialog extends Component {
                     </div>
                     }
                     {(dialogType === BrowserRuleDialog.TYPE_VIEW || dialogType === BrowserRuleDialog.TYPE_INHERIT) &&
+                        <div>
+                        <Typography variant="body1">
+                            이 정책을 하위 조직에 적용 하시겠습니까?
+                        </Typography>
                         <BrowserRuleViewer viewItem={editingItem} />
-
-                        
+                        </div>
                     }
                 </DialogContent>
                 <DialogActions>
@@ -240,11 +265,15 @@ class BrowserRuleDialog extends Component {
                 {(dialogType === BrowserRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
+                {(dialogType === BrowserRuleDialog.TYPE_INHERIT) &&
+                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">적용</Button>
+                }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
                 <GRConfirm />
             </Dialog>
             }
+            <GRAlert />
             </div>
         );
     }
@@ -252,12 +281,14 @@ class BrowserRuleDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    BrowserRuleProps: state.BrowserRuleModule
+    BrowserRuleProps: state.BrowserRuleModule,
+    DeptProps: state.DeptModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
     BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleDialog));
