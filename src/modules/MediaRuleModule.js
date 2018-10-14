@@ -75,10 +75,7 @@ export const readMediaRuleList = (module, compId) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -105,10 +102,7 @@ export const readMediaRuleListPaged = (module, compId, extParam) => dispatch => 
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -125,10 +119,7 @@ export const getMediaRule = (param) => dispatch => {
                 });
             }
         ).catch(error => {
-            dispatch({
-                type: COMMON_FAILURE,
-                error: error
-            });
+            dispatch({ type: COMMON_FAILURE, error: error });
         });
     } else {
         return dispatch({
@@ -152,10 +143,7 @@ export const getMediaRuleByUserId = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -171,10 +159,7 @@ export const getMediaRuleByDeptCd = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -190,10 +175,7 @@ export const getMediaRuleByGroupId = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -264,17 +246,11 @@ export const createMediaRuleData = (itemObj) => dispatch => {
                     });
                 }    
             } catch(error) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -295,6 +271,7 @@ export const editMediaRuleData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
 
                 // change object array for selector
@@ -308,24 +285,14 @@ export const editMediaRuleData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
-                    dispatch({
-                        type: COMMON_FAILURE,
-                        error: error
-                    });
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });                
             } else {
-                // alarm ... fail
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -341,10 +308,7 @@ export const deleteMediaRuleData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -373,15 +337,10 @@ export const setBluetoothMac = (param) => dispatch => {
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        return state.merge({
-            pending: true, 
-            error: false
-        });
+        return state.merge({ pending: true, error: false });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return state.merge({
-            pending: false, 
-            error: true,
+        return state.merge({ pending: false, error: true,
             resultMsg: (action.error.data && action.error.data.status) ? action.error.data.status.message : '',
             errorObj: (action.error) ? action.error : ''
         });

@@ -240,8 +240,8 @@ export const createBrowserRuleData = (itemObj) => dispatch => {
                         type: CREATE_BROWSERRULE_SUCCESS
                     });
                 }    
-            } catch(ex) {
-                dispatch({ type: COMMON_FAILURE, ex: ex });
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
@@ -266,6 +266,7 @@ export const editBrowserRuleData = (itemObj, compId) => dispatch => {
                         });
                     }
                 ).catch(error => {
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
 
                 // change object array for selector

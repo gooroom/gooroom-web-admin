@@ -61,10 +61,7 @@ export const readJobManageListPaged = (module, compId, extParam) => dispatch => 
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -83,15 +80,10 @@ export const changeListParamData = (param) => dispatch => {
 
 export default handleActions({
     [COMMON_PENDING]: (state, action) => {
-        return state.merge({
-            pending: true, 
-            error: false
-        });
+        return state.merge({ pending: true, error: false });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return state.merge({
-            pending: false, 
-            error: true,
+        return state.merge({ pending: false, error: true,
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
             errorObj: (action.error) ? action.error : ''
         });

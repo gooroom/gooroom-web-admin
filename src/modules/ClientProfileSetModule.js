@@ -62,10 +62,7 @@ export const readClientProfileSetListPaged = (module, compId, extParam) => dispa
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -99,18 +96,11 @@ export const createClientProfileSetData = (param) => dispatch => {
                     });
                 }
             } catch(error) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: null,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -125,10 +115,7 @@ export const editClientProfileSetData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -143,10 +130,7 @@ export const deleteClientProfileSetData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -161,25 +145,17 @@ export const createClientProfileSetJob = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        return state.merge({
-            pending: true, 
-            error: false
-        });
+        return state.merge({ pending: true, error: false });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return state.merge({
-            pending: false, 
-            error: true,
+        return state.merge({ pending: false, error: true,
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
             errorObj: (action.error) ? action.error : ''
         });

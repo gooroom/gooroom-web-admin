@@ -90,10 +90,7 @@ export const readClientListPaged = (module, compId, extParam, isResetSelect=fals
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -107,10 +104,7 @@ export const deleteClientData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 

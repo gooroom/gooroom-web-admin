@@ -62,10 +62,7 @@ export const readAdminUserListPaged = (module, compId, extParam) => dispatch => 
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -98,18 +95,12 @@ export const generateAdminUser = (param) => dispatch => {
                         value: response.data.data[0].key
                     });
                 }
-            } catch(ex) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -125,19 +116,12 @@ export const createAdminUserData = (param) => dispatch => {
                         response: response
                     });
                 }    
-            } catch(ex) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: null,
-                    ex: ex
-                });
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -152,10 +136,7 @@ export const editAdminUserData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -170,10 +151,7 @@ export const deleteAdminUserData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
