@@ -105,7 +105,8 @@ export const changeCompVariable = (param) => dispatch => {
         type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
-        value: param.value
+        value: param.value,
+        targetType: param.targetType
     });
 };
 
@@ -286,7 +287,7 @@ export default handleActions({
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CHG_COMPDATA_VALUE]: (state, action) => {
-        return state.setIn(['viewItems', action.compId, action.name], action.value);
+        return commonHandleActions.handleChangeCompValue(state, action);
     },
     [CREATE_CLIENTGROUP_SUCCESS]: (state, action) => {
         return state.merge({

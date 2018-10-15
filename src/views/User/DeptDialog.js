@@ -31,6 +31,7 @@ class DeptDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
+        
         this.props.DeptActions.closeDialog();
     }
 
@@ -62,9 +63,9 @@ class DeptDialog extends Component {
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
                 uprDeptCd: DeptProps.getIn(['editingItem', 'selectedDeptCd']),
 
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
+                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
@@ -93,9 +94,9 @@ class DeptDialog extends Component {
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
 
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
+                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
@@ -113,12 +114,15 @@ class DeptDialog extends Component {
         const editingItem = (DeptProps.get('editingItem')) ? DeptProps.get('editingItem') : null;
 
         let title = "";
+        let editObject = null;
         if(dialogType === DeptDialog.TYPE_ADD) {
             title = "조직 등록";
         } else if(dialogType === DeptDialog.TYPE_VIEW) {
             title = "조직 정보";
+            editObject = DeptProps.get('editingItem').toJS();
         } else if(dialogType === DeptDialog.TYPE_EDIT) {
             title = "조직 수정";
+            editObject = DeptProps.get('editingItem').toJS();
         }
 
         const upperDeptInfo = DeptProps.getIn(['viewItems', compId, 'selectedDeptNm']) +
@@ -151,7 +155,7 @@ class DeptDialog extends Component {
                             className={classes.fullWidth}
                         />
                         <Divider style={{marginBottom: 10}} />
-                        <UserRuleSelector compId={compId} module={DeptProps.get('editingItem').toJS()} />
+                        <UserRuleSelector compId={compId} module={editObject} targetType="DEPT" />
                     </DialogContent>
                     <DialogActions>
                         {(dialogType === DeptDialog.TYPE_ADD) &&

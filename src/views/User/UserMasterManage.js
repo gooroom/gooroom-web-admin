@@ -21,26 +21,25 @@ import GRPane from "containers/GRContent/GRPane";
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import UserListComp from 'views/User/UserListComp';
+import UserRuleInform from "views/User/UserRuleInform";
+import UserSelectDialog from "views/User/UserSelectDialog";
+import UserRuleDialog from "views/User/UserRuleDialog";
+
 import DeptRuleInform from "views/User/DeptRuleInform";
 import DeptDialog from "views/User/DeptDialog";
-import UserSelectDialog from "views/User/UserSelectDialog";
 
-import Typography from '@material-ui/core/Typography';
 import Grid from "@material-ui/core/Grid";
 import Toolbar from '@material-ui/core/Toolbar';
 
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
+import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-import Button from '@material-ui/core/Button';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
 
-class DeptManage extends Component {
+class UserMasterManage extends Component {
 
   constructor(props) {
     super(props);
@@ -64,6 +63,11 @@ class DeptManage extends Component {
     const { UserProps, UserActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    UserActions.closeInform({
+      compId: compId
+    });
+
     // show user list in dept.
     UserActions.readUserListPaged(UserProps, compId, {
       deptCd: node.key, page:0
@@ -109,7 +113,13 @@ class DeptManage extends Component {
   };
 
   handleCreateButtonForDept = (event) => {
+    // 이전에 선택되어진 내용 삭제
     const compId = this.props.match.params.grMenuId;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
+    BrowserRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
+    MediaRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
+    SecurityRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
+
     const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
     if(selectedDeptCd && selectedDeptCd !== '') {
       this.props.DeptActions.showDialog({
@@ -218,11 +228,61 @@ class DeptManage extends Component {
     }
   }
 
-  handleUserSelectClose = () => {
+  handleUserSelectionClose = () => {
     this.setState({
       isOpenUserSelect: false
     })
   }
+
+
+  // Select User Item
+  handleUserSelect = (selectedUserObj, selectedUserIdArray) => {
+    const { UserActions, DeptActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
+
+    const compId = this.props.match.params.grMenuId;
+
+    // show user info.
+    if(selectedUserObj) {
+      const userId = selectedUserObj.get('userId');
+
+      DeptActions.closeInform({
+        compId: compId
+      });
+
+      // show user configurations.....
+      // get browser rule info
+      BrowserRuleActions.getBrowserRuleByUserId({ compId: compId, userId: userId });
+      // get media control setting info
+      MediaRuleActions.getMediaRuleByUserId({ compId: compId, userId: userId });
+      // get client secu info
+      SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
+      // show user inform pane.
+      UserActions.showInform({ compId: compId, selectedViewItem: selectedUserObj });
+
+      // // show client group info.
+      // const groupId = selectedClientObj.get('clientGroupId');
+      // const selectedGroupObj = getRowObjectById(ClientGroupProps, compId, groupId, 'grpId');
+      // if(selectedGroupObj) {
+      //   // get browser rule info
+      //   BrowserRuleActions.getBrowserRuleByGroupId({
+      //     compId: compId, groupId: groupId
+      //   });
+      //   // get media control setting info
+      //   MediaRuleActions.getMediaRuleByGroupId({
+      //     compId: compId, groupId: groupId
+      //   });
+      //   // get client secu info
+      //   SecurityRuleActions.getSecurityRuleByGroupId({
+      //     compId: compId, groupId: groupId
+      //   });   
+
+      //   ClientGroupActions.showClientGroupInform({
+      //     compId: compId, selectedViewItem: selectedGroupObj,
+      //   });
+      // }
+    }
+  };
 
   
 
@@ -274,17 +334,21 @@ class DeptManage extends Component {
                   <RemoveIcon />삭제
                 </Button>
               </Toolbar>
-              <UserListComp name='UserListComp' compId={compId} deptCd='' />
+              <UserListComp name='UserListComp' compId={compId} deptCd='' 
+                onSelect={this.handleUserSelect}
+              />
             </Grid>
 
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef'}} >
+              <UserRuleInform compId={compId} />
               <DeptRuleInform compId={compId} />
             </Grid>
 
           </Grid>
         </GRPane>
+        <UserRuleDialog compId={compId} />
         <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
-        <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectClose} />
+        <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectionClose} />
         <GRConfirm />
 
       </React.Fragment>
@@ -295,7 +359,10 @@ class DeptManage extends Component {
 const mapStateToProps = (state) => ({
   GlobalProps: state.GlobalModule,
   DeptProps: state.DeptModule,
-  UserProps: state.UserModule
+  UserProps: state.UserModule,
+  BrowserRuleProps: state.BrowserRuleModule,
+  MediaRuleProps: state.MediaRuleModule,
+  SecurityRuleProps: state.SecurityRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -308,6 +375,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserMasterManage));
 
 

@@ -63,7 +63,7 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readBrowserRuleList = (module, compId) => dispatch => {
+export const readBrowserRuleList = (module, compId, targetType) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readBrowserRuleList', {
     }).then(
@@ -71,6 +71,7 @@ export const readBrowserRuleList = (module, compId) => dispatch => {
             dispatch({
                 type: GET_BROWSERRULE_LIST_SUCCESS,
                 compId: compId,
+                targetType: targetType,
                 response: response
             });
         }
@@ -119,16 +120,13 @@ export const getBrowserRule = (param) => dispatch => {
                 });
             }
         ).catch(error => {
-            dispatch({
-                type: COMMON_FAILURE,
-                error: error
-            });
+            dispatch({ type: COMMON_FAILURE, error: error });
         });
     } else {
         return dispatch({
             type: DELETE_COMPDATA_ITEM,
             compId: compId,
-            itemName: 'selectedViewItem'
+            name: 'selectedViewItem'
         });      
     }
 
@@ -142,6 +140,7 @@ export const getBrowserRuleByUserId = (param) => dispatch => {
             dispatch({
                 type: GET_BROWSERRULE_SUCCESS,
                 compId: compId,
+                target: 'USER',
                 response: response
             });
         }
@@ -158,6 +157,7 @@ export const getBrowserRuleByDeptCd = (param) => dispatch => {
             dispatch({
                 type: GET_BROWSERRULE_SUCCESS,
                 compId: compId,
+                target: 'DEPT',
                 response: response
             });
         }
@@ -174,6 +174,7 @@ export const getBrowserRuleByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_BROWSERRULE_SUCCESS,
                 compId: compId,
+                target: 'GROUP',
                 response: response
             });
         }
@@ -204,14 +205,25 @@ export const changeCompVariable = (param) => dispatch => {
         type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
-        value: param.value
+        value: param.value,
+        targetType: param.targetType
     });
 };
 
 export const deleteCompData = (param) => dispatch => {
     return dispatch({
         type: DELETE_COMPDATA,
-        compId: param.compId
+        compId: param.compId,
+        targetType: param.targetType
+    });
+};
+
+export const deleteCompDataItem = (param) => dispatch => {
+    return dispatch({
+        type: DELETE_COMPDATA_ITEM,
+        compId: param.compId,
+        name: param.name,
+        targetType: param.targetType
     });
 };
 
@@ -283,7 +295,6 @@ export const editBrowserRuleData = (itemObj, compId) => dispatch => {
                     dispatch({ type: COMMON_FAILURE, error: error });
                 });
             } else {
-                // alarm ... fail
                 dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
@@ -368,7 +379,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_BROWSERRULE_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
     },
     [SHOW_BROWSERRULE_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -391,13 +402,13 @@ export default handleActions({
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CHG_COMPDATA_VALUE]: (state, action) => {
-        return state.setIn(['viewItems', action.compId, action.name], action.value);
+        return commonHandleActions.handleChangeCompValue(state, action);
     },
     [DELETE_COMPDATA]: (state, action) => {
         return state.deleteIn(['viewItems', action.compId]);
     },
     [DELETE_COMPDATA_ITEM]: (state, action) => {
-        return state.deleteIn(['viewItems', action.compId, action.itemName]);
+        return commonHandleActions.handleDeleteCompItem(state, action);
     },
     [CREATE_BROWSERRULE_SUCCESS]: (state, action) => {
         return state.merge({

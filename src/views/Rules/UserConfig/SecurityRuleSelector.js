@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -30,35 +31,42 @@ import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
 class SecurityRuleSelector extends Component {
 
   componentDidMount() {
-    const { SecurityRuleProps, SecurityRuleActions, compId, initId } = this.props;
-    SecurityRuleActions.readSecurityRuleList(SecurityRuleProps, compId);
-    if(!SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+    const { SecurityRuleProps, SecurityRuleActions, compId, initId, targetType } = this.props;
+    //
+    SecurityRuleActions.readSecurityRuleList(SecurityRuleProps, compId, targetType);
+    //
+    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
+    if(!SecurityRuleProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
       SecurityRuleActions.changeCompVariable({
         compId: compId,
         name: 'selectedOptionItemId',
-        value: initId
+        value: initId,
+        targetType: targetType
       });
     }
   }
 
   handleChange = (event, value) => {
-    const { SecurityRuleProps, SecurityRuleActions, compId } = this.props;
+    const { SecurityRuleActions, compId, targetType } = this.props;
     SecurityRuleActions.changeCompVariable({
       compId: compId,
       name: 'selectedOptionItemId',
-      value: event.target.value
+      value: event.target.value,
+      targetType: targetType
     });
   };
 
   // .................................................
   render() {
     const { classes } = this.props;
-    const { SecurityRuleProps, compId } = this.props;
+    const { SecurityRuleProps, compId, targetType } = this.props;
 
-    const listAllData = SecurityRuleProps.getIn(['viewItems', compId, 'listAllData']);
-    let selectedOptionItemId = SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedObj = (targetType && targetType != '') ? SecurityRuleProps.getIn(['viewItems', compId, targetType]) : SecurityRuleProps.getIn(['viewItems', compId]);
+
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    let selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
-      selectedOptionItemId = listAllData.getIn([0, 'objId']);
+      selectedOptionItemId = '-';
     }
 
     return (
@@ -83,6 +91,7 @@ class SecurityRuleSelector extends Component {
             compId={compId}
             objId={selectedOptionItemId}
             compType="VIEW"
+            targetType={targetType}
           />
         }
         </CardContent>

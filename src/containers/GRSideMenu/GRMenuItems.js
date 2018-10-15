@@ -58,8 +58,8 @@ export default {
       level: 1,
       children: [
         {
-          name: '조직정보',
-          url: '/user/deptmanage/GRM0301/조직정보',
+          name: '사용자통합관리',
+          url: '/user/usermastermanage/GRM0301/사용자통합관리',
           icon: 'icon-wrench',
           level: 2,
         },

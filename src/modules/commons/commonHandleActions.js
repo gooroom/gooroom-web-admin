@@ -27,31 +27,35 @@ export const getCommonInitialState = (initOrderColumn, initOrder = '', extValue 
 
 export const handleListAction = (state, action) => {
     const { data } = action.response.data;
+    const targetType = action.targetType;
+    const targetNames = (targetType && targetType != '') ? ['viewItems', action.compId, targetType] : ['viewItems', action.compId];
+
     if(data && data.length > 0) {
-        if(state.hasIn(['viewItems', action.compId])) {
-            const beforeItemId = state.getIn(['viewItems', action.compId, 'selectedOptionItemId']);
+        if(state.hasIn(targetNames)) {
+
+            const beforeItemId = state.getIn(List(targetNames).push('selectedOptionItemId'));
             const pos = (beforeItemId) ? data.map((e) => (e.objId)).indexOf(beforeItemId) : -1;
             if(pos < 0) {
                 // no exist or selected id was deleted
                 return state
-                    .setIn(['viewItems', action.compId, 'listAllData'], List(data.map((e) => {return Map(e)})))
-                    .setIn(['viewItems', action.compId, 'selectedOptionItemId'], '-');
+                    .setIn(List(targetNames).push('listAllData'), List(data.map((e) => {return Map(e)})))
+                    .setIn(List(targetNames).push('selectedOptionItemId'), '-');
             } else {
                 // before exist and selected id is exist
                 return state
-                    .setIn(['viewItems', action.compId, 'listAllData'], List(data.map((e) => {return Map(e)})))
-                    .setIn(['viewItems', action.compId, 'selectedOptionItemId'], beforeItemId);
+                    .setIn(List(targetNames).push('listAllData'), List(data.map((e) => {return Map(e)})))
+                    .setIn(List(targetNames).push('selectedOptionItemId'), beforeItemId);
             }
         }
 
-        return state.setIn(['viewItems', action.compId], Map({
+        return state.setIn(targetNames, Map({
             'listAllData': List(data.map((e) => {return Map(e)}))
         }));
         
     } else {
         return state
-        .deleteIn(['viewItems', action.compId, 'listAllData'])
-        .deleteIn(['viewItems', action.compId, 'selectedOptionItemId']);
+        .deleteIn(List(targetNames).push('listAllData'))
+        .deleteIn(List(targetNames).push('selectedOptionItemId'));
     }
 }
 
@@ -90,22 +94,33 @@ export const handleListPagedAction = (state, action) => {
     }
 }
 
-export const handleGetObjectAction = (state, compId, data, extend) => {
+export const handleGetObjectAction = (state, compId, data, extend, target) => {
     if(data && data.length > 0) {
         const isDefault = (extend && extend.length > 0 && extend[0] === 'DEFAULT') ? true: false;
         const isDeptRole = (extend && extend.length > 0 && extend[0] === 'DEPT') ? true: false;
-        return state
-        .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
-        .setIn(['viewItems', compId, 'selectedOptionItemId'], (isDefault) ? '' : data[0].objId)
-        .setIn(['viewItems', compId, 'isDefault'], isDefault)
-        .setIn(['viewItems', compId, 'isDeptRole'], isDeptRole)
-        .setIn(['viewItems', compId, 'informOpen'], true);
+
+        if(target && target != '') {
+            return state
+            .setIn(['viewItems', compId, target, 'selectedViewItem'], fromJS(data[0]))
+            .setIn(['viewItems', compId, target, 'selectedOptionItemId'], (isDefault) ? '' : data[0].objId)
+            .setIn(['viewItems', compId, target, 'isDefault'], isDefault)
+            .setIn(['viewItems', compId, target, 'isDeptRole'], isDeptRole)
+            .setIn(['viewItems', compId, target, 'informOpen'], true);
+        } else {
+            return state
+            .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
+            .setIn(['viewItems', compId, 'selectedOptionItemId'], (isDefault) ? '' : data[0].objId)
+            .setIn(['viewItems', compId, 'isDefault'], isDefault)
+            .setIn(['viewItems', compId, 'isDeptRole'], isDeptRole)
+            .setIn(['viewItems', compId, 'informOpen'], true);
+        }
     } else  {
         return state.deleteIn(['viewItems', compId]);
     }
 }
 
 export const handleShowDialogAction = (state, action) => {
+
     return state.merge({
         editingItem: action.selectedViewItem,
         dialogOpen: true,
@@ -173,3 +188,16 @@ export const handleDeleteSuccessAction = (state, action) => {
         dialogType: ''
     });
 }
+
+export const handleChangeCompValue = (state, action) => {
+    const targetType = action.targetType;
+    const targetNames = (targetType && targetType != '') ? ['viewItems', action.compId, targetType] : ['viewItems', action.compId];
+    return state.setIn(List(targetNames).push(action.name), action.value);
+}
+
+export const handleDeleteCompItem = (state, action) => {
+    const targetType = action.targetType;
+    const targetNames = (targetType && targetType != '') ? ['viewItems', action.compId, targetType] : ['viewItems', action.compId];
+    return state.deleteIn(List(targetNames).push(action.name));
+}
+

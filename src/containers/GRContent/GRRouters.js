@@ -24,7 +24,7 @@ import SecurityRuleManage from "views/Rules/UserConfig/SecurityRuleManage";
 import JobManage from "views/Job/JobManage";
 import PackageManage from 'views/ClientPackage/ClientPackageManage';
 
-import DeptManage from "views/User/DeptManage";
+import UserMasterManage from "views/User/UserMasterManage";
 import UserManage from "views/User/UserManage";
 
 import AdminUserManage from "views/System/AdminUserManage";
@@ -66,7 +66,7 @@ class GRRouters extends Component {
           <Route path="/userconfig/security/:grMenuId/:grMenuName" component={SecurityRuleManage} />
           <Route path="/jobs/jobmanage/:grMenuId/:grMenuName" component={JobManage} />
           <Route path="/package/packagemanage/:grMenuId/:grMenuName" component={PackageManage} />
-          <Route path="/user/deptmanage/:grMenuId/:grMenuName" component={DeptManage} />
+          <Route path="/user/usermastermanage/:grMenuId/:grMenuName" component={UserMasterManage} />
           <Route path="/user/usermanage/:grMenuId/:grMenuName" component={UserManage} />
 
           <Route path="/desktopconfig/desktopapp/:grMenuId/:grMenuName" component={DesktopAppManage} />

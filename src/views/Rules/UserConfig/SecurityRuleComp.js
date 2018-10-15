@@ -14,7 +14,6 @@ import { generateConfigObject } from './SecurityRuleInform';
 import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getRoleTitleClassName } from 'components/GRUtils/GRTableListUtils';
 
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
@@ -40,8 +39,8 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class SecurityRuleComp extends Component {
 
   handleEditBtnClick = (objId, compType) => {
-    const { SecurityRuleProps, SecurityRuleActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SecurityRuleProps, compId, 'objId') : getSelectedObjectInComp(SecurityRuleProps, compId);
+    const { SecurityRuleProps, SecurityRuleActions, compId, targetType } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SecurityRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(SecurityRuleProps, compId, targetType) ;
 
     SecurityRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
@@ -50,8 +49,8 @@ class SecurityRuleComp extends Component {
   };
 
   handleInheritBtnClick = (objId, compType) => {
-    const { SecurityRuleProps, SecurityRuleActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SecurityRuleProps, compId, 'objId') : getSelectedObjectInComp(SecurityRuleProps, compId);
+    const { SecurityRuleProps, SecurityRuleActions, compId, targetType } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SecurityRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(SecurityRuleProps, compId, targetType);
 
     SecurityRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
@@ -62,14 +61,15 @@ class SecurityRuleComp extends Component {
   render() {
 
     const { classes } = this.props;
-    const { SecurityRuleProps, compId, compType } = this.props;
+    const { SecurityRuleProps, compId, compType, targetType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = SecurityRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = SecurityRuleProps.getIn(['viewItems', compId, 'listAllData']);
-    const selectedOptionItemId = SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
-    const isDefault = SecurityRuleProps.getIn(['viewItems', compId, 'isDefault']);
-    const isDeptRole = SecurityRuleProps.getIn(['viewItems', compId, 'isDeptRole']);
+    const selectedObj = (targetType && targetType != '') ? SecurityRuleProps.getIn(['viewItems', compId, targetType]) : BrowserRuleProps.getIn(['viewItems', compId]);
+    const selectedViewItem = (selectedObj) ? selectedObj.get('selectedViewItem') : null;
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    const selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
+    const isDefault = (selectedObj) ? selectedObj.get('isDefault') : null;
+    const isDeptRole = (selectedObj) ? selectedObj.get('isDeptRole') : null;
 
     const titleClassName = getRoleTitleClassName(this.props.targetType, isDefault, isDeptRole);
 
@@ -117,7 +117,7 @@ class SecurityRuleComp extends Component {
               </Grid>
               <Grid item xs={6}>
                 <Grid container justify="flex-end">
-                  {(this.props.inherit) && 
+                  {(this.props.inherit && !isDefault) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.handleInheritBtnClick(viewCompItem.get('objId'), compType)}
@@ -134,6 +134,7 @@ class SecurityRuleComp extends Component {
               ><SettingsApplicationsIcon /></Button>
             </Typography>
             <Typography color="textSecondary">
+              {(viewCompItem.get('objId') != '') ? '(' + viewCompItem.get('objId') + ') ' : ''}
               {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
             </Typography>
             <Divider />

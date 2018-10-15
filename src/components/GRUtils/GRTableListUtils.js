@@ -54,13 +54,17 @@ export const setAllSelectedIdsInComp = (propObj, compId, idName, checked) => {
     }
 }
 
-export const getSelectedObjectInComp = (propObj, compId) => {
-     return propObj.getIn(['viewItems', compId, 'selectedViewItem']);
+export const getSelectedObjectInComp = (propObj, compId, targetType) => {
+    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
+    
+    return propObj.getIn(List(targetNames).push('selectedViewItem'));
 }
 
-export const getSelectedObjectInCompAndId = (propObj, compId, idName) => {
-    const listAllData = propObj.getIn(['viewItems', compId, 'listAllData']);
-    const selectedOptionItemId = propObj.getIn(['viewItems', compId, 'selectedOptionItemId']);
+export const getSelectedObjectInCompAndId = (propObj, compId, idName, targetType) => {
+    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
+
+    const listAllData = propObj.getIn(List(targetNames).push('listAllData'));
+    const selectedOptionItemId = propObj.getIn(List(targetNames).push('selectedOptionItemId'));
 
     if(listAllData && selectedOptionItemId) {
         const item = listAllData.find((e) => {
