@@ -21,7 +21,7 @@ import KeywordOption from "views/Options/KeywordOption";
 import GRPageHeader from "containers/GRContent/GRPageHeader";
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import UserDialog from "views/User/UserDialog";
+import UserBasicDialog from "views/User/UserBasicDialog";
 import UserInform from "views/User/UserInform";
 import GRPane from "containers/GRContent/GRPane";
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
@@ -109,7 +109,7 @@ class UserListComp extends Component {
     const selectedViewItem = getRowObjectById(UserProps, compId, id, 'userId');
     UserActions.showDialog({
       selectedViewItem: selectedViewItem,
-      dialogType: UserDialog.TYPE_EDIT
+      dialogType: UserBasicDialog.TYPE_EDIT
     });
   };
 
@@ -236,7 +236,7 @@ class UserListComp extends Component {
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
       }
-      <UserDialog compId={compId} />
+      <UserBasicDialog compId={compId} />
       </div>
     );
 

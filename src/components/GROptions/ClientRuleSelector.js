@@ -35,7 +35,7 @@ class ClientRuleSelector extends Component {
 
     render() {
         const { selectedTab } = this.state;
-        const { compId, module } = this.props;
+        const { compId, module, targetType } = this.props;
 
         return (
             <React.Fragment>
@@ -56,12 +56,12 @@ class ClientRuleSelector extends Component {
                     </Tabs>
                 </AppBar>
                 <Paper elevation={0} style={{ maxHeight: 400, overflow: 'auto' }} >
-                {selectedTab === 0 && <ClientConfSettingSelector compId={compId} initId={module ? module.clientConfigId : '-'} />}
-                {selectedTab === 1 && <ClientHostNameSelector compId={compId} initId={module ? module.hostNameConfigId : '-'} />}
-                {selectedTab === 2 && <ClientUpdateServerSelector compId={compId} initId={module ? module.updateServerConfigId : '-'} />}
-                {selectedTab === 3 && <BrowserRuleSelector compId={compId} initId={module ? module.browserRuleId : '-'} />}
-                {selectedTab === 4 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} />}
-                {selectedTab === 5 && <SecurityRuleSelector compId={compId} initId={module ? module.clientSecuRuleId : '-'} />}
+                {selectedTab === 0 && <ClientConfSettingSelector compId={compId} initId={module ? module.clientConfigId : '-'} targetType={targetType} />}
+                {selectedTab === 1 && <ClientHostNameSelector compId={compId} initId={module ? module.hostNameConfigId : '-'} targetType={targetType} />}
+                {selectedTab === 2 && <ClientUpdateServerSelector compId={compId} initId={module ? module.updateServerConfigId : '-'} targetType={targetType} />}
+                {selectedTab === 3 && <BrowserRuleSelector compId={compId} initId={module ? module.browserRuleId : '-'} targetType={targetType} />}
+                {selectedTab === 4 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} targetType={targetType} />}
+                {selectedTab === 5 && <SecurityRuleSelector compId={compId} initId={module ? module.clientSecuRuleId : '-'} targetType={targetType} />}
                 </Paper>
             
             </React.Fragment>

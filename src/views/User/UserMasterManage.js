@@ -23,7 +23,7 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 import UserListComp from 'views/User/UserListComp';
 import UserRuleInform from "views/User/UserRuleInform";
 import UserSelectDialog from "views/User/UserSelectDialog";
-import UserRuleDialog from "views/User/UserRuleDialog";
+import UserDialog from "views/User/UserDialog";
 
 import DeptRuleInform from "views/User/DeptRuleInform";
 import DeptDialog from "views/User/DeptDialog";
@@ -346,7 +346,7 @@ class UserMasterManage extends Component {
 
           </Grid>
         </GRPane>
-        <UserRuleDialog compId={compId} />
+        <UserDialog compId={compId} />
         <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
         <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectionClose} />
         <GRConfirm />

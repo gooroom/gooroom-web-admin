@@ -20,6 +20,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Divider from '@material-ui/core/Divider';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -141,19 +142,23 @@ class DeptDialog extends Component {
                             className={classes.fullWidth}
                         />
                         }
-                        <TextField
-                            label="조직아이디"
-                            value={(editingItem.get('deptCd')) ? editingItem.get('deptCd') : ''}
-                            onChange={this.handleValueChange("deptCd")}
-                            className={classes.fullWidth}
-                            disabled={(dialogType == DeptDialog.TYPE_EDIT) ? true : false}
-                        />
-                        <TextField
-                            label="조직이름"
-                            value={(editingItem.get('deptNm')) ? editingItem.get('deptNm') : ''}
-                            onChange={this.handleValueChange("deptNm")}
-                            className={classes.fullWidth}
-                        />
+                        <Grid container spacing={24}>
+                            <Grid item xs={6}>
+                                <TextField label="조직아이디"
+                                    value={(editingItem.get('deptCd')) ? editingItem.get('deptCd') : ''}
+                                    onChange={this.handleValueChange("deptCd")}
+                                    className={classes.fullWidth}
+                                    disabled={(dialogType == DeptDialog.TYPE_EDIT) ? true : false}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField label="조직이름"
+                                    value={(editingItem.get('deptNm')) ? editingItem.get('deptNm') : ''}
+                                    onChange={this.handleValueChange("deptNm")}
+                                    className={classes.fullWidth}
+                                />
+                            </Grid>
+                        </Grid>
                         <Divider style={{marginBottom: 10}} />
                         <UserRuleSelector compId={compId} module={editObject} targetType="DEPT" />
                     </DialogContent>
