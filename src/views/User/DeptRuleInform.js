@@ -59,8 +59,8 @@ class DeptRuleInform extends Component {
     const selectedDept = DeptProps.getIn(['viewItems', compId]);
 
     return (
-      <div >
-      {informOpen &&
+      <div style={{marginTop: 10}}>
+      {(informOpen && selectedDept) &&
         <Card>
           <CardHeader
             title={selectedDept.get('selectedDeptNm')}

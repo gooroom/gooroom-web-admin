@@ -19,6 +19,8 @@ const SHOW_USER_INFORM = 'user/SHOW_USER_INFORM';
 const CLOSE_USER_INFORM = 'user/CLOSE_USER_INFORM';
 const SHOW_USER_DIALOG = 'user/SHOW_USER_DIALOG';
 const CLOSE_USER_DIALOG = 'user/CLOSE_USER_DIALOG';
+const SHOW_USERRULE_DIALOG = 'user/SHOW_USERRULE_DIALOG';
+const CLOSE_USERRULE_DIALOG = 'user/CLOSE_USERRULE_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'user/SET_EDITING_ITEM_VALUE';
 
@@ -28,9 +30,23 @@ const CHG_COMPDATA_VALUE = 'user/CHG_COMPDATA_VALUE';
 const CHG_STORE_DATA = 'user/CHG_STORE_DATA';
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chUserNm', 'asc', {}, {status: 'STAT010', deptCd: '', keyword: ''});
+const initialState = commonHandleActions.getCommonInitialState('chUserNm', 'asc', 
+    { 
+        ruleDialogOpen: false,
+        ruleDialogType: ''
+    }, {
+        status: 'STAT010', 
+        deptCd: '', keyword: ''
+    });
 
-export const showDialog = (param) => dispatch => {
+export const showDialog = (param, isRule) => dispatch => {
+    if(isRule) {
+        return dispatch({
+            type: SHOW_USERRULE_DIALOG,
+            selectedViewItem: param.ruleSelectedViewItem,
+            ruleDialogType: param.ruleDialogType
+        });
+    }
     return dispatch({
         type: SHOW_USER_DIALOG,
         selectedViewItem: param.selectedViewItem,
@@ -38,7 +54,12 @@ export const showDialog = (param) => dispatch => {
     });
 };
 
-export const closeDialog = () => dispatch => {
+export const closeDialog = (isRule) => dispatch => {
+    if(isRule) {
+        return dispatch({
+            type: CLOSE_USERRULE_DIALOG
+        });
+    }
     return dispatch({
         type: CLOSE_USER_DIALOG
     });
@@ -122,14 +143,27 @@ export const changeStoreData = (param) => dispatch => {
     });
 };
 
+const makeParameter = (param) => {
+
+    const isChangePasswd = (param.userPassword && param.userPassword != '') ? 'Y' : 'N';
+
+    return {
+        userId: param.userId,
+        userPasswd: param.userPassword,
+        userNm: param.userNm,
+        isChangePasswd: isChangePasswd,
+
+        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
+    };
+}
+
+
 // create (add)
 export const createUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createUser', {
-        userId: param.userId,
-        userPasswd: param.userPassword,
-        userNm: param.userNm
-    }).then(
+    return requestPostAPI('createUser', makeParameter(param)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
@@ -149,19 +183,15 @@ export const createUserData = (param) => dispatch => {
 // edit
 export const editUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateUserData', {
-        userId: param.userId,
-        userPasswd: param.userPassword,
-        userNm: param.userNm
-    }).then(
+    return requestPostAPI('updateUserData', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
-                requestPostAPI('readUserData', {'userId': item.get('userId')}).then(
+                requestPostAPI('readUserData', {'userId': param.userId}).then(
                     (response) => {
                         dispatch({
                             type: EDIT_USER_SUCCESS,
-                            userId: item.get('userId'),
+                            userId: param.userId,
                             response: response
                         });
                     }
@@ -247,6 +277,18 @@ export default handleActions({
     },
     [DELETE_USER_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action);
+    },
+    [SHOW_USERRULE_DIALOG]: (state, action) => {
+        return state.merge({
+            editingItem: action.selectedViewItem,
+            ruleDialogOpen: true, ruleDialogType: action.ruleDialogType
+        });
+    },
+    [CLOSE_USERRULE_DIALOG]: (state, action) => {
+        return state.delete('editingItem').merge({
+            ruleDialogOpen: false,
+            ruleDialogType: ''
+        });
     },
 
 }, initialState);

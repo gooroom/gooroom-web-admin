@@ -195,9 +195,9 @@ const makeParameter = (param) => {
 }
 
 // create (add)
-export const createDeptInfo = (itemObj) => dispatch => {
+export const createDeptInfo = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createDeptInfo', makeParameter(itemObj)).then(
+    return requestPostAPI('createDeptInfo', makeParameter(param)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
