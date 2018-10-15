@@ -22,7 +22,9 @@ import GRPageHeader from "containers/GRContent/GRPageHeader";
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import UserDialog from "views/User/UserDialog";
-import UserInform from "views/User/UserInform";
+import UserRuleDialog from "views/User/UserRuleDialog";
+
+import UserRuleInform from "views/User/UserRuleInform";
 import GRPane from "containers/GRContent/GRPane";
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
@@ -91,6 +93,7 @@ class UserManage extends Component {
     const compId = this.props.match.params.grMenuId;
 
     const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
+    const userId = clickedRowObject.get('userId');
     const newSelectedIds = setSelectedIdsInComp(UserProps, compId, id);
 
     // check select box
@@ -101,28 +104,16 @@ class UserManage extends Component {
     });
     
     // get browser rule info
-    BrowserRuleActions.getBrowserRuleByUserId({
-      compId: compId,
-      userId: clickedRowObject.get('userId')
-    });
+    BrowserRuleActions.getBrowserRuleByUserId({ compId: compId, userId: userId });
 
     // get media control setting info
-    MediaRuleActions.getMediaRuleByUserId({
-      compId: compId,
-      userId: clickedRowObject.get('userId')
-    });
+    MediaRuleActions.getMediaRuleByUserId({ compId: compId, userId: userId });
 
     // get client secu info
-    SecurityRuleActions.getSecurityRuleByUserId({
-      compId: compId,
-      userId: clickedRowObject.get('userId')
-    });
+    SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
 
     // show user inform pane.
-    UserActions.showInform({
-      compId: compId,
-      selectedViewItem: clickedRowObject,
-    });
+    UserActions.showInform({ compId: compId, selectedViewItem: clickedRowObject });
   };
 
   handleSelectBtnClick = () => {
@@ -176,26 +167,6 @@ class UserManage extends Component {
       selectedViewItem: selectedViewItem,
       dialogType: UserDialog.TYPE_EDIT
     });
-
-
-
-    // const { UserProps, UserActions } = this.props;
-    // const compId = this.props.match.params.grMenuId;
-
-    // const listData = getListData({ props: UserProps, compId: compId });
-    // const selectedViewItem = listData.find(function(element) {
-    //   return element.userId == id;
-    // });
-
-    // UserActions.showDialog({
-    //   compId: compId,
-    //   selectedViewItem: {
-    //     userId: selectedViewItem.userId,
-    //     userName: selectedViewItem.userNm,
-    //     userPassword: selectedViewItem.userPasswd
-    //   },
-    //   dialogType: UserDialog.TYPE_EDIT,
-    // });
   };
 
   // delete
@@ -222,7 +193,6 @@ class UserManage extends Component {
       });
     }
   };
-
 
   // .................................................
   handleKeywordChange = (name, value) => {
@@ -363,8 +333,9 @@ class UserManage extends Component {
           </div>
           }
         </GRPane>
-        <UserInform compId={compId} />
+        <UserRuleInform compId={compId} />
         <UserDialog compId={compId} />
+        <UserRuleDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>
     );

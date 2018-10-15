@@ -33,17 +33,17 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class UserInform extends Component {
+class UserRuleInform extends Component {
 
    // edit
-   handleEditClick = (selectedDept) => {
+   handleEditClick = (selectedViewItem) => {
     this.props.UserActions.showDialog({
       ruleSelectedViewItem: {
-        deptCd: selectedDept.get('selectedDeptCd'),
-        deptNm: selectedDept.get('selectedDeptNm')
+        userId: selectedViewItem.get('userId'),
+        userNm: selectedViewItem.get('userNm')
       },
       ruleDialogType: UserRuleDialog.TYPE_EDIT
-    });
+    }, true);
   };
 
   // .................................................
@@ -66,7 +66,7 @@ class UserInform extends Component {
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.handleEditClick(selectedDept)}
+                  onClick={() => this.handleEditClick(selectedViewItem)}
                 ><SettingsApplicationsIcon /></Button>
               </div>
             }
@@ -103,5 +103,5 @@ const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserRuleInform));
 

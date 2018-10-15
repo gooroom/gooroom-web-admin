@@ -10,6 +10,7 @@ import * as DeptActions from 'modules/DeptModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
+import UserRuleSelector from 'components/GROptions/UserRuleSelector';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -17,31 +18,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Divider from '@material-ui/core/Divider';
-
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
-import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
-import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
-import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
-
-import UserRuleSelector from 'components/GROptions/UserRuleSelector';
-
 
 class DeptDialog extends Component {
     
