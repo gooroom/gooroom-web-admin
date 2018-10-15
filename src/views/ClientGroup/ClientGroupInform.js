@@ -90,25 +90,25 @@ class ClientGroupInform extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={0}>
               <Grid item xs={12} sm={12} lg={6}>
-                <ClientConfSettingComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
+                <ClientConfSettingComp compId={compId} targetType="GROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <ClientHostNameComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
+                <ClientHostNameComp compId={compId} targetType="GROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <ClientUpdateServerComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
+                <ClientUpdateServerComp compId={compId} targetType="GROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <BrowserRuleComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
+                <BrowserRuleComp compId={compId} targetType="GROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <MediaRuleComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
+                <MediaRuleComp compId={compId} targetType="GROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <SecurityRuleComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
+                <SecurityRuleComp compId={compId} targetType="GROUP" inherit={false} />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
-                <DesktopConfigComp compId={compId} targetType="CLIENTGROUP" inherit={false} />
+                <DesktopConfigComp compId={compId} targetType="GROUP" inherit={false} />
               </Grid>
             </Grid>
 

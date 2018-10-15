@@ -11,13 +11,11 @@ import { getViewItem } from 'components/GRUtils/GRCommonUtils';
 
 import * as UserActions from 'modules/UserModule';
 import UserDialog from './UserDialog';
-import UserRuleDialog from './UserRuleDialog';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
@@ -42,7 +40,7 @@ class UserInform extends Component {
         deptCd: selectedDept.get('selectedDeptCd'),
         deptNm: selectedDept.get('selectedDeptNm')
       },
-      ruleDialogType: UserRuleDialog.TYPE_EDIT
+      ruleDialogType: UserDialog.TYPE_EDIT
     });
   };
 

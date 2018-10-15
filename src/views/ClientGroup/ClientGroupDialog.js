@@ -148,7 +148,7 @@ class ClientGroupDialog extends Component {
                         className={classes.fullWidth}
                     />
                     <Divider style={{marginBottom: 10}} />
-                    <ClientRuleSelector compId={compId} module={ClientGroupProps.get('editingItem').toJS()} />
+                    <ClientRuleSelector compId={compId} module={ClientGroupProps.get('editingItem').toJS()} targetType="GROUP" />
                 </DialogContent>
                 <DialogActions>
                     {(dialogType === ClientGroupDialog.TYPE_ADD) &&

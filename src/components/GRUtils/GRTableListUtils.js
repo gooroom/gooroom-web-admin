@@ -82,7 +82,7 @@ export const getRoleTitleClassName = (targetType, isDefault, isDeptRole) => {
     if(isDefault) {
         return 'compTitleForBasic';
     } else {
-        if(targetType == 'CLIENTGROUP') {
+        if(targetType == 'GROUP') {
             return 'compTitle';
         } else if(targetType == 'USER') {
             if(isDeptRole) {

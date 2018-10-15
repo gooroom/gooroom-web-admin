@@ -14,25 +14,18 @@ import UserRuleSelector from 'components/GROptions/UserRuleSelector';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
+
+import Divider from '@material-ui/core/Divider';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class UserDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -67,6 +60,7 @@ class UserDialog extends Component {
     // 데이타 생성
     handleCreateData = (event) => {
         const { UserProps, GRConfirmActions } = this.props;
+
         GRConfirmActions.showConfirm({
             confirmTitle: '사용자정보 등록',
             confirmMsg: '사용자정보를 등록하시겠습니까?',
@@ -78,10 +72,16 @@ class UserDialog extends Component {
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { UserProps, UserActions, compId } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
+
             UserActions.createUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userNm'])
+                userNm: UserProps.getIn(['editingItem', 'userNm']),
+
+                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
+                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
+                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
@@ -102,11 +102,14 @@ class UserDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { UserProps, UserActions, compId } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
 
             UserActions.editUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
-                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userNm'])
+                userNm: UserProps.getIn(['editingItem', 'userNm']),
+                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
+                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
+                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
@@ -118,67 +121,52 @@ class UserDialog extends Component {
         const { classes } = this.props;
         const { UserProps, compId } = this.props;
 
-        const dialogType = UserProps.get('dialogType');
+        const ruleDialogType = UserProps.get('ruleDialogType');
         const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
 
         let title = "";
-        if(dialogType === UserDialog.TYPE_ADD) {
+        if(ruleDialogType === UserDialog.TYPE_ADD) {
             title = "사용자 등록";
-        } else if(dialogType === UserDialog.TYPE_VIEW) {
+        } else if(ruleDialogType === UserDialog.TYPE_VIEW) {
             title = "사용자 정보";
-        } else if(dialogType === UserDialog.TYPE_EDIT) {
+        } else if(ruleDialogType === UserDialog.TYPE_EDIT) {
             title = "사용자 수정";
         }
 
         return (
             <div>
-            {(UserProps.get('dialogOpen') && editingItem) &&
-                <Dialog open={UserProps.get('dialogOpen')}>
+            {(UserProps.get('ruleDialogOpen') && editingItem) &&
+                <Dialog open={UserProps.get('ruleDialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                     <DialogTitle>{title}</DialogTitle>
-                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
-                        <TextField
-                            id="userId"
-                            label="사용자아이디"
-                            value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
-                            onChange={this.handleValueChange("userId")}
-                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            disabled={(dialogType == UserDialog.TYPE_EDIT) ? true : false}
-                        />
-
-                        <TextField
-                            id="userName"
-                            label="사용자이름"
-                            value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
-                            onChange={this.handleValueChange("userNm")}
-                            className={classes.fullWidth}
-                        />
-                        <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
-                            <InputLabel htmlFor="adornment-password">Password</InputLabel>
-                            <Input
-                                id="userPassword"
-                                type={(editingItem && editingItem.get('showPassword')) ? 'text' : 'password'}
-                                value={(editingItem.get('userPassword')) ? editingItem.get('userPassword') : ''}
-                                onChange={this.handleValueChange('userPassword')}
-                                endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                    aria-label="Toggle password visibility"
-                                    onClick={this.handleClickShowPassword}
-                                    onMouseDown={this.handleMouseDownPassword}
-                                    >
-                                    {(editingItem && editingItem.get('showPassword')) ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                                }
-                            />
-                        </FormControl>
-                    </form>
+                    <DialogContent>
+                        <Grid container spacing={24}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="사용자아이디"
+                                    value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
+                                    onChange={this.handleValueChange("userId")}
+                                    className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                                    disabled={(ruleDialogType == UserDialog.TYPE_EDIT) ? true : false}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="사용자이름"
+                                    value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
+                                    onChange={this.handleValueChange("userNm")}
+                                    className={classes.fullWidth}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Divider style={{marginBottom: 10}} /> 
+                        <UserRuleSelector compId={compId} module={UserProps.get('editingItem').toJS()} targetType="USER" />
+                    </DialogContent>
 
                     <DialogActions>
-                        {(dialogType === UserDialog.TYPE_ADD) &&
+                        {(ruleDialogType === UserDialog.TYPE_ADD) &&
                             <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
                         }
-                        {(dialogType === UserDialog.TYPE_EDIT) &&
+                        {(ruleDialogType === UserDialog.TYPE_EDIT) &&
                             <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                         }
                         <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
@@ -193,7 +181,10 @@ class UserDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    UserProps: state.UserModule
+    UserProps: state.UserModule,
+    BrowserRuleProps: state.BrowserRuleModule,
+    MediaRuleProps: state.MediaRuleModule,
+    SecurityRuleProps: state.SecurityRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

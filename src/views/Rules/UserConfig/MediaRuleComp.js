@@ -66,7 +66,7 @@ class MediaRuleComp extends Component {
     const { MediaRuleProps, compId, compType, targetType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedObj = (targetType && targetType != '') ? MediaRuleProps.getIn(['viewItems', compId, targetType]) : BrowserRuleProps.getIn(['viewItems', compId]);
+    const selectedObj = (targetType && targetType != '') ? MediaRuleProps.getIn(['viewItems', compId, targetType]) : MediaRuleProps.getIn(['viewItems', compId]);
     const selectedViewItem = (selectedObj) ? selectedObj.get('selectedViewItem') : null;
     const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
     const selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;

@@ -21,8 +21,8 @@ import KeywordOption from "views/Options/KeywordOption";
 import GRPageHeader from "containers/GRContent/GRPageHeader";
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
+import UserBasicDialog from "views/User/UserBasicDialog";
 import UserDialog from "views/User/UserDialog";
-import UserRuleDialog from "views/User/UserRuleDialog";
 
 import UserRuleInform from "views/User/UserRuleInform";
 import GRPane from "containers/GRContent/GRPane";
@@ -131,7 +131,7 @@ class UserManage extends Component {
         userPassword: '',
         showPassword: false
       },
-      dialogType: UserDialog.TYPE_ADD
+      dialogType: UserBasicDialog.TYPE_ADD
     });
   };
   
@@ -165,7 +165,7 @@ class UserManage extends Component {
     const selectedViewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
     UserActions.showDialog({
       selectedViewItem: selectedViewItem,
-      dialogType: UserDialog.TYPE_EDIT
+      dialogType: UserBasicDialog.TYPE_EDIT
     });
   };
 
@@ -334,8 +334,8 @@ class UserManage extends Component {
           }
         </GRPane>
         <UserRuleInform compId={compId} />
+        <UserBasicDialog compId={compId} />
         <UserDialog compId={compId} />
-        <UserRuleDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>
     );
