@@ -63,7 +63,7 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readMediaRuleList = (module, compId) => dispatch => {
+export const readMediaRuleList = (module, compId, targetType) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readMediaRuleList', {
     }).then(
@@ -71,6 +71,7 @@ export const readMediaRuleList = (module, compId) => dispatch => {
             dispatch({
                 type: GET_MEDIACONTROL_LIST_SUCCESS,
                 compId: compId,
+                targetType: targetType,
                 response: response
             });
         }
@@ -125,7 +126,7 @@ export const getMediaRule = (param) => dispatch => {
         return dispatch({
             type: DELETE_COMPDATA_ITEM,
             compId: compId,
-            itemName: 'selectedViewItem'
+            name: 'selectedViewItem'
         });      
     }
 
@@ -139,6 +140,7 @@ export const getMediaRuleByUserId = (param) => dispatch => {
             dispatch({
                 type: GET_MEDIACONTROL_SUCCESS,
                 compId: compId,
+                target: 'USER',
                 response: response
             });
         }
@@ -155,6 +157,7 @@ export const getMediaRuleByDeptCd = (param) => dispatch => {
             dispatch({
                 type: GET_MEDIACONTROL_SUCCESS,
                 compId: compId,
+                target: 'DEPT',
                 response: response
             });
         }
@@ -171,6 +174,7 @@ export const getMediaRuleByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_MEDIACONTROL_SUCCESS,
                 compId: compId,
+                target: 'GROUP',
                 response: response
             });
         }
@@ -201,7 +205,8 @@ export const changeCompVariable = (param) => dispatch => {
         type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
-        value: param.value
+        value: param.value,
+        targetType: param.targetType
     });
 };
 
@@ -209,6 +214,15 @@ export const deleteCompData = (param) => dispatch => {
     return dispatch({
         type: DELETE_COMPDATA,
         compId: param.compId
+    });
+};
+
+export const deleteCompDataItem = (param) => dispatch => {
+    return dispatch({
+        type: DELETE_COMPDATA_ITEM,
+        compId: param.compId,
+        name: param.name,
+        targetType: param.targetType
     });
 };
 
@@ -372,7 +386,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_MEDIACONTROL_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
     },
     [SHOW_MEDIACONTROL_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -395,13 +409,13 @@ export default handleActions({
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CHG_COMPDATA_VALUE]: (state, action) => {
-        return state.setIn(['viewItems', action.compId, action.name], action.value);
+        return commonHandleActions.handleChangeCompValue(state, action);
     },
     [DELETE_COMPDATA]: (state, action) => {
         return state.deleteIn(['viewItems', action.compId]);
     },
     [DELETE_COMPDATA_ITEM]: (state, action) => {
-        return state.deleteIn(['viewItems', action.compId, action.itemName]);
+        return commonHandleActions.handleDeleteCompItem(state, action);
     },
     [CREATE_MEDIACONTROL_SUCCESS]: (state, action) => {
         return state.merge({

@@ -39,8 +39,8 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class BrowserRuleComp extends Component {
 
   handleEditBtnClick = (objId, compType) => {
-    const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId') : getSelectedObjectInComp(BrowserRuleProps, compId);
+    const { BrowserRuleProps, BrowserRuleActions, compId, targetType } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(BrowserRuleProps, compId, targetType);
 
     BrowserRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
@@ -49,8 +49,8 @@ class BrowserRuleComp extends Component {
   };
 
   handleInheritBtnClick = (objId, compType) => {
-    const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId') : getSelectedObjectInComp(BrowserRuleProps, compId);
+    const { BrowserRuleProps, BrowserRuleActions, compId, targetType } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(BrowserRuleProps, compId, targetType);
 
     BrowserRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
@@ -61,14 +61,16 @@ class BrowserRuleComp extends Component {
   render() {
 
     const { classes } = this.props;
-    const { BrowserRuleProps, compId, compType } = this.props;
+    const { BrowserRuleProps, compId, compType, targetType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = BrowserRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
-    const selectedOptionItemId = BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
-    const isDefault = BrowserRuleProps.getIn(['viewItems', compId, 'isDefault']);
-    const isDeptRole = BrowserRuleProps.getIn(['viewItems', compId, 'isDeptRole']);
+    const selectedObj = (targetType && targetType != '') ? BrowserRuleProps.getIn(['viewItems', compId, targetType]) : BrowserRuleProps.getIn(['viewItems', compId]);
+
+    const selectedViewItem = (selectedObj) ? selectedObj.get('selectedViewItem') : null;
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    const selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
+    const isDefault = (selectedObj) ? selectedObj.get('isDefault') : null;
+    const isDeptRole = (selectedObj) ? selectedObj.get('isDeptRole') : null;
 
     const titleClassName = getRoleTitleClassName(this.props.targetType, isDefault, isDeptRole);
 
@@ -116,7 +118,7 @@ class BrowserRuleComp extends Component {
               </Grid>
               <Grid item xs={6}>
                 <Grid container justify="flex-end">
-                  {(this.props.inherit) && 
+                  {(this.props.inherit && !isDefault) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.handleInheritBtnClick(viewCompItem.get('objId'), compType)}

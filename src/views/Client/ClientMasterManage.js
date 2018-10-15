@@ -28,17 +28,12 @@ import GRPane from 'containers/GRContent/GRPane';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientSelectDialog from "views/Client/ClientSelectDialog";
 
-import ClientStatusSelect from "views/Options/ClientStatusSelect";
-
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
-import GetAppIcon from '@material-ui/icons/GetApp';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import InputLabel from "@material-ui/core/InputLabel";
 
 import ClientManageComp from 'views/Client/ClientManageComp';
 import ClientManageInform from 'views/Client/ClientManageInform';
@@ -46,8 +41,6 @@ import ClientManageInform from 'views/Client/ClientManageInform';
 import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
 import ClientGroupInform from 'views/ClientGroup/ClientGroupInform';
 import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
-
-import Card from "@material-ui/core/Card";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -357,14 +350,13 @@ class ClientMasterManage extends Component {
                 </Grid>
               </Toolbar>
               <ClientManageComp compId={compId}
-                onSelectAll={this.handleClientSelectAll}
                 onSelect={this.handleClientSelect}
               />
             </Grid>
 
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef', padding: 0, marginTop: 20}}>
-              <ClientManageInform compId={compId} onSelect={this.handleClientSelect}  />
-              <ClientGroupInform compId={compId} onSelect={this.handleClientGroupSelect} />
+              <ClientManageInform compId={compId} />
+              <ClientGroupInform compId={compId} />
             </Grid>
           </Grid>
           <ClientGroupDialog compId={compId} />

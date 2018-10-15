@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -30,35 +31,42 @@ import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
 class MediaRuleSelector extends Component {
 
   componentDidMount() {
-    const { MediaRuleProps, MediaRuleActions, compId, initId } = this.props;
-    MediaRuleActions.readMediaRuleList(MediaRuleProps, compId);
-    if(!MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+    const { MediaRuleProps, MediaRuleActions, compId, initId, targetType } = this.props;
+    //
+    MediaRuleActions.readMediaRuleList(MediaRuleProps, compId, targetType);
+    //
+    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
+    if(!MediaRuleProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
       MediaRuleActions.changeCompVariable({
         compId: compId,
         name: 'selectedOptionItemId',
-        value: initId
+        value: initId,
+        targetType: targetType
       });
     }
   }
   
   handleChange = (event, value) => {
-    const { MediaRuleProps, MediaRuleActions, compId } = this.props;
+    const { MediaRuleActions, compId, targetType } = this.props;
     MediaRuleActions.changeCompVariable({
       compId: compId,
       name: 'selectedOptionItemId',
-      value: event.target.value
+      value: event.target.value,
+      targetType: targetType
     });
   };
 
   // .................................................
   render() {
     const { classes } = this.props;
-    const { MediaRuleProps, compId } = this.props;
+    const { MediaRuleProps, compId, targetType } = this.props;
 
-    const listAllData = MediaRuleProps.getIn(['viewItems', compId, 'listAllData']);
-    let selectedOptionItemId = MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedObj = (targetType && targetType != '') ? MediaRuleProps.getIn(['viewItems', compId, targetType]) : MediaRuleProps.getIn(['viewItems', compId]);
+
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    let selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
-      selectedOptionItemId = listAllData.getIn([0, 'objId']);
+      selectedOptionItemId = '-';
     }
 
     return (
@@ -83,6 +91,7 @@ class MediaRuleSelector extends Component {
             compId={compId}
             objId={selectedOptionItemId}
             compType="VIEW"
+            targetType={targetType}
           />
         }
         </CardContent>

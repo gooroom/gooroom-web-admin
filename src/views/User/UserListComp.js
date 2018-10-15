@@ -87,6 +87,8 @@ class UserListComp extends Component {
 
   handleRowClick = (event, id) => {
     const { UserProps, UserActions, compId } = this.props;
+
+    const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
     const newSelectedIds = setSelectedIdsInComp(UserProps, compId, id);
 
     // check select box
@@ -95,6 +97,10 @@ class UserListComp extends Component {
       value: newSelectedIds,
       compId: compId
     });
+
+    if(this.props.onSelect) {
+      this.props.onSelect(clickedRowObject, newSelectedIds);
+    }
   };
 
   // edit

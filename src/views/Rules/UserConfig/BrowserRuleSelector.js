@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -30,32 +31,40 @@ import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
 class BrowserRuleSelector extends Component {
 
   componentDidMount() {
-    const { BrowserRuleProps, BrowserRuleActions, compId, initId } = this.props;
-    BrowserRuleActions.readBrowserRuleList(BrowserRuleProps, compId);
-    if(!BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+    const { BrowserRuleProps, BrowserRuleActions, compId, initId, targetType } = this.props;
+    //
+    BrowserRuleActions.readBrowserRuleList(BrowserRuleProps, compId, targetType);
+    // 
+    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
+    if(!BrowserRuleProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
       BrowserRuleActions.changeCompVariable({
         compId: compId,
         name: 'selectedOptionItemId',
-        value: initId
+        value: initId,
+        targetType: targetType
       });
     }
   }
 
   handleChange = (event, value) => {
-    this.props.BrowserRuleActions.changeCompVariable({
-      compId: this.props.compId,
+	const { BrowserRuleActions, compId, targetType } = this.props;
+    BrowserRuleActions.changeCompVariable({
+      compId: compId,
       name: 'selectedOptionItemId',
-      value: event.target.value
+      value: event.target.value,
+      targetType: targetType
     });
   };
 
   // .................................................
   render() {
     const { classes } = this.props;
-    const { BrowserRuleProps, compId } = this.props;
+    const { BrowserRuleProps, compId, targetType } = this.props;
 
-    const listAllData = BrowserRuleProps.getIn(['viewItems', compId, 'listAllData']);
-    let selectedOptionItemId = BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedObj = (targetType && targetType != '') ? BrowserRuleProps.getIn(['viewItems', compId, targetType]) : BrowserRuleProps.getIn(['viewItems', compId]);
+
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    let selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = '-';
     }
@@ -82,6 +91,7 @@ class BrowserRuleSelector extends Component {
             compId={compId}
             objId={selectedOptionItemId}
             compType="VIEW"
+            targetType={targetType}
           />
         }
         </CardContent>

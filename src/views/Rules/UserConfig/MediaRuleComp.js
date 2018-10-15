@@ -14,7 +14,6 @@ import { generateConfigObject } from './MediaRuleInform';
 import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getRoleTitleClassName } from 'components/GRUtils/GRTableListUtils';
 
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
@@ -40,8 +39,8 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class MediaRuleComp extends Component {
 
   handleEditBtnClick = (objId, compType) => {
-    const { MediaRuleProps, MediaRuleActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId') : getSelectedObjectInComp(MediaRuleProps, compId);
+    const { MediaRuleProps, MediaRuleActions, compId, targetType } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
 
     MediaRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
@@ -50,8 +49,8 @@ class MediaRuleComp extends Component {
   };
 
   handleInheritBtnClick = (objId, compType) => {
-    const { MediaRuleProps, MediaRuleActions, compId } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId') : getSelectedObjectInComp(MediaRuleProps, compId);
+    const { MediaRuleProps, MediaRuleActions, compId, targetType } = this.props;
+    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
 
     MediaRuleActions.showDialog({
       selectedViewItem: generateConfigObject(selectedViewItem),
@@ -64,14 +63,15 @@ class MediaRuleComp extends Component {
   render() {
 
     const { classes } = this.props;
-    const { MediaRuleProps, compId, compType } = this.props;
+    const { MediaRuleProps, compId, compType, targetType } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const selectedViewItem = MediaRuleProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = MediaRuleProps.getIn(['viewItems', compId, 'listAllData']);
-    const selectedOptionItemId = MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
-    const isDefault = MediaRuleProps.getIn(['viewItems', compId, 'isDefault']);
-    const isDeptRole = MediaRuleProps.getIn(['viewItems', compId, 'isDeptRole']);
+    const selectedObj = (targetType && targetType != '') ? MediaRuleProps.getIn(['viewItems', compId, targetType]) : BrowserRuleProps.getIn(['viewItems', compId]);
+    const selectedViewItem = (selectedObj) ? selectedObj.get('selectedViewItem') : null;
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    const selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
+    const isDefault = (selectedObj) ? selectedObj.get('isDefault') : null;
+    const isDeptRole = (selectedObj) ? selectedObj.get('isDeptRole') : null;
 
     const titleClassName = getRoleTitleClassName(this.props.targetType, isDefault, isDeptRole);
 
@@ -119,7 +119,7 @@ class MediaRuleComp extends Component {
               </Grid>
               <Grid item xs={6}>
                 <Grid container justify="flex-end">
-                  {(this.props.inherit) && 
+                  {(this.props.inherit && !isDefault) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.handleInheritBtnClick(viewCompItem.get('objId'), compType)}
@@ -137,6 +137,7 @@ class MediaRuleComp extends Component {
               ><SettingsApplicationsIcon /></Button>
             </Typography>
             <Typography color="textSecondary">
+              {(viewCompItem.get('objId') != '') ? '(' + viewCompItem.get('objId') + ') ' : ''}
               {(viewCompItem.get('comment') != '') ? '"' + viewCompItem.get('comment') + '"' : ''}
             </Typography>
             <Divider />

@@ -33,9 +33,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class UserRuleDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -89,9 +86,9 @@ class UserRuleDialog extends Component {
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                 userNm: UserProps.getIn(['editingItem', 'userNm']),
 
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
+                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
+                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
+                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
@@ -117,9 +114,9 @@ class UserRuleDialog extends Component {
             UserActions.editUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
                 userNm: UserProps.getIn(['editingItem', 'userNm']),
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
+                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
+                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
+                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
@@ -166,7 +163,7 @@ class UserRuleDialog extends Component {
                         />
             
                         <Divider style={{marginBottom: 10}} /> 
-                        <UserRuleSelector compId={compId} module={UserProps.get('editingItem').toJS()} />
+                        <UserRuleSelector compId={compId} module={UserProps.get('editingItem').toJS()} targetType="USER" />
                     </DialogContent>
 
                     <DialogActions>
