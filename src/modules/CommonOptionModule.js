@@ -18,8 +18,7 @@ const initialState = {
 
     listDataForClientGroupSelect: [],
     selectedClientGroup: {
-        grpId: '',
-        grpNm: ''
+        grpIds: []
     },
 
     userStatusData: [

@@ -69,10 +69,12 @@ export const readClientListPaged = (module, compId, extParam, isResetSelect=fals
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
 
+    const groupIdParam = (newListParam.get('groupId') && newListParam.get('groupId').length > 0) ? newListParam.get('groupId').join() : '';
+
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientListPaged', {
         clientType: newListParam.get('clientType'),
-        groupId: newListParam.get('groupId'),
+        groupId: groupIdParam,
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),

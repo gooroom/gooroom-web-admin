@@ -69,12 +69,20 @@ class ClientManageInform extends Component {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                        <TableCell component="th" scope="row">{bull} 단말설명</TableCell>
+                      <TableCell component="th" scope="row">{bull} 단말설명</TableCell>
                       <TableCell numeric>{selectedViewItem.get('comment')}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 온라인여부</TableCell>
                       <TableCell numeric>{(selectedViewItem.get('isOn') == '0') ? '오프라인' : '온라인'}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">{bull} 홈폴더사용률</TableCell>
+                      <TableCell numeric>{selectedViewItem.get('home')}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">{bull} 설치패키지수</TableCell>
+                      <TableCell numeric>{selectedViewItem.get('totalCnt')}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>

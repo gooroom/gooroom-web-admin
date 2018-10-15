@@ -7,6 +7,8 @@ import * as CommonOptionActions from 'modules/CommonOptionModule';
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -32,8 +34,7 @@ class ClientGroupSelect extends Component {
     CommonOptionActions.changeSelectValue({
       name: 'selectedClientGroup',
       value: {
-        grpId: event.target.value,
-        grpNm: event.target.name
+        grpIds: event.target.value
       }
     });
     if(this.props.onChangeSelect) {
@@ -41,22 +42,37 @@ class ClientGroupSelect extends Component {
     }    
   };
 
+  makeRenderValue = (param) => {
+    const { CommonOptionProps } = this.props;
+    const newParam = param.map(x => {
+      const grpObj = CommonOptionProps.listDataForClientGroupSelect.find(e => (e.grpId == x));
+      return grpObj.grpNm;
+    })
+  
+    return newParam.join(', ');
+  }
+
   render() {
 
     const { CommonOptionProps } = this.props;
 
     return (
-
       <Select
-        value={CommonOptionProps.selectedClientGroup.grpId}
+        multiple
+        value={CommonOptionProps.selectedClientGroup.grpIds}
         onChange={this.handleChangeSelect}
-        inputProps={{name: 'clientGroup'}}
+        renderValue={selected => {
+          return this.makeRenderValue(selected);
+        }}
       >
-        {CommonOptionProps.listDataForClientGroupSelect.map(x => (
-          <MenuItem value={x.grpId} key={x.grpId}>
-            {x.grpNm}
-          </MenuItem>
-        ))}
+        {CommonOptionProps.listDataForClientGroupSelect.map(x => {
+          return (
+            <MenuItem value={x.grpId} key={x.grpId}>
+              <Checkbox checked={CommonOptionProps.selectedClientGroup.grpIds.indexOf(x.grpId) > -1} />
+              <ListItemText primary={x.grpNm} />
+            </MenuItem>
+          );
+        })}
       </Select>
 
     );
