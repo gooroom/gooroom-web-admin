@@ -71,7 +71,7 @@ class BrowserRuleComp extends Component {
     const selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
     const isDefault = (selectedObj) ? selectedObj.get('isDefault') : null;
     const isDeptRole = (selectedObj) ? selectedObj.get('isDeptRole') : null;
-console.log('targetType ::::::::::::', targetType);
+
     const titleClassName = getRoleTitleClassName(targetType, isDefault, isDeptRole);
 
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
