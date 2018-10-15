@@ -35,9 +35,6 @@ class UserRuleInform extends Component {
 
    // edit
    handleEditClick = (selectedViewItem) => {
-
-    console.log('selectedViewItem :::::::::::::::::::: ', selectedViewItem.toJS());
-
     this.props.UserActions.showDialog({
       ruleSelectedViewItem: {
         userId: selectedViewItem.get('userId'),
