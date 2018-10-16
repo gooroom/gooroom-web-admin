@@ -2,16 +2,9 @@ import React, { Component } from "react";
 import classNames from "classnames";
 
 import { grRequestPromise } from "components/GRUtils/GRRequester";
-
-import ListSubheader from "@material-ui/core/ListSubheader";
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-
 import GRTreeItem from "./GRTreeItem";
 
+import List from '@material-ui/core/List';
 import OpenIcon from "@material-ui/icons/ExpandMore";
 import CloseIcon from "@material-ui/icons/ExpandLess";
 import FolderIcon from "@material-ui/icons/Folder";
@@ -20,8 +13,6 @@ import BuildIcon from '@material-ui/icons/Build';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
-
 
 class GRTreeList extends Component {
   constructor(props) {
@@ -291,28 +282,38 @@ class GRTreeList extends Component {
 
     let newChecked = checked;
     let newImperfect = imperfect;
+    let newStatus = null;
 
-    const children = treeData.filter(obj => obj.key === nodeKey)[0].children;
-    if(children) {
-      if(event.target.checked) {
-        // check self and children
-        newChecked = this.updateCheckStatus(nodeKey, newChecked, true);
+    if(this.props.relative) {
+      const children = treeData.filter(obj => obj.key === nodeKey)[0].children;
+      if(children) {
+        if(event.target.checked) {
+          // check self and children
+          newChecked = this.updateCheckStatus(nodeKey, newChecked, true);
+        } else {
+          // uncheck self and children
+          newChecked = this.updateCheckStatus(nodeKey, newChecked, false);
+        }
+        // remove from imperfect
+        newImperfect = this.updateCheckStatus(nodeKey, newImperfect, false);
+        // check children from this
+        const newChildrenStatus = this.updateChildrenNode(children, event.target.checked, newChecked, newImperfect);
+        newChecked = newChildrenStatus.newChecked;
+        newImperfect = newChildrenStatus.newImperfect;
       } else {
-        // uncheck self and children
-        newChecked = this.updateCheckStatus(nodeKey, newChecked, false);
+        newChecked = this.updateCheckStatus(nodeKey, checked, event.target.checked);
       }
-      // remove from imperfect
-      newImperfect = this.updateCheckStatus(nodeKey, newImperfect, false);
-      // check children from this
-      const newChildrenStatus = this.updateChildrenNode(children, event.target.checked, newChecked, newImperfect);
-      newChecked = newChildrenStatus.newChecked;
-      newImperfect = newChildrenStatus.newImperfect;
-    } else {
-      newChecked = this.updateCheckStatus(nodeKey, checked, event.target.checked);
-    }
 
-    // check parent from this
-    const newStatus = this.updateParentNode(nodeKey, event.target.checked, newChecked, newImperfect);
+      // check parent from this
+      newStatus = this.updateParentNode(nodeKey, event.target.checked, newChecked, newImperfect);
+    } else {
+      
+      newChecked = this.updateCheckStatus(nodeKey, checked, event.target.checked);
+      newStatus = {
+        newChecked: newChecked,
+        newImperfect: newImperfect
+      };
+    }
 
     this.setState({
       checked: newStatus.newChecked,
@@ -364,13 +365,6 @@ class GRTreeList extends Component {
         return listItem;
       }
     );
-
-  //   const editButton = <Button color="secondary" size="small" className={classes.buttonInTableRow}
-  //   onClick={this.handleEditClick(event, n.get('userId'))}>
-  //   <BuildIcon />
-  // </Button>;
-
-    // Search Node...
 
     // JSX: array of listItems
     const listItemsJSX = listItemsModified.map((listItem, i) => {
