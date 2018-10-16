@@ -20,6 +20,9 @@ const CLOSE_DEPT_INFORM = 'dept/CLOSE_DEPT_INFORM';
 const SHOW_DEPT_DIALOG = 'dept/SHOW_DEPT_DIALOG';
 const CLOSE_DEPT_DIALOG = 'dept/CLOSE_DEPT_DIALOG';
 
+const SHOW_MULTIDEPT_DIALOG = 'dept/SHOW_MULTIDEPT_DIALOG';
+const CLOSE_MULTIDEPT_DIALOG = 'dept/CLOSE_MULTIDEPT_DIALOG';
+
 const SET_EDITING_ITEM_VALUE = 'dept/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'dept/CHG_LISTPARAM_DATA';
@@ -61,6 +64,21 @@ export const closeInform = (param) => dispatch => {
         compId: param.compId
     });
 };
+
+export const showMultiDialog = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_MULTIDEPT_DIALOG
+    });
+};
+
+export const closeMultiDialog = () => dispatch => {
+    return dispatch({
+        type: CLOSE_MULTIDEPT_DIALOG
+    });
+};
+
+
+
 
 export const readDeptList = (module, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
@@ -191,7 +209,9 @@ const makeParameter = (param) => {
 
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
-        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
+
+        paramIsInherit: (param.paramIsInherit) ? param.paramIsInherit : false
     };
 }
 
@@ -233,20 +253,6 @@ export const editDeptInfo = (param) => dispatch => {
                 ).catch(error => {
                     dispatch({ type: COMMON_FAILURE, error: error });
                 });
-
-                // change object array for selector
-                // requestPostAPI('readDeptList', {
-                // }).then(
-                //     (response) => {
-                //         dispatch({
-                //             type: GET_DEPT_LIST_SUCCESS,
-                //             compId: compId,
-                //             response: response
-                //         });
-                //     }
-                // ).catch(error => {
-                //     dispatch({ type: COMMON_FAILURE, error: error });
-                // });
             } else {
                 dispatch({ type: COMMON_FAILURE, error: error });
             }
@@ -312,6 +318,26 @@ export const deleteUsersInDept = (itemObj) => dispatch => {
     });
 };
 
+// edit multi dept rule once.
+export const editMultiDeptRule = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateRuleForDepts', param).then(
+        (response) => {
+            if(response && response.data && response.data.status && response.data.status.result == 'success') {
+                dispatch({
+                    type: EDIT_DEPT_SUCCESS,
+                    response: response
+                });
+            } else {
+                dispatch({ type: COMMON_FAILURE, error: error });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
@@ -344,6 +370,17 @@ export default handleActions({
     [CLOSE_DEPT_INFORM]: (state, action) => {
         return commonHandleActions.handleCloseInformAction(state, action);
     },
+    [SHOW_MULTIDEPT_DIALOG]: (state, action) => {
+        return state.merge({
+            multiDialogOpen: true, multiDialogType: action.multiDialogType
+        });
+    },
+    [CLOSE_MULTIDEPT_DIALOG]: (state, action) => {
+        return state.delete('editingItem').merge({
+            multiDialogOpen: false
+        });
+    },
+
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
             editingItem: state.get('editingItem').merge({[action.name]: action.value})

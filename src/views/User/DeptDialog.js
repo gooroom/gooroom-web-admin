@@ -81,30 +81,46 @@ class DeptDialog extends Component {
         GRConfirmActions.showConfirm({
             confirmTitle: '조직정보 수정',
             confirmMsg: '조직정보를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
-            confirmOpen: true,
-            confirmObject: DeptProps.get('editingItem')
+            handleConfirmResult: this.handleEditDataAskInherit,
+            confirmOpen: true
         });
     }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
+    handleEditDataAskInherit = (confirmValue) => {
+        this.handleClose();
         if(confirmValue) {
-            const { DeptProps, DeptActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
-
-            DeptActions.editDeptInfo({
-                deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
-                deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
-            }).then((res) => {
-                // DeptActions.readDeptListPaged(DeptProps, compId);
-                // tree refresh
-                // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
-                this.handleClose();
+            const { DeptProps, GRConfirmActions } = this.props;
+            GRConfirmActions.showConfirm({
+                confirmTitle: '하위 조직 적용여부',
+                confirmMsg: '하위 조직에도 같은 정책을 반영 하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult,
+                confirmOpen: true
             });
         }
+    }
+    handleEditConfirmResult = (confirmValue) => {
+        let isInherit = false;
+        if(confirmValue) {
+            isInherit = true;
+        }
+
+        const { DeptProps, DeptActions, compId } = this.props;
+        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
+
+        DeptActions.editDeptInfo({
+            deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
+            deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
+
+            paramIsInherit: (isInherit) ? 'Y' : 'N',
+
+            browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+            mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+            securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
+        }).then((res) => {
+            // DeptActions.readDeptListPaged(DeptProps, compId);
+            // tree refresh
+            // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
+            this.handleClose();
+        });
     }
 
     render() {

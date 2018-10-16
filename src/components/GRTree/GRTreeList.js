@@ -284,35 +284,43 @@ class GRTreeList extends Component {
     let newImperfect = imperfect;
     let newStatus = null;
 
-    if(this.props.relative) {
-      const children = treeData.filter(obj => obj.key === nodeKey)[0].children;
-      if(children) {
-        if(event.target.checked) {
-          // check self and children
-          newChecked = this.updateCheckStatus(nodeKey, newChecked, true);
-        } else {
-          // uncheck self and children
-          newChecked = this.updateCheckStatus(nodeKey, newChecked, false);
-        }
-        // remove from imperfect
-        newImperfect = this.updateCheckStatus(nodeKey, newImperfect, false);
-        // check children from this
-        const newChildrenStatus = this.updateChildrenNode(children, event.target.checked, newChecked, newImperfect);
-        newChecked = newChildrenStatus.newChecked;
-        newImperfect = newChildrenStatus.newImperfect;
-      } else {
-        newChecked = this.updateCheckStatus(nodeKey, checked, event.target.checked);
-      }
-
-      // check parent from this
-      newStatus = this.updateParentNode(nodeKey, event.target.checked, newChecked, newImperfect);
-    } else {
-      
+    if(!this.props.hasSelectChild && !this.props.hasSelectParent) {
       newChecked = this.updateCheckStatus(nodeKey, checked, event.target.checked);
       newStatus = {
         newChecked: newChecked,
         newImperfect: newImperfect
       };
+    } else {
+      if(this.props.hasSelectChild) {
+        const children = treeData.filter(obj => obj.key === nodeKey)[0].children;
+        if(children) {
+          if(event.target.checked) {
+            // check self and children
+            newChecked = this.updateCheckStatus(nodeKey, newChecked, true);
+          } else {
+            // uncheck self and children
+            newChecked = this.updateCheckStatus(nodeKey, newChecked, false);
+          }
+          // remove from imperfect
+          newImperfect = this.updateCheckStatus(nodeKey, newImperfect, false);
+          // check children from this
+          const newChildrenStatus = this.updateChildrenNode(children, event.target.checked, newChecked, newImperfect);
+          newChecked = newChildrenStatus.newChecked;
+          newImperfect = newChildrenStatus.newImperfect;
+        } else {
+          newChecked = this.updateCheckStatus(nodeKey, checked, event.target.checked);
+        }
+        
+        newStatus = {
+          newChecked: newChecked,
+          newImperfect: newImperfect
+        };
+      }
+
+      if(this.props.hasSelectParent) {
+        // check parent from this
+        newStatus = this.updateParentNode(nodeKey, event.target.checked, newChecked, newImperfect);
+      }
     }
 
     this.setState({

@@ -27,6 +27,7 @@ import UserDialog from "views/User/UserDialog";
 
 import DeptRuleInform from "views/User/DeptRuleInform";
 import DeptDialog from "views/User/DeptDialog";
+import DeptMultiDialog from "views/User/DeptMultiDialog";
 
 import Grid from "@material-ui/core/Grid";
 import Toolbar from '@material-ui/core/Toolbar';
@@ -34,6 +35,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import TuneIcon from '@material-ui/icons/Tune';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -56,7 +58,17 @@ class UserMasterManage extends Component {
       valueObj: {selectedDeptCd: '', selectedDeptNm: ''}
     });
   }
-  
+
+  // click dept row (in tree)
+  handleCheckedDept = (checked, imperfect) => {
+    // Check selectedDeptCd
+    const compId = this.props.match.params.grMenuId;
+    this.props.DeptActions.changeCompVariableObject({
+      compId: compId,
+      valueObj: {checkedDeptCd: checked}
+    });
+  }
+    
   // click dept row (in tree)
   handleSelectDept = (node) => {
     const { DeptProps, DeptActions } = this.props;
@@ -97,11 +109,7 @@ class UserMasterManage extends Component {
       compId: compId, selectedViewItem: null
     });
   }
-
-  handleCheckedDept = (checked, imperfect) => {
-    //console.log('handleCheckedDept: checked ........ ', checked);
-  }
-
+  
   handleEditDept = (listItem, i) => { 
     this.props.DeptActions.showDialog({
       selectedViewItem: {
@@ -139,6 +147,19 @@ class UserMasterManage extends Component {
     //this.props.GlobalActions.showElementMsg(event.currentTarget, '테스트 문장입니다.');
   }
   handleDeleteButtonForDeptConfirmResult = (confirmValue, confirmObject) => {
+  }
+
+  handleApplyMultiDept = (event) => {
+    const compId = this.props.match.params.grMenuId;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
+    // 이전에 선택되어진 내용 삭제
+    BrowserRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
+    MediaRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
+    SecurityRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
+
+    this.props.DeptActions.showMultiDialog({
+      multiDialogType: DeptMultiDialog.TYPE_EDIT
+    });
   }
 
   handleResetDeptTree = (deptCd) => {
@@ -300,12 +321,24 @@ class UserMasterManage extends Component {
 
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForDept} disabled={this.isUserAddible()} >
-                  <AddIcon />등록
-                </Button>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
-                  <RemoveIcon />삭제
-                </Button>
+                <Grid container spacing={0}>
+                  <Grid item xs={12} sm={8} lg={8}>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForDept} disabled={this.isUserAddible()} >
+                      <AddIcon />등록
+                    </Button>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
+                      <RemoveIcon />삭제
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={4} lg={4}>
+                    <Grid container justify="flex-end">
+                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleApplyMultiDept} >
+                        <TuneIcon />일괄변경
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+
               </Toolbar>
               <GRTreeList
                 useFolderIcons={true}
@@ -316,6 +349,8 @@ class UserMasterManage extends Component {
                 keyName='key'
                 title='title'
                 startingDepth='2'
+                hasSelectChild={true}
+                hasSelectParent={false}
                 compId={compId}
                 onInitTreeData={this.handleInitTreeData}
                 onSelectNode={this.handleSelectDept}
@@ -346,8 +381,11 @@ class UserMasterManage extends Component {
 
           </Grid>
         </GRPane>
+
         <UserDialog compId={compId} />
         <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
+        <DeptMultiDialog compId={compId} />
+        
         <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectionClose} />
         <GRConfirm />
 

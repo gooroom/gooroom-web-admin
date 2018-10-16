@@ -2,8 +2,12 @@ import moment from 'moment';
 
 export const formatDateToSimple = (value, format) => {
     try {
-        const date = new Date(value);
-        return moment(date).format(format); //date.toISOString().substring(0, 10);
+        if(value && value != '') {
+            const date = new Date(value);
+            return moment(date).format(format); //date.toISOString().substring(0, 10);
+        } else {
+            return '';
+        }
     } catch (err) {
         return '';
     }
