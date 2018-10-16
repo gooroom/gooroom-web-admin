@@ -62,8 +62,8 @@ class ClientRegKeyDialog extends Component {
                 comment: paramObject.get('comment'),
                 ipRange: paramObject.get('ipRange'),
                 regKeyNo: paramObject.get('regKeyNo'),
-                validDate: paramObject.get('validDate'),
-                expireDate: paramObject.get('expireDate')
+                validDate: (new Date(paramObject.get('validDate'))).getTime(),
+                expireDate: (new Date(paramObject.get('expireDate'))).getTime()
             }).then((res) => {
                 ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, compId);
                 this.handleClose();
@@ -88,8 +88,8 @@ class ClientRegKeyDialog extends Component {
                 comment: paramObject.get('comment'),
                 ipRange: paramObject.get('ipRange'),
                 regKeyNo: paramObject.get('regKeyNo'),
-                validDate: paramObject.get('validDate'),
-                expireDate: paramObject.get('expireDate')
+                validDate: (new Date(paramObject.get('validDate'))).getTime(),
+                expireDate: (new Date(paramObject.get('expireDate'))).getTime()
             }).then((res) => {
                 ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, compId);
                 this.handleClose();
@@ -148,7 +148,7 @@ class ClientRegKeyDialog extends Component {
                             value={(editingItem.get('validDate')) ? formatDateToSimple(editingItem.get('validDate'), 'YYYY-MM-DD') : ''}
                             onChange={this.handleValueChange("validDate")}
                             className={classes.fullWidth}
-                            InputLabelProps={{ shrink: true, }}
+                            
                             disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                         />
                         </Grid>
