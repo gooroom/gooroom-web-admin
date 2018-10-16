@@ -61,6 +61,9 @@ const theme = createMuiTheme({
     MuiTableRow: {
       root: {
         height: 32
+      },
+      head: {
+        height: 44
       }
     }
   }
