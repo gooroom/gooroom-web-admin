@@ -79,6 +79,7 @@ class UserSelectDialog extends Component {
                                         keyName='key'
                                         title='title'
                                         startingDepth='2'
+                                        relative={true}
                                         onSelectNode={this.handleSelectDept}
                                     />
                                 </Card>
