@@ -13,29 +13,40 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class GRCheckConfirm extends Component {
+
+  state = {
+    checkedConfirm: false
+  };
 
   handleCancel = () => {
     const { GRConfirmActions, GRConfirmProps } = this.props;
     GRConfirmProps.handleConfirmResult(false);
     GRConfirmActions.closeConfirm({
       confirmResult: false,
-      confirmOpen: false,
+      confirmCheckOpen: false,
       confirmObject: GRConfirmProps.confirmObject
     });
   };
 
   handleOk = () => {
     const { GRConfirmActions, GRConfirmProps } = this.props;
-    GRConfirmProps.handleConfirmResult(true, GRConfirmProps.confirmObject);
+    GRConfirmProps.handleConfirmResult(true, GRConfirmProps.confirmObject, this.state.checkedConfirm);
     GRConfirmActions.closeConfirm({
       confirmResult: true,
-      confirmOpen: false,
+      confirmCheckOpen: false,
       confirmObject: GRConfirmProps.confirmObject
     });
+  };
+
+  handleCheckChange = name => event => {
+    this.setState({ [name]: event.target.checked });
   };
 
   render() {
@@ -44,7 +55,7 @@ class GRCheckConfirm extends Component {
     return (
        <Dialog
           onClose={this.handleCancel}
-          open={GRConfirmProps.confirmOpen}
+          open={GRConfirmProps.confirmCheckOpen}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
@@ -54,9 +65,17 @@ class GRCheckConfirm extends Component {
               {GRConfirmProps.confirmMsg}
             </DialogContentText>
             <DialogContentText id="alert-dialog-description">
-              {GRConfirmProps.confirmMsg}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.checkedConfirm}
+                    onChange={this.handleCheckChange('checkedConfirm')}
+                    value="checkedConfirm"
+                  />
+                }
+                label={GRConfirmProps.confirmCheckMsg}
+              />
             </DialogContentText>
-            
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleCancel} color="primary" autoFocus>
