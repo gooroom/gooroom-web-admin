@@ -346,6 +346,24 @@ export const inheritMediaRuleData = (param) => dispatch => {
     });
 };
 
+// clone rule
+export const cloneMediaRuleData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createClonedMediaRule', {
+            'objId': param.objId
+        }).then(
+        (response) => {
+            dispatch({
+                type: CREATE_MEDIACONTROL_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export const addBluetoothMac = () => dispatch => {
     return dispatch({
         type: ADD_BLUETOOTHMAC_ITEM

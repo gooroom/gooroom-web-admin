@@ -339,6 +339,24 @@ export const inheritBrowserRuleData = (param) => dispatch => {
     });
 };
 
+// clone rule
+export const cloneBrowserRuleData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createClonedBrowserRule', {
+            'objId': param.objId
+        }).then(
+        (response) => {
+            dispatch({
+                type: CREATE_BROWSERRULE_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export const addWhiteList = () => dispatch => {
     return dispatch({
         type: ADD_WHITELIST_ITEM
