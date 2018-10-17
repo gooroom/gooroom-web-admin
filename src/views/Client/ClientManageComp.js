@@ -44,7 +44,6 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class ClientManageComp extends Component {
 
   columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
     { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
     { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
     { id: 'loginId', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
@@ -56,8 +55,10 @@ class ClientManageComp extends Component {
   ];
 
   componentDidMount() {
-    const { ClientManageActions, ClientManageProps, compId } = this.props;
-    ClientManageActions.readClientListPaged(ClientManageProps, compId);
+    if(this.props.selectorType && this.props.selectorType == 'multiple') {
+      this.columnHeaders = this.columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
+    }
+    this.props.ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId);
   }
 
   handleChangePage = (event, page) => {
@@ -95,15 +96,18 @@ class ClientManageComp extends Component {
 
   handleRowClick = (event, id) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-
     const clickedRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
-    const newSelectedIds = setSelectedIdsInComp(ClientManageProps, compId, id);
-
-    ClientManageActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
-      compId: compId
-    });
+    let newSelectedIds = '';
+    if(this.props.selectorType && this.props.selectorType == 'multiple') {
+      newSelectedIds = setSelectedIdsInComp(ClientManageProps, compId, id);  
+      ClientManageActions.changeCompVariable({
+        name: 'selectedIds',
+        value: newSelectedIds,
+        compId: compId
+      });
+    } else {
+      newSelectedIds = id;
+    }
 
     if(this.props.onSelect) {
       this.props.onSelect(clickedRowObject, newSelectedIds);
@@ -182,6 +186,7 @@ class ClientManageComp extends Component {
         {/* data area */}
         {listObj &&
         <Table>
+          {(this.props.selectorType && this.props.selectorType == 'multiple') && 
           <GRCommonTableHead
             classes={classes}
             keyId="clientId"
@@ -193,6 +198,17 @@ class ClientManageComp extends Component {
             listData={listObj.get('listData')}
             columnData={this.columnHeaders}
           />
+          }
+          {(!this.props.selectorType || this.props.selectorType == 'single') && 
+          <GRCommonTableHead
+            classes={classes}
+            keyId="clientId"
+            orderDir={listObj.getIn(['listParam', 'orderDir'])}
+            orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+            onRequestSort={this.handleChangeSort}
+            columnData={this.columnHeaders}
+          />
+          }
           <TableBody>
             {listObj.get('listData').map(n => {
               const isSelected = this.isSelected(n.get('clientId'));
@@ -201,13 +217,13 @@ class ClientManageComp extends Component {
                   hover
                   onClick={event => this.handleRowClick(event, n.get('clientId'))}
                   role="checkbox"
-                  aria-checked={isSelected}
                   key={n.get('clientId')}
-                  selected={isSelected}
                 >
+                {(this.props.selectorType && this.props.selectorType == 'multiple') && 
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                     <Checkbox checked={isSelected} className={classes.grObjInCell} />
                   </TableCell>
+                }
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('viewStatus')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('loginId')}</TableCell>
@@ -257,7 +273,6 @@ class ClientManageComp extends Component {
 const mapStateToProps = (state) => ({
   ClientManageProps: state.ClientManageModule
 });
-
 
 const mapDispatchToProps = (dispatch) => ({
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),

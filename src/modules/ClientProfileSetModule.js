@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'clientProfileSet/COMMON_PENDING';

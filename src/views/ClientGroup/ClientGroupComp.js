@@ -54,13 +54,17 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class ClientGroupComp extends Component {
 
   columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
     { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
     { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정' },
   ];
 
   componentDidMount() {
+    if(this.props.selectorType && this.props.selectorType == 'multiple') {
+      this.columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
+    }
+
+    console.log('this.columnHeaders ::::::::::::::::', this.columnHeaders);
     this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId);
   }
 
@@ -177,13 +181,13 @@ class ClientGroupComp extends Component {
     this.props.ClientGroupActions.changeListParamData({
       name: name, 
       value: value,
-      compId: this.props.match.params.grMenuId
+      compId: this.props.compId
     });
   }
 
   handleSelectBtnClick = () => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId);
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.compId);
   };
 
   render() {
@@ -215,6 +219,7 @@ class ClientGroupComp extends Component {
 
         {listObj &&
         <Table>
+          {(this.props.selectorType && this.props.selectorType == 'multiple') && 
           <GRCommonTableHead
             classes={classes}
             keyId="grpId"
@@ -226,6 +231,17 @@ class ClientGroupComp extends Component {
             listData={listObj.get('listData')}
             columnData={this.columnHeaders}
           />
+          }
+          {(!this.props.selectorType || this.props.selectorType == 'single') && 
+          <GRCommonTableHead
+            classes={classes}
+            keyId="grpId"
+            orderDir={listObj.getIn(['listParam', 'orderDir'])}
+            orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+            onRequestSort={this.handleChangeSort}
+            columnData={this.columnHeaders}
+          />
+          }
           <TableBody>
           {listObj.get('listData').map(n => {
             const isSelected = this.isSelected(n.get('grpId'));
@@ -234,13 +250,13 @@ class ClientGroupComp extends Component {
                 hover
                 onClick={event => this.handleRowClick(event, n.get('grpId'))}
                 role="checkbox"
-                aria-checked={isSelected}
                 key={n.get('grpId')}
-                selected={isSelected}
               >
-                <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                  <Checkbox checked={isSelected} className={classes.grObjInCell} onClick={event => this.handleSelectGroup(event, n.get('grpId'))} />
-                </TableCell>
+                {(this.props.selectorType && this.props.selectorType == 'multiple') && 
+                  <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
+                    <Checkbox checked={isSelected} className={classes.grObjInCell} onClick={event => this.handleSelectGroup(event, n.get('grpId'))} />
+                  </TableCell>
+                }
                 <TableCell className={classes.grSmallAndClickCell}>
                   {n.get('grpNm')}
                 </TableCell>
@@ -295,7 +311,6 @@ class ClientGroupComp extends Component {
   }
 }
 
-
 const mapStateToProps = (state) => ({
   ClientGroupProps: state.ClientGroupModule,
   ClientConfSettingProps: state.ClientConfSettingModule,
@@ -303,7 +318,6 @@ const mapStateToProps = (state) => ({
   ClientUpdateServerProps: state.ClientUpdateServerModule,
   ClientDesktopConfigProps: state.ClientDesktopConfigModule
 });
-
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),

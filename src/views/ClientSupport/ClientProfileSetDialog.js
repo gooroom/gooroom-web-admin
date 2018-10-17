@@ -124,15 +124,9 @@ class ClientProfileSetDialog extends Component {
         });
     }
 
-    handleSelectClient = (value) => {
-        this.props.ClientProfileSetActions.setEditingItemValue({
-            name: 'clientId',
-            value: value.clientId
-        });
-        this.props.ClientProfileSetActions.setEditingItemValue({
-            name: 'clientNm',
-            value: value.clientName
-        });
+    handleSelectClient = (clientObj) => {
+        this.props.ClientProfileSetActions.setEditingItemValue({ name: 'clientId', value: clientObj.get('clientId') });
+        this.props.ClientProfileSetActions.setEditingItemValue({ name: 'clientNm', value: clientObj.get('clientName') });
     }
 
     handleSelectClientArray = (value) => {
@@ -183,16 +177,14 @@ class ClientProfileSetDialog extends Component {
                     <TextField  
                         label="프로파일 이름"
                         value={(editingItem.get('profileNm')) ? editingItem.get('profileNm') : ''}
-                        onChange={this.handleValueChange("profileNm")}
+                        onChange={([ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)) ? null : this.handleValueChange("profileNm")}
                         className={classNames(classes.fullWidth)}
-                        disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     <TextField
                         label="프로파일 설명"
                         value={(editingItem.get('profileCmt')) ? editingItem.get('profileCmt') : ''}
-                        onChange={this.handleValueChange("profileCmt")}
+                        onChange={([ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)) ? null : this.handleValueChange("profileCmt")}
                         className={classNames(classes.fullWidth, classes.profileItemRow)}
-                        disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
                         <div className={classNames(classes.fullWidth, classes.profileItemRow)}>
@@ -207,9 +199,7 @@ class ClientProfileSetDialog extends Component {
                         <TextField
                             label="레퍼런스 단말"
                             value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
-                            onChange={this.handleValueChange("clientId")}
                             className={classNames(classes.fullWidth, classes.profileItemRow)}
-                            disabled
                         />
                     }
                     {(dialogType === ClientProfileSetDialog.TYPE_ADD || dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
@@ -217,9 +207,8 @@ class ClientProfileSetDialog extends Component {
                             <TextField
                                 id="clientId"
                                 label="레퍼런스 단말"
-                                value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
+                                value={(editingItem.get('clientId') && editingItem.get('clientId') != '') ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
                                 placeholder="아래 목록에서 단말을 선택하세요."
-                                onChange={this.handleValueChange("clientId")}
                                 className={classNames(classes.fullWidth, classes.profileItemRow)}
                             />
                             <div className={classes.profileItemRow}>
