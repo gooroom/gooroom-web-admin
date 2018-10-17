@@ -71,7 +71,6 @@ class BrowserRuleDialog extends Component {
             confirmTitle: '브라우저제어정보 등록',
             confirmMsg: '브라우저제어정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
             confirmObject: BrowserRuleProps.get('editingItem')
         });
     }
@@ -92,7 +91,6 @@ class BrowserRuleDialog extends Component {
             confirmTitle: '브라우저제어정보 수정',
             confirmMsg: '브라우저제어정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
-            confirmOpen: true,
             confirmObject: BrowserRuleProps.get('editingItem')
         });
     }

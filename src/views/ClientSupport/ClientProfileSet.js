@@ -148,7 +148,6 @@ class ClientProfileSet extends Component {
       confirmTitle: '단말프로파일 삭제',
       confirmMsg: '단말프로파일(' + selectedViewItem.get('profileNo') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };

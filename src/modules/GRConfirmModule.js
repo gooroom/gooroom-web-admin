@@ -9,8 +9,9 @@ export const showConfirm = (param) => dispatch => {
         type: SHOW_CONFIRM,
         confirmTitle: param.confirmTitle,
         confirmMsg: param.confirmMsg,
+        confirmCheckMsg: param.confirmCheckMsg,
         handleConfirmResult: param.handleConfirmResult,
-        confirmOpen: param.confirmOpen,
+        confirmOpen: true,
         confirmObject: param.confirmObject
     });
 };
@@ -25,9 +26,11 @@ export const closeConfirm = (param) => dispatch => {
 const initialState = {
     confirmTitle: '',
     confirmMsg: '',
+    confirmCheckMsg: '',
     handleConfirmResult: () => {},
     confirmOpen: false,
     confirmResult: false,
+    confirmCheckResult: false,
     confirmObject: null
 };
 
@@ -39,6 +42,7 @@ export default handleActions({
             ...state,
             confirmTitle: action.confirmTitle,
             confirmMsg: action.confirmMsg,
+            confirmCheckMsg: action.confirmCheckMsg,
             handleConfirmResult: action.handleConfirmResult,
             confirmOpen: action.confirmOpen,
             confirmObject: (action.confirmObject) ? action.confirmObject : null

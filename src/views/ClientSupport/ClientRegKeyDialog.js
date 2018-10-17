@@ -51,7 +51,6 @@ class ClientRegKeyDialog extends Component {
             confirmTitle: '단말등록키 등록',
             confirmMsg: '단말등록키를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateDataConfirmResult,
-            confirmOpen: true,
             confirmObject: ClientRegKeyProps.get('editingItem')
         });
     }
@@ -76,7 +75,6 @@ class ClientRegKeyDialog extends Component {
         GRConfirmActions.showConfirm({
             confirmTitle: '단말등록키 수정',
             confirmMsg: '단말등록키를 수정하시겠습니까?',
-            confirmOpen: true,
             handleConfirmResult: this.handleEditDataConfirmResult,
             confirmObject: ClientRegKeyProps.get('editingItem')
         });

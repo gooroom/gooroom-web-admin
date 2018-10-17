@@ -166,7 +166,6 @@ class ClientGroupManage extends Component {
       confirmTitle: '단말그룹 삭제',
       confirmMsg: '단말그룹(' + selectedViewItem.get('grpNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };

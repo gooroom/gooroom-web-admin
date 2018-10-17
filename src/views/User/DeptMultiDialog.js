@@ -58,7 +58,6 @@ class DeptMultiDialog extends Component {
             confirmTitle: '조직정보 일괄변경',
             confirmMsg: '선택하신 조직의 정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
-            confirmOpen: true
         });
     }
     handleEditConfirmResult = (confirmValue) => {

@@ -152,7 +152,6 @@ class MediaRuleManage extends Component {
       confirmTitle: '매체제어정책정보 삭제',
       confirmMsg: '매체제어정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };

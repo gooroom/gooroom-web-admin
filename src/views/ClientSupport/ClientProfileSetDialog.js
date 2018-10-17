@@ -49,7 +49,6 @@ class ClientProfileSetDialog extends Component {
             confirmTitle: '단말 프로파일 등록',
             confirmMsg: '단말 프로파일을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateDataConfirmResult,
-            confirmOpen: true,
             confirmObject: ClientProfileSetProps.get('editingItem')
         });
     }
@@ -72,7 +71,6 @@ class ClientProfileSetDialog extends Component {
         GRConfirmActions.showConfirm({
             confirmTitle: '단말 프로파일 수정',
             confirmMsg: '단말 프로파일을 수정하시겠습니까?',
-            confirmOpen: true,
             handleConfirmResult: this.handleEditConfirmResult,
             confirmObject: ClientProfileSetProps.get('editingItem')
         });
@@ -97,7 +95,6 @@ class ClientProfileSetDialog extends Component {
         GRConfirmActions.showConfirm({
             confirmTitle: '단말 프로파일 실행',
             confirmMsg: '단말 프로파일을 실행하시겠습니까?',
-            confirmOpen: true,
             handleConfirmResult: this.handleProfileJobConfirmResult,
             confirmObject: ClientProfileSetProps.get('editingItem')
         });

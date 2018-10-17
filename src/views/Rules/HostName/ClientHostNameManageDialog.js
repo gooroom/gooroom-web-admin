@@ -49,7 +49,6 @@ class ClientHostNameManageDialog extends Component {
             confirmTitle: 'Hosts 정보 등록',
             confirmMsg: 'Hosts 정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
             confirmObject: ClientHostNameProps.get('editingItem')
         });
     }
@@ -70,7 +69,6 @@ class ClientHostNameManageDialog extends Component {
             confirmTitle: 'Hosts 정보 수정',
             confirmMsg: 'Hosts 정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
-            confirmOpen: true,
             confirmObject: ClientHostNameProps.get('editingItem')
         });
     }

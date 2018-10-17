@@ -190,7 +190,6 @@ class UserMasterManage extends Component {
         confirmTitle: '사용자 삭제',
         confirmMsg: '선택하신 사용자를 조직에서 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteUserInDeptConfirmResult,
-        confirmOpen: true,
         confirmObject: {
           selectedDeptCd: selectedDeptCd,
           selectedUsers: selectedUsers
@@ -224,7 +223,6 @@ class UserMasterManage extends Component {
         confirmTitle: '사용자 추가',
         confirmMsg: '사용자정보를 조직에 추가하시겠습니까?',
         handleConfirmResult: this.handleUserSelectSaveConfirmResult,
-        confirmOpen: true,
         confirmObject: {
           selectedDeptCd: selectedDeptCd,
           selectedUsers: selectedUsers

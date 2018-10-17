@@ -146,7 +146,6 @@ class ClientPackageManage extends Component {
         confirmTitle: '단말그룹 삭제',
         confirmMsg: '단말그룹(' + selectedIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
-        confirmOpen: true,
         confirmObject: null
       });
     }
@@ -197,7 +196,6 @@ class ClientPackageManage extends Component {
         confirmTitle: '선택한 패키지 설치',
         confirmMsg: '선택한 패키지를 설치하시겠습니까?',
         handleConfirmResult: this.handleClientPackageInstallConfirmResult,
-        confirmOpen: true,
         confirmObject: {
           selectedClientIds: selectedIds.toJS(),
           selectedPackageIds: selectedPackage.toJS()
@@ -225,7 +223,6 @@ class ClientPackageManage extends Component {
         confirmTitle: '그룹에 단말 추가',
         confirmMsg: '단말을 그룹 추가하시겠습니까?',
         handleConfirmResult: this.handleClientSelectSaveConfirmResult,
-        confirmOpen: true,
         confirmObject: {
           selectedGroupId: selectedGroupItem.get('grpId'),
           selectedClients: selectedClients
@@ -261,7 +258,6 @@ class ClientPackageManage extends Component {
         confirmTitle: '그룹에서 단말 삭제',
         confirmMsg: '선택하신 단말을 그룹에서 삭제하시겠습니까?',
         handleConfirmResult: this.handleRemoveClientInGroupConfirmResult,
-        confirmOpen: true,
         confirmObject: {
           selectedClients: selectedClients
         }
@@ -306,7 +302,6 @@ class ClientPackageManage extends Component {
       confirmTitle: '전체패키지 업데이트',
       confirmMsg: '선택하신 단말의 업데이트 가능 패키지를 모두 업데이트 하겠습니까?',
       handleConfirmResult: this.handleAllUpdateForClientConfirmResult,
-      confirmOpen: true
     });
     console.log('handleAllUpdateForClient...............');
   }

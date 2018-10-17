@@ -177,7 +177,6 @@ class UserManage extends Component {
       confirmTitle: '사용자정보 삭제',
       confirmMsg: '사용자정보(' + selectedViewItem.get('userNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };

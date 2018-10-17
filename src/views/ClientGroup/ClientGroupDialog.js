@@ -49,7 +49,6 @@ class ClientGroupDialog extends Component {
             confirmTitle: '단말그룹 등록',
             confirmMsg: '단말그룹을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateDataConfirmResult,
-            confirmOpen: true,
             confirmObject: ClientGroupProps.get('editingItem')
         });
     }
@@ -83,7 +82,6 @@ class ClientGroupDialog extends Component {
         GRConfirmActions.showConfirm({
             confirmTitle: '단말그룹 수정',
             confirmMsg: '단말그룹을 수정하시겠습니까?',
-            confirmOpen: true,
             handleConfirmResult: this.handleEditConfirmResult
         });
     }

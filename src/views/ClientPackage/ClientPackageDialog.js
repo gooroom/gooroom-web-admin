@@ -58,7 +58,6 @@ class ClientPackageDialog extends Component {
             confirmTitle: '단말패키지지 등록',
             confirmMsg: '단말패키지지을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateDataConfirmResult,
-            confirmOpen: true,
             confirmObject: ClientPackageProps.get('editingItem')
         });
     }
@@ -81,7 +80,6 @@ class ClientPackageDialog extends Component {
         GRConfirmActions.showConfirm({
             confirmTitle: '단말패키지지 수정',
             confirmMsg: '단말패키지지을 수정하시겠습니까?',
-            confirmOpen: true,
             handleConfirmResult: this.handleEditConfirmResult
         });
     }
