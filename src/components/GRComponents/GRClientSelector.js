@@ -1,6 +1,12 @@
 import React, { Component } from "react";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
+
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import * as ClientManageActions from 'modules/ClientManageModule';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
@@ -53,7 +59,6 @@ class GRClientSelector extends Component {
 
   // handle click event in group list, to request client list in selected client group.
   handleClickGroup = (value) => {
-    // TODO: error process.
     requestPostAPI('readClientListForGroups', {groupId: value.grpId}).then(
       (response) => {
         const { data } = response.data;
@@ -64,36 +69,39 @@ class GRClientSelector extends Component {
   }
 
   // handle click event in client list, set selected client data and call parent function if exixted.
-  handleClickClient = (value) => {
+  handleClickClient = (clientObj, id) => {
+
+    console.log('clientObj >>>>>>>>>>>>>>>>>  ', clientObj.toJS());
+
     // call assigned handler from parameters(properties), don't save in local state
     // only call where type is 'single'
     if(this.props.handleClientSelect && this.props.selectorType === 'single') {
-      this.props.handleClientSelect(value);
+      this.props.handleClientSelect(clientObj);
     }
   }
 
   // handle click event in client check box list, 
-  handleClientCheckToggle = (value) => (event) => {
+  // handleClientCheckToggle = (value) => (event) => {
     
-    const { checkedClient } = this.state;
-    const currentIndex = checkedClient.indexOf(value);
-    const newChecked = [...checkedClient];
+  //   const { checkedClient } = this.state;
+  //   const currentIndex = checkedClient.indexOf(value);
+  //   const newChecked = [...checkedClient];
 
-    if (currentIndex === -1 && event.target.checked) {
-      newChecked.push(value);
-    } else if(currentIndex !== -1 && !event.target.checked) {
-      newChecked.splice(currentIndex, 1);
-    } else {
-      // 
-    }
+  //   if (currentIndex === -1 && event.target.checked) {
+  //     newChecked.push(value);
+  //   } else if(currentIndex !== -1 && !event.target.checked) {
+  //     newChecked.splice(currentIndex, 1);
+  //   } else {
+  //     // 
+  //   }
 
-    if(this.props.handleClientSelect && this.props.selectorType === 'multiple') {
-      this.props.handleClientSelect(newChecked);
-    }
-    this.setState({
-      checkedClient: newChecked
-    });
-  };
+  //   if(this.props.handleClientSelect && this.props.selectorType === 'multiple') {
+  //     this.props.handleClientSelect(newChecked);
+  //   }
+  //   this.setState({
+  //     checkedClient: newChecked
+  //   });
+  // };
 
   // handle click event in client group check box list, 
   handleGroupCheckToggle = (value) => (event) => {
@@ -118,6 +126,17 @@ class GRClientSelector extends Component {
     });
   };
 
+  // Select Group Item
+  handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
+    const { ClientManageProps, ClientManageActions, compId } = this.props;
+
+    // show client list
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+      groupId: selectedGroupIdArray.toJS(), page:0
+    }, true);
+  };
+  
+
   // RENDER...
   render() {
     const { classes, compId } = this.props;
@@ -127,25 +146,18 @@ class GRClientSelector extends Component {
     return (
       <React.Fragment>
         <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
-
           <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}}>
-            <ClientGroupComp compId={compId}
+            <ClientGroupComp compId={compId} selectorType={selectorType}
               onSelectAll={this.handleClientGroupSelectAll}
               onSelect={this.handleClientGroupSelect}
             />
           </Grid>
-
           <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
-
-            <ClientManageComp compId={compId}
-              onSelect={this.handleClientSelect}
+            <ClientManageComp compId={compId} selectorType={selectorType}
+              onSelect={this.handleClickClient}
             />
-          
           </Grid>
-
         </Grid>
-
-
       </React.Fragment>
     )
 
@@ -180,5 +192,13 @@ class GRClientSelector extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(GRClientSelector);
+
+const mapStateToProps = (state) => ({
+  ClientManageProps: state.ClientManageModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  ClientManageActions: bindActionCreators(ClientManageActions, dispatch)
+});
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GRClientSelector));
 

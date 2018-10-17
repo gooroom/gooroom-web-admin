@@ -86,6 +86,7 @@ class ClientProfileSet extends Component {
   handleRowClick = (event, id) => {
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
+    
     ClientProfileSetActions.showDialog({
       selectedViewItem: selectedViewItem,
       dialogType: ClientProfileSetDialog.TYPE_VIEW
@@ -100,6 +101,7 @@ class ClientProfileSet extends Component {
         profileNm: '',
         profileCmt: '',
         clientId: '',
+        clientItem: {},
         targetClientIds: '',
         targetClientIdArray: [],
         targetGroupIds: '',
