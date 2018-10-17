@@ -10,6 +10,7 @@ import * as DeptActions from 'modules/DeptModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRCheckConfirm from 'components/GRComponents/GRCheckConfirm';
 import UserRuleSelector from 'components/GROptions/UserRuleSelector';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -50,7 +51,6 @@ class DeptDialog extends Component {
             confirmTitle: '조직정보 등록',
             confirmMsg: '조직정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
             confirmObject: DeptProps.get('editingItem')
         });
     }
@@ -82,7 +82,6 @@ class DeptDialog extends Component {
             confirmTitle: '조직정보 수정',
             confirmMsg: '조직정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditDataAskInherit,
-            confirmOpen: true
         });
     }
     handleEditDataAskInherit = (confirmValue) => {
@@ -93,7 +92,6 @@ class DeptDialog extends Component {
                 confirmTitle: '하위 조직 적용여부',
                 confirmMsg: '하위 조직에도 같은 정책을 반영 하시겠습니까?',
                 handleConfirmResult: this.handleEditConfirmResult,
-                confirmOpen: true
             });
         }
     }
@@ -188,6 +186,7 @@ class DeptDialog extends Component {
                         <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                     </DialogActions>
                     <GRConfirm />
+                    <GRCheckConfirm />
                 </Dialog>
             }
             </div>

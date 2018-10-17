@@ -49,7 +49,6 @@ class ClientUpdateServerManageDialog extends Component {
             confirmTitle: '업데이트서버 정보 등록',
             confirmMsg: '업데이트서버 정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
             confirmObject: ClientUpdateServerProps.get('editingItem')
         });
     }
@@ -70,7 +69,6 @@ class ClientUpdateServerManageDialog extends Component {
             confirmTitle: '업데이트서버 정보 수정',
             confirmMsg: '업데이트서버 정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
-            confirmOpen: true,
             confirmObject: ClientUpdateServerProps.get('editingItem')
         });
     }

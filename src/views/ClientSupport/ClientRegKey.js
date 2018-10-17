@@ -124,7 +124,6 @@ class ClientRegKey extends Component {
       confirmTitle: '단말등록키 삭제',
       confirmMsg: '단말등록키(' + selectedViewItem.get('regKeyNo') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };

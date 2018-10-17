@@ -72,7 +72,6 @@ class ComponentTests extends Component {
       confirmTitle: '단말정책정보 삭제',
       confirmMsg: '단말정책정보(' + selectedViewItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true
     });
   };
   handleDeleteConfirmResult = (confirmValue) => {

@@ -72,7 +72,6 @@ class ServerUrlInfo extends Component {
     GRConfirmActions.showConfirm({
         confirmTitle: '구름관리서버설정 저장',
         confirmMsg: '구름관리서버설정을 저장하시겠습니까?',
-        confirmOpen: true,
         handleConfirmResult: this.handleSaveDataConfirmResult
     });
   }

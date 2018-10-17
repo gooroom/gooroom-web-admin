@@ -151,7 +151,6 @@ class ClientHostNameManage extends Component {
       confirmTitle: 'Hosts 정보 삭제',
       confirmMsg: 'Hosts 정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };

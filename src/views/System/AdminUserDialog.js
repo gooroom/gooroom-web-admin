@@ -57,7 +57,6 @@ class AdminUserDialog extends Component {
             confirmTitle: '관리자계정 등록',
             confirmMsg: '관리자계정을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
             confirmObject: AdminUserProps.get('editingItem')
         });
     }
@@ -81,7 +80,6 @@ class AdminUserDialog extends Component {
         GRConfirmActions.showConfirm({
             confirmTitle: '관리자계정 수정',
             confirmMsg: '관리자계정을 수정하시겠습니까?',
-            confirmOpen: true,
             handleConfirmResult: this.handleEditDataConfirmResult,
             confirmObject: AdminUserProps.get('editingItem')
         });

@@ -72,7 +72,6 @@ class MediaRuleDialog extends Component {
             confirmTitle: '매체제어정책정보 등록',
             confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
             confirmObject: MediaRuleProps.get('editingItem')
         });
     }
@@ -93,7 +92,6 @@ class MediaRuleDialog extends Component {
             confirmTitle: '매체제어정책정보 수정',
             confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
-            confirmOpen: true,
             confirmObject: MediaRuleProps.get('editingItem')
         });
     }

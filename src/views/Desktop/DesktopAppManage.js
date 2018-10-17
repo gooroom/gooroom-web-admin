@@ -151,7 +151,6 @@ class DesktopAppManage extends Component {
       confirmTitle: '데스크톱앱 삭제',
       confirmMsg: '데스크톱앱(' + selectedViewItem.get('appId') + ') 을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };

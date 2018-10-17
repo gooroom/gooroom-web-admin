@@ -148,7 +148,6 @@ class AdminUserManage extends Component {
       confirmTitle: '관리자계정 삭제',
       confirmMsg: '관리자계정(' + selectedViewItem.get('adminId') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };

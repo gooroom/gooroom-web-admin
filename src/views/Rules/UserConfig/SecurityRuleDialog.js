@@ -69,7 +69,6 @@ class SecurityRuleDialog extends Component {
             confirmTitle: '단말보안정책정보 등록',
             confirmMsg: '단말보안정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
             confirmObject: SecurityRuleProps.get('editingItem')
         });
     }
@@ -91,7 +90,6 @@ class SecurityRuleDialog extends Component {
             confirmTitle: '단말보안정책정보 수정',
             confirmMsg: '단말보안정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
-            confirmOpen: true,
             confirmObject: SecurityRuleProps.get('editingItem')
         });
     }

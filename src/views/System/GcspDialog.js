@@ -59,7 +59,6 @@ class GcspDialog extends Component {
             confirmTitle: '클라우드서비스 등록',
             confirmMsg: '클라우드서비스를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
             confirmObject: GcspManageProps.get('editingItem')
         });
     }
@@ -87,7 +86,6 @@ class GcspDialog extends Component {
         GRConfirmActions.showConfirm({
             confirmTitle: '클라우드서비스 수정',
             confirmMsg: '클라우드서비스를 수정하시겠습니까?',
-            confirmOpen: true,
             handleConfirmResult: this.handleEditDataConfirmResult,
             confirmObject: GcspManageProps.get('editingItem')
         });

@@ -157,7 +157,6 @@ class ClientMasterManage extends Component {
         confirmTitle: '단말그룹 삭제',
         confirmMsg: '단말그룹(' + selectedIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
-        confirmOpen: true,
         confirmObject: null
       });
     }
@@ -205,7 +204,6 @@ class ClientMasterManage extends Component {
         confirmTitle: '그룹에 단말 추가',
         confirmMsg: '단말을 그룹 추가하시겠습니까?',
         handleConfirmResult: this.handleClientSelectSaveConfirmResult,
-        confirmOpen: true,
         confirmObject: {
           selectedGroupId: selectedGroupItem.get('grpId'),
           selectedClients: selectedClients
@@ -241,7 +239,6 @@ class ClientMasterManage extends Component {
         confirmTitle: '그룹에서 단말 삭제',
         confirmMsg: '선택하신 단말을 그룹에서 삭제하시겠습니까?',
         handleConfirmResult: this.handleRemoveClientInGroupConfirmResult,
-        confirmOpen: true,
         confirmObject: {
           selectedClients: selectedClients
         }
@@ -276,7 +273,6 @@ class ClientMasterManage extends Component {
         confirmTitle: '단말 삭제',
         confirmMsg: '단말(' + selectedClientIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteClientConfirmResult,
-        confirmOpen: true,
         confirmObject: {selectedClientIds: selectedClientIds}
       });
     }

@@ -74,7 +74,6 @@ class DesktopAppDialog extends Component {
             confirmTitle: '데스크톱앱 등록',
             confirmMsg: '데스크톱앱을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
             confirmObject: DesktopAppProps.get('editingItem')
         });
     }
@@ -95,7 +94,6 @@ class DesktopAppDialog extends Component {
             confirmTitle: '데스크톱앱 수정',
             confirmMsg: '데스크톱앱을 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
-            confirmOpen: true,
             confirmObject: DesktopAppProps.get('editingItem')
         });
     }

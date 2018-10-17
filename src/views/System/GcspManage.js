@@ -130,7 +130,6 @@ class GcspManage extends Component {
       confirmTitle: '클라우드서비스 삭제',
       confirmMsg: '클라우드서비스(' + selectedViewItem.get('gcspId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
       confirmObject: selectedViewItem
     });
   };

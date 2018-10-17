@@ -71,7 +71,6 @@ class UserBasicDialog extends Component {
             confirmTitle: '사용자정보 등록',
             confirmMsg: '사용자정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
             confirmObject: UserProps.get('editingItem')
         });
     }
@@ -95,7 +94,6 @@ class UserBasicDialog extends Component {
             confirmTitle: '사용자정보 수정',
             confirmMsg: '사용자정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
-            confirmOpen: true,
             confirmObject: UserProps.get('editingItem')
         });
     }
