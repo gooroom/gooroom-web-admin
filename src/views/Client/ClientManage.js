@@ -63,7 +63,7 @@ class ClientManage extends Component {
     { id: 'lastLoginDate', isOrder: true, numeric: false, disablePadding: true, label: '최종접속일' },
     { id: 'clientIp', isOrder: true, numeric: false, disablePadding: true, label: '최종접속IP' },
     { id: 'strgSize', isOrder: true, numeric: false, disablePadding: true, label: '용량' },
-    { id: 'totalCnt', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' },
+    { id: 'totalCnt', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' }
   ];
   
   constructor(props) {
