@@ -78,29 +78,16 @@ class DeptDialog extends Component {
 
     handleEditData = (event) => {
         const { DeptProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
+        GRConfirmActions.showCheckConfirm({
             confirmTitle: '조직정보 수정',
             confirmMsg: '조직정보를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditDataAskInherit,
+            confirmCheckMsg: '하위조직 적용여부',
+            handleConfirmResult: this.handleEditConfirmResult,
         });
     }
-    handleEditDataAskInherit = (confirmValue) => {
-        this.handleClose();
-        if(confirmValue) {
-            const { DeptProps, GRConfirmActions } = this.props;
-            GRConfirmActions.showConfirm({
-                confirmTitle: '하위 조직 적용여부',
-                confirmMsg: '하위 조직에도 같은 정책을 반영 하시겠습니까?',
-                handleConfirmResult: this.handleEditConfirmResult,
-            });
-        }
-    }
-    handleEditConfirmResult = (confirmValue) => {
-        let isInherit = false;
-        if(confirmValue) {
-            isInherit = true;
-        }
+    handleEditConfirmResult = (confirmValue, confirmObject, isChecked) => {
 
+        const isInherit = isChecked;
         const { DeptProps, DeptActions, compId } = this.props;
         const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
 
