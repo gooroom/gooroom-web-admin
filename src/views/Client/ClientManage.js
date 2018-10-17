@@ -62,7 +62,7 @@ class ClientManage extends Component {
     { id: 'clientGroupName', isOrder: true, numeric: false,disablePadding: true,label: '단말그룹'},
     { id: 'lastLoginDate', isOrder: true, numeric: false, disablePadding: true, label: '최종접속일' },
     { id: 'clientIp', isOrder: true, numeric: false, disablePadding: true, label: '최종접속IP' },
-    { id: 'homeSize', isOrder: true, numeric: false, disablePadding: true, label: '용량' },
+    { id: 'strgSize', isOrder: true, numeric: false, disablePadding: true, label: '용량' },
     { id: 'totalCnt', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' },
   ];
   
@@ -269,7 +269,7 @@ class ClientManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell} >{n.get('homeSize')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell} >{n.get('strgSize')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('totalCnt')}</TableCell>
                     </TableRow>
                   );
