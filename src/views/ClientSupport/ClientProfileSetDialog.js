@@ -177,26 +177,25 @@ class ClientProfileSetDialog extends Component {
         return (
             <div>
             {(ClientProfileSetProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={ClientProfileSetProps.get('dialogOpen')}>
+            <Dialog open={ClientProfileSetProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <DialogTitle >{title}</DialogTitle>
                 <DialogContent>
-                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
                     <TextField  
                         label="프로파일 이름"
                         value={(editingItem.get('profileNm')) ? editingItem.get('profileNm') : ''}
                         onChange={this.handleValueChange("profileNm")}
-                        className={classNames(classes.fullWidthfullWidth)}
+                        className={classNames(classes.fullWidth)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     <TextField
                         label="프로파일 설명"
                         value={(editingItem.get('profileCmt')) ? editingItem.get('profileCmt') : ''}
                         onChange={this.handleValueChange("profileCmt")}
-                        className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
+                        className={classNames(classes.fullWidth, classes.profileItemRow)}
                         disabled={[ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)}
                     />
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                        <div className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}>
+                        <div className={classNames(classes.fullWidth, classes.profileItemRow)}>
                             <FormLabel>기타 패키지 처리방식</FormLabel>
                             <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={editingItem.get('isRemoval')} row>
                                 <FormControlLabel value="true" control={<Radio />} label="삭제함" />
@@ -209,7 +208,7 @@ class ClientProfileSetDialog extends Component {
                             label="레퍼런스 단말"
                             value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
                             onChange={this.handleValueChange("clientId")}
-                            className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
+                            className={classNames(classes.fullWidth, classes.profileItemRow)}
                             disabled
                         />
                     }
@@ -221,7 +220,7 @@ class ClientProfileSetDialog extends Component {
                                 value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
                                 placeholder="아래 목록에서 단말을 선택하세요."
                                 onChange={this.handleValueChange("clientId")}
-                                className={classNames(classes.fullWidthfullWidth, classes.profileItemRow)}
+                                className={classNames(classes.fullWidth, classes.profileItemRow)}
                             />
                             <div className={classes.profileItemRow}>
                                 <GRClientSelector selectorType='single' 
@@ -241,7 +240,6 @@ class ClientProfileSetDialog extends Component {
                                 height='220' />
                         </div>
                     }
-                    </form>
                 </DialogContent>
                 <DialogActions>
                 {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
