@@ -333,6 +333,24 @@ export const inheritSecurityRuleData = (param) => dispatch => {
     });
 };
 
+// clone rule
+export const cloneSecurityRuleData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createClonedSecurityRule', {
+            'objId': param.objId
+        }).then(
+        (response) => {
+            dispatch({
+                type: CREATE_SECURITYRULE_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {

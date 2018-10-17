@@ -10,6 +10,10 @@ import { connect } from 'react-redux';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import SecurityRuleDialog from './SecurityRuleDialog'
+
+import Button from '@material-ui/core/Button';
+import CopyIcon from '@material-ui/icons/FileCopy';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -30,8 +34,15 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 class SecurityRuleInform extends Component {
 
-  // .................................................
+  handleCopyClick = (selectedViewItem) => {
+    const { SecurityRuleActions } = this.props;
+    SecurityRuleActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: SecurityRuleDialog.TYPE_COPY
+    });
+  };
 
+  // .................................................
   render() {
 
     const { classes } = this.props;
@@ -48,6 +59,14 @@ class SecurityRuleInform extends Component {
           <CardHeader
             title={(selectedViewItem) ? selectedViewItem.get('objNm')  : ''}
             subheader={selectedViewItem.get('objId') + ', ' + formatDateToSimple(selectedViewItem.get('modDate'), 'YYYY-MM-DD')}
+            action={
+              <div style={{width:48,paddingTop:10}}>
+                <Button size="small"
+                  variant="outlined" color="primary" style={{minWidth:32}}
+                  onClick={() => this.handleCopyClick(selectedViewItem)}
+                ><CopyIcon /></Button>
+              </div>
+            }
           />
           <CardContent>
             <Typography component="pre">

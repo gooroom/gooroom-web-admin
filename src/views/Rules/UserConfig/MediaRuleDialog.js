@@ -46,6 +46,7 @@ class MediaRuleDialog extends Component {
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
     static TYPE_INHERIT = 'INHERIT';
+    static TYPE_COPY = 'COPY';
 
     handleClose = (event) => {
         this.props.MediaRuleActions.closeDialog();
@@ -122,6 +123,19 @@ class MediaRuleDialog extends Component {
         });
     }
 
+    handleCopyCreateData = (event, id) => {
+        const { MediaRuleProps, MediaRuleActions } = this.props;
+        MediaRuleActions.cloneMediaRuleData({
+            'objId': MediaRuleProps.getIn(['editingItem', 'objId'])
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: '시스템알림',
+                alertMsg: '매체제어설정을 복사하였습니다.'
+            });
+            refreshDataListInComp(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
+            this.handleClose();
+        });
+    }
 
     handleAddBluetoothMac = () => {
         const { MediaRuleActions } = this.props;
@@ -154,6 +168,8 @@ class MediaRuleDialog extends Component {
             title = "매체제어정책설정 수정";
         } else if(dialogType === MediaRuleDialog.TYPE_INHERIT) {
             title = "매체제어정책설정 상속";
+        } else if(dialogType === MediaRuleDialog.TYPE_COPY) {
+            title = "매체제어정책설정 복사";
         }
 
         return (
@@ -307,10 +323,18 @@ class MediaRuleDialog extends Component {
                     }
                     </div>
                     }
-                    {(dialogType === MediaRuleDialog.TYPE_VIEW || dialogType === MediaRuleDialog.TYPE_INHERIT) &&
+                    {(dialogType === MediaRuleDialog.TYPE_INHERIT) &&
                         <div>
                         <Typography variant="body1">
                             이 설정을 하위 조직에 적용 하시겠습니까?
+                        </Typography>
+                        <MediaRuleViewer viewItem={editingItem} />
+                        </div>
+                    }
+                    {(dialogType === MediaRuleDialog.TYPE_COPY) &&
+                        <div>
+                        <Typography variant="body1">
+                            이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
                         </Typography>
                         <MediaRuleViewer viewItem={editingItem} />
                         </div>
@@ -326,6 +350,9 @@ class MediaRuleDialog extends Component {
                 }
                 {(dialogType === MediaRuleDialog.TYPE_INHERIT) &&
                     <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">적용</Button>
+                }
+                {(dialogType === MediaRuleDialog.TYPE_COPY) &&
+                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
