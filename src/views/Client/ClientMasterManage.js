@@ -66,7 +66,7 @@ class ClientMasterManage extends Component {
 
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      groupId: selectedGroupIdArray.join(','), page:0
+      groupId: selectedGroupIdArray.toJS(), page:0
     }, true);
 
     // show client group info.

@@ -65,11 +65,12 @@ export const closeClientManageInform = (param) => dispatch => {
 
 // ...
 export const readClientListPaged = (module, compId, extParam, isResetSelect=false) => dispatch => {
+
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
 
-    const groupIdParam = (newListParam.get('groupId') && newListParam.get('groupId').length > 0) ? newListParam.get('groupId').join() : '';
+    const groupIdParam = (newListParam.get('groupId') && List(newListParam.get('groupId')).size > 0) ? List(newListParam.get('groupId')).join() : '';
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientListPaged', {
