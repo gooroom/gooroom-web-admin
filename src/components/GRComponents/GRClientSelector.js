@@ -4,6 +4,10 @@ import classNames from "classnames";
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
+import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
+import ClientManageComp from 'views/Client/ClientManageComp';
+
+import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -116,38 +120,63 @@ class GRClientSelector extends Component {
 
   // RENDER...
   render() {
-    const { classes } = this.props;
+    const { classes, compId } = this.props;
     const { groupList, clientList } = this.state;
     const { selectorType, height } = this.props;
 
     return (
-      <div className={classes.csRoot} style={{height: height}}>
-        <div className={classes.csGroupArea}>
-        <List className={classes.csSelectItemList}>
-          {groupList.map(value => (
-            <ListItem key={value.grpId} className={classes.csSelectItem} dense button onClick={() => this.handleClickGroup(value)}>
-              {(selectorType === 'multiple') ?
-                <Checkbox className={classes.csSelectCheck} onChange={this.handleGroupCheckToggle(value)} /> : ''
-              }
-              <ListItemText primary={value.grpNm} />
-            </ListItem>
-          ))}
-        </List>
-        </div>
-        <div className={classes.csClientArea}>
-          <List className={classes.csSelectItemList}>
-            {clientList.map(value => (
-              <ListItem key={value.clientId} className={classes.csSelectItem} dense button onClick={() => this.handleClickClient(value)}>
-              {(selectorType === 'multiple') ?
-                <Checkbox className={classes.csSelectCheck} onChange={this.handleClientCheckToggle(value)} /> : ''
-              }
-                <ListItemText primary={value.clientName} />
-              </ListItem>
-            ))}
-          </List>
-        </div>
-      </div>
-    );
+      <React.Fragment>
+        <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
+
+          <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}}>
+            <ClientGroupComp compId={compId}
+              onSelectAll={this.handleClientGroupSelectAll}
+              onSelect={this.handleClientGroupSelect}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
+
+            <ClientManageComp compId={compId}
+              onSelect={this.handleClientSelect}
+            />
+          
+          </Grid>
+
+        </Grid>
+
+
+      </React.Fragment>
+    )
+
+    // return (
+    //   <div className={classes.csRoot} style={{height: height}}>
+    //     <div className={classes.csGroupArea}>
+    //     <List className={classes.csSelectItemList}>
+    //       {groupList.map(value => (
+    //         <ListItem key={value.grpId} className={classes.csSelectItem} dense button onClick={() => this.handleClickGroup(value)}>
+    //           {(selectorType === 'multiple') ?
+    //             <Checkbox className={classes.csSelectCheck} onChange={this.handleGroupCheckToggle(value)} /> : ''
+    //           }
+    //           <ListItemText primary={value.grpNm} />
+    //         </ListItem>
+    //       ))}
+    //     </List>
+    //     </div>
+    //     <div className={classes.csClientArea}>
+    //       <List className={classes.csSelectItemList}>
+    //         {clientList.map(value => (
+    //           <ListItem key={value.clientId} className={classes.csSelectItem} dense button onClick={() => this.handleClickClient(value)}>
+    //           {(selectorType === 'multiple') ?
+    //             <Checkbox className={classes.csSelectCheck} onChange={this.handleClientCheckToggle(value)} /> : ''
+    //           }
+    //             <ListItemText primary={value.clientName} />
+    //           </ListItem>
+    //         ))}
+    //       </List>
+    //     </div>
+    //   </div>
+    // );
   }
 }
 
