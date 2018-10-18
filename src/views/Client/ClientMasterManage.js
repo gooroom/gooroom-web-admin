@@ -321,6 +321,9 @@ class ClientMasterManage extends Component {
                 </Button>
               </Toolbar>
               <ClientGroupComp compId={compId}
+                selectorType='multiple'
+                hasEdit={true}
+                hasShowRule={true}
                 onSelectAll={this.handleClientGroupSelectAll}
                 onSelect={this.handleClientGroupSelect}
               />
@@ -345,7 +348,7 @@ class ClientMasterManage extends Component {
                   </Grid>
                 </Grid>
               </Toolbar>
-              <ClientManageComp compId={compId}
+              <ClientManageComp compId={compId} selectorType='multiple'
                 onSelect={this.handleClientSelect}
               />
             </Grid>
