@@ -13,7 +13,6 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import MediaRuleDialog from './MediaRuleDialog'
 
 import Button from '@material-ui/core/Button';
-import CopyIcon from '@material-ui/icons/FileCopy';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -26,6 +25,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
+import CopyIcon from '@material-ui/icons/FileCopy';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
@@ -35,7 +36,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class MediaRuleInform extends Component {
 
   handleCopyClick = (selectedViewItem) => {
-    const { MediaRuleActions, compId, targetType } = this.props;
+    const { MediaRuleActions } = this.props;
     MediaRuleActions.showDialog({
       selectedViewItem: selectedViewItem,
       dialogType: MediaRuleDialog.TYPE_COPY
@@ -46,9 +47,9 @@ class MediaRuleInform extends Component {
   render() {
 
     const { classes } = this.props;
+    const { MediaRuleProps, compId } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const { MediaRuleProps, compId } = this.props;
     const informOpen = MediaRuleProps.getIn(['viewItems', compId, 'informOpen']);
     const selectedViewItem = generateConfigObject(MediaRuleProps.getIn(['viewItems', compId, 'selectedViewItem']));
 

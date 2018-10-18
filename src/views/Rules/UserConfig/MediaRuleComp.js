@@ -7,19 +7,18 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as MediaRuleActions from 'modules/MediaRuleModule';
-
-import MediaRuleDialog from './MediaRuleDialog';
 import { generateConfigObject } from './MediaRuleInform';
 import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getRoleTitleClassName } from 'components/GRUtils/GRTableListUtils';
+
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import MediaRuleDialog from './MediaRuleDialog';
+
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-
-import Grid from '@material-ui/core/Grid';
-
-import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 
 import Table from '@material-ui/core/Table';
@@ -59,7 +58,6 @@ class MediaRuleComp extends Component {
   };
 
   // .................................................
-
   render() {
 
     const { classes } = this.props;
@@ -69,14 +67,18 @@ class MediaRuleComp extends Component {
     const selectedObj = (targetType && targetType != '') ? MediaRuleProps.getIn(['viewItems', compId, targetType]) : MediaRuleProps.getIn(['viewItems', compId]);
     const selectedViewItem = (selectedObj) ? selectedObj.get('selectedViewItem') : null;
     const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+
     const selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
     const isDefault = (selectedObj) ? selectedObj.get('isDefault') : null;
     const isDeptRole = (selectedObj) ? selectedObj.get('isDeptRole') : null;
 
     const titleClassName = getRoleTitleClassName(this.props.targetType, isDefault, isDeptRole);
 
+    console.log('compType :::::::::: ', compType);
+
     const viewCompItem = (compType != 'VIEW') ? generateConfigObject(selectedViewItem) : 
       (() => {
+        console.log('@#$%@#$%#$%#$%#%#$#$#$#$%#$%#$@#$#$%#%#@%#$%#$#$%#$%#$%#$%#$%#%#$%#$%#$%#$%#$%@#%');
         if(listAllData && selectedOptionItemId != null) {
           const item = listAllData.find((element) => {
             return element.get('objId') == selectedOptionItemId;
