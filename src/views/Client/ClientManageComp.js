@@ -56,7 +56,7 @@ class ClientManageComp extends Component {
 
   componentDidMount() {
     if(this.props.selectorType && this.props.selectorType == 'multiple') {
-      this.columnHeaders = this.columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
+      this.columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
     }
     this.props.ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId);
   }

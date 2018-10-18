@@ -9,6 +9,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import GRClientSelector from 'components/GRComponents/GRClientSelector';
 import { getMergedObject } from 'components/GRUtils/GRCommonUtils';
+import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
@@ -102,13 +103,14 @@ class ClientProfileSetDialog extends Component {
     handleProfileJobConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientProfileSetProps, ClientProfileSetActions, compId } = this.props;
-            const targetClientIds = (paramObject.get('targetClientIdArray')).map((v) => (v.get('clientId'))).join(',');
-            const targetGroupIds = (paramObject.get('targetGroupIdArray')).map((v) => (v.get('grpId'))).join(',');
+            const { ClientGroupProps, ClientManageProps } = this.props;
+            const selectedClientGroupIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
+            const selectedClientIds = getDataObjectVariableInComp(ClientManageProps, compId, 'selectedIds');
 
             ClientProfileSetActions.createClientProfileSetJob({
                 profileNo: paramObject.get('profileNo'),
-                targetClientIds: targetClientIds,
-                targetClientGroupIds: targetGroupIds,
+                targetClientIds: (selectedClientIds) ? selectedClientIds.join() : '',
+                targetClientGroupIds: (selectedClientGroupIds) ? selectedClientGroupIds.join() : '',
                 isRemoval: paramObject.get('isRemoval')
             }).then((res) => {
                 ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, compId);
@@ -129,18 +131,27 @@ class ClientProfileSetDialog extends Component {
         this.props.ClientProfileSetActions.setEditingItemValue({ name: 'clientNm', value: clientObj.get('clientName') });
     }
 
-    handleSelectClientArray = (value) => {
-        this.props.ClientProfileSetActions.setEditingItemValue({
-          name: 'targetClientIdArray',
-          value: value
-        });
+    handleSelectClientArray = (selectedObj, selectedIds) => {
+        // console.log('handleSelectClientArray selectedObj ::::::::::::::: ', selectedObj);
+        // console.log('handleSelectClientArray selectedIds ::::::::::::::: ', selectedIds);
+
+
+
+        // this.props.ClientProfileSetActions.setEditingItemValue({
+        //   name: 'targetClientIdArray',
+        //   value: selectedIds
+        // });
     }
 
-    handleSelectGroupArray = (value) => {
-        this.props.ClientProfileSetActions.setEditingItemValue({
-          name: 'targetGroupIdArray',
-          value: value
-        });
+    handleSelectGroupArray = (selectedObj, selectedIds) => {
+        // console.log('handleSelectGroupArray selectedObj ::::::::::::::: ', selectedObj);
+        // console.log('handleSelectGroupArray selectedIds ::::::::::::::: ', selectedIds);
+
+
+        // this.props.ClientProfileSetActions.setEditingItemValue({
+        //   name: 'targetGroupIdArray',
+        //   value: selectedIds
+        // });
     }
 
     handleChangeRemoval = key => (event, value) => {
@@ -153,7 +164,7 @@ class ClientProfileSetDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { ClientProfileSetProps } = this.props;
+        const { ClientProfileSetProps, compId } = this.props;
         const dialogType = ClientProfileSetProps.get('dialogType');
         const editingItem = (ClientProfileSetProps.get('editingItem')) ? ClientProfileSetProps.get('editingItem') : null;
 
@@ -189,7 +200,7 @@ class ClientProfileSetDialog extends Component {
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
                         <div className={classNames(classes.fullWidth, classes.profileItemRow)}>
                             <FormLabel>기타 패키지 처리방식</FormLabel>
-                            <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={editingItem.get('isRemoval')} row>
+                            <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={(editingItem.get('isRemoval') == 'true') ? 'true': 'false'} row>
                                 <FormControlLabel value="true" control={<Radio />} label="삭제함" />
                                 <FormControlLabel value="false" control={<Radio />} label="삭제안함" />
                             </RadioGroup>
@@ -212,7 +223,8 @@ class ClientProfileSetDialog extends Component {
                                 className={classNames(classes.fullWidth, classes.profileItemRow)}
                             />
                             <div className={classes.profileItemRow}>
-                                <GRClientSelector selectorType='single' 
+                                <GRClientSelector compId={compId}
+                                    selectorType='single' 
                                     handleClientSelect={this.handleSelectClient} 
                                     height='220' />
                             </div>
@@ -223,7 +235,8 @@ class ClientProfileSetDialog extends Component {
                             <div className={classes.profileLabel}>
                                 <InputLabel >대상 단말</InputLabel>
                             </div>
-                            <GRClientSelector selectorType='multiple' 
+                            <GRClientSelector compId={compId}
+                                selectorType='multiple' 
                                 handleClientSelect={this.handleSelectClientArray} 
                                 handleGroupSelect={this.handleSelectGroupArray} 
                                 height='220' />
@@ -251,7 +264,9 @@ class ClientProfileSetDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientProfileSetProps: state.ClientProfileSetModule
+    ClientProfileSetProps: state.ClientProfileSetModule,
+    ClientGroupProps: state.ClientGroupModule,
+    ClientManageProps: state.ClientManageModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
