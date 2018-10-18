@@ -63,8 +63,6 @@ class ClientGroupComp extends Component {
     if(this.props.selectorType && this.props.selectorType == 'multiple') {
       this.columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
     }
-
-    console.log('this.columnHeaders ::::::::::::::::', this.columnHeaders);
     this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId);
   }
 
@@ -96,7 +94,7 @@ class ClientGroupComp extends Component {
     });
   };
   
-  handleSelectAllClick = (event, checked) => {
+  handleCheckAllClick = (event, checked) => {
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
     const newSelectedIds = setAllSelectedIdsInComp(ClientGroupProps, compId, 'grpId', checked);
     ClientGroupActions.changeCompVariable({
@@ -104,9 +102,50 @@ class ClientGroupComp extends Component {
       value: newSelectedIds,
       compId: compId
     });
+
+    if(this.props.onSelect) {
+      this.props.onSelect(null, newSelectedIds);
+    }
   };
 
-  handleSelectGroup = (event, id) => {
+  getClientGroupRules = (grpId) => {
+    const { ClientGroupProps, compId } = this.props;
+    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
+
+    ClientConfSettingActions.getClientConfByGroupId({
+      compId: compId, groupId: grpId
+    });   
+    ClientHostNameActions.getClientHostNameByGroupId({
+      compId: compId, groupId: grpId
+    });   
+    ClientUpdateServerActions.getClientUpdateServerByGroupId({
+      compId: compId, groupId: grpId
+    });   
+
+    // get browser rule info
+    BrowserRuleActions.getBrowserRuleByGroupId({
+      compId: compId, groupId: grpId
+    });
+    // get media control setting info
+    MediaRuleActions.getMediaRuleByGroupId({
+      compId: compId, groupId: grpId
+    });
+    // get client secu info
+    SecurityRuleActions.getSecurityRuleByGroupId({
+      compId: compId, groupId: grpId
+    });   
+
+  // '데스크톱 정보설정' : 정책 정보 변경
+  // 사용자, 조직
+  // ClientDesktopConfigActions.getClientDesktopConfig({
+  //   compId: compId, desktopConfId: clickedRowObject.get('desktopConfigId')
+  // });   
+
+  }
+
+  handleCheckClick = (event, id) => {
+    event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
     const newSelectedIds = setSelectedIdsInComp(ClientGroupProps, compId, id);
 
@@ -116,53 +155,38 @@ class ClientGroupComp extends Component {
       compId: compId
     });
 
-    this.handleRowClick(event, id);
+    // this.handleRowClick(event, id);
+    if(this.props.onSelect) {
+      this.props.onSelect(getRowObjectById(ClientGroupProps, compId, id, 'grpId'), newSelectedIds);
+    }
+
+    if(this.props.hasShowRule) {
+      this.getClientGroupRules(id);
+    }
   }
 
   handleRowClick = (event, id) => {
     event.stopPropagation();
-    const { ClientGroupProps, compId } = this.props;
-    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
+    const { ClientGroupProps, ClientGroupActions, compId } = this.props;
 
+    // get Object
     const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
-    
-    const newSelectedIds = setSelectedIdsInComp(ClientGroupProps, compId, id);
-    if(this.props.onSelect) {
-      this.props.onSelect(clickedRowObject, newSelectedIds);
+
+    if(this.props.selectorType && this.props.selectorType == 'multiple') {
+      const selectedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
+      if(this.props.onSelect) {
+        this.props.onSelect(clickedRowObject, selectedIds);
+      }
+    } else {
+      ClientGroupActions.changeCompVariable({ name: 'selectedIds', value: id, compId: compId });
+      if(this.props.onSelect) {
+        this.props.onSelect(clickedRowObject, List([id]));
+      }
     }
 
-    // 정책 조회
-    ClientConfSettingActions.getClientConfByGroupId({
-      compId: compId, groupId: id
-    });   
-    ClientHostNameActions.getClientHostNameByGroupId({
-      compId: compId, groupId: id
-    });   
-    ClientUpdateServerActions.getClientUpdateServerByGroupId({
-      compId: compId, groupId: id
-    });   
-
-    // show rules
-    // get browser rule info
-    BrowserRuleActions.getBrowserRuleByGroupId({
-      compId: compId, groupId: id
-    });
-    // get media control setting info
-    MediaRuleActions.getMediaRuleByGroupId({
-      compId: compId, groupId: id
-    });
-    // get client secu info
-    SecurityRuleActions.getSecurityRuleByGroupId({
-      compId: compId, groupId: id
-    });   
-
-    // '데스크톱 정보설정' : 정책 정보 변경
-    // 이것은 사용자, 조직 위주
-    // ClientDesktopConfigActions.getClientDesktopConfig({
-    //   compId: compId, desktopConfId: clickedRowObject.get('desktopConfigId')
-    // });   
-
+    if(this.props.hasShowRule) {
+      this.getClientGroupRules(id);
+    }
   };
 
   isSelected = id => {
@@ -226,7 +250,7 @@ class ClientGroupComp extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            onSelectAllClick={this.handleSelectAllClick}
+            onSelectAllClick={this.handleCheckAllClick}
             selectedIds={listObj.get('selectedIds')}
             listData={listObj.get('listData')}
             columnData={this.columnHeaders}
@@ -254,7 +278,7 @@ class ClientGroupComp extends Component {
               >
                 {(this.props.selectorType && this.props.selectorType == 'multiple') && 
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isSelected} className={classes.grObjInCell} onClick={event => this.handleSelectGroup(event, n.get('grpId'))} />
+                    <Checkbox checked={isSelected} className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('grpId'))} />
                   </TableCell>
                 }
                 <TableCell className={classes.grSmallAndClickCell}>

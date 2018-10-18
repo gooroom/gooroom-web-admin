@@ -102,10 +102,6 @@ class ClientProfileSet extends Component {
         profileCmt: '',
         clientId: '',
         clientItem: {},
-        targetClientIds: '',
-        targetClientIdArray: [],
-        targetGroupIds: '',
-        targetGroupIdArray: [],
         isRemoval: 'false'
       },
       dialogType: ClientProfileSetDialog.TYPE_ADD
@@ -127,16 +123,7 @@ class ClientProfileSet extends Component {
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     ClientProfileSetActions.showDialog({
-      selectedViewItem: {
-        profileNo: selectedViewItem.get('profileNo'),
-        profileNm: selectedViewItem.get('profileNm'),
-        profileCmt: selectedViewItem.get('profileCmt'),
-        targetClientIds: '',
-        targetClientIdArray: [],
-        targetGroupIds: '',
-        targetGroupIdArray: [],
-        isRemoval: 'false'
-      },
+      selectedViewItem: selectedViewItem,
       dialogType: ClientProfileSetDialog.TYPE_PROFILE
     });
   };
