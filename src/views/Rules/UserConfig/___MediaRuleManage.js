@@ -12,6 +12,8 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
+import { generateConfigObject } from './MediaRuleInform';
+
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
@@ -19,7 +21,7 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import MediaRuleDialog from './MediaRuleDialog';
-import MediaRuleSpec from './MediaRuleSpec';
+import MediaRuleInform from './MediaRuleInform';
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -62,7 +64,6 @@ class MediaRuleManage extends Component {
 
     this.state = {
       loading: true,
-      isOpenSpec: false
     }
   }
 
@@ -138,7 +139,7 @@ class MediaRuleManage extends Component {
     const selectedViewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     MediaRuleActions.showDialog({
-      selectedViewItem: MediaRuleSpec.generateConfigObject(selectedViewItem),
+      selectedViewItem: generateConfigObject(selectedViewItem),
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
@@ -167,24 +168,6 @@ class MediaRuleManage extends Component {
     }
   };
 
-  // ===================================================================
-  handleCopyClick = (selectedViewItem) => {
-    const { MediaRuleActions } = this.props;
-    MediaRuleActions.showDialog({
-      selectedViewItem: selectedViewItem,
-      dialogType: MediaRuleDialog.TYPE_COPY
-    });
-  };
-
-  handleEditClick = (viewItem, compType) => {
-    //const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
-    this.props.MediaRuleActions.showDialog({
-      selectedViewItem: viewItem,
-      dialogType: MediaRuleDialog.TYPE_EDIT
-    });
-  };
-  // ===================================================================
-
   render() {
     const { classes } = this.props;
     const { MediaRuleProps } = this.props;
@@ -192,8 +175,6 @@ class MediaRuleManage extends Component {
     const emptyRows = 0;
 
     const listObj = MediaRuleProps.getIn(['viewItems', compId]);
-    //console.log('listObj :::::::::: ', listObj);
-    const selectedItem = (listObj) ? listObj.get('selectedViewItem') : null;
 
     return (
       <div>
@@ -295,13 +276,7 @@ class MediaRuleManage extends Component {
         }
         </GRPane>
         {/* dialog(popup) component area */}
-        <MediaRuleSpec 
-          specType="inform" 
-          isOpen={this.state.isOpenSpec} 
-          selectedItem={selectedItem}
-          handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditClick}
-        />
+        <MediaRuleInform compId={compId} />
         <MediaRuleDialog compId={compId} />
         <GRConfirm />
         
