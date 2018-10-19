@@ -24,6 +24,7 @@ import Typography from "@material-ui/core/Typography";
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
 import Divider from '@material-ui/core/Divider';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -31,7 +32,10 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
+
 import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import AddIcon from '@material-ui/icons/Add';
@@ -164,7 +168,7 @@ class SecurityRuleDialog extends Component {
         return (
             <div>
             {(SecurityRuleProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={SecurityRuleProps.get('dialogOpen')}>
+            <Dialog open={SecurityRuleProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === SecurityRuleDialog.TYPE_EDIT || dialogType === SecurityRuleDialog.TYPE_ADD) &&
@@ -180,21 +184,10 @@ class SecurityRuleDialog extends Component {
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
                     />
-                    {(dialogType === SecurityRuleDialog.TYPE_VIEW) &&
-                        <div>
-                            <Grid container spacing={24} >
-                                <Grid item xs={12}>
-                                </Grid> 
-                            </Grid>
-                        </div>                        
-                    }
                     {(dialogType === SecurityRuleDialog.TYPE_EDIT || dialogType === SecurityRuleDialog.TYPE_ADD) &&
-                        <div className={classes.dialogItemRowBig}>
-
-                            <Grid item xs={12} container 
-                                alignItems="flex-end" direction="row" justify="space-between" 
-                                className={classes.dialogItemRow}>
-                                <Grid item xs={5}>
+                        <div>
+                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+                                <Grid item xs={12} sm={4} md={4}>
                                     <TextField
                                         label="화면보호기 설정시간(분)"
                                         multiline
@@ -203,9 +196,7 @@ class SecurityRuleDialog extends Component {
                                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                     />
                                 </Grid>
-                                <Grid item xs={1}>
-                                </Grid>
-                                <Grid item xs={5} >
+                                <Grid item xs={12} sm={4} md={4}>
                                     <TextField
                                         label="패스워드 변경주기(일)"
                                         multiline
@@ -214,29 +205,30 @@ class SecurityRuleDialog extends Component {
                                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                     />
                                 </Grid>
+                                <Grid item xs={12} sm={4} md={4}>
+                                    <FormControlLabel
+                                        control={
+                                        <Switch onChange={this.handleValueChange('packageHandle')} 
+                                            checked={this.checkAllow(editingItem.get('packageHandle'))}
+                                            color="primary" />
+                                        }
+                                        label={(editingItem.get('packageHandle') == 'allow') ? '패키지추가/삭제 기능차단' : '패키지추가/삭제 기능사용'}
+                                    />
+                                </Grid>
                             </Grid>
-                            
-                            <div className={classes.dialogItemRow}>
-                                <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('packageHandle')} 
-                                        checked={this.checkAllow(editingItem.get('packageHandle'))}
-                                        color="primary" />
-                                    }
-                                    label={(editingItem.get('packageHandle') == 'allow') ? '패키지추가/삭제 기능차단' : '패키지추가/삭제 기능사용'}
-                                />
-                            </div>
-                            <Divider />
-                            <div className={classes.dialogItemRow}>
-                                <FormControlLabel
-                                    control={
-                                    <Switch onChange={this.handleValueChange('state')} 
-                                        checked={this.checkAllow(editingItem.get('state'))}
-                                        color="primary" />
-                                    }
-                                    label={(editingItem.get('state') == 'allow') ? '전체네트워크허용' : '전체네트워크차단'}
-                                />
-                            </div>
+                            <FormControl className={classes.formControl} error aria-describedby="component-error-text">
+                                <InputLabel htmlFor="component-error">Name</InputLabel>
+                                <Input id="component-error" value="this.state.name" onChange={this.handleChange} />
+                                <FormHelperText id="component-error-text">Error</FormHelperText>
+                            </FormControl>
+                            <FormControlLabel
+                                control={
+                                <Switch onChange={this.handleValueChange('state')} 
+                                    checked={this.checkAllow(editingItem.get('state'))}
+                                    color="primary" />
+                                }
+                                label={(editingItem.get('state') == 'allow') ? '전체네트워크허용' : '전체네트워크차단'}
+                            />
                         </div>
                     }
                     </div>

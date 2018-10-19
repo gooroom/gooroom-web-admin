@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -57,7 +58,7 @@ class ClientHostNameSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { ClientHostNameProps, compId } = this.props;
+    const { ClientHostNameProps, compId, targetType } = this.props;
 
     const listAllData = ClientHostNameProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = ClientHostNameProps.getIn(['viewItems', compId, 'selectedOptionItemId']);

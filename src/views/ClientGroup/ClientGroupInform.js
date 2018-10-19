@@ -154,7 +154,7 @@ class ClientGroupInform extends Component {
           ></CardHeader>
           <Divider />
           <CardContent style={{padding:10}}>
-            <Grid container spacing={0}>
+            <Grid container spacing={16}>
               <Grid item xs={12} sm={12} lg={6}>
                 <ClientConfSettingSpec 
                   specType="inform" targetType="GROUP"
@@ -162,16 +162,12 @@ class ClientGroupInform extends Component {
                   handleEditClick={this.handleEditClickForClientConfSetting}
                   inherit={false}
                 />
-              </Grid>
-              <Grid item xs={12} sm={12} lg={6}>
-                <ClientHostNameSpec 
+                <MediaRuleSpec 
                   specType="inform" targetType="GROUP"
-                  selectedItem={selectedClientHostNameItem}
-                  handleEditClick={this.handleEditClickForClientHostName}
+                  selectedItem={selectedMediaRuleItem}
+                  handleEditClick={this.handleEditClickForMediaRule}
                   inherit={false}
                 />
-              </Grid>
-              <Grid item xs={12} sm={12} lg={6}>
                 <ClientUpdateServerSpec 
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientUpdateServerItem}
@@ -186,20 +182,16 @@ class ClientGroupInform extends Component {
                   handleEditClick={this.handleEditClickForBrowserRule}
                   inherit={false}
                 />
-              </Grid>
-              <Grid item xs={12} sm={12} lg={6}>
-                <MediaRuleSpec 
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedMediaRuleItem}
-                  handleEditClick={this.handleEditClickForMediaRule}
-                  inherit={false}
-                />
-              </Grid>
-              <Grid item xs={12} sm={12} lg={6}>
                 <SecurityRuleSpec 
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedSecurityRuleItem}
                   handleEditClick={this.handleEditClickForSecurityRule}
+                  inherit={false}
+                />
+                <ClientHostNameSpec 
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedClientHostNameItem}
+                  handleEditClick={this.handleEditClickForClientHostName}
                   inherit={false}
                 />
               </Grid>

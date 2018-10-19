@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -60,7 +61,7 @@ class ClientConfSettingSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { ClientConfSettingProps, compId } = this.props;
+    const { ClientConfSettingProps, compId, targetType } = this.props;
 
     const selectedViewItem = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = ClientConfSettingProps.getIn(['viewItems', compId, 'listAllData']);

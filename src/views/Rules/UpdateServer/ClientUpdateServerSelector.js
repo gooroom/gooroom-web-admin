@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -64,7 +65,7 @@ class ClientUpdateServerSelector extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { ClientUpdateServerProps, compId } = this.props;
+    const { ClientUpdateServerProps, compId, targetType } = this.props;
 
     const selectedViewItem = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedViewItem']);
     const listAllData = ClientUpdateServerProps.getIn(['viewItems', compId, 'listAllData']);
