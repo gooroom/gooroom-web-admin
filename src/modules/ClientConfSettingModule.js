@@ -137,6 +137,7 @@ export const getClientConfByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_CONFSETTING_SUCCESS,
                 compId: compId,
+                target: 'GROUP',
                 response: response
             });
         }
@@ -270,6 +271,25 @@ export const deleteClientConfSettingData = (param) => dispatch => {
     });
 };
 
+// clone rule
+export const cloneClientConfSettingData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createClonedClientConf', {
+            'objId': param.objId
+        }).then(
+        (response) => {
+            dispatch({
+                type: CREATE_CONFSETTING_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+
 export const addNtpAddress = () => dispatch => {
     return dispatch({
         type: ADD_NTPADDRESS_ITEM
@@ -309,7 +329,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);

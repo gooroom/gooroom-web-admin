@@ -133,6 +133,7 @@ export const getClientUpdateServerByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_UPDATESERVER_SUCCESS,
                 compId: compId,
+                target: 'GROUP',
                 response: response
             });
         }
@@ -204,7 +205,6 @@ export const createClientUpdateServerData = (itemObj) => dispatch => {
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
     });
-
 };
 
 // edit
@@ -266,6 +266,23 @@ export const deleteClientUpdateServerData = (param) => dispatch => {
     });
 };
 
+// clone rule
+export const cloneClientUpdateServerData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createClonedUpdateServerConf', {
+            'objId': param.objId
+        }).then(
+        (response) => {
+            dispatch({
+                type: CREATE_UPDATESERVER_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
 
 export default handleActions({
 
@@ -285,7 +302,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     },
     [GET_UPDATESERVER_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
     },
     [SHOW_UPDATESERVER_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);

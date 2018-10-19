@@ -18,9 +18,6 @@ import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class BrowserRuleViewer extends Component {
 
   render() {

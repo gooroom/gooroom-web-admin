@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
@@ -19,9 +18,6 @@ import TableRow from '@material-ui/core/TableRow';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class MediaRuleViewer extends Component {
 
   render() {

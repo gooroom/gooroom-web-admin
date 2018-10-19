@@ -98,9 +98,10 @@ export const handleGetObjectAction = (state, compId, data, extend, target) => {
     if(data && data.length > 0) {
 
         const ruleGrade = (extend && extend.length > 0) ? extend[0] : '';
+        let selectedOptionItemId = data[0].objId;
 
         if(target && target != '') {
-            let selectedOptionItemId = data[0].objId;
+            
             if(target == 'DEPT' && ruleGrade != 'DEPT') {
                 selectedOptionItemId = '';
             } else if(target == 'USER' && ruleGrade != 'USER') {
