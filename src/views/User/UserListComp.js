@@ -22,7 +22,6 @@ import GRPageHeader from "containers/GRContent/GRPageHeader";
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import UserBasicDialog from "views/User/UserBasicDialog";
-import UserInform from "views/User/UserInform";
 import GRPane from "containers/GRContent/GRPane";
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
