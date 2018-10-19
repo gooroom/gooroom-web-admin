@@ -1,6 +1,16 @@
-
+import React, { Component } from "react";
 import { Map, List, fromJS } from 'immutable';
 
+import Avatar from '@material-ui/core/Avatar';
+import DefaultIcon from '@material-ui/icons/Language';
+import DeptIcon from '@material-ui/icons/BusinessCenter';
+import UserIcon from '@material-ui/icons/Person';
+import GroupIcon from '@material-ui/icons/LaptopChromebook';
+
+import red from '@material-ui/core/colors/red';
+import blue from '@material-ui/core/colors/blue';
+import orange from '@material-ui/core/colors/orange';
+import green from '@material-ui/core/colors/green';
 
 export const refreshDataListInComp = (propObj, callBack) => {
     const viewItems = propObj.get('viewItems');
@@ -93,6 +103,29 @@ export const getRoleTitleClassName = (targetType, isDefault, isDeptRole) => {
             return 'compTitle';
         } else {
             return 'compTitleForBasic';
+        }
+    }
+}
+
+export const getAvatarForRule = (targetType, isDefault, isDeptRole, isUserRole, isGroupRole) => {
+
+    if(isDefault) {
+        return <Avatar aria-label="Recipe" style={{ backgroundColor: red[400] }}><DefaultIcon /></Avatar>;
+    } else if(isDeptRole) {
+        return <Avatar aria-label="Recipe" style={{ backgroundColor: blue[400] }}><DeptIcon /></Avatar>;
+    } else if(isUserRole) {
+        return <Avatar aria-label="Recipe" style={{ backgroundColor: orange[400] }}><UserIcon /></Avatar>;
+    } else if(isGroupRole) {
+        return <Avatar aria-label="Recipe" style={{ backgroundColor: green[400] }}><GroupIcon /></Avatar>;
+    } else {
+        if(targetType == 'USER') {
+            return <Avatar aria-label="Recipe" style={{ backgroundColor: orange[400] }}><UserIcon /></Avatar>;
+        } else if(targetType == 'DEPT') {
+            return <Avatar aria-label="Recipe" style={{ backgroundColor: blue[400] }}><DeptIcon /></Avatar>;
+        } else if(targetType == 'GROUP') {
+            return <Avatar aria-label="Recipe" style={{ backgroundColor: green[400] }}><GroupIcon /></Avatar>;
+        } else {
+            return <Avatar aria-label="Recipe" style={{ backgroundColor: red[400] }}><DefaultIcon /></Avatar>;
         }
     }
 }
