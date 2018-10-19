@@ -50,7 +50,7 @@ class ClientConfSettingSpec extends Component {
     return (
       <React.Fragment>
         {viewItem && 
-        <Card>
+        <Card elevation={4} style={{marginBottom:20}}>
           <CardHeader
             avatar={RuleAvartar}
             title={viewItem.get('objNm') + ' :' + selectedItem.get('isDefault') + ' :' + selectedItem.get('isDeptRole') + ' :' + selectedItem.get('isUserRole') + ' :' + selectedItem.get('isGroupRole')} 

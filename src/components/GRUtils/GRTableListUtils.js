@@ -143,6 +143,8 @@ export const getAvatarForRuleGrade = (targetType, ruleGrade) => {
             return <Avatar aria-label="Recipe" style={{ backgroundColor: blue[400] }}><DeptIcon /></Avatar>;
         } else if(ruleGrade == 'USER') {
             return <Avatar aria-label="Recipe" style={{ backgroundColor: orange[400] }}><UserIcon /></Avatar>;
+        } else if(ruleGrade == 'GROUP') {
+            return <Avatar aria-label="Recipe" style={{ backgroundColor: green[400] }}><GroupIcon /></Avatar>;
         } else {
             return <Avatar aria-label="Recipe" style={{ backgroundColor: red[100] }}><DefaultIcon /></Avatar>;
         }
