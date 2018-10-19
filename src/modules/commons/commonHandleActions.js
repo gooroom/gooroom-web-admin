@@ -38,18 +38,18 @@ export const handleListAction = (state, action) => {
             if(pos < 0) {
                 // no exist or selected id was deleted
                 return state
-                    .setIn(List(targetNames).push('listAllData'), List(data.map((e) => {return Map(e)})))
+                    .setIn(List(targetNames).push('listAllData'), fromJS(data))
                     .setIn(List(targetNames).push('selectedOptionItemId'), '-');
             } else {
                 // before exist and selected id is exist
                 return state
-                    .setIn(List(targetNames).push('listAllData'), List(data.map((e) => {return Map(e)})))
+                    .setIn(List(targetNames).push('listAllData'), fromJS(data))
                     .setIn(List(targetNames).push('selectedOptionItemId'), beforeItemId);
             }
         }
 
-        return state.setIn(targetNames, Map({
-            'listAllData': List(data.map((e) => {return Map(e)}))
+        return state
+            .setIn(targetNames, Map({'listAllData': List(data.map((e) => {return Map(e)}))
         }));
         
     } else {
@@ -96,22 +96,28 @@ export const handleListPagedAction = (state, action) => {
 
 export const handleGetObjectAction = (state, compId, data, extend, target) => {
     if(data && data.length > 0) {
-        const isDefault = (extend && extend.length > 0 && extend[0] === 'DEFAULT') ? true: false;
-        const isDeptRole = (extend && extend.length > 0 && extend[0] === 'DEPT') ? true: false;
+
+        const ruleGrade = (extend && extend.length > 0) ? extend[0] : '';
 
         if(target && target != '') {
+            let selectedOptionItemId = data[0].objId;
+            if(target == 'DEPT' && ruleGrade != 'DEPT') {
+                selectedOptionItemId = '';
+            } else if(target == 'USER' && ruleGrade != 'USER') {
+                selectedOptionItemId = '';
+            } else if(target == 'GROUP' && ruleGrade != 'GROUP') {
+                selectedOptionItemId = '';
+            }
             return state
             .setIn(['viewItems', compId, target, 'selectedViewItem'], fromJS(data[0]))
-            .setIn(['viewItems', compId, target, 'selectedOptionItemId'], (isDefault) ? '' : data[0].objId)
-            .setIn(['viewItems', compId, target, 'isDefault'], isDefault)
-            .setIn(['viewItems', compId, target, 'isDeptRole'], isDeptRole)
+            .setIn(['viewItems', compId, target, 'selectedOptionItemId'], selectedOptionItemId)
+            .setIn(['viewItems', compId, target, 'ruleGrade'], (extend && extend.length > 0) ? extend[0] : '')
             .setIn(['viewItems', compId, target, 'informOpen'], true);
         } else {
             return state
             .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
-            .setIn(['viewItems', compId, 'selectedOptionItemId'], (isDefault) ? '' : data[0].objId)
-            .setIn(['viewItems', compId, 'isDefault'], isDefault)
-            .setIn(['viewItems', compId, 'isDeptRole'], isDeptRole)
+            .setIn(['viewItems', compId, 'selectedOptionItemId'], selectedOptionItemId)
+            .setIn(['viewItems', compId, 'ruleGrade'], (extend && extend.length > 0) ? extend[0] : '')
             .setIn(['viewItems', compId, 'informOpen'], true);
         }
     } else  {
