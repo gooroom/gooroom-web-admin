@@ -25,7 +25,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class ClientHostNameManageDialog extends Component {
+class ClientHostNameDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
@@ -90,11 +90,11 @@ class ClientHostNameManageDialog extends Component {
         const editingItem = (ClientHostNameProps.get('editingItem')) ? ClientHostNameProps.get('editingItem') : null;
 
         let title = "";
-        if(dialogType === ClientHostNameManageDialog.TYPE_ADD) {
+        if(dialogType === ClientHostNameDialog.TYPE_ADD) {
             title = "Hosts정책 등록";
-        } else if(dialogType === ClientHostNameManageDialog.TYPE_VIEW) {
+        } else if(dialogType === ClientHostNameDialog.TYPE_VIEW) {
             title = "Hosts정책 정보";
-        } else if(dialogType === ClientHostNameManageDialog.TYPE_EDIT) {
+        } else if(dialogType === ClientHostNameDialog.TYPE_EDIT) {
             title = "Hosts정책 수정";
         }
 
@@ -110,7 +110,7 @@ class ClientHostNameManageDialog extends Component {
                         value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                         onChange={this.handleValueChange("objNm")}
                         className={classes.fullWidth}
-                        disabled={(dialogType === ClientHostNameManageDialog.TYPE_VIEW)}
+                        disabled={(dialogType === ClientHostNameDialog.TYPE_VIEW)}
                     />
                     <TextField
                         id="comment"
@@ -118,9 +118,9 @@ class ClientHostNameManageDialog extends Component {
                         value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange("comment")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === ClientHostNameManageDialog.TYPE_VIEW)}
+                        disabled={(dialogType === ClientHostNameDialog.TYPE_VIEW)}
                     />
-                    {(dialogType === ClientHostNameManageDialog.TYPE_VIEW) &&
+                    {(dialogType === ClientHostNameDialog.TYPE_VIEW) &&
                         <div>
                             <TextField
                                 label="Hosts 정보"
@@ -131,7 +131,7 @@ class ClientHostNameManageDialog extends Component {
                             />
                         </div>                        
                     }
-                    {(dialogType === ClientHostNameManageDialog.TYPE_EDIT || dialogType === ClientHostNameManageDialog.TYPE_ADD) &&
+                    {(dialogType === ClientHostNameDialog.TYPE_EDIT || dialogType === ClientHostNameDialog.TYPE_ADD) &&
                         <div>
                             <TextField
                                 label="Hosts 정보"
@@ -145,10 +145,10 @@ class ClientHostNameManageDialog extends Component {
                 </form>
 
                 <DialogActions>
-                {(dialogType === ClientHostNameManageDialog.TYPE_ADD) &&
+                {(dialogType === ClientHostNameDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
                 }
-                {(dialogType === ClientHostNameManageDialog.TYPE_EDIT) &&
+                {(dialogType === ClientHostNameDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
@@ -171,5 +171,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameManageDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameDialog));
 

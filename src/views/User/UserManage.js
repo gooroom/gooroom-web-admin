@@ -105,20 +105,18 @@ class UserManage extends Component {
     
     // get browser rule info
     BrowserRuleActions.getBrowserRuleByUserId({ compId: compId, userId: userId });
-
     // get media control setting info
     MediaRuleActions.getMediaRuleByUserId({ compId: compId, userId: userId });
-
     // get client secu info
     SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
-
+    
     // show user inform pane.
     UserActions.showInform({ compId: compId, selectedViewItem: clickedRowObject });
   };
 
   handleSelectBtnClick = () => {
     const { UserActions, UserProps } = this.props;
-    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId);
+    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {page: 0});
   };
 
 

@@ -8,6 +8,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
+import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -18,12 +20,9 @@ import Select from '@material-ui/core/Select';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
-import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -56,6 +55,15 @@ class BrowserRuleSelector extends Component {
     });
   };
 
+  // ===================================================================
+  handleEditClickForBrowserRule = (viewItem, compType) => {
+    this.props.BrowserRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: BrowserRuleDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+  
   // .................................................
   render() {
     const { classes } = this.props;
@@ -68,6 +76,16 @@ class BrowserRuleSelector extends Component {
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = '-';
     }
+
+    let selectedBrowserRuleItem = null;
+    if(listAllData && listAllData.size > 0) {
+      const selectedData = listAllData.find((element) => {
+        return element.get('objId') == selectedOptionItemId;
+      });
+      if(selectedData) {
+        selectedBrowserRuleItem = Map({'selectedViewItem': selectedData});
+      }      
+    };
 
     return (
       <Card className={classes.card}>
@@ -87,11 +105,10 @@ class BrowserRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <BrowserRuleComp
-            compId={compId}
-            objId={selectedOptionItemId}
-            compType="VIEW"
-            targetType={targetType}
+          <BrowserRuleSpec 
+            specType="inform" targetType={targetType}
+            selectedItem={selectedBrowserRuleItem}
+            handleEditClick={this.handleEditClickForBrowserRule}
           />
         }
         </CardContent>

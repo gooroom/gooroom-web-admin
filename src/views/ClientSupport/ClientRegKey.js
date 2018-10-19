@@ -78,7 +78,7 @@ class ClientRegKey extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientRegKeyActions, ClientRegKeyProps } = this.props;
-    ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, this.props.match.params.grMenuId);
+    ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, this.props.match.params.grMenuId, {page: 0});
   };
   
   handleRowClick = (event, id) => {

@@ -12,8 +12,6 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import { generateConfigObject } from './ClientConfSettingInform';
-
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
@@ -21,20 +19,18 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
-import ClientConfSettingInform from './ClientConfSettingInform';
+import ClientConfSettingSpec from './ClientConfSettingSpec';
+
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
@@ -58,14 +54,6 @@ class ClientConfSetting extends Component {
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    }
-  }
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -94,7 +82,7 @@ class ClientConfSetting extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId);
+    ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId, {page: 0});
   };
 
   handleKeywordChange = (name, value) => {
@@ -138,7 +126,7 @@ class ClientConfSetting extends Component {
     const selectedViewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientConfSettingActions.showDialog({
-      selectedViewItem: generateConfigObject(selectedViewItem),
+      selectedViewItem: ClientConfSettingSpec.generateClientConfSettingObject(selectedViewItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -166,6 +154,23 @@ class ClientConfSetting extends Component {
     }
   };
 
+  // ===================================================================
+  handleCopyClick = (selectedViewItem) => {
+    const { ClientConfSettingActions } = this.props;
+    ClientConfSettingActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: ClientConfSettingDialog.TYPE_COPY
+    });
+  };
+
+  handleEditClick = (viewItem, compType) => {
+    this.props.ClientConfSettingActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: ClientConfSettingDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+  
   // .................................................
   render() {
     const { classes } = this.props;
@@ -173,7 +178,7 @@ class ClientConfSetting extends Component {
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientConfSettingProps.listParam.rowsPerPage - ClientConfSettingProps.listData.length;
 
-    const listObj = ClientConfSettingProps.getIn(['viewItems', compId]);
+    const selectedItem = ClientConfSettingProps.getIn(['viewItems', compId]);
 
     return (
       <React.Fragment>
@@ -204,19 +209,19 @@ class ClientConfSetting extends Component {
           </Grid>            
 
           {/* data area */}
-          {(listObj) && 
+          {(selectedItem) && 
           <div>
             <Table>
               <GRCommonTableHead
                 classes={classes}
                 keyId="objId"
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                orderDir={selectedItem.getIn(['listParam', 'orderDir'])}
+                orderColumn={selectedItem.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData').map(n => {
+                {selectedItem.get('listData').map(n => {
                   return (
                     <TableRow 
                       hover
@@ -252,10 +257,10 @@ class ClientConfSetting extends Component {
             </Table>
             <TablePagination
               component='div'
-              count={listObj.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={listObj.getIn(['listParam', 'page'])}
+              count={selectedItem.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={selectedItem.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={selectedItem.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={selectedItem.getIn(['listParam', 'page'])}
               backIconButtonProps={{
                 'aria-label': 'Previous Page'
               }}
@@ -269,7 +274,12 @@ class ClientConfSetting extends Component {
           }
         </GRPane>
         {/* dialog(popup) component area */}
-        <ClientConfSettingInform compId={compId} />
+        <ClientConfSettingSpec 
+          specType="inform" 
+          selectedItem={selectedItem}
+          handleCopyClick={this.handleCopyClick}
+          handleEditClick={this.handleEditClick}
+        />
         <ClientConfSettingDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>

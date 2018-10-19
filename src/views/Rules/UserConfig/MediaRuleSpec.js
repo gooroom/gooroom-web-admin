@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Map, List, fromJS } from 'immutable';
+import { Map, List } from 'immutable';
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -7,20 +7,15 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getRoleTitleClassName } from 'components/GRUtils/GRTableListUtils';
+import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import MediaRuleDialog from './MediaRuleDialog';
 
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -39,14 +34,12 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 class MediaRuleSpec extends Component {
 
-  
-
   handleInheritClick = (objId, compType) => {
     const { MediaRuleProps, MediaRuleActions, compId, targetType } = this.props;
     const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
 
     MediaRuleActions.showDialog({
-      selectedViewItem: generateConfigObject(selectedViewItem),
+      selectedViewItem: generateMediaRuleObject(selectedViewItem),
       dialogType: MediaRuleDialog.TYPE_INHERIT
     });
   };
@@ -55,48 +48,24 @@ class MediaRuleSpec extends Component {
   render() {
 
     const { classes } = this.props;
-    const { specType, isOpen, selectedItem } = this.props;
-    const { MediaRuleProps, compId, compType, targetType } = this.props;
+    const { compId, compType, targetType, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    const viewItem = (selectedItem) ? generateConfigObject(selectedItem) : null;
-
-    const selectedObj = (targetType && targetType != '') ? MediaRuleProps.getIn(['viewItems', compId, targetType]) : MediaRuleProps.getIn(['viewItems', compId]);
-    const selectedViewItem = (selectedObj) ? selectedObj.get('selectedViewItem') : null;
-    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
-
-    const selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
-    const isDefault = (selectedObj) ? selectedObj.get('isDefault') : null;
-    const isDeptRole = (selectedObj) ? selectedObj.get('isDeptRole') : null;
-
-    const titleClassName = getRoleTitleClassName(this.props.targetType, isDefault, isDeptRole);
-
-    console.log('specType :::::::::: ', specType);
-    console.log('selectedItem :::::::::: ', (selectedItem) ? selectedItem.toJS() : null);
-
-    // const viewCompItem = (specType != 'VIEW') ? generateConfigObject(selectedItem) : 
-    //   (() => {
-    //     console.log('@#$%@#$%#$%#$%#%#$#$#$#$%#$%#$@#$#$%#%#@%#$%#$#$%#$%#$%#$%#$%#%#$%#$%#$%#$%#$%@#%');
-    //     if(listAllData && selectedOptionItemId != null) {
-    //       const item = listAllData.find((element) => {
-    //         return element.get('objId') == selectedOptionItemId;
-    //       });
-    //       if(item) {
-    //         return generateConfigObject(fromJS(item.toJS()));
-    //       } else {
-    //         return null;
-    //       }
-    //     }
-    //   })()
-    // ;
-
+    let viewItem = null;
+    let RuleAvartar = null;
+    if(selectedItem) {
+      viewItem = generateMediaRuleObject(selectedItem.get('selectedViewItem'));
+      RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+    }
+    
     return (
       <React.Fragment>
         {viewItem && 
           <Card >
 
             <CardHeader
-              title={viewItem.get('objNm')}
+              avatar={RuleAvartar}
+              title={viewItem.get('objNm') + ' :' + selectedItem.get('isDefault') + ' :' + selectedItem.get('isDeptRole') + ' :' + selectedItem.get('isUserRole') + ' :' + selectedItem.get('isGroupRole')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
@@ -104,11 +73,13 @@ class MediaRuleSpec extends Component {
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.handleEditClick(viewItem, compType)}
                   ><SettingsApplicationsIcon /></Button>
+                  {(this.props.handleCopyClick) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.handleCopyClick(viewItem)}
                   ><CopyIcon /></Button>
-                  {(this.props.inherit && !isDefault) && 
+                  }
+                  {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.handleInheritClick(viewItem.get('objId'), compType)}
@@ -185,8 +156,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(MediaRuleSpec));
 
-
-export const generateConfigObject = (param) => {
+export const generateMediaRuleObject = (param) => {
 
   if(param) {
     let usbMemory = '';
@@ -201,7 +171,7 @@ export const generateConfigObject = (param) => {
     let keyboard = '';
     let mouse = '';
     let macAddress = [];
-    
+
     param.get('propList').forEach(function(e) {
       const ename = e.get('propNm');
       const evalue = e.get('propValue');

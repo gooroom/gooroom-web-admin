@@ -118,14 +118,35 @@ export const getAvatarForRule = (targetType, isDefault, isDeptRole, isUserRole, 
     } else if(isGroupRole) {
         return <Avatar aria-label="Recipe" style={{ backgroundColor: green[400] }}><GroupIcon /></Avatar>;
     } else {
-        if(targetType == 'USER') {
-            return <Avatar aria-label="Recipe" style={{ backgroundColor: orange[400] }}><UserIcon /></Avatar>;
-        } else if(targetType == 'DEPT') {
-            return <Avatar aria-label="Recipe" style={{ backgroundColor: blue[400] }}><DeptIcon /></Avatar>;
-        } else if(targetType == 'GROUP') {
-            return <Avatar aria-label="Recipe" style={{ backgroundColor: green[400] }}><GroupIcon /></Avatar>;
+        if(targetType) {
+            if(targetType == 'USER') {
+                return <Avatar aria-label="Recipe" style={{ backgroundColor: orange[400] }}><UserIcon /></Avatar>;
+            } else if(targetType == 'DEPT') {
+                return <Avatar aria-label="Recipe" style={{ backgroundColor: blue[400] }}><DeptIcon /></Avatar>;
+            } else if(targetType == 'GROUP') {
+                return <Avatar aria-label="Recipe" style={{ backgroundColor: green[400] }}><GroupIcon /></Avatar>;
+            } else {
+                return <Avatar aria-label="Recipe" style={{ backgroundColor: red[400] }}><DefaultIcon /></Avatar>;
+            }
         } else {
             return <Avatar aria-label="Recipe" style={{ backgroundColor: red[400] }}><DefaultIcon /></Avatar>;
         }
+    }
+}
+
+export const getAvatarForRuleGrade = (targetType, ruleGrade) => {
+
+    if(ruleGrade) {
+        if(ruleGrade == 'DEFAULT') {
+            return <Avatar aria-label="Recipe" style={{ backgroundColor: red[400] }}><DefaultIcon /></Avatar>;
+        } else if(ruleGrade == 'DEPT') {
+            return <Avatar aria-label="Recipe" style={{ backgroundColor: blue[400] }}><DeptIcon /></Avatar>;
+        } else if(ruleGrade == 'USER') {
+            return <Avatar aria-label="Recipe" style={{ backgroundColor: orange[400] }}><UserIcon /></Avatar>;
+        } else {
+            return <Avatar aria-label="Recipe" style={{ backgroundColor: red[100] }}><DefaultIcon /></Avatar>;
+        }
+    } else {
+        return <Avatar aria-label="Recipe" style={{ backgroundColor: red[100] }}><DefaultIcon /></Avatar>;
     }
 }

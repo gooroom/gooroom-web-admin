@@ -11,8 +11,11 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils'; 
 
+import ClientUpdateServerViewer from './ClientUpdateServerViewer';
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
@@ -25,11 +28,12 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class ClientUpdateServerManageDialog extends Component {
+class ClientUpdateServerDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+    static TYPE_COPY = 'COPY';
 
     handleClose = (event) => {
         this.props.ClientUpdateServerActions.closeDialog();
@@ -90,94 +94,55 @@ class ClientUpdateServerManageDialog extends Component {
         const editingItem = (ClientUpdateServerProps.get('editingItem')) ? ClientUpdateServerProps.get('editingItem') : null;
 
         let title = "";
-        if(dialogType === ClientUpdateServerManageDialog.TYPE_ADD) {
+        if(dialogType === ClientUpdateServerDialog.TYPE_ADD) {
             title = "업데이트서버정책 등록";
-        } else if(dialogType === ClientUpdateServerManageDialog.TYPE_VIEW) {
+        } else if(dialogType === ClientUpdateServerDialog.TYPE_VIEW) {
             title = "업데이트서버정책 정보";
-        } else if(dialogType === ClientUpdateServerManageDialog.TYPE_EDIT) {
+        } else if(dialogType === ClientUpdateServerDialog.TYPE_EDIT) {
             title = "업데이트서버정책 수정";
+        } else if(dialogType === ClientUpdateServerDialog.TYPE_COPY) {
+            title = "업데이트서버정책 복사";
         }
 
         return (
             <div>
             {(ClientUpdateServerProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={ClientUpdateServerProps.get('dialogOpen')}>
+            <Dialog open={ClientUpdateServerProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={classes.dialogContainer}>
-
-                    <TextField
-                        id="objNm"
-                        label="이름"
-                        value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                        onChange={this.handleValueChange("objNm")}
-                        className={classes.fullWidth}
-                        disabled={(dialogType === ClientUpdateServerManageDialog.TYPE_VIEW)}
-                    />
-                    <TextField
-                        id="comment"
-                        label="설명"
-                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                        onChange={this.handleValueChange("comment")}
-                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === ClientUpdateServerManageDialog.TYPE_VIEW)}
-                    />
-                    {(dialogType === ClientUpdateServerManageDialog.TYPE_VIEW) &&
-                        <div>
-                            <TextField
-                                label="주 OS 정보"
-                                multiline
-                                value={(editingItem.get('mainos')) ? editingItem.get('mainos') : ''}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                disabled
-                            />
-                            <TextField
-                                label="기반 OS 정보"
-                                multiline
-                                value={(editingItem.get('extos')) ? editingItem.get('extos') : ''}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                disabled
-                            />
-                            <TextField
-                                label="gooroom.pref"
-                                multiline
-                                value={(editingItem.get('priorities')) ? editingItem.get('priorities') : ''}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                disabled
-                            />
-                        </div>                        
+                <DialogContent>
+                    {(dialogType === ClientUpdateServerDialog.TYPE_EDIT || dialogType === ClientUpdateServerDialog.TYPE_ADD) &&
+                    <div>
+                        <TextField label="이름" className={classes.fullWidth}
+                            value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            onChange={this.handleValueChange("objNm")} />
+                        <TextField label="설명" className={classes.fullWidth}
+                            value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                            onChange={this.handleValueChange("comment")} />
+                        <TextField label="주 OS 정보" multiline className={classes.fullWidth}
+                            value={(editingItem.get('mainos')) ? editingItem.get('mainos') : ''}
+                            onChange={this.handleValueChange("mainos")} />
+                        <TextField label="기반 OS 정보" multiline className={classes.fullWidth}
+                            value={(editingItem.get('extos')) ? editingItem.get('extos') : ''}
+                            onChange={this.handleValueChange("extos")} />
+                        <TextField label="gooroom.pref" multiline className={classes.fullWidth}
+                            value={(editingItem.get('priorities')) ? editingItem.get('priorities') : ''}
+                            onChange={this.handleValueChange("priorities")} />
+                    </div>
                     }
-                    {(dialogType === ClientUpdateServerManageDialog.TYPE_EDIT || dialogType === ClientUpdateServerManageDialog.TYPE_ADD) &&
+                    {(dialogType === ClientUpdateServerDialog.TYPE_COPY) &&
                         <div>
-                            <TextField
-                                label="주 OS 정보"
-                                multiline
-                                value={(editingItem.get('mainos')) ? editingItem.get('mainos') : ''}
-                                onChange={this.handleValueChange("mainos")}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            />
-                            <TextField
-                                label="기반 OS 정보"
-                                multiline
-                                value={(editingItem.get('extos')) ? editingItem.get('extos') : ''}
-                                onChange={this.handleValueChange("extos")}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            />
-                            <TextField
-                                label="gooroom.pref"
-                                multiline
-                                value={(editingItem.get('priorities')) ? editingItem.get('priorities') : ''}
-                                onChange={this.handleValueChange("priorities")}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            />
+                        <Typography variant="body1">
+                            이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
+                        </Typography>
+                        <ClientUpdateServerViewer viewItem={editingItem} />
                         </div>
                     }
-                </form>
-
+                </DialogContent>
                 <DialogActions>
-                {(dialogType === ClientUpdateServerManageDialog.TYPE_ADD) &&
+                {(dialogType === ClientUpdateServerDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
                 }
-                {(dialogType === ClientUpdateServerManageDialog.TYPE_EDIT) &&
+                {(dialogType === ClientUpdateServerDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
@@ -200,5 +165,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientUpdateServerManageDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientUpdateServerDialog));
 

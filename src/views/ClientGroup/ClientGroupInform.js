@@ -9,6 +9,15 @@ import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import Grid from '@material-ui/core/Grid';
@@ -23,12 +32,19 @@ import AddIcon from '@material-ui/icons/Add';
 
 import ClientGroupDialog from './ClientGroupDialog';
 
-import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
-import ClientHostNameComp from 'views/Rules/HostName/ClientHostNameComp';
-import ClientUpdateServerComp from 'views/Rules/UpdateServer/ClientUpdateServerComp';
-import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
-import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
-import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
+import ClientConfSettingDialog from 'views/Rules/ClientConfig/ClientConfSettingDialog';
+import ClientConfSettingSpec from 'views/Rules/ClientConfig/ClientConfSettingSpec';
+import ClientHostNameDialog from 'views/Rules/HostName/ClientHostNameDialog';
+import ClientHostNameSpec from 'views/Rules/HostName/ClientHostNameSpec';
+import ClientUpdateServerDialog from 'views/Rules/UpdateServer/ClientUpdateServerDialog';
+import ClientUpdateServerSpec from 'views/Rules/UpdateServer/ClientUpdateServerSpec';
+
+import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
+import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
+import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
+import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
+import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
+import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 
 import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
 
@@ -53,12 +69,62 @@ class ClientGroupInform extends Component {
     });
   };
 
+
+  // ===================================================================
+  handleEditClickForClientConfSetting = (viewItem, compType) => {
+    this.props.ClientConfSettingActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: ClientConfSettingDialog.TYPE_EDIT
+    });
+  };
+  handleEditClickForClientHostName = (viewItem, compType) => {
+    this.props.ClientHostNameActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: ClientHostNameDialog.TYPE_EDIT
+    });
+  };
+  handleEditClickForClientUpdateServer = (viewItem, compType) => {
+    this.props.ClientUpdateServerActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: ClientUpdateServerDialog.TYPE_EDIT
+    });
+  };
+  handleEditClickForMediaRule = (viewItem, compType) => {
+    this.props.MediaRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: MediaRuleDialog.TYPE_EDIT
+    });
+  };
+  handleEditClickForBrowserRule = (viewItem, compType) => {
+    this.props.BrowserRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: BrowserRuleDialog.TYPE_EDIT
+    });
+  };
+  handleEditClickForSecurityRule = (viewItem, compType) => {
+    this.props.SecurityRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: SecurityRuleDialog.TYPE_EDIT
+    });
+  };
+
+  // ===================================================================
+  
   render() {
 
     const { compId, ClientGroupProps } = this.props;
+
     const informOpen = ClientGroupProps.getIn(['viewItems', compId, 'informOpen']);
     const selectedViewItem = ClientGroupProps.getIn(['viewItems', compId, 'selectedViewItem']);
 
+    const selectedClientConfSettingItem = this.props.ClientConfSettingProps.getIn(['viewItems', compId, 'GROUP']);
+    const selectedClientHostNameItem = this.props.ClientHostNameProps.getIn(['viewItems', compId, 'GROUP`']);
+    const selectedClientUpdateServerItem = this.props.ClientUpdateServerProps.getIn(['viewItems', compId, 'GROUP']);
+
+    const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'GROUP']);
+    const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'GROUP']);
+    const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'GROUP']);
+    
     let groupInfo = '';
     if(selectedViewItem) {
       groupInfo = selectedViewItem.get('grpId');
@@ -90,22 +156,52 @@ class ClientGroupInform extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={0}>
               <Grid item xs={12} sm={12} lg={6}>
-                <ClientConfSettingComp compId={compId} targetType="GROUP" inherit={false} />
+                <ClientConfSettingSpec 
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedClientConfSettingItem}
+                  handleEditClick={this.handleEditClickForClientConfSetting}
+                  inherit={false}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <ClientHostNameComp compId={compId} targetType="GROUP" inherit={false} />
+                <ClientHostNameSpec 
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedClientHostNameItem}
+                  handleEditClick={this.handleEditClickForClientHostName}
+                  inherit={false}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <ClientUpdateServerComp compId={compId} targetType="GROUP" inherit={false} />
+                <ClientUpdateServerSpec 
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedClientUpdateServerItem}
+                  handleEditClick={this.handleEditClickForClientUpdateServer}
+                  inherit={false}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <BrowserRuleComp compId={compId} targetType="GROUP" inherit={false} />
+                <BrowserRuleSpec 
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedBrowserRuleItem}
+                  handleEditClick={this.handleEditClickForBrowserRule}
+                  inherit={false}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <MediaRuleComp compId={compId} targetType="GROUP" inherit={false} />
+                <MediaRuleSpec 
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedMediaRuleItem}
+                  handleEditClick={this.handleEditClickForMediaRule}
+                  inherit={false}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <SecurityRuleComp compId={compId} targetType="GROUP" inherit={false} />
+                <SecurityRuleSpec 
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedSecurityRuleItem}
+                  handleEditClick={this.handleEditClickForSecurityRule}
+                  inherit={false}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfigComp compId={compId} targetType="GROUP" inherit={false} />
@@ -123,12 +219,28 @@ class ClientGroupInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule
+  ClientGroupProps: state.ClientGroupModule,
+
+  ClientConfSettingProps: state.ClientConfSettingModule,
+  ClientHostNameProps: state.ClientHostNameModule,
+  ClientUpdateServerProps: state.ClientUpdateServerModule,
+  
+  MediaRuleProps: state.MediaRuleModule,
+  BrowserRuleProps: state.BrowserRuleModule,
+  SecurityRuleProps: state.SecurityRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+  
+  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupInform));
