@@ -174,7 +174,7 @@ class ClientGroupComp extends Component {
 
     if(this.props.selectorType && this.props.selectorType == 'multiple') {
       const selectedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
-      if(this.props.onSelect) {
+      if(selectedIds && this.props.onSelect) {
         this.props.onSelect(clickedRowObject, selectedIds);
       }
     } else {
