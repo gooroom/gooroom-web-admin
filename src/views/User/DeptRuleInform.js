@@ -11,6 +11,9 @@ import { getViewItem } from 'components/GRUtils/GRCommonUtils';
 
 import * as UserActions from 'modules/UserModule';
 import * as DeptActions from 'modules/DeptModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
 import DeptDialog from './DeptDialog';
 
@@ -24,9 +27,12 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
-import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
-import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
-import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
+import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
+import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
+import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
+import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
+import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
+import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 
 import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
 
@@ -49,14 +55,41 @@ class DeptRuleInform extends Component {
     });
   };
 
+  // ===================================================================
+  handleEditClickForMediaRule = (viewItem, compType) => {
+    //const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
+    this.props.MediaRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: MediaRuleDialog.TYPE_EDIT
+    });
+  };
+  handleEditClickForBrowserRule = (viewItem, compType) => {
+    this.props.BrowserRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: BrowserRuleDialog.TYPE_EDIT
+    });
+  };
+  handleEditClickForSecurityRule = (viewItem, compType) => {
+    this.props.SecurityRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: SecurityRuleDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+
   // .................................................
   render() {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
     const { UserProps, DeptProps, compId } = this.props;
+
     const informOpen = DeptProps.getIn(['viewItems', compId, 'informOpen']);
     const selectedDept = DeptProps.getIn(['viewItems', compId]);
+
+    const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'DEPT']);
+    const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'DEPT']);
+    const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'DEPT']);
 
     return (
       <div style={{marginTop: 10}}>
@@ -78,13 +111,28 @@ class DeptRuleInform extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
               <Grid item xs={12} sm={12} lg={6} >
-                <BrowserRuleComp compId={compId} targetType="DEPT" inherit={true} />
+                <BrowserRuleSpec 
+                  specType="inform" targetType="DEPT"
+                  selectedItem={selectedBrowserRuleItem}
+                  handleEditClick={this.handleEditClickForBrowserRule}
+                  inherit={true}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={6} >
-                <MediaRuleComp compId={compId} targetType="DEPT" inherit={true} />
+                <MediaRuleSpec 
+                  specType="inform" targetType="DEPT"
+                  selectedItem={selectedMediaRuleItem}
+                  handleEditClick={this.handleEditClickForMediaRule}
+                  inherit={true}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={6} >
-                <SecurityRuleComp compId={compId} targetType="DEPT" inherit={true} />
+                <SecurityRuleSpec 
+                  specType="inform" targetType="DEPT"
+                  selectedItem={selectedSecurityRuleItem}
+                  handleEditClick={this.handleEditClickForSecurityRule}
+                  inherit={true}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfigComp compId={compId} targetType="DEPT" inherit={false} />
@@ -101,12 +149,18 @@ class DeptRuleInform extends Component {
 
 const mapStateToProps = (state) => ({
   UserProps: state.UserModule,
-  DeptProps: state.DeptModule
+  DeptProps: state.DeptModule,
+  MediaRuleProps: state.MediaRuleModule,
+  BrowserRuleProps: state.BrowserRuleModule,
+  SecurityRuleProps: state.SecurityRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
-  DeptActions: bindActionCreators(DeptActions, dispatch)
+  DeptActions: bindActionCreators(DeptActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptRuleInform));

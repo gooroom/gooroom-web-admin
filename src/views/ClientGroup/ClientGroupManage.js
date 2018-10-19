@@ -94,7 +94,7 @@ class ClientGroupManage extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId);
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {page: 0});
   };
 
   handleRowClick = (event, id) => {

@@ -12,16 +12,14 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import { generateConfigObject } from './ClientHostNameManageInform';
-
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
-import ClientHostNameManageDialog from './ClientHostNameManageDialog';
-import ClientHostNameManageInform from './ClientHostNameManageInform';
+import ClientHostNameDialog from './ClientHostNameDialog';
+import ClientHostNameSpec from './ClientHostNameSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -59,14 +57,6 @@ class ClientHostNameManage extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    }
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
@@ -94,7 +84,7 @@ class ClientHostNameManage extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId);
+    ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId, {page: 0});
   };
 
   handleKeywordChange = (name, value) => {
@@ -115,7 +105,7 @@ class ClientHostNameManage extends Component {
     // 1. popup dialog
     // ClientHostNameActions.showDialog({
     //   selectedViewItem: viewItem,
-    //   dialogType: ClientHostNameManageDialog.TYPE_VIEW,
+    //   dialogType: ClientHostNameDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
@@ -129,7 +119,7 @@ class ClientHostNameManage extends Component {
   handleCreateButton = () => {
     this.props.ClientHostNameActions.showDialog({
       selectedViewItem: Map(),
-      dialogType: ClientHostNameManageDialog.TYPE_ADD
+      dialogType: ClientHostNameDialog.TYPE_ADD
     });
   }
 
@@ -138,8 +128,8 @@ class ClientHostNameManage extends Component {
     const selectedViewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientHostNameActions.showDialog({
-      selectedViewItem: generateConfigObject(selectedViewItem),
-      dialogType: ClientHostNameManageDialog.TYPE_EDIT
+      selectedViewItem: ClientHostNameSpec.generateClientHostNameObject(selectedViewItem),
+      dialogType: ClientHostNameDialog.TYPE_EDIT
     });
   };
 
@@ -166,6 +156,23 @@ class ClientHostNameManage extends Component {
       });
     }
   };
+
+  // ===================================================================
+  handleCopyClick = (selectedViewItem) => {
+    const { ClientHostNameActions } = this.props;
+    ClientHostNameActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: ClientHostNameDialog.TYPE_COPY
+    });
+  };
+
+  handleEditClick = (viewItem, compType) => {
+    this.props.ClientHostNameActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: ClientHostNameDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
   
   // .................................................
   render() {
@@ -174,7 +181,7 @@ class ClientHostNameManage extends Component {
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientHostNameProps.listParam.rowsPerPage - ClientHostNameProps.listData.length;
 
-    const listObj = ClientHostNameProps.getIn(['viewItems', compId]);
+    const selectedItem = ClientHostNameProps.getIn(['viewItems', compId]);
 
     return (
       <React.Fragment>
@@ -205,19 +212,19 @@ class ClientHostNameManage extends Component {
           </Grid>
 
           {/* data area */}
-          {(listObj) && 
+          {(selectedItem) && 
           <div>
             <Table>
               <GRCommonTableHead
                 classes={classes}
                 keyId="objId"
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                orderDir={selectedItem.getIn(['listParam', 'orderDir'])}
+                orderColumn={selectedItem.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData') && listObj.get('listData').map(n => {
+                {selectedItem.get('listData') && selectedItem.get('listData').map(n => {
                   return (
                     <TableRow
                       hover
@@ -250,10 +257,10 @@ class ClientHostNameManage extends Component {
             </Table>
             <TablePagination
               component='div'
-              count={listObj.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={listObj.getIn(['listParam', 'page'])}
+              count={selectedItem.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={selectedItem.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={selectedItem.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={selectedItem.getIn(['listParam', 'page'])}
               backIconButtonProps={{
                 'aria-label': 'Previous Page'
               }}
@@ -267,8 +274,13 @@ class ClientHostNameManage extends Component {
           }
         </GRPane>
         {/* dialog(popup) component area */}
-        <ClientHostNameManageInform compId={compId} />
-        <ClientHostNameManageDialog compId={compId} />
+        <ClientHostNameSpec 
+          specType="inform" 
+          selectedItem={selectedItem}
+          handleCopyClick={this.handleCopyClick}
+          handleEditClick={this.handleEditClick}
+        />
+        <ClientHostNameDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>
     );

@@ -95,7 +95,7 @@ class ClientPackageComp extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientPackageActions, ClientPackageProps, compId } = this.props;
-    ClientPackageActions.readClientPackageListPaged(ClientPackageProps, compId);
+    ClientPackageActions.readClientPackageListPaged(ClientPackageProps, compId, {page: 0});
   };
 
   handleRowClick = (event, id) => {

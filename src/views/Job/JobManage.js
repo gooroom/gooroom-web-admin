@@ -86,7 +86,7 @@ class JobManage extends Component {
   
   handleSelectBtnClick = () => {
     const { JobManageActions, JobManageProps } = this.props;
-    JobManageActions.readJobManageListPaged(JobManageProps, this.props.match.params.grMenuId);
+    JobManageActions.readJobManageListPaged(JobManageProps, this.props.match.params.grMenuId, {page: 0});
   };
 
   handleRowClick = (event, id) => {

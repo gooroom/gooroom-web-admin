@@ -80,7 +80,7 @@ class ClientProfileSet extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientProfileSetActions, ClientProfileSetProps } = this.props;
-    ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, this.props.match.params.grMenuId);
+    ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, this.props.match.params.grMenuId, {page: 0});
   };
 
   handleRowClick = (event, id) => {

@@ -211,7 +211,7 @@ class ClientGroupComp extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.compId);
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.compId, {page: 0});
   };
 
   render() {

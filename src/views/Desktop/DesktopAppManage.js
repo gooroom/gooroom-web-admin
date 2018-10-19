@@ -93,7 +93,7 @@ class DesktopAppManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { DesktopAppActions, DesktopAppProps } = this.props;
-    DesktopAppActions.readDesktopAppListPaged(DesktopAppProps, this.props.match.params.grMenuId);
+    DesktopAppActions.readDesktopAppListPaged(DesktopAppProps, this.props.match.params.grMenuId, {page: 0});
   };
 
   handleKeywordChange = (name, value) => {

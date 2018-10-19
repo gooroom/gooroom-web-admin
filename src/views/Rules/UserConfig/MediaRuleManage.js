@@ -57,15 +57,6 @@ class MediaRuleManage extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-      isOpenSpec: false
-    }
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
@@ -94,7 +85,7 @@ class MediaRuleManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { MediaRuleActions, MediaRuleProps } = this.props;
-    MediaRuleActions.readMediaRuleListPaged(MediaRuleProps, this.props.match.params.grMenuId);
+    MediaRuleActions.readMediaRuleListPaged(MediaRuleProps, this.props.match.params.grMenuId, {page: 0});
   };
   
   handleKeywordChange = (name, value) => {
@@ -138,7 +129,7 @@ class MediaRuleManage extends Component {
     const selectedViewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     MediaRuleActions.showDialog({
-      selectedViewItem: MediaRuleSpec.generateConfigObject(selectedViewItem),
+      selectedViewItem: MediaRuleSpec.generateMediaRuleObject(selectedViewItem),
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
@@ -177,7 +168,6 @@ class MediaRuleManage extends Component {
   };
 
   handleEditClick = (viewItem, compType) => {
-    //const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
     this.props.MediaRuleActions.showDialog({
       selectedViewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_EDIT
@@ -191,9 +181,7 @@ class MediaRuleManage extends Component {
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;
 
-    const listObj = MediaRuleProps.getIn(['viewItems', compId]);
-    //console.log('listObj :::::::::: ', listObj);
-    const selectedItem = (listObj) ? listObj.get('selectedViewItem') : null;
+    const selectedItem = MediaRuleProps.getIn(['viewItems', compId]);
 
     return (
       <div>
@@ -225,19 +213,19 @@ class MediaRuleManage extends Component {
           </Grid>            
 
           {/* data area */}
-          {(listObj) &&
+          {(selectedItem) &&
           <div>
             <Table>
               <GRCommonTableHead
                 classes={classes}
                 keyId="objId"
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                orderDir={selectedItem.getIn(['listParam', 'orderDir'])}
+                orderColumn={selectedItem.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData').map(n => {
+                {selectedItem.get('listData').map(n => {
                   return (
                     <TableRow 
                       hover
@@ -278,10 +266,10 @@ class MediaRuleManage extends Component {
             </Table>
             <TablePagination
               component='div'
-              count={listObj.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={listObj.getIn(['listParam', 'page'])}
+              count={selectedItem.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={selectedItem.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={selectedItem.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={selectedItem.getIn(['listParam', 'page'])}
               backIconButtonProps={{
                 'aria-label': 'Previous Page'
               }}
@@ -297,7 +285,6 @@ class MediaRuleManage extends Component {
         {/* dialog(popup) component area */}
         <MediaRuleSpec 
           specType="inform" 
-          isOpen={this.state.isOpenSpec} 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}
           handleEditClick={this.handleEditClick}

@@ -12,16 +12,14 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import { generateConfigObject } from './ClientUpdateServerManageInform';
-
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
-import ClientUpdateServerManageDialog from './ClientUpdateServerManageDialog';
-import ClientUpdateServerManageInform from './ClientUpdateServerManageInform';
+import ClientUpdateServerDialog from './ClientUpdateServerDialog';
+import ClientUpdateServerSpec from './ClientUpdateServerSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -59,14 +57,6 @@ class ClientUpdateServerManage extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    }
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
@@ -94,7 +84,7 @@ class ClientUpdateServerManage extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId);
+    ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId, {page: 0});
   };
 
   handleRowClick = (event, id) => {
@@ -107,7 +97,7 @@ class ClientUpdateServerManage extends Component {
     // 1. popup dialog
     // ClientUpdateServerActions.showDialog({
     //   selectedViewItem: viewItem,
-    //   dialogType: ClientHostNameManageDialog.TYPE_VIEW,
+    //   dialogType: ClientHostNameDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
@@ -121,7 +111,7 @@ class ClientUpdateServerManage extends Component {
   handleCreateButton = () => {
     this.props.ClientUpdateServerActions.showDialog({
       selectedViewItem: Map(),
-      dialogType: ClientUpdateServerManageDialog.TYPE_ADD
+      dialogType: ClientUpdateServerDialog.TYPE_ADD
     });
   }
 
@@ -130,8 +120,8 @@ class ClientUpdateServerManage extends Component {
     const selectedViewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientUpdateServerActions.showDialog({
-      selectedViewItem: generateConfigObject(selectedViewItem),
-      dialogType: ClientUpdateServerManageDialog.TYPE_EDIT
+      selectedViewItem: ClientUpdateServerSpec.generateUpdateServerObject(selectedViewItem),
+      dialogType: ClientUpdateServerDialog.TYPE_EDIT
     });
   };
 
@@ -168,6 +158,23 @@ class ClientUpdateServerManage extends Component {
     });
   }
 
+  // ===================================================================
+  handleCopyClick = (selectedViewItem) => {
+    const { ClientUpdateServerActions } = this.props;
+    ClientUpdateServerActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: ClientUpdateServerDialog.TYPE_COPY
+    });
+  };
+
+  handleEditClick = (viewItem, compType) => {
+    this.props.ClientUpdateServerActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: ClientUpdateServerDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+  
   // ..............................................
   render() {
     const { classes } = this.props;
@@ -175,7 +182,7 @@ class ClientUpdateServerManage extends Component {
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//ClientUpdateServerProps.listParam.rowsPerPage - ClientUpdateServerProps.listData.length;
 
-    const listObj = ClientUpdateServerProps.getIn(['viewItems', compId]);
+    const selectedItem = ClientUpdateServerProps.getIn(['viewItems', compId]);
 
     return (
       <React.Fragment>
@@ -208,19 +215,19 @@ class ClientUpdateServerManage extends Component {
           </Grid>            
 
           {/* data area */}
-          {(listObj) &&
+          {(selectedItem) &&
           <div>
             <Table>
               <GRCommonTableHead
                 classes={classes}
                 keyId="objId"
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                orderDir={selectedItem.getIn(['listParam', 'orderDir'])}
+                orderColumn={selectedItem.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData') && listObj.get('listData').map(n => {
+                {selectedItem.get('listData') && selectedItem.get('listData').map(n => {
                   return (
                     <TableRow
                       hover
@@ -253,10 +260,10 @@ class ClientUpdateServerManage extends Component {
             </Table>
             <TablePagination
               component='div'
-              count={listObj.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={listObj.getIn(['listParam', 'page'])}
+              count={selectedItem.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={selectedItem.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={selectedItem.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={selectedItem.getIn(['listParam', 'page'])}
               backIconButtonProps={{
                 'aria-label': 'Previous Page'
               }}
@@ -270,8 +277,13 @@ class ClientUpdateServerManage extends Component {
           }
         </GRPane>
         {/* dialog(popup) component area */}
-        <ClientUpdateServerManageInform compId={compId} />
-        <ClientUpdateServerManageDialog compId={compId} />
+        <ClientUpdateServerSpec 
+          specType="inform" 
+          selectedItem={selectedItem}
+          handleCopyClick={this.handleCopyClick}
+          handleEditClick={this.handleEditClick}
+        />
+        <ClientUpdateServerDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>
     );

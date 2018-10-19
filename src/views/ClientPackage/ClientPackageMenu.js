@@ -83,7 +83,7 @@ class ClientPackageMenu extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientPackageActions, ClientPackageProps } = this.props;
-    ClientPackageActions.readClientPackageListPaged(ClientPackageProps, this.props.match.params.grMenuId);
+    ClientPackageActions.readClientPackageListPaged(ClientPackageProps, this.props.match.params.grMenuId, {page: 0});
   };
 
   handleRowClick = (event, id) => {

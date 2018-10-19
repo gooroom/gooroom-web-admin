@@ -8,6 +8,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
+import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -18,12 +20,9 @@ import Select from '@material-ui/core/Select';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
-import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -56,6 +55,15 @@ class SecurityRuleSelector extends Component {
     });
   };
 
+  // ===================================================================
+  handleEditClickForSecurityRule = (viewItem, compType) => {
+    this.props.SecurityRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: SecurityRuleDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+
   // .................................................
   render() {
     const { classes } = this.props;
@@ -68,6 +76,16 @@ class SecurityRuleSelector extends Component {
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = '-';
     }
+
+    let selectedSecurityRuleItem = null;
+    if(listAllData && listAllData.size > 0) {
+      const selectedData = listAllData.find((element) => {
+        return element.get('objId') == selectedOptionItemId;
+      });
+      if(selectedData) {
+        selectedSecurityRuleItem = Map({'selectedViewItem': selectedData});
+      }      
+    };
 
     return (
       <Card className={classes.card}>
@@ -87,11 +105,10 @@ class SecurityRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <SecurityRuleComp
-            compId={compId}
-            objId={selectedOptionItemId}
-            compType="VIEW"
-            targetType={targetType}
+          <SecurityRuleSpec 
+            specType="inform" targetType={targetType}
+            selectedItem={selectedSecurityRuleItem}
+            handleEditClick={this.handleEditClickForSecurityRule}
           />
         }
         </CardContent>

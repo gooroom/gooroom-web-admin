@@ -90,7 +90,7 @@ class AdminUserManage extends Component {
 
   handleSelectBtnClick = () => {
     const { AdminUserActions, AdminUserProps } = this.props;
-    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId);
+    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {page: 0});
   };
   
   handleRowClick = (event, id) => {

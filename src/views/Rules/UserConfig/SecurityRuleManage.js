@@ -12,8 +12,6 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import { generateConfigObject } from './SecurityRuleInform';
-
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
@@ -21,20 +19,17 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import SecurityRuleDialog from './SecurityRuleDialog';
-import SecurityRuleInform from './SecurityRuleInform';
+import SecurityRuleSpec from './SecurityRuleSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
@@ -95,7 +90,7 @@ class SecurityRuleManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { SecurityRuleActions, SecurityRuleProps } = this.props;
-    SecurityRuleActions.readSecurityRuleListPaged(SecurityRuleProps, this.props.match.params.grMenuId);
+    SecurityRuleActions.readSecurityRuleListPaged(SecurityRuleProps, this.props.match.params.grMenuId, {page: 0});
   };
 
   handleKeywordChange = (name, value) => {
@@ -140,7 +135,7 @@ class SecurityRuleManage extends Component {
     const selectedViewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     SecurityRuleActions.showDialog({
-      selectedViewItem: generateConfigObject(selectedViewItem),
+      selectedViewItem: SecurityRuleSpec.generateSecurityRuleObject(selectedViewItem),
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
@@ -170,13 +165,31 @@ class SecurityRuleManage extends Component {
     }
   };
 
+  // ===================================================================
+  handleCopyClick = (selectedViewItem) => {
+    const { SecurityRuleActions } = this.props;
+    SecurityRuleActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: SecurityRuleDialog.TYPE_COPY
+    });
+  };
+
+  handleEditClick = (viewItem, compType) => {
+    this.props.SecurityRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: SecurityRuleDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+
+
   render() {
     const { classes } = this.props;
     const { SecurityRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//SecurityRuleProps.listParam.rowsPerPage - SecurityRuleProps.listData.length;
 
-    const listObj = SecurityRuleProps.getIn(['viewItems', compId]);
+    const selectedItem = SecurityRuleProps.getIn(['viewItems', compId]);
     
     return (
       <div>
@@ -208,19 +221,19 @@ class SecurityRuleManage extends Component {
           </Grid>            
 
           {/* data area */}
-          {(listObj) &&
+          {(selectedItem) &&
           <div>
             <Table>
               <GRCommonTableHead
                 classes={classes}
                 keyId="objId"
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                orderDir={selectedItem.getIn(['listParam', 'orderDir'])}
+                orderColumn={selectedItem.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData').map(n => {
+                {selectedItem.get('listData').map(n => {
                   return (
                     <TableRow 
                       hover
@@ -262,10 +275,10 @@ class SecurityRuleManage extends Component {
 
             <TablePagination
               component='div'
-              count={listObj.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={listObj.getIn(['listParam', 'page'])}
+              count={selectedItem.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={selectedItem.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={selectedItem.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={selectedItem.getIn(['listParam', 'page'])}
               backIconButtonProps={{
                 'aria-label': 'Previous Page'
               }}
@@ -279,7 +292,12 @@ class SecurityRuleManage extends Component {
         }
         </GRPane>
         {/* dialog(popup) component area */}
-        <SecurityRuleInform compId={compId} />
+        <SecurityRuleSpec 
+          specType="inform" 
+          selectedItem={selectedItem}
+          handleCopyClick={this.handleCopyClick}
+          handleEditClick={this.handleEditClick}
+        />
         <SecurityRuleDialog compId={compId} />
         <GRConfirm />
       </div>

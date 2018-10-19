@@ -7,8 +7,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
-
-import ClientUpdateServerComp from './ClientUpdateServerComp';
+import ClientUpdateServerSpec from './ClientUpdateServerSpec';
+import ClientUpdateServerDialog from './ClientUpdateServerDialog';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -52,6 +52,15 @@ class ClientUpdateServerSelector extends Component {
     });
   };
 
+  // ===================================================================
+  handleEditClickForClientUpdateServer = (viewItem, compType) => {
+    this.props.ClientUpdateServerActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: ClientUpdateServerDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+
   // .................................................
   render() {
     const { classes } = this.props;
@@ -63,6 +72,16 @@ class ClientUpdateServerSelector extends Component {
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = listAllData.getIn([0, 'objId']);
     }
+
+    let selectedClientUpdateServerItem = null;
+    if(listAllData && listAllData.size > 0) {
+      const selectedData = listAllData.find((element) => {
+        return element.get('objId') == selectedOptionItemId;
+      });
+      if(selectedData) {
+        selectedClientUpdateServerItem = Map({'selectedViewItem': selectedData});
+      }      
+    };
 
     return (
       <Card className={classes.card}>
@@ -82,10 +101,10 @@ class ClientUpdateServerSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientUpdateServerComp
-            compId={compId}
-            objId={selectedOptionItemId}
-            compType="VIEW"
+          <ClientUpdateServerSpec 
+            specType="inform" targetType={targetType}
+            selectedItem={selectedClientUpdateServerItem}
+            handleEditClick={this.handleEditClickForClientUpdateServer}
           />
         }
         </CardContent>

@@ -12,8 +12,6 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import { generateConfigObject } from './BrowserRuleInform';
-
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
@@ -21,20 +19,17 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import BrowserRuleDialog from './BrowserRuleDialog';
-import BrowserRuleInform from './BrowserRuleInform';
+import BrowserRuleSpec from './BrowserRuleSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
@@ -95,7 +90,7 @@ class BrowserRuleManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { BrowserRuleActions, BrowserRuleProps } = this.props;
-    BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId);
+    BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId, {page: 0});
   };
 
   handleKeywordChange = (name, value) => {
@@ -140,7 +135,7 @@ class BrowserRuleManage extends Component {
     const selectedViewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     BrowserRuleActions.showDialog({
-      selectedViewItem: generateConfigObject(selectedViewItem),
+      selectedViewItem: BrowserRuleSpec.generateBrowserRuleObject(selectedViewItem),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -169,13 +164,31 @@ class BrowserRuleManage extends Component {
     }
   };
 
+  // ===================================================================
+  handleCopyClick = (selectedViewItem) => {
+    const { BrowserRuleActions } = this.props;
+    BrowserRuleActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: BrowserRuleDialog.TYPE_COPY
+    });
+  };
+
+  handleEditClick = (viewItem, compType) => {
+    this.props.BrowserRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: BrowserRuleDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+
+
   render() {
     const { classes } = this.props;
     const { BrowserRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//BrowserRuleProps.listParam.rowsPerPage - BrowserRuleProps.listData.length;
 
-    const listObj = BrowserRuleProps.getIn(['viewItems', compId]);
+    const selectedItem = BrowserRuleProps.getIn(['viewItems', compId]);
 
     return (
       <div>
@@ -207,19 +220,19 @@ class BrowserRuleManage extends Component {
           </Grid>            
 
           {/* data area */}
-          {(listObj) &&
+          {(selectedItem) &&
           <div>
             <Table>
               <GRCommonTableHead
                 classes={classes}
                 keyId="objId"
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                orderDir={selectedItem.getIn(['listParam', 'orderDir'])}
+                orderColumn={selectedItem.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData').map(n => {
+                {selectedItem.get('listData').map(n => {
                   return (
                     <TableRow 
                       hover
@@ -260,10 +273,10 @@ class BrowserRuleManage extends Component {
             </Table>
             <TablePagination
               component='div'
-              count={listObj.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={listObj.getIn(['listParam', 'page'])}
+              count={selectedItem.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={selectedItem.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={selectedItem.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={selectedItem.getIn(['listParam', 'page'])}
               backIconButtonProps={{
                 'aria-label': 'Previous Page'
               }}
@@ -277,7 +290,12 @@ class BrowserRuleManage extends Component {
         }
         </GRPane>
         {/* dialog(popup) component area */}
-        <BrowserRuleInform compId={compId} />
+        <BrowserRuleSpec 
+          specType="inform" 
+          selectedItem={selectedItem}
+          handleCopyClick={this.handleCopyClick}
+          handleEditClick={this.handleEditClick}
+        />
         <BrowserRuleDialog compId={compId} />
         <GRConfirm />
       </div>

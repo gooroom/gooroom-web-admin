@@ -145,7 +145,7 @@ class ClientWithPackageComp extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    ClientManageActions.readClientListPaged(ClientManageProps, compId);
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {page: 0});
   };
 
   render() {

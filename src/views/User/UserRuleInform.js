@@ -10,6 +10,10 @@ import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getViewItem } from 'components/GRUtils/GRCommonUtils';
 
 import * as UserActions from 'modules/UserModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+
 import UserDialog from './UserDialog';
 
 import Grid from '@material-ui/core/Grid';
@@ -21,9 +25,12 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
-import BrowserRuleComp from 'views/Rules/UserConfig/BrowserRuleComp';
-import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
-import SecurityRuleComp from 'views/Rules/UserConfig/SecurityRuleComp';
+import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
+import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
+import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
+import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
+import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
+import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -44,14 +51,39 @@ class UserRuleInform extends Component {
     }, true);
   };
 
+  // ===================================================================
+  handleEditClickForMediaRule = (viewItem, compType) => {
+    this.props.MediaRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: MediaRuleDialog.TYPE_EDIT
+    });
+  };
+  handleEditClickForBrowserRule = (viewItem, compType) => {
+    this.props.BrowserRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: BrowserRuleDialog.TYPE_EDIT
+    });
+  };
+  handleEditClickForSecurityRule = (viewItem, compType) => {
+    this.props.SecurityRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: SecurityRuleDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+
+
   // .................................................
   render() {
     const { classes } = this.props;
-    const bull = <span className={classes.bullet}>•</span>;
-
     const { UserProps, compId } = this.props;
+
     const informOpen = UserProps.getIn(['viewItems', compId, 'informOpen']);
     const selectedViewItem = UserProps.getIn(['viewItems', compId, 'selectedViewItem']);
+
+    const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'USER']);
+    const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'USER']);
+    const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'USER']);
 
     return (
       <div style={{marginTop: 10}} >
@@ -74,13 +106,25 @@ class UserRuleInform extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
               <Grid item xs={12} sm={12} lg={6} >
-                <BrowserRuleComp compId={compId} targetType="USER" />
+                <BrowserRuleSpec 
+                  specType="inform" targetType="USER"
+                  selectedItem={selectedBrowserRuleItem}
+                  handleEditClick={this.handleEditClickForBrowserRule}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={6} >
-                <MediaRuleComp compId={compId} targetType="USER" />
+                <MediaRuleSpec 
+                  specType="inform" targetType="USER"
+                  selectedItem={selectedMediaRuleItem}
+                  handleEditClick={this.handleEditClickForMediaRule}
+                />
               </Grid>
               <Grid item xs={12} sm={12} lg={6} >
-                <SecurityRuleComp compId={compId} targetType="USER" />
+                <SecurityRuleSpec 
+                  specType="inform" targetType="USER"
+                  selectedItem={selectedSecurityRuleItem}
+                  handleEditClick={this.handleEditClickForSecurityRule}
+                />
               </Grid>
             </Grid>
           </CardContent>
@@ -94,11 +138,17 @@ class UserRuleInform extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  UserProps: state.UserModule
+  UserProps: state.UserModule,
+  MediaRuleProps: state.MediaRuleModule,
+  BrowserRuleProps: state.BrowserRuleModule,
+  SecurityRuleProps: state.SecurityRuleModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  UserActions: bindActionCreators(UserActions, dispatch)
+  UserActions: bindActionCreators(UserActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserRuleInform));

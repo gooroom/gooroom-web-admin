@@ -87,7 +87,7 @@ class GcspManage extends Component {
 
   handleSelectBtnClick = () => {
     const { GcspManageActions, GcspManageProps } = this.props;
-    GcspManageActions.readGcspListPaged(GcspManageProps, this.props.match.params.grMenuId);
+    GcspManageActions.readGcspListPaged(GcspManageProps, this.props.match.params.grMenuId, {page: 0});
   };
   
   handleRowClick = (event, id) => {

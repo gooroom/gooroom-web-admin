@@ -7,8 +7,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
-
-import ClientHostNameComp from './ClientHostNameComp';
+import ClientHostNameSpec from './ClientHostNameSpec';
+import ClientHostNameDialog from './ClientHostNameDialog';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -45,6 +45,15 @@ class ClientHostNameSelector extends Component {
     });
   };
 
+  // ===================================================================
+  handleEditClickForClientHostName = (viewItem, compType) => {
+    this.props.ClientHostNameActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: ClientHostNameDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+  
   // .................................................
   render() {
     const { classes } = this.props;
@@ -55,6 +64,16 @@ class ClientHostNameSelector extends Component {
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = listAllData.getIn([0, 'objId']);
     }
+
+    let selectedClientHostNameItem = null;
+    if(listAllData && listAllData.size > 0) {
+      const selectedData = listAllData.find((element) => {
+        return element.get('objId') == selectedOptionItemId;
+      });
+      if(selectedData) {
+        selectedClientHostNameItem = Map({'selectedViewItem': selectedData});
+      }      
+    };
 
     return (
       <Card className={classes.card}>
@@ -74,10 +93,10 @@ class ClientHostNameSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientHostNameComp
-            compId={compId}
-            objId={selectedOptionItemId}
-            compType="VIEW"
+          <ClientHostNameSpec
+            specType="inform" targetType={targetType}
+            selectedItem={selectedClientHostNameItem}
+            handleEditClick={this.handleEditClickForClientHostName}
           />
         }
         </CardContent>

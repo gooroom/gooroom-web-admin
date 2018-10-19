@@ -8,6 +8,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as MediaRuleActions from 'modules/MediaRuleModule';
+import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
+import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -18,12 +20,9 @@ import Select from '@material-ui/core/Select';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
-import MediaRuleComp from 'views/Rules/UserConfig/MediaRuleComp';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -56,6 +55,15 @@ class MediaRuleSelector extends Component {
     });
   };
 
+  // ===================================================================
+  handleEditClickForMediaRule = (viewItem, compType) => {
+    this.props.MediaRuleActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: MediaRuleDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+  
   // .................................................
   render() {
     const { classes } = this.props;
@@ -68,6 +76,16 @@ class MediaRuleSelector extends Component {
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = '-';
     }
+
+    let selectedMediaRuleItem = null;
+    if(listAllData && listAllData.size > 0) {
+      const selectedData = listAllData.find((element) => {
+        return element.get('objId') == selectedOptionItemId;
+      });
+      if(selectedData) {
+        selectedMediaRuleItem = Map({'selectedViewItem': selectedData});
+      }      
+    };
 
     return (
       <Card className={classes.card}>
@@ -87,11 +105,10 @@ class MediaRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <MediaRuleComp
-            compId={compId}
-            objId={selectedOptionItemId}
-            compType="VIEW"
-            targetType={targetType}
+          <MediaRuleSpec 
+            specType="inform" targetType={targetType}
+            selectedItem={selectedMediaRuleItem}
+            handleEditClick={this.handleEditClickForMediaRule}
           />
         }
         </CardContent>

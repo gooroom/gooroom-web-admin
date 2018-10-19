@@ -7,6 +7,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import ClientConfSettingSpec from './ClientConfSettingSpec';
+import ClientConfSettingDialog from './ClientConfSettingDialog';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -17,26 +19,14 @@ import Select from '@material-ui/core/Select';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
-import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
-
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientConfSettingSelector extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true
-    };
-  }
 
   componentDidMount() {
     const { ClientConfSettingProps, ClientConfSettingActions, compId, initId } = this.props;
@@ -58,6 +48,15 @@ class ClientConfSettingSelector extends Component {
     });
   };
 
+  // ===================================================================
+  handleEditClickForClientConfSetting = (viewItem, compType) => {
+    this.props.ClientConfSettingActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: ClientConfSettingDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+  
   // .................................................
   render() {
     const { classes } = this.props;
@@ -70,6 +69,16 @@ class ClientConfSettingSelector extends Component {
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = listAllData.getIn([0, 'objId']);
     }
+
+    let selectedClientConfSettingItem = null;
+    if(listAllData && listAllData.size > 0) {
+      const selectedData = listAllData.find((element) => {
+        return element.get('objId') == selectedOptionItemId;
+      });
+      if(selectedData) {
+        selectedClientConfSettingItem = Map({'selectedViewItem': selectedData});
+      }      
+    };
 
     return (
       <Card className={classes.card}>
@@ -89,10 +98,10 @@ class ClientConfSettingSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientConfSettingComp
-            compId={compId}
-            objId={selectedOptionItemId}
-            compType="VIEW"
+          <ClientConfSettingSpec 
+            specType="inform" targetType={targetType}
+            selectedItem={selectedClientConfSettingItem}
+            handleEditClick={this.handleEditClickForClientConfSetting}
           />
         }
         </CardContent>
