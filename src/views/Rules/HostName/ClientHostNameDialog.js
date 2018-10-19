@@ -7,16 +7,22 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
-import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils'; 
+import GRAlert from 'components/GRComponents/GRAlert';
+import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
+
+import ClientHostNameViewer from './ClientHostNameViewer';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -30,6 +36,7 @@ class ClientHostNameDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+    static TYPE_COPY = 'COPY';
 
     handleClose = (event) => {
         this.props.ClientHostNameActions.closeDialog();
@@ -83,6 +90,21 @@ class ClientHostNameDialog extends Component {
         }
     }
 
+    handleCopyCreateData = (event, id) => {
+        const { ClientHostNameProps, ClientHostNameActions } = this.props;
+        ClientHostNameActions.cloneClientHostNameData({
+            'objId': ClientHostNameProps.getIn(['editingItem', 'objId'])
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: '시스템알림',
+                alertMsg: 'Hosts 정보를 복사하였습니다.'
+            });
+            refreshDataListInComp(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
+            this.handleClose();
+        });
+    }
+
+
     render() {
         const { classes } = this.props;
         const { ClientHostNameProps } = this.props;
@@ -96,54 +118,38 @@ class ClientHostNameDialog extends Component {
             title = "Hosts정책 정보";
         } else if(dialogType === ClientHostNameDialog.TYPE_EDIT) {
             title = "Hosts정책 수정";
+        } else if(dialogType === ClientHostNameDialog.TYPE_COPY) {
+            title = "Hosts정책 복사";
         }
 
         return (
             <div>
             {(ClientHostNameProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={ClientHostNameProps.get('dialogOpen')}>
+            <Dialog open={ClientHostNameProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
                 <DialogTitle>{title}</DialogTitle>
-                <form noValidate autoComplete="off" className={classes.dialogContainer}>
-                    <TextField
-                        id="objNm"
-                        label="이름"
-                        value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                        onChange={this.handleValueChange("objNm")}
-                        className={classes.fullWidth}
-                        disabled={(dialogType === ClientHostNameDialog.TYPE_VIEW)}
-                    />
-                    <TextField
-                        id="comment"
-                        label="설명"
-                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                        onChange={this.handleValueChange("comment")}
-                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === ClientHostNameDialog.TYPE_VIEW)}
-                    />
-                    {(dialogType === ClientHostNameDialog.TYPE_VIEW) &&
-                        <div>
-                            <TextField
-                                label="Hosts 정보"
-                                multiline
-                                value={(editingItem.get('hosts')) ? editingItem.get('hosts') : ''}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                disabled
-                            />
-                        </div>                        
-                    }
+                <DialogContent>
                     {(dialogType === ClientHostNameDialog.TYPE_EDIT || dialogType === ClientHostNameDialog.TYPE_ADD) &&
+                    <div>
+                        <TextField label="이름" className={classes.fullWidth}
+                            value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            onChange={this.handleValueChange("objNm")} />
+                        <TextField label="설명" className={classes.fullWidth}
+                            value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                            onChange={this.handleValueChange("comment")} />
+                        <TextField label="Hosts 정보" multiline className={classes.fullWidth}
+                            value={(editingItem.get('hosts')) ? editingItem.get('hosts') : ''}
+                            onChange={this.handleValueChange("hosts")} />
+                    </div>
+                    }
+                    {(dialogType === ClientHostNameDialog.TYPE_COPY) &&
                         <div>
-                            <TextField
-                                label="Hosts 정보"
-                                multiline
-                                value={editingItem.get('hosts')}
-                                onChange={this.handleValueChange("hosts")}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            />
+                        <Typography variant="body1">
+                            이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
+                        </Typography>
+                        <ClientHostNameViewer viewItem={editingItem} />
                         </div>
                     }
-                </form>
-
+                </DialogContent>
                 <DialogActions>
                 {(dialogType === ClientHostNameDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
@@ -151,11 +157,16 @@ class ClientHostNameDialog extends Component {
                 {(dialogType === ClientHostNameDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
+                {(dialogType === ClientHostNameDialog.TYPE_COPY) &&
+                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
+                }
+
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
                 <GRConfirm />
             </Dialog>
             }
+            <GRAlert />
             </div>
         );
     }
@@ -168,7 +179,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameDialog));

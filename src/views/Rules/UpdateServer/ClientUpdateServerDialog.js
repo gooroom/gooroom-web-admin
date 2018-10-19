@@ -7,8 +7,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils'; 
 
 import ClientUpdateServerViewer from './ClientUpdateServerViewer';
@@ -20,6 +22,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -87,6 +90,21 @@ class ClientUpdateServerDialog extends Component {
         }
     }
 
+    handleCopyCreateData = (event, id) => {
+        const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+        ClientUpdateServerActions.cloneClientUpdateServerData({
+            'objId': ClientUpdateServerProps.getIn(['editingItem', 'objId'])
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: '시스템알림',
+                alertMsg: '업데이트서버 정보를 복사하였습니다.'
+            });
+            refreshDataListInComp(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
+            this.handleClose();
+        });
+    }
+
+
     render() {
         const { classes } = this.props;
         const { ClientUpdateServerProps } = this.props;
@@ -145,11 +163,15 @@ class ClientUpdateServerDialog extends Component {
                 {(dialogType === ClientUpdateServerDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
+                {(dialogType === ClientUpdateServerDialog.TYPE_COPY) &&
+                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
+                }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
                 <GRConfirm />
             </Dialog>
             }
+            <GRAlert />
             </div>
         );
     }
@@ -162,7 +184,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientUpdateServerDialog));

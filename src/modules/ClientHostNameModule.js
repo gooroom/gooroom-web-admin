@@ -133,6 +133,7 @@ export const getClientHostNameByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_HOSTNAME_SUCCESS,
                 compId: compId,
+                target: 'GROUP',
                 response: response
             });
         }
@@ -264,6 +265,24 @@ export const deleteClientHostNameData = (param) => dispatch => {
     });
 };
 
+// clone rule
+export const cloneClientHostNameData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createClonedHostNameConf', {
+            'objId': param.objId
+        }).then(
+        (response) => {
+            dispatch({
+                type: CREATE_HOSTNAME_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
@@ -282,7 +301,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     },  
     [GET_HOSTNAME_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
     },
     [SHOW_HOSTNAME_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
