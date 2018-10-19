@@ -111,24 +111,27 @@ class ClientGroupManage extends Component {
     });
     
     // 정책 조회
-    ClientConfSettingActions.getClientConf({
-      compId: compId, objId: clickedRowObject.get('clientConfigId')
+    ClientConfSettingActions.getClientConfByGroupId({
+      compId: compId, groupId: id
     });   
-    ClientHostNameActions.getClientHostName({
-      compId: compId, objId: clickedRowObject.get('hostNameConfigId')
+    ClientHostNameActions.getClientHostNameByGroupId({
+      compId: compId, groupId: id
     });   
-    ClientUpdateServerActions.getClientUpdateServer({
-      compId: compId, objId: clickedRowObject.get('updateServerConfigId')
+    ClientUpdateServerActions.getClientUpdateServerByGroupId({
+      compId: compId, groupId: id
     });   
 
-    BrowserRuleActions.getBrowserRule({
-      compId: compId, objId: clickedRowObject.get('browserRuleId')
-    });   
-    MediaRuleActions.getMediaRule({
-      compId: compId, objId: clickedRowObject.get('mediaRuleId')
-    });   
-    SecurityRuleActions.getSecurityRule({
-      compId: compId, objId: clickedRowObject.get('securityRuleId')
+    // get browser rule info
+    BrowserRuleActions.getBrowserRuleByGroupId({
+      compId: compId, groupId: id
+    });
+    // get media control setting info
+    MediaRuleActions.getMediaRuleByGroupId({
+      compId: compId, groupId: id
+    });
+    // get client secu info
+    SecurityRuleActions.getSecurityRuleByGroupId({
+      compId: compId, groupId: id
     });   
 
     // '데스크톱 정보설정' : 정책 정보 변경
