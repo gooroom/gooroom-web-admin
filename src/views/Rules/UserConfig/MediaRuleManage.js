@@ -124,7 +124,7 @@ class MediaRuleManage extends Component {
     });
   }
   
-  handleEditClick = (event, id) => {
+  handleEditListClick = (event, id) => {
     const { MediaRuleActions, MediaRuleProps } = this.props;
     const selectedViewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
@@ -167,7 +167,7 @@ class MediaRuleManage extends Component {
     });
   };
 
-  handleEditClick = (viewItem, compType) => {
+  handleEditItemClick = (viewItem, compType) => {
     this.props.MediaRuleActions.showDialog({
       selectedViewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_EDIT
@@ -242,7 +242,7 @@ class MediaRuleManage extends Component {
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditClick(event, n.get('objId'))}>
+                          onClick={event => this.handleEditListClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
 
@@ -287,7 +287,7 @@ class MediaRuleManage extends Component {
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditClick}
+          handleEditClick={this.handleEditItemClick}
         />
         <MediaRuleDialog compId={compId} />
         <GRConfirm />

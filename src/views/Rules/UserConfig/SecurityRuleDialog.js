@@ -8,6 +8,7 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import SecurityRuleNetwork from './SecurityRuleNetwork';
 import SecurityRuleViewer from './SecurityRuleViewer';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
@@ -41,6 +42,10 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import AddIcon from '@material-ui/icons/Add';
 
 import Radio from '@material-ui/core/Radio';
+
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -165,6 +170,8 @@ class SecurityRuleDialog extends Component {
             title = "단말보안정책설정 복사";
         }
 
+
+
         return (
             <div>
             {(SecurityRuleProps.get('dialogOpen') && editingItem) &&
@@ -216,18 +223,10 @@ class SecurityRuleDialog extends Component {
                                     />
                                 </Grid>
                             </Grid>
-                            <FormControl className={classes.formControl} error aria-describedby="component-error-text">
-                                <InputLabel htmlFor="component-error">Name</InputLabel>
-                                <Input id="component-error" value="this.state.name" onChange={this.handleChange} />
-                                <FormHelperText id="component-error-text">Error</FormHelperText>
-                            </FormControl>
-                            <FormControlLabel
-                                control={
-                                <Switch onChange={this.handleValueChange('state')} 
-                                    checked={this.checkAllow(editingItem.get('state'))}
-                                    color="primary" />
-                                }
-                                label={(editingItem.get('state') == 'allow') ? '전체네트워크허용' : '전체네트워크차단'}
+                            <Divider style={{marginTop:20}}/>
+
+                            <SecurityRuleNetwork 
+                                editingItem={editingItem}
                             />
                         </div>
                     }

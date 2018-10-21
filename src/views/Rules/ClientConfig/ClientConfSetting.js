@@ -121,7 +121,7 @@ class ClientConfSetting extends Component {
     });
   }
 
-  handleEditClick = (event, id) => { 
+  handleEditListClick = (event, id) => { 
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
     const selectedViewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
@@ -163,7 +163,7 @@ class ClientConfSetting extends Component {
     });
   };
 
-  handleEditClick = (viewItem, compType) => {
+  handleEditItemClick = (viewItem, compType) => {
     this.props.ClientConfSettingActions.showDialog({
       selectedViewItem: viewItem,
       dialogType: ClientConfSettingDialog.TYPE_EDIT
@@ -235,7 +235,7 @@ class ClientConfSetting extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
 
-                        <Button color="secondary" size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.get('objId'))}>
+                        <Button color="secondary" size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditListClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
 
@@ -278,7 +278,7 @@ class ClientConfSetting extends Component {
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditClick}
+          handleEditClick={this.handleEditItemClick}
         />
         <ClientConfSettingDialog compId={compId} />
         <GRConfirm />

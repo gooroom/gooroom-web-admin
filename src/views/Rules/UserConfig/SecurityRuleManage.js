@@ -63,7 +63,7 @@ class SecurityRuleManage extends Component {
   }
 
   componentDidMount() {
-    this.handleSelectBtnClick();
+    this.handleCreateButton();//.handleSelectBtnClick();
   }
 
   handleChangePage = (event, page) => {
@@ -130,7 +130,7 @@ class SecurityRuleManage extends Component {
     });
   }
 
-  handleEditClick = (event, id) => { 
+  handleEditListClick = (event, id) => { 
     const { SecurityRuleActions, SecurityRuleProps } = this.props;
     const selectedViewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
@@ -174,7 +174,7 @@ class SecurityRuleManage extends Component {
     });
   };
 
-  handleEditClick = (viewItem, compType) => {
+  handleEditItemClick = (viewItem, compType) => {
     this.props.SecurityRuleActions.showDialog({
       selectedViewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_EDIT
@@ -250,7 +250,7 @@ class SecurityRuleManage extends Component {
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditClick(event, n.get('objId'))}>
+                          onClick={event => this.handleEditListClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
 
@@ -296,7 +296,7 @@ class SecurityRuleManage extends Component {
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditClick}
+          handleEditClick={this.handleEditItemClick}
         />
         <SecurityRuleDialog compId={compId} />
         <GRConfirm />

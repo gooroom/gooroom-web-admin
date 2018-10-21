@@ -115,7 +115,7 @@ class ClientUpdateServerManage extends Component {
     });
   }
 
-  handleEditClick = (event, id) => {
+  handleEditListClick = (event, id) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
     const selectedViewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
 
@@ -167,7 +167,7 @@ class ClientUpdateServerManage extends Component {
     });
   };
 
-  handleEditClick = (viewItem, compType) => {
+  handleEditItemClick = (viewItem, compType) => {
     this.props.ClientUpdateServerActions.showDialog({
       selectedViewItem: viewItem,
       dialogType: ClientUpdateServerDialog.TYPE_EDIT
@@ -240,7 +240,7 @@ class ClientUpdateServerManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
-                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.get('objId'))}>
+                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditListClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
                         <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
@@ -281,7 +281,7 @@ class ClientUpdateServerManage extends Component {
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditClick}
+          handleEditClick={this.handleEditItemClick}
         />
         <ClientUpdateServerDialog compId={compId} />
         <GRConfirm />
