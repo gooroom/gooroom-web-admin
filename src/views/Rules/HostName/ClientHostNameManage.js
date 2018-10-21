@@ -123,7 +123,7 @@ class ClientHostNameManage extends Component {
     });
   }
 
-  handleEditClick = (event, id) => { 
+  handleEditListClick = (event, id) => { 
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     const selectedViewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
 
@@ -166,7 +166,7 @@ class ClientHostNameManage extends Component {
     });
   };
 
-  handleEditClick = (viewItem, compType) => {
+  handleEditItemClick = (viewItem, compType) => {
     this.props.ClientHostNameActions.showDialog({
       selectedViewItem: viewItem,
       dialogType: ClientHostNameDialog.TYPE_EDIT
@@ -237,7 +237,7 @@ class ClientHostNameManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>
-                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditClick(event, n.get('objId'))}>
+                        <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditListClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
                         <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
@@ -278,7 +278,7 @@ class ClientHostNameManage extends Component {
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditClick}
+          handleEditClick={this.handleEditItemClick}
         />
         <ClientHostNameDialog compId={compId} />
         <GRConfirm />

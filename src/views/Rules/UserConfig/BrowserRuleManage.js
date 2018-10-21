@@ -130,7 +130,7 @@ class BrowserRuleManage extends Component {
     });
   }
 
-  handleEditClick = (event, id) => { 
+  handleEditListClick = (event, id) => { 
     const { BrowserRuleProps, BrowserRuleActions } = this.props;
     const selectedViewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
@@ -173,7 +173,7 @@ class BrowserRuleManage extends Component {
     });
   };
 
-  handleEditClick = (viewItem, compType) => {
+  handleEditItemClick = (viewItem, compType) => {
     this.props.BrowserRuleActions.showDialog({
       selectedViewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_EDIT
@@ -249,7 +249,7 @@ class BrowserRuleManage extends Component {
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditClick(event, n.get('objId'))}>
+                          onClick={event => this.handleEditListClick(event, n.get('objId'))}>
                           <BuildIcon />
                         </Button>
 
@@ -294,7 +294,7 @@ class BrowserRuleManage extends Component {
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditClick}
+          handleEditClick={this.handleEditItemClick}
         />
         <BrowserRuleDialog compId={compId} />
         <GRConfirm />
