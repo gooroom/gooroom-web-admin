@@ -96,11 +96,29 @@ let EnhancedTableToolbar = props => {
       <div style={{flex: '1 1 100%'}} />
       <div >
         {numSelected > 0 ? (
-          <Tooltip title="Delete">
-            <IconButton aria-label="Delete" onClick={props.onDeleteClick} >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
+          <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={12} sm={4} md={4}>
+              <Tooltip title="Delete">
+                <IconButton aria-label="Delete" onClick={props.onDeleteClick} >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4}>
+              <Tooltip title="Up">
+                <IconButton aria-label="Up" onClick={props.onUpwardClick} >
+                  <UpIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            <Grid item xs={12} sm={4} md={4}>
+              <Tooltip title="Down">
+                <IconButton aria-label="Down" onClick={props.onDownwardClick} >
+                  <DownIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
         ) : (
           <Tooltip title="항목 추가">
             <IconButton aria-label="항목 추가" onClick={props.onAddClick} >
@@ -186,14 +204,28 @@ class SecurityRuleNetwork extends Component {
     });
   };
 
+  handleSelectUpwardClick = () => {
+    const { SecurityRuleProps } = this.props;
+    const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
+    const selected = (editingItem && editingItem.get('selected')) ? editingItem.get('selected') : List([]);
+
+    this.props.SecurityRuleActions.chgSelectedNetworkItemUpward(selected.toJS());
+  }
+
+  handleSelectDownwardClick = () => {
+    const { SecurityRuleProps } = this.props;
+    const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
+    const selected = (editingItem && editingItem.get('selected')) ? editingItem.get('selected') : List([]);
+
+    this.props.SecurityRuleActions.chgSelectedNetworkItemDownward(selected.toJS());
+  }
+
   handleUpwardClick = (event, id) => {
     this.props.SecurityRuleActions.chgNetworkItemUpward(id);
-    console.log('handleUpwardClick ..... ', id);
   }
 
   handleDownwardClick = (event, id) => {
     this.props.SecurityRuleActions.chgNetworkItemDownward(id);
-    console.log('handleDownwardClick ..... ', id);
   }
 
   isSelected = id => {
@@ -220,6 +252,8 @@ class SecurityRuleNetwork extends Component {
         numSelected={selected.length} 
         onAddClick={this.handleAddClick}
         onDeleteClick={this.handleDeleteClick}
+        onUpwardClick={this.handleSelectUpwardClick}
+        onDownwardClick={this.handleSelectDownwardClick}
       />
       
       <div>

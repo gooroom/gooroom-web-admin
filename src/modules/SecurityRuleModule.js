@@ -29,8 +29,11 @@ const DELETE_COMPDATA_ITEM = 'securityRule/DELETE_COMPDATA_ITEM';
 
 const ADD_NETWORK_ITEM = 'securityRule/ADD_NETWORK_ITEM';
 const DELETE_NETWORK_ITEM = 'securityRule/DELETE_NETWORK_ITEM';
+
 const UPWARD_NETWORK_ITEM = 'securityRule/UPWARD_NETWORK_ITEM';
 const DOWNWARD_NETWORK_ITEM = 'securityRule/DOWNWARD_NETWORK_ITEM';
+const UPWARD_SELECTEDNETWORK_ITEM = 'securityRule/UPWARD_SELECTEDNETWORK_ITEM';
+const DOWNWARD_SELECTEDNETWORK_ITEM = 'securityRule/DOWNWARD_SELECTEDNETWORK_ITEM';
 
 
 // ...
@@ -395,6 +398,20 @@ export const chgNetworkItemDownward = (id) => dispatch => {
     });
 }
 
+export const chgSelectedNetworkItemUpward = (ids) => dispatch => {
+    return dispatch({
+        type: UPWARD_SELECTEDNETWORK_ITEM,
+        ids: ids
+    });
+}
+
+export const chgSelectedNetworkItemDownward = (ids) => dispatch => {
+    return dispatch({
+        type: DOWNWARD_SELECTEDNETWORK_ITEM,
+        ids: ids
+    });
+}
+
 
 
 export default handleActions({
@@ -535,18 +552,68 @@ export default handleActions({
         }
     },
     [DOWNWARD_NETWORK_ITEM]: (state, action) => {
-        if(action.id <= 0) {
+        if(action.id+1 >= state.getIn(['editingItem', 'networkItems']).size) {
             return state;
         } else {
             const target = state.getIn(['editingItem', 'networkItems', action.id]);
-            const next = state.getIn(['editingItem', 'networkItems', (action.id-1)]);
+            const next = state.getIn(['editingItem', 'networkItems', (action.id+1)]);
 
             let newState = state.setIn(['editingItem', 'networkItems', action.id], next.set('no', action.id));
-            newState = newState.setIn(['editingItem', 'networkItems', (action.id-1)], target.set('no', (action.id-1)));
+            newState = newState.setIn(['editingItem', 'networkItems', (action.id+1)], target.set('no', (action.id+1)));
             newState = newState.setIn(['editingItem', 'selected'], List([]));
             return newState;
         }
     },
+    [UPWARD_SELECTEDNETWORK_ITEM]: (state, action) => {
+        if(action.ids && action.ids.length > 0) {
+            // sort (for seleted variable);
+            action.ids.sort();
+            let newState = state;
+            let newSelected = [];
+
+            for(var i = 0; i < action.ids.length; i++) {
+                var id = action.ids[i];
+                if(id > 0 && newSelected.indexOf(id-1) == -1) {
+                    const target = newState.getIn(['editingItem', 'networkItems', id]);
+                    const next = newState.getIn(['editingItem', 'networkItems', (id-1)]);
+                    newState = newState.setIn(['editingItem', 'networkItems', id], next.set('no', id));
+                    newState = newState.setIn(['editingItem', 'networkItems', (id-1)], target.set('no', (id-1)));
+                    newSelected.push(id-1);
+                } else {
+                    newSelected.push(id);   
+                }
+            }
+            newState = newState.setIn(['editingItem', 'selected'], List(newSelected));
+            return newState;
+        }
+        return state;
+    },
+    [DOWNWARD_SELECTEDNETWORK_ITEM]: (state, action) => {
+        if(action.ids && action.ids.length > 0) {
+            // sort (for seleted variable);
+            const maxItemSize = state.getIn(['editingItem', 'networkItems']).size;
+            action.ids.sort();
+            let newState = state;
+            let newSelected = [];
+
+            for(var i = action.ids.length-1; i >= 0; i--) {
+                var id = action.ids[i];
+                if(id < maxItemSize-1 && newSelected.indexOf(id+1) == -1) {
+                    const target = newState.getIn(['editingItem', 'networkItems', id]);
+                    const next = newState.getIn(['editingItem', 'networkItems', (id+1)]);
+                    newState = newState.setIn(['editingItem', 'networkItems', id], next.set('no', id));
+                    newState = newState.setIn(['editingItem', 'networkItems', (id+1)], target.set('no', (id+1)));
+                    newSelected.push(id+1);
+                } else {
+                    newSelected.push(id);   
+                }
+            }
+            newState = newState.setIn(['editingItem', 'selected'], List(newSelected));
+            return newState;
+        }
+        return state;
+    },
+
 
 }, initialState);
 
