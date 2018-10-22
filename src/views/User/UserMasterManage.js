@@ -20,6 +20,10 @@ import GRTreeList from "components/GRTree/GRTreeList";
 import GRPane from "containers/GRContent/GRPane";
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
+import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
+import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
+import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
+
 import UserListComp from 'views/User/UserListComp';
 import UserRuleInform from "views/User/UserRuleInform";
 import UserSelectDialog from "views/User/UserSelectDialog";
@@ -385,6 +389,10 @@ class UserMasterManage extends Component {
         <DeptMultiDialog compId={compId} />
         
         <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectionClose} />
+        <BrowserRuleDialog compId={compId} />
+        <SecurityRuleDialog compId={compId} />
+        <MediaRuleDialog compId={compId} />
+
         <GRConfirm />
 
       </React.Fragment>

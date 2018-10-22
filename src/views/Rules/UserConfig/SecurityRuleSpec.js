@@ -117,7 +117,6 @@ class SecurityRuleSpec extends Component {
             </CardContent>
           </Card>
         }
-        <SecurityRuleDialog compId={compId} />
       </React.Fragment>
     );
   }
