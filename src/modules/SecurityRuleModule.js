@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { List } from 'immutable';
+import { Map, List } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -20,11 +20,18 @@ const SHOW_SECURITYRULE_DIALOG = 'securityRule/SHOW_SECURITYRULE_DIALOG';
 const CLOSE_SECURITYRULE_DIALOG = 'securityRule/CLOSE_SECURITYRULE_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'securityRule/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_NETWORK_VALUE = 'securityRule/SET_EDITING_NETWORK_VALUE';
 
 const CHG_LISTPARAM_DATA = 'securityRule/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'securityRule/CHG_COMPDATA_VALUE';
 const DELETE_COMPDATA = 'securityRule/DELETE_COMPDATA';
 const DELETE_COMPDATA_ITEM = 'securityRule/DELETE_COMPDATA_ITEM';
+
+const ADD_NETWORK_ITEM = 'securityRule/ADD_NETWORK_ITEM';
+const DELETE_NETWORK_ITEM = 'securityRule/DELETE_NETWORK_ITEM';
+const UPWARD_NETWORK_ITEM = 'securityRule/UPWARD_NETWORK_ITEM';
+const DOWNWARD_NETWORK_ITEM = 'securityRule/DOWNWARD_NETWORK_ITEM';
+
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId');
@@ -181,6 +188,15 @@ export const getSecurityRuleByGroupId = (param) => dispatch => {
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
         type: SET_EDITING_ITEM_VALUE,
+        name: param.name,
+        value: param.value
+    });
+};
+
+export const setEditingNetworkValue = (param) => dispatch => {
+    return dispatch({
+        type: SET_EDITING_NETWORK_VALUE,
+        count: param.count,
         name: param.name,
         value: param.value
     });
@@ -351,6 +367,36 @@ export const cloneSecurityRuleData = (param) => dispatch => {
     });
 };
 
+export const addNetworkItem = (item) => dispatch => {
+    return dispatch({
+        type: ADD_NETWORK_ITEM,
+        item: item
+    });
+}
+
+export const deleteNetworkItem = (item) => dispatch => {
+    return dispatch({
+        type: DELETE_NETWORK_ITEM,
+        item: item
+    });
+}
+
+export const chgNetworkItemUpward = (id) => dispatch => {
+    return dispatch({
+        type: UPWARD_NETWORK_ITEM,
+        id: id
+    });
+}
+
+export const chgNetworkItemDownward = (id) => dispatch => {
+    return dispatch({
+        type: DOWNWARD_NETWORK_ITEM,
+        id: id
+    });
+}
+
+
+
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
@@ -388,6 +434,26 @@ export default handleActions({
             editingItem: state.get('editingItem').merge({[action.name]: action.value})
         });
     },
+    [SET_EDITING_NETWORK_VALUE]: (state, action) => {
+
+        let editingItem = state.get('editingItem');
+
+        // console.log('=======================================================');
+        // console.log('editingItem :::::::: ', editingItem);
+        // console.log('action.count :::::::: ', action.count);
+
+        let newEditingItem = editingItem;
+        if(editingItem.get('networkItems')) {
+            let networkItems = editingItem.get('networkItems');
+            if(networkItems.get(action.count)) {
+                newEditingItem = editingItem.setIn(['networkItems', action.count, action.name], action.value);
+            }
+        }
+
+        return state.merge({
+            editingItem: newEditingItem
+        });
+    },
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
@@ -411,7 +477,76 @@ export default handleActions({
     },
     [DELETE_SECURITYRULE_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action);
-    }
+    },
+
+    [ADD_NETWORK_ITEM]: (state, action) => {
+        const newNetworkItems = state.getIn(['editingItem', 'networkItems']);
+        if(newNetworkItems) {
+            const itemSize = newNetworkItems.size;
+            action.item.no = itemSize + 1;
+            return state.setIn(['editingItem', 'networkItems'], newNetworkItems.push(action.item));
+        } else {
+            action.item.no = 1;
+            return state.setIn(['editingItem', 'networkItems'], List([action.item]));
+        }
+    },
+    [DELETE_NETWORK_ITEM]: (state, action) => {
+
+        let newNetworkItems = state.getIn(['editingItem', 'networkItems']);
+        if(action.item && action.item.length > 0) {
+
+            const tempResult = newNetworkItems.filter(function (k, v) {
+                let isExist = false;
+                action.item.forEach(function(e) {
+                    if(e == k.get('no')) {
+                        isExist = true;
+                    }
+                });
+                return !isExist;
+            });
+
+            if(tempResult && tempResult.size > 0) {
+                // reset no value
+                let count = 0;
+                newNetworkItems = tempResult.map(e => {
+                    return e.set('no', count++);
+                });
+            } else {
+                newNetworkItems = List([]);
+            }
+        }
+        
+        return state
+            .setIn(['editingItem', 'networkItems'], newNetworkItems)
+            .setIn(['editingItem', 'selected'], List([]));
+    },
+
+    [UPWARD_NETWORK_ITEM]: (state, action) => {
+        if(action.id <= 0) {
+            return state;
+        } else {
+            const target = state.getIn(['editingItem', 'networkItems', action.id]);
+            const next = state.getIn(['editingItem', 'networkItems', (action.id-1)]);
+
+            let newState = state.setIn(['editingItem', 'networkItems', action.id], next.set('no', action.id));
+            newState = newState.setIn(['editingItem', 'networkItems', (action.id-1)], target.set('no', (action.id-1)));
+            newState = newState.setIn(['editingItem', 'selected'], List([]));
+            return newState;
+        }
+    },
+    [DOWNWARD_NETWORK_ITEM]: (state, action) => {
+        if(action.id <= 0) {
+            return state;
+        } else {
+            const target = state.getIn(['editingItem', 'networkItems', action.id]);
+            const next = state.getIn(['editingItem', 'networkItems', (action.id-1)]);
+
+            let newState = state.setIn(['editingItem', 'networkItems', action.id], next.set('no', action.id));
+            newState = newState.setIn(['editingItem', 'networkItems', (action.id-1)], target.set('no', (action.id-1)));
+            newState = newState.setIn(['editingItem', 'selected'], List([]));
+            return newState;
+        }
+    },
 
 }, initialState);
 

@@ -19,6 +19,10 @@ import GRPane from 'containers/GRContent/GRPane';
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
+import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
+import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
+import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
+
 import Grid from '@material-ui/core/Grid';
 
 import Table from '@material-ui/core/Table';
@@ -306,6 +310,10 @@ class ClientManage extends Component {
 
         </GRPane>
         <ClientManageInform compId={compId} />
+
+        <BrowserRuleDialog compId={compId} />
+        <SecurityRuleDialog compId={compId} />
+        <MediaRuleDialog compId={compId} />
 
       </React.Fragment>
       

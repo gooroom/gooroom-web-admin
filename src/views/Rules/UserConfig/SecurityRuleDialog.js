@@ -73,6 +73,14 @@ class SecurityRuleDialog extends Component {
         });
     }
 
+    handleChangeNetworkOption = (count, event) => {
+        this.props.SecurityRuleActions.setEditingNetworkValue({
+            count: count,
+            name: event.target.name,
+            value: event.target.value
+        });
+    }
+
     handleCreateData = (event) => {
         const { SecurityRuleProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
@@ -170,8 +178,6 @@ class SecurityRuleDialog extends Component {
             title = "단말보안정책설정 복사";
         }
 
-
-
         return (
             <div>
             {(SecurityRuleProps.get('dialogOpen') && editingItem) &&
@@ -223,11 +229,9 @@ class SecurityRuleDialog extends Component {
                                     />
                                 </Grid>
                             </Grid>
-                            <Divider style={{marginTop:20}}/>
 
-                            <SecurityRuleNetwork 
-                                editingItem={editingItem}
-                            />
+                            <SecurityRuleNetwork />
+
                         </div>
                     }
                     </div>

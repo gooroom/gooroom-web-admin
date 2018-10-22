@@ -24,6 +24,10 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 import UserBasicDialog from "views/User/UserBasicDialog";
 import UserDialog from "views/User/UserDialog";
 
+import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
+import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
+import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
+
 import UserRuleInform from "views/User/UserRuleInform";
 import GRPane from "containers/GRContent/GRPane";
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
@@ -333,6 +337,11 @@ class UserManage extends Component {
         <UserRuleInform compId={compId} />
         <UserBasicDialog compId={compId} />
         <UserDialog compId={compId} />
+
+        <BrowserRuleDialog compId={compId} />
+        <SecurityRuleDialog compId={compId} />
+        <MediaRuleDialog compId={compId} />
+
         <GRConfirm />
       </React.Fragment>
     );

@@ -125,7 +125,13 @@ class SecurityRuleManage extends Component {
 
   handleCreateButton = () => {
     this.props.SecurityRuleActions.showDialog({
-      selectedViewItem: Map(),
+      selectedViewItem: Map({
+        objNm: 'testAuto',
+        comment: 'testcomment',
+        screenTime: '11',
+        passwordTime: '22',
+        packageHandle: 'allow'
+      }),
       dialogType: SecurityRuleDialog.TYPE_ADD
     });
   }

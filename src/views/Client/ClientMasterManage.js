@@ -28,6 +28,10 @@ import GRPane from 'containers/GRContent/GRPane';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientSelectDialog from "views/Client/ClientSelectDialog";
 
+import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
+import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
+import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
+
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 
@@ -366,6 +370,11 @@ class ClientMasterManage extends Component {
           </Grid>
           <ClientGroupDialog compId={compId} />
           <ClientSelectDialog isOpen={this.state.isOpenClientSelect} onSaveHandle={this.handleClientSelectSave} onClose={this.handleClientSelectClose} />
+
+          <BrowserRuleDialog compId={compId} />
+          <SecurityRuleDialog compId={compId} />
+          <MediaRuleDialog compId={compId} />
+          
           <GRConfirm />
           
         </GRPane>
