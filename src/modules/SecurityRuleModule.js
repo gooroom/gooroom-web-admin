@@ -242,6 +242,17 @@ export const deleteCompDataItem = (param) => dispatch => {
 
 
 const makeParameter = (param) => {
+
+    const networkItems = param.get('networkItems');
+    let firewallNetworkItem = null;
+    if(networkItems && networkItems.size > 0) {
+        firewallNetworkItem = networkItems.map(e => {
+            return (String(e.get('no'))).concat('|', e.get('direction'), '|', e.get('protocol'), '|', e.get('address'), '|', e.get('srcport'), '|', e.get('dstport'), '|', e.get('state'));
+        })
+    }
+
+    console.log('firewallNetworkItem :::::::::::: ', firewallNetworkItem.toJS());
+
     return {
         objId: param.get('objId'),
         objName: param.get('objNm'),
@@ -250,6 +261,7 @@ const makeParameter = (param) => {
         screen_time: param.get('screenTime'),
         password_time: param.get('passwordTime'),
         package_handle: (param.get('packageHandle') == 'allow') ? 'allow' : 'disallow',
+        firewall_network: (firewallNetworkItem) ? firewallNetworkItem.toJS() : null,
         state: (param.get('state') == 'allow') ? 'allow' : 'disallow'
     };
 }
@@ -454,11 +466,6 @@ export default handleActions({
     [SET_EDITING_NETWORK_VALUE]: (state, action) => {
 
         let editingItem = state.get('editingItem');
-
-        // console.log('=======================================================');
-        // console.log('editingItem :::::::: ', editingItem);
-        // console.log('action.count :::::::: ', action.count);
-
         let newEditingItem = editingItem;
         if(editingItem.get('networkItems')) {
             let networkItems = editingItem.get('networkItems');
@@ -466,10 +473,7 @@ export default handleActions({
                 newEditingItem = editingItem.setIn(['networkItems', action.count, action.name], action.value);
             }
         }
-
-        return state.merge({
-            editingItem: newEditingItem
-        });
+        return state.set('editingItem', newEditingItem);
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
