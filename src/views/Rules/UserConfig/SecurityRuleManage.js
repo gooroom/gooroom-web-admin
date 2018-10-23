@@ -64,7 +64,7 @@ class SecurityRuleManage extends Component {
   }
 
   componentDidMount() {
-    this.handleCreateButton();//.handleSelectBtnClick();
+    this.handleSelectBtnClick();
   }
 
   handleChangePage = (event, page) => {
