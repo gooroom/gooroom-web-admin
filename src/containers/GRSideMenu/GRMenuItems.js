@@ -103,7 +103,7 @@ export default {
       children: [
         {
           name: '데스크톱정보',
-          url: '/desktopconfig/desktopmng/GRM0501/데스크톱정보',
+          url: '/desktopconfig/desktopconf/GRM0501/데스크톱정보',
           icon: 'icon-wrench',
           level: 2,
         },

@@ -33,6 +33,7 @@ import GcspManage from "views/System/GcspManage";
 
 
 import DesktopAppManage from "views/Desktop/DesktopAppManage";
+import DesktopConfManage from "views/Rules/DesktopConfig/DesktopConfManage";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -70,6 +71,7 @@ class GRRouters extends Component {
           <Route path="/user/usermanage/:grMenuId/:grMenuName" component={UserManage} />
 
           <Route path="/desktopconfig/desktopapp/:grMenuId/:grMenuName" component={DesktopAppManage} />
+          <Route path="/desktopconfig/desktopconf/:grMenuId/:grMenuName" component={DesktopConfManage} />
 
           <Route path="/system/adminusermng/:grMenuId/:grMenuName" component={AdminUserManage} />
           <Route path="/system/serverurl/:grMenuId/:grMenuName" component={ServerUrlInfo} />
