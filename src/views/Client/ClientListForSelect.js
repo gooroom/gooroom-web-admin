@@ -4,7 +4,7 @@ import { Map, List, fromJS } from 'immutable';
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import UserStatusSelect from "views/Options/UserStatusSelect";
+import ClientStatusSelect from "views/Options/ClientStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
@@ -153,10 +153,10 @@ class ClientListForSelect extends Component {
     this.props.onSelectClient(newSelectedIds);
   };
 
-  handleChangeUserStatusSelect = (value) => {
+  handleChangeClientStatusSelect = (event, property) => {
     const { stateData } = this.state;
     const newListParam = (stateData.get('listParam')).merge({
-      status: value, page: 0
+      clientType: property, page: 0
     });
     this.setState({
       stateData: stateData.set('listParam', newListParam)
@@ -203,7 +203,7 @@ class ClientListForSelect extends Component {
         <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
               <Grid item xs={4} >
                 <FormControl fullWidth={true}>
-                  <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
+                  <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
                 </FormControl>
               </Grid>
               <Grid item xs={4}>

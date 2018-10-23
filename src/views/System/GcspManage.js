@@ -150,7 +150,7 @@ class GcspManage extends Component {
     this.props.GcspManageActions.changeListParamData({
       name: name, 
       value: value,
-      compId: this.props.match.params.grMenuId
+      compId: this.props.match.params.grMenuIdUserStatusSelect
     });
   }
 
@@ -173,11 +173,11 @@ class GcspManage extends Component {
           <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
 
-              <Grid item xs={4} >
+              {/* <Grid item xs={4} >
                 <FormControl fullWidth={true}>
                   <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid item xs={4} >
                 <FormControl fullWidth={true}>
                   <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />

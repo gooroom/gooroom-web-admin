@@ -83,7 +83,7 @@ class ClientPackageManage extends Component {
 
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      groupId: selectedGroupIdArray.join(','), page:0
+      groupId: selectedGroupIdArray.toJS(), page:0
     }, true);
 
     // show client group info.
@@ -333,7 +333,7 @@ class ClientPackageManage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { ClientPackageProps } = this.props;
+    const { ClientPackageProps, ClientGroupProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     return (
@@ -390,7 +390,12 @@ class ClientPackageManage extends Component {
 
         </GRPane>
         <ClientGroupDialog compId={compId} />
-        <ClientSelectDialog isOpen={this.state.isOpenClientSelect} onSaveHandle={this.handleClientSelectSave} onClose={this.handleClientSelectClose} />
+        <ClientSelectDialog 
+          isOpen={this.state.isOpenClientSelect} 
+          onSaveHandle={this.handleClientSelectSave} 
+          onClose={this.handleClientSelectClose} 
+          selectedGroupItem={ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedViewItem'])}
+        />
         <ClientPackageSelectDialog isOpen={this.state.isOpenClientPackageSelect} onInstallHandle={this.handleClientPackageInstall} onClose={this.handleClientPackageSelectClose} />
         <GRConfirm />
       </React.Fragment>

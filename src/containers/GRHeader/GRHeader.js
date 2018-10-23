@@ -53,7 +53,7 @@ class GRHeader extends Component {
       <AppBar className={classes.headerRoot}>
         <Toolbar className={classes.headerToolbar}>
             <Typography type="title" className={classes.headerBrandLogo}>
-              GPMS v2.0
+              GPMS v1.2
             </Typography>
             <IconButton onClick={this.props.toggleDrawer}>
               <MenuIcon />

@@ -152,7 +152,6 @@ class ClientManage extends Component {
     });
   };
 
-
   isSelected = id => {
     const { ClientManageProps } = this.props;
     const selectedIds = getDataObjectVariableInComp(ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
