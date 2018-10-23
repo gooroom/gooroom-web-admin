@@ -20,6 +20,8 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import MediaRuleDialog from './MediaRuleDialog';
 import MediaRuleSpec from './MediaRuleSpec';
+import { generateMediaRuleObject } from './MediaRuleSpec';
+
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -129,7 +131,7 @@ class MediaRuleManage extends Component {
     const selectedViewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     MediaRuleActions.showDialog({
-      selectedViewItem: MediaRuleSpec.generateMediaRuleObject(selectedViewItem),
+      selectedViewItem: generateMediaRuleObject(selectedViewItem),
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };

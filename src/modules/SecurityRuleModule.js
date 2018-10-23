@@ -447,6 +447,10 @@ export default handleActions({
         return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
     },
     [SHOW_SECURITYRULE_DIALOG]: (state, action) => {
+        // generate firewall data
+        console.log('action.selectedViewItem :::::::::::::: ', action.selectedViewItem);
+
+
         return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_SECURITYRULE_DIALOG]: (state, action) => {

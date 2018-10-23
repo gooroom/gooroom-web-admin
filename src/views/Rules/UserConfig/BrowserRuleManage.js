@@ -20,6 +20,8 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import BrowserRuleDialog from './BrowserRuleDialog';
 import BrowserRuleSpec from './BrowserRuleSpec';
+import { generateBrowserRuleObject} from './BrowserRuleSpec';
+
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -135,7 +137,7 @@ class BrowserRuleManage extends Component {
     const selectedViewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     BrowserRuleActions.showDialog({
-      selectedViewItem: BrowserRuleSpec.generateBrowserRuleObject(selectedViewItem),
+      selectedViewItem: generateBrowserRuleObject(selectedViewItem),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
