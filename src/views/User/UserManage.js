@@ -134,7 +134,7 @@ class UserManage extends Component {
         showPassword: false
       },
       dialogType: UserBasicDialog.TYPE_ADD
-    });
+    }, false);
   };
   
   handleSelectAllClick = (event, checked) => {
@@ -168,7 +168,7 @@ class UserManage extends Component {
     UserActions.showDialog({
       selectedViewItem: selectedViewItem,
       dialogType: UserBasicDialog.TYPE_EDIT
-    });
+    }, false);
   };
 
   // delete

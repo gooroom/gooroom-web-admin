@@ -109,7 +109,7 @@ class UserListComp extends Component {
     UserActions.showDialog({
       selectedViewItem: selectedViewItem,
       dialogType: UserBasicDialog.TYPE_EDIT
-    });
+    }, false);
   };
 
   // delete
