@@ -46,7 +46,7 @@ import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 
-import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
+import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
@@ -196,7 +196,7 @@ class ClientGroupInform extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
-                <DesktopConfigComp compId={compId} targetType="GROUP" inherit={false} />
+                <DesktopConfSpec compId={compId} targetType="GROUP" inherit={false} />
               </Grid>
             </Grid>
 
