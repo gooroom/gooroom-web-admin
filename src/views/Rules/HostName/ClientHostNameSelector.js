@@ -94,7 +94,7 @@ class ClientHostNameSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientHostNameSpec
+          <ClientHostNameSpec compId={compId}
             specType="inform" targetType={targetType}
             selectedItem={selectedClientHostNameItem}
             handleEditClick={this.handleEditClickForClientHostName}

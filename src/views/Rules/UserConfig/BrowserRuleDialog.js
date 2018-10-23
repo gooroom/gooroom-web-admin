@@ -186,7 +186,7 @@ class BrowserRuleDialog extends Component {
                             value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                             onChange={this.handleValueChange("comment")} />
 
-                        <Grid item xs={12} container 
+                        <Grid container spacing={16}
                             alignItems="flex-end" direction="row" justify="space-between" 
                             className={classes.dialogItemRow}>
                             <Grid item xs={5}>
@@ -213,49 +213,32 @@ class BrowserRuleDialog extends Component {
                             </Grid>
                         </Grid>
                         
-                        <div className={classes.dialogItemRow}>
-                            <TextField
-                                label="신뢰사이트 설정 (파일로 변경필요~!!!!)"
-                                multiline
-                                value={(editingItem.get('trustSetupId')) ? editingItem.get('trustSetupId') : ''}
-                                onChange={this.handleValueChange("trustSetupId")}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            />
-                        </div>
+                        <TextField label="신뢰사이트 설정" className={classes.fullWidth} multiline
+                            value={(editingItem.get('trustSetupId')) ? editingItem.get('trustSetupId') : ''}
+                            onChange={this.handleValueChange("trustSetupId")} />
+                        <TextField label="비신뢰사이트 설정" className={classes.fullWidth} multiline style={{marginBottom:20}}
+                            value={(editingItem.get('untrustSetupId')) ? editingItem.get('untrustSetupId') : ''}
+                            onChange={this.handleValueChange("untrustSetupId")} />
 
-                        <div className={classes.dialogItemRow}>
-                            <TextField
-                                label="비신뢰사이트 설정 (파일로 변경필요~!!!!)"
-                                multiline
-                                value={(editingItem.get('untrustSetupId')) ? editingItem.get('untrustSetupId') : ''}
-                                onChange={this.handleValueChange("untrustSetupId")}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            />
-                        </div>
-                        <div className={classes.dialogItemRow}>
-
-                            <FormLabel >{bull} White Address List</FormLabel>
-                            <Button size="small" variant="contained" color="primary" 
-                                className={classes.smallIconButton}
-                                onClick={this.handleAddWhiteList}
-                            >
-                                <AddIcon />
-                            </Button>
-                            <div>
-                                <List>
-                                {editingItem.get('trustUrlList') && editingItem.get('trustUrlList').size > 0 && editingItem.get('trustUrlList').map((value, index) => (
-                                    <ListItem key={index}>
-                                        <Input value={value} style={{width:"100%"}} onChange={this.handleWhiteListValueChange(index)}/>
-                                        <ListItemSecondaryAction>
-                                            <IconButton onClick={this.handleDeleteWhiteList(index)}>
-                                                <DeleteForeverIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                ))}
-                                </List>
-                            </div>
-                        </div>
+                        <FormLabel>{bull} White Address List</FormLabel>
+                        <Button size="small" variant="contained" color="primary" style={{marginLeft:20}}
+                            className={classes.smallIconButton}
+                            onClick={this.handleAddWhiteList}
+                        >
+                            <AddIcon />
+                        </Button>
+                        <List>
+                        {editingItem.get('trustUrlList') && editingItem.get('trustUrlList').size > 0 && editingItem.get('trustUrlList').map((value, index) => (
+                            <ListItem key={index} style={{paddingTop:0,paddingBottom:0}}>
+                                <Input value={value} style={{width:"100%"}} onChange={this.handleWhiteListValueChange(index)}/>
+                                <ListItemSecondaryAction>
+                                    <IconButton onClick={this.handleDeleteWhiteList(index)}>
+                                        <DeleteForeverIcon />
+                                    </IconButton>
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                        ))}
+                        </List>
                     </div>
                     }
                     {(dialogType === BrowserRuleDialog.TYPE_INHERIT) &&

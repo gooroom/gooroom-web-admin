@@ -105,7 +105,7 @@ class BrowserRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <BrowserRuleSpec 
+          <BrowserRuleSpec compId={compId} 
             specType="inform" targetType={targetType}
             selectedItem={selectedBrowserRuleItem}
             handleEditClick={this.handleEditClickForBrowserRule}

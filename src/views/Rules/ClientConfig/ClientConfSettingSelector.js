@@ -99,7 +99,7 @@ class ClientConfSettingSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientConfSettingSpec 
+          <ClientConfSettingSpec compId={compId}
             specType="inform" targetType={targetType}
             selectedItem={selectedClientConfSettingItem}
             handleEditClick={this.handleEditClickForClientConfSetting}

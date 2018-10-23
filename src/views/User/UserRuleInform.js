@@ -106,21 +106,21 @@ class UserRuleInform extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
               <Grid item xs={12} sm={12} lg={6} >
-                <BrowserRuleSpec 
+                <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="USER"
                   selectedItem={selectedBrowserRuleItem}
                   handleEditClick={this.handleEditClickForBrowserRule}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={6} >
-                <MediaRuleSpec 
+                <MediaRuleSpec compId={compId}
                   specType="inform" targetType="USER"
                   selectedItem={selectedMediaRuleItem}
                   handleEditClick={this.handleEditClickForMediaRule}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={6} >
-                <SecurityRuleSpec 
+                <SecurityRuleSpec compId={compId}
                   specType="inform" targetType="USER"
                   selectedItem={selectedSecurityRuleItem}
                   handleEditClick={this.handleEditClickForSecurityRule}

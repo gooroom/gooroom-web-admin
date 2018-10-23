@@ -37,7 +37,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 class SecurityRuleSpec extends Component {
 
-  handleInheritBtnClick = (objId, compType) => {
+  handleInheritClick = (objId, compType) => {
     const { SecurityRuleProps, SecurityRuleActions, compId, targetType } = this.props;
     const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SecurityRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(SecurityRuleProps, compId, targetType);
 

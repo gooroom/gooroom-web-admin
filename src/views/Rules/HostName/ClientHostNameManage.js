@@ -276,7 +276,7 @@ class ClientHostNameManage extends Component {
           }
         </GRPane>
         {/* dialog(popup) component area */}
-        <ClientHostNameSpec 
+        <ClientHostNameSpec compId={compId}
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}

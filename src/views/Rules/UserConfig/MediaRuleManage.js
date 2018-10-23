@@ -285,7 +285,7 @@ class MediaRuleManage extends Component {
         }
         </GRPane>
         {/* dialog(popup) component area */}
-        <MediaRuleSpec 
+        <MediaRuleSpec compId={compId}
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}
