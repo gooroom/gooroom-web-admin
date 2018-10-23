@@ -156,8 +156,9 @@ class UserDialog extends Component {
                                 />
                             </Grid>
                         </Grid>
-                        <Divider style={{marginBottom: 10}} /> 
+                        <div style={{marginTop:20}}>
                         <UserRuleSelector compId={compId} module={UserProps.get('editingItem').toJS()} targetType="USER" />
+                        </div>
                     </DialogContent>
 
                     <DialogActions>

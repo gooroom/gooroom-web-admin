@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { Map, List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -251,8 +251,6 @@ const makeParameter = (param) => {
         })
     }
 
-    console.log('firewallNetworkItem :::::::::::: ', firewallNetworkItem.toJS());
-
     return {
         objId: param.get('objId'),
         objName: param.get('objNm'),
@@ -261,8 +259,8 @@ const makeParameter = (param) => {
         screen_time: param.get('screenTime'),
         password_time: param.get('passwordTime'),
         package_handle: (param.get('packageHandle') == 'allow') ? 'allow' : 'disallow',
-        firewall_network: (firewallNetworkItem) ? firewallNetworkItem.toJS() : null,
-        state: (param.get('state') == 'allow') ? 'allow' : 'disallow'
+        global_network: (param.get('globalNetwork')) ? param.get('globalNetwork') : 'drop',
+        firewall_network: (firewallNetworkItem) ? firewallNetworkItem.toJS() : null
     };
 }
 
@@ -448,8 +446,24 @@ export default handleActions({
     },
     [SHOW_SECURITYRULE_DIALOG]: (state, action) => {
         // generate firewall data
-        console.log('action.selectedViewItem :::::::::::::: ', action.selectedViewItem);
+        const netItems = action.selectedViewItem.get('netItem');
+        if(netItems && netItems.size > 0) {
+            let networkItems = List([]);
+            netItems.forEach(n => {
+                const ns = n.split('|');
+                networkItems = networkItems.push(Map({
+                    no: ns[0],
+                    direction: ns[1],
+                    protocol: ns[2],
+                    address: ns[3],
+                    srcport: ns[4],
+                    dstport: ns[5],
+                    state: ns[6]
+                }));
+            });
 
+            action.selectedViewItem = action.selectedViewItem.set('networkItems', networkItems);
+        }
 
         return commonHandleActions.handleShowDialogAction(state, action);
     },
@@ -496,6 +510,7 @@ export default handleActions({
             pending: false,
             error: false
         });
+
     },
     [EDIT_SECURITYRULE_SUCCESS]: (state, action) => {
         return commonHandleActions.handleEditSuccessAction(state, action);

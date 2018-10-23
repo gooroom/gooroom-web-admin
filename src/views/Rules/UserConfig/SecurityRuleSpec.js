@@ -60,7 +60,6 @@ class SecurityRuleSpec extends Component {
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
     }
 
-    console.log('viewItem ::::::::::::: ', (viewItem) ? viewItem.toJS(): 'AAAA');
     return (
       <React.Fragment>
         {viewItem && 
@@ -110,8 +109,8 @@ class SecurityRuleSpec extends Component {
                   </TableRow>
 
                   <TableRow>
-                    <TableCell component="th" scope="row">{bull} 전체네트워크허용</TableCell>
-                    <TableCell numeric>{viewItem.get('state')}</TableCell>
+                    <TableCell component="th" scope="row">{bull} 기본네트워크허용여부</TableCell>
+                    <TableCell numeric>{viewItem.get('globalNetwork')}</TableCell>
                     <TableCell component="th" scope="row"></TableCell>
                     <TableCell numeric></TableCell>
                   </TableRow>
@@ -175,6 +174,7 @@ export const generateSecurityRuleObject = (param) => {
     let passwordTime = '';
     let packageHandle = '';
     let netState = '';
+    let globalNetwork = '';
     let netItem = List([]);
     
     param.get('propList').forEach(function(e) {
@@ -190,7 +190,10 @@ export const generateSecurityRuleObject = (param) => {
         netState = evalue;
       } else if(ename == 'firewall_network') {
         netItem = netItem.push(evalue);
+      } else if(ename == 'global_network') {
+        globalNetwork = evalue;
       }
+      
     });
   
     return Map({
@@ -202,6 +205,7 @@ export const generateSecurityRuleObject = (param) => {
       screenTime: screenTime,
       passwordTime: passwordTime,
       packageHandle: packageHandle,
+      globalNetwork: globalNetwork,
       netState: netState,
       netItem: netItem
     });

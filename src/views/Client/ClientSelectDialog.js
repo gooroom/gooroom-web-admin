@@ -39,10 +39,6 @@ class ClientSelectDialog extends Component {
         };
     }
 
-    componentDidMount() {
-        //console.log('props :::::::::: ', this.props);
-    }
-
     handleSelectDept = (node) => {
         this.setState(({stateData}) => ({
             stateData: stateData.set('selectedGroupId', node.key).set('selectedGroupNm', node.title)

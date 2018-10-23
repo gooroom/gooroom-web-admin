@@ -76,7 +76,6 @@ class ClientMasterManage extends Component {
     // show client group info.
     if(selectedGroupObj) {
 
-      console.log('selectedGroupObj ::::::::::::::::::::: ', (selectedGroupObj) ? selectedGroupObj.toJS() : '');
       ClientConfSettingActions.getClientConfByGroupId({
         compId: compId, groupId: (selectedGroupObj) ? selectedGroupObj.get('grpId') : ''
       });
