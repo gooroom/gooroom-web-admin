@@ -22,6 +22,16 @@ export default {
           icon: 'icon-wrench',
           level: 2,
         }, {
+          name: '단말정보',
+          url: '/clients/clientmanage/GRM0102/단말정보',
+          icon: 'icon-wrench',
+          level: 2,
+        }, {
+          name: '단말그룹',
+          url: '/clients/clientgroupmanage/GRM0103/단말그룹',
+          icon: 'icon-folder',
+          level: 2,
+        }, {
           name: '단말등록키',
           url: '/clientconfig/regkey/GRM0104/단말등록키',
           icon: 'icon-notebook',
@@ -39,12 +49,6 @@ export default {
           url: '/package/packagemanage/GRM0201/패키지관리',
           icon: 'icon-layers',
           level: 2,
-        },
-        {
-          name: '프로파일정보',
-          url: '/clientconfig/profileset/GRM0202/프로파일정보',
-          icon: 'icon-notebook',
-          level: 2,
         }
       ]
     }, {
@@ -57,6 +61,12 @@ export default {
           name: '사용자통합관리',
           url: '/user/usermastermanage/GRM0301/사용자통합관리',
           icon: 'icon-wrench',
+          level: 2,
+        },
+        {
+          name: '사용자정보',
+          url: '/user/usermanage/GRM0302/사용자정보',
+          icon: 'icon-folder',
           level: 2,
         }
       ]
@@ -118,7 +128,7 @@ export default {
         }
       ]
     }, {
-      name: '단말정책',
+      name: '기타정책',
       url: '/clientconfig',
       icon: 'icon-screen-desktop',
       level: 1,
@@ -134,8 +144,21 @@ export default {
           icon: 'icon-layers',
           level: 2,
         }, {
-          name: '단말설정',
-          url: '/clientconfig/setting/GRM0703/단말설정',
+          name: '단말정책',
+          url: '/clientconfig/setting/GRM0703/단말정책',
+          icon: 'icon-notebook',
+          level: 2,
+        }
+      ]
+    }, {
+      name: '단말설정(NEW)',
+      url: '/clientconfig',
+      icon: 'icon-screen-desktop',
+      level: 1,
+      children: [
+        {
+          name: '프로파일정보',
+          url: '/clientconfig/profileset/GRM0801/프로파일정보',
           icon: 'icon-notebook',
           level: 2,
         }
@@ -177,6 +200,19 @@ export default {
           level: 2,
         },
         
+      ]
+    }, {
+      name: '???테스트',
+      url: '/test',
+      icon: 'icon-screen-desktop',
+      level: 1,
+      children: [
+        {
+          name: '???컴포넌트테스트',
+          url: '/test/components/GRM0991/컴포넌트테스트',
+          icon: 'icon-wrench',
+          level: 2,
+        }
       ]
     }
   ]
