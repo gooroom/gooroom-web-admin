@@ -279,7 +279,7 @@ class ClientUpdateServerManage extends Component {
           }
         </GRPane>
         {/* dialog(popup) component area */}
-        <ClientUpdateServerSpec 
+        <ClientUpdateServerSpec compId={compId}
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}

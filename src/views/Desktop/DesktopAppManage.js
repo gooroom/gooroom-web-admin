@@ -57,14 +57,6 @@ class DesktopAppManage extends Component {
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' }
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    }
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
@@ -172,7 +164,7 @@ class DesktopAppManage extends Component {
     const compId = this.props.match.params.grMenuId;
     const emptyRows = 0;//DesktopAppProps.listParam.rowsPerPage - DesktopAppProps.listData.length;
 
-    const listObj = DesktopAppProps.getIn(['viewItems', compId]);
+    const selectedItem = DesktopAppProps.getIn(['viewItems', compId]);
 
     return (
       <div>
@@ -204,19 +196,19 @@ class DesktopAppManage extends Component {
           </Grid>            
 
           {/* data area */}
-          {(listObj) &&
+          {(selectedItem) &&
           <div>
             <Table>
               <GRCommonTableHead
                 classes={classes}
                 keyId="appId"
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+                orderDir={selectedItem.getIn(['listParam', 'orderDir'])}
+                orderColumn={selectedItem.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData').map(n => {
+                {selectedItem.get('listData').map(n => {
                   return (
                     <TableRow 
                       hover
@@ -243,10 +235,10 @@ class DesktopAppManage extends Component {
             </Table>
             <TablePagination
               component='div'
-              count={listObj.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={listObj.getIn(['listParam', 'page'])}
+              count={selectedItem.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={selectedItem.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={selectedItem.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={selectedItem.getIn(['listParam', 'page'])}
               backIconButtonProps={{
                 'aria-label': 'Previous Page'
               }}

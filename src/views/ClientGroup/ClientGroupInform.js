@@ -156,19 +156,19 @@ class ClientGroupInform extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
               <Grid item xs={12} sm={12} lg={6}>
-                <ClientConfSettingSpec 
+                <ClientConfSettingSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientConfSettingItem}
                   handleEditClick={this.handleEditClickForClientConfSetting}
                   inherit={false}
                 />
-                <MediaRuleSpec 
+                <MediaRuleSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedMediaRuleItem}
                   handleEditClick={this.handleEditClickForMediaRule}
                   inherit={false}
                 />
-                <ClientUpdateServerSpec 
+                <ClientUpdateServerSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientUpdateServerItem}
                   handleEditClick={this.handleEditClickForClientUpdateServer}
@@ -176,19 +176,19 @@ class ClientGroupInform extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={6}>
-                <BrowserRuleSpec 
+                <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedBrowserRuleItem}
                   handleEditClick={this.handleEditClickForBrowserRule}
                   inherit={false}
                 />
-                <SecurityRuleSpec 
+                <SecurityRuleSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedSecurityRuleItem}
                   handleEditClick={this.handleEditClickForSecurityRule}
                   inherit={false}
                 />
-                <ClientHostNameSpec 
+                <ClientHostNameSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientHostNameItem}
                   handleEditClick={this.handleEditClickForClientHostName}

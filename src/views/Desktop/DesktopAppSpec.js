@@ -32,7 +32,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class BrowserRuleSpec extends Component {
+class DesktopAppSpec extends Component {
 
   handleInheritClick = (objId, compType) => {
     const { BrowserRuleProps, BrowserRuleActions, compId, targetType } = this.props;
@@ -129,7 +129,7 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleSpec));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopAppSpec));
 
 export const generateBrowserRuleObject = (param) => {
 

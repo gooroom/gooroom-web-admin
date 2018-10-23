@@ -299,7 +299,7 @@ class SecurityRuleManage extends Component {
         }
         </GRPane>
         {/* dialog(popup) component area */}
-        <SecurityRuleSpec 
+        <SecurityRuleSpec compId={compId}
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}

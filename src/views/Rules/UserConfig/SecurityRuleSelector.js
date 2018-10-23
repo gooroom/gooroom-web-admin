@@ -105,7 +105,7 @@ class SecurityRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <SecurityRuleSpec 
+          <SecurityRuleSpec compId={compId}
             specType="inform" targetType={targetType}
             selectedItem={selectedSecurityRuleItem}
             handleEditClick={this.handleEditClickForSecurityRule}

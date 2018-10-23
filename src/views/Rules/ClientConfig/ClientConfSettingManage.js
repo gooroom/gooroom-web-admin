@@ -275,7 +275,7 @@ class ClientConfSettingManage extends Component {
           }
         </GRPane>
         {/* dialog(popup) component area */}
-        <ClientConfSettingSpec 
+        <ClientConfSettingSpec compId={compId}
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}

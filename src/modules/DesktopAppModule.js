@@ -210,24 +210,31 @@ export const deleteCompData = (param) => dispatch => {
     });
 };
 
-const makeParameter = (param) => {
-    return {
-        objId: param.get('objId'),
-        objName: param.get('objNm'),
-        objComment: param.get('comment'),
+const makeParameter = (itemObj) => {
 
-        webSocket: param.get('webSocket'),
-        webWorker: param.get('webWorker'),
-        trustSetupId: param.get('trustSetupId'),
-        untrustSetupId: param.get('untrustSetupId'),
-        trustUrlList: (param.get('trustUrlList')) ? param.get('trustUrlList').toArray() : []
+    return {
+        appId: itemObj.get('appId'),
+        appNm: itemObj.get('appNm'),
+        appInfo: itemObj.get('comment'),
+
+        appExec: itemObj.get('appExec'),
+        appGubun: itemObj.get('appGubun'),
+
+        iconGubun: itemObj.get('iconGubun'),
+        statusCd: itemObj.get('statusCd'),
+
+        appMountUrl: itemObj.get('appMountUrl'),
+        appMountPoint: itemObj.get('appMountPoint'),
+
+        iconUrl: itemObj.get('iconUrl'),
+        iconId: itemObj.get('iconSelect')
     };
 }
 
 // create (add)
 export const createDesktopAppData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createDesktopAppConf', makeParameter(itemObj)).then(
+    return requestPostAPI('createDesktopApp', makeParameter(itemObj)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {

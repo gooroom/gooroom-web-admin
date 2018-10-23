@@ -292,7 +292,7 @@ class BrowserRuleManage extends Component {
         }
         </GRPane>
         {/* dialog(popup) component area */}
-        <BrowserRuleSpec 
+        <BrowserRuleSpec compId={compId}
           specType="inform" 
           selectedItem={selectedItem}
           handleCopyClick={this.handleCopyClick}

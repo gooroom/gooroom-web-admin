@@ -102,7 +102,7 @@ class ClientUpdateServerSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientUpdateServerSpec 
+          <ClientUpdateServerSpec compId={compId}
             specType="inform" targetType={targetType}
             selectedItem={selectedClientUpdateServerItem}
             handleEditClick={this.handleEditClickForClientUpdateServer}

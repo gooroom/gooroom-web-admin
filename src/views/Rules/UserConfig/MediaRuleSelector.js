@@ -105,7 +105,7 @@ class MediaRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <MediaRuleSpec 
+          <MediaRuleSpec compId={compId}
             specType="inform" targetType={targetType}
             selectedItem={selectedMediaRuleItem}
             handleEditClick={this.handleEditClickForMediaRule}
