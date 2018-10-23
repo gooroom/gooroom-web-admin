@@ -92,10 +92,10 @@ let EnhancedTableToolbar = props => {
             <FormControlLabel
                 control={
                 <Switch onChange={props.onGlobalNetworkChange('globalNetwork')} 
-                    checked={(props.globalNetwork == 'accept')}
+                    checked={(props.globalNetwork == 'ACCEPT')}
                     color="primary" />
                 }
-                label={(props.globalNetwork == 'accept') ? '기본네트워크 허가' : '기본네트워크 차단'}
+                label={(props.globalNetwork == 'ACCEPT') ? '기본네트워크 허가' : '기본네트워크 차단'}
             />
 
           </Grid>
@@ -208,7 +208,7 @@ class SecurityRuleNetwork extends Component {
   };
 
   handleValueChange = name => event => {
-    const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'accept' : 'drop') : event.target.value;
+    const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'ACCEPT' : 'DROP') : event.target.value;
     this.props.SecurityRuleActions.setEditingItemValue({
         name: name,
         value: value
@@ -311,9 +311,9 @@ class SecurityRuleNetwork extends Component {
                         name="direction"
                         onChange={this.changeNetworkOption(n.get('no'))}
                       >
-                        <MenuItem value={'input'}>INPUT</MenuItem>
-                        <MenuItem value={'output'}>OUTPUT</MenuItem>
-                        <MenuItem value={'all'}>ALL</MenuItem>
+                        <MenuItem value={'INPUT'}>INPUT</MenuItem>
+                        <MenuItem value={'OUTPUT'}>OUTPUT</MenuItem>
+                        <MenuItem value={'ALL'}>ALL</MenuItem>
                       </Select>
                     </FormControl>
                   </TableCell>
@@ -324,9 +324,9 @@ class SecurityRuleNetwork extends Component {
                         name="protocol"
                         onChange={this.changeNetworkOption(n.get('no'))}
                       >
-                        <MenuItem value={'tcp'}>TCP</MenuItem>
-                        <MenuItem value={'udp'}>UDP</MenuItem>
-                        <MenuItem value={'icmp'}>ICMP</MenuItem>
+                        <MenuItem value={'TCP'}>TCP</MenuItem>
+                        <MenuItem value={'UDP'}>UDP</MenuItem>
+                        <MenuItem value={'ICMP'}>ICMP</MenuItem>
                       </Select>
                     </FormControl>
                   </TableCell>
@@ -368,8 +368,8 @@ class SecurityRuleNetwork extends Component {
                         name="state"
                         onChange={this.changeNetworkOption(n.get('no'))}
                       >
-                        <MenuItem value={'accept'}>ACCEPT</MenuItem>
-                        <MenuItem value={'drop'}>DROP</MenuItem>
+                        <MenuItem value={'ACCEPT'}>ACCEPT</MenuItem>
+                        <MenuItem value={'DROP'}>DROP</MenuItem>
                       </Select>
                     </FormControl>
                   
