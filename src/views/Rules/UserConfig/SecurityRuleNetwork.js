@@ -14,27 +14,17 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import CustomToolbar from "./CustomToolbar";
-import CustomToolbarSelect from "./CustomToolbarSelect";
-
-import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
-
-import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
-
-import SecurityRuleDialog from './SecurityRuleDialog';
-import SecurityRuleSpec from './SecurityRuleSpec';
-import GRPane from 'containers/GRContent/GRPane';
-
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
@@ -42,12 +32,9 @@ import IconButton from '@material-ui/core/IconButton';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
-import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
-import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import UpIcon from '@material-ui/icons/ArrowUpward';
@@ -82,51 +69,75 @@ let EnhancedTableToolbar = props => {
 
   return (
     <Toolbar style={{padding:0}}>
-      <div style={{flex: '0 0 auto'}}>
-        {numSelected > 0 ? (
-          <Typography color="inherit" variant="subtitle1">
-            {numSelected} selected
-          </Typography>
-        ) : (
-          <Typography variant="subtitle1" id="tableTitle">
-            방화벽 설정
-          </Typography>
-        )}
-      </div>
-      <div style={{flex: '1 1 100%'}} />
-      <div >
-        {numSelected > 0 ? (
-          <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={12} sm={4} md={4}>
-              <Tooltip title="Delete">
-                <IconButton aria-label="Delete" onClick={props.onDeleteClick} >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid>
-            <Grid item xs={12} sm={4} md={4}>
-              <Tooltip title="Up">
-                <IconButton aria-label="Up" onClick={props.onUpwardClick} >
-                  <UpIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid>
-            <Grid item xs={12} sm={4} md={4}>
-              <Tooltip title="Down">
-                <IconButton aria-label="Down" onClick={props.onDownwardClick} >
-                  <DownIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid>
+    
+    <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+      <Grid item xs={12} sm={4} md={4}>
+      
+      {numSelected > 0 ? (
+        <Typography color="inherit" variant="subtitle1">
+          {numSelected} selected
+        </Typography>
+      ) : (
+        <Typography variant="subtitle1" id="tableTitle">방화벽 설정</Typography>
+      )}
+    
+      
+      
+      </Grid>
+      <Grid item xs={12} sm={8} md={8}>
+
+        <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+          <Grid item xs={12} sm={6} md={6}>
+      
+            <FormControlLabel
+                control={
+                <Switch onChange={props.onGlobalNetworkChange('globalNetwork')} 
+                    checked={(props.globalNetwork == 'accept')}
+                    color="primary" />
+                }
+                label={(props.globalNetwork == 'accept') ? '기본네트워크 허가' : '기본네트워크 차단'}
+            />
+
           </Grid>
-        ) : (
-          <Tooltip title="항목 추가">
-            <IconButton aria-label="항목 추가" onClick={props.onAddClick} >
-              <AddIcon />
-            </IconButton>
-          </Tooltip>
-        )}
-      </div>
+          <Grid item xs={12} sm={6} md={6}>
+
+            {numSelected > 0 ? (
+              <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+                <Grid item xs={12} sm={4} md={4}>
+                  <Tooltip title="Delete">
+                    <IconButton aria-label="Delete" onClick={props.onDeleteClick} >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item xs={12} sm={4} md={4}>
+                  <Tooltip title="Up">
+                    <IconButton aria-label="Up" onClick={props.onUpwardClick} >
+                      <UpIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item xs={12} sm={4} md={4}>
+                  <Tooltip title="Down">
+                    <IconButton aria-label="Down" onClick={props.onDownwardClick} >
+                      <DownIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            ) : (
+              <Tooltip title="항목 추가">
+                <IconButton aria-label="항목 추가" onClick={props.onAddClick} >
+                  <AddIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+      
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
+
     </Toolbar>
   );
 };
@@ -196,6 +207,14 @@ class SecurityRuleNetwork extends Component {
     });
   };
 
+  handleValueChange = name => event => {
+    const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'accept' : 'drop') : event.target.value;
+    this.props.SecurityRuleActions.setEditingItemValue({
+        name: name,
+        value: value
+    });
+  }
+
   changeNetworkOption = count => event => {
     this.props.SecurityRuleActions.setEditingNetworkValue({
       count: count,
@@ -254,6 +273,8 @@ class SecurityRuleNetwork extends Component {
         onDeleteClick={this.handleDeleteClick}
         onUpwardClick={this.handleSelectUpwardClick}
         onDownwardClick={this.handleSelectDownwardClick}
+        onGlobalNetworkChange={this.handleValueChange}
+        globalNetwork={(editingItem) ? editingItem.get('globalNetwork') : 'DROP'}
       />
       
       <div>
@@ -266,7 +287,7 @@ class SecurityRuleNetwork extends Component {
                 <TableCell key={column.id}>{column.label}</TableCell>
               );
             }, this)}
-            <TableCell>ORDER</TableCell>
+            <TableCell>이동</TableCell>
           </TableRow>
         </TableHead>
         {(networkItems) &&
@@ -290,9 +311,9 @@ class SecurityRuleNetwork extends Component {
                         name="direction"
                         onChange={this.changeNetworkOption(n.get('no'))}
                       >
-                        <MenuItem value={'INPUT'}>INPUT</MenuItem>
-                        <MenuItem value={'OUTPUT'}>OUTPUT</MenuItem>
-                        <MenuItem value={'ALL'}>ALL</MenuItem>
+                        <MenuItem value={'input'}>INPUT</MenuItem>
+                        <MenuItem value={'output'}>OUTPUT</MenuItem>
+                        <MenuItem value={'all'}>ALL</MenuItem>
                       </Select>
                     </FormControl>
                   </TableCell>
@@ -303,9 +324,9 @@ class SecurityRuleNetwork extends Component {
                         name="protocol"
                         onChange={this.changeNetworkOption(n.get('no'))}
                       >
-                        <MenuItem value={'TCP'}>TCP</MenuItem>
-                        <MenuItem value={'UDP'}>UDP</MenuItem>
-                        <MenuItem value={'ICMP'}>ICMP</MenuItem>
+                        <MenuItem value={'tcp'}>TCP</MenuItem>
+                        <MenuItem value={'udp'}>UDP</MenuItem>
+                        <MenuItem value={'icmp'}>ICMP</MenuItem>
                       </Select>
                     </FormControl>
                   </TableCell>
@@ -347,8 +368,8 @@ class SecurityRuleNetwork extends Component {
                         name="state"
                         onChange={this.changeNetworkOption(n.get('no'))}
                       >
-                        <MenuItem value={'ACCEPT'}>ACCEPT</MenuItem>
-                        <MenuItem value={'DROP'}>DROP</MenuItem>
+                        <MenuItem value={'accept'}>ACCEPT</MenuItem>
+                        <MenuItem value={'drop'}>DROP</MenuItem>
                       </Select>
                     </FormControl>
                   

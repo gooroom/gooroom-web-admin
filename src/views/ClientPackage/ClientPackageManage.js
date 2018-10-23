@@ -303,7 +303,6 @@ class ClientPackageManage extends Component {
       confirmMsg: '선택하신 단말의 업데이트 가능 패키지를 모두 업데이트 하겠습니까?',
       handleConfirmResult: this.handleAllUpdateForClientConfirmResult,
     });
-    console.log('handleAllUpdateForClient...............');
   }
   handleAllUpdateForClientConfirmResult = (confirmValue, confirmObject) => {
     if(confirmValue) {
@@ -312,9 +311,6 @@ class ClientPackageManage extends Component {
       
       //const selectedGroupIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
       const selectedClientIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
-
-      console.log('selectedGroupIds :::::::::: ', selectedGroupIds);
-      console.log('selectedClientIds :::::::::: ', selectedClientIds);
 
       ClientPackageActions.updateAllPackage({
         compId: compId
