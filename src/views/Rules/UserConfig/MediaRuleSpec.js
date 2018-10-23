@@ -64,7 +64,7 @@ class MediaRuleSpec extends Component {
           <Card elevation={4} style={{marginBottom:20}}>
             <CardHeader
               avatar={RuleAvartar}
-              title={viewItem.get('objNm') + ' :' + selectedItem.get('isDefault') + ' :' + selectedItem.get('isDeptRole') + ' :' + selectedItem.get('isUserRole') + ' :' + selectedItem.get('isGroupRole')} 
+              title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
