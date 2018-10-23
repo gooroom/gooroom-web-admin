@@ -368,7 +368,12 @@ class ClientMasterManage extends Component {
             </Grid>
           </Grid>
           <ClientGroupDialog compId={compId} />
-          <ClientSelectDialog isOpen={this.state.isOpenClientSelect} onSaveHandle={this.handleClientSelectSave} onClose={this.handleClientSelectClose} />
+          <ClientSelectDialog 
+            isOpen={this.state.isOpenClientSelect} 
+            onSaveHandle={this.handleClientSelectSave} 
+            onClose={this.handleClientSelectClose} 
+            selectedGroupItem={ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedViewItem'])}
+          />
 
           <BrowserRuleDialog compId={compId} />
           <SecurityRuleDialog compId={compId} />

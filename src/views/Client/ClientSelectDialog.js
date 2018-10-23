@@ -59,13 +59,13 @@ class ClientSelectDialog extends Component {
     
     render() {
         const { classes } = this.props;
-        const { isOpen, UserProps } = this.props;
+        const { isOpen, UserProps, selectedGroupItem } = this.props;
 
         return (
             <div>
             {(isOpen) &&
                 <Dialog open={isOpen} fullWidth={true} >
-                    <DialogTitle>단말 선택</DialogTitle>
+                    <DialogTitle>단말 선택 ({selectedGroupItem.get('grpNm')})</DialogTitle>
                     <DialogContent>
                         <Grid container spacing={8}>
                             {/* <Grid item xs={12} sm={12} lg={4}>

@@ -7,6 +7,8 @@ import * as CommonOptionActions from 'modules/CommonOptionModule';
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -29,6 +31,8 @@ class ClientStatusSelect extends Component {
   render() {
     const { CommonOptionProps } = this.props;
     return (
+      <React.Fragment>
+      <InputLabel htmlFor="client-status">단말상태</InputLabel>
       <Select
         value={CommonOptionProps.selectedClientStatus.statusId}
         onChange={this.handleChangeSelect}
@@ -40,6 +44,7 @@ class ClientStatusSelect extends Component {
           </MenuItem>
         ))}
       </Select>
+      </React.Fragment>
     );
   }
 }
