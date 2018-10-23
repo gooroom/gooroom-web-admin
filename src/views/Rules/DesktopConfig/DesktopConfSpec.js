@@ -12,6 +12,8 @@ import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRule
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 import DesktopConfDialog from './DesktopConfDialog';
 
+import Grid from '@material-ui/core/Grid';
+
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -86,45 +88,25 @@ class DesktopConfSpec extends Component {
               style={{paddingBottom:0}}
             />
             <CardContent>
-              <Table>
-                <TableBody>
-                  <TableRow>
+              
 
-                  {viewItem.get('apps') && viewItem.get('apps').map(n => {
-                    return (
-                        <TableCell className={classes.grSmallAndClickCell} key={n.get('appId')}>
+              {viewItem.get('apps') && viewItem.get('apps').map(n => {
+                return (
+                  <div key={n.get('appId')}>
+                        <Grid container direction="column" justify="space-between" alignItems="center" >
+                          <Grid item xs={12} >
+                            <Typography><img src={n.get('iconUrl')} style={{width:40}}></img></Typography>
+                          </Grid>
+                          <Grid item xs={12} >
+                            <Typography gutterBottom variant="body2">{n.get('appNm')}</Typography>
+                          </Grid>
+                        </Grid>
+                  </div>
+                );
+              })}
 
-                        <Card className={classes.card}>
 
-
-                        <CardHeader avatar={<Avatar aria-label="Recipe" src={n.get('iconUrl')}></Avatar>} style={{paddingBottom:0}} />
-
-                          <CardContent>
-                            <CardMedia
-                              component="img"
-                              alt={n.get('appNm')}
-                              className={classes.media}
-                              height="140"
-                              image={n.get('iconUrl')}
-                              title={n.get('appNm')}
-                            />
-                            <CardContent>
-                              <Typography gutterBottom variant="h5" component="h2">
-                                {n.get('appNm')}
-                              </Typography>
-                              <Typography component="p">
-                                {n.get('appInfo')},{n.get('appExec')}
-                              </Typography>
-                            </CardContent>
-                          </CardContent>
-                        </Card>
-                        </TableCell>
-                    );
-                  })}
                        
-                  </TableRow>
-                </TableBody>
-              </Table>
             </CardContent>
           </Card>
         }
