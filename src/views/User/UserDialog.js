@@ -33,7 +33,7 @@ class UserDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.UserActions.closeDialog();
+        this.props.UserActions.closeDialog(true);
     }
 
     handleValueChange = name => event => {
