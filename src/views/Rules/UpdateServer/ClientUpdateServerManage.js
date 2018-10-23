@@ -20,6 +20,8 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import ClientUpdateServerDialog from './ClientUpdateServerDialog';
 import ClientUpdateServerSpec from './ClientUpdateServerSpec';
+import { generateUpdateServerObject } from './ClientUpdateServerSpec';
+
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -120,7 +122,7 @@ class ClientUpdateServerManage extends Component {
     const selectedViewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientUpdateServerActions.showDialog({
-      selectedViewItem: ClientUpdateServerSpec.generateUpdateServerObject(selectedViewItem),
+      selectedViewItem: generateUpdateServerObject(selectedViewItem),
       dialogType: ClientUpdateServerDialog.TYPE_EDIT
     });
   };

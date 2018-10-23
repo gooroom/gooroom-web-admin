@@ -13,7 +13,7 @@ import ClientGroupManage from "views/ClientGroup/ClientGroupManage";
 import ClientRegKey from "views/ClientSupport/ClientRegKey";
 import ClientProfileSet from "views/ClientSupport/ClientProfileSet";
 
-import ClientConfSetting from "views/Rules/ClientConfig/ClientConfSetting";
+import ClientConfSettingManage from "views/Rules/ClientConfig/ClientConfSettingManage";
 import ClientHostNameManage from "views/Rules/HostName/ClientHostNameManage";
 import ClientUpdateServerManage from "views/Rules/UpdateServer/ClientUpdateServerManage";
 
@@ -58,7 +58,7 @@ class GRRouters extends Component {
           <Route path="/clients/clientgroupmanage/:grMenuId/:grMenuName" component={ClientGroupManage} />
           <Route path="/clientconfig/regkey/:grMenuId/:grMenuName" component={ClientRegKey} />
           <Route path="/clientconfig/profileset/:grMenuId/:grMenuName" component={ClientProfileSet} />
-          <Route path="/clientconfig/setting/:grMenuId/:grMenuName" component={ClientConfSetting} />
+          <Route path="/clientconfig/setting/:grMenuId/:grMenuName" component={ClientConfSettingManage} />
           <Route path="/clientconfig/host/:grMenuId/:grMenuName" component={ClientHostNameManage} />
           <Route path="/clientconfig/update/:grMenuId/:grMenuName" component={ClientUpdateServerManage} />
           <Route path="/userconfig/media/:grMenuId/:grMenuName" component={MediaRuleManage} />

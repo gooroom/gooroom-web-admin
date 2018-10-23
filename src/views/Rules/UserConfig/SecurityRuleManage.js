@@ -20,6 +20,7 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import SecurityRuleDialog from './SecurityRuleDialog';
 import SecurityRuleSpec from './SecurityRuleSpec';
+import { generateSecurityRuleObject } from './SecurityRuleSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -141,7 +142,7 @@ class SecurityRuleManage extends Component {
     const selectedViewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     SecurityRuleActions.showDialog({
-      selectedViewItem: SecurityRuleSpec.generateSecurityRuleObject(selectedViewItem),
+      selectedViewItem: generateSecurityRuleObject(selectedViewItem),
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };

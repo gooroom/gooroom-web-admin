@@ -20,6 +20,7 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import ClientConfSettingDialog from './ClientConfSettingDialog';
 import ClientConfSettingSpec from './ClientConfSettingSpec';
+import { generateClientConfSettingObject } from './ClientConfSettingSpec';
 
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -44,7 +45,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientConfSetting extends Component {
+class ClientConfSettingManage extends Component {
 
   columnHeaders = [
     { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
@@ -126,7 +127,7 @@ class ClientConfSetting extends Component {
     const selectedViewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientConfSettingActions.showDialog({
-      selectedViewItem: ClientConfSettingSpec.generateClientConfSettingObject(selectedViewItem),
+      selectedViewItem: generateClientConfSettingObject(selectedViewItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -296,7 +297,7 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSetting));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingManage));
 
 
 

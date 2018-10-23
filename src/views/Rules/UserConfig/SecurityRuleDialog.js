@@ -230,7 +230,7 @@ class SecurityRuleDialog extends Component {
                                 </Grid>
                             </Grid>
 
-                            <SecurityRuleNetwork />
+                            <SecurityRuleNetwork dialogType={dialogType} editingItem={editingItem} />
 
                         </div>
                     }

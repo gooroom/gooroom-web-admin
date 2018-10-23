@@ -20,6 +20,8 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import ClientHostNameDialog from './ClientHostNameDialog';
 import ClientHostNameSpec from './ClientHostNameSpec';
+import { generateClientHostNameObject } from './ClientHostNameSpec';
+
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -128,7 +130,7 @@ class ClientHostNameManage extends Component {
     const selectedViewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientHostNameActions.showDialog({
-      selectedViewItem: ClientHostNameSpec.generateClientHostNameObject(selectedViewItem),
+      selectedViewItem: generateClientHostNameObject(selectedViewItem),
       dialogType: ClientHostNameDialog.TYPE_EDIT
     });
   };
