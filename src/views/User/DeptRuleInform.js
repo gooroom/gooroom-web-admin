@@ -34,7 +34,7 @@ import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 
-import DesktopConfigComp from 'views/Rules/DesktopConfig/DesktopConfigComp';
+import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -135,7 +135,7 @@ class DeptRuleInform extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
-                <DesktopConfigComp compId={compId} targetType="DEPT" inherit={false} />
+                <DesktopConfSpec compId={compId} targetType="DEPT" inherit={false} />
               </Grid>
             </Grid>
           </CardContent>
