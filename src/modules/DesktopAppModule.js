@@ -105,9 +105,9 @@ export const readDesktopAppListPaged = (module, compId, extParam) => dispatch =>
 
 export const getDesktopApp = (param) => dispatch => {
     const compId = param.compId;
-    if(param.objId && param.objId !== '') {
+    if(param.appId && param.appId !== '') {
         dispatch({type: COMMON_PENDING});
-        return requestPostAPI('readDesktopApp', {'objId': param.objId}).then(
+        return requestPostAPI('readDesktopAppData', {'desktopAppId': param.appId}).then(
             (response) => {
                 dispatch({
                     type: GET_DESKTOPAPP_SUCCESS,
@@ -215,7 +215,7 @@ const makeParameter = (itemObj) => {
     return {
         appId: itemObj.get('appId'),
         appNm: itemObj.get('appNm'),
-        appInfo: itemObj.get('comment'),
+        appInfo: itemObj.get('appInfo'),
 
         appExec: itemObj.get('appExec'),
         appGubun: itemObj.get('appGubun'),
@@ -227,7 +227,8 @@ const makeParameter = (itemObj) => {
         appMountPoint: itemObj.get('appMountPoint'),
 
         iconUrl: itemObj.get('iconUrl'),
-        iconId: itemObj.get('iconSelect')
+        // chnage name for server api
+        iconId: itemObj.get('iconNm')
     };
 }
 
@@ -254,16 +255,16 @@ export const createDesktopAppData = (itemObj) => dispatch => {
 // edit
 export const editDesktopAppData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateDesktopAppConf', makeParameter(itemObj)).then(
+    return requestPostAPI('updateDesktopApp', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
                 // change selected object
-                requestPostAPI('readDesktopApp', {'objId': itemObj.get('objId')}).then(
+                requestPostAPI('readDesktopAppData', {'desktopAppId': itemObj.get('appId')}).then(
                     (response) => {
                         dispatch({
                             type: EDIT_DESKTOPAPP_SUCCESS,
-                            objId: itemObj.get('objId'),
+                            appId: itemObj.get('appId'),
                             response: response
                         });
                     }
@@ -271,19 +272,20 @@ export const editDesktopAppData = (itemObj, compId) => dispatch => {
                     dispatch({ type: COMMON_FAILURE, error: error });
                 });
 
-                // change object array for selector
-                requestPostAPI('readDesktopAppList', {
-                }).then(
-                    (response) => {
-                        dispatch({
-                            type: GET_DESKTOPAPP_LIST_SUCCESS,
-                            compId: compId,
-                            response: response
-                        });
-                    }
-                ).catch(error => {
-                    dispatch({ type: COMMON_FAILURE, error: error });
-                });
+                // // change object array for selector
+                // IS NEED ????????????????????????????????????????????????????????????
+                // requestPostAPI('readDesktopAppList', {
+                // }).then(
+                //     (response) => {
+                //         dispatch({
+                //             type: GET_DESKTOPAPP_LIST_SUCCESS,
+                //             compId: compId,
+                //             response: response
+                //         });
+                //     }
+                // ).catch(error => {
+                //     dispatch({ type: COMMON_FAILURE, error: error });
+                // });
             } else {
                 dispatch({ type: COMMON_FAILURE, error: error });
             }
@@ -296,12 +298,12 @@ export const editDesktopAppData = (itemObj, compId) => dispatch => {
 // delete
 export const deleteDesktopAppData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteDesktopAppConf', {'objId': param.objId}).then(
+    return requestPostAPI('deleteDesktopApp', {'appId': param.appId}).then(
         (response) => {
             dispatch({
                 type: DELETE_DESKTOPAPP_SUCCESS,
                 compId: param.compId,
-                objId: param.objId
+                appId: param.appId
             });
         }
     ).catch(error => {
