@@ -12,8 +12,6 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import { generateConfigObject } from './DesktopAppInform';
-
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
@@ -21,7 +19,8 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import DesktopAppDialog from './DesktopAppDialog';
-import DesktopAppInform from './DesktopAppInform';
+import DesktopAppSpec from './DesktopAppSpec';
+
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -130,7 +129,7 @@ class DesktopAppManage extends Component {
     const selectedViewItem = getRowObjectById(DesktopAppProps, this.props.match.params.grMenuId, id, 'appId');
 
     DesktopAppActions.showDialog({
-      selectedViewItem: generateConfigObject(selectedViewItem),
+      selectedViewItem: selectedViewItem,
       dialogType: DesktopAppDialog.TYPE_EDIT
     });
   };
@@ -157,6 +156,22 @@ class DesktopAppManage extends Component {
       });
     }
   };
+
+  // ===================================================================
+  handleCopyClick = (selectedViewItem) => {
+    this.props.DesktopAppActions.showDialog({
+      selectedViewItem: selectedViewItem,
+      dialogType: DesktopAppDialog.TYPE_COPY
+    });
+  };
+
+  handleEditItemClick = (viewItem, compType) => {
+    this.props.DesktopAppActions.showDialog({
+      selectedViewItem: viewItem,
+      dialogType: DesktopAppDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
 
   render() {
     const { classes } = this.props;
@@ -252,7 +267,12 @@ class DesktopAppManage extends Component {
         }
         </GRPane>
         {/* dialog(popup) component area */}
-        <DesktopAppInform compId={compId} />
+        <DesktopAppSpec compId={compId}
+          specType="inform" 
+          selectedItem={selectedItem}
+          handleCopyClick={this.handleCopyClick}
+          handleEditClick={this.handleEditItemClick}
+        />
         <DesktopAppDialog compId={compId} />
         <GRConfirm />
       </div>

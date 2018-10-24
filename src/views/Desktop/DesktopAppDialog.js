@@ -136,8 +136,8 @@ class DesktopAppDialog extends Component {
                         value={(editingItem.get('appNm')) ? editingItem.get('appNm') : ''}
                         onChange={this.handleValueChange("appNm")} />
                     <TextField label="설명" className={classes.fullWidth}
-                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                        onChange={this.handleValueChange("comment")} />
+                        value={(editingItem.get('appInfo')) ? editingItem.get('appInfo') : ''}
+                        onChange={this.handleValueChange("appInfo")} />
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{marginTop:12}}>
                         <Grid xs={4} item>
                             <FormLabel component="legend">데스크톱앱 종류</FormLabel>
@@ -203,15 +203,15 @@ class DesktopAppDialog extends Component {
                     </Grid>
                     {(editingItem.get('iconGubun') === 'favicon') && 
                     <TextField label="Favicon URL" className={classes.fullWidth}
-                        value={(editingItem.get('faviconUrl')) ? editingItem.get('faviconUrl') : ''}
-                        onChange={this.handleValueChange("faviconUrl")} />
+                        value={(editingItem.get('iconUrl')) ? editingItem.get('iconUrl') : ''}
+                        onChange={this.handleValueChange("iconUrl")} />
                     }
                     {(editingItem.get('iconGubun') === 'library') && 
                     <FormControl className={classes.fullWidth}>
-                        <InputLabel htmlFor="iconSelect">ICON 타입</InputLabel>
-                        <Select value={(editingItem.get('iconSelect')) ? editingItem.get('iconSelect') : ''}
-                            onChange={this.handleValueChange('iconSelect')}
-                            name="iconSelect" style={{marginTop: 'theme.spacing.unit * 2'}}
+                        <InputLabel htmlFor="iconNm">ICON 타입</InputLabel>
+                        <Select value={(editingItem.get('iconNm')) ? editingItem.get('iconNm') : ''}
+                            onChange={this.handleValueChange('iconNm')}
+                            name="iconNm" style={{marginTop: 'theme.spacing.unit * 2'}}
                         >
                             <MenuItem value=""><em>None</em></MenuItem>
                             <MenuItem value="cloud_storage">cloud storage</MenuItem>
@@ -221,8 +221,8 @@ class DesktopAppDialog extends Component {
                             <MenuItem value="video_conferencing_system">video conferencing system</MenuItem>
                             <MenuItem value="groupware">groupware</MenuItem>
                             <MenuItem value="memo">memo</MenuItem>
-                            <MenuItem value="KMS">KMS</MenuItem>
-                            <MenuItem value="ERP">ERP</MenuItem>
+                            <MenuItem value="kms">KMS</MenuItem>
+                            <MenuItem value="erp">ERP</MenuItem>
                             <MenuItem value="accounting_management">accounting management</MenuItem>
                             <MenuItem value="personnel_management">personnel management</MenuItem>
                             <MenuItem value="etc_applications">etc applications</MenuItem>

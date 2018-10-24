@@ -7,10 +7,11 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
-import BrowserRuleDialog from './BrowserRuleDialog';
+import DesktopAppDialog from './DesktopAppDialog';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -34,54 +35,40 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 class DesktopAppSpec extends Component {
 
-  handleInheritClick = (objId, compType) => {
-    const { BrowserRuleProps, BrowserRuleActions, compId, targetType } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(BrowserRuleProps, compId, targetType);
-
-    BrowserRuleActions.showDialog({
-      selectedViewItem: generateBrowserRuleObject(selectedViewItem),
-      dialogType: BrowserRuleDialog.TYPE_INHERIT
-    });
-  };
-
   render() {
 
     const { classes } = this.props;
     const { compId, compType, targetType, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    let viewItem = null;
-    let RuleAvartar = null;
+    let selectedViewItem = null;
+    let GRAvartar = null;
     if(selectedItem) {
-      viewItem = generateBrowserRuleObject(selectedItem.get('selectedViewItem'));
-      RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+      selectedViewItem = selectedItem.get('selectedViewItem');
+      GRAvartar = getAvatarForRuleGrade(targetType, "DESKTOP_APP");
     }
+
+    console.log('selectedViewItem ::::::::::  ', (selectedViewItem) ? selectedViewItem.toJS(): 'NNNN');
     
     return (
       <React.Fragment>
-        {(viewItem) && 
+        {(selectedViewItem) && 
           <Card elevation={4} style={{marginBottom:20}}>
             <CardHeader
-              avatar={RuleAvartar}
-              title={viewItem.get('objNm')} 
-              subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
+              avatar={GRAvartar}
+              title={selectedViewItem.get('appNm')} 
+              subheader={selectedViewItem.get('appId') + ', ' + selectedViewItem.get('appInfo')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.handleEditClick(viewItem, compType)}
+                    onClick={() => this.props.handleEditClick(selectedViewItem, compType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.handleCopyClick) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.handleCopyClick(viewItem)}
+                    onClick={() => this.props.handleCopyClick(selectedViewItem)}
                   ><CopyIcon /></Button>
-                  }
-                  {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.handleInheritClick(viewItem.get('objId'), compType)}
-                  ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
               }
@@ -91,31 +78,39 @@ class DesktopAppSpec extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} Web Socket 사용</TableCell>
-                  <TableCell numeric>{viewItem.get('webSocket')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} Web Worker 사용</TableCell>
-                  <TableCell numeric>{viewItem.get('webWorker')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 데스크톱앱 종류</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('appGubun')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 실행 명령어</TableCell>
+                  <TableCell numeric style={{wordBreak: 'break-word'}}>{selectedViewItem.get('appExec')}</TableCell>
                 </TableRow>
+
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('trustSetupId')}</pre></TableCell>
+                  <TableCell component="th" scope="row">{bull} 마운트 URL</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('appMountUrl')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 마운트 포인트</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('appMountPoint')}</TableCell>
                 </TableRow>
+
                 <TableRow>
-                  <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 비신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('untrustSetupId')}</pre></TableCell>
+                  <TableCell component="th" scope="row">{bull} 서비스 상태</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('statusCd')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 수정일</TableCell>
+                  <TableCell numeric>{formatDateToSimple(selectedViewItem.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                 </TableRow>
+
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} White List</TableCell>
-                  <TableCell colSpan={3} numeric>{viewItem.get('trustUrlList').map(function(prop, index) {
-                    return <span key={index}>{prop}<br/></span>;
-                  })}</TableCell>
+                  <TableCell component="th" scope="row">{bull} Icon 구분</TableCell>
+                  <TableCell numeric>{selectedViewItem.get('iconGubun')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} Icon 정보</TableCell>
+                  <TableCell numeric>{(selectedViewItem.get('iconGubun') == 'favicon') ? selectedViewItem.get('iconUrl') : selectedViewItem.get('iconNm')}</TableCell>
                 </TableRow>
+
               </TableBody>
             </Table>
             </CardContent>
           </Card>
         }
-      <BrowserRuleDialog compId={compId} />
+      <DesktopAppDialog compId={compId} />
       </React.Fragment>
     );
   }
@@ -131,45 +126,3 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopAppSpec));
 
-export const generateBrowserRuleObject = (param) => {
-
-  if(param) {
-    let webSocket = '';
-    let webWorker = '';
-    let trustSetupId = '';
-    let untrustSetupId = '';
-    let trustUrlList = [];
-
-    param.get('propList').forEach(function(e) {
-      const ename = e.get('propNm');
-      const evalue = e.get('propValue');
-      if(ename == 'websocket') {
-        webSocket = evalue;
-      } else if(ename == 'webworker') {
-        webWorker = evalue;
-      } else if(ename == 'trustSetupId') {
-        trustSetupId = evalue;
-      } else if(ename == 'untrustSetupId') {
-        untrustSetupId = evalue;
-      } else if(ename == 'trust') {
-        trustUrlList.push(evalue);
-      }
-    });
-  
-    return Map({
-      objId: param.get('objId'),
-      objNm: param.get('objNm'),
-      comment: param.get('comment'),
-      modDate: param.get('modDate'),
-      webSocket: webSocket,
-      webWorker: webWorker,
-      trustSetupId: trustSetupId,
-      untrustSetupId: untrustSetupId,
-      trustUrlList: List(trustUrlList)
-    });
-  
-  } else {
-    return param;
-  }
-
-};

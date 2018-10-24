@@ -168,8 +168,7 @@ class BrowserRuleManage extends Component {
 
   // ===================================================================
   handleCopyClick = (selectedViewItem) => {
-    const { BrowserRuleActions } = this.props;
-    BrowserRuleActions.showDialog({
+    this.props.BrowserRuleActions.showDialog({
       selectedViewItem: selectedViewItem,
       dialogType: BrowserRuleDialog.TYPE_COPY
     });
