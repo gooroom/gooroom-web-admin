@@ -21,16 +21,16 @@ class GRCommonTableHead extends Component {
   render() {
     const { classes, columnData, keyId } = this.props;
     const { 
-      onSelectAllClick,
+      onClickAllCheck,
       orderDir,
       orderColumn,
-      selectedIds,
+      checkedIds,
       listData
     } = this.props;
 
     let checkSelection = 0;
-    if(listData && listData.size > 0 && selectedIds && selectedIds.size > 0) {
-      checkSelection = arrayContainsArray(selectedIds.toJS(), listData.map(x => x.get(keyId)));
+    if(listData && listData.size > 0 && checkedIds && checkedIds.size > 0) {
+      checkSelection = arrayContainsArray(checkedIds.toJS(), listData.map(x => x.get(keyId)));
     }
     
     return (
@@ -47,7 +47,7 @@ class GRCommonTableHead extends Component {
                   <Checkbox
                     indeterminate={checkSelection === 50}
                     checked={checkSelection === 100}
-                    onChange={onSelectAllClick}
+                    onChange={onClickAllCheck}
                   />
                 </TableCell>
               );

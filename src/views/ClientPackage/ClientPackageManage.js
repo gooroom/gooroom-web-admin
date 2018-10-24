@@ -14,7 +14,7 @@ import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRPane from 'containers/GRContent/GRPane';

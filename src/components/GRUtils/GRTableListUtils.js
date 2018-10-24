@@ -43,21 +43,21 @@ export const getDataObjectVariableInComp = (propObj, compId, name) => {
     }    
 }
 
-export const setSelectedIdsInComp = (propObj, compId, id) => {
-    const selectedIds = propObj.getIn(['viewItems', compId, 'selectedIds']);
-    if(selectedIds) {
-        const indexNo = selectedIds.indexOf(id);
+export const setCheckedIdsInComp = (propObj, compId, id) => {
+    const checkedIds = propObj.getIn(['viewItems', compId, 'checkedIds']);
+    if(checkedIds) {
+        const indexNo = checkedIds.indexOf(id);
         if(indexNo > -1) {
-            return selectedIds.delete(indexNo);
+            return checkedIds.delete(indexNo);
         } else {
-            return selectedIds.push(id);
+            return checkedIds.push(id);
         }
     } else {
         return List([id]);
     }
 }
 
-export const setAllSelectedIdsInComp = (propObj, compId, idName, checked) => {
+export const getDataPropertyInCompByParam = (propObj, compId, idName, checked) => {
     if(checked) {
         const listData = propObj.getIn(['viewItems', compId, 'listData']);
         return (listData) ? listData.map((e) => (e.get(idName))) : List([]);

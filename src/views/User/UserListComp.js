@@ -13,7 +13,7 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
@@ -88,17 +88,17 @@ class UserListComp extends Component {
     const { UserProps, UserActions, compId } = this.props;
 
     const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
-    const newSelectedIds = setSelectedIdsInComp(UserProps, compId, id);
+    const newCheckedIds = setCheckedIdsInComp(UserProps, compId, id);
 
     // check select box
     UserActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
 
     if(this.props.onSelect) {
-      this.props.onSelect(clickedRowObject, newSelectedIds);
+      this.props.onSelect(clickedRowObject, newCheckedIds);
     }
   };
 
@@ -136,15 +136,10 @@ class UserListComp extends Component {
   };
 
 
-  isSelected = id => {
+  isChecked = id => {
     const { UserProps, compId } = this.props;
-    const selectedIds = getDataObjectVariableInComp(UserProps, compId, 'selectedIds');
-
-    if(selectedIds) {
-      return selectedIds.includes(id);
-    } else {
-      return false;
-    }    
+    const checkedIds = getDataObjectVariableInComp(UserProps, compId, 'checkedIds');
+    return (checkedIds && checkedIds.includes(id));
   }
 
 
@@ -165,25 +160,25 @@ class UserListComp extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            onSelectAllClick={this.handleSelectAllClick}
-            selectedIds={listObj.get('selectedIds')}
+            onClickAllCheck={this.handleClickAllCheck}
+            checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
             columnData={this.columnHeaders}
           />
           <TableBody>
             {listObj.get('listData').map(n => {
-              const isSelected = this.isSelected(n.get('userId'));
+              const isChecked = this.isChecked(n.get('userId'));
               return (
                 <TableRow
                   hover
                   onClick={event => this.handleRowClick(event, n.get('userId'))}
                   role="checkbox"
-                  aria-checked={isSelected}
+                  aria-checked={isChecked}
                   key={n.get('userId')}
-                  selected={isSelected}
+                  selected={isChecked}
                 >
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isSelected} className={classes.grObjInCell} />
+                    <Checkbox checked={isChecked} className={classes.grObjInCell} />
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>

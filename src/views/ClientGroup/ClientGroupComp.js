@@ -21,7 +21,7 @@ import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
@@ -96,15 +96,15 @@ class ClientGroupComp extends Component {
   
   handleCheckAllClick = (event, checked) => {
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    const newSelectedIds = setAllSelectedIdsInComp(ClientGroupProps, compId, 'grpId', checked);
+    const newCheckedIds = getDataPropertyInCompByParam(ClientGroupProps, compId, 'grpId', checked);
     ClientGroupActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
 
-    if(this.props.onSelect) {
-      this.props.onSelect(null, newSelectedIds);
+    if(this.props.onCheckAll) {
+      this.props.onCheckAll(null, newCheckedIds);
     }
   };
 
@@ -147,17 +147,17 @@ class ClientGroupComp extends Component {
   handleCheckClick = (event, id) => {
     event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-    const newSelectedIds = setSelectedIdsInComp(ClientGroupProps, compId, id);
+    const newCheckedIds = setCheckedIdsInComp(ClientGroupProps, compId, id);
 
     ClientGroupActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
 
     // this.handleRowClick(event, id);
-    if(this.props.onSelect) {
-      this.props.onSelect(getRowObjectById(ClientGroupProps, compId, id, 'grpId'), newSelectedIds);
+    if(this.props.onCheck) {
+      this.props.onCheck(getRowObjectById(ClientGroupProps, compId, id, 'grpId'), newCheckedIds);
     }
 
     if(this.props.hasShowRule) {
@@ -171,33 +171,42 @@ class ClientGroupComp extends Component {
 
     // get Object
     const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
-
-    if(this.props.selectorType && this.props.selectorType == 'multiple') {
-      const selectedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
-      if(selectedIds && this.props.onSelect) {
-        this.props.onSelect(clickedRowObject, selectedIds);
-      }
-    } else {
-      ClientGroupActions.changeCompVariable({ name: 'selectedIds', value: id, compId: compId });
-      if(this.props.onSelect) {
-        this.props.onSelect(clickedRowObject, List([id]));
-      }
+    if(this.props.onSelect) {
+      this.props.onSelect(clickedRowObject);
     }
+
+
+    // console.log('handleRowClick :::: ', clickedRowObject);
+    // console.log('this.props.selectorType :::: ', this.props.selectorType);
+    // if(this.props.selectorType && this.props.selectorType == 'multiple') {
+    //   const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
+    //   console.log('checkedIds :::: ', checkedIds);
+    //   if(checkedIds && this.props.onSelect) {
+    //     console.log('this.props.onSelect :::: ', clickedRowObject);
+    //     this.props.onSelect(clickedRowObject, checkedIds);
+    //   }
+    // } else {
+    //   ClientGroupActions.changeCompVariable({ name: 'checkedIds', value: id, compId: compId });
+    //   if(this.props.onSelect) {
+    //     this.props.onSelect(clickedRowObject, List([id]));
+    //   }
+    // }
 
     if(this.props.hasShowRule) {
       this.getClientGroupRules(id);
     }
   };
 
+  isChecked = id => {
+    const { ClientGroupProps, compId } = this.props;
+    const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
+    return (checkedIds && checkedIds.includes(id));
+  }
+
   isSelected = id => {
     const { ClientGroupProps, compId } = this.props;
-    const selectedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
-
-    if(selectedIds) {
-      return selectedIds.includes(id);
-    } else {
-      return false;
-    }    
+    const selectedViewItem = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedViewItem');
+    return (selectedViewItem && selectedViewItem.get('grpId') == id);
   }
 
   // .................................................
@@ -250,8 +259,8 @@ class ClientGroupComp extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            onSelectAllClick={this.handleCheckAllClick}
-            selectedIds={listObj.get('selectedIds')}
+            onClickAllCheck={this.handleCheckAllClick}
+            checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
             columnData={this.columnHeaders}
           />
@@ -268,17 +277,20 @@ class ClientGroupComp extends Component {
           }
           <TableBody>
           {listObj.get('listData').map(n => {
+            const isChecked = this.isChecked(n.get('grpId'));
             const isSelected = this.isSelected(n.get('grpId'));
+            
             return (
               <TableRow
                 hover
+                className={(isSelected) ? classes.grSelectedRow : ''}
                 onClick={event => this.handleRowClick(event, n.get('grpId'))}
                 role="checkbox"
                 key={n.get('grpId')}
               >
                 {(this.props.selectorType && this.props.selectorType == 'multiple') && 
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isSelected} className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('grpId'))} />
+                    <Checkbox checked={isChecked} className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('grpId'))} />
                   </TableCell>
                 }
                 <TableCell className={classes.grSmallAndClickCell}>

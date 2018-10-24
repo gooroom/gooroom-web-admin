@@ -287,7 +287,13 @@ export const GRCommonStyle = theme => ({
     },
     grObjInCell: {
         height: "inherit"
+    },
+
+    grSelectedRow: {
+        backgroundColor:"#fdeec2"
     }
+
+
 
 });
 

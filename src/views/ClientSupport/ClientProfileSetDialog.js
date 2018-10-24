@@ -9,7 +9,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import GRClientSelector from 'components/GRComponents/GRClientSelector';
 import { getMergedObject } from 'components/GRUtils/GRCommonUtils';
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";

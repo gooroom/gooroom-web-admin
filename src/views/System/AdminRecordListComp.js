@@ -52,7 +52,7 @@ class AdminRecordListComp extends Component {
           rowsTotal: 0,
           rowsFiltered: 0
         }),
-        selectedIds: List([])
+        checkedIds: List([])
       })
     };
   }
