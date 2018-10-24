@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Immutable, { isImmutable } from 'immutable';
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -41,7 +42,7 @@ class GRClientSelector extends Component {
     // call assigned handler from parameters(properties), don't save in local state
     // only call where type is 'single'
     if(this.props.handleClientSelect) {
-      this.props.handleClientSelect(selectedClientObj, selectedClientIds.toJS());
+      this.props.handleClientSelect(selectedClientObj, (!!selectedClientIds.toJS) ? selectedClientIds.toJS() : selectedClientIds);
     }
   }
 
