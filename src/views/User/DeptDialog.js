@@ -87,25 +87,27 @@ class DeptDialog extends Component {
     }
     handleEditConfirmResult = (confirmValue, confirmObject, isChecked) => {
 
-        const isInherit = isChecked;
-        const { DeptProps, DeptActions, compId } = this.props;
-        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
-
-        DeptActions.editDeptInfo({
-            deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
-            deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-
-            paramIsInherit: (isInherit) ? 'Y' : 'N',
-
-            browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-            mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-            securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
-        }).then((res) => {
-            // DeptActions.readDeptListPaged(DeptProps, compId);
-            // tree refresh
-            // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
-            this.handleClose();
-        });
+        if(confirmValue) {
+            const isInherit = isChecked;
+            const { DeptProps, DeptActions, compId } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
+    
+            DeptActions.editDeptInfo({
+                deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
+                deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
+    
+                paramIsInherit: (isInherit) ? 'Y' : 'N',
+    
+                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
+            }).then((res) => {
+                // DeptActions.readDeptListPaged(DeptProps, compId);
+                // tree refresh
+                // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
+                this.handleClose();
+            });
+        }
     }
 
     render() {

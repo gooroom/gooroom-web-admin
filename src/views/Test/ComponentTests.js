@@ -75,9 +75,8 @@ class ComponentTests extends Component {
     });
   };
   handleDeleteConfirmResult = (confirmValue) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-
     if(confirmValue) {
+      const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
       ClientConfSettingActions.deleteClientConfSettingData({
         objId: ClientConfSettingProps.selectedViewItem.objId
       }).then(() => {
