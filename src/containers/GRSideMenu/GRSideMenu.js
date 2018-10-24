@@ -24,6 +24,8 @@ import Divider from "@material-ui/core/Divider";
 
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
+import DashIcon from '@material-ui/icons/Remove';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 import menuItems from "./GRMenuItems";
 
@@ -47,14 +49,14 @@ const localStyles = {
   },
 
   menuItemClass: {
-    padding: "3px 10px 3px 10px !important",
+    padding: "3px 5px 0px 20px !important",
     '&:focus': {
       backgroundColor: "#78909C",
     }
   },
 
   nestedClass: {
-    padding: "3px 10px 3px 30px !important"
+    padding: "3px 5px 0px 30px !important"
   },
 
   iconClass: {
@@ -124,15 +126,14 @@ class GRSideMenu extends React.Component {
     const menuLink = (item, key, classParam) => {
       const url = item.url ? item.url : '';
       const menuclass = item.level == 1 ? classes.menuItemClass : classes.nestedClass;
+      const menuIcon = (item.level == 1) ? <DashIcon /> : <ArrowRightIcon />
       return (
         <MenuItem key={key} 
           className={menuclass} 
           component={Link}
           to={item.url}>
-          <ListItemIcon className={classes.iconClass}>
-            <SendIcon />
-          </ListItemIcon>
-          <Typography variant="subtitle1" color="textSecondary">
+          <ListItemIcon className={classes.iconClass}>{menuIcon}</ListItemIcon>
+          <Typography variant="button" color="textSecondary">
             {item.name}
           </Typography>
         </MenuItem>
