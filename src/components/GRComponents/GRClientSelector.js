@@ -30,11 +30,9 @@ class GRClientSelector extends Component {
     }
 
     // show client list
-    if(selectedGroupIds && selectedGroupIds.size > 0) {
-      ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-        groupId: selectedGroupIds.toJS(), page:0
-      }, true);
-    }
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+      groupId: selectedGroupIds.toJS(), page:0
+    }, true);
   };
 
   // handle click event in client list, set selected client data and call parent function if exixted.
