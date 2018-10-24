@@ -188,14 +188,8 @@ export default {
           level: 2,
         },
         {
-          name: '데스크톱앱관리',
-          url: '/system/desktopappmng/GRM0904/데스크톱앱관리',
-          icon: 'icon-notebook',
-          level: 2,
-        },
-        {
           name: '테마관리',
-          url: '/system/thememng/GRM0905/테마관리',
+          url: '/system/thememng/GRM0904/테마관리',
           icon: 'icon-notebook',
           level: 2,
         },
