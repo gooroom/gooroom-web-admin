@@ -62,8 +62,8 @@ class ClientMasterManage extends Component {
     };
   }
 
-  // Select Group Item
-  handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
+  // Check Group Item
+  handleClientGroupCheck = (selectedGroupObj, selectedGroupIdArray) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
     const { ClientManageProps, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
@@ -72,6 +72,18 @@ class ClientMasterManage extends Component {
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       groupId: selectedGroupIdArray.toJS(), page:0
     }, true);
+
+  };
+
+  // Select Group Item - single
+  handleClientGroupSelect = (selectedGroupObj) => {
+
+    console.log('handleClientGroupSelect :::: ', selectedGroupObj);
+
+
+    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const { ClientManageProps, ClientManageActions } = this.props;
+    const compId = this.props.match.params.grMenuId; 
 
     // show client group info.
     if(selectedGroupObj) {
@@ -333,8 +345,9 @@ class ClientMasterManage extends Component {
                 selectorType='multiple'
                 hasEdit={true}
                 hasShowRule={true}
-                onSelectAll={this.handleClientGroupSelectAll}
+                onCheckAll={this.handleClientGroupSelectAll}
                 onSelect={this.handleClientGroupSelect}
+                onCheck={this.handleClientGroupCheck}
               />
             </Grid>
 

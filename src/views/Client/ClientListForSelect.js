@@ -52,7 +52,7 @@ class ClientListForSelect extends Component {
           rowsTotal: 0,
           rowsFiltered: 0
         }),
-        selectedIds: List([])
+        checkedIds: List([])
       })
     };
   }
@@ -137,20 +137,20 @@ class ClientListForSelect extends Component {
 
   handleRowClick = (event, id) => {
     const { stateData } = this.state;
-    const selectedIds = stateData.get('selectedIds');
-    let newSelectedIds = null;
-    if(selectedIds) {
-        const indexNo = selectedIds.indexOf(id);
+    const checkedIds = stateData.get('checkedIds');
+    let newCheckedIds = null;
+    if(checkedIds) {
+        const indexNo = checkedIds.indexOf(id);
         if(indexNo > -1) {
-          newSelectedIds = selectedIds.delete(indexNo);
+          newCheckedIds = checkedIds.delete(indexNo);
         } else {
-          newSelectedIds = selectedIds.push(id);
+          newCheckedIds = checkedIds.push(id);
         }
     } else {
-      newSelectedIds = List([id]);
+      newCheckedIds = List([id]);
     }
-    this.setState({ stateData: stateData.set('selectedIds', newSelectedIds) });
-    this.props.onSelectClient(newSelectedIds);
+    this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
+    this.props.onSelectClient(newCheckedIds);
   };
 
   handleChangeClientStatusSelect = (event, property) => {
@@ -183,13 +183,9 @@ class ClientListForSelect extends Component {
   };
 
 
-  isSelected = id => {
-    const selectedIds = this.state.stateData.get('selectedIds');
-    if(selectedIds) {
-      return selectedIds.includes(id);
-    } else {
-      return false;
-    }    
+  isChecked = id => {
+    const checkedIds = this.state.stateData.get('checkedIds');
+    return (checkedIds && checkedIds.includes(id));
   }
 
   render() {
@@ -226,25 +222,25 @@ class ClientListForSelect extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            onSelectAllClick={this.handleSelectAllClick}
-            selectedIds={listObj.get('selectedIds')}
+            onClickAllCheck={this.handleClickAllCheck}
+            checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
             columnData={this.columnHeaders}
           />
           <TableBody>
             {listObj.get('listData').map(n => {
-              const isSelected = this.isSelected(n.get('clientId'));
+              const isChecked = this.isChecked(n.get('clientId'));
               return (
                 <TableRow
                   hover
                   onClick={event => this.handleRowClick(event, n.get('clientId'))}
                   role="checkbox"
-                  aria-checked={isSelected}
+                  aria-checked={isChecked}
                   key={n.get('clientId')}
-                  selected={isSelected}
+                  selected={isChecked}
                 >
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isSelected} className={classes.grObjInCell} />
+                    <Checkbox checked={isChecked} className={classes.grObjInCell} />
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>

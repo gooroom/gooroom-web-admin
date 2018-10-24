@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import * as ClientPackageActions from 'modules/ClientPackageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
@@ -83,12 +83,12 @@ class ClientPackageComp extends Component {
     });
   };
   
-  handleSelectAllClick = (event, checked) => {
+  handleClickAllCheck = (event, checked) => {
     const { ClientPackageActions, ClientPackageProps, compId } = this.props;
-    const newSelectedIds = setAllSelectedIdsInComp(ClientPackageProps, compId, 'packageId', checked);
+    const newCheckedIds = getDataPropertyInCompByParam(ClientPackageProps, compId, 'packageId', checked);
     ClientPackageActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
   };
@@ -104,28 +104,23 @@ class ClientPackageComp extends Component {
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
 
     const clickedRowObject = getRowObjectById(ClientPackageProps, compId, id, 'packageId');
-    const newSelectedIds = setSelectedIdsInComp(ClientPackageProps, compId, id);
+    const newCheckedIds = setCheckedIdsInComp(ClientPackageProps, compId, id);
 
     ClientPackageActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
 
     if(this.props.onSelect) {
-      this.props.onSelect(clickedRowObject, newSelectedIds);
+      this.props.onSelect(clickedRowObject, newCheckedIds);
     }
   };
 
-  isSelected = id => {
+  isChecked = id => {
     const { ClientPackageProps, compId } = this.props;
-    const selectedIds = getDataObjectVariableInComp(ClientPackageProps, compId, 'selectedIds');
-
-    if(selectedIds) {
-      return selectedIds.includes(id);
-    } else {
-      return false;
-    }    
+    const checkedIds = getDataObjectVariableInComp(ClientPackageProps, compId, 'checkedIds');
+    return (checkedIds && checkedIds.includes(id));
   }
 
   // .................................................
@@ -178,14 +173,14 @@ class ClientPackageComp extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            onSelectAllClick={this.handleSelectAllClick}
-            selectedIds={listObj.get('selectedIds')}
+            onClickAllCheck={this.handleClickAllCheck}
+            checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
             columnData={this.columnHeaders}
           />
           <TableBody>
           {listObj.get('listData').map(n => {
-            const isSelected = this.isSelected(n.get('packageId'));
+            const isChecked = this.isChecked(n.get('packageId'));
             return (
               <TableRow
                 hover
@@ -193,7 +188,7 @@ class ClientPackageComp extends Component {
                 key={n.get('packageId')}
               >
                 <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                  <Checkbox checked={isSelected} className={classes.grObjInCell} />
+                  <Checkbox checked={isChecked} className={classes.grObjInCell} />
                 </TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('packageId')}</TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('packageArch')}</TableCell>
