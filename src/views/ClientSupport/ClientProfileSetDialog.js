@@ -19,6 +19,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
+import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -185,42 +186,46 @@ class ClientProfileSetDialog extends Component {
             <Dialog open={ClientProfileSetProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <DialogTitle >{title}</DialogTitle>
                 <DialogContent>
-                    <TextField  
-                        label="프로파일 이름"
+                    <TextField label="프로파일 이름" className={classes.fullWidth}
                         value={(editingItem.get('profileNm')) ? editingItem.get('profileNm') : ''}
                         onChange={([ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)) ? null : this.handleValueChange("profileNm")}
-                        className={classNames(classes.fullWidth)}
                     />
-                    <TextField
-                        label="프로파일 설명"
+                    <TextField label="프로파일 설명" className={classes.fullWidth}
                         value={(editingItem.get('profileCmt')) ? editingItem.get('profileCmt') : ''}
                         onChange={([ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)) ? null : this.handleValueChange("profileCmt")}
-                        className={classNames(classes.fullWidth, classes.profileItemRow)}
                     />
-                    {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                        <div className={classNames(classes.fullWidth, classes.profileItemRow)}>
-                            <FormLabel>기타 패키지 처리방식</FormLabel>
-                            <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={(editingItem.get('isRemoval') == 'true') ? 'true': 'false'} row>
-                                <FormControlLabel value="true" control={<Radio />} label="삭제함" />
-                                <FormControlLabel value="false" control={<Radio />} label="삭제안함" />
-                            </RadioGroup>
+                    <Grid container spacing={16} alignItems="center" direction="row" justify="space-between" >
+                        <Grid item xs={12} sm={6} lg={6} >
+                        <div className={classes.fullWidth}>
+                        {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
+                            <div>
+                                <FormLabel>기타 패키지 처리방식</FormLabel>
+                                <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={(editingItem.get('isRemoval') == 'true') ? 'true': 'false'} row>
+                                    <FormControlLabel value="true" control={<Radio />} label="삭제함" />
+                                    <FormControlLabel value="false" control={<Radio />} label="삭제안함" />
+                                </RadioGroup>
+                            </div>
+                        }
+                        {(dialogType === ClientProfileSetDialog.TYPE_VIEW) &&
+                            <TextField label="레퍼런스 단말" className={classes.fullWidth}
+                                value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
+                            />
+                        }
                         </div>
-                    }
-                    {(dialogType === ClientProfileSetDialog.TYPE_VIEW || dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                        <TextField
-                            label="레퍼런스 단말"
-                            value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
-                            className={classNames(classes.fullWidth, classes.profileItemRow)}
-                        />
-                    }
+                        </Grid>
+                        <Grid item xs={12} sm={6} lg={6} >
+                        {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
+                            <TextField label="레퍼런스 단말" className={classes.fullWidth}
+                                value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
+                            />
+                        }
+                        </Grid>
+                    </Grid>
                     {(dialogType === ClientProfileSetDialog.TYPE_ADD || dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
                         <div>
-                            <TextField
-                                id="clientId"
-                                label="레퍼런스 단말"
+                            <TextField label="레퍼런스 단말" className={classes.fullWidth}
                                 value={(editingItem.get('clientId') && editingItem.get('clientId') != '') ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
                                 placeholder="아래 목록에서 단말을 선택하세요."
-                                className={classNames(classes.fullWidth, classes.profileItemRow)}
                             />
                             <div className={classes.profileItemRow}>
                                 <GRClientSelector compId={compId}

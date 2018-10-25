@@ -72,7 +72,8 @@ export const handleListPagedAction = (state, action) => {
                 rowsPerPage: parseInt(rowLength, 10),
                 orderColumn: orderColumn,
                 orderDir: orderDir
-            }));
+            }))
+            .deleteIn(['viewItems', action.compId, 'checkedIds']);
     } else {
         newState = state.setIn(['viewItems', action.compId], Map({
             'listData': List(data.map((e) => {return Map(e)})),

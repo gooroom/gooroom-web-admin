@@ -48,8 +48,6 @@ class DesktopAppSpec extends Component {
       GRAvartar = getAvatarForRuleGrade(targetType, "DESKTOP_APP");
     }
 
-    console.log('viewItem ::::::::::  ', (viewItem) ? viewItem.toJS(): 'NNNN');
-    
     return (
       <React.Fragment>
         {(viewItem) && 

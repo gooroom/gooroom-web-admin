@@ -58,7 +58,7 @@ class ClientManageComp extends Component {
     if(this.props.selectorType && this.props.selectorType == 'multiple') {
       this.columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
     }
-    this.props.ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId);
+    this.props.ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {}, false, true);
   }
 
   handleChangePage = (event, page) => {
@@ -175,7 +175,7 @@ class ClientManageComp extends Component {
 
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
-    if(listObj) {
+    if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
 
@@ -229,7 +229,7 @@ class ClientManageComp extends Component {
           />
           }
           <TableBody>
-            {listObj.get('listData').map(n => {
+            {listObj.get('listData') && listObj.get('listData').map(n => {
               const isChecked = this.isChecked(n.get('clientId'));
               const isSelected = this.isSelected(n.get('clientId'));
 

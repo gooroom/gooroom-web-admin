@@ -77,7 +77,6 @@ class ClientMasterManage extends Component {
 
   // Select Group Item - single
   handleClientGroupSelect = (selectedGroupObj) => {
-
     const { ClientGroupActions, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
 
@@ -351,8 +350,8 @@ class ClientMasterManage extends Component {
                 hasEdit={true}
                 hasShowRule={true}
                 onCheckAll={this.handleClientGroupSelectAll}
-                onSelect={this.handleClientGroupSelect}
                 onCheck={this.handleClientGroupCheck}
+                onSelect={this.handleClientGroupSelect}
               />
             </Grid>
 

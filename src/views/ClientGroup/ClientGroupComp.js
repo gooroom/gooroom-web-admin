@@ -252,7 +252,7 @@ class ClientGroupComp extends Component {
 
     const listObj = ClientGroupProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
-    if(listObj) {
+    if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
 
@@ -299,7 +299,7 @@ class ClientGroupComp extends Component {
           />
           }
           <TableBody>
-          {listObj.get('listData').map(n => {
+          {listObj.get('listData') && listObj.get('listData').map(n => {
             const isChecked = this.isChecked(n.get('grpId'));
             const isSelected = this.isSelected(n.get('grpId'));
 
