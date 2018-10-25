@@ -120,7 +120,11 @@ class ClientPackageComp extends Component {
   isChecked = id => {
     const { ClientPackageProps, compId } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientPackageProps, compId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
 
   // .................................................

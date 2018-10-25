@@ -151,8 +151,6 @@ class ClientGroupComp extends Component {
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
     const newCheckedIds = setCheckedIdsInComp(ClientGroupProps, compId, id);
 
-    // console.log('handleCheckClick....newCheckedIds ................', newCheckedIds.toJS());
-
     ClientGroupActions.changeCompVariable({
       name: 'checkedIds',
       value: newCheckedIds,
@@ -171,12 +169,8 @@ class ClientGroupComp extends Component {
 
   handleCheckAllClick = (event, checked) => {
 
-    // console.log('handleCheckAllClick....................');
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
     const newCheckedIds = getDataPropertyInCompByParam(ClientGroupProps, compId, 'grpId', checked);
-
-    // console.log('handleCheckAllClick....newCheckedIds ................', newCheckedIds.toJS());
-
 
     ClientGroupActions.changeCompVariable({
       name: 'checkedIds',
@@ -225,11 +219,11 @@ class ClientGroupComp extends Component {
     const { ClientGroupProps, compId } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
 
-    // console.log('isChecked.. checkedIds ::::::::::: ', checkedIds);
-    // console.log('isChecked.. id ::::::::::: ', id);
-    // console.log('isChecked.. checkedIds.includes(id) ::::::::::: ', (checkedIds) ? checkedIds.includes(id) : '');
-    // console.log('isChecked.. checkedIds ::::::::::: ', (checkedIds) ? checkedIds.toJS(): '');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
 
   isSelected = id => {
@@ -308,8 +302,6 @@ class ClientGroupComp extends Component {
           {listObj.get('listData').map(n => {
             const isChecked = this.isChecked(n.get('grpId'));
             const isSelected = this.isSelected(n.get('grpId'));
-
-            console.log('isChecked ::::::::::::  ', isChecked);
 
             return (
               <TableRow

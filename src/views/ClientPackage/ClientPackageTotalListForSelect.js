@@ -157,10 +157,13 @@ class ClientPackageTotalListForSelect extends Component {
     this.handleGetPackageTotalList(newListParam);
   };
 
-
   isChecked = id => {
     const checkedIds = this.state.stateData.get('checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
 
   render() {

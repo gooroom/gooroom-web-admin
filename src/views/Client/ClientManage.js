@@ -155,7 +155,11 @@ class ClientManage extends Component {
   isChecked = id => {
     const { ClientManageProps } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientManageProps, this.props.match.params.grMenuId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   };
 
 

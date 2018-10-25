@@ -142,7 +142,11 @@ class ClientPackageMenu extends Component {
   isChecked = id => {
     const { ClientPackageProps } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientPackageProps, this.props.match.params.grMenuId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
   // .................................................
   handleKeywordChange = (name, value) => {

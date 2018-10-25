@@ -149,12 +149,15 @@ class UserManage extends Component {
       compId: compId
     });
   };
-  
-  
+    
   isChecked = id => {
     const { UserProps } = this.props;
     const checkedIds = getDataObjectVariableInComp(UserProps, this.props.match.params.grMenuId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
   
   handleEditClick = (event, id) => { 

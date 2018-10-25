@@ -135,13 +135,15 @@ class UserListComp extends Component {
     }
   };
 
-
   isChecked = id => {
     const { UserProps, compId } = this.props;
     const checkedIds = getDataObjectVariableInComp(UserProps, compId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
-
 
   render() {
 

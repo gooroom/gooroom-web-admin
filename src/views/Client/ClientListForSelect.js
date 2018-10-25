@@ -182,10 +182,13 @@ class ClientListForSelect extends Component {
     this.handleGetClientList(newListParam);
   };
 
-
   isChecked = id => {
     const checkedIds = this.state.stateData.get('checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
 
   render() {
