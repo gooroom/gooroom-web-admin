@@ -48,6 +48,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_DESKTOPAPP_INFORM,
         compId: param.compId,
+        selectId: (param.viewItem) ? param.viewItem.get('appId') : '',
         viewItem: param.viewItem
     });
 };

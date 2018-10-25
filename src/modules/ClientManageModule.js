@@ -51,6 +51,7 @@ export const showClientManageInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENT_INFORM,
         compId: param.compId,
+        selectId: (param.viewItem) ? param.viewItem.get('clientId') : '',
         viewItem: param.viewItem
     });
 };

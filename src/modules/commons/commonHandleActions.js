@@ -145,6 +145,7 @@ export const handleCloseDialogAction = (state, action) => {
 export const handleShowInformAction = (state, action) => {
     return state
         .setIn(['viewItems', action.compId, 'viewItem'], action.viewItem)
+        .setIn(['viewItems', action.compId, 'selectId'], action.selectId)
         .setIn(['viewItems', action.compId, 'informOpen'], true);
 }
 
