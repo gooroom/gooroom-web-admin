@@ -93,17 +93,19 @@ class GRTreeList extends Component {
         parents[index].children = resData.map(d => {
           return d.key;
         });
-        if(this.state.checked.includes(parents[index].key)) {
-          // add checked data, by default checked.
-          const newChecked = [...this.state.checked];
-          resData.map(d => {
-            newChecked.push(d.key);  
-            return d;
-          });
-          this.setState({
-            checked: newChecked  
-          });
-        }
+
+        // check child if parent checked
+        // if(this.state.checked.includes(parents[index].key)) {
+        //   // add checked data, by default checked.
+        //   const newChecked = [...this.state.checked];
+        //   resData.map(d => {
+        //     newChecked.push(d.key);  
+        //     return d;
+        //   });
+        //   this.setState({
+        //     checked: newChecked  
+        //   });
+        // }
         
         // data merge.
         // 1. delete children
@@ -277,7 +279,7 @@ class GRTreeList extends Component {
     };
   }
 
-  handleChange = nodeKey => event => {
+  handleCheckNode = nodeKey => event => {
     const { checked, imperfect, treeData } = this.state;
 
     let newChecked = checked;
@@ -328,6 +330,8 @@ class GRTreeList extends Component {
       imperfect: newStatus.newImperfect
     });
 
+
+    console.log('newStatus :::::::::::: ', newStatus);
     // call select node event
     if (this.props.onCheckedNode) this.props.onCheckedNode(newStatus.newChecked, newStatus.newImperfect);
   };
@@ -402,7 +406,7 @@ class GRTreeList extends Component {
               }
               this.handleClickNode(listItem, i);
             }}
-            onCheckNode={this.handleChange}
+            onCheckNode={this.handleCheckNode}
           />
         );
       } else {

@@ -64,12 +64,19 @@ class UserMasterManage extends Component {
   }
 
   // click dept row (in tree)
-  handleCheckedDept = (checked, imperfect) => {
-    // Check selectedDeptCd
+  handleCheckedDept = (checkedDeptCdArray, imperfect) => {
+    const { UserProps, UserActions } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    // Check selectedDeptCd
     this.props.DeptActions.changeCompVariableObject({
       compId: compId,
-      valueObj: {checkedDeptCd: checked}
+      valueObj: {checkedDeptCd: checkedDeptCdArray}
+    });
+
+    // show user list in dept.
+    UserActions.readUserListPaged(UserProps, compId, {
+      deptCd: checkedDeptCdArray.join(), page:0
     });
   }
     
@@ -85,9 +92,10 @@ class UserMasterManage extends Component {
     });
 
     // show user list in dept.
-    UserActions.readUserListPaged(UserProps, compId, {
-      deptCd: node.key, page:0
-    });
+    // UserActions.readUserListPaged(UserProps, compId, {
+    //   deptCd: node.key, page:0
+    // });
+
     // Check selectedDeptCd
     DeptActions.changeCompVariableObject({
       compId: compId,
@@ -351,7 +359,7 @@ class UserMasterManage extends Component {
                 keyName='key'
                 title='title'
                 startingDepth='2'
-                hasSelectChild={true}
+                hasSelectChild={false}
                 hasSelectParent={false}
                 compId={compId}
                 onInitTreeData={this.handleInitTreeData}
