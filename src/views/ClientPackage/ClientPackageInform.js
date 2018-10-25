@@ -29,25 +29,25 @@ class ClientPackageInform extends Component {
 
     const { compId, ClientPackageProps } = this.props;
     const informOpen = ClientPackageProps.getIn(['viewItems', compId, 'informOpen']);
-    const selectedViewItem = ClientPackageProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const viewItem = ClientPackageProps.getIn(['viewItems', compId, 'viewItem']);
 
     let packageInfo = '';
-    if(selectedViewItem) {
-      packageInfo = selectedViewItem.get('packageId');
-      if(selectedViewItem.get('regDate') && selectedViewItem.get('regDate') !== '') {
-        packageInfo += ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD');
+    if(viewItem) {
+      packageInfo = viewItem.get('packageId');
+      if(viewItem.get('regDate') && viewItem.get('regDate') !== '') {
+        packageInfo += ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD');
       }
-      if(selectedViewItem.get('comment') && selectedViewItem.get('comment') !== '') {
-        packageInfo += ', ' + selectedViewItem.get('comment');
+      if(viewItem.get('comment') && viewItem.get('comment') !== '') {
+        packageInfo += ', ' + viewItem.get('comment');
       }
     }
 
     return (
       <div style={{marginTop: 10}} >
-      {(informOpen && selectedViewItem) &&
+      {(informOpen && viewItem) &&
         <Card >
           <CardHeader
-            title={selectedViewItem.get('packageId')}
+            title={viewItem.get('packageId')}
             subheader={packageInfo}
           ></CardHeader>
           <Divider />

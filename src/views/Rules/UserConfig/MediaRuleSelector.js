@@ -58,7 +58,7 @@ class MediaRuleSelector extends Component {
   // ===================================================================
   handleEditClickForMediaRule = (viewItem, compType) => {
     this.props.MediaRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
@@ -83,7 +83,7 @@ class MediaRuleSelector extends Component {
         return element.get('objId') == selectedOptionItemId;
       });
       if(selectedData) {
-        selectedMediaRuleItem = Map({'selectedViewItem': selectedData});
+        selectedMediaRuleItem = Map({'viewItem': selectedData});
       }      
     };
 

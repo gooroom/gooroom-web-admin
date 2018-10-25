@@ -103,41 +103,41 @@ class BrowserRuleManage extends Component {
     });
   }
   
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { BrowserRuleActions, BrowserRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedViewItem = getRowObjectById(BrowserRuleProps, compId, id, 'objId');
+    const viewItem = getRowObjectById(BrowserRuleProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // BrowserRuleActions.showDialog({
-    //   selectedViewItem: viewObject,
+    //   viewItem: viewObject,
     //   dialogType: BrowserRuleDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     BrowserRuleActions.showInform({
       compId: compId,
-      selectedViewItem: selectedViewItem
+      viewItem: viewItem
     });
     
   };
 
   handleCreateButton = () => {
     this.props.BrowserRuleActions.showDialog({
-      selectedViewItem: Map(),
+      viewItem: Map(),
       dialogType: BrowserRuleDialog.TYPE_ADD
     });
   }
 
   handleEditListClick = (event, id) => { 
     const { BrowserRuleProps, BrowserRuleActions } = this.props;
-    const selectedViewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     BrowserRuleActions.showDialog({
-      selectedViewItem: generateBrowserRuleObject(selectedViewItem),
+      viewItem: generateBrowserRuleObject(viewItem),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -145,12 +145,12 @@ class BrowserRuleManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { BrowserRuleProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말정책정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
@@ -167,16 +167,16 @@ class BrowserRuleManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (selectedViewItem) => {
+  handleCopyClick = (viewItem) => {
     this.props.BrowserRuleActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_COPY
     });
   };
 
   handleEditItemClick = (viewItem, compType) => {
     this.props.BrowserRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -237,7 +237,7 @@ class BrowserRuleManage extends Component {
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('objId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('objId'))}
                       tabIndex={-1}
                       key={n.get('objId')}
                     >

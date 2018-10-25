@@ -42,7 +42,7 @@ class ClientHostNameSpec extends Component {
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateClientHostNameObject(selectedItem.get('selectedViewItem'));
+      viewItem = generateClientHostNameObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
     }
 

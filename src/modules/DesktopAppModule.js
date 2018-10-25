@@ -33,7 +33,7 @@ const initialState = commonHandleActions.getCommonInitialState('chAppId', 'asc')
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_DESKTOPAPP_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };
@@ -48,7 +48,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_DESKTOPAPP_INFORM,
         compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        viewItem: param.viewItem
     });
 };
 
@@ -122,7 +122,7 @@ export const getDesktopApp = (param) => dispatch => {
         return dispatch({
             type: DELETE_COMPDATA_ITEM,
             compId: compId,
-            itemName: 'selectedViewItem'
+            itemName: 'viewItem'
         });      
     }
 

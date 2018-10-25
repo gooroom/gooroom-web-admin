@@ -90,10 +90,10 @@ class ClientWithPackageComp extends Component {
     });
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
 
-    const clickedRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
+    const selectRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
     const newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);
 
     ClientManageActions.changeCompVariable({
@@ -103,7 +103,7 @@ class ClientWithPackageComp extends Component {
     });
 
     if(this.props.onSelect) {
-      this.props.onSelect(clickedRowObject, newCheckedIds);
+      this.props.onSelect(selectRowObject, newCheckedIds);
     }
     
     // rest actions..
@@ -196,7 +196,7 @@ class ClientWithPackageComp extends Component {
               return (
                 <TableRow
                   hover
-                  onClick={event => this.handleRowClick(event, n.get('clientId'))}
+                  onClick={event => this.handleSelectRow(event, n.get('clientId'))}
                   role="checkbox"
                   aria-checked={isChecked}
                   key={n.get('clientId')}

@@ -89,40 +89,40 @@ class ClientUpdateServerManage extends Component {
     ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId, {page: 0});
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const selectedViewItem = getRowObjectById(ClientUpdateServerProps, compId, id, 'objId');
+    const viewItem = getRowObjectById(ClientUpdateServerProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // ClientUpdateServerActions.showDialog({
-    //   selectedViewItem: viewItem,
+    //   viewItem: viewItem,
     //   dialogType: ClientHostNameDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     ClientUpdateServerActions.showInform({
       compId: compId,
-      selectedViewItem: selectedViewItem
+      viewItem: viewItem
     });
     
   };
   
   handleCreateButton = () => {
     this.props.ClientUpdateServerActions.showDialog({
-      selectedViewItem: Map(),
+      viewItem: Map(),
       dialogType: ClientUpdateServerDialog.TYPE_ADD
     });
   }
 
   handleEditListClick = (event, id) => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
-    const selectedViewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientUpdateServerActions.showDialog({
-      selectedViewItem: generateUpdateServerObject(selectedViewItem),
+      viewItem: generateUpdateServerObject(viewItem),
       dialogType: ClientUpdateServerDialog.TYPE_EDIT
     });
   };
@@ -131,12 +131,12 @@ class ClientUpdateServerManage extends Component {
   handleDeleteClick = (event, id) => {
 
     const { ClientUpdateServerProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(ClientUpdateServerProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
       confirmTitle: '업데이트서버 정보 삭제',
-      confirmMsg: '업데이트서버 정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '업데이트서버 정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -161,17 +161,17 @@ class ClientUpdateServerManage extends Component {
   }
 
   // ===================================================================
-  handleCopyClick = (selectedViewItem) => {
+  handleCopyClick = (viewItem) => {
     const { ClientUpdateServerActions } = this.props;
     ClientUpdateServerActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientUpdateServerDialog.TYPE_COPY
     });
   };
 
   handleEditItemClick = (viewItem, compType) => {
     this.props.ClientUpdateServerActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: ClientUpdateServerDialog.TYPE_EDIT
     });
   };
@@ -233,7 +233,7 @@ class ClientUpdateServerManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('objId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('objId'))}
                       key={n.get('objId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>

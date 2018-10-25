@@ -26,7 +26,7 @@ export const showJobInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_JOB_INFORM,
         compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        viewItem: param.viewItem
     });
 };
 

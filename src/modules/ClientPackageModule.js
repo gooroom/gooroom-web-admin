@@ -24,7 +24,7 @@ const initialState = commonHandleActions.getCommonInitialState('chPackageId', 'a
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTPACKAGE_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };
@@ -39,7 +39,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTPACKAGE_INFORM,
         compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        viewItem: param.viewItem
     });
 };
 

@@ -87,9 +87,9 @@ class ClientGroupComp extends Component {
   // edit
   handleEditClick = (event, id) => {
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-    const selectedViewItem = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+    const viewItem = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
     ClientGroupActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
@@ -139,7 +139,7 @@ class ClientGroupComp extends Component {
   // '데스크톱 정보설정' : 정책 정보 변경
   // 사용자, 조직
   // ClientDesktopConfigActions.getClientDesktopConfig({
-  //   compId: compId, desktopConfId: clickedRowObject.get('desktopConfigId')
+  //   compId: compId, desktopConfId: selectRowObject.get('desktopConfigId')
   // });   
 
   }
@@ -155,7 +155,7 @@ class ClientGroupComp extends Component {
       compId: compId
     });
 
-    // this.handleRowClick(event, id);
+    // this.handleSelectRow(event, id);
     if(this.props.onCheck) {
       this.props.onCheck(getRowObjectById(ClientGroupProps, compId, id, 'grpId'), newCheckedIds);
     }
@@ -165,30 +165,30 @@ class ClientGroupComp extends Component {
     }
   }
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
 
     // get Object
-    const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
-    if(this.props.onSelect) {
-      this.props.onSelect(clickedRowObject);
+    const selectRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+    if(this.props.onSelect && selectRowObject) {
+      this.props.onSelect(selectRowObject);
     }
 
 
-    // console.log('handleRowClick :::: ', clickedRowObject);
+    // console.log('handleSelectRow :::: ', selectRowObject);
     // console.log('this.props.selectorType :::: ', this.props.selectorType);
     // if(this.props.selectorType && this.props.selectorType == 'multiple') {
     //   const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
     //   console.log('checkedIds :::: ', checkedIds);
     //   if(checkedIds && this.props.onSelect) {
-    //     console.log('this.props.onSelect :::: ', clickedRowObject);
-    //     this.props.onSelect(clickedRowObject, checkedIds);
+    //     console.log('this.props.onSelect :::: ', selectRowObject);
+    //     this.props.onSelect(selectRowObject, checkedIds);
     //   }
     // } else {
     //   ClientGroupActions.changeCompVariable({ name: 'checkedIds', value: id, compId: compId });
     //   if(this.props.onSelect) {
-    //     this.props.onSelect(clickedRowObject, List([id]));
+    //     this.props.onSelect(selectRowObject, List([id]));
     //   }
     // }
 
@@ -205,8 +205,8 @@ class ClientGroupComp extends Component {
 
   isSelected = id => {
     const { ClientGroupProps, compId } = this.props;
-    const selectedViewItem = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedViewItem');
-    return (selectedViewItem && selectedViewItem.get('grpId') == id);
+    const viewItem = getDataObjectVariableInComp(ClientGroupProps, compId, 'viewItem');
+    return (viewItem && viewItem.get('grpId') == id);
   }
 
   // .................................................
@@ -284,7 +284,7 @@ class ClientGroupComp extends Component {
               <TableRow
                 hover
                 className={(isSelected) ? classes.grSelectedRow : ''}
-                onClick={event => this.handleRowClick(event, n.get('grpId'))}
+                onClick={event => this.handleSelectRow(event, n.get('grpId'))}
                 role="checkbox"
                 key={n.get('grpId')}
               >

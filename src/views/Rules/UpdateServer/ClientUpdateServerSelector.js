@@ -56,7 +56,7 @@ class ClientUpdateServerSelector extends Component {
   // ===================================================================
   handleEditClickForClientUpdateServer = (viewItem, compType) => {
     this.props.ClientUpdateServerActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: ClientUpdateServerDialog.TYPE_EDIT
     });
   };
@@ -67,7 +67,7 @@ class ClientUpdateServerSelector extends Component {
     const { classes } = this.props;
     const { ClientUpdateServerProps, compId, targetType } = this.props;
 
-    const selectedViewItem = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const viewItem = ClientUpdateServerProps.getIn(['viewItems', compId, 'viewItem']);
     const listAllData = ClientUpdateServerProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
@@ -80,7 +80,7 @@ class ClientUpdateServerSelector extends Component {
         return element.get('objId') == selectedOptionItemId;
       });
       if(selectedData) {
-        selectedClientUpdateServerItem = Map({'selectedViewItem': selectedData});
+        selectedClientUpdateServerItem = Map({'viewItem': selectedData});
       }      
     };
 

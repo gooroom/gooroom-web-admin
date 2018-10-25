@@ -125,7 +125,7 @@ class AdminRecordListComp extends Component {
   };
   // .................................................
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
   };
 
   handleKeywordChange = (name, value) => {
@@ -218,7 +218,7 @@ class AdminRecordListComp extends Component {
               return (
                 <TableRow
                   hover
-                  onClick={event => this.handleRowClick(event, n.get('logSeq'))}
+                  onClick={event => this.handleSelectRow(event, n.get('logSeq'))}
                   key={n.get('logSeq')}
                 >
                   <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('actDt'), 'YYYY-MM-DD')}</TableCell>

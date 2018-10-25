@@ -62,9 +62,9 @@ class ClientGroupInform extends Component {
   // edit
   handleEditClick = (id) => {
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-    const selectedViewItem = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+    const viewItem = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
     ClientGroupActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
@@ -73,37 +73,37 @@ class ClientGroupInform extends Component {
   // ===================================================================
   handleEditClickForClientConfSetting = (viewItem, compType) => {
     this.props.ClientConfSettingActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
   handleEditClickForClientHostName = (viewItem, compType) => {
     this.props.ClientHostNameActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: ClientHostNameDialog.TYPE_EDIT
     });
   };
   handleEditClickForClientUpdateServer = (viewItem, compType) => {
     this.props.ClientUpdateServerActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: ClientUpdateServerDialog.TYPE_EDIT
     });
   };
   handleEditClickForMediaRule = (viewItem, compType) => {
     this.props.MediaRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
   handleEditClickForBrowserRule = (viewItem, compType) => {
     this.props.BrowserRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
   handleEditClickForSecurityRule = (viewItem, compType) => {
     this.props.SecurityRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
@@ -115,7 +115,7 @@ class ClientGroupInform extends Component {
     const { compId, ClientGroupProps } = this.props;
 
     const informOpen = ClientGroupProps.getIn(['viewItems', compId, 'informOpen']);
-    const selectedViewItem = ClientGroupProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const viewItem = ClientGroupProps.getIn(['viewItems', compId, 'viewItem']);
 
     const selectedClientConfSettingItem = this.props.ClientConfSettingProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedClientHostNameItem = this.props.ClientHostNameProps.getIn(['viewItems', compId, 'GROUP']);
@@ -126,28 +126,28 @@ class ClientGroupInform extends Component {
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'GROUP']);
     
     let groupInfo = '';
-    if(selectedViewItem) {
-      groupInfo = selectedViewItem.get('grpId');
-      if(selectedViewItem.get('regDate') && selectedViewItem.get('regDate') !== '') {
-        groupInfo += ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD');
+    if(viewItem) {
+      groupInfo = viewItem.get('grpId');
+      if(viewItem.get('regDate') && viewItem.get('regDate') !== '') {
+        groupInfo += ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD');
       }
-      if(selectedViewItem.get('comment') && selectedViewItem.get('comment') !== '') {
-        groupInfo += ', ' + selectedViewItem.get('comment');
+      if(viewItem.get('comment') && viewItem.get('comment') !== '') {
+        groupInfo += ', ' + viewItem.get('comment');
       }
     }
 
     return (
       <div>
-      {(informOpen && selectedViewItem) &&
+      {(informOpen && viewItem) &&
         <Card >
           <CardHeader
-            title={selectedViewItem.get('grpNm')}
+            title={viewItem.get('grpNm')}
             subheader={groupInfo}
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.handleEditClick(selectedViewItem.get('grpId'))}
+                  onClick={() => this.handleEditClick(viewItem.get('grpId'))}
                 ><SettingsApplicationsIcon /></Button>
               </div>
             }

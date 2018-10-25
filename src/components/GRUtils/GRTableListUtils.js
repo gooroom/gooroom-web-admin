@@ -27,10 +27,10 @@ export const refreshDataListInComp = (propObj, callBack) => {
 
 export const getRowObjectById = (propObj, compId, id, keyId) => {
     if(propObj.getIn(['viewItems', compId, 'listData'])) {
-        const selectedViewItem = propObj.getIn(['viewItems', compId, 'listData']).find((element) => {
+        const viewItem = propObj.getIn(['viewItems', compId, 'listData']).find((element) => {
             return element.get(keyId) == id;
         });
-        return (selectedViewItem) ? fromJS(selectedViewItem.toJS()) : null;
+        return (viewItem) ? fromJS(viewItem.toJS()) : null;
     } 
     return null;
 }
@@ -69,7 +69,7 @@ export const getDataPropertyInCompByParam = (propObj, compId, idName, checked) =
 export const getSelectedObjectInComp = (propObj, compId, targetType) => {
     const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
     
-    return propObj.getIn(List(targetNames).push('selectedViewItem'));
+    return propObj.getIn(List(targetNames).push('viewItem'));
 }
 
 export const getSelectedObjectInCompAndId = (propObj, compId, idName, targetType) => {

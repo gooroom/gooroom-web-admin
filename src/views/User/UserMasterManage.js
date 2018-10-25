@@ -110,13 +110,13 @@ class UserMasterManage extends Component {
 
     // show user inform pane.
     DeptActions.showInform({
-      compId: compId, selectedViewItem: null
+      compId: compId, viewItem: null
     });
   }
   
   handleEditDept = (listItem, i) => { 
     this.props.DeptActions.showDialog({
-      selectedViewItem: {
+      viewItem: {
         deptCd: listItem.key,
         deptNm: listItem.title
       },
@@ -135,7 +135,7 @@ class UserMasterManage extends Component {
     const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
     if(selectedDeptCd && selectedDeptCd !== '') {
       this.props.DeptActions.showDialog({
-        selectedViewItem: {
+        viewItem: {
           deptCd: '',
           deptNm: '',
           selectedDeptCd: selectedDeptCd
@@ -281,7 +281,7 @@ class UserMasterManage extends Component {
       // get client secu info
       SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
       // show user inform pane.
-      UserActions.showInform({ compId: compId, selectedViewItem: selectedUserObj });
+      UserActions.showInform({ compId: compId, viewItem: selectedUserObj });
 
       // // show client group info.
       // const groupId = selectedClientObj.get('clientGroupId');
@@ -301,7 +301,7 @@ class UserMasterManage extends Component {
       //   });   
 
       //   ClientGroupActions.showClientGroupInform({
-      //     compId: compId, selectedViewItem: selectedGroupObj,
+      //     compId: compId, viewItem: selectedGroupObj,
       //   });
       // }
     }

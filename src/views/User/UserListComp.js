@@ -84,10 +84,10 @@ class UserListComp extends Component {
   };
   // .................................................
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { UserProps, UserActions, compId } = this.props;
 
-    const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
+    const selectRowObject = getRowObjectById(UserProps, compId, id, 'userId');
     const newCheckedIds = setCheckedIdsInComp(UserProps, compId, id);
 
     // check select box
@@ -98,16 +98,16 @@ class UserListComp extends Component {
     });
 
     if(this.props.onSelect) {
-      this.props.onSelect(clickedRowObject, newCheckedIds);
+      this.props.onSelect(selectRowObject, newCheckedIds);
     }
   };
 
   // edit
   handleEditClick = (event, id) => { 
     const { UserProps, UserActions, compId } = this.props;
-    const selectedViewItem = getRowObjectById(UserProps, compId, id, 'userId');
+    const viewItem = getRowObjectById(UserProps, compId, id, 'userId');
     UserActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: UserBasicDialog.TYPE_EDIT
     }, false);
   };
@@ -115,12 +115,12 @@ class UserListComp extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { UserProps, GRConfirmActions, compId } = this.props;
-    const selectedViewItem = getRowObjectById(UserProps, compId, id, 'userId');
+    const viewItem = getRowObjectById(UserProps, compId, id, 'userId');
     GRConfirmActions.showConfirm({
       confirmTitle: '사용자정보 삭제',
-      confirmMsg: '사용자정보(' + selectedViewItem.get('userNm') + ')을 삭제하시겠습니까?',
+      confirmMsg: '사용자정보(' + viewItem.get('userNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -171,7 +171,7 @@ class UserListComp extends Component {
               return (
                 <TableRow
                   hover
-                  onClick={event => this.handleRowClick(event, n.get('userId'))}
+                  onClick={event => this.handleSelectRow(event, n.get('userId'))}
                   role="checkbox"
                   aria-checked={isChecked}
                   key={n.get('userId')}

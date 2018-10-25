@@ -110,13 +110,13 @@ export const handleGetObjectAction = (state, compId, data, extend, target) => {
                 selectedOptionItemId = '';
             }
             return state
-            .setIn(['viewItems', compId, target, 'selectedViewItem'], fromJS(data[0]))
+            .setIn(['viewItems', compId, target, 'viewItem'], fromJS(data[0]))
             .setIn(['viewItems', compId, target, 'selectedOptionItemId'], selectedOptionItemId)
             .setIn(['viewItems', compId, target, 'ruleGrade'], (extend && extend.length > 0) ? extend[0] : '')
             .setIn(['viewItems', compId, target, 'informOpen'], true);
         } else {
             return state
-            .setIn(['viewItems', compId, 'selectedViewItem'], fromJS(data[0]))
+            .setIn(['viewItems', compId, 'viewItem'], fromJS(data[0]))
             .setIn(['viewItems', compId, 'selectedOptionItemId'], selectedOptionItemId)
             .setIn(['viewItems', compId, 'ruleGrade'], (extend && extend.length > 0) ? extend[0] : '')
             .setIn(['viewItems', compId, 'informOpen'], true);
@@ -129,7 +129,7 @@ export const handleGetObjectAction = (state, compId, data, extend, target) => {
 export const handleShowDialogAction = (state, action) => {
 
     return state.merge({
-        editingItem: action.selectedViewItem,
+        editingItem: action.viewItem,
         dialogOpen: true,
         dialogType: action.dialogType
     });
@@ -144,25 +144,25 @@ export const handleCloseDialogAction = (state, action) => {
 
 export const handleShowInformAction = (state, action) => {
     return state
-        .setIn(['viewItems', action.compId, 'selectedViewItem'], action.selectedViewItem)
+        .setIn(['viewItems', action.compId, 'viewItem'], action.viewItem)
         .setIn(['viewItems', action.compId, 'informOpen'], true);
 }
 
 export const handleCloseInformAction = (state, action) => {
     return state
         .setIn(['viewItems', action.compId, 'informOpen'], false)
-        .deleteIn(['viewItems', action.compId, 'selectedViewItem']);
+        .deleteIn(['viewItems', action.compId, 'viewItem']);
 }
 
 export const handleEditSuccessAction = (state, action) => {
     let newState = state;
     if(newState.get('viewItems')) {
         newState.get('viewItems').forEach((e, i) => {
-            // if(e.get('selectedViewItem')) {
-            //     if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
+            // if(e.get('viewItem')) {
+            //     if(e.getIn(['viewItem', 'objId']) == action.objId) {
                     // replace
                     newState = newState
-                        .setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]))
+                        .setIn(['viewItems', i, 'viewItem'], fromJS(action.response.data.data[0]))
                         .setIn(['viewItems', i, 'informOpen'], false);
             //     }
             // }
@@ -180,10 +180,10 @@ export const handleDeleteSuccessAction = (state, action) => {
     let newState = state;
     if(newState.get('viewItems')) {
         newState.get('viewItems').forEach((e, i) => {
-            if(e.get('selectedViewItem')) {
-                if(e.getIn(['selectedViewItem', 'objId']) == action.objId) {
+            if(e.get('viewItem')) {
+                if(e.getIn(['viewItem', 'objId']) == action.objId) {
                     // replace
-                    newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
+                    newState = newState.deleteIn(['viewItems', i, 'viewItem']);
                 }
             }
         });

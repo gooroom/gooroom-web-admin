@@ -47,7 +47,7 @@ class ComponentTests extends Component {
 
   }
   
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     
   };
 
@@ -61,16 +61,16 @@ class ComponentTests extends Component {
     event.stopPropagation();
     const { ClientConfSettingProps, ClientConfSettingActions, GRConfirmActions } = this.props;
 
-    const selectedViewItem = ClientConfSettingProps.listData.find(function(element) {
+    const viewItem = ClientConfSettingProps.listData.find(function(element) {
       return element.objId == id;
     });
 
     ClientConfSettingActions.setSelectedItemObj({
-      selectedViewItem: Object.assign(ClientConfSettingProps.selectedViewItem, selectedViewItem)
+      viewItem: Object.assign(ClientConfSettingProps.viewItem, viewItem)
     });
     const re = GRConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedViewItem.objId + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말정책정보(' + viewItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
     });
   };
@@ -78,7 +78,7 @@ class ComponentTests extends Component {
     if(confirmValue) {
       const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
       ClientConfSettingActions.deleteClientConfSettingData({
-        objId: ClientConfSettingProps.selectedViewItem.objId
+        objId: ClientConfSettingProps.viewItem.objId
       }).then(() => {
         ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps.listParam);
         }, () => {
@@ -121,21 +121,21 @@ class ComponentTests extends Component {
 
 
 
-  handleChangeGroupSelected_first = (newSelected, selectedViewItem) => {
+  handleChangeGroupSelected_first = (newSelected, viewItem) => {
 
   }
 
 
-  handleChangeGroupSelected_second = (newSelected, selectedViewItem) => {
+  handleChangeGroupSelected_second = (newSelected, viewItem) => {
 
   }
 
-  handleChangeClientSelected_first = (newSelected, selectedViewItem) => {
+  handleChangeClientSelected_first = (newSelected, viewItem) => {
 
   }
 
 
-  handleChangeClientSelected_second = (newSelected, selectedViewItem) => {
+  handleChangeClientSelected_second = (newSelected, viewItem) => {
 
   }
 

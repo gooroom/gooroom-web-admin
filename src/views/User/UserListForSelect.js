@@ -138,7 +138,7 @@ class UserListForSelect extends Component {
   };
   // .................................................
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { stateData } = this.state;
     const checkedIds = stateData.get('checkedIds');
     let newCheckedIds = null;
@@ -236,7 +236,7 @@ class UserListForSelect extends Component {
               return (
                 <TableRow
                   hover
-                  onClick={event => this.handleRowClick(event, n.get('userId'))}
+                  onClick={event => this.handleSelectRow(event, n.get('userId'))}
                   role="checkbox"
                   aria-checked={isChecked}
                   key={n.get('userId')}

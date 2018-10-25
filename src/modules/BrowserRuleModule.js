@@ -38,7 +38,7 @@ const initialState = commonHandleActions.getCommonInitialState('chConfId');
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_BROWSERRULE_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };
@@ -53,7 +53,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_BROWSERRULE_INFORM,
         compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        viewItem: param.viewItem
     });
 };
 
@@ -127,7 +127,7 @@ export const getBrowserRule = (param) => dispatch => {
         return dispatch({
             type: DELETE_COMPDATA_ITEM,
             compId: compId,
-            name: 'selectedViewItem'
+            name: 'viewItem'
         });      
     }
 

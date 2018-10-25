@@ -47,7 +47,7 @@ class DeptRuleInform extends Component {
   // edit
   handleEditClick = (selectedDept) => {
     this.props.DeptActions.showDialog({
-      selectedViewItem: {
+      viewItem: {
         deptCd: selectedDept.get('selectedDeptCd'),
         deptNm: selectedDept.get('selectedDeptNm')
       },
@@ -57,21 +57,21 @@ class DeptRuleInform extends Component {
 
   // ===================================================================
   handleEditClickForMediaRule = (viewItem, compType) => {
-    //const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
+    //const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
     this.props.MediaRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
   handleEditClickForBrowserRule = (viewItem, compType) => {
     this.props.BrowserRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
   handleEditClickForSecurityRule = (viewItem, compType) => {
     this.props.SecurityRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };

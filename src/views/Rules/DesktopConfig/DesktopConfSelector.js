@@ -58,7 +58,7 @@ class DesktopConfSelector extends Component {
   // ===================================================================
   handleEditClickForDesktopConf = (viewItem, compType) => {
     this.props.DesktopConfActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT
     });
   };
@@ -83,7 +83,7 @@ class DesktopConfSelector extends Component {
         return element.get('objId') == selectedOptionItemId;
       });
       if(selectedData) {
-        selectedDesktopConfItem = Map({'selectedViewItem': selectedData});
+        selectedDesktopConfItem = Map({'viewItem': selectedData});
       }      
     };
 

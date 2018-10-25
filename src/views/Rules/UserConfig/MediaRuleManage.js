@@ -98,40 +98,40 @@ class MediaRuleManage extends Component {
     });
   }
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { MediaRuleActions, MediaRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedViewItem = getRowObjectById(MediaRuleProps, compId, id, 'objId');
+    const viewItem = getRowObjectById(MediaRuleProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // MediaRuleActions.showDialog({
-    //   selectedViewItem: viewObject,
+    //   viewItem: viewObject,
     //   dialogType: MediaRuleDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     MediaRuleActions.showInform({
       compId: compId,
-      selectedViewItem: selectedViewItem
+      viewItem: viewItem
     });
   };
 
   handleCreateButton = () => {
     this.props.MediaRuleActions.showDialog({
-      selectedViewItem: Map(),
+      viewItem: Map(),
       dialogType: MediaRuleDialog.TYPE_ADD
     });
   }
   
   handleEditListClick = (event, id) => {
     const { MediaRuleActions, MediaRuleProps } = this.props;
-    const selectedViewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     MediaRuleActions.showDialog({
-      selectedViewItem: generateMediaRuleObject(selectedViewItem),
+      viewItem: generateMediaRuleObject(viewItem),
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
@@ -139,12 +139,12 @@ class MediaRuleManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { MediaRuleProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
       confirmTitle: '매체제어정책정보 삭제',
-      confirmMsg: '매체제어정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '매체제어정책정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
@@ -161,17 +161,17 @@ class MediaRuleManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (selectedViewItem) => {
+  handleCopyClick = (viewItem) => {
     const { MediaRuleActions } = this.props;
     MediaRuleActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_COPY
     });
   };
 
   handleEditItemClick = (viewItem, compType) => {
     this.props.MediaRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
@@ -231,7 +231,7 @@ class MediaRuleManage extends Component {
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('objId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('objId'))}
                       tabIndex={-1}
                       key={n.get('objId')}
                     >

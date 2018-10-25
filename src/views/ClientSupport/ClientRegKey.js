@@ -81,11 +81,11 @@ class ClientRegKey extends Component {
     ClientRegKeyActions.readClientRegkeyListPaged(ClientRegKeyProps, this.props.match.params.grMenuId, {page: 0});
   };
   
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
+    const viewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
     ClientRegKeyActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientRegKeyDialog.TYPE_VIEW
     });
   };
@@ -93,7 +93,7 @@ class ClientRegKey extends Component {
   // create dialog
   handleCreateButton = () => {
     this.props.ClientRegKeyActions.showDialog({
-      selectedViewItem: {
+      viewItem: {
         regKeyNo: '',
         validDate: (new Date()).setMonth((new Date()).getMonth() + 1),
         expireDate: (new Date()).setMonth((new Date()).getMonth() + 1),
@@ -108,9 +108,9 @@ class ClientRegKey extends Component {
   handleEditClick = (event, id) => {
     event.stopPropagation();
     const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
+    const viewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
     ClientRegKeyActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientRegKeyDialog.TYPE_EDIT
     });
   };
@@ -119,12 +119,12 @@ class ClientRegKey extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientRegKeyProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
+    const viewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
     GRConfirmActions.showConfirm({
       confirmTitle: '단말등록키 삭제',
-      confirmMsg: '단말등록키(' + selectedViewItem.get('regKeyNo') + ')을 삭제하시겠습니까?',
+      confirmMsg: '단말등록키(' + viewItem.get('regKeyNo') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -199,7 +199,7 @@ class ClientRegKey extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('regKeyNo'))}
+                      onClick={event => this.handleSelectRow(event, n.get('regKeyNo'))}
                       key={n.get('regKeyNo')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regKeyNo')}</TableCell>

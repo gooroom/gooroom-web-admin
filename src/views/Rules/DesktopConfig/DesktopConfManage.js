@@ -99,40 +99,40 @@ class DesktopConfManage extends Component {
     });
   }
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { DesktopConfActions, DesktopConfProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedViewItem = getRowObjectById(DesktopConfProps, compId, id, 'confId');
+    const viewItem = getRowObjectById(DesktopConfProps, compId, id, 'confId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // DesktopConfActions.showDialog({
-    //   selectedViewItem: viewObject,
+    //   viewItem: viewObject,
     //   dialogType: DesktopConfDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     DesktopConfActions.showInform({
       compId: compId,
-      selectedViewItem: selectedViewItem
+      viewItem: viewItem
     });
   };
 
   handleCreateButton = () => {
     this.props.DesktopConfActions.showDialog({
-      selectedViewItem: Map(),
+      viewItem: Map(),
       dialogType: DesktopConfDialog.TYPE_ADD
     });
   }
   
   handleEditListClick = (event, id) => {
     const { DesktopConfActions, DesktopConfProps } = this.props;
-    const selectedViewItem = getRowObjectById(DesktopConfProps, this.props.match.params.grMenuId, id, 'confId');
+    const viewItem = getRowObjectById(DesktopConfProps, this.props.match.params.grMenuId, id, 'confId');
 
     DesktopConfActions.showDialog({
-      selectedViewItem: generateDesktopConfObject(selectedViewItem),
+      viewItem: generateDesktopConfObject(viewItem),
       dialogType: DesktopConfDialog.TYPE_EDIT
     });
   };
@@ -140,12 +140,12 @@ class DesktopConfManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { DesktopConfProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(DesktopConfProps, this.props.match.params.grMenuId, id, 'confId');
+    const viewItem = getRowObjectById(DesktopConfProps, this.props.match.params.grMenuId, id, 'confId');
     GRConfirmActions.showConfirm({
       confirmTitle: '매체제어정책정보 삭제',
-      confirmMsg: '매체제어정책정보(' + selectedViewItem.get('confId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '매체제어정책정보(' + viewItem.get('confId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
@@ -162,17 +162,17 @@ class DesktopConfManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (selectedViewItem) => {
+  handleCopyClick = (viewItem) => {
     const { DesktopConfActions } = this.props;
     DesktopConfActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_COPY
     });
   };
 
   handleEditItemClick = (viewItem, compType) => {
     this.props.DesktopConfActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT
     });
   };
@@ -232,7 +232,7 @@ class DesktopConfManage extends Component {
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('confId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('confId'))}
                       tabIndex={-1}
                       key={n.get('confId')}
                     >
