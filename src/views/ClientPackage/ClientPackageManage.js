@@ -76,31 +76,41 @@ class ClientPackageManage extends Component {
   }
 
   // Select Group Item
-  handleClientGroupSelect = (selectedGroupObj, selectedGroupIdArray) => {
+  handleClientGroupSelect = (selectedGroupObj) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
     const { ClientManageProps, ClientManageActions } = this.props;
-    const compId = this.props.match.params.grMenuId; 
+    const compId = this.props.match.params.grMenuId;
 
+    ClientGroupActions.changeCompVariable({
+      name: 'selectId',
+      value: selectedGroupObj.get('grpId'),
+      compId: compId
+    });
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      groupId: selectedGroupIdArray.toJS(), page:0
+      groupId: [selectedGroupObj.get('grpId')], page:0
     }, true);
 
     // show client group info.
-    if(selectedGroupObj) {
-      ClientManageActions.closeClientManageInform({compId: compId});
-      ClientGroupActions.showClientGroupInform({
-        compId: compId, viewItem: selectedGroupObj,
-      });
-    }
+    // if(selectedGroupObj) {
+    //   ClientManageActions.closeClientManageInform({compId: compId});
+    //   ClientGroupActions.showClientGroupInform({
+    //     compId: compId, viewItem: selectedGroupObj,
+    //   });
+    // }
   };
 
   // Select Client Item
-  handleClientSelect = (selectedClientObj, selectedClientIdArray) => {
+  handleClientSelect = (selectedClientObj) => {
     const { ClientManageActions, ClientGroupActions } = this.props;
     const { ClientPackageProps, ClientPackageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
+    ClientManageActions.changeCompVariable({
+      name: 'selectId',
+      value: selectedClientObj.get('clientId'),
+      compId: compId
+    });
     // show package list by client id
     ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {
       clientId: selectedClientObj.get('clientId'), page:0
