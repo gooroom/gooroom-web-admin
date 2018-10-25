@@ -8,6 +8,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientManageActions from 'modules/ClientManageModule';
+import * as ClientGroupActions from 'modules/ClientGroupModule';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
@@ -21,26 +22,62 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class GRClientSelector extends Component {
 
+  componentDidMount() {
+    const { ClientGroupActions, ClientManageActions, compId } = this.props;
+    
+    ClientGroupActions.changeCompVariable({ name: 'selectId', value: '', compId: compId });
 
-  // Select Group Item
-  handleClientGroupSelect = (selectedGroupObj, selectedGroupIds) => {
-    const { ClientManageProps, ClientManageActions, compId } = this.props;
-    if(this.props.handleGroupSelect) {
-      this.props.handleGroupSelect(selectedGroupObj, selectedGroupIds);
+    ClientManageActions.changeCompVariable({ name: 'selectId', value: '', compId: compId });
+    ClientManageActions.changeListParamData({ name: 'groupId', value: [], compId: compId });
+  }
+
+
+
+  // Select Group Item - single
+  handleClientGroupSelect = (selectedGroupObj) => {
+    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const { ClientManageProps, ClientManageActions } = this.props;
+    const { compId, selectorType } = this.props;
+
+    ClientGroupActions.changeCompVariable({
+      name: 'selectId',
+      value: selectedGroupObj.get('grpId'),
+      compId: compId
+    });
+    // if(this.props.handleGroupSelect) {
+    //   this.props.handleGroupSelect(selectedGroupObj, selectedGroupIds);
+    // }
+
+    // show client list
+    if(selectorType == 'single') {
+      ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+        groupId: [selectedGroupObj.get('grpId')], page:0
+      }, true);
     }
+
+  }
+
+  // Check Group Item
+  handleClientGroupCheck = (selectedGroupObj, selectedGroupIdArray) => {
+    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const { ClientManageProps, ClientManageActions, compId } = this.props;
 
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      groupId: selectedGroupIds.toJS(), page:0
+      groupId: selectedGroupIdArray.toJS(), page:0
     }, true);
+
   };
+  
 
   // handle click event in client list, set selected client data and call parent function if exixted.
   handleClientSelect = (selectedClientObj, selectedClientIds) => {
     // call assigned handler from parameters(properties), don't save in local state
     // only call where type is 'single'
-    if(this.props.handleClientSelect) {
-      this.props.handleClientSelect(selectedClientObj, (!!selectedClientIds.toJS) ? selectedClientIds.toJS() : selectedClientIds);
+    if(this.props.selectorType == 'single') {
+      if(this.props.handleClientSelect) {
+        this.props.handleClientSelect(selectedClientObj);
+      }
     }
   }
 
@@ -57,7 +94,8 @@ class GRClientSelector extends Component {
               selectorType={selectorType}
               hasEdit={false}
               hasShowRule={false}
-              onSelectAll={this.handleClientGroupSelectAll}
+              onCheckAll={this.handleClientGroupSelectAll}
+              onCheck={this.handleClientGroupCheck}
               onSelect={this.handleClientGroupSelect}
             />
           </Grid>
@@ -74,11 +112,13 @@ class GRClientSelector extends Component {
 
 
 const mapStateToProps = (state) => ({
-  ClientManageProps: state.ClientManageModule
+  ClientManageProps: state.ClientManageModule,
+  ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientManageActions: bindActionCreators(ClientManageActions, dispatch)
+  ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
+  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GRClientSelector));
 

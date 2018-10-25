@@ -366,7 +366,9 @@ class ClientPackageManage extends Component {
                 </Button>
               </Toolbar>
 
-              <ClientGroupComp compId={compId} onSelectAll={this.handleClientGroupSelectAll} onSelect={this.handleClientGroupSelect} />
+              <ClientGroupComp compId={compId} 
+                onSelectAll={this.handleClientGroupSelectAll} 
+                onSelect={this.handleClientGroupSelect} />
             </Grid>
 
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>

@@ -133,17 +133,13 @@ class ClientGroupDialog extends Component {
             <Dialog open={ClientGroupProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <DialogTitle >{title}</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        label="단말그룹이름"
+                    <TextField label="단말그룹이름" className={classes.fullWidth}
                         value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
                         onChange={this.handleValueChange('grpNm')}
-                        className={classes.fullWidth}
                     />
-                    <TextField
-                        label="단말그룹설명"
+                    <TextField label="단말그룹설명" className={classes.fullWidth}
                         value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={this.handleValueChange('comment')}
-                        className={classes.fullWidth}
                     />
                     <Divider style={{marginBottom: 10}} />
                     <ClientRuleSelector compId={compId} module={ClientGroupProps.get('editingItem').toJS()} targetType="GROUP" />

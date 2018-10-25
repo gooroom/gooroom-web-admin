@@ -34,7 +34,6 @@ class GRHeader extends Component {
   }
 
   handleClickSystem = () => {
-    console.log("handleClickSystem...........");
     this.setState(state => ({ popMenu: !state.popMenu }));
   }
 
