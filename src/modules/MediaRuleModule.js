@@ -52,6 +52,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_MEDIACONTROL_INFORM,
         compId: param.compId,
+        selectId: (param.viewItem) ? param.viewItem.get('objId') : '',
         viewItem: param.viewItem
     });
 };

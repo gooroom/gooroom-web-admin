@@ -39,6 +39,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTPACKAGE_INFORM,
         compId: param.compId,
+        selectId: (param.viewItem) ? param.viewItem.get('objId') : '',
         viewItem: param.viewItem
     });
 };

@@ -54,6 +54,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_DEPT_INFORM,
         compId: param.compId,
+        selectId: (param.viewItem) ? param.viewItem.get('deptId') : '',
         viewItem: param.viewItem
     });
 };

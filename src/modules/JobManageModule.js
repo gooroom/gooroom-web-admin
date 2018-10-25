@@ -26,6 +26,7 @@ export const showJobInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_JOB_INFORM,
         compId: param.compId,
+        selectId: (param.viewItem) ? param.viewItem.get('jobId') : '',
         viewItem: param.viewItem
     });
 };
