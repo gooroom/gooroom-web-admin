@@ -183,7 +183,7 @@ class ClientProfileSet extends Component {
                 </FormControl>
               </Grid>
               <Grid item xs={6} >
-                <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                   <Search />조회
                 </Button>
               </Grid>

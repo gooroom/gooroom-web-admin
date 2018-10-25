@@ -190,7 +190,7 @@ class ClientConfSettingDialog extends Component {
                         </div>
                         <div style={{marginTop:"10px"}}>
                             <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
-                            <Button onClick={this.handleAddNtp} variant="outlined" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
+                            <Button onClick={this.handleAddNtp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
                             <List>
                             {editingItem.get('ntpAddress') && editingItem.get('ntpAddress').size > 0 && editingItem.get('ntpAddress').map((value, index) => (
                                 <ListItem style={{paddingTop:"0px", paddingBottom:"0px"}} key={index} >
