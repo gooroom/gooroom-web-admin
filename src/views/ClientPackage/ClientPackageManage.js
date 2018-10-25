@@ -49,7 +49,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import BuildIcon from '@material-ui/icons/Build';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import ClientWithPackageComp from 'views/Client/ClientWithPackageComp';
+import ClientManageCompWithPackage from 'views/Client/ClientManageCompWithPackage';
 import ClientManageInform from 'views/Client/ClientManageInform';
 
 import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
@@ -190,12 +190,14 @@ class ClientPackageManage extends Component {
   }
 
   isClientSelected = () => {
-    const selectedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
-    return !(selectedIds && selectedIds.size > 0);
+    const checkedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    // const selectedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
+    return !(checkedIds && checkedIds.size > 0);
   }
 
   isGroupSelected = () => {
-    return (this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem'])) ? false : true;
+    const groupSelectId = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectId']);
+    return (groupSelectId && groupSelectId !== '') ? false : true;
   }
 
   // install package user selected
@@ -372,10 +374,10 @@ class ClientPackageManage extends Component {
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
-                      <AddIcon />추가
+                      <AddIcon />그룹단말추가
                     </Button>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
-                      <RemoveIcon />제거
+                      <RemoveIcon />그룹단말제거
                     </Button>
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
@@ -389,7 +391,7 @@ class ClientPackageManage extends Component {
                 </Grid>
               </Toolbar>
 
-              <ClientWithPackageComp compId={compId} onSelectAll={this.handleClientSelectAll} onSelect={this.handleClientSelect} />
+              <ClientManageCompWithPackage compId={compId} onSelectAll={this.handleClientSelectAll} onSelect={this.handleClientSelect} />
             </Grid>
 
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef'}}>
