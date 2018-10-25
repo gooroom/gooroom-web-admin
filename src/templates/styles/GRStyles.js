@@ -93,6 +93,32 @@ export const GRCommonStyle = theme => ({
         backgroundColor: theme.palette.background.default
     },
 
+    menuContainerClass: {
+        top: grLayout.headerHeight + " !important",
+        position: "fixed",
+        zIndex: 1019,
+        width: grLayout.sideBarWidth,
+        height: "calc(100vh - " + grLayout.headerHeight + ") !important",
+        flex: "0 0 200px",
+        order: "-1",
+        transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
+        overflowX: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        padding: 0,
+    },
+
+    menuItemClass: {
+        padding: "3px 5px 0px 20px !important",
+        '&:focus': {
+          backgroundColor: "#78909C",
+        }
+    },
+
+    nestedClass: {
+        padding: "3px 5px 0px 30px !important"
+    },
+    
     // MENU Footer
     menuFooterRoot: {
         textAlign: "right",
