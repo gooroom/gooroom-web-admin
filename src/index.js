@@ -5,7 +5,7 @@ import store from './store';
 import { Provider } from 'react-redux';
 
 // Import Main styles for this application
-import './scss/main.scss'
+// import './scss/main.scss'
 
 // Containers
 import GRFull from 'containers/GRFull/'

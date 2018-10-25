@@ -48,9 +48,25 @@ import Search from '@material-ui/icons/Search';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
+const CustomTableRow = withStyles(theme => ({
+
+  root: {
+    backgroundColor: '#00ff00',
+    color: '#ffffff',
+  },
+  hover: {
+    backgroundColor: '#ff0000',
+    color: '#ffffff',
+  },
+  selected: {
+    backgroundColor: '#0000ff',
+    color: '#ffffff',
+  }
+
+}))(TableRow);
+
+
 class ClientGroupComp extends Component {
 
   columnHeaders = [
@@ -244,7 +260,7 @@ class ClientGroupComp extends Component {
             </FormControl>
           </Grid>
           <Grid item xs={6} >
-            <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
               <Search />조회
             </Button>
           </Grid>
@@ -279,7 +295,9 @@ class ClientGroupComp extends Component {
           {listObj.get('listData').map(n => {
             const isChecked = this.isChecked(n.get('grpId'));
             const isSelected = this.isSelected(n.get('grpId'));
-            
+
+            console.log(classes);
+
             return (
               <TableRow
                 hover
