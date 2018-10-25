@@ -85,20 +85,21 @@ class UserListComp extends Component {
   // .................................................
 
   handleSelectRow = (event, id) => {
+    event.stopPropagation();
     const { UserProps, UserActions, compId } = this.props;
 
     const selectRowObject = getRowObjectById(UserProps, compId, id, 'userId');
-    const newCheckedIds = setCheckedIdsInComp(UserProps, compId, id);
+    // const newCheckedIds = setCheckedIdsInComp(UserProps, compId, id);
 
     // check select box
-    UserActions.changeCompVariable({
-      name: 'checkedIds',
-      value: newCheckedIds,
-      compId: compId
-    });
+    // UserActions.changeCompVariable({
+    //   name: 'checkedIds',
+    //   value: newCheckedIds,
+    //   compId: compId
+    // });
 
     if(this.props.onSelect) {
-      this.props.onSelect(selectRowObject, newCheckedIds);
+      this.props.onSelect(selectRowObject);
     }
   };
 
@@ -135,6 +136,31 @@ class UserListComp extends Component {
     }
   };
 
+
+  handleClickAllCheck = (event, checked) => {
+    const { UserActions, UserProps, compId } = this.props;
+    const newCheckedIds = getDataPropertyInCompByParam(UserProps, compId, 'userId', checked);
+
+    UserActions.changeCompVariable({
+      name: 'checkedIds',
+      value: newCheckedIds,
+      compId: compId
+    });
+  };
+
+  handleCheckClick = (event, id) => {
+    event.stopPropagation();
+    const { UserActions, UserProps, compId } = this.props;
+    const newCheckedIds = setCheckedIdsInComp(UserProps, compId, id);  
+
+    UserActions.changeCompVariable({
+      name: 'checkedIds',
+      value: newCheckedIds,
+      compId: compId
+    });
+
+  }
+
   isChecked = id => {
     const { UserProps, compId } = this.props;
     const checkedIds = getDataObjectVariableInComp(UserProps, compId, 'checkedIds');
@@ -143,6 +169,12 @@ class UserListComp extends Component {
     } else {
       return false;
     }
+  }
+
+  isSelected = id => {
+    const { UserProps, compId } = this.props;
+    const selectId = getDataObjectVariableInComp(UserProps, compId, 'selectId');
+    return (selectId == id);
   }
 
   render() {
@@ -170,17 +202,18 @@ class UserListComp extends Component {
           <TableBody>
             {listObj.get('listData').map(n => {
               const isChecked = this.isChecked(n.get('userId'));
+              const isSelected = this.isSelected(n.get('userId'));
+
               return (
                 <TableRow
                   hover
+                  className={(isSelected) ? classes.grSelectedRow : ''}
                   onClick={event => this.handleSelectRow(event, n.get('userId'))}
                   role="checkbox"
-                  aria-checked={isChecked}
                   key={n.get('userId')}
-                  selected={isChecked}
                 >
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} />
+                    <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('userId'))}/>
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
