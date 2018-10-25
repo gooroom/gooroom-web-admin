@@ -68,7 +68,7 @@ class ClientGroupSelect extends Component {
         {CommonOptionProps.listDataForClientGroupSelect.map(x => {
           return (
             <MenuItem value={x.grpId} key={x.grpId}>
-              <Checkbox checked={CommonOptionProps.selectedClientGroup.grpIds.indexOf(x.grpId) > -1} />
+              <Checkbox checked={CommonOptionProps.selectedClientGroup.grpIds.indexOf(x.grpId) > -1} color="primary" />
               <ListItemText primary={x.grpNm} />
             </MenuItem>
           );

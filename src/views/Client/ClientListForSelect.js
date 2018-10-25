@@ -240,7 +240,7 @@ class ClientListForSelect extends Component {
                   selected={isChecked}
                 >
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                    <Checkbox color="primary" checked={isChecked} className={classes.grObjInCell} />
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>

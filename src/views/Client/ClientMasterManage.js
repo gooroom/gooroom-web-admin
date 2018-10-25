@@ -92,13 +92,13 @@ class ClientMasterManage extends Component {
       ClientManageActions.closeClientManageInform({compId: compId});
       // show client group inform
       ClientGroupActions.showClientGroupInform({
-        compId: compId, viewItem: selectedGroupObj,
+        compId: compId, viewItem: selectedGroupObj, selectId: selectedGroupObj.get('grpId')
       });
     }
   };
 
   // Select Client Item
-  handleClientSelect = (selectedClientObj, selectedClientIdArray) => {
+  handleClientSelect = (selectedClientObj) => {
     const { ClientGroupProps } = this.props;
     const { ClientManageActions, ClientGroupActions } = this.props;
 
@@ -109,9 +109,11 @@ class ClientMasterManage extends Component {
 
     // show client info.
     if(selectedClientObj) {
+
       ClientGroupActions.closeClientGroupInform({
         compId: compId
       });
+      
       ClientManageActions.showClientManageInform({
         compId: compId,
         viewItem: selectedClientObj,
@@ -147,7 +149,7 @@ class ClientMasterManage extends Component {
         });   
 
         ClientGroupActions.showClientGroupInform({
-          compId: compId, viewItem: selectedGroupObj,
+          compId: compId, viewItem: selectedGroupObj, selectId: ''
         });
       }
     }

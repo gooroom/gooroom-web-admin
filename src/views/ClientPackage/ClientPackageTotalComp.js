@@ -188,7 +188,7 @@ class ClientPackageComp extends Component {
                 key={n.get('packageId')}
               >
                 <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                  <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                  <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} />
                 </TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('packageId')}</TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('packageArch')}</TableCell>

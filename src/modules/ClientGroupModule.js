@@ -45,7 +45,7 @@ export const showClientGroupInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTGROUP_INFORM,
         compId: param.compId,
-        selectId: (param.viewItem) ? param.viewItem.get('grpId') : '',
+        selectId: param.selectId,
         viewItem: param.viewItem
     });
 };
