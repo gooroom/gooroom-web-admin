@@ -121,7 +121,7 @@ class ClientPackageTotalListForSelect extends Component {
   };
   // .................................................
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { stateData } = this.state;
     const checkedIds = stateData.get('checkedIds');
     let newCheckedIds = null;
@@ -203,7 +203,7 @@ class ClientPackageTotalListForSelect extends Component {
               return (
                 <TableRow
                   hover
-                  onClick={event => this.handleRowClick(event, n.get('packageId'))}
+                  onClick={event => this.handleSelectRow(event, n.get('packageId'))}
                   role="checkbox"
                   aria-checked={isChecked}
                   key={n.get('packageId')}

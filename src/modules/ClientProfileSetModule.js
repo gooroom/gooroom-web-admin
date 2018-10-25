@@ -26,7 +26,7 @@ const initialState = commonHandleActions.getCommonInitialState('chProfileSetNo',
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_PROFILESET_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };

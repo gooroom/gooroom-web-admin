@@ -93,11 +93,11 @@ class AdminUserManage extends Component {
     AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {page: 0});
   };
   
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { AdminUserProps, AdminUserActions } = this.props;
-    const selectedViewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
+    const viewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
     AdminUserActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: AdminUserDialog.TYPE_VIEW
     });
   };
@@ -121,7 +121,7 @@ class AdminUserManage extends Component {
   // create dialog
   handleCreateButton = () => {
     this.props.AdminUserActions.showDialog({
-      selectedViewItem: {
+      viewItem: {
         adminId: ''
       },
       dialogType: AdminUserDialog.TYPE_ADD
@@ -132,9 +132,9 @@ class AdminUserManage extends Component {
   handleEditClick = (event, id) => {
     event.stopPropagation();
     const { AdminUserProps, AdminUserActions } = this.props;
-    const selectedViewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
+    const viewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
     AdminUserActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: AdminUserDialog.TYPE_EDIT
     });
   };
@@ -143,12 +143,12 @@ class AdminUserManage extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { AdminUserProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
+    const viewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
     GRConfirmActions.showConfirm({
       confirmTitle: '관리자계정 삭제',
-      confirmMsg: '관리자계정(' + selectedViewItem.get('adminId') + ')을 삭제하시겠습니까?',
+      confirmMsg: '관리자계정(' + viewItem.get('adminId') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -232,7 +232,7 @@ class AdminUserManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('adminId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('adminId'))}
                       key={n.get('adminId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>

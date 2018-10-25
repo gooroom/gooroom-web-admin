@@ -86,11 +86,11 @@ class ClientPackageMenu extends Component {
     ClientPackageActions.readClientPackageListPaged(ClientPackageProps, this.props.match.params.grMenuId, {page: 0});
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientPackageProps, ClientPackageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    // const clickedRowObject = getRowObjectById(ClientPackageProps, compId, id, 'packageId');
+    // const selectRowObject = getRowObjectById(ClientPackageProps, compId, id, 'packageId');
     const newCheckedIds = setCheckedIdsInComp(ClientPackageProps, compId, id);
 
     ClientPackageActions.changeCompVariable({
@@ -100,12 +100,12 @@ class ClientPackageMenu extends Component {
     });
 
     // if(this.props.onSelect) {
-    //   this.props.onSelect(clickedRowObject, newCheckedIds);
+    //   this.props.onSelect(selectRowObject, newCheckedIds);
     // }
 
     // ClientPackageActions.showInform({
     //   compId: compId,
-    //   selectedViewItem: clickedRowObject,
+    //   viewItem: selectRowObject,
     // });
   };
   // .................................................
@@ -113,7 +113,7 @@ class ClientPackageMenu extends Component {
   // add
   // handleCreateButton = () => {
   //   this.props.ClientPackageActions.showDialog({
-  //     selectedViewItem: Map(),
+  //     viewItem: Map(),
   //     dialogType: ClientPackageDialog.TYPE_ADD
   //   });
   // }
@@ -122,9 +122,9 @@ class ClientPackageMenu extends Component {
   // handleEditClick = (event, id) => {
   //   event.stopPropagation();
   //   const { ClientPackageProps, ClientPackageActions } = this.props;
-  //   const selectedViewItem = getRowObjectById(ClientPackageProps, this.props.match.params.grMenuId, id, 'packageId');
+  //   const viewItem = getRowObjectById(ClientPackageProps, this.props.match.params.grMenuId, id, 'packageId');
   //   ClientPackageActions.showDialog({
-  //     selectedViewItem: selectedViewItem,
+  //     viewItem: viewItem,
   //     dialogType: ClientPackageDialog.TYPE_EDIT
   //   });
   // };
@@ -211,7 +211,7 @@ class ClientPackageMenu extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('packageId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('packageId'))}
                       role="checkbox"
                       aria-checked={isChecked}
                       key={n.get('packageId')}

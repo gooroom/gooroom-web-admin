@@ -42,7 +42,7 @@ const initialState = commonHandleActions.getCommonInitialState('chConfId');
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_SECURITYRULE_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };
@@ -57,7 +57,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_SECURITYRULE_INFORM,
         compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        viewItem: param.viewItem
     });
 };
 
@@ -131,7 +131,7 @@ export const getSecurityRule = (param) => dispatch => {
         return dispatch({
             type: DELETE_COMPDATA_ITEM,
             compId: compId,
-            name: 'selectedViewItem'
+            name: 'viewItem'
         });      
     }
 
@@ -446,7 +446,7 @@ export default handleActions({
     },
     [SHOW_SECURITYRULE_DIALOG]: (state, action) => {
         // generate firewall data
-        const netItems = action.selectedViewItem.get('netItem');
+        const netItems = action.viewItem.get('netItem');
         if(netItems && netItems.size > 0) {
             let networkItems = List([]);
             netItems.forEach(n => {
@@ -462,7 +462,7 @@ export default handleActions({
                 }));
             });
 
-            action.selectedViewItem = action.selectedViewItem.set('networkItems', networkItems);
+            action.viewItem = action.viewItem.set('networkItems', networkItems);
         }
 
         return commonHandleActions.handleShowDialogAction(state, action);

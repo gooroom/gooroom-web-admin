@@ -41,19 +41,19 @@ class ClientManageInform extends Component {
 
     const { compId, ClientManageProps } = this.props;
     const informOpen = ClientManageProps.getIn(['viewItems', compId, 'informOpen']);
-    const selectedViewItem = ClientManageProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const viewItem = ClientManageProps.getIn(['viewItems', compId, 'viewItem']);
 
     return (
       <div>
-      {(informOpen && selectedViewItem) &&
+      {(informOpen && viewItem) &&
         <Card style={{marginBottom: 20}}>
           <CardHeader
-            title={(selectedViewItem) ? selectedViewItem.get('clientName') : ''}
-            subheader={selectedViewItem.get('clientId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
+            title={(viewItem) ? viewItem.get('clientName') : ''}
+            subheader={viewItem.get('clientId') + ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}
           />
           <CardContent>
             <Typography component="pre">
-              {selectedViewItem.get('clientStatus')}
+              {viewItem.get('clientStatus')}
             </Typography>
 
             <Divider />
@@ -65,24 +65,24 @@ class ClientManageInform extends Component {
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 단말그룹</TableCell>
                       <TableCell numeric>
-                        {selectedViewItem.get('clientGroupName')} ({selectedViewItem.get('clientGroupId')})
+                        {viewItem.get('clientGroupName')} ({viewItem.get('clientGroupId')})
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 단말설명</TableCell>
-                      <TableCell numeric>{selectedViewItem.get('comment')}</TableCell>
+                      <TableCell numeric>{viewItem.get('comment')}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 온라인여부</TableCell>
-                      <TableCell numeric>{(selectedViewItem.get('isOn') == '0') ? '오프라인' : '온라인'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('isOn') == '0') ? '오프라인' : '온라인'}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 용량(홈폴더)</TableCell>
-                      <TableCell numeric>{selectedViewItem.get('strgSize')}</TableCell>
+                      <TableCell numeric>{viewItem.get('strgSize')}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 설치패키지수</TableCell>
-                      <TableCell numeric>{selectedViewItem.get('totalCnt')}</TableCell>
+                      <TableCell numeric>{viewItem.get('totalCnt')}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -93,27 +93,27 @@ class ClientManageInform extends Component {
                     
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} isBootProtector</TableCell>
-                      <TableCell numeric>{(selectedViewItem.get('isBootProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('isBootProtector') == '0') ? '미침해' : '침해'}</TableCell>
                     </TableRow>
 
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} isExeProtector</TableCell>
-                      <TableCell numeric>{(selectedViewItem.get('isExeProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('isExeProtector') == '0') ? '미침해' : '침해'}</TableCell>
                     </TableRow>
 
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} isMediaProtector</TableCell>
-                      <TableCell numeric>{(selectedViewItem.get('isMediaProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('isMediaProtector') == '0') ? '미침해' : '침해'}</TableCell>
                     </TableRow>
 
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} isOsProtector</TableCell>
-                      <TableCell numeric>{(selectedViewItem.get('isOsProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('isOsProtector') == '0') ? '미침해' : '침해'}</TableCell>
                     </TableRow>
 
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} isProtector</TableCell>
-                      <TableCell numeric>{(selectedViewItem.get('isProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('isProtector') == '0') ? '미침해' : '침해'}</TableCell>
                     </TableRow>
 
                   </TableBody>

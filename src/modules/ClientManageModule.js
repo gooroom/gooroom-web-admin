@@ -36,7 +36,7 @@ const initialState = commonHandleActions.getCommonInitialState('clientName', 'de
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENT_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };
@@ -51,7 +51,7 @@ export const showClientManageInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENT_INFORM,
         compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        viewItem: param.viewItem
     });
 };
 
@@ -59,7 +59,7 @@ export const closeClientManageInform = (param) => dispatch => {
     return dispatch({
         type: CLOSE_CLIENT_INFORM,
         compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        viewItem: param.viewItem
     });
 };
 

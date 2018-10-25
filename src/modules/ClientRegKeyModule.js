@@ -27,7 +27,7 @@ const initialState = commonHandleActions.getCommonInitialState('chModDate', 'des
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_REGKEY_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };

@@ -89,15 +89,15 @@ class JobManage extends Component {
     JobManageActions.readJobManageListPaged(JobManageProps, this.props.match.params.grMenuId, {page: 0});
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { JobManageProps, JobManageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const clickedRowObject = getRowObjectById(JobManageProps, compId, id, 'jobNo');
+    const selectRowObject = getRowObjectById(JobManageProps, compId, id, 'jobNo');
 
     JobManageActions.showJobInform({
       compId: compId,
-      selectedViewItem: clickedRowObject,
+      viewItem: selectRowObject,
     });
   };
 
@@ -177,7 +177,7 @@ class JobManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('jobNo'))}
+                      onClick={event => this.handleSelectRow(event, n.get('jobNo'))}
                       key={n.get('jobNo')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('jobNo')}</TableCell>

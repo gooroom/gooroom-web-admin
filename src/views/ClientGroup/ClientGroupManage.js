@@ -97,17 +97,17 @@ class ClientGroupManage extends Component {
     ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {page: 0});
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientGroupProps } = this.props;
     const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+    const selectRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
 
     ClientGroupActions.showClientGroupInform({
       compId: compId,
-      selectedViewItem: clickedRowObject,
+      viewItem: selectRowObject,
     });
     
     // 정책 조회
@@ -136,7 +136,7 @@ class ClientGroupManage extends Component {
 
     // '데스크톱 정보설정' : 정책 정보 변경
     ClientDesktopConfigActions.getClientDesktopConfig({
-      compId: compId, desktopConfId: clickedRowObject.get('desktopConfigId')
+      compId: compId, desktopConfId: selectRowObject.get('desktopConfigId')
     });   
   };
   // .................................................
@@ -144,7 +144,7 @@ class ClientGroupManage extends Component {
   // add
   handleCreateButton = () => {
     this.props.ClientGroupActions.showDialog({
-      selectedViewItem: Map(),
+      viewItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD
     });
   }
@@ -153,9 +153,9 @@ class ClientGroupManage extends Component {
   handleEditClick = (event, id) => {
     event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
+    const viewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     ClientGroupActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
@@ -164,12 +164,12 @@ class ClientGroupManage extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientGroupProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
+    const viewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     GRConfirmActions.showConfirm({
       confirmTitle: '단말그룹 삭제',
-      confirmMsg: '단말그룹(' + selectedViewItem.get('grpNm') + ')을 삭제하시겠습니까?',
+      confirmMsg: '단말그룹(' + viewItem.get('grpNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -246,7 +246,7 @@ class ClientGroupManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('grpId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('grpId'))}
                       key={n.get('grpId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>

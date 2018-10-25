@@ -97,40 +97,40 @@ class ClientHostNameManage extends Component {
     });
   }
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientHostNameProps, ClientHostNameActions } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const selectedViewItem = getRowObjectById(ClientHostNameProps, compId, id, 'objId');
+    const viewItem = getRowObjectById(ClientHostNameProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // ClientHostNameActions.showDialog({
-    //   selectedViewItem: viewItem,
+    //   viewItem: viewItem,
     //   dialogType: ClientHostNameDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     ClientHostNameActions.showInform({
       compId: compId,
-      selectedViewItem: selectedViewItem
+      viewItem: viewItem
     });
     
   };
 
   handleCreateButton = () => {
     this.props.ClientHostNameActions.showDialog({
-      selectedViewItem: Map(),
+      viewItem: Map(),
       dialogType: ClientHostNameDialog.TYPE_ADD
     });
   }
 
   handleEditListClick = (event, id) => { 
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
-    const selectedViewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientHostNameActions.showDialog({
-      selectedViewItem: generateClientHostNameObject(selectedViewItem),
+      viewItem: generateClientHostNameObject(viewItem),
       dialogType: ClientHostNameDialog.TYPE_EDIT
     });
   };
@@ -138,12 +138,12 @@ class ClientHostNameManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { ClientHostNameProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
       confirmTitle: 'Hosts 정보 삭제',
-      confirmMsg: 'Hosts 정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: 'Hosts 정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -160,17 +160,17 @@ class ClientHostNameManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (selectedViewItem) => {
+  handleCopyClick = (viewItem) => {
     const { ClientHostNameActions } = this.props;
     ClientHostNameActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientHostNameDialog.TYPE_COPY
     });
   };
 
   handleEditItemClick = (viewItem, compType) => {
     this.props.ClientHostNameActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: ClientHostNameDialog.TYPE_EDIT
     });
   };
@@ -230,7 +230,7 @@ class ClientHostNameManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('objId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('objId'))}
                       key={n.get('objId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>

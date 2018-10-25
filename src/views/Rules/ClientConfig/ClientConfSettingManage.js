@@ -94,40 +94,40 @@ class ClientConfSettingManage extends Component {
     });
   }
   
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const selectedViewItem = getRowObjectById(ClientConfSettingProps, compId, id, 'objId');
+    const viewItem = getRowObjectById(ClientConfSettingProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // ClientConfSettingActions.showDialog({
-    //   selectedViewItem: viewObject,
+    //   viewItem: viewObject,
     //   dialogType: ClientConfSettingDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     ClientConfSettingActions.showInform({
       compId: compId,
-      selectedViewItem: selectedViewItem
+      viewItem: viewItem
     });
     
   };
 
   handleCreateButton = () => {
     this.props.ClientConfSettingActions.showDialog({
-      selectedViewItem: Map(),
+      viewItem: Map(),
       dialogType: ClientConfSettingDialog.TYPE_ADD
     });
   }
 
   handleEditListClick = (event, id) => { 
     const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientConfSettingActions.showDialog({
-      selectedViewItem: generateClientConfSettingObject(selectedViewItem),
+      viewItem: generateClientConfSettingObject(viewItem),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -135,12 +135,12 @@ class ClientConfSettingManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { ClientConfSettingProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말정책정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -156,17 +156,17 @@ class ClientConfSettingManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (selectedViewItem) => {
+  handleCopyClick = (viewItem) => {
     const { ClientConfSettingActions } = this.props;
     ClientConfSettingActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientConfSettingDialog.TYPE_COPY
     });
   };
 
   handleEditItemClick = (viewItem, compType) => {
     this.props.ClientConfSettingActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -226,7 +226,7 @@ class ClientConfSettingManage extends Component {
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('objId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('objId'))}
                       key={n.get('objId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>

@@ -94,9 +94,9 @@ class ClientManageComp extends Component {
     });
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    const clickedRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
+    const selectRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
     let newCheckedIds = '';
     if(this.props.selectorType && this.props.selectorType == 'multiple') {
       newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);  
@@ -110,7 +110,7 @@ class ClientManageComp extends Component {
     }
 
     if(this.props.onSelect) {
-      this.props.onSelect(clickedRowObject, newCheckedIds);
+      this.props.onSelect(selectRowObject, newCheckedIds);
     }
     
     // rest actions..
@@ -210,7 +210,7 @@ class ClientManageComp extends Component {
               return (
                 <TableRow
                   hover
-                  onClick={event => this.handleRowClick(event, n.get('clientId'))}
+                  onClick={event => this.handleSelectRow(event, n.get('clientId'))}
                   role="checkbox"
                   key={n.get('clientId')}
                 >

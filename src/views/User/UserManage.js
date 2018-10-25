@@ -91,13 +91,13 @@ class UserManage extends Component {
     });
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { UserProps, UserActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
-    const userId = clickedRowObject.get('userId');
+    const selectRowObject = getRowObjectById(UserProps, compId, id, 'userId');
+    const userId = selectRowObject.get('userId');
     const newCheckedIds = setCheckedIdsInComp(UserProps, compId, id);
 
     // check select box
@@ -115,7 +115,7 @@ class UserManage extends Component {
     SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
     
     // show user inform pane.
-    UserActions.showInform({ compId: compId, selectedViewItem: clickedRowObject });
+    UserActions.showInform({ compId: compId, viewItem: selectRowObject });
   };
 
   handleSelectBtnClick = () => {
@@ -127,7 +127,7 @@ class UserManage extends Component {
   handleCreateButton = value => {
     const { UserActions } = this.props;
     UserActions.showDialog({
-      selectedViewItem: {
+      viewItem: {
         userId: '',
         userNm: '',
         userPassword: '',
@@ -159,9 +159,9 @@ class UserManage extends Component {
   
   handleEditClick = (event, id) => { 
     const { UserProps, UserActions } = this.props;
-    const selectedViewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
+    const viewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
     UserActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: UserBasicDialog.TYPE_EDIT
     }, false);
   };
@@ -169,12 +169,12 @@ class UserManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { UserProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
+    const viewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
     GRConfirmActions.showConfirm({
       confirmTitle: '사용자정보 삭제',
-      confirmMsg: '사용자정보(' + selectedViewItem.get('userNm') + ')을 삭제하시겠습니까?',
+      confirmMsg: '사용자정보(' + viewItem.get('userNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -267,7 +267,7 @@ class UserManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('userId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('userId'))}
                       role="checkbox"
                       aria-checked={isChecked}
                       key={n.get('userId')}

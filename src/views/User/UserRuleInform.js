@@ -41,11 +41,11 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class UserRuleInform extends Component {
 
    // edit
-   handleEditClick = (selectedViewItem) => {
+   handleEditClick = (viewItem) => {
     this.props.UserActions.showDialog({
       ruleSelectedViewItem: {
-        userId: selectedViewItem.get('userId'),
-        userNm: selectedViewItem.get('userNm')
+        userId: viewItem.get('userId'),
+        userNm: viewItem.get('userNm')
       },
       ruleDialogType: UserDialog.TYPE_EDIT
     }, true);
@@ -54,19 +54,19 @@ class UserRuleInform extends Component {
   // ===================================================================
   handleEditClickForMediaRule = (viewItem, compType) => {
     this.props.MediaRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
   handleEditClickForBrowserRule = (viewItem, compType) => {
     this.props.BrowserRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
   handleEditClickForSecurityRule = (viewItem, compType) => {
     this.props.SecurityRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
@@ -79,7 +79,7 @@ class UserRuleInform extends Component {
     const { UserProps, compId } = this.props;
 
     const informOpen = UserProps.getIn(['viewItems', compId, 'informOpen']);
-    const selectedViewItem = UserProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const viewItem = UserProps.getIn(['viewItems', compId, 'viewItem']);
 
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'USER']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'USER']);
@@ -87,16 +87,16 @@ class UserRuleInform extends Component {
 
     return (
       <div style={{marginTop: 10}} >
-      {(informOpen && selectedViewItem) &&
+      {(informOpen && viewItem) &&
         <Card>
           <CardHeader
-            title={selectedViewItem.get('userNm')}
-            subheader={selectedViewItem.get('userId') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
+            title={viewItem.get('userNm')}
+            subheader={viewItem.get('userId') + ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.handleEditClick(selectedViewItem)}
+                  onClick={() => this.handleEditClick(viewItem)}
                 ><SettingsApplicationsIcon /></Button>
               </div>
             }

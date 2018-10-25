@@ -90,11 +90,11 @@ class GcspManage extends Component {
     GcspManageActions.readGcspListPaged(GcspManageProps, this.props.match.params.grMenuId, {page: 0});
   };
   
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { GcspManageProps, GcspManageActions } = this.props;
-    const selectedViewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
+    const viewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
     GcspManageActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: GcspDialog.TYPE_VIEW
     });
   };
@@ -102,7 +102,7 @@ class GcspManage extends Component {
   // create dialog
   handleCreateButton = () => {
     this.props.GcspManageActions.showDialog({
-      selectedViewItem: {
+      viewItem: {
         gcspId: '',
         certGubun: 'cert1'
       },
@@ -114,9 +114,9 @@ class GcspManage extends Component {
   handleEditClick = (event, id) => {
     event.stopPropagation();
     const { GcspManageProps, GcspManageActions } = this.props;
-    const selectedViewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
+    const viewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
     GcspManageActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: GcspDialog.TYPE_EDIT
     });
   };
@@ -125,12 +125,12 @@ class GcspManage extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { GcspManageProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
+    const viewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
     GRConfirmActions.showConfirm({
       confirmTitle: '클라우드서비스 삭제',
-      confirmMsg: '클라우드서비스(' + selectedViewItem.get('gcspId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '클라우드서비스(' + viewItem.get('gcspId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -213,7 +213,7 @@ class GcspManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('gcspId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('gcspId'))}
                       key={n.get('gcspId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspNm')}</TableCell>

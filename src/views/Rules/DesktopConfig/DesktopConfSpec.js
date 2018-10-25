@@ -59,7 +59,7 @@ class DesktopConfSpec extends Component {
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateDesktopConfObject(selectedItem.get('selectedViewItem'));
+      viewItem = generateDesktopConfObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
     }
     

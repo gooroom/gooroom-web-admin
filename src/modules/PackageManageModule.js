@@ -43,7 +43,7 @@ const initialState = {
         rowsFiltered: 0
     },
 
-    selectedViewItem: {},
+    viewItem: {},
 
     informOpen: false,
 };

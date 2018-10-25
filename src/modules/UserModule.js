@@ -43,13 +43,13 @@ export const showDialog = (param, isRule) => dispatch => {
     if(isRule) {
         return dispatch({
             type: SHOW_USERRULE_DIALOG,
-            selectedViewItem: param.ruleSelectedViewItem,
+            viewItem: param.ruleSelectedViewItem,
             ruleDialogType: param.ruleDialogType
         });
     }
     return dispatch({
         type: SHOW_USER_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };
@@ -69,7 +69,7 @@ export const showInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_USER_INFORM,
         compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        viewItem: param.viewItem
     });
 };
 
@@ -281,7 +281,7 @@ export default handleActions({
     },
     [SHOW_USERRULE_DIALOG]: (state, action) => {
         return state.merge({
-            editingItem: action.selectedViewItem,
+            editingItem: action.viewItem,
             ruleDialogOpen: true, ruleDialogType: action.ruleDialogType
         });
     },

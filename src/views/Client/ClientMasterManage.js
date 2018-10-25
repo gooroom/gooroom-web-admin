@@ -78,23 +78,21 @@ class ClientMasterManage extends Component {
   // Select Group Item - single
   handleClientGroupSelect = (selectedGroupObj) => {
 
-    console.log('handleClientGroupSelect :::: ', selectedGroupObj);
-
-
-    const { ClientGroupProps, ClientGroupActions } = this.props;
-    const { ClientManageProps, ClientManageActions } = this.props;
+    const { ClientGroupActions, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
 
     // show client group info.
     if(selectedGroupObj) {
 
-      ClientConfSettingActions.getClientConfByGroupId({
-        compId: compId, groupId: (selectedGroupObj) ? selectedGroupObj.get('grpId') : ''
-      });
+      // ClientConfSettingActions.getClientConfByGroupId({
+      //   compId: compId, groupId: (selectedGroupObj) ? selectedGroupObj.get('grpId') : ''
+      // });
 
+      // close client inform
       ClientManageActions.closeClientManageInform({compId: compId});
+      // show client group inform
       ClientGroupActions.showClientGroupInform({
-        compId: compId, selectedViewItem: selectedGroupObj,
+        compId: compId, viewItem: selectedGroupObj,
       });
     }
   };
@@ -116,7 +114,7 @@ class ClientMasterManage extends Component {
       });
       ClientManageActions.showClientManageInform({
         compId: compId,
-        selectedViewItem: selectedClientObj,
+        viewItem: selectedClientObj,
       });
 
       // show client group info.
@@ -149,7 +147,7 @@ class ClientMasterManage extends Component {
         });   
 
         ClientGroupActions.showClientGroupInform({
-          compId: compId, selectedViewItem: selectedGroupObj,
+          compId: compId, viewItem: selectedGroupObj,
         });
       }
     }
@@ -160,7 +158,7 @@ class ClientMasterManage extends Component {
   // create group
   handleCreateButtonForClientGroup = () => {
     this.props.ClientGroupActions.showDialog({
-      selectedViewItem: Map(),
+      viewItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD
     });
   }
@@ -201,7 +199,7 @@ class ClientMasterManage extends Component {
 
   // add client in group
   handleAddClientInGroup = (event) => {
-    const selectedGroupItem = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedViewItem']);
+    const selectedGroupItem = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
     if(selectedGroupItem) {
       this.setState({
         isOpenClientSelect: true
@@ -220,7 +218,7 @@ class ClientMasterManage extends Component {
   // add client in group - save
   handleClientSelectSave = (selectedClients) => {
     const { ClientGroupProps, GRConfirmActions } = this.props;
-    const selectedGroupItem = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedViewItem']);
+    const selectedGroupItem = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
     GRConfirmActions.showConfirm({
         confirmTitle: '그룹에 단말 추가',
         confirmMsg: '단말을 그룹 추가하시겠습니까?',
@@ -385,7 +383,7 @@ class ClientMasterManage extends Component {
             isOpen={this.state.isOpenClientSelect} 
             onSaveHandle={this.handleClientSelectSave} 
             onClose={this.handleClientSelectClose} 
-            selectedGroupItem={ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedViewItem'])}
+            selectedGroupItem={ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem'])}
           />
 
           <BrowserRuleDialog compId={compId} />

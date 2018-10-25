@@ -26,7 +26,7 @@ const initialState = commonHandleActions.getCommonInitialState('chAdminNm', 'asc
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_ADMINUSER_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };

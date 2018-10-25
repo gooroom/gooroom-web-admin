@@ -52,7 +52,7 @@ class ClientConfSettingSelector extends Component {
   // ===================================================================
   handleEditClickForClientConfSetting = (viewItem, compType) => {
     this.props.ClientConfSettingActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -63,7 +63,7 @@ class ClientConfSettingSelector extends Component {
     const { classes } = this.props;
     const { ClientConfSettingProps, compId, targetType } = this.props;
 
-    const selectedViewItem = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const viewItem = ClientConfSettingProps.getIn(['viewItems', compId, 'viewItem']);
     const listAllData = ClientConfSettingProps.getIn(['viewItems', compId, 'listAllData']);
     let selectedOptionItemId = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
 
@@ -77,7 +77,7 @@ class ClientConfSettingSelector extends Component {
         return element.get('objId') == selectedOptionItemId;
       });
       if(selectedData) {
-        selectedClientConfSettingItem = Map({'selectedViewItem': selectedData});
+        selectedClientConfSettingItem = Map({'viewItem': selectedData});
       }      
     };
 

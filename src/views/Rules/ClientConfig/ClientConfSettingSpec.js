@@ -43,7 +43,7 @@ class ClientConfSettingSpec extends Component {
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateClientConfSettingObject(selectedItem.get('selectedViewItem'));
+      viewItem = generateClientConfSettingObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
     }
 

@@ -102,31 +102,31 @@ class SecurityRuleManage extends Component {
     });
   }
     
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { SecurityRuleActions, SecurityRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedViewItem = getRowObjectById(SecurityRuleProps, compId, id, 'objId');
+    const viewItem = getRowObjectById(SecurityRuleProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // SecurityRuleActions.showDialog({
-    //   selectedViewItem: viewObject,
+    //   viewItem: viewObject,
     //   dialogType: SecurityRuleDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     SecurityRuleActions.showInform({
       compId: compId,
-      selectedViewItem: selectedViewItem
+      viewItem: viewItem
     });
     
   };
 
   handleCreateButton = () => {
     this.props.SecurityRuleActions.showDialog({
-      selectedViewItem: Map({
+      viewItem: Map({
         objNm: 'testAuto',
         comment: 'testcomment',
         screenTime: '11',
@@ -139,10 +139,10 @@ class SecurityRuleManage extends Component {
 
   handleEditListClick = (event, id) => { 
     const { SecurityRuleActions, SecurityRuleProps } = this.props;
-    const selectedViewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     SecurityRuleActions.showDialog({
-      selectedViewItem: generateSecurityRuleObject(selectedViewItem),
+      viewItem: generateSecurityRuleObject(viewItem),
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
@@ -150,12 +150,12 @@ class SecurityRuleManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { SecurityRuleProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
+    const viewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
       confirmTitle: '단말보안정책정보 삭제',
-      confirmMsg: '단말보안정책정보(' + selectedViewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말보안정책정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
@@ -173,17 +173,17 @@ class SecurityRuleManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (selectedViewItem) => {
+  handleCopyClick = (viewItem) => {
     const { SecurityRuleActions } = this.props;
     SecurityRuleActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_COPY
     });
   };
 
   handleEditItemClick = (viewItem, compType) => {
     this.props.SecurityRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
@@ -244,7 +244,7 @@ class SecurityRuleManage extends Component {
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('objId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('objId'))}
                       tabIndex={-1}
                       key={n.get('objId')}
                     >

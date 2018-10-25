@@ -36,10 +36,10 @@ class MediaRuleSpec extends Component {
 
   handleInheritClick = (objId, compType) => {
     const { MediaRuleProps, MediaRuleActions, compId, targetType } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
+    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
 
     MediaRuleActions.showDialog({
-      selectedViewItem: generateMediaRuleObject(selectedViewItem),
+      viewItem: generateMediaRuleObject(viewItem),
       dialogType: MediaRuleDialog.TYPE_INHERIT
     });
   };
@@ -54,7 +54,7 @@ class MediaRuleSpec extends Component {
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateMediaRuleObject(selectedItem.get('selectedViewItem'));
+      viewItem = generateMediaRuleObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
     }
     

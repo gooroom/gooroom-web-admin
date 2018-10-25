@@ -40,21 +40,21 @@ class JobInform extends Component {
   render() {
     const { compId, JobManageProps } = this.props;
     const informOpen = JobManageProps.getIn(['viewItems', compId, 'informOpen']);
-    const selectedViewItem = JobManageProps.getIn(['viewItems', compId, 'selectedViewItem']);
+    const viewItem = JobManageProps.getIn(['viewItems', compId, 'viewItem']);
 
     return (
       <div>
-      {(informOpen && selectedViewItem) &&
+      {(informOpen && viewItem) &&
         <Card >
           <CardHeader
-            title={selectedViewItem.get('jobName')}
-            subheader={selectedViewItem.get('jobNo') + ', ' + formatDateToSimple(selectedViewItem.get('regDate'), 'YYYY-MM-DD')}
+            title={viewItem.get('jobName')}
+            subheader={viewItem.get('jobNo') + ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}
           />
           <Grid container spacing={24}>
           <Grid item xs={12} sm={5}>
             <CardContent>
               <Typography component="pre">
-                {selectedViewItem.get('jobData')}
+                {viewItem.get('jobData')}
               </Typography>
             </CardContent>
           </Grid>

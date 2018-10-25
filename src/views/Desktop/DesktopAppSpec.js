@@ -41,33 +41,33 @@ class DesktopAppSpec extends Component {
     const { compId, compType, targetType, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    let selectedViewItem = null;
+    let viewItem = null;
     let GRAvartar = null;
     if(selectedItem) {
-      selectedViewItem = selectedItem.get('selectedViewItem');
+      viewItem = selectedItem.get('viewItem');
       GRAvartar = getAvatarForRuleGrade(targetType, "DESKTOP_APP");
     }
 
-    console.log('selectedViewItem ::::::::::  ', (selectedViewItem) ? selectedViewItem.toJS(): 'NNNN');
+    console.log('viewItem ::::::::::  ', (viewItem) ? viewItem.toJS(): 'NNNN');
     
     return (
       <React.Fragment>
-        {(selectedViewItem) && 
+        {(viewItem) && 
           <Card elevation={4} style={{marginBottom:20}}>
             <CardHeader
               avatar={GRAvartar}
-              title={selectedViewItem.get('appNm')} 
-              subheader={selectedViewItem.get('appId') + ', ' + selectedViewItem.get('appInfo')}
+              title={viewItem.get('appNm')} 
+              subheader={viewItem.get('appId') + ', ' + viewItem.get('appInfo')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.handleEditClick(selectedViewItem, compType)}
+                    onClick={() => this.props.handleEditClick(viewItem, compType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.handleCopyClick) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.handleCopyClick(selectedViewItem)}
+                    onClick={() => this.props.handleCopyClick(viewItem)}
                   ><CopyIcon /></Button>
                   }
                 </div>
@@ -79,30 +79,30 @@ class DesktopAppSpec extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 데스크톱앱 종류</TableCell>
-                  <TableCell numeric>{selectedViewItem.get('appGubun')}</TableCell>
+                  <TableCell numeric>{viewItem.get('appGubun')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 실행 명령어</TableCell>
-                  <TableCell numeric style={{wordBreak: 'break-word'}}>{selectedViewItem.get('appExec')}</TableCell>
+                  <TableCell numeric style={{wordBreak: 'break-word'}}>{viewItem.get('appExec')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 마운트 URL</TableCell>
-                  <TableCell numeric>{selectedViewItem.get('appMountUrl')}</TableCell>
+                  <TableCell numeric>{viewItem.get('appMountUrl')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 마운트 포인트</TableCell>
-                  <TableCell numeric>{selectedViewItem.get('appMountPoint')}</TableCell>
+                  <TableCell numeric>{viewItem.get('appMountPoint')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 서비스 상태</TableCell>
-                  <TableCell numeric>{selectedViewItem.get('statusCd')}</TableCell>
+                  <TableCell numeric>{viewItem.get('statusCd')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 수정일</TableCell>
-                  <TableCell numeric>{formatDateToSimple(selectedViewItem.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                  <TableCell numeric>{formatDateToSimple(viewItem.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} Icon 구분</TableCell>
-                  <TableCell numeric>{selectedViewItem.get('iconGubun')}</TableCell>
+                  <TableCell numeric>{viewItem.get('iconGubun')}</TableCell>
                   <TableCell component="th" scope="row">{bull} Icon 정보</TableCell>
-                  <TableCell numeric>{(selectedViewItem.get('iconGubun') == 'favicon') ? selectedViewItem.get('iconUrl') : selectedViewItem.get('iconNm')}</TableCell>
+                  <TableCell numeric>{(viewItem.get('iconGubun') == 'favicon') ? viewItem.get('iconUrl') : viewItem.get('iconNm')}</TableCell>
                 </TableRow>
 
               </TableBody>

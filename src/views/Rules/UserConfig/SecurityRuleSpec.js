@@ -39,10 +39,10 @@ class SecurityRuleSpec extends Component {
 
   handleInheritClick = (objId, compType) => {
     const { SecurityRuleProps, SecurityRuleActions, compId, targetType } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SecurityRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(SecurityRuleProps, compId, targetType);
+    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SecurityRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(SecurityRuleProps, compId, targetType);
 
     SecurityRuleActions.showDialog({
-      selectedViewItem: generateSecurityRuleObject(selectedViewItem),
+      viewItem: generateSecurityRuleObject(viewItem),
       dialogType: SecurityRuleDialog.TYPE_INHERIT
     });
   };
@@ -56,7 +56,7 @@ class SecurityRuleSpec extends Component {
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateSecurityRuleObject(selectedItem.get('selectedViewItem'));
+      viewItem = generateSecurityRuleObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
     }
 

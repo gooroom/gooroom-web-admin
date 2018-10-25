@@ -58,7 +58,7 @@ class BrowserRuleSelector extends Component {
   // ===================================================================
   handleEditClickForBrowserRule = (viewItem, compType) => {
     this.props.BrowserRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -83,7 +83,7 @@ class BrowserRuleSelector extends Component {
         return element.get('objId') == selectedOptionItemId;
       });
       if(selectedData) {
-        selectedBrowserRuleItem = Map({'selectedViewItem': selectedData});
+        selectedBrowserRuleItem = Map({'viewItem': selectedData});
       }      
     };
 

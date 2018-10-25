@@ -36,10 +36,10 @@ class BrowserRuleSpec extends Component {
 
   handleInheritClick = (objId, compType) => {
     const { BrowserRuleProps, BrowserRuleActions, compId, targetType } = this.props;
-    const selectedViewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(BrowserRuleProps, compId, targetType);
+    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(BrowserRuleProps, compId, targetType);
 
     BrowserRuleActions.showDialog({
-      selectedViewItem: generateBrowserRuleObject(selectedViewItem),
+      viewItem: generateBrowserRuleObject(viewItem),
       dialogType: BrowserRuleDialog.TYPE_INHERIT
     });
   };
@@ -53,7 +53,7 @@ class BrowserRuleSpec extends Component {
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateBrowserRuleObject(selectedItem.get('selectedViewItem'));
+      viewItem = generateBrowserRuleObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
     }
     

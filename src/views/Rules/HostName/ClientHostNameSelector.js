@@ -49,7 +49,7 @@ class ClientHostNameSelector extends Component {
   // ===================================================================
   handleEditClickForClientHostName = (viewItem, compType) => {
     this.props.ClientHostNameActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: ClientHostNameDialog.TYPE_EDIT
     });
   };
@@ -72,7 +72,7 @@ class ClientHostNameSelector extends Component {
         return element.get('objId') == selectedOptionItemId;
       });
       if(selectedData) {
-        selectedClientHostNameItem = Map({'selectedViewItem': selectedData});
+        selectedClientHostNameItem = Map({'viewItem': selectedData});
       }      
     };
 

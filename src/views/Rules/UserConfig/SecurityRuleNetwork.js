@@ -180,7 +180,7 @@ class SecurityRuleNetwork extends Component {
   };
 
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { SecurityRuleProps } = this.props;
     const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
 
@@ -303,7 +303,7 @@ class SecurityRuleNetwork extends Component {
                   key={n.get('no')}
                   selected={isSelected}
                 >
-                  <TableCell padding="checkbox"><Checkbox checked={isSelected} onClick={event => this.handleRowClick(event, n.get('no'))} /></TableCell>
+                  <TableCell padding="checkbox"><Checkbox checked={isSelected} onClick={event => this.handleSelectRow(event, n.get('no'))} /></TableCell>
                   <TableCell>
                     <FormControl className={classes.formControl}>
                       <Select

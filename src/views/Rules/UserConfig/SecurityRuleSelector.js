@@ -58,7 +58,7 @@ class SecurityRuleSelector extends Component {
   // ===================================================================
   handleEditClickForSecurityRule = (viewItem, compType) => {
     this.props.SecurityRuleActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
@@ -83,7 +83,7 @@ class SecurityRuleSelector extends Component {
         return element.get('objId') == selectedOptionItemId;
       });
       if(selectedData) {
-        selectedSecurityRuleItem = Map({'selectedViewItem': selectedData});
+        selectedSecurityRuleItem = Map({'viewItem': selectedData});
       }      
     };
 

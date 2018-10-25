@@ -42,7 +42,7 @@ class ClientUpdateServerSpec extends Component {
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateUpdateServerObject(selectedItem.get('selectedViewItem'));
+      viewItem = generateUpdateServerObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
     }
 

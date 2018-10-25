@@ -30,7 +30,7 @@ const initialState = commonHandleActions.getCommonInitialState('chGrpNm', 'asc',
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTGROUP_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };
@@ -45,7 +45,7 @@ export const showClientGroupInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTGROUP_INFORM,
         compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        viewItem: param.viewItem
     });
 };
 

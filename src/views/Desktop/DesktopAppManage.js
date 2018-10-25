@@ -95,41 +95,41 @@ class DesktopAppManage extends Component {
     });
   }
   
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { DesktopAppActions, DesktopAppProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const selectedViewItem = getRowObjectById(DesktopAppProps, compId, id, 'appId');
+    const viewItem = getRowObjectById(DesktopAppProps, compId, id, 'appId');
 
     // choice one from two views.
 
     // 1. popup dialog
     // DesktopAppActions.showDialog({
-    //   selectedViewItem: viewObject,
+    //   viewItem: viewObject,
     //   dialogType: DesktopAppDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
     DesktopAppActions.showInform({
       compId: compId,
-      selectedViewItem: selectedViewItem
+      viewItem: viewItem
     });
     
   };
 
   handleCreateButton = () => {
     this.props.DesktopAppActions.showDialog({
-      selectedViewItem: Map(),
+      viewItem: Map(),
       dialogType: DesktopAppDialog.TYPE_ADD
     });
   }
 
   handleEditClick = (event, id) => { 
     const { DesktopAppProps, DesktopAppActions } = this.props;
-    const selectedViewItem = getRowObjectById(DesktopAppProps, this.props.match.params.grMenuId, id, 'appId');
+    const viewItem = getRowObjectById(DesktopAppProps, this.props.match.params.grMenuId, id, 'appId');
 
     DesktopAppActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: DesktopAppDialog.TYPE_EDIT
     });
   };
@@ -137,12 +137,12 @@ class DesktopAppManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { DesktopAppProps, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(DesktopAppProps, this.props.match.params.grMenuId, id, 'appId');
+    const viewItem = getRowObjectById(DesktopAppProps, this.props.match.params.grMenuId, id, 'appId');
     GRConfirmActions.showConfirm({
       confirmTitle: '데스크톱앱 삭제',
-      confirmMsg: '데스크톱앱(' + selectedViewItem.get('appId') + ') 을 삭제하시겠습니까?',
+      confirmMsg: '데스크톱앱(' + viewItem.get('appId') + ') 을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
@@ -158,16 +158,16 @@ class DesktopAppManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (selectedViewItem) => {
+  handleCopyClick = (viewItem) => {
     this.props.DesktopAppActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: DesktopAppDialog.TYPE_COPY
     });
   };
 
   handleEditItemClick = (viewItem, compType) => {
     this.props.DesktopAppActions.showDialog({
-      selectedViewItem: viewItem,
+      viewItem: viewItem,
       dialogType: DesktopAppDialog.TYPE_EDIT
     });
   };
@@ -227,7 +227,7 @@ class DesktopAppManage extends Component {
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('appId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('appId'))}
                       tabIndex={-1}
                       key={n.get('appId')}
                     >

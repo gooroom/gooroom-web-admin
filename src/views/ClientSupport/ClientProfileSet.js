@@ -83,12 +83,12 @@ class ClientProfileSet extends Component {
     ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, this.props.match.params.grMenuId, {page: 0});
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
+    const viewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     
     ClientProfileSetActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientProfileSetDialog.TYPE_VIEW
     });
   };
@@ -96,7 +96,7 @@ class ClientProfileSet extends Component {
   // create dialog
   handleCreateButton = () => {
     this.props.ClientProfileSetActions.showDialog({
-      selectedViewItem: {
+      viewItem: {
         profileNo: '',
         profileNm: '',
         profileCmt: '',
@@ -111,9 +111,9 @@ class ClientProfileSet extends Component {
   handleEditClick = (event, id) => {
     event.stopPropagation();
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
+    const viewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     ClientProfileSetActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientProfileSetDialog.TYPE_EDIT
     });
   };
@@ -121,9 +121,9 @@ class ClientProfileSet extends Component {
   handleProfileClick = (event, id) => {
     event.stopPropagation();
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
+    const viewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     ClientProfileSetActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientProfileSetDialog.TYPE_PROFILE
     });
   };
@@ -132,12 +132,12 @@ class ClientProfileSet extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientProfileSetProps, ClientProfileSetActions, GRConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
+    const viewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     GRConfirmActions.showConfirm({
       confirmTitle: '단말프로파일 삭제',
-      confirmMsg: '단말프로파일(' + selectedViewItem.get('profileNo') + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말프로파일(' + viewItem.get('profileNo') + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -212,7 +212,7 @@ class ClientProfileSet extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('profileNo'))}
+                      onClick={event => this.handleSelectRow(event, n.get('profileNo'))}
                       key={n.get('profileNo')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('profileNo')}</TableCell>

@@ -76,9 +76,9 @@ class ClientPackageComp extends Component {
   // edit
   handleEditClick = (event, id) => {
     const { ClientPackageProps, ClientPackageActions, compId } = this.props;
-    const selectedViewItem = getRowObjectById(ClientPackageProps, compId, id, 'packageId');
+    const viewItem = getRowObjectById(ClientPackageProps, compId, id, 'packageId');
     ClientPackageActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientPackageDialog.TYPE_EDIT
     });
   };
@@ -98,12 +98,12 @@ class ClientPackageComp extends Component {
     ClientPackageActions.readClientPackageListPaged(ClientPackageProps, compId, {page: 0});
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientPackageProps, compId } = this.props;
     const { ClientPackageActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
 
-    const clickedRowObject = getRowObjectById(ClientPackageProps, compId, id, 'packageId');
+    const selectRowObject = getRowObjectById(ClientPackageProps, compId, id, 'packageId');
     const newCheckedIds = setCheckedIdsInComp(ClientPackageProps, compId, id);
 
     ClientPackageActions.changeCompVariable({
@@ -113,7 +113,7 @@ class ClientPackageComp extends Component {
     });
 
     if(this.props.onSelect) {
-      this.props.onSelect(clickedRowObject, newCheckedIds);
+      this.props.onSelect(selectRowObject, newCheckedIds);
     }
   };
 
@@ -184,7 +184,7 @@ class ClientPackageComp extends Component {
             return (
               <TableRow
                 hover
-                onClick={event => this.handleRowClick(event, n.get('packageId'))}
+                onClick={event => this.handleSelectRow(event, n.get('packageId'))}
                 key={n.get('packageId')}
               >
                 <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
