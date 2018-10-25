@@ -211,10 +211,15 @@ class ClientMasterManage extends Component {
     }
   }
 
-  isClientRemovable = () => {
-    const selectedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+  isClientSelected = () => {
+    const checkedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     // const selectedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
-    return !(selectedIds && selectedIds.size > 0);
+    return !(checkedIds && checkedIds.size > 0);
+  }
+
+  isGroupSelected = () => {
+    const groupSelectId = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectId']);
+    return (groupSelectId && groupSelectId !== '') ? false : true;
   }
 
   // add client in group - save
@@ -355,16 +360,16 @@ class ClientMasterManage extends Component {
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} >
-                      <AddIcon />추가
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
+                      <AddIcon />그룹단말추가
                     </Button>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}} >
-                      <RemoveIcon />제거
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
+                      <RemoveIcon />그룹단말제거
                     </Button>
                   </Grid>
 
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientRemovable()} style={{marginLeft: "10px"}}>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientSelected()} style={{marginLeft: "10px"}}>
                       <AddIcon />삭제
                     </Button>
                   </Grid>
