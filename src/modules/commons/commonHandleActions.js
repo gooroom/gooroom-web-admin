@@ -152,6 +152,7 @@ export const handleShowInformAction = (state, action) => {
 export const handleCloseInformAction = (state, action) => {
     return state
         .setIn(['viewItems', action.compId, 'informOpen'], false)
+        .deleteIn(['viewItems', action.compId, 'selectId'])
         .deleteIn(['viewItems', action.compId, 'viewItem']);
 }
 

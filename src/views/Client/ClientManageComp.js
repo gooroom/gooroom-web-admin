@@ -94,23 +94,37 @@ class ClientManageComp extends Component {
     });
   };
 
+  handleCheckClick = (event, id) => {
+    event.stopPropagation();
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
+    const newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);  
+
+    ClientManageActions.changeCompVariable({
+      name: 'checkedIds',
+      value: newCheckedIds,
+      compId: compId
+    });
+
+  }
+
   handleSelectRow = (event, id) => {
+    event.stopPropagation();
     const { ClientManageActions, ClientManageProps, compId } = this.props;
     const selectRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
-    let newCheckedIds = '';
-    if(this.props.selectorType && this.props.selectorType == 'multiple') {
-      newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);  
-      ClientManageActions.changeCompVariable({
-        name: 'checkedIds',
-        value: newCheckedIds,
-        compId: compId
-      });
-    } else {
-      newCheckedIds = id;
-    }
+    // let newCheckedIds = '';
+    // if(this.props.selectorType && this.props.selectorType == 'multiple') {
+    //   newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);  
+    //   ClientManageActions.changeCompVariable({
+    //     name: 'checkedIds',
+    //     value: newCheckedIds,
+    //     compId: compId
+    //   });
+    // } else {
+    //   newCheckedIds = id;
+    // }
 
     if(this.props.onSelect) {
-      this.props.onSelect(selectRowObject, newCheckedIds);
+      this.props.onSelect(selectRowObject);
     }
     
     // rest actions..
@@ -121,6 +135,12 @@ class ClientManageComp extends Component {
     const { ClientManageProps, compId } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientManageProps, compId, 'checkedIds');
     return (checkedIds && checkedIds.includes(id));
+  }
+
+  isSelected = id => {
+    const { ClientManageProps, compId } = this.props;
+    const selectId = getDataObjectVariableInComp(ClientManageProps, compId, 'selectId');
+    return (selectId == id);
   }
 
   // .................................................
@@ -207,16 +227,19 @@ class ClientManageComp extends Component {
           <TableBody>
             {listObj.get('listData').map(n => {
               const isChecked = this.isChecked(n.get('clientId'));
+              const isSelected = this.isSelected(n.get('clientId'));
+
               return (
                 <TableRow
                   hover
+                  className={(isSelected) ? classes.grSelectedRow : ''}
                   onClick={event => this.handleSelectRow(event, n.get('clientId'))}
                   role="checkbox"
                   key={n.get('clientId')}
                 >
                 {(this.props.selectorType && this.props.selectorType == 'multiple') && 
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                    <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('clientId'))}/>
                   </TableCell>
                 }
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('viewStatus')}</TableCell>
@@ -224,9 +247,9 @@ class ClientManageComp extends Component {
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('loginId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientGroupName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell} >{n.get('strgSize')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell} >{n.get('totalCnt')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell} >{n.get('strgSize')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell} >{n.get('totalCnt')}</TableCell>
                 </TableRow>
               );
             })}

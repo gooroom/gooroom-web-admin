@@ -33,7 +33,7 @@ class GRTreeItem extends Component {
             <ListItem button
                 style={Object.assign({}, styles.root, style)}
                 onClick={onClickNode}>
-                <Checkbox
+                <Checkbox color="primary"
                     onClick={this.onClickNode}
                     onChange={onCheckNode(nodeKey)}
                     checked={checked.indexOf(nodeKey) !== -1}

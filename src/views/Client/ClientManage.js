@@ -258,7 +258,7 @@ class ClientManage extends Component {
                       selected={isChecked}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                        <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                        <Checkbox color="primary" checked={isChecked} className={classes.grObjInCell} />
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('viewStatus')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>

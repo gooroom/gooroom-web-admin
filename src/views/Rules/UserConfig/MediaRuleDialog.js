@@ -212,7 +212,7 @@ class MediaRuleDialog extends Component {
                             </Grid>
                             <Grid item xs={6}>
                             <FormControlLabel label="Readonly"
-                                control={<Checkbox onChange={this.handleValueChange('usbReadonly')}
+                                control={<Checkbox onChange={this.handleValueChange('usbReadonly')} color="primary"
                                     checked={this.checkAllow(editingItem.get('usbReadonly'))}
                                 />}                                
                             />

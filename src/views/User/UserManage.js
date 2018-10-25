@@ -274,7 +274,7 @@ class UserManage extends Component {
                       selected={isChecked}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                        <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                        <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} />
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
