@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { List } from 'immutable';
+import { Map, List } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -25,6 +25,8 @@ const CHG_LISTPARAM_DATA = 'desktopConf/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'desktopConf/CHG_COMPDATA_VALUE';
 const DELETE_COMPDATA = 'desktopConf/DELETE_COMPDATA';
 const DELETE_COMPDATA_ITEM = 'desktopConf/DELETE_COMPDATA_ITEM';
+
+const GET_THEMEINFO_LIST_SUCCESS = 'desktopConf/GET_THEMEINFO_LIST_SUCCESS';
 
 
 // ...
@@ -303,6 +305,23 @@ export const deleteDesktopConfData = (param) => dispatch => {
     });
 };
 
+export const readThemeInfoList = (compId) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readThemeList', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_THEMEINFO_LIST_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        console.log('error ::::: ', error);
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 
 export default handleActions({
 
@@ -364,7 +383,18 @@ export default handleActions({
     },
     [DELETE_DESKTOPCONF_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action);
-    }
+    },
+
+    [GET_THEMEINFO_LIST_SUCCESS]: (state, action) => {
+        const { data } = action.response.data;
+
+        console.log('action ::::: ', action);
+        console.log('data ::::: ', data);
+
+        return state
+            .mergeIn(['viewItems', action.compId], Map({'themeListData': List(data.map((e) => {return Map(e)}))
+        }));
+    }, 
 
 }, initialState);
 

@@ -40,6 +40,7 @@ import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -53,6 +54,7 @@ class DesktopConfManage extends Component {
   columnHeaders = [
     { id: 'chConfId', isOrder: false, numeric: false, disablePadding: true, label: '데스크톱환경아이디' },
     { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '데스크톱환경이름' },
+    { id: 'chThemeName', isOrder: false, numeric: false, disablePadding: true, label: '테마이름' },
     { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: '수정자' },
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
     { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: '등록자' },
@@ -121,6 +123,8 @@ class DesktopConfManage extends Component {
   };
 
   handleCreateButton = () => {
+    const compId = this.props.match.params.grMenuId;
+    this.props.DesktopConfActions.readThemeInfoList(compId);
     this.props.DesktopConfActions.showDialog({
       viewItem: Map(),
       dialogType: DesktopConfDialog.TYPE_ADD
@@ -231,7 +235,7 @@ class DesktopConfManage extends Component {
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData').map(n => {
+                {listObj && listObj.get('listData') && listObj.get('listData').map(n => {
                   return (
                     <TableRow 
                       hover
@@ -241,6 +245,7 @@ class DesktopConfManage extends Component {
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('confId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('confNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('themeNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
@@ -250,7 +255,7 @@ class DesktopConfManage extends Component {
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditListClick(event, n.get('confId'))}>
-                          <BuildIcon />
+                          <SettingsApplicationsIcon />
                         </Button>
 
                         <Button color="secondary" size="small" 
