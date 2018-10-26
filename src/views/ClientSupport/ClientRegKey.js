@@ -131,7 +131,7 @@ class ClientRegKey extends Component {
     if(confirmValue) {
       const { ClientRegKeyProps, ClientRegKeyActions } = this.props;
       const compId = this.props.match.params.grMenuId;
-      ClientRegKeyActions.deleteClientGroupData({
+      ClientRegKeyActions.deleteClientRegKeyData({
         compId: compId,
         regKeyNo: confirmObject.get('regKeyNo')
       }).then(() => {
