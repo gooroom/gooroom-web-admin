@@ -12,7 +12,10 @@ import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRule
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 import DesktopConfDialog from './DesktopConfDialog';
 
+import DesktopApp from './DesktopApp';
+
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -62,6 +65,13 @@ class DesktopConfSpec extends Component {
       viewItem = generateDesktopConfObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
     }
+
+    let appPaneWidth = 0;
+    if(viewItem && viewItem.get('apps') && viewItem.get('apps').size > 0) {
+      appPaneWidth = viewItem.get('apps').size * (160 + 16) + 40;
+    }
+
+    console.log('viewItem ::::: ', (viewItem) ? viewItem.toJS(): 'viewItem');
     
     return (
       <React.Fragment>
@@ -88,24 +98,25 @@ class DesktopConfSpec extends Component {
               style={{paddingBottom:0}}
             />
             <CardContent>
-              
+            <div style={{overflowX: 'auto', height: 300}}>
+            
+            <Grid container spacing={16} direction="row" justify="flex-start" alignItems="flex-start" style={{width:appPaneWidth,margin:20}}>
 
-              {viewItem.get('apps') && viewItem.get('apps').map(n => {
-                return (
-                  <div key={n.get('appId')}>
-                        <Grid container direction="column" justify="space-between" alignItems="center" >
-                          <Grid item xs={12} >
-                            <Typography><img src={n.get('iconUrl')} style={{width:40}}></img></Typography>
-                          </Grid>
-                          <Grid item xs={12} >
-                            <Typography gutterBottom variant="body2">{n.get('appNm')}</Typography>
-                          </Grid>
-                        </Grid>
-                  </div>
-                );
-              })}
+            {viewItem.get('apps') && viewItem.get('apps').map(n => {
+              return (
+                <Grid key={n.get('appId')} item>
+                  <DesktopApp 
+                      key={n.get('appId')}
+                      appObj={n}
+                      themeId={viewItem.get('themeId')}
+                    />
+                </Grid>
+              );
+            })}
 
+            </Grid>
 
+            </div>
                        
             </CardContent>
           </Card>
