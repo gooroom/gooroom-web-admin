@@ -153,9 +153,12 @@ class ClientRegKey extends Component {
     const { classes } = this.props;
     const { ClientRegKeyProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
 
     const listObj = ClientRegKeyProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
       <React.Fragment>
@@ -222,11 +225,14 @@ class ClientRegKey extends Component {
                   );
                 })}
 
-                {emptyRows > 0 && (
-                  <TableRow >
-                    <TableCell colSpan={this.columnHeaders.length + 1} className={classes.grSmallAndClickCell} />
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
                   </TableRow>
-                )}
+                )}))}
               </TableBody>
             </Table>
             <TablePagination

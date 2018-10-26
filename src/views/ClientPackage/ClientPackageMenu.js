@@ -161,9 +161,12 @@ class ClientPackageMenu extends Component {
     const { classes } = this.props;
     const { ClientPackageProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;// = ClientPackageProps.listParam.rowsPerPage - ClientPackageProps.listData.length;
 
     const listObj = ClientPackageProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
 
@@ -231,14 +234,14 @@ class ClientPackageMenu extends Component {
                   );
                 })}
 
-                {emptyRows > 0 && (
-                <TableRow >
-                  <TableCell
-                    colSpan={this.columnHeaders.length + 1}
-                    className={classes.grSmallAndClickCell}
-                  />
-                </TableRow>
-                )}
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
+                  </TableRow>
+                )}))}
               </TableBody>
             </Table>
             <TablePagination
