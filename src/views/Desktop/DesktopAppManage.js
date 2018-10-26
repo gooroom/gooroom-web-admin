@@ -204,7 +204,7 @@ class DesktopAppManage extends Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={6} style={{textAlign:'right'}}>
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
                 <AddIcon />등록
               </Button>
