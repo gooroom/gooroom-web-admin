@@ -56,6 +56,8 @@ class MediaRuleSpec extends Component {
     if(selectedItem) {
       viewItem = generateMediaRuleObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+    } else {
+      viewItem = generateMediaRuleObject(this.props.MediaRuleProps.getIn(['viewItems', compId, 'viewItem']));
     }
     
     return (
