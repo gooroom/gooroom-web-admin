@@ -212,20 +212,22 @@ class ClientGroupManage extends Component {
         <GRPane>
 
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-              <Grid item xs={6} >
-                <FormControl fullWidth={true}>
-                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={6} >
-                <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                  <Search />조회
-                </Button>
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={6}>
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                <Grid item xs={6} >
+                  <FormControl fullWidth={true}>
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={6} >
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                    <Search />조회
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
+            <Grid item xs={6}>
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />등록
               </Button>

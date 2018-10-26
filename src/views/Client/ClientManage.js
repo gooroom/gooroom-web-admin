@@ -199,38 +199,40 @@ class ClientManage extends Component {
         <GRPane>
 
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10}>
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
 
-              <Grid item xs={3} >
-                <FormControl fullWidth={true}>
-                  <InputLabel htmlFor="client-status">단말상태</InputLabel>
-                  <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
-                </FormControl>
+                <Grid item xs={3} >
+                  <FormControl fullWidth={true}>
+                    <InputLabel htmlFor="client-status">단말상태</InputLabel>
+                    <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={3} >
+                  <FormControl fullWidth={true}>
+                    <InputLabel htmlFor="client-status">단말그룹</InputLabel>
+                    <ClientGroupSelect onChangeSelect={this.handleChangeGroupSelect} />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={3} >
+                  <FormControl fullWidth={true}>
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={3} >
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                    <Search />조회
+                  </Button>
+                </Grid>
+
               </Grid>
-
-              <Grid item xs={3} >
-                <FormControl fullWidth={true}>
-                  <InputLabel htmlFor="client-status">단말그룹</InputLabel>
-                  <ClientGroupSelect onChangeSelect={this.handleChangeGroupSelect} />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={3} >
-                <FormControl fullWidth={true}>
-                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={3} >
-                <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                  <Search />조회
-                </Button>
-              </Grid>
-
             </Grid>
 
-            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
+            <Grid item xs={2}>
             {/*
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />등록

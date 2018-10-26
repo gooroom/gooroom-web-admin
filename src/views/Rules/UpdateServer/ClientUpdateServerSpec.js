@@ -44,8 +44,6 @@ class ClientUpdateServerSpec extends Component {
     if(selectedItem) {
       viewItem = generateUpdateServerObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
-    } else {
-      viewItem = generateUpdateServerObject(this.props.ClientUpdateServerProps.getIn(['viewItems', compId, 'viewItem']));
     }
 
     return (

@@ -58,8 +58,6 @@ class SecurityRuleSpec extends Component {
     if(selectedItem) {
       viewItem = generateSecurityRuleObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
-    } else {
-      viewItem = generateSecurityRuleObject(this.props.SecurityRuleProps.getIn(['viewItems', compId, 'viewItem']));
     }
 
     return (

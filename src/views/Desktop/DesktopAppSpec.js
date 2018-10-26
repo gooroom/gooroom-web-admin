@@ -13,6 +13,8 @@ import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRule
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import DesktopAppDialog from './DesktopAppDialog';
 
+import Grid from '@material-ui/core/Grid';
+
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -73,13 +75,29 @@ class DesktopAppSpec extends Component {
               style={{paddingBottom:0}}
             />
           <CardContent>
+            {/* 
+            <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+              <Grid item xs={12} sm={12} md={6} >
+                <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                  <Grid item xs={4}>{bull} 데스크톱앱 종류</Grid>
+                  <Grid item xs={8}>{viewItem.get('appGubun')}</Grid>
+                </Grid>
+              </Grid>
+              <Grid item xs={12} sm={12} md={6} >
+                <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                  <Grid item xs={4}>{bull} 실행 명령어</Grid>
+                  <Grid item xs={8}>{viewItem.get('appExec')}</Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            */}
             <Table>
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 데스크톱앱 종류</TableCell>
                   <TableCell numeric>{viewItem.get('appGubun')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 실행 명령어</TableCell>
-                  <TableCell numeric style={{wordBreak: 'break-word'}}>{viewItem.get('appExec')}</TableCell>
+                  <TableCell numeric style={{wordBreak: 'break-word', maxWidth:200}}>{viewItem.get('appExec')}</TableCell>
                 </TableRow>
 
                 <TableRow>

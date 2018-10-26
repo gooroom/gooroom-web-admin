@@ -45,10 +45,7 @@ class ClientConfSettingSpec extends Component {
     if(selectedItem) {
       viewItem = generateClientConfSettingObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
-    } else {
-      viewItem = generateClientConfSettingObject(this.props.ClientConfSettingProps.getIn(['viewItems', compId, 'viewItem']));
     }
-
 
     return (
       <React.Fragment>
