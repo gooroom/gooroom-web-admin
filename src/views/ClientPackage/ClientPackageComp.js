@@ -156,7 +156,7 @@ class ClientPackageComp extends Component {
 
       <div>
         {/* data option area */}
-        <Grid item xs={12} spacing={16} container alignItems="flex-end" direction="row" justify="space-between" >
+        <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4} >
             <FormControl fullWidth={true}>
               <TextField label="단말아이디" value={(selectedClientId) ? selectedClientId : ""} disabled={true} />

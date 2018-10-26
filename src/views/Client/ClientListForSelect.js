@@ -203,23 +203,23 @@ class ClientListForSelect extends Component {
     return (
       <div>
         {/* data option area */}
-        <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-              <Grid item xs={4} >
-                <FormControl fullWidth={true}>
-                  <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <FormControl fullWidth={true}>
-                  <KeywordOption handleKeywordChange={this.handleKeywordChange} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={3}>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />
-                  조회
-                </Button>
-              </Grid>
+        <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+          <Grid item xs={4} >
+            <FormControl fullWidth={true}>
+              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={4}>
+            <FormControl fullWidth={true}>
+              <KeywordOption handleKeywordChange={this.handleKeywordChange} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={3}>
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+              <Search />
+              조회
+            </Button>
+          </Grid>
         </Grid>
       {(listObj) &&
         <Table>

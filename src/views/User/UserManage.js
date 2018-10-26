@@ -226,27 +226,27 @@ class UserManage extends Component {
         <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GRPane>
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-            
-              <Grid item xs={4} >
-                <FormControl fullWidth={true}>
-                  <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <FormControl fullWidth={true}>
-                  <KeywordOption handleKeywordChange={this.handleKeywordChange} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />조회
-                </Button>
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10} >
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                <Grid item xs={4} >
+                  <FormControl fullWidth={true}>
+                    <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControl fullWidth={true}>
+                    <KeywordOption handleKeywordChange={this.handleKeywordChange} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                    <Search />조회
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-
-            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end" >
+            <Grid item xs={2} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
                 <AddIcon />등록
               </Button>

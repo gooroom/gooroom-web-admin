@@ -179,17 +179,17 @@ class ClientPackageTotalListForSelect extends Component {
       <div>
         {/* data option area */}
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
-              <Grid item xs={6}>
-                <FormControl fullWidth={true}>
-                  <KeywordOption handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={6}>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                  <Search />
-                  조회
-                </Button>
-              </Grid>
+          <Grid item xs={6}>
+            <FormControl fullWidth={true}>
+              <KeywordOption handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={6}>
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+              <Search />
+              조회
+            </Button>
+          </Grid>
         </Grid>
       {(listObj) &&
         <Table>
