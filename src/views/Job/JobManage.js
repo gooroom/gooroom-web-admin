@@ -154,9 +154,6 @@ class JobManage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-                <AddIcon />등록
-              </Button>
             </Grid>
           </Grid>
 
