@@ -330,8 +330,6 @@ class GRTreeList extends Component {
       imperfect: newStatus.newImperfect
     });
 
-
-    console.log('newStatus :::::::::::: ', newStatus);
     // call select node event
     if (this.props.onCheckedNode) this.props.onCheckedNode(newStatus.newChecked, newStatus.newImperfect);
   };
