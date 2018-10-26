@@ -55,6 +55,8 @@ class BrowserRuleSpec extends Component {
     if(selectedItem) {
       viewItem = generateBrowserRuleObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+    } else {
+      viewItem = generateBrowserRuleObject(this.props.BrowserRuleProps.getIn(['viewItems', compId, 'viewItem']));
     }
     
     return (

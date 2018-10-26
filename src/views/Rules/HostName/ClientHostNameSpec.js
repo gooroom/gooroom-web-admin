@@ -44,6 +44,8 @@ class ClientHostNameSpec extends Component {
     if(selectedItem) {
       viewItem = generateClientHostNameObject(selectedItem.get('viewItem'));
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+    } else {
+      viewItem = generateClientHostNameObject(this.props.ClientHostNameProps.getIn(['viewItems', compId, 'viewItem']));
     }
 
     return (
