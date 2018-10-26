@@ -193,8 +193,12 @@ class ClientListForSelect extends Component {
 
   render() {
     const { classes } = this.props;
-    const emptyRows = 0;//UserProps.listParam.rowsPerPage - UserProps.listData.length;
+    
     const listObj = this.state.stateData;
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
       <div>
@@ -253,14 +257,14 @@ class ClientListForSelect extends Component {
               );
             })}
 
-            {emptyRows > 0 && (
-              <TableRow >
+            {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+              <TableRow key={e}>
                 <TableCell
                   colSpan={this.columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
-            )}
+            )}))}
           </TableBody>
         </Table>
       }

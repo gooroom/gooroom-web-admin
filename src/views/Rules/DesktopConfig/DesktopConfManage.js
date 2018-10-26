@@ -182,9 +182,12 @@ class DesktopConfManage extends Component {
     const { classes } = this.props;
     const { DesktopConfProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;
 
-    const selectedItem = DesktopConfProps.getIn(['viewItems', compId]);
+    const listObj = DesktopConfProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
       <div>
@@ -216,19 +219,19 @@ class DesktopConfManage extends Component {
           </Grid>            
 
           {/* data area */}
-          {(selectedItem) &&
+          {(listObj) &&
           <div>
             <Table>
               <GRCommonTableHead
                 classes={classes}
                 keyId="confId"
-                orderDir={selectedItem.getIn(['listParam', 'orderDir'])}
-                orderColumn={selectedItem.getIn(['listParam', 'orderColumn'])}
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {selectedItem.get('listData').map(n => {
+                {listObj.get('listData').map(n => {
                   return (
                     <TableRow 
                       hover
@@ -261,19 +264,22 @@ class DesktopConfManage extends Component {
                   );
                 })}
 
-                {emptyRows > 0 && (
-                  <TableRow >
-                    <TableCell colSpan={this.columnHeaders.columnData.length + 1} className={classes.grSmallAndClickCell} />
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
                   </TableRow>
-                )}
+                )}))}
               </TableBody>
             </Table>
             <TablePagination
               component='div'
-              count={selectedItem.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={selectedItem.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={selectedItem.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={selectedItem.getIn(['listParam', 'page'])}
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
               backIconButtonProps={{
                 'aria-label': 'Previous Page'
               }}
@@ -289,7 +295,7 @@ class DesktopConfManage extends Component {
         {/* dialog(popup) component area */}
         <DesktopConfSpec 
           specType="inform" 
-          selectedItem={selectedItem}
+          listObj={listObj}
           handleCopyClick={this.handleCopyClick}
           handleEditClick={this.handleEditItemClick}
         />
