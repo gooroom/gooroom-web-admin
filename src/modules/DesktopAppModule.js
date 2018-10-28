@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { List } from 'immutable';
+import { Map, List } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -7,6 +7,8 @@ import * as commonHandleActions from 'modules/commons/commonHandleActions';
 const COMMON_PENDING = 'desktopApp/COMMON_PENDING';
 const COMMON_FAILURE = 'desktopApp/COMMON_FAILURE';
 
+
+const GET_DESKTOPAPP_ALLLIST_SUCCESS = 'desktopApp/GET_DESKTOPAPP_ALLLIST_SUCCESS';
 const GET_DESKTOPAPP_LIST_SUCCESS = 'desktopApp/GET_DESKTOPAPP_LIST_SUCCESS';
 const GET_DESKTOPAPP_LISTPAGED_SUCCESS = 'desktopApp/GET_DESKTOPAPP_LISTPAGED_SUCCESS';
 const GET_DESKTOPAPP_SUCCESS = 'desktopApp/GET_DESKTOPAPP_SUCCESS';
@@ -60,7 +62,22 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readDesktopAppList = (module, compId) => dispatch => {
+export const readDesktopAppAllList = () => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readDesktopAppList', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_DESKTOPAPP_ALLLIST_SUCCESS,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+export const readDesktopAppList = (compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readDesktopAppList', {
     }).then(
@@ -324,6 +341,13 @@ export default handleActions({
             errorObj: (action.error) ? action.error : ''
         });
     },
+    
+    [GET_DESKTOPAPP_ALLLIST_SUCCESS]: (state, action) => {
+        const { data } = action.response.data;
+        if(data && data.length > 0) {
+            return state.set('listAllData', List(data.map((e) => {return Map(e)})));
+        };
+    }, 
     [GET_DESKTOPAPP_LIST_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListAction(state, action);
     }, 

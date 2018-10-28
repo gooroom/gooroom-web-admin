@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
+import * as DesktopAppActions from 'modules/DesktopAppModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -124,7 +125,11 @@ class DesktopConfManage extends Component {
 
   handleCreateButton = () => {
     const compId = this.props.match.params.grMenuId;
-    this.props.DesktopConfActions.readThemeInfoList(compId);
+
+    // desktop app list for select
+    //this.props.DesktopAppActions.readDesktopAppList(compId);
+    // theme list for select option
+    //this.props.DesktopConfActions.readThemeInfoList();
     this.props.DesktopConfActions.showDialog({
       viewItem: Map(),
       dialogType: DesktopConfDialog.TYPE_ADD
@@ -216,7 +221,8 @@ class DesktopConfManage extends Component {
             </Grid>
 
             <Grid item xs={6} style={{textAlign:'right'}}>
-              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
+              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" 
+                onClick={() => { this.handleCreateButton(); } } >
                 <AddIcon />등록
               </Button>
             </Grid>
@@ -318,6 +324,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
+  DesktopAppActions: bindActionCreators(DesktopAppActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 

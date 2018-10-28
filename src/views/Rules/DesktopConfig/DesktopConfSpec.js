@@ -68,10 +68,8 @@ class DesktopConfSpec extends Component {
 
     let appPaneWidth = 0;
     if(viewItem && viewItem.get('apps') && viewItem.get('apps').size > 0) {
-      appPaneWidth = viewItem.get('apps').size * (160 + 16) + 40;
+      appPaneWidth = viewItem.get('apps').size * (120 + 16) + 40;
     }
-
-    console.log('viewItem ::::: ', (viewItem) ? viewItem.toJS(): 'viewItem');
     
     return (
       <React.Fragment>
@@ -98,26 +96,21 @@ class DesktopConfSpec extends Component {
               style={{paddingBottom:0}}
             />
             <CardContent>
-            <div style={{overflowX: 'auto', height: 300}}>
-            
-            <Grid container spacing={16} direction="row" justify="flex-start" alignItems="flex-start" style={{width:appPaneWidth,margin:20}}>
-
-            {viewItem.get('apps') && viewItem.get('apps').map(n => {
-              return (
-                <Grid key={n.get('appId')} item>
-                  <DesktopApp 
-                      key={n.get('appId')}
-                      appObj={n}
-                      themeId={viewItem.get('themeId')}
-                    />
+              <div style={{overflowY: 'auto'}}>
+                <Grid container spacing={16} direction="row" justify="flex-start" alignItems="flex-start" style={{width:appPaneWidth,margin:20}}>
+                  {viewItem.get('apps') && viewItem.get('apps').map(n => {
+                    return (
+                      <Grid key={n.get('appId')} item>
+                        <DesktopApp 
+                            key={n.get('appId')}
+                            appObj={n}
+                            themeId={viewItem.get('themeId')}
+                          />
+                      </Grid>
+                    );
+                  })}
                 </Grid>
-              );
-            })}
-
-            </Grid>
-
-            </div>
-                       
+              </div>
             </CardContent>
           </Card>
         }

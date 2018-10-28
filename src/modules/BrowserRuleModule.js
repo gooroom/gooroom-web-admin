@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { List } from 'immutable';
+import { Map, List } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
