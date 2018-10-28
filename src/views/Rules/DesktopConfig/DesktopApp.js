@@ -18,6 +18,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
+import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -28,20 +29,37 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 class DesktopApp extends Component {
 
+  handleEditClick = (appId) => {
+    if(this.props.onEditClick) {
+      this.props.onEditClick(appId);
+    }
+  }
+
+  handleAddClick = (appObj) => {
+    if(this.props.onAddClick) {
+      this.props.onAddClick(appObj);
+    }
+  }
+
+  handleDeleteClick = (appId) => {
+    if(this.props.onDeleteClick) {
+      this.props.onDeleteClick(appId);
+    }
+  }
+
   // .................................................
   render() {
 
     const { classes } = this.props;
-    const { appObj, themeId } = this.props;
+    const { appObj, themeId, isSelected } = this.props;
 
     let iconUrl = '';
     if(appObj && appObj.get('iconGubun')) {
-      console.log('>>>>> ', appObj.toJS());
       iconUrl = (appObj.get('iconGubun') == 'library') ? 'https://gpms.gooroom.kr/gpms/images/gr_icons/' + themeId + '_' + appObj.get('iconId') + '.svg' : appObj.get('iconUrl');
     }
     
     return (
-      <Paper style={{width:160,height:200}} elevation={5}>
+      <Paper style={{width:120,height:174}} elevation={5}>
       { (appObj) &&
         <Table style={{width:'100%'}}>
 
@@ -58,12 +76,12 @@ class DesktopApp extends Component {
                 
                 <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:18,minHeight:18}}
-                    onClick={() => this.props.handleEditClick(viewItem, compType)}
+                    onClick={() => this.handleEditClick(appObj.get('appId'))}
                 ><SettingsApplicationsIcon style={{fontSize:18}} /></Button>
 
                 <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:18,minHeight:18,marginLeft:3}}
-                    onClick={() => this.props.handleDeleteClick(viewItem, compType)}
+                    onClick={() => this.handleDeleteClick(appObj.get('appId'))}
                 ><DeleteIcon style={{fontSize:18}} /></Button>
 
               </TableCell>
@@ -71,19 +89,29 @@ class DesktopApp extends Component {
           </TableHead>
           <TableBody>
             <TableRow>
-              <TableCell colSpan={2} style={{padding:'13 0 13 0',textAlign:'center'}}>
-              <img src={iconUrl} width={50}/>
+              <TableCell colSpan={2} style={{padding:'6 0 6 0',height:63,textAlign:'center'}}>
+               <img src={iconUrl} width={50}/>
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell colSpan={2} style={{padding:'13 0 13 0',textAlign:'center'}}>{appObj.get('appNm')}</TableCell>
+              <TableCell colSpan={2} style={{padding:'6 0 6 0',textAlign:'center'}}>{appObj.get('appNm')}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell numeric>2018-10-25</TableCell>
-              <TableCell numeric>admin</TableCell>
+              <TableCell colSpan={2} numeric>{appObj.get('appId')}</TableCell>
             </TableRow>
 
-            
+            <TableRow style={{height:24,backgroundColor:'#dedede'}}>
+              <TableCell></TableCell>
+              <TableCell style={{padding:0,textAlign:'right'}}>
+              { (!isSelected && this.props.type == 'main') &&
+                <Button size="small"
+                    variant="outlined" color="primary" style={{minWidth:18,minHeight:18}}
+                    onClick={() => this.handleAddClick(appObj)}
+                ><AddIcon style={{fontSize:18}} /></Button>
+              }
+              </TableCell>
+            </TableRow>
+
           </TableBody>
         </Table>
       }

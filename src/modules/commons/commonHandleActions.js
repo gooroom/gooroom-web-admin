@@ -166,7 +166,7 @@ export const handleEditSuccessAction = (state, action) => {
                     // replace
                     newState = newState
                         .setIn(['viewItems', i, 'viewItem'], fromJS(action.response.data.data[0]))
-                        .setIn(['viewItems', i, 'informOpen'], false);
+//                        .setIn(['viewItems', i, 'informOpen'], false);
             //     }
             // }
         });

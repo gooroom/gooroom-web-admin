@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Map, List } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -9,6 +11,8 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
 import DesktopConfViewer from './DesktopConfViewer';
+import DesktopAppSelector from './DesktopAppSelector';
+
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
@@ -34,7 +38,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 
 import Checkbox from '@material-ui/core/Checkbox';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
@@ -51,8 +54,11 @@ class DesktopConfDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
-    static TYPE_INHERIT = 'INHERIT';
     static TYPE_COPY = 'COPY';
+
+    componentDidMount() {
+        this.props.DesktopConfActions.readThemeInfoList();
+    }
 
     handleClose = (event) => {
         this.props.DesktopConfActions.closeDialog();
@@ -113,22 +119,6 @@ class DesktopConfDialog extends Component {
         }
     }
 
-    handleInheritSaveData = (event, id) => {
-        const { DesktopConfProps, DeptProps, DesktopConfActions, compId } = this.props;
-        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
-
-        DesktopConfActions.inheritDesktopConfData({
-            'objId': DesktopConfProps.getIn(['editingItem', 'objId']),
-            'deptCd': selectedDeptCd
-        }).then((res) => {
-            this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
-                alertMsg: '데스크톱정보가 하위 조직에 적용되었습니다.'
-            });
-            this.handleClose();
-        });
-    }
-
     handleCopyCreateData = (event, id) => {
         const { DesktopConfProps, DesktopConfActions } = this.props;
         DesktopConfActions.cloneDesktopConfData({
@@ -143,31 +133,21 @@ class DesktopConfDialog extends Component {
         });
     }
 
-    handleAddBluetoothMac = () => {
-        const { DesktopConfActions } = this.props;
-        DesktopConfActions.addBluetoothMac();
-    }
-
-    handleDeleteBluetoothMac = index => event => {
-        const { DesktopConfActions } = this.props;
-        DesktopConfActions.deleteBluetoothMac(index);
-    }
-
-    checkAllow = value => {
-        return (value == 'allow');
-    }
-
     render() {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
 
-        const { DesktopConfProps, compId } = this.props;
+        const { DesktopConfProps, DesktopAppProps, compId } = this.props;
         const dialogType = DesktopConfProps.get('dialogType');
         const editingItem = (DesktopConfProps.get('editingItem')) ? DesktopConfProps.get('editingItem') : null;
+        const selectedThemeId = (editingItem && editingItem.get('themeId')) ? editingItem.get('themeId') : '';
+        const themeListData = DesktopConfProps.get('themeListData');
 
-        const themeListData = DesktopConfProps.getIn(['viewItems', compId, 'themeListData']);
-
-        console.log('themeListData ::::::::::::: ', (themeListData) ? themeListData.toJS() : '.....');
+        const appListAllData = DesktopAppProps.getIn(['viewItems', compId, 'listAllData']);
+        let allAppPaneWidth = 0;
+        if(appListAllData && appListAllData.size > 0) {
+            allAppPaneWidth = appListAllData.size * (120 + 16) + 40;
+        }
 
         let title = "";
         if(dialogType === DesktopConfDialog.TYPE_ADD) {
@@ -176,8 +156,6 @@ class DesktopConfDialog extends Component {
             title = "데스크톱정보 정보";
         } else if(dialogType === DesktopConfDialog.TYPE_EDIT) {
             title = "데스크톱정보 수정";
-        } else if(dialogType === DesktopConfDialog.TYPE_INHERIT) {
-            title = "데스크톱정보 상속";
         } else if(dialogType === DesktopConfDialog.TYPE_COPY) {
             title = "데스크톱정보 복사";
         }
@@ -189,38 +167,36 @@ class DesktopConfDialog extends Component {
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === DesktopConfDialog.TYPE_EDIT || dialogType === DesktopConfDialog.TYPE_ADD) &&
-                    <div>
-                        <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                            onChange={this.handleValueChange("objNm")}
-                            className={classes.fullWidth}
-                            disabled={(dialogType === DesktopConfDialog.TYPE_VIEW)}
-                        />
-                        <TextField label="설명" value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                            onChange={this.handleValueChange("comment")}
-                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            disabled={(dialogType === DesktopConfDialog.TYPE_VIEW)}
-                        />
-                        <InputLabel>테마</InputLabel>
-                        <Select
-                            value={''}
-                            onChange={this.handleChangeSelect}
-                            inputProps={{name: 'clientStatus'}}
-                        >
-                            {themeListData && themeListData.map(x => (
-                            <MenuItem value={x.get('themeId')} key={x.get('themeId')}>
-                                {x.get('themeNm')}
-                            </MenuItem>
-                            ))}
-                        </Select>
-                    </div>
-                    }
-                    {(dialogType === DesktopConfDialog.TYPE_INHERIT) &&
-                        <div>
-                        <Typography variant="body1">
-                            이 설정을 하위 조직에 적용 하시겠습니까?
-                        </Typography>
-                        <DesktopConfViewer viewItem={editingItem} />
-                        </div>
+                        <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+                            <Grid item xs={8} >
+                                <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                                    onChange={this.handleValueChange("objNm")}
+                                    className={classes.fullWidth}
+                                    disabled={(dialogType === DesktopConfDialog.TYPE_VIEW)}
+                                />
+                            </Grid>
+                            <Grid item xs={4} >
+                                <InputLabel>테마</InputLabel>
+                                <Select
+                                    value={selectedThemeId} style={{width:'100%'}}
+                                    onChange={this.handleValueChange('themeId')}
+                                >
+                                    {themeListData && themeListData.map(x => (
+                                    <MenuItem value={x.get('themeId')} key={x.get('themeId')}>
+                                        {x.get('themeNm')}
+                                    </MenuItem>
+                                    ))}
+                                </Select>
+                            </Grid>
+
+                            <Grid item xs={12} >
+                                <DesktopAppSelector 
+                                    appDatas={appListAllData} 
+                                    selectedApp__Ids={List(['DEAP000005', 'DEAP000007'])} 
+                                    selectedApps={editingItem.get('apps') ? editingItem.get('apps') : List([])} />
+                            </Grid>
+                            
+                        </Grid>
                     }
                     {(dialogType === DesktopConfDialog.TYPE_COPY) &&
                         <div>
@@ -239,9 +215,6 @@ class DesktopConfDialog extends Component {
                 {(dialogType === DesktopConfDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
-                {(dialogType === DesktopConfDialog.TYPE_INHERIT) &&
-                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">적용</Button>
-                }
                 {(dialogType === DesktopConfDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
                 }
@@ -259,6 +232,7 @@ class DesktopConfDialog extends Component {
 
 const mapStateToProps = (state) => ({
     DesktopConfProps: state.DesktopConfModule,
+    DesktopAppProps: state.DesktopAppModule,
     DeptProps: state.DeptModule
 });
 

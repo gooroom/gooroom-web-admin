@@ -215,22 +215,17 @@ export const deleteCompData = (param) => dispatch => {
 
 const makeParameter = (param) => {
     return {
-        objId: param.get('objId'),
-        objName: param.get('objNm'),
-        objComment: param.get('comment'),
-
-        webSocket: param.get('webSocket'),
-        webWorker: param.get('webWorker'),
-        trustSetupId: param.get('trustSetupId'),
-        untrustSetupId: param.get('untrustSetupId'),
-        trustUrlList: (param.get('trustUrlList')) ? param.get('trustUrlList').toArray() : []
+        desktopConfId: param.get('confId'),
+        desktopConfNm: param.get('confNm'),
+        appDatas: param.get('apps').map(x => x.get('appId')).toJS(),
+        desktopTheme: param.get('themeId')
     };
 }
 
 // create (add)
 export const createDesktopConfData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createDesktopConfConf', makeParameter(itemObj)).then(
+    return requestPostAPI('createDesktopConf', makeParameter(itemObj)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
@@ -250,16 +245,15 @@ export const createDesktopConfData = (itemObj) => dispatch => {
 // edit
 export const editDesktopConfData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateDesktopConfConf', makeParameter(itemObj)).then(
+    return requestPostAPI('updateDesktopConf', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
                 // change selected object
-                requestPostAPI('readDesktopConf', {'objId': itemObj.get('objId')}).then(
+                requestPostAPI('readDesktopConf', {'desktopConfId': itemObj.get('confId')}).then(
                     (response) => {
                         dispatch({
                             type: EDIT_DESKTOPCONF_SUCCESS,
-                            objId: itemObj.get('objId'),
                             response: response
                         });
                     }
@@ -268,18 +262,18 @@ export const editDesktopConfData = (itemObj, compId) => dispatch => {
                 });
 
                 // change object array for selector
-                requestPostAPI('readDesktopConfList', {
-                }).then(
-                    (response) => {
-                        dispatch({
-                            type: GET_DESKTOPCONF_LIST_SUCCESS,
-                            compId: compId,
-                            response: response
-                        });
-                    }
-                ).catch(error => {
-                    dispatch({ type: COMMON_FAILURE, error: error });
-                });
+                // requestPostAPI('readDesktopConfList', {
+                // }).then(
+                //     (response) => {
+                //         dispatch({
+                //             type: GET_DESKTOPCONF_LIST_SUCCESS,
+                //             compId: compId,
+                //             response: response
+                //         });
+                //     }
+                // ).catch(error => {
+                //     dispatch({ type: COMMON_FAILURE, error: error });
+                // });
             } else {
                 dispatch({ type: COMMON_FAILURE, error: error });
             }
@@ -292,7 +286,7 @@ export const editDesktopConfData = (itemObj, compId) => dispatch => {
 // delete
 export const deleteDesktopConfData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteDesktopConfConf', {'objId': param.objId}).then(
+    return requestPostAPI('deleteDesktopConf', {'objId': param.objId}).then(
         (response) => {
             dispatch({
                 type: DELETE_DESKTOPCONF_SUCCESS,
@@ -305,19 +299,17 @@ export const deleteDesktopConfData = (param) => dispatch => {
     });
 };
 
-export const readThemeInfoList = (compId) => dispatch => {
+export const readThemeInfoList = () => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readThemeList', {
     }).then(
         (response) => {
             dispatch({
                 type: GET_THEMEINFO_LIST_SUCCESS,
-                compId: compId,
                 response: response
             });
         }
     ).catch(error => {
-        console.log('error ::::: ', error);
         dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
@@ -384,16 +376,11 @@ export default handleActions({
     [DELETE_DESKTOPCONF_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action);
     },
-
     [GET_THEMEINFO_LIST_SUCCESS]: (state, action) => {
         const { data } = action.response.data;
-
-        console.log('action ::::: ', action);
-        console.log('data ::::: ', data);
-
-        return state
-            .mergeIn(['viewItems', action.compId], Map({'themeListData': List(data.map((e) => {return Map(e)}))
-        }));
+        if(data && data.length > 0) {
+            return state.set('themeListData', List(data.map((e) => {return Map(e)})));
+        };
     }, 
 
 }, initialState);
