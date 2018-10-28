@@ -9,7 +9,7 @@ import OpenIcon from "@material-ui/icons/ExpandMore";
 import CloseIcon from "@material-ui/icons/ExpandLess";
 import FolderIcon from "@material-ui/icons/Folder";
 import FileIcon from "@material-ui/icons/InsertDriveFile";
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -389,7 +389,7 @@ class GRTreeList extends Component {
             checked={this.state.checked}
             imperfect={this.state.imperfect}
             leftIcon={getLeftIcon(listItem, this.props)}
-            editIcon={<BuildIcon style={{color: 'darkgray', fontSize: 18}} onClick={() => this.handleEditClickNode(listItem, i)} />}
+            editIcon={<SettingsApplicationsIcon style={{color: 'darkgray', fontSize: 18}} onClick={() => this.handleEditClickNode(listItem, i)} />}
             rightIcon={
               !listItem.children ? null : expandedListItems.indexOf(i) ===
               -1 ? (

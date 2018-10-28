@@ -46,7 +46,7 @@ import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import InputLabel from "@material-ui/core/InputLabel";
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import ClientManageCompWithPackage from 'views/Client/ClientManageCompWithPackage';

@@ -42,7 +42,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from '@material-ui/core/Button';
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import Search from '@material-ui/icons/Search'; 
 
 import { withStyles } from '@material-ui/core/styles';
@@ -322,7 +322,7 @@ class ClientGroupComp extends Component {
                   <Button color='secondary' size="small" 
                     className={classes.buttonInTableRow} 
                     onClick={event => this.handleEditClick(event, n.get('grpId'))}>
-                    <BuildIcon />
+                    <SettingsApplicationsIcon />
                   </Button>
                 </TableCell>
               </TableRow>

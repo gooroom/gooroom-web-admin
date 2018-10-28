@@ -260,7 +260,7 @@ class UserListForSelect extends Component {
                     <Button color="secondary" size="small" 
                       className={classes.buttonInTableRow}
                       onClick={event => this.handleEditClick(event, n.get('userId'))}>
-                      <BuildIcon />
+                      <SettingsApplicationsIcon />
                     </Button>
                     <Button color="secondary" size="small" 
                       className={classes.buttonInTableRow}
