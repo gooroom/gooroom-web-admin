@@ -45,7 +45,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search'; 
 import AddIcon from '@material-ui/icons/Add';
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import ClientGroupDialog from './ClientGroupDialog';
@@ -263,7 +263,7 @@ class ClientGroupManage extends Component {
                         <Button color='secondary' size="small" 
                           className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('grpId'))}>
-                          <BuildIcon />
+                          <SettingsApplicationsIcon />
                         </Button>
                         <Button color='secondary' size="small"
                           className={classes.buttonInTableRow} 

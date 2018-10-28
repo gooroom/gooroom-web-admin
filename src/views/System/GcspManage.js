@@ -36,7 +36,7 @@ import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -225,7 +225,7 @@ class GcspManage extends Component {
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('gcspId'))}>
-                          <BuildIcon />
+                          <SettingsApplicationsIcon />
                         </Button>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
