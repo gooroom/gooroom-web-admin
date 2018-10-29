@@ -28,6 +28,7 @@ import UserListComp from 'views/User/UserListComp';
 import UserRuleInform from "views/User/UserRuleInform";
 import UserSelectDialog from "views/User/UserSelectDialog";
 import UserDialog from "views/User/UserDialog";
+import UserBasicDialog from "views/User/UserBasicDialog";
 
 import DeptRuleInform from "views/User/DeptRuleInform";
 import DeptDialog from "views/User/DeptDialog";
@@ -315,7 +316,18 @@ class UserMasterManage extends Component {
     }
   };
 
-  
+  handleCreateUserButton = value => {
+    const { UserActions } = this.props;
+    UserActions.showDialog({
+      viewItem: {
+        userId: '',
+        userNm: '',
+        userPassword: '',
+        showPassword: false
+      },
+      dialogType: UserBasicDialog.TYPE_ADD
+    }, false);
+  };
 
 
   render() {
@@ -372,12 +384,23 @@ class UserMasterManage extends Component {
 
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserAddible()} >
-                  <AddIcon />추가
-                </Button>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
-                  <RemoveIcon />삭제
-                </Button>
+                <Grid container spacing={0}>
+                  <Grid item xs={12} sm={8} lg={8}>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserAddible()} >
+                      <AddIcon />조직사용자추가
+                    </Button>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
+                      <RemoveIcon />조직사용자삭제
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={4} lg={4}>
+                    <Grid container justify="flex-end">
+                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateUserButton} >
+                        <AddIcon />사용자생성
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Toolbar>
               <UserListComp name='UserListComp' compId={compId} deptCd='' 
                 onSelect={this.handleUserSelect}
@@ -393,6 +416,7 @@ class UserMasterManage extends Component {
         </GRPane>
 
         <UserDialog compId={compId} />
+        <UserBasicDialog compId={compId} />
         <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
         <DeptMultiDialog compId={compId} />
         
