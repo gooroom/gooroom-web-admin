@@ -58,8 +58,8 @@ class UserListComp extends Component {
     { id: "chCheckbox", isCheckbox: true},
     { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
     { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
+    { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: "조직" },
     { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
-    { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
@@ -268,7 +268,6 @@ class UserListComp extends Component {
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
       }
-      <UserBasicDialog compId={compId} />
       </div>
     );
 

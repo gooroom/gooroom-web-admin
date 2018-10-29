@@ -272,9 +272,8 @@ export const GRCommonStyle = theme => ({
         minWidth: '34px'
     },
     GRIconSmallButton: {
-        padding: "0 5 0 0",
+        padding: "0 2 0 0",
         minWidth: "48px",
-        fontSize: "0.8125rem",
         minHeight: "24px"
     },
     popoverMsg: {

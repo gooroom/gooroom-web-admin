@@ -71,7 +71,7 @@ export const readClientListPaged = (module, compId, extParam, extOption = {isRes
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
     
-    if(isInitParam) {
+    if(extOption.isInitParam) {
         newListParam = module.get('defaultListParam');
     }
     const groupIdParam = (newListParam.get('groupId') && List(newListParam.get('groupId')).size > 0) ? List(newListParam.get('groupId')).join() : '';

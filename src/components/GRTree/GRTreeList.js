@@ -29,6 +29,9 @@ class GRTreeList extends Component {
       keyName: props.keyName,
       title: props.title,
       startingDepth: props.startingDepth ? props.startingDepth: 0,
+      
+      isShowCheck: (props.isShowCheck !== undefined) ? props.isShowCheck : true,
+      isEnableEdit: (props.isEnableEdit !== undefined) ? props.isEnableEdit : false,
 
       treeData: [],
 
@@ -386,6 +389,8 @@ class GRTreeList extends Component {
             nodeKey={listItem.key}
             primaryText={listItem._primaryText}
             style={Object.assign({}, listItem._styles.root)}
+            isShowCheck={this.state.isShowCheck}
+            isEnableEdit={this.state.isEnableEdit}
             checked={this.state.checked}
             imperfect={this.state.imperfect}
             leftIcon={getLeftIcon(listItem, this.props)}
