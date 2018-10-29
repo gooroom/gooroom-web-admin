@@ -58,7 +58,7 @@ class ClientManageComp extends Component {
     if(this.props.selectorType && this.props.selectorType == 'multiple') {
       this.columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
     }
-    this.props.ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {}, false, true);
+    this.props.ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {}, {isResetSelect:false, isInitParam:true});
   }
 
   handleChangePage = (event, page) => {

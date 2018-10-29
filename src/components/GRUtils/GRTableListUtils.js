@@ -14,12 +14,12 @@ import blue from '@material-ui/core/colors/blue';
 import orange from '@material-ui/core/colors/orange';
 import green from '@material-ui/core/colors/green';
 
-export const refreshDataListInComp = (propObj, callBack) => {
+export const refreshDataListInComps = (propObj, callBack, extParam, extOption) => {
     const viewItems = propObj.get('viewItems');
     if(viewItems) {
         viewItems.forEach((element, compId) => {
             if(element && element.get('listParam')) {
-                callBack(propObj, compId, {});
+                callBack(propObj, compId, extParam, extOption);
             }
         });
     }

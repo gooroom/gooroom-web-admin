@@ -15,7 +15,7 @@ import DesktopAppSelector from './DesktopAppSelector';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
-import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -93,7 +93,7 @@ class DesktopConfDialog extends Component {
             const { DesktopConfProps, DesktopConfActions } = this.props;
             DesktopConfActions.createDesktopConfData(DesktopConfProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
+                    refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
                     this.handleClose();
                 });
         }
@@ -113,7 +113,7 @@ class DesktopConfDialog extends Component {
             const { DesktopConfProps, DesktopConfActions } = this.props;
             DesktopConfActions.editDesktopConfData(DesktopConfProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComp(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
+                    refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
                     this.handleClose();
                 });
         }
@@ -122,20 +122,19 @@ class DesktopConfDialog extends Component {
     handleCopyCreateData = (event, id) => {
         const { DesktopConfProps, DesktopConfActions } = this.props;
         DesktopConfActions.cloneDesktopConfData({
-            'objId': DesktopConfProps.getIn(['editingItem', 'objId'])
+            'confId': DesktopConfProps.getIn(['editingItem', 'confId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: '시스템알림',
                 alertMsg: '데스크톱정보를 복사하였습니다.'
             });
-            refreshDataListInComp(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
+            refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
             this.handleClose();
         });
     }
 
     render() {
         const { classes } = this.props;
-        const bull = <span className={classes.bullet}>•</span>;
 
         const { DesktopConfProps, DesktopAppProps, compId } = this.props;
         const dialogType = DesktopConfProps.get('dialogType');
@@ -144,10 +143,10 @@ class DesktopConfDialog extends Component {
         const themeListData = DesktopConfProps.get('themeListData');
 
         const appListAllData = DesktopAppProps.getIn(['viewItems', compId, 'listAllData']);
-        let allAppPaneWidth = 0;
-        if(appListAllData && appListAllData.size > 0) {
-            allAppPaneWidth = appListAllData.size * (120 + 16) + 40;
-        }
+        // let allAppPaneWidth = 0;
+        // if(appListAllData && appListAllData.size > 0) {
+        //     allAppPaneWidth = appListAllData.size * (120 + 16) + 40;
+        // }
 
         let title = "";
         if(dialogType === DesktopConfDialog.TYPE_ADD) {
@@ -169,8 +168,8 @@ class DesktopConfDialog extends Component {
                     {(dialogType === DesktopConfDialog.TYPE_EDIT || dialogType === DesktopConfDialog.TYPE_ADD) &&
                         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                             <Grid item xs={8} >
-                                <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                                    onChange={this.handleValueChange("objNm")}
+                                <TextField label="이름" value={(editingItem.get('confNm')) ? editingItem.get('confNm') : ''}
+                                    onChange={this.handleValueChange("confNm")}
                                     className={classes.fullWidth}
                                     disabled={(dialogType === DesktopConfDialog.TYPE_VIEW)}
                                 />

@@ -10,7 +10,7 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -147,7 +147,7 @@ class ClientUpdateServerManage extends Component {
         objId: confirmObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComp(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
+        refreshDataListInComps(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
       });
     }
   };

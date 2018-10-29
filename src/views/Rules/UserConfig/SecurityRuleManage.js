@@ -10,7 +10,7 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -167,7 +167,7 @@ class SecurityRuleManage extends Component {
         objId: paramObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComp(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
+        refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
       });
     }
   };

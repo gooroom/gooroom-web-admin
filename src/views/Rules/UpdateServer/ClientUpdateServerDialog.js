@@ -11,7 +11,7 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
-import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils'; 
+import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils'; 
 
 import ClientUpdateServerViewer from './ClientUpdateServerViewer';
 
@@ -64,7 +64,7 @@ class ClientUpdateServerDialog extends Component {
             const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
             ClientUpdateServerActions.createClientUpdateServerData(ClientUpdateServerProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
+                    refreshDataListInComps(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
                     this.handleClose();
                 });
         }
@@ -84,7 +84,7 @@ class ClientUpdateServerDialog extends Component {
             const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
             ClientUpdateServerActions.editClientUpdateServerData(ClientUpdateServerProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComp(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
+                    refreshDataListInComps(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
                     this.handleClose();
                 });
         }
@@ -99,7 +99,7 @@ class ClientUpdateServerDialog extends Component {
                 alertTitle: '시스템알림',
                 alertMsg: '업데이트서버 정보를 복사하였습니다.'
             });
-            refreshDataListInComp(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
+            refreshDataListInComps(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
             this.handleClose();
         });
     }

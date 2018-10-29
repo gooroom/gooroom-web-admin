@@ -11,7 +11,7 @@ import * as DesktopAppActions from 'modules/DesktopAppModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -21,7 +21,7 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import DesktopConfDialog from './DesktopConfDialog';
 import DesktopConfSpec from './DesktopConfSpec';
-import { generateDesktopConfObject } from './DesktopConfSpec';
+import DesktopAppDialog from 'views/Desktop/DesktopAppDialog';
 
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -140,7 +140,7 @@ class DesktopConfManage extends Component {
     const viewItem = getRowObjectById(DesktopConfProps, this.props.match.params.grMenuId, id, 'confId');
 
     DesktopConfActions.showDialog({
-      viewItem: generateDesktopConfObject(viewItem),
+      viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT
     });
   };
@@ -164,7 +164,7 @@ class DesktopConfManage extends Component {
         confId: paramObject.get('confId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComp(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
+        refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
       });
     }
   };
@@ -310,6 +310,7 @@ class DesktopConfManage extends Component {
           handleEditClick={this.handleEditItemClick}
         />
         <DesktopConfDialog compId={compId} />
+        <DesktopAppDialog compId={compId} />
         <GRConfirm />
         
       </div>

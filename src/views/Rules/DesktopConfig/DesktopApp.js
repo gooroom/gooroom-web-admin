@@ -4,7 +4,6 @@ import { Map, List } from 'immutable';
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 
@@ -73,31 +72,34 @@ class DesktopApp extends Component {
               </TableCell>
 
               <TableCell style={{padding:0,textAlign:'right'}}>
-                
-                <Button size="small"
+                {(this.props.onEditClick) &&
+                  <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:18,minHeight:18}}
-                    onClick={() => this.handleEditClick(appObj.get('appId'))}
-                ><SettingsApplicationsIcon style={{fontSize:18}} /></Button>
-
-                <Button size="small"
+                    onClick={() => this.handleEditClick(appObj)}
+                  ><SettingsApplicationsIcon style={{fontSize:18}} /></Button>
+                }
+                {(this.props.onDeleteClick) && 
+                  <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:18,minHeight:18,marginLeft:3}}
                     onClick={() => this.handleDeleteClick(appObj.get('appId'))}
-                ><DeleteIcon style={{fontSize:18}} /></Button>
-
+                  ><DeleteIcon style={{fontSize:18}} /></Button>
+                }
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
               <TableCell colSpan={2} style={{padding:'6 0 6 0',height:63,textAlign:'center'}}>
-               <img src={iconUrl} width={50}/>
+               <img src={iconUrl} height={50}/>
               </TableCell>
             </TableRow>
-            <TableRow>
+            <TableRow style={{height:62}}>
               <TableCell colSpan={2} style={{padding:'6 0 6 0',textAlign:'center'}}>{appObj.get('appNm')}</TableCell>
+              {/* 
             </TableRow>
             <TableRow>
               <TableCell colSpan={2} numeric>{appObj.get('appId')}</TableCell>
+              */}
             </TableRow>
 
             <TableRow style={{height:24,backgroundColor:'#dedede'}}>
