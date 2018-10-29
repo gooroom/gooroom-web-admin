@@ -31,16 +31,22 @@ import UserDialog from "views/User/UserDialog";
 import UserBasicDialog from "views/User/UserBasicDialog";
 
 import DeptRuleInform from "views/User/DeptRuleInform";
+import DeptSelectDialog from "views/User/DeptSelectDialog";
 import DeptDialog from "views/User/DeptDialog";
 import DeptMultiDialog from "views/User/DeptMultiDialog";
 
 import Grid from "@material-ui/core/Grid";
 import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import MoveIcon from '@material-ui/icons/Redo';
 import TuneIcon from '@material-ui/icons/Tune';
+import UserIcon from '@material-ui/icons/Person';
+import AccountIcon from '@material-ui/icons/AccountBox';
+import DeptIcon from '@material-ui/icons/WebAsset';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -53,6 +59,8 @@ class UserMasterManage extends Component {
 
     this.state = {
       isOpenUserSelect: false,
+      isOpenDeptSelect: false,
+      selectedDept: {deptCd:'', deptNm:''}
     };
   }
 
@@ -87,6 +95,10 @@ class UserMasterManage extends Component {
     const { UserProps, UserActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    this.setState({
+      selectedDept: {deptCd:node.key, deptNm:node.title}
+    });
 
     UserActions.closeInform({
       compId: compId
@@ -190,9 +202,26 @@ class UserMasterManage extends Component {
     }
   }
 
+  handleMoveUserToDept = (event) => {
+    const checkedIds = this.props.UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    if(checkedIds && checkedIds.size > 0) {
+      this.setState({
+        isOpenDeptSelect: true
+      });
+    } else {
+      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 선택하세요.');
+    }
+  }
+
   isUserAddible = () => {
     return (this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd'])) ? false : true;
   }
+
+  isUserChecked = () => {
+    const checkedIds = this.props.UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    return (checkedIds && checkedIds.size > 0) ? false : true;
+  }
+
 
   handleDeleteUserInDept = (event) => {
     const { UserProps, DeptProps, GRConfirmActions } = this.props;
@@ -230,15 +259,28 @@ class UserMasterManage extends Component {
   };
 
   handleUserSelectSave = (selectedUsers) => {
-    const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
+    const selectedDept = this.state.selectedDept;
     const { DeptProps, GRConfirmActions } = this.props;
     GRConfirmActions.showConfirm({
-        confirmTitle: '사용자 추가',
-        confirmMsg: '사용자정보를 조직에 추가하시겠습니까?',
+        confirmTitle: '사용자 조직 변경',
+        confirmMsg: '선택한 사용자(' + selectedUsers.size + '명)를 조직(' + selectedDept.deptNm + ')으로 변경하시겠습니까?',
         handleConfirmResult: this.handleUserSelectSaveConfirmResult,
         confirmObject: {
-          selectedDeptCd: selectedDeptCd,
+          selectedDeptCd: selectedDept.deptCd,
           selectedUsers: selectedUsers
+        }
+    });
+  }
+  handleDeptSelectSave = (selectedDept) => {
+    const checkedUserIds = this.props.UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    const { DeptProps, GRConfirmActions } = this.props;
+    GRConfirmActions.showConfirm({
+        confirmTitle: '사용자 조직 변경',
+        confirmMsg: '선택한 사용자(' + checkedUserIds.size + '명)를 조직(' + selectedDept.deptNm + ')으로 변경하시겠습니까?',
+        handleConfirmResult: this.handleUserSelectSaveConfirmResult,
+        confirmObject: {
+          selectedDeptCd: selectedDept.deptCd,
+          selectedUsers: checkedUserIds
         }
     });
   }
@@ -256,6 +298,7 @@ class UserMasterManage extends Component {
         });
         // close dialog
         this.setState({ isOpenUserSelect: false });
+        this.setState({ isOpenDeptSelect: false });
       });
     }
   }
@@ -265,6 +308,14 @@ class UserMasterManage extends Component {
       isOpenUserSelect: false
     })
   }
+
+  handleDeptSelectionClose = () => {
+    this.setState({
+      isOpenDeptSelect: false
+    })
+  }
+
+
 
 
   // Select User Item
@@ -340,27 +391,51 @@ class UserMasterManage extends Component {
         <GRPane>
 
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
-
-            <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}} >
+            <Grid item xs={12} sm={5} style={{border: '0px solid #efefef'}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Grid container spacing={0}>
-                  <Grid item xs={12} sm={8} lg={8}>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForDept} disabled={this.isUserAddible()} >
-                      <AddIcon />등록
-                    </Button>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
-                      <RemoveIcon />삭제
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={4} lg={4}>
-                    <Grid container justify="flex-end">
-                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleApplyMultiDept} >
-                        <TuneIcon />일괄변경
+                <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
+                  <Grid item>
+                    <Tooltip title="신규조직등록">
+                      <span>
+                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleCreateButtonForDept} disabled={this.isUserAddible()} >
+                        <AddIcon /><DeptIcon />
                       </Button>
-                    </Grid>
+                      </span>
+                    </Tooltip>
+                    <Tooltip title="조직삭제">
+                      <span>
+                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "4px"}} >
+                        <RemoveIcon /><DeptIcon />
+                      </Button>
+                      </span>
+                    </Tooltip>
+                  </Grid>
+                  <Grid item>
+                    <Tooltip title="조직정책 일괄변경">
+                      <span>
+                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleApplyMultiDept} >
+                        <TuneIcon />
+                      </Button>
+                      </span>
+                    </Tooltip>
+                  </Grid>
+                  <Grid item>
+                    <Tooltip title="조직에 사용자 추가">
+                      <span>
+                      <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserAddible()} >
+                        <AddIcon /><UserIcon />
+                      </Button>
+                      </span>
+                    </Tooltip>
+                    <Tooltip title="조직에서 사용자 삭제">
+                      <span>
+                      <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserAddible()} style={{marginLeft: "4px"}} >
+                        <RemoveIcon /><UserIcon />
+                      </Button>
+                      </span>
+                    </Tooltip>
                   </Grid>
                 </Grid>
-
               </Toolbar>
               <GRTreeList
                 useFolderIcons={true}
@@ -374,6 +449,7 @@ class UserMasterManage extends Component {
                 hasSelectChild={false}
                 hasSelectParent={false}
                 compId={compId}
+                isEnableEdit={true}
                 onInitTreeData={this.handleInitTreeData}
                 onSelectNode={this.handleSelectDept}
                 onCheckedNode={this.handleCheckedDept}
@@ -382,24 +458,21 @@ class UserMasterManage extends Component {
               />
             </Grid>
 
-            <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}} >
+            <Grid item xs={12} sm={7} style={{border: '0px solid #efefef'}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Grid container spacing={0}>
-                  <Grid item xs={12} sm={8} lg={8}>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserAddible()} >
-                      <AddIcon />조직사용자추가
-                    </Button>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserAddible()} style={{marginLeft: "10px"}} >
-                      <RemoveIcon />조직사용자삭제
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={4} lg={4}>
-                    <Grid container justify="flex-end">
-                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateUserButton} >
-                        <AddIcon />사용자생성
+                <Grid container spacing={0} alignItems="center" direction="row" justify="flex-end">
+                    <Tooltip title="부서이동">
+                      <span>
+                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleMoveUserToDept} disabled={this.isUserChecked()} >
+                        <MoveIcon /><DeptIcon />
                       </Button>
-                    </Grid>
-                  </Grid>
+                      </span>
+                    </Tooltip>
+                    <Tooltip title="신규사용자 생성">
+                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateUserButton} style={{marginLeft: "4px"}}>
+                        <AddIcon /><AccountIcon />
+                      </Button>
+                    </Tooltip>
                 </Grid>
               </Toolbar>
               <UserListComp name='UserListComp' compId={compId} deptCd='' 
@@ -417,10 +490,19 @@ class UserMasterManage extends Component {
 
         <UserDialog compId={compId} />
         <UserBasicDialog compId={compId} />
+
         <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
         <DeptMultiDialog compId={compId} />
         
-        <UserSelectDialog isOpen={this.state.isOpenUserSelect} onSaveHandle={this.handleUserSelectSave} onClose={this.handleUserSelectionClose} />
+        <UserSelectDialog isOpen={this.state.isOpenUserSelect}
+          selectedDept={this.state.selectedDept}
+          onSaveHandle={this.handleUserSelectSave} 
+          onClose={this.handleUserSelectionClose} />
+        <DeptSelectDialog isOpen={this.state.isOpenDeptSelect}
+          isShowCheck={false}
+          onSaveHandle={this.handleDeptSelectSave} 
+          onClose={this.handleDeptSelectionClose} />
+
         <BrowserRuleDialog compId={compId} />
         <SecurityRuleDialog compId={compId} />
         <MediaRuleDialog compId={compId} />
