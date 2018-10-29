@@ -10,7 +10,7 @@ import * as DesktopAppActions from 'modules/DesktopAppModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -53,7 +53,8 @@ class DesktopAppManage extends Component {
     { id: 'chAppInfo', isOrder: false, numeric: false, disablePadding: true, label: '설명' },
     { id: 'chStatus', isOrder: false, numeric: false, disablePadding: true, label: '상태' },
     { id: 'chModUser', isOrder: false, numeric: false, disablePadding: true, label: '수정자' },
-    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' }
+    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
+    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
   componentDidMount() {
@@ -152,7 +153,7 @@ class DesktopAppManage extends Component {
         appId: paramObject.get('appId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComp(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
+        refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
       });
     }
   };
@@ -172,6 +173,16 @@ class DesktopAppManage extends Component {
     });
   };
   // ===================================================================
+
+  handleEditListClick = (event, id) => {
+    const { DesktopAppActions, DesktopAppProps } = this.props;
+    const viewItem = getRowObjectById(DesktopAppProps, this.props.match.params.grMenuId, id, 'appId');
+
+    DesktopAppActions.showDialog({
+      viewItem: viewItem,
+      dialogType: DesktopAppDialog.TYPE_EDIT
+    });
+  };
 
   render() {
     const { classes } = this.props;
@@ -235,9 +246,24 @@ class DesktopAppManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('appId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('appNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('appInfo')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('statusCd')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>
+
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleEditListClick(event, n.get('appId'))}>
+                          <SettingsApplicationsIcon />
+                        </Button>
+
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleDeleteClick(event, n.get('appId'))}>
+                          <DeleteIcon />
+                        </Button>                        
+
+                      </TableCell>
                     </TableRow>
                   );
                 })}

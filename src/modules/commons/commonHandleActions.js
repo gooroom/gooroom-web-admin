@@ -88,11 +88,17 @@ export const handleListPagedAction = (state, action) => {
         }));
     }
 
-    if(action.isResetSelect) {
-        return newState.deleteIn(['viewItems', action.compId, 'selectedIds']);
-    } else {
-        return newState;
+    if(action.extOption) {
+        if(action.extOption.isResetSelect) {
+            newState = newState.deleteIn(['viewItems', action.compId, 'selectedIds']);
+        }
+        if(action.extOption.isCloseInform) {
+            newState = newState.deleteIn(['viewItems', action.compId, 'informOpen'])
+                        .deleteIn(['viewItems', action.compId, 'viewItem']);
+        }
     }
+
+    return newState;
 }
 
 export const handleGetObjectAction = (state, compId, data, extend, target) => {
@@ -113,13 +119,13 @@ export const handleGetObjectAction = (state, compId, data, extend, target) => {
             return state
             .setIn(['viewItems', compId, target, 'viewItem'], fromJS(data[0]))
             .setIn(['viewItems', compId, target, 'selectedOptionItemId'], selectedOptionItemId)
-            .setIn(['viewItems', compId, target, 'ruleGrade'], (extend && extend.length > 0) ? extend[0] : '')
+            .setIn(['viewItems', compId, target, 'ruleGrade'], ruleGrade)
             .setIn(['viewItems', compId, target, 'informOpen'], true);
         } else {
             return state
             .setIn(['viewItems', compId, 'viewItem'], fromJS(data[0]))
             .setIn(['viewItems', compId, 'selectedOptionItemId'], selectedOptionItemId)
-            .setIn(['viewItems', compId, 'ruleGrade'], (extend && extend.length > 0) ? extend[0] : '')
+            .setIn(['viewItems', compId, 'ruleGrade'], ruleGrade)
             .setIn(['viewItems', compId, 'informOpen'], true);
         }
     } else  {

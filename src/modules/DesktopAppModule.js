@@ -316,7 +316,7 @@ export const editDesktopAppData = (itemObj, compId) => dispatch => {
 // delete
 export const deleteDesktopAppData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteDesktopApp', {'appId': param.appId}).then(
+    return requestPostAPI('deleteDesktopApp', {'desktopAppId': param.appId}).then(
         (response) => {
             dispatch({
                 type: DELETE_DESKTOPAPP_SUCCESS,

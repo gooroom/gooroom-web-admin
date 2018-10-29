@@ -11,7 +11,7 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
-import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
 import ClientHostNameViewer from './ClientHostNameViewer';
 
@@ -64,7 +64,7 @@ class ClientHostNameDialog extends Component {
             const { ClientHostNameProps, ClientHostNameActions } = this.props;
             ClientHostNameActions.createClientHostNameData(ClientHostNameProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
+                    refreshDataListInComps(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
                     this.handleClose();
                 });
         }
@@ -84,7 +84,7 @@ class ClientHostNameDialog extends Component {
             const { ClientHostNameProps, ClientHostNameActions } = this.props;
             ClientHostNameActions.editClientHostNameData(ClientHostNameProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComp(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
+                    refreshDataListInComps(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
                     this.handleClose();
                 });
         }
@@ -99,7 +99,7 @@ class ClientHostNameDialog extends Component {
                 alertTitle: '시스템알림',
                 alertMsg: 'Hosts 정보를 복사하였습니다.'
             });
-            refreshDataListInComp(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
+            refreshDataListInComps(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
             this.handleClose();
         });
     }

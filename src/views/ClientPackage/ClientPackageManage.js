@@ -89,7 +89,7 @@ class ClientPackageManage extends Component {
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       groupId: [selectedGroupObj.get('grpId')], page:0
-    }, true);
+    }, {isResetSelect:true});
 
     // show client group info.
     // if(selectedGroupObj) {
@@ -253,7 +253,7 @@ class ClientPackageManage extends Component {
         // show clients list in group
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
           groupId: paramObject.selectedGroupId, page:0
-        }, true);
+        }, {isResetSelect:true});
         ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
         // close dialog
         this.setState({ isOpenClientSelect: false });
@@ -288,7 +288,7 @@ class ClientPackageManage extends Component {
         // show user list in dept.
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
           page:0
-        }, true);
+        }, {isResetSelect:true});
         // close dialog
         this.setState({ isOpenClientSelect: false });
       });

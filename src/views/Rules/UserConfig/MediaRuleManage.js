@@ -10,7 +10,7 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -155,7 +155,7 @@ class MediaRuleManage extends Component {
         objId: paramObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComp(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
+        refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
       });
     }
   };

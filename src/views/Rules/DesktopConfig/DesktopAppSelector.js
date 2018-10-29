@@ -11,7 +11,10 @@ import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import GRAlert from 'components/GRComponents/GRAlert';
+
 import DesktopApp from './DesktopApp';
+import DesktopAppDialog from 'views/Desktop/DesktopAppDialog';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -55,9 +58,19 @@ class DesktopAppSelector extends Component {
     DesktopConfActions.setEditingItemValue({ name: 'apps', value: selectedApps });
   }
 
+  handleEditAppClick = (viewItem) => {
+    this.props.DesktopAppActions.showDialog({
+      viewItem: viewItem,
+      dialogType: DesktopAppDialog.TYPE_EDIT_INCONF
+    });
+  };
+
   handleDeleteApp = appId => {
     const { DesktopConfProps, DesktopConfActions } = this.props;
-    console.log('handleDeleteApp............ ', appId);
+    this.props.GRAlertActions.showAlert({
+      alertTitle: "시스템알림",
+      alertMsg: "현재 데스크톱 앱 삭제는 '데스크톱앱관리' 메뉴에서만 실행 되도록 설정되어 있습니다."
+    });
   }
 
   handleDeleteSelected = appId => {
@@ -113,6 +126,7 @@ class DesktopAppSelector extends Component {
                       type='main'
                       themeId={(n.get('themeId')) ? n.get('themeId') : '1'}
                       onAddClick={this.handleAddClick}
+                      onEditClick={this.handleEditAppClick}
                       onDeleteClick={this.handleDeleteApp}
                       isSelected={this.isSelected(n.get('appId'))}
                   />
@@ -134,6 +148,7 @@ class DesktopAppSelector extends Component {
                       appObj={n}
                       type='select'
                       themeId={(n.get('themeId')) ? n.get('themeId') : '1'}
+                      onEditClick={this.handleEditAppClick}
                       onDeleteClick={this.handleDeleteSelected}
                       isSelected={true}
                   />
@@ -143,7 +158,7 @@ class DesktopAppSelector extends Component {
           </Grid>
       </div>      
 
-
+      <GRAlert />
       </React.Fragment>
     );
   }

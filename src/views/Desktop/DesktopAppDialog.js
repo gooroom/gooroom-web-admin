@@ -4,11 +4,13 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
 import * as DesktopAppActions from 'modules/DesktopAppModule';
+import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
-import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -48,6 +50,7 @@ class DesktopAppDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+    static TYPE_EDIT_INCONF = 'EDIT_INCONF';
 
     handleClose = (event) => {
         this.props.DesktopAppActions.closeDialog();
@@ -81,7 +84,7 @@ class DesktopAppDialog extends Component {
             const { DesktopAppProps, DesktopAppActions } = this.props;
             DesktopAppActions.createDesktopAppData(DesktopAppProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
+                    refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
                     this.handleClose();
                 });
         }
@@ -98,12 +101,34 @@ class DesktopAppDialog extends Component {
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { DesktopAppProps, DesktopAppActions } = this.props;
-            DesktopAppActions.editDesktopAppData(DesktopAppProps.get('editingItem'), this.props.compId)
+            const { DesktopAppProps, DesktopAppActions, DesktopConfProps, DesktopConfActions } = this.props;
+            if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT || 
+                DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
+
+                DesktopAppActions.editDesktopAppData(DesktopAppProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComp(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
+
+                    if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT) {
+                        refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
+                    } else if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
+                        // 변경이 필요한 데이타를 위해 액션 리스트를 사용함.
+                        // OLD
+                        // DesktopConfActions.changedDesktopApp(DesktopConfProps, [
+                        //     DesktopConfActions.readDesktopConfListPaged, 
+                        //     DesktopConfActions.changeDesktopConfForEditing,
+                        //     DesktopConfActions.changeDesktopConfForViewItem
+                        // ], {}, {isCloseInform:true});
+
+                        // 하나로 처리
+                        DesktopConfActions.changedDesktopConfForEdit(DesktopConfProps, DesktopConfActions);
+
+                        // 전체 APP 리스트 조회 (변경된 데이타로 주입)
+                        DesktopAppActions.readDesktopAppAllList();
+                    }
                     this.handleClose();
                 });
+
+            }
         }
     }
 
@@ -122,6 +147,8 @@ class DesktopAppDialog extends Component {
             title = "데스크톱앱 정보";
         } else if(dialogType === DesktopAppDialog.TYPE_EDIT) {
             title = "데스크톱앱 수정";
+        } else if(dialogType === DesktopAppDialog.TYPE_EDIT_INCONF) {
+            title = "데스크톱앱 수정";
         }
 
         return (
@@ -130,7 +157,7 @@ class DesktopAppDialog extends Component {
             <Dialog open={DesktopAppProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
-                    {(dialogType === DesktopAppDialog.TYPE_EDIT || dialogType === DesktopAppDialog.TYPE_ADD) &&
+                    {(dialogType === DesktopAppDialog.TYPE_EDIT || dialogType === DesktopAppDialog.TYPE_EDIT_INCONF || dialogType === DesktopAppDialog.TYPE_ADD) &&
                     <div>
                     <TextField label="이름" className={classes.fullWidth}
                         value={(editingItem.get('appNm')) ? editingItem.get('appNm') : ''}
@@ -155,7 +182,7 @@ class DesktopAppDialog extends Component {
                     </Grid>
                     
                     {(editingItem.get('appGubun') === 'application') && 
-                    <TextField label="실행 명령어" className={classes.fullWidth}
+                    <TextField label="실행 명령어" className={classes.fullWidth} multiple
                         value={(editingItem.get('appExec')) ? editingItem.get('appExec') : ''}
                         onChange={this.handleValueChange("appExec")} />
                     }
@@ -250,6 +277,9 @@ class DesktopAppDialog extends Component {
                 {(dialogType === DesktopAppDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
+                {(dialogType === DesktopAppDialog.TYPE_EDIT_INCONF) &&
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
                 <GRConfirm />
@@ -262,11 +292,13 @@ class DesktopAppDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    DesktopAppProps: state.DesktopAppModule
+    DesktopAppProps: state.DesktopAppModule,
+    DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
     DesktopAppActions: bindActionCreators(DesktopAppActions, dispatch),
+    DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 

@@ -71,7 +71,7 @@ class ClientMasterManage extends Component {
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       groupId: selectedGroupIdArray.toJS(), page:0
-    }, true);
+    }, {isResetSelect:true});
 
   };
 
@@ -247,7 +247,7 @@ class ClientMasterManage extends Component {
         // show clients list in group
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
           groupId: paramObject.selectedGroupId, page:0
-        }, true);
+        }, {isResetSelect:true});
         ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
         // close dialog
         this.setState({ isOpenClientSelect: false });
@@ -282,7 +282,7 @@ class ClientMasterManage extends Component {
         // show user list in dept.
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
           page:0
-        }, true);
+        }, {isResetSelect:true});
         // close dialog
         this.setState({ isOpenClientSelect: false });
       });
@@ -311,7 +311,7 @@ class ClientMasterManage extends Component {
       }).then(() => {
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
           page:0
-        }, true);
+        }, {isResetSelect:true});
       });
     }
   }

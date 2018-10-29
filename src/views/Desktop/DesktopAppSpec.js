@@ -126,7 +126,6 @@ class DesktopAppSpec extends Component {
             </CardContent>
           </Card>
         }
-      <DesktopAppDialog compId={compId} />
       </React.Fragment>
     );
   }

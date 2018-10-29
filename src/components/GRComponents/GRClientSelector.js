@@ -52,7 +52,7 @@ class GRClientSelector extends Component {
     if(selectorType == 'single') {
       ClientManageActions.readClientListPaged(ClientManageProps, compId, {
         groupId: [selectedGroupObj.get('grpId')], page:0
-      }, true);
+      }, {isResetSelect:true});
     }
 
   }
@@ -65,7 +65,7 @@ class GRClientSelector extends Component {
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       groupId: selectedGroupIdArray.toJS(), page:0
-    }, true);
+    }, {isResetSelect:true});
 
   };
   

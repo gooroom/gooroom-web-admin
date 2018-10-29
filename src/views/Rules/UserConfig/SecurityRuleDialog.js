@@ -12,7 +12,7 @@ import SecurityRuleNetwork from './SecurityRuleNetwork';
 import SecurityRuleViewer from './SecurityRuleViewer';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
-import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -95,7 +95,7 @@ class SecurityRuleDialog extends Component {
             const { SecurityRuleProps, SecurityRuleActions } = this.props;
             SecurityRuleActions.createSecurityRule(SecurityRuleProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
+                    refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
                     this.handleClose();
                 }, (res) => {
             })
@@ -116,7 +116,7 @@ class SecurityRuleDialog extends Component {
             const { SecurityRuleProps, SecurityRuleActions } = this.props;
             SecurityRuleActions.editSecurityRule(SecurityRuleProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComp(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
+                    refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
                     this.handleClose();
                 });
         }
@@ -147,7 +147,7 @@ class SecurityRuleDialog extends Component {
                 alertTitle: '시스템알림',
                 alertMsg: '단말보안정책을 복사하였습니다.'
             });
-            refreshDataListInComp(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
+            refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
             this.handleClose();
         });
     }

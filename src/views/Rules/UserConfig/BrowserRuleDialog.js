@@ -10,7 +10,7 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
-import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
 import BrowserRuleViewer from './BrowserRuleViewer';
 
@@ -80,7 +80,7 @@ class BrowserRuleDialog extends Component {
             const { BrowserRuleProps, BrowserRuleActions } = this.props;
             BrowserRuleActions.createBrowserRuleData(BrowserRuleProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
+                    refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
                     this.handleClose();
                 });
         }
@@ -100,7 +100,7 @@ class BrowserRuleDialog extends Component {
             const { BrowserRuleProps, BrowserRuleActions } = this.props;
             BrowserRuleActions.editBrowserRuleData(BrowserRuleProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComp(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
+                    refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
                     this.handleClose();
                 });
         }
@@ -131,7 +131,7 @@ class BrowserRuleDialog extends Component {
                 alertTitle: '시스템알림',
                 alertMsg: '브라우저제어설정을 복사하였습니다.'
             });
-            refreshDataListInComp(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
+            refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
             this.handleClose();
         });
     }
