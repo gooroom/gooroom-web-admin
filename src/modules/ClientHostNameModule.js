@@ -296,13 +296,13 @@ export default handleActions({
         });
     },
     [GET_HOSTNAME_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action);
+        return commonHandleActions.handleListAction(state, action, 'objId');
     },  
     [GET_HOSTNAME_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     },  
     [GET_HOSTNAME_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'objId');
     },
     [SHOW_HOSTNAME_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -343,7 +343,7 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_HOSTNAME_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'objId');
     }
 
 }, initialState);

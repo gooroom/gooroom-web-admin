@@ -399,13 +399,13 @@ export default handleActions({
         });
     },
     [GET_MEDIACONTROL_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action);
+        return commonHandleActions.handleListAction(state, action, 'objId');
     }, 
     [GET_MEDIACONTROL_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_MEDIACONTROL_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'objId');
     },
     [SHOW_MEDIACONTROL_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -446,7 +446,7 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_MEDIACONTROL_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'objId');
     },
     [SET_BLUETOOTHMAC_ITEM]: (state, action) => {
         const newBluetoothMac = state.getIn(['editingItem', 'macAddress']).set(action.index, action.value);

@@ -299,7 +299,7 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'grpId');
     },
     [ADD_CLIENTINGROUP_SUCCESS]: (state, action) => {
         return state.merge({

@@ -24,6 +24,7 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
+import DesktopConfDialog from "views/Rules/DesktopConfig/DesktopConfDialog";
 
 import UserListComp from 'views/User/UserListComp';
 import UserSpec from "views/User/UserSpec";
@@ -501,6 +502,7 @@ class UserMasterManage extends Component {
         <BrowserRuleDialog compId={compId} />
         <SecurityRuleDialog compId={compId} />
         <MediaRuleDialog compId={compId} />
+        <DesktopConfDialog compId={compId} />
 
         <GRConfirm />
 
