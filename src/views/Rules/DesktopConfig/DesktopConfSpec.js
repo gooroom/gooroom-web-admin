@@ -86,7 +86,7 @@ class DesktopConfSpec extends Component {
             />
             <CardContent>
               <div style={{overflowY: 'auto'}}>
-                <Grid container spacing={16} direction="row" justify="flex-start" alignItems="flex-start" style={{width:appPaneWidth,margin:20}}>
+                <Grid container spacing={16} direction="row" justify="flex-start" alignItems="flex-start" style={{width:appPaneWidth,margin:'20 0 20 0'}}>
                   {viewItem.get('apps') && viewItem.get('apps').map(n => {
                     return (
                       <Grid key={n.get('appId')} item>

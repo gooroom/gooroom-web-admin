@@ -75,7 +75,7 @@ export const changedDesktopApp = (module, callbacks, extParam, extOption) => dis
     }
 }
 
-export const readDesktopConfList = (module, compId) => dispatch => {
+export const readDesktopConfList = (module, compId, targetType) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readDesktopConfList', {
     }).then(
@@ -83,6 +83,7 @@ export const readDesktopConfList = (module, compId) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_LIST_SUCCESS,
                 compId: compId,
+                targetType: targetType,
                 response: response
             });
         }
@@ -455,13 +456,13 @@ export default handleActions({
         });
     },
     [GET_DESKTOPCONF_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action);
+        return commonHandleActions.handleListAction(state, action, 'confId');
     }, 
     [GET_DESKTOPCONF_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_DESKTOPCONF_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'confId');
     },
     [CHANGE_DESKTOPCONF_EDITING_SUCCESS]: (state, action) => {
         const data = action.response.data.data;
@@ -518,7 +519,7 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_DESKTOPCONF_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'confId');
     },
     [GET_THEMEINFO_LIST_SUCCESS]: (state, action) => {
         const { data } = action.response.data;

@@ -199,7 +199,7 @@ export default handleActions({
     // },
     
     [DELETE_CLIENT_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'clientId');
     },
 
 }, initialState);

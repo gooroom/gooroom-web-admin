@@ -55,7 +55,7 @@ class ClientRuleSelector extends Component {
                         <Tab label="단말보안정책" value={5} />
                     </Tabs>
                 </AppBar>
-                <Paper elevation={0} style={{ maxHeight: 400, overflow: 'auto' }} >
+                <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
                 {selectedTab === 0 && <ClientConfSettingSelector compId={compId} initId={module ? module.clientConfigId : '-'} targetType={targetType} />}
                 {selectedTab === 1 && <ClientHostNameSelector compId={compId} initId={module ? module.hostNameConfigId : '-'} targetType={targetType} />}
                 {selectedTab === 2 && <ClientUpdateServerSelector compId={compId} initId={module ? module.updateServerConfigId : '-'} targetType={targetType} />}

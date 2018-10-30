@@ -201,7 +201,7 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_GCSP_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'objId');
     },
     [GET_GCSP_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);

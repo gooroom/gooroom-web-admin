@@ -299,7 +299,7 @@ export default handleActions({
         return newState;
     },
     [DELETE_USER_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'userId');
     },
     [SHOW_USERRULE_DIALOG]: (state, action) => {
         return state.merge({
