@@ -23,6 +23,7 @@ const SHOW_USERRULE_DIALOG = 'user/SHOW_USERRULE_DIALOG';
 const CLOSE_USERRULE_DIALOG = 'user/CLOSE_USERRULE_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'user/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_ITEM_VALUES = 'user/SET_EDITING_ITEM_VALUES';
 
 const CHG_LISTPARAM_DATA = 'user/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'user/CHG_COMPDATA_VALUE';
@@ -118,6 +119,13 @@ export const setEditingItemValue = (param) => dispatch => {
     });
 };
 
+export const setEditingItemValues = (param) => dispatch => {
+    return dispatch({
+        type: SET_EDITING_ITEM_VALUES,
+        values: param
+    });
+};
+
 export const changeListParamData = (param) => dispatch => {
     return dispatch({
         type: CHG_LISTPARAM_DATA,
@@ -153,6 +161,7 @@ const makeParameter = (param) => {
         userId: param.userId,
         userPasswd: param.userPassword,
         userNm: param.userNm,
+        deptCd: param.deptCd,
         isChangePasswd: isChangePasswd,
 
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
@@ -165,7 +174,7 @@ const makeParameter = (param) => {
 // create (add)
 export const createUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createUser', makeParameter(param)).then(
+    return requestPostAPI('createUserWithRule', makeParameter(param)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
@@ -188,17 +197,8 @@ export const editUserData = (param) => dispatch => {
     return requestPostAPI('updateUserData', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
-                requestPostAPI('readUserData', {'userId': param.userId}).then(
-                    (response) => {
-                        dispatch({
-                            type: EDIT_USER_SUCCESS,
-                            userId: param.userId,
-                            response: response
-                        });
-                    }
-                ).catch(error => {
-                    dispatch({ type: COMMON_FAILURE, error: error });
+                dispatch({
+                    type: EDIT_USER_SUCCESS
                 });
             } else {
                 dispatch({ type: COMMON_FAILURE, error: error });
@@ -257,6 +257,11 @@ export default handleActions({
             editingItem: state.get('editingItem').merge({[action.name]: action.value})
         });
     },
+    [SET_EDITING_ITEM_VALUES]: (state, action) => {
+        return state.merge({
+            editingItem: state.get('editingItem').merge(action.values)
+        });
+    },
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
@@ -275,7 +280,23 @@ export default handleActions({
         });
     },
     [EDIT_USER_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleEditSuccessAction(state, action);
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                newState = newState
+                        .deleteIn(['viewItems', i, 'viewItem'])
+                        .setIn(['viewItems', i, 'informOpen'], false)
+                        .delete('editingItem')
+                        .merge({
+                            pending: false,
+                            error: false,
+                            dialogOpen: false,
+                            dialogType: ''
+                        });
+            });
+        }
+
+        return newState;
     },
     [DELETE_USER_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action);

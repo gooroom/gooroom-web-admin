@@ -52,7 +52,7 @@ class UserRuleSelector extends Component {
                 <Paper elevation={0} style={{ maxHeight: 400, overflow: 'auto' }} >
                 {selectedTab === 0 && <BrowserRuleSelector compId={compId} initId={module ? module.browserRuleId : '-'} targetType={targetType} />}
                 {selectedTab === 1 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 2 && <SecurityRuleSelector compId={compId} initId={module ? module.clientSecuRuleId : '-'} targetType={targetType} />}
+                {selectedTab === 2 && <SecurityRuleSelector compId={compId} initId={module ? module.securityRuleId : '-'} targetType={targetType} />}
                 </Paper>
             
             </React.Fragment>

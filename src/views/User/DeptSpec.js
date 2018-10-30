@@ -14,6 +14,7 @@ import * as DeptActions from 'modules/DeptModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import DeptDialog from './DeptDialog';
 
@@ -33,7 +34,7 @@ import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
-
+import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -75,6 +76,12 @@ class DeptSpec extends Component {
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
+  handleEditClickForDesktopConf = (viewItem, compType) => {
+    this.props.DesktopConfActions.showDialog({
+      viewItem: viewItem,
+      dialogType: DesktopConfDialog.TYPE_EDIT
+    });
+  };
   // ===================================================================
 
   // .................................................
@@ -90,6 +97,7 @@ class DeptSpec extends Component {
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'DEPT']);
+    const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'DEPT']);
 
     return (
       <div style={{marginTop: 10}}>
@@ -110,7 +118,7 @@ class DeptSpec extends Component {
           <Divider />
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
-              <Grid item xs={12} sm={12} lg={6} >
+              <Grid item md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedBrowserRuleItem}
@@ -118,7 +126,7 @@ class DeptSpec extends Component {
                   inherit={true}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} lg={6} >
+              <Grid item md={12} lg={6} xl={4} >
                 <MediaRuleSpec compId={compId}
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedMediaRuleItem}
@@ -126,7 +134,7 @@ class DeptSpec extends Component {
                   inherit={true}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} lg={6} >
+              <Grid item md={12} lg={6} xl={4} >
                 <SecurityRuleSpec compId={compId}
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedSecurityRuleItem}
@@ -135,7 +143,11 @@ class DeptSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
-                <DesktopConfSpec compId={compId} targetType="DEPT" inherit={false} />
+                <DesktopConfSpec compId={compId}
+                  specType="inform" targetType="DEPT" 
+                  selectedItem={selectedDesktopConfItem}
+                  handleEditClick={this.handleEditClickForDesktopConf}
+                  inherit={false} />
               </Grid>
             </Grid>
           </CardContent>
@@ -152,7 +164,8 @@ const mapStateToProps = (state) => ({
   DeptProps: state.DeptModule,
   MediaRuleProps: state.MediaRuleModule,
   BrowserRuleProps: state.BrowserRuleModule,
-  SecurityRuleProps: state.SecurityRuleModule
+  SecurityRuleProps: state.SecurityRuleModule,
+  DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -160,7 +173,8 @@ const mapDispatchToProps = (dispatch) => ({
   DeptActions: bindActionCreators(DeptActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
-  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptSpec));

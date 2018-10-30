@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { Map, List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -345,7 +345,7 @@ export default handleActions({
     [GET_DESKTOPAPP_ALLLIST_SUCCESS]: (state, action) => {
         const { data } = action.response.data;
         if(data && data.length > 0) {
-            return state.set('listAllData', List(data.map((e) => {return Map(e)})));
+            return state.set('listAllData', List(data.map((e) => {return fromJS(e)})));
         };
     }, 
     [GET_DESKTOPAPP_LIST_SUCCESS]: (state, action) => {
