@@ -42,7 +42,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class DeptRuleInform extends Component {
+class DeptSpec extends Component {
 
   // edit
   handleEditClick = (selectedDept) => {
@@ -163,5 +163,5 @@ const mapDispatchToProps = (dispatch) => ({
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptRuleInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptSpec));
 

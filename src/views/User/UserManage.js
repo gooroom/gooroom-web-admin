@@ -28,7 +28,7 @@ import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
 
-import UserRuleInform from "views/User/UserRuleInform";
+import UserSpec from "views/User/UserSpec";
 import GRPane from "containers/GRContent/GRPane";
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
@@ -336,7 +336,7 @@ class UserManage extends Component {
           </div>
           }
         </GRPane>
-        <UserRuleInform compId={compId} />
+        <UserSpec compId={compId} />
         <UserBasicDialog compId={compId} />
         <UserDialog compId={compId} />
 

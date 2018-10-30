@@ -179,11 +179,11 @@ export const GRCommonStyle = theme => ({
 
     // TREE
     parentNodeClass: {
-        color: "#59761E"
+        color: "#455a64"
     },
 
     childNodeClass: {
-        color: "#98CA32"
+        color: "#808080"
     },
 
 
