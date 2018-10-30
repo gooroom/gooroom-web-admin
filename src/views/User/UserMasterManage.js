@@ -11,6 +11,7 @@ import * as UserActions from 'modules/UserModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
@@ -93,7 +94,7 @@ class UserMasterManage extends Component {
   handleSelectDept = (node) => {
     const { DeptProps, DeptActions } = this.props;
     const { UserProps, UserActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, DesktopConfActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     this.setState({
@@ -117,22 +118,17 @@ class UserMasterManage extends Component {
 
     // show rules
     // get browser rule info
-    BrowserRuleActions.getBrowserRuleByDeptCd({
-      compId: compId, deptCd: node.key
-    });
+    BrowserRuleActions.getBrowserRuleByDeptCd({ compId: compId, deptCd: node.key });
     // get media control setting info
-    MediaRuleActions.getMediaRuleByDeptCd({
-      compId: compId, deptCd: node.key
-    });
+    MediaRuleActions.getMediaRuleByDeptCd({ compId: compId, deptCd: node.key });
     // get client secu info
-    SecurityRuleActions.getSecurityRuleByDeptCd({
-      compId: compId, deptCd: node.key
-    });
+    SecurityRuleActions.getSecurityRuleByDeptCd({ compId: compId, deptCd: node.key });
+    // get client secu info
+    DesktopConfActions.getDesktopConfByDeptCd({ compId: compId, deptCd: node.key });
 
-    // show user inform pane.
-    DeptActions.showInform({
-      compId: compId, viewItem: null
-    });
+
+    // show Dept. inform pane.
+    DeptActions.showInform({ compId: compId, viewItem: null });
   }
   
   handleEditDept = (listItem, i) => { 
@@ -315,9 +311,6 @@ class UserMasterManage extends Component {
     })
   }
 
-
-
-
   // Select User Item
   handleUserSelect = (selectedUserObj, selectedUserIdArray) => {
     const { UserActions, DeptActions } = this.props;
@@ -370,14 +363,14 @@ class UserMasterManage extends Component {
   handleCreateUserButton = value => {
     const { UserActions } = this.props;
     UserActions.showDialog({
-      viewItem: {
+      ruleSelectedViewItem: {
         userId: '',
         userNm: '',
         userPassword: '',
         showPassword: false
       },
-      dialogType: UserBasicDialog.TYPE_ADD
-    }, false);
+      ruleDialogType: UserDialog.TYPE_ADD
+    }, true);
   };
 
 
@@ -522,7 +515,8 @@ const mapStateToProps = (state) => ({
   UserProps: state.UserModule,
   BrowserRuleProps: state.BrowserRuleModule,
   MediaRuleProps: state.MediaRuleModule,
-  SecurityRuleProps: state.SecurityRuleModule
+  SecurityRuleProps: state.SecurityRuleModule,
+  DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -532,6 +526,7 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 

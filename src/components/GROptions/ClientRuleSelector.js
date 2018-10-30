@@ -61,7 +61,7 @@ class ClientRuleSelector extends Component {
                 {selectedTab === 2 && <ClientUpdateServerSelector compId={compId} initId={module ? module.updateServerConfigId : '-'} targetType={targetType} />}
                 {selectedTab === 3 && <BrowserRuleSelector compId={compId} initId={module ? module.browserRuleId : '-'} targetType={targetType} />}
                 {selectedTab === 4 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 5 && <SecurityRuleSelector compId={compId} initId={module ? module.clientSecuRuleId : '-'} targetType={targetType} />}
+                {selectedTab === 5 && <SecurityRuleSelector compId={compId} initId={module ? module.securityRuleId : '-'} targetType={targetType} />}
                 </Paper>
             
             </React.Fragment>

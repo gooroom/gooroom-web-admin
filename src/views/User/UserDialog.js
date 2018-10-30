@@ -11,6 +11,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import UserRuleSelector from 'components/GROptions/UserRuleSelector';
+import DeptSelectDialog from "views/User/DeptSelectDialog";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -22,6 +23,14 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Grid from '@material-ui/core/Grid';
 
+import IconButton from '@material-ui/core/IconButton';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import FormControl from '@material-ui/core/FormControl';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
@@ -31,6 +40,15 @@ class UserDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isOpenDeptSelect: false,
+            selectedDept: {deptCd:'', deptNm:''}
+        };
+    }
 
     handleClose = (event) => {
         this.props.UserActions.closeDialog(true);
@@ -77,10 +95,11 @@ class UserDialog extends Component {
                 userId: UserProps.getIn(['editingItem', 'userId']),
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                 userNm: UserProps.getIn(['editingItem', 'userNm']),
+                deptCd: UserProps.getIn(['editingItem', 'deptCd']),
 
                 browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
                 mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
-                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
+                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
@@ -115,6 +134,19 @@ class UserDialog extends Component {
         }
     }
 
+
+
+    handleShowDeptSelector = () => {
+        this.setState({ isOpenDeptSelect: true });
+    }
+    handleDeptSelectionClose = () => {
+        this.setState({ isOpenDeptSelect: false });
+    }
+    handleDeptSelectSave = (selectedDept) => {
+        this.props.UserActions.setEditingItemValues({ 'deptNm': selectedDept.deptNm, 'deptCd': selectedDept.deptCd });
+        this.setState({ isOpenDeptSelect: false });
+    }
+
     render() {
         const { classes } = this.props;
         const { UserProps, compId } = this.props;
@@ -132,7 +164,7 @@ class UserDialog extends Component {
         }
 
         return (
-            <div>
+            <React.Fragment>
             {(UserProps.get('ruleDialogOpen') && editingItem) &&
                 <Dialog open={UserProps.get('ruleDialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                     <DialogTitle>{title}</DialogTitle>
@@ -148,6 +180,31 @@ class UserDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={6}>
+                                <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
+                                    <InputLabel htmlFor="adornment-password">Password</InputLabel>
+                                    <Input
+                                        id="userPassword"
+                                        type={(editingItem && editingItem.get('showPassword')) ? 'text' : 'password'}
+                                        value={(editingItem.get('userPassword')) ? editingItem.get('userPassword') : ''}
+                                        onChange={this.handleValueChange('userPassword')}
+                                        endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                            aria-label="Toggle password visibility"
+                                            onClick={this.handleClickShowPassword}
+                                            onMouseDown={this.handleMouseDownPassword}
+                                            >
+                                            {(editingItem && editingItem.get('showPassword')) ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                        }
+                                    />
+                                </FormControl>                            
+                            </Grid>
+                        </Grid>
+
+                        <Grid container spacing={24}>
+                            <Grid item xs={6}>
                                 <TextField
                                     label="사용자이름"
                                     value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
@@ -155,9 +212,18 @@ class UserDialog extends Component {
                                     className={classes.fullWidth}
                                 />
                             </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="조직"
+                                    value={(editingItem.get('deptNm')) ? editingItem.get('deptNm') : ''}
+                                    onClick={() => this.handleShowDeptSelector()}
+                                    className={classes.fullWidth}
+                                />
+                            </Grid>
                         </Grid>
+
                         <div style={{marginTop:20}}>
-                        <UserRuleSelector compId={compId} module={UserProps.get('editingItem').toJS()} targetType="USER" />
+                            <UserRuleSelector compId={compId} module={UserProps.get('editingItem').toJS()} targetType="USER" />
                         </div>
                     </DialogContent>
 
@@ -173,7 +239,12 @@ class UserDialog extends Component {
                     <GRConfirm />
                 </Dialog>
             }
-            </div>
+
+            <DeptSelectDialog isOpen={this.state.isOpenDeptSelect}
+                isShowCheck={false}
+                onSaveHandle={this.handleDeptSelectSave} 
+                onClose={this.handleDeptSelectionClose} />
+            </React.Fragment>
         );
     }
 

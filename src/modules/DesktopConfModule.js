@@ -203,6 +203,7 @@ export const getDesktopConfByUserId = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
+                target: 'USER',
                 response: response
             });
         }
@@ -219,6 +220,7 @@ export const getDesktopConfByDeptCd = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
+                target: 'DEPT',
                 response: response
             });
         }
@@ -235,6 +237,7 @@ export const getDesktopConfByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
+                target: 'GROUP',
                 response: response
             });
         }
@@ -458,7 +461,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_DESKTOPCONF_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
     },
     [CHANGE_DESKTOPCONF_EDITING_SUCCESS]: (state, action) => {
         const data = action.response.data.data;
