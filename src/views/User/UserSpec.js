@@ -38,7 +38,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class UserRuleInform extends Component {
+class UserSpec extends Component {
 
    // edit
    handleEditClick = (viewItem) => {
@@ -151,5 +151,5 @@ const mapDispatchToProps = (dispatch) => ({
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserRuleInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserSpec));
 

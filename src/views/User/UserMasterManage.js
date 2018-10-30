@@ -25,12 +25,12 @@ import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
 
 import UserListComp from 'views/User/UserListComp';
-import UserRuleInform from "views/User/UserRuleInform";
+import UserSpec from "views/User/UserSpec";
 import UserSelectDialog from "views/User/UserSelectDialog";
 import UserDialog from "views/User/UserDialog";
 import UserBasicDialog from "views/User/UserBasicDialog";
 
-import DeptRuleInform from "views/User/DeptRuleInform";
+import DeptSpec from "views/User/DeptSpec";
 import DeptSelectDialog from "views/User/DeptSelectDialog";
 import DeptDialog from "views/User/DeptDialog";
 import DeptMultiDialog from "views/User/DeptMultiDialog";
@@ -427,6 +427,7 @@ class UserMasterManage extends Component {
                       </Button>
                       </span>
                     </Tooltip>
+                    {/*
                     <Tooltip title="조직에서 사용자 삭제">
                       <span>
                       <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserAddible()} style={{marginLeft: "4px"}} >
@@ -434,6 +435,7 @@ class UserMasterManage extends Component {
                       </Button>
                       </span>
                     </Tooltip>
+                    */}
                   </Grid>
                 </Grid>
               </Toolbar>
@@ -481,8 +483,8 @@ class UserMasterManage extends Component {
             </Grid>
 
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef'}} >
-              <UserRuleInform compId={compId} />
-              <DeptRuleInform compId={compId} />
+              <UserSpec compId={compId} />
+              <DeptSpec compId={compId} />
             </Grid>
 
           </Grid>

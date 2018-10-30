@@ -204,7 +204,7 @@ class UserListComp extends Component {
             columnData={this.columnHeaders}
           />
           <TableBody>
-            {listObj.get('listData').map(n => {
+            {listObj.get('listData') && listObj.get('listData').map(n => {
               const isChecked = this.isChecked(n.get('userId'));
               const isSelected = this.isSelected(n.get('userId'));
 

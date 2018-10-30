@@ -25,9 +25,6 @@ class DesktopConfViewer extends Component {
   render() {
 
     const { classes, viewItem } = this.props;
-    const bull = <span className={classes.bullet}>•</span>;
-
-    console.log('viewItem :::::::::: ', viewItem);
 
     let appPaneWidth = 0;
     if(viewItem && viewItem.get('apps') && viewItem.get('apps').size > 0) {

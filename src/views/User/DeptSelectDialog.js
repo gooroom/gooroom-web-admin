@@ -41,17 +41,6 @@ class DeptSelectDialog extends Component {
         this.props.DeptActions.closeMultiDialog();
     }
 
-    handleInitTreeData = () => {
-
-        console.log('DeptSelectDialog: handleInitTreeData.............');
-
-        // Check selectedDeptCd
-        // this.props.DeptActions.changeCompVariableObject({
-        //   compId: this.props.match.params.grMenuId,
-        //   valueObj: {selectedDeptCd: '', selectedDeptNm: ''}
-        // });
-    }
-
     handleSelectDept = (listItem) => {
         this.setState({
             selectedDept: { deptCd: listItem.key, deptNm: listItem.title }
@@ -87,9 +76,7 @@ class DeptSelectDialog extends Component {
                             hasSelectChild={false}
                             hasSelectParent={false}
                             compId={compId}
-                            onInitTreeData={this.handleInitTreeData}
                             onSelectNode={this.handleSelectDept}
-                            onCheckedNode={this.handleCheckedDept}
                         />
                     </DialogContent>
                     <DialogActions>
