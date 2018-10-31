@@ -49,7 +49,7 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import ClientGroupDialog from './ClientGroupDialog';
-import ClientGroupInform from './ClientGroupInform';
+import ClientGroupSpec from './ClientGroupSpec';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -304,7 +304,7 @@ class ClientGroupManage extends Component {
           }
 
         </GRPane>
-        <ClientGroupInform compId={compId} />
+        <ClientGroupSpec compId={compId} />
         <ClientGroupDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>

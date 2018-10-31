@@ -50,10 +50,10 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import ClientManageCompWithPackage from 'views/Client/ClientManageCompWithPackage';
-import ClientManageInform from 'views/Client/ClientManageInform';
+import ClientManageSpec from 'views/Client/ClientManageSpec';
 
 import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
-import ClientGroupInform from 'views/ClientGroup/ClientGroupInform';
+import ClientGroupSpec from 'views/ClientGroup/ClientGroupSpec';
 import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
 
 import ClientPackageComp from 'views/ClientPackage/ClientPackageComp';
