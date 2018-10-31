@@ -89,7 +89,7 @@ class UserDialog extends Component {
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { UserProps, UserActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
 
             UserActions.createUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
@@ -99,7 +99,8 @@ class UserDialog extends Component {
 
                 browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
                 mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
+                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
+                desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
@@ -119,14 +120,18 @@ class UserDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { UserProps, UserActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
 
             UserActions.editUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
+                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                 userNm: UserProps.getIn(['editingItem', 'userNm']),
+                deptCd: UserProps.getIn(['editingItem', 'deptCd']),
+
                 browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
                 mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
+                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
+                desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
@@ -168,7 +173,7 @@ class UserDialog extends Component {
             {(UserProps.get('ruleDialogOpen') && editingItem) &&
                 <Dialog open={UserProps.get('ruleDialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                     <DialogTitle>{title}</DialogTitle>
-                    <DialogContent>
+                    <DialogContent style={{minHeight:567}}>
                         <Grid container spacing={24}>
                             <Grid item xs={6}>
                                 <TextField
@@ -221,10 +226,9 @@ class UserDialog extends Component {
                                 />
                             </Grid>
                         </Grid>
+                        <Divider style={{marginBottom: 10}} />
+                        <UserRuleSelector compId={compId} module={UserProps.get('editingItem').toJS()} targetType="USER" />
 
-                        <div style={{marginTop:20}}>
-                            <UserRuleSelector compId={compId} module={UserProps.get('editingItem').toJS()} targetType="USER" />
-                        </div>
                     </DialogContent>
 
                     <DialogActions>
@@ -254,7 +258,8 @@ const mapStateToProps = (state) => ({
     UserProps: state.UserModule,
     BrowserRuleProps: state.BrowserRuleModule,
     MediaRuleProps: state.MediaRuleModule,
-    SecurityRuleProps: state.SecurityRuleModule
+    SecurityRuleProps: state.SecurityRuleModule,
+    DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -25,6 +25,7 @@ import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
 import DesktopConfDialog from "views/Rules/DesktopConfig/DesktopConfDialog";
+import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
 import UserListComp from 'views/User/UserListComp';
 import UserSpec from "views/User/UserSpec";
@@ -124,7 +125,7 @@ class UserMasterManage extends Component {
     MediaRuleActions.getMediaRuleByDeptCd({ compId: compId, deptCd: node.key });
     // get client secu info
     SecurityRuleActions.getSecurityRuleByDeptCd({ compId: compId, deptCd: node.key });
-    // get client secu info
+    // get desktop conf info
     DesktopConfActions.getDesktopConfByDeptCd({ compId: compId, deptCd: node.key });
 
 
@@ -315,7 +316,7 @@ class UserMasterManage extends Component {
   // Select User Item
   handleUserSelect = (selectedUserObj, selectedUserIdArray) => {
     const { UserActions, DeptActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, DesktopConfActions } = this.props;
 
     const compId = this.props.match.params.grMenuId;
 
@@ -334,8 +335,13 @@ class UserMasterManage extends Component {
       MediaRuleActions.getMediaRuleByUserId({ compId: compId, userId: userId });
       // get client secu info
       SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
+      // get desktop conf info
+      DesktopConfActions.getDesktopConfByUserId({ compId: compId, userId: userId });
+      
+      
       // show user inform pane.
       UserActions.showInform({ compId: compId, viewItem: selectedUserObj });
+      
 
       // // show client group info.
       // const groupId = selectedClientObj.get('clientGroupId');
@@ -502,7 +508,9 @@ class UserMasterManage extends Component {
         <BrowserRuleDialog compId={compId} />
         <SecurityRuleDialog compId={compId} />
         <MediaRuleDialog compId={compId} />
+
         <DesktopConfDialog compId={compId} />
+        <DesktopAppDialog compId={compId} />
 
         <GRConfirm />
 

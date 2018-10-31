@@ -166,7 +166,8 @@ const makeParameter = (param) => {
 
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
-        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
+        desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId
     };
 }
 
@@ -174,6 +175,7 @@ const makeParameter = (param) => {
 // create (add)
 export const createUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
+    
     return requestPostAPI('createUserWithRule', makeParameter(param)).then(
         (response) => {
             try {
@@ -194,6 +196,8 @@ export const createUserData = (param) => dispatch => {
 // edit
 export const editUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
+    console.log('editUserData ::::: ', param);
+
     return requestPostAPI('updateUserData', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {

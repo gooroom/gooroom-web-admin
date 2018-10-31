@@ -13,6 +13,7 @@ import * as UserActions from 'modules/UserModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import UserDialog from './UserDialog';
 
@@ -31,6 +32,8 @@ import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
+import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
+import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -45,7 +48,9 @@ class UserSpec extends Component {
     this.props.UserActions.showDialog({
       ruleSelectedViewItem: {
         userId: viewItem.get('userId'),
-        userNm: viewItem.get('userNm')
+        userNm: viewItem.get('userNm'),
+        deptCd: viewItem.get('deptCd'),
+        deptNm: viewItem.get('deptNm')
       },
       ruleDialogType: UserDialog.TYPE_EDIT
     }, true);
@@ -70,6 +75,12 @@ class UserSpec extends Component {
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
+  handleEditClickForDesktopConf = (viewItem, compType) => {
+    this.props.DesktopConfActions.showDialog({
+      viewItem: viewItem,
+      dialogType: DesktopConfDialog.TYPE_EDIT
+    });
+  };
   // ===================================================================
 
 
@@ -84,6 +95,7 @@ class UserSpec extends Component {
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'USER']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'USER']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'USER']);
+    const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'USER']);
 
     return (
       <div style={{marginTop: 10}} >
@@ -105,27 +117,35 @@ class UserSpec extends Component {
 
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
-              <Grid item xs={12} sm={12} lg={6} >
+              <Grid item md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="USER"
                   selectedItem={selectedBrowserRuleItem}
                   onClickEdit={this.handleEditClickForBrowserRule}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} lg={6} >
+              <Grid item md={12} lg={6} xl={4} >
                 <MediaRuleSpec compId={compId}
                   specType="inform" targetType="USER"
                   selectedItem={selectedMediaRuleItem}
                   onClickEdit={this.handleEditClickForMediaRule}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} lg={6} >
+              <Grid item md={12} lg={6} xl={4} >
                 <SecurityRuleSpec compId={compId}
                   specType="inform" targetType="USER"
                   selectedItem={selectedSecurityRuleItem}
                   onClickEdit={this.handleEditClickForSecurityRule}
                 />
               </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
+                <DesktopConfSpec compId={compId}
+                  specType="inform" targetType="USER" 
+                  selectedItem={selectedDesktopConfItem}
+                  onClickEdit={this.handleEditClickForDesktopConf}
+                />
+              </Grid>
+
             </Grid>
           </CardContent>
 
@@ -141,14 +161,16 @@ const mapStateToProps = (state) => ({
   UserProps: state.UserModule,
   MediaRuleProps: state.MediaRuleModule,
   BrowserRuleProps: state.BrowserRuleModule,
-  SecurityRuleProps: state.SecurityRuleModule
+  SecurityRuleProps: state.SecurityRuleModule,
+  DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
-  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserSpec));
