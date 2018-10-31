@@ -118,7 +118,7 @@ class DeptSpec extends Component {
           <Divider />
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
-              <Grid item md={12} lg={6} xl={4} >
+              <Grid item xs={12} md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedBrowserRuleItem}
@@ -126,7 +126,7 @@ class DeptSpec extends Component {
                   inherit={true}
                 />
               </Grid>
-              <Grid item md={12} lg={6} xl={4} >
+              <Grid item xs={12} md={12} lg={6} xl={4} >
                 <MediaRuleSpec compId={compId}
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedMediaRuleItem}
@@ -134,7 +134,7 @@ class DeptSpec extends Component {
                   inherit={true}
                 />
               </Grid>
-              <Grid item md={12} lg={6} xl={4} >
+              <Grid item xs={12} md={12} lg={6} xl={4} >
                 <SecurityRuleSpec compId={compId}
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedSecurityRuleItem}

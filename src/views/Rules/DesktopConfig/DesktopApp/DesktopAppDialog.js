@@ -183,40 +183,40 @@ class DesktopAppDialog extends Component {
                     {(dialogType === DesktopAppDialog.TYPE_EDIT_INAPP || dialogType === DesktopAppDialog.TYPE_EDIT_INCONF || dialogType === DesktopAppDialog.TYPE_ADD) &&
                     <div>
                     <TextField label="이름" className={classes.fullWidth}
-                        value={(editingItem.get('appNm')) ? editingItem.get('appNm') : ''}
-                        onChange={this.handleValueChange("appNm")} />
+                        value={editingItem.get('appNm')}
+                        onChange={this.handleValueChange('appNm')} />
                     <TextField label="설명" className={classes.fullWidth}
-                        value={(editingItem.get('appInfo')) ? editingItem.get('appInfo') : ''}
-                        onChange={this.handleValueChange("appInfo")} />
+                        value={editingItem.get('appInfo')}
+                        onChange={this.handleValueChange('appInfo')} />
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{marginTop:12}}>
                         <Grid xs={4} item>
                             <FormLabel component="legend">데스크톱앱 종류</FormLabel>
                         </Grid>
                         <Grid item>
                             <FormControlLabel value="application" control={
-                                <Radio color="primary" value="application" onChange={this.handleValueChange("appGubun")} checked={editingItem.get('appGubun') === 'application'} />
+                                <Radio color="primary" value="application" onChange={this.handleValueChange('appGubun')} checked={editingItem.get('appGubun') === 'application'} />
                             } label="Application" labelPlacement="end" />
                         </Grid>
                         <Grid item>
                             <FormControlLabel value="mount" control={
-                                <Radio color="primary" value="mount" onChange={this.handleValueChange("appGubun")} checked={editingItem.get('appGubun') === 'mount'} />
+                                <Radio color="primary" value="mount" onChange={this.handleValueChange('appGubun')} checked={editingItem.get('appGubun') === 'mount'} />
                             } label="마운트앱" labelPlacement="end" />
                         </Grid>
                     </Grid>
                     
                     {(editingItem.get('appGubun') === 'application') && 
                     <TextField label="실행 명령어" className={classes.fullWidth} multiple
-                        value={(editingItem.get('appExec')) ? editingItem.get('appExec') : ''}
-                        onChange={this.handleValueChange("appExec")} />
+                        value={editingItem.get('appExec')}
+                        onChange={this.handleValueChange('appExec')} />
                     }
                     {(editingItem.get('appGubun') === 'mount') && 
                     <div>
                     <TextField label="마운트 URL" className={classes.fullWidth}
-                        value={(editingItem.get('appMountUrl')) ? editingItem.get('appMountUrl') : ''}
-                        onChange={this.handleValueChange("appMountUrl")} />
+                        value={editingItem.get('appMountUrl')}
+                        onChange={this.handleValueChange('appMountUrl')} />
                     <TextField label="마운트 포인트" className={classes.fullWidth}
-                        value={(editingItem.get('appMountPoint')) ? editingItem.get('appMountPoint') : ''}
-                        onChange={this.handleValueChange("appMountPoint")} />
+                        value={editingItem.get('appMountPoint')}
+                        onChange={this.handleValueChange('appMountPoint')} />
                     </div>
                     }
 
@@ -258,10 +258,10 @@ class DesktopAppDialog extends Component {
                     }
                     {(editingItem.get('iconGubun') === 'library') && 
                     <FormControl className={classes.fullWidth}>
-                        <InputLabel htmlFor="iconNm">ICON 타입</InputLabel>
-                        <Select value={(editingItem.get('iconNm')) ? editingItem.get('iconNm') : ''}
-                            onChange={this.handleValueChange('iconNm')}
-                            name="iconNm" style={{marginTop: 'theme.spacing.unit * 2'}}
+                        <InputLabel htmlFor="iconId">ICON 타입</InputLabel>
+                        <Select value={(editingItem.get('iconId')) ? editingItem.get('iconId') : ''}
+                            onChange={this.handleValueChange('iconId')}
+                            name="iconId" style={{marginTop: 'theme.spacing.unit * 2'}}
                         >
                             <MenuItem value=""><em>None</em></MenuItem>
                             <MenuItem value="cloud_storage">cloud storage</MenuItem>

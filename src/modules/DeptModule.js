@@ -240,8 +240,6 @@ export const createDeptInfo = (param) => dispatch => {
 // edit
 export const editDeptInfo = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-
-    console.log('param ::::::::::::: ', (param) ? param : '--');
     return requestPostAPI('updateDeptInfo', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {

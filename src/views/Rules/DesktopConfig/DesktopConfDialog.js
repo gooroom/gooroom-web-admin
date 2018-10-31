@@ -142,7 +142,8 @@ class DesktopConfDialog extends Component {
         const selectedThemeId = (editingItem && editingItem.get('themeId')) ? editingItem.get('themeId') : '';
         const themeListData = DesktopConfProps.get('themeListData');
 
-        const appListAllData = DesktopAppProps.getIn(['viewItems', compId, 'listAllData']);
+        // const appListAllData = DesktopAppProps.getIn(['viewItems', compId, 'listAllData']);
+        // const appListAllData = DesktopAppProps.get('listAllData');
         // let allAppPaneWidth = 0;
         // if(appListAllData && appListAllData.size > 0) {
         //     allAppPaneWidth = appListAllData.size * (120 + 16) + 40;
@@ -190,7 +191,6 @@ class DesktopConfDialog extends Component {
 
                             <Grid item xs={12} >
                                 <DesktopAppSelector 
-                                    appDatas={appListAllData} 
                                     selectedApp__Ids={List(['DEAP000005', 'DEAP000007'])} 
                                     selectedApps={editingItem.get('apps') ? editingItem.get('apps') : List([])} />
                             </Grid>

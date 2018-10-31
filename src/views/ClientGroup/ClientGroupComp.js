@@ -48,25 +48,6 @@ import Search from '@material-ui/icons/Search';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-
-const CustomTableRow = withStyles(theme => ({
-
-  root: {
-    backgroundColor: '#00ff00',
-    color: '#ffffff',
-  },
-  hover: {
-    backgroundColor: '#ff0000',
-    color: '#ffffff',
-  },
-  selected: {
-    backgroundColor: '#0000ff',
-    color: '#ffffff',
-  }
-
-}))(TableRow);
-
-
 class ClientGroupComp extends Component {
 
   columnHeaders = [
@@ -109,42 +90,6 @@ class ClientGroupComp extends Component {
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
-  
-  getClientGroupRules = (grpId) => {
-    const { ClientGroupProps, compId } = this.props;
-    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
-
-    ClientConfSettingActions.getClientConfByGroupId({
-      compId: compId, groupId: grpId
-    });   
-    ClientHostNameActions.getClientHostNameByGroupId({
-      compId: compId, groupId: grpId
-    });   
-    ClientUpdateServerActions.getClientUpdateServerByGroupId({
-      compId: compId, groupId: grpId
-    });   
-
-    // get browser rule info
-    BrowserRuleActions.getBrowserRuleByGroupId({
-      compId: compId, groupId: grpId
-    });
-    // get media control setting info
-    MediaRuleActions.getMediaRuleByGroupId({
-      compId: compId, groupId: grpId
-    });
-    // get client secu info
-    SecurityRuleActions.getSecurityRuleByGroupId({
-      compId: compId, groupId: grpId
-    });   
-
-  // '데스크톱 정보설정' : 정책 정보 변경
-  // 사용자, 조직
-  // ClientDesktopConfigActions.getClientDesktopConfig({
-  //   compId: compId, desktopConfId: selectRowObject.get('desktopConfigId')
-  // });   
-
-  }
 
   handleCheckClick = (event, id) => {
     event.stopPropagation();
@@ -157,14 +102,9 @@ class ClientGroupComp extends Component {
       compId: compId
     });
 
-    // this.handleSelectRow(event, id);
     if(this.props.onCheck) {
       this.props.onCheck(getRowObjectById(ClientGroupProps, compId, id, 'grpId'), newCheckedIds);
     }
-
-    // if(this.props.hasShowRule) {
-    //   this.getClientGroupRules(id);
-    // }
   }
 
   handleCheckAllClick = (event, checked) => {
@@ -186,33 +126,12 @@ class ClientGroupComp extends Component {
   handleSelectRow = (event, id) => {
     event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-
     // get Object
     const selectRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
     if(this.props.onSelect && selectRowObject) {
       this.props.onSelect(selectRowObject);
     }
 
-
-    // console.log('handleSelectRow :::: ', selectRowObject);
-    // console.log('this.props.selectorType :::: ', this.props.selectorType);
-    // if(this.props.selectorType && this.props.selectorType == 'multiple') {
-    //   const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
-    //   console.log('checkedIds :::: ', checkedIds);
-    //   if(checkedIds && this.props.onSelect) {
-    //     console.log('this.props.onSelect :::: ', selectRowObject);
-    //     this.props.onSelect(selectRowObject, checkedIds);
-    //   }
-    // } else {
-    //   ClientGroupActions.changeCompVariable({ name: 'checkedIds', value: id, compId: compId });
-    //   if(this.props.onSelect) {
-    //     this.props.onSelect(selectRowObject, List([id]));
-    //   }
-    // }
-
-    if(this.props.hasShowRule) {
-      this.getClientGroupRules(id);
-    }
   };
 
   isChecked = id => {

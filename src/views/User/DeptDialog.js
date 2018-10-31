@@ -58,16 +58,16 @@ class DeptDialog extends Component {
         if(confirmValue) {
             const { DeptProps, DeptActions, compId, resetCallback } = this.props;
             const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
-
+            const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
             DeptActions.createDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
                 uprDeptCd: DeptProps.getIn(['editingItem', 'selectedDeptCd']),
 
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
+                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
@@ -92,17 +92,17 @@ class DeptDialog extends Component {
             const isInherit = isChecked;
             const { DeptProps, DeptActions, compId } = this.props;
             const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
-    
+            const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
             DeptActions.editDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
     
                 paramIsInherit: (isInherit) ? 'Y' : 'N',
     
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
+                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh

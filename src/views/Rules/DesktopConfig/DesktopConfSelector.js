@@ -108,7 +108,7 @@ class DesktopConfSelector extends Component {
           <DesktopConfSpec 
             specType="inform" targetType={targetType}
             selectedItem={selectedDesktopConfItem}
-            onClickEdit={this.handleEditClickForDesktopConf}
+            handleEditClick={this.handleEditClickForDesktopConf}
           />
         }
         </CardContent>

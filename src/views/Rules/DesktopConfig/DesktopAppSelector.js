@@ -97,7 +97,6 @@ class DesktopAppSelector extends Component {
     const { DesktopAppProps, selectedApps } = this.props;
 
     let appAllDatas = (DesktopAppProps.get('listAllData')) ? DesktopAppProps.get('listAllData') : List([]);
-    appAllDatas = (appAllDatas && appAllDatas.size > 0) ? appAllDatas.get(0) : undefined;
 
     // let selectedAppDatas = List([]);
     // if(selectedApps && selectedApps.size > 0) {
@@ -118,7 +117,7 @@ class DesktopAppSelector extends Component {
           <Grid container spacing={16} direction="row" justify="flex-start" 
               alignItems="flex-start" style={{width:'inherit',margin:20}}
           >
-          {appAllDatas && appAllDatas.get('apps') && appAllDatas.get('apps').size > 0 &&  appAllDatas.get('apps').map(n => {
+          {appAllDatas && appAllDatas.size > 0 &&  appAllDatas.map(n => {
               const isSelected = (selectedApps) ? selectedApps.includes(n.get('appId')) : false;
               return (
               <Grid key={n.get('appId')} item>

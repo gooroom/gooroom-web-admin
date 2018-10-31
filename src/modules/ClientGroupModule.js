@@ -111,19 +111,26 @@ export const changeCompVariable = (param) => dispatch => {
     });
 };
 
-// create (add)
-export const createClientGroupData = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClientGroup', {
+const makeParameter = (param) => {
+    return {
+        groupId: param.groupId,
         groupName: param.groupName,
         groupComment: param.groupComment,
+        
         clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
         hostNameConfigId: (param.hostNameConfigId == '-') ? '' : param.hostNameConfigId,
         updateServerConfigId: (param.updateServerConfigId == '-') ? '' : param.updateServerConfigId,
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
-        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
-    }).then(
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
+        desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId
+    };
+}
+
+// create (add)
+export const createClientGroupData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createClientGroup', makeParameter(param)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
@@ -144,17 +151,7 @@ export const createClientGroupData = (param) => dispatch => {
 // edit
 export const editClientGroupData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateClientGroup', {
-        groupId: param.groupId,
-        groupName: param.groupName,
-        groupComment: param.groupComment,
-        clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
-        hostNameConfigId: (param.hostNameConfigId == '-') ? '' : param.hostNameConfigId,
-        updateServerConfigId: (param.updateServerConfigId == '-') ? '' : param.updateServerConfigId,
-        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
-        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
-        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId
-    }).then(
+    return requestPostAPI('updateClientGroup', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success

@@ -30,22 +30,28 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class ClientConfSettingSelector extends Component {
 
   componentDidMount() {
-    const { ClientConfSettingProps, ClientConfSettingActions, compId, initId } = this.props;
-    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, compId);
-    if(!ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId'])) {
+    const { ClientConfSettingProps, ClientConfSettingActions, compId, initId, targetType } = this.props;
+    //
+    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, compId, targetType);
+    //
+    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
+    if(!ClientConfSettingProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
       ClientConfSettingActions.changeCompVariable({
         compId: compId,
         name: 'selectedOptionItemId',
-        value: initId
+        value: initId,
+        targetType: targetType
       });
     }
   }
 
   handleChange = (event, value) => {
-    this.props.ClientConfSettingActions.changeCompVariable({
-      compId: this.props.compId,
+    const { ClientConfSettingActions, compId, targetType } = this.props;
+    ClientConfSettingActions.changeCompVariable({
+      compId: compId,
       name: 'selectedOptionItemId',
-      value: event.target.value
+      value: event.target.value,
+      targetType: targetType
     });
   };
 
@@ -63,12 +69,12 @@ class ClientConfSettingSelector extends Component {
     const { classes } = this.props;
     const { ClientConfSettingProps, compId, targetType } = this.props;
 
-    const viewItem = ClientConfSettingProps.getIn(['viewItems', compId, 'viewItem']);
-    const listAllData = ClientConfSettingProps.getIn(['viewItems', compId, 'listAllData']);
-    let selectedOptionItemId = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedObj = (targetType && targetType != '') ? ClientConfSettingProps.getIn(['viewItems', compId, targetType]) : ClientConfSettingProps.getIn(['viewItems', compId]);
 
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    let selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
-      selectedOptionItemId = listAllData.getIn([0, 'objId']);
+      selectedOptionItemId = '-';
     }
 
     let selectedClientConfSettingItem = null;
