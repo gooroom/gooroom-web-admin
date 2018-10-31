@@ -102,7 +102,7 @@ class ClientConfSettingSelector extends Component {
           <ClientConfSettingSpec compId={compId}
             specType="inform" targetType={targetType}
             selectedItem={selectedClientConfSettingItem}
-            handleEditClick={this.handleEditClickForClientConfSetting}
+            onClickEdit={this.handleEditClickForClientConfSetting}
           />
         }
         </CardContent>

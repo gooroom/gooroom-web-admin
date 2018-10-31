@@ -97,7 +97,7 @@ class ClientHostNameSelector extends Component {
           <ClientHostNameSpec compId={compId}
             specType="inform" targetType={targetType}
             selectedItem={selectedClientHostNameItem}
-            handleEditClick={this.handleEditClickForClientHostName}
+            onClickEdit={this.handleEditClickForClientHostName}
           />
         }
         </CardContent>

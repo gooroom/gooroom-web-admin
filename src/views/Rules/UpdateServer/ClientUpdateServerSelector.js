@@ -105,7 +105,7 @@ class ClientUpdateServerSelector extends Component {
           <ClientUpdateServerSpec compId={compId}
             specType="inform" targetType={targetType}
             selectedItem={selectedClientUpdateServerItem}
-            handleEditClick={this.handleEditClickForClientUpdateServer}
+            onClickEdit={this.handleEditClickForClientUpdateServer}
           />
         }
         </CardContent>

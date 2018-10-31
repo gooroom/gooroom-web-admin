@@ -122,7 +122,7 @@ class DeptSpec extends Component {
                 <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedBrowserRuleItem}
-                  handleEditClick={this.handleEditClickForBrowserRule}
+                  onClickEdit={this.handleEditClickForBrowserRule}
                   inherit={true}
                 />
               </Grid>
@@ -130,7 +130,7 @@ class DeptSpec extends Component {
                 <MediaRuleSpec compId={compId}
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedMediaRuleItem}
-                  handleEditClick={this.handleEditClickForMediaRule}
+                  onClickEdit={this.handleEditClickForMediaRule}
                   inherit={true}
                 />
               </Grid>
@@ -138,7 +138,7 @@ class DeptSpec extends Component {
                 <SecurityRuleSpec compId={compId}
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedSecurityRuleItem}
-                  handleEditClick={this.handleEditClickForSecurityRule}
+                  onClickEdit={this.handleEditClickForSecurityRule}
                   inherit={true}
                 />
               </Grid>
@@ -146,7 +146,7 @@ class DeptSpec extends Component {
                 <DesktopConfSpec compId={compId}
                   specType="inform" targetType="DEPT" 
                   selectedItem={selectedDesktopConfItem}
-                  handleEditClick={this.handleEditClickForDesktopConf}
+                  onClickEdit={this.handleEditClickForDesktopConf}
                   inherit={false} />
               </Grid>
             </Grid>

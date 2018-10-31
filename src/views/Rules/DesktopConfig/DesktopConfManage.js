@@ -306,8 +306,8 @@ class DesktopConfManage extends Component {
         <DesktopConfSpec 
           specType="inform" 
           selectedItem={listObj}
-          handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditItemClick}
+          onClickCopy={this.handleCopyClick}
+          onClickEdit={this.handleEditItemClick}
         />
         <DesktopConfDialog compId={compId} />
         <DesktopAppDialog compId={compId} />

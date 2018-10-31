@@ -285,8 +285,8 @@ class ClientConfSettingManage extends Component {
         <ClientConfSettingSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditItemClick}
+          onClickCopy={this.handleCopyClick}
+          onClickEdit={this.handleEditItemClick}
         />
         <ClientConfSettingDialog compId={compId} />
         <GRConfirm />

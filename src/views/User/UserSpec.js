@@ -109,21 +109,21 @@ class UserSpec extends Component {
                 <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="USER"
                   selectedItem={selectedBrowserRuleItem}
-                  handleEditClick={this.handleEditClickForBrowserRule}
+                  onClickEdit={this.handleEditClickForBrowserRule}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={6} >
                 <MediaRuleSpec compId={compId}
                   specType="inform" targetType="USER"
                   selectedItem={selectedMediaRuleItem}
-                  handleEditClick={this.handleEditClickForMediaRule}
+                  onClickEdit={this.handleEditClickForMediaRule}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={6} >
                 <SecurityRuleSpec compId={compId}
                   specType="inform" targetType="USER"
                   selectedItem={selectedSecurityRuleItem}
-                  handleEditClick={this.handleEditClickForSecurityRule}
+                  onClickEdit={this.handleEditClickForSecurityRule}
                 />
               </Grid>
             </Grid>

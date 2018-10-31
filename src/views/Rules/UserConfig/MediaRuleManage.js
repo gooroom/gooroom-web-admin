@@ -292,8 +292,8 @@ class MediaRuleManage extends Component {
         <MediaRuleSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditItemClick}
+          onClickCopy={this.handleCopyClick}
+          onClickEdit={this.handleEditItemClick}
         />
         <MediaRuleDialog compId={compId} />
         <GRConfirm />

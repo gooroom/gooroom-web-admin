@@ -159,19 +159,19 @@ class ClientGroupInform extends Component {
                 <ClientConfSettingSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientConfSettingItem}
-                  handleEditClick={this.handleEditClickForClientConfSetting}
+                  onClickEdit={this.handleEditClickForClientConfSetting}
                   inherit={false}
                 />
                 <MediaRuleSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedMediaRuleItem}
-                  handleEditClick={this.handleEditClickForMediaRule}
+                  onClickEdit={this.handleEditClickForMediaRule}
                   inherit={false}
                 />
                 <ClientUpdateServerSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientUpdateServerItem}
-                  handleEditClick={this.handleEditClickForClientUpdateServer}
+                  onClickEdit={this.handleEditClickForClientUpdateServer}
                   inherit={false}
                 />
               </Grid>
@@ -179,19 +179,19 @@ class ClientGroupInform extends Component {
                 <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedBrowserRuleItem}
-                  handleEditClick={this.handleEditClickForBrowserRule}
+                  onClickEdit={this.handleEditClickForBrowserRule}
                   inherit={false}
                 />
                 <SecurityRuleSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedSecurityRuleItem}
-                  handleEditClick={this.handleEditClickForSecurityRule}
+                  onClickEdit={this.handleEditClickForSecurityRule}
                   inherit={false}
                 />
                 <ClientHostNameSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientHostNameItem}
-                  handleEditClick={this.handleEditClickForClientHostName}
+                  onClickEdit={this.handleEditClickForClientHostName}
                   inherit={false}
                 />
               </Grid>
