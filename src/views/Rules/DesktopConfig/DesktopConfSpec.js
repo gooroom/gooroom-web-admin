@@ -13,7 +13,7 @@ import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as DesktopAppActions from 'modules/DesktopAppModule';
 
 import DesktopConfDialog from './DesktopConfDialog';
-import DesktopAppDialog from 'views/Desktop/DesktopAppDialog';
+import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
 import DesktopApp from './DesktopApp';
 

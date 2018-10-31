@@ -14,7 +14,7 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 import GRAlert from 'components/GRComponents/GRAlert';
 
 import DesktopApp from './DesktopApp';
-import DesktopAppDialog from 'views/Desktop/DesktopAppDialog';
+import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';

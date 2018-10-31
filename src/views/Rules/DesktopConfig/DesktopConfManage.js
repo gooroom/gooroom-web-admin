@@ -21,7 +21,7 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import DesktopConfDialog from './DesktopConfDialog';
 import DesktopConfSpec from './DesktopConfSpec';
-import DesktopAppDialog from 'views/Desktop/DesktopAppDialog';
+import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
 import GRPane from 'containers/GRContent/GRPane';
 
