@@ -112,32 +112,8 @@ class DesktopAppSelector extends Component {
     
     return (
       <React.Fragment>
-
-        <div style={{height:280,overflowY:'auto',border:'1px solid #cecece'}}>
-          <Grid container spacing={16} direction="row" justify="flex-start" 
-              alignItems="flex-start" style={{width:'inherit',margin:20}}
-          >
-          {appAllDatas && appAllDatas.size > 0 &&  appAllDatas.map(n => {
-              const isSelected = (selectedApps) ? selectedApps.includes(n.get('appId')) : false;
-              return (
-              <Grid key={n.get('appId')} item>
-                  <DesktopApp 
-                      key={n.get('appId')}
-                      appObj={n}
-                      type='main'
-                      themeId={(n.get('themeId')) ? n.get('themeId') : '1'}
-                      onAddClick={this.handleAddClick}
-                      onEditClick={this.handleEditAppClick}
-                      onDeleteClick={this.handleDeleteApp}
-                      isSelected={this.isSelected(n.get('appId'))}
-                  />
-              </Grid>
-              );
-          })}
-          </Grid>
-      </div>
-
-      <div style={{height:260,overflowX:'auto',border:'1px solid #cecece'}}>
+        <Typography variant="subtitle2" style={{marginBottom:0}} gutterBottom>앱리스트  (아래 전체앱리스트에서 앱을 추가 할 수 있습니다.)</Typography>
+        <div style={{height:260,overflowX:'auto',border:'1px solid #cecece'}}>
           <Grid container spacing={16} direction="row" justify="flex-start" 
               alignItems="flex-start" style={{width:2000,margin:20}}
           >
@@ -157,7 +133,33 @@ class DesktopAppSelector extends Component {
               );
           })}
           </Grid>
-      </div>      
+        </div>      
+
+
+        <Typography variant="h5" style={{marginTop:20}} gutterBottom> 전체 앱 리스트 </Typography>
+        <div style={{height:280,overflowY:'auto',border:'1px solid #cecece'}}>
+          <Grid container spacing={16} direction="row" justify="flex-start" 
+              alignItems="flex-start" style={{width:'inherit',margin:20}}
+          >
+          {appAllDatas && appAllDatas.size > 0 && appAllDatas.map(n => {
+              return (
+              <Grid key={n.get('appId')} item>
+                  <DesktopApp 
+                      key={n.get('appId')}
+                      appObj={n}
+                      type='main'
+                      themeId={(n.get('themeId')) ? n.get('themeId') : '1'}
+                      onAddClick={this.handleAddClick}
+                      onEditClick={this.handleEditAppClick}
+                      onDeleteClick={this.handleDeleteApp}
+                      isSelected={this.isSelected(n.get('appId'))}
+                  />
+              </Grid>
+              );
+          })}
+          </Grid>
+        </div>
+
 
       <GRAlert />
       </React.Fragment>
