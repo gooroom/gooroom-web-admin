@@ -32,7 +32,7 @@ import ServerUrlInfo from "views/System/ServerUrlInfo";
 import GcspManage from "views/System/GcspManage";
 
 
-import DesktopAppManage from "views/Desktop/DesktopAppManage";
+import DesktopAppManage from "views/Rules/DesktopConfig/DesktopApp/DesktopAppManage";
 import DesktopConfManage from "views/Rules/DesktopConfig/DesktopConfManage";
 
 import { withStyles } from '@material-ui/core/styles';
