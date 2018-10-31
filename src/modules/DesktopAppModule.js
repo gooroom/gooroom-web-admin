@@ -270,6 +270,22 @@ export const createDesktopAppData = (itemObj) => dispatch => {
     });
 };
 
+// clone create
+export const cloneDesktopAppData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createClonedDesktopApp', {
+            'appId': param.appId
+        }).then(
+        (response) => {
+            dispatch({
+                type: CREATE_DESKTOPAPP_SUCCESS
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 // edit
 export const editDesktopAppData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});

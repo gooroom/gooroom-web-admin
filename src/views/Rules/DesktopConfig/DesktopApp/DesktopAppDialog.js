@@ -8,9 +8,13 @@ import { connect } from 'react-redux';
 import * as DesktopAppActions from 'modules/DesktopAppModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
+
+import DesktopAppViewer from './DesktopAppViewer';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -24,6 +28,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
+import Typography from "@material-ui/core/Typography";
 
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
@@ -51,6 +56,7 @@ class DesktopAppDialog extends Component {
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT_INAPP = 'EDIT_INAPP';
     static TYPE_EDIT_INCONF = 'EDIT_INCONF';
+    static TYPE_COPY = 'COPY';
 
     handleClose = (event) => {
         this.props.DesktopAppActions.closeDialog();
@@ -133,6 +139,20 @@ class DesktopAppDialog extends Component {
         }
     }
 
+    handleCopyCreateData = (event, id) => {
+        const { DesktopAppProps, DesktopAppActions } = this.props;
+        DesktopAppActions.cloneDesktopAppData({
+            'appId': DesktopAppProps.getIn(['editingItem', 'appId'])
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: '시스템알림',
+                alertMsg: '데스크톱앱을 복사하였습니다.'
+            });
+            refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
+            this.handleClose();
+        });
+    }
+
     render() {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
@@ -150,6 +170,8 @@ class DesktopAppDialog extends Component {
             title = "데스크톱앱 수정";
         } else if(dialogType === DesktopAppDialog.TYPE_EDIT_INCONF) {
             title = "데스크톱앱 수정";
+        } else if(dialogType === DesktopAppDialog.TYPE_COPY) {
+            title = "데스크톱앱 복사";
         }
 
         return (
@@ -270,6 +292,14 @@ class DesktopAppDialog extends Component {
                     }
                     </div>
                 }
+                {(dialogType === DesktopAppDialog.TYPE_COPY) &&
+                    <div>
+                    <Typography variant="body1">
+                        이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
+                    </Typography>
+                    <DesktopAppViewer viewItem={editingItem} />
+                    </div>
+                }
                 </DialogContent>
                 <DialogActions>
                 {(dialogType === DesktopAppDialog.TYPE_ADD) &&
@@ -281,11 +311,15 @@ class DesktopAppDialog extends Component {
                 {(dialogType === DesktopAppDialog.TYPE_EDIT_INCONF) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
+                {(dialogType === DesktopAppDialog.TYPE_COPY) &&
+                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
+                }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
                 <GRConfirm />
             </Dialog>
             }
+            <GRAlert />
             </div>
         );
     }
@@ -300,7 +334,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     DesktopAppActions: bindActionCreators(DesktopAppActions, dispatch),
     DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopAppDialog));
