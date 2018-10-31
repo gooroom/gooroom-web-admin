@@ -20,6 +20,7 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { getRowObjectById, getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
 
@@ -31,6 +32,8 @@ import ClientSelectDialog from "views/Client/ClientSelectDialog";
 import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
+import DesktopConfDialog from "views/Rules/DesktopConfig/DesktopConfDialog";
+import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -82,17 +85,13 @@ class ClientMasterManage extends Component {
 
     // show client group info.
     if(selectedGroupObj) {
-
-      // ClientConfSettingActions.getClientConfByGroupId({
-      //   compId: compId, groupId: (selectedGroupObj) ? selectedGroupObj.get('grpId') : ''
-      // });
-
       // close client inform
       ClientManageActions.closeClientManageInform({compId: compId});
       // show client group inform
       ClientGroupActions.showClientGroupInform({
         compId: compId, viewItem: selectedGroupObj, selectId: selectedGroupObj.get('grpId')
       });
+      this.resetClientGroupRules(compId, selectedGroupObj.get('grpId'));
     }
   };
 
@@ -100,59 +99,45 @@ class ClientMasterManage extends Component {
   handleClientSelect = (selectedClientObj) => {
     const { ClientGroupProps } = this.props;
     const { ClientManageActions, ClientGroupActions } = this.props;
-
-    const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
-
     const compId = this.props.match.params.grMenuId;
 
     // show client info.
     if(selectedClientObj) {
-
-      ClientGroupActions.closeClientGroupInform({
-        compId: compId
-      });
-      
-      ClientManageActions.showClientManageInform({
-        compId: compId,
-        viewItem: selectedClientObj,
-      });
-
+      // show client information
+      ClientManageActions.showClientManageInform({ compId: compId, viewItem: selectedClientObj });
       // show client group info.
-      const groupId = selectedClientObj.get('clientGroupId');
-      const selectedGroupObj = getRowObjectById(ClientGroupProps, compId, groupId, 'grpId');
-      if(selectedGroupObj) {
-
-        ClientConfSettingActions.getClientConfByGroupId({
-          compId: compId, groupId: groupId
-        });   
-        ClientHostNameActions.getClientHostNameByGroupId({
-          compId: compId, groupId: groupId
-        });   
-        ClientUpdateServerActions.getClientUpdateServerByGroupId({
-          compId: compId, groupId: groupId
-        });   
-
-        // show rules
-        // get browser rule info
-        BrowserRuleActions.getBrowserRuleByGroupId({
-          compId: compId, groupId: groupId
-        });
-        // get media control setting info
-        MediaRuleActions.getMediaRuleByGroupId({
-          compId: compId, groupId: groupId
-        });
-        // get client secu info
-        SecurityRuleActions.getSecurityRuleByGroupId({
-          compId: compId, groupId: groupId
-        });   
-
-        ClientGroupActions.showClientGroupInform({
-          compId: compId, viewItem: selectedGroupObj, selectId: ''
-        });
-      }
+      ClientGroupActions.showClientGroupInform({
+        compId: compId, viewItem: getRowObjectById(ClientGroupProps, compId, selectedClientObj.get('clientGroupId'), 'grpId'), selectId: ''
+      });
+      // show client group info.
+      this.resetClientGroupRules(compId, selectedClientObj.get('clientGroupId'));
     }
   };
+
+  resetClientGroupRules(compId, grpId) {
+    const { ClientGroupProps } = this.props;
+    const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, DesktopConfActions } = this.props;
+
+    const selectedGroupObj = getRowObjectById(ClientGroupProps, compId, grpId, 'grpId');
+    if(selectedGroupObj) {
+      // show rules
+      ClientConfSettingActions.getClientConfByGroupId({ compId: compId, groupId: grpId });   
+      ClientHostNameActions.getClientHostNameByGroupId({ compId: compId, groupId: grpId });
+      ClientUpdateServerActions.getClientUpdateServerByGroupId({ compId: compId, groupId: grpId });   
+      // get browser rule info
+      BrowserRuleActions.getBrowserRuleByGroupId({ compId: compId, groupId: grpId });
+      // get media control setting info
+      MediaRuleActions.getMediaRuleByGroupId({ compId: compId, groupId: grpId });
+      // get client secu info
+      SecurityRuleActions.getSecurityRuleByGroupId({ compId: compId, groupId: grpId });   
+      // get desktop conf info
+      DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: grpId });   
+
+      ClientGroupActions.showClientGroupInform({ compId: compId, viewItem: selectedGroupObj, selectId: '' });
+    }
+
+  }
 
   // GROUP COMPONENT --------------------------------
 
@@ -395,6 +380,8 @@ class ClientMasterManage extends Component {
           <BrowserRuleDialog compId={compId} />
           <SecurityRuleDialog compId={compId} />
           <MediaRuleDialog compId={compId} />
+          <DesktopConfDialog compId={compId} />
+          <DesktopAppDialog compId={compId} />
           
           <GRConfirm />
           
@@ -426,6 +413,7 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
 
 });
 

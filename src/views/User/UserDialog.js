@@ -90,17 +90,17 @@ class UserDialog extends Component {
         if(confirmValue) {
             const { UserProps, UserActions, compId } = this.props;
             const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
-
+            const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
             UserActions.createUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                 userNm: UserProps.getIn(['editingItem', 'userNm']),
                 deptCd: UserProps.getIn(['editingItem', 'deptCd']),
 
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
-                desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
+                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
@@ -121,17 +121,17 @@ class UserDialog extends Component {
         if(confirmValue) {
             const { UserProps, UserActions, compId } = this.props;
             const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
-
+            const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
             UserActions.editUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                 userNm: UserProps.getIn(['editingItem', 'userNm']),
                 deptCd: UserProps.getIn(['editingItem', 'deptCd']),
 
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId']),
-                desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'USER', 'selectedOptionItemId'])
+                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();

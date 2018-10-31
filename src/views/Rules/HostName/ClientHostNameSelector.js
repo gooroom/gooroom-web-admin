@@ -30,19 +30,28 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class ClientHostNameSelector extends Component {
 
   componentDidMount() {
-    this.props.ClientHostNameActions.readClientHostNameList(this.props.ClientHostNameProps, this.props.compId);
-    this.props.ClientHostNameActions.changeCompVariable({
-      compId: this.props.compId,
-      name: 'selectedOptionItemId',
-      value: this.props.initId
-    });
+    const { ClientHostNameProps, ClientHostNameActions, compId, initId, targetType } = this.props;
+    //
+    ClientHostNameActions.readClientHostNameList(ClientHostNameProps, compId, targetType);
+    //
+    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
+    if(!ClientHostNameProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
+      ClientHostNameActions.changeCompVariable({
+        compId: compId,
+        name: 'selectedOptionItemId',
+        value: initId,
+        targetType: targetType
+      });
+    }
   }
 
   handleChange = (event, value) => {
-    this.props.ClientHostNameActions.changeCompVariable({
-      compId: this.props.compId,
+    const { MediaRuleActions, compId, targetType } = this.props;
+    MediaRuleActions.changeCompVariable({
+      compId: compId,
       name: 'selectedOptionItemId',
-      value: event.target.value
+      value: event.target.value,
+      targetType: targetType
     });
   };
 
@@ -60,10 +69,12 @@ class ClientHostNameSelector extends Component {
     const { classes } = this.props;
     const { ClientHostNameProps, compId, targetType } = this.props;
 
-    const listAllData = ClientHostNameProps.getIn(['viewItems', compId, 'listAllData']);
-    let selectedOptionItemId = ClientHostNameProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedObj = (targetType && targetType != '') ? ClientHostNameProps.getIn(['viewItems', compId, targetType]) : ClientHostNameProps.getIn(['viewItems', compId]);
+
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    let selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
-      selectedOptionItemId = listAllData.getIn([0, 'objId']);
+      selectedOptionItemId = '-';
     }
 
     let selectedClientHostNameItem = null;

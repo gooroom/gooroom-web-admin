@@ -56,19 +56,21 @@ class ClientGroupDialog extends Component {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
             const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
 
+            const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
             ClientGroupActions.createClientGroupData({
                 groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                 groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
                 isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
                 
-                clientConfigId: ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                hostNameConfigId: ClientHostNameProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                updateServerConfigId: ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
+                clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
+                hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
+                updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
+                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
 
             }).then((res) => {
                 ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
@@ -89,20 +91,22 @@ class ClientGroupDialog extends Component {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
             const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
 
+            const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
             ClientGroupActions.editClientGroupData({
                 groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                 groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                 groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
                 isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
 
-                clientConfigId: ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                hostNameConfigId: ClientHostNameProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                updateServerConfigId: ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'selectedOptionItemId'])
+                clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
+                hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
+                updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
+                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                 
             }).then((res) => {
                 ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
@@ -132,7 +136,7 @@ class ClientGroupDialog extends Component {
             {(ClientGroupProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientGroupProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <DialogTitle >{title}</DialogTitle>
-                <DialogContent>
+                <DialogContent style={{minHeight:567}}>
                     <TextField label="단말그룹이름" className={classes.fullWidth}
                         value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
                         onChange={this.handleValueChange('grpNm')}
@@ -169,7 +173,8 @@ const mapStateToProps = (state) => ({
     
     BrowserRuleProps: state.BrowserRuleModule,
     MediaRuleProps: state.MediaRuleModule,
-    SecurityRuleProps: state.SecurityRuleModule
+    SecurityRuleProps: state.SecurityRuleModule,
+    DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

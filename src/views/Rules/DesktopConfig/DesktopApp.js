@@ -51,14 +51,13 @@ class DesktopApp extends Component {
 
     const { classes } = this.props;
     const { isSelected } = this.props;
-
     const { appObj } = this.props;
-    
+
     let iconUrl = '';
-    if(appObj && appObj.getIn(['desktop', 'iconGubun'])) {
-      iconUrl = (appObj.getIn(['desktop', 'iconGubun']) == 'library') ? 'https://gpms.gooroom.kr/gpms/images/gr_icons/' + appObj.getIn(['desktop', 'icon']) : appObj.getIn(['desktop', 'icon']);
+    if(appObj && appObj.get('iconGubun')) {
+      iconUrl = (appObj.get('iconGubun') == 'library') ? 'https://gpms.gooroom.kr/gpms/images/gr_icons/1_' + appObj.get('iconId') + '.svg' : appObj.get('iconUrl');
     }
-    
+
     return (
       <Paper style={{width:120,height:174}} elevation={5}>
       { (appObj) &&
@@ -69,7 +68,7 @@ class DesktopApp extends Component {
               
               <TableCell style={{padding:'0 0 0 3'}}>
                 <Typography variant="caption" style={{fontSize:10,fontWeight:'bold'}}>
-                  {appObj.get('desktopGubun')}
+                  {appObj.get('appGubun')}
                 </Typography>
               </TableCell>
 
@@ -96,7 +95,7 @@ class DesktopApp extends Component {
               </TableCell>
             </TableRow>
             <TableRow style={{height:62}}>
-              <TableCell colSpan={2} style={{padding:'6 0 6 0',textAlign:'center'}}>{appObj.getIn(['desktop', 'name'])}</TableCell>
+              <TableCell colSpan={2} style={{padding:'6 0 6 0',textAlign:'center'}}>{appObj.get('appNm')}</TableCell>
               {/* 
             </TableRow>
             <TableRow>

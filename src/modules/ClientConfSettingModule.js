@@ -63,7 +63,7 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readClientConfSettingList = (module, compId) => dispatch => {
+export const readClientConfSettingList = (module, compId, targetType) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientConfList', {
     }).then(
@@ -71,6 +71,7 @@ export const readClientConfSettingList = (module, compId) => dispatch => {
             dispatch({
                 type: GET_CONFSETTING_LIST_SUCCESS,
                 compId: compId,
+                targetType: targetType,
                 response: response
             });
         }

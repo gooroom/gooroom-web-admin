@@ -59,7 +59,7 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readClientUpdateServerList = (module, compId) => dispatch => {
+export const readClientUpdateServerList = (module, compId, targetType) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readUpdateServerConfList', {
     }).then(
@@ -67,6 +67,7 @@ export const readClientUpdateServerList = (module, compId) => dispatch => {
             dispatch({
                 type: GET_UPDATESERVER_LIST_SUCCESS,
                 compId: compId,
+                targetType: targetType,
                 response: response
             });
         }

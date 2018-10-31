@@ -196,8 +196,6 @@ export const createUserData = (param) => dispatch => {
 // edit
 export const editUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    console.log('editUserData ::::: ', param);
-
     return requestPostAPI('updateUserData', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {

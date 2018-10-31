@@ -28,28 +28,30 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientUpdateServerSelector extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true
-    };
-  }
 
   componentDidMount() {
-    this.props.ClientUpdateServerActions.readClientUpdateServerList(this.props.ClientUpdateServerProps, this.props.compId);
-    this.props.ClientUpdateServerActions.changeCompVariable({
-      compId: this.props.compId,
-      name: 'selectedOptionItemId',
-      value: this.props.initId
-    });
+    const { ClientUpdateServerProps, ClientUpdateServerActions, compId, initId, targetType } = this.props;
+    //
+    ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, compId, targetType);
+    //
+    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
+    if(!ClientUpdateServerProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
+      ClientUpdateServerActions.changeCompVariable({
+        compId: compId,
+        name: 'selectedOptionItemId',
+        value: initId,
+        targetType: targetType
+      });
+    }
   }
 
   handleChange = (event, value) => {
-    this.props.ClientUpdateServerActions.changeCompVariable({
+    const { MediaRuleActions, compId, targetType } = this.props;
+    MediaRuleActions.changeCompVariable({
       compId: this.props.compId,
       name: 'selectedOptionItemId',
-      value: event.target.value
+      value: event.target.value,
+      targetType: targetType
     });
   };
 
@@ -67,11 +69,12 @@ class ClientUpdateServerSelector extends Component {
     const { classes } = this.props;
     const { ClientUpdateServerProps, compId, targetType } = this.props;
 
-    const viewItem = ClientUpdateServerProps.getIn(['viewItems', compId, 'viewItem']);
-    const listAllData = ClientUpdateServerProps.getIn(['viewItems', compId, 'listAllData']);
-    let selectedOptionItemId = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const selectedObj = (targetType && targetType != '') ? ClientUpdateServerProps.getIn(['viewItems', compId, targetType]) : ClientUpdateServerProps.getIn(['viewItems', compId]);
+
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    let selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
-      selectedOptionItemId = listAllData.getIn([0, 'objId']);
+      selectedOptionItemId = '-';
     }
 
     let selectedClientUpdateServerItem = null;

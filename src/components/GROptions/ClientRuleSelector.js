@@ -12,6 +12,7 @@ import ClientUpdateServerSelector from 'views/Rules/UpdateServer/ClientUpdateSer
 import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
 import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
+import DesktopConfSelector from 'views/Rules/DesktopConfig/DesktopConfSelector';
 
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -53,6 +54,7 @@ class ClientRuleSelector extends Component {
                         <Tab label="브라우져정책" value={3} />
                         <Tab label="매체제어정책" value={4} />
                         <Tab label="단말보안정책" value={5} />
+                        <Tab label="데스크톱정보" value={6} />
                     </Tabs>
                 </AppBar>
                 <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
@@ -62,6 +64,7 @@ class ClientRuleSelector extends Component {
                 {selectedTab === 3 && <BrowserRuleSelector compId={compId} initId={module ? module.browserRuleId : '-'} targetType={targetType} />}
                 {selectedTab === 4 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} targetType={targetType} />}
                 {selectedTab === 5 && <SecurityRuleSelector compId={compId} initId={module ? module.securityRuleId : '-'} targetType={targetType} />}
+                {selectedTab === 6 && <DesktopConfSelector compId={compId} initId={module ? '+' : '-'} targetType={targetType} />}
                 </Paper>
             
             </React.Fragment>
