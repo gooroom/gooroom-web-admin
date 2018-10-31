@@ -131,7 +131,7 @@ class DesktopAppManage extends Component {
 
     DesktopAppActions.showDialog({
       viewItem: viewItem,
-      dialogType: DesktopAppDialog.TYPE_EDIT
+      dialogType: DesktopAppDialog.TYPE_EDIT_INAPP
     });
   };
 
@@ -169,7 +169,7 @@ class DesktopAppManage extends Component {
   handleEditItemClick = (viewItem, compType) => {
     this.props.DesktopAppActions.showDialog({
       viewItem: viewItem,
-      dialogType: DesktopAppDialog.TYPE_EDIT
+      dialogType: DesktopAppDialog.TYPE_EDIT_INAPP
     });
   };
   // ===================================================================
@@ -180,7 +180,7 @@ class DesktopAppManage extends Component {
 
     DesktopAppActions.showDialog({
       viewItem: viewItem,
-      dialogType: DesktopAppDialog.TYPE_EDIT
+      dialogType: DesktopAppDialog.TYPE_EDIT_INAPP
     });
   };
 

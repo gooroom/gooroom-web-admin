@@ -49,7 +49,7 @@ class DesktopAppDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
-    static TYPE_EDIT = 'EDIT';
+    static TYPE_EDIT_INAPP = 'EDIT_INAPP';
     static TYPE_EDIT_INCONF = 'EDIT_INCONF';
 
     handleClose = (event) => {
@@ -102,14 +102,16 @@ class DesktopAppDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { DesktopAppProps, DesktopAppActions, DesktopConfProps, DesktopConfActions } = this.props;
-            if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT || 
+            if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INAPP || 
                 DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
 
                 DesktopAppActions.editDesktopAppData(DesktopAppProps.get('editingItem'), this.props.compId)
                 .then((res) => {
 
-                    if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT) {
+                    if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INAPP) {
+
                         refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
+                        
                     } else if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
                         // 변경이 필요한 데이타를 위해 액션 리스트를 사용함.
                         // OLD
@@ -119,9 +121,8 @@ class DesktopAppDialog extends Component {
                         //     DesktopConfActions.changeDesktopConfForViewItem
                         // ], {}, {isCloseInform:true});
 
-                        // 하나로 처리
+                        // 선택된 App 리스트 처리
                         DesktopConfActions.changedDesktopConfForEdit(DesktopConfProps, DesktopConfActions);
-
                         // 전체 APP 리스트 조회 (변경된 데이타로 주입)
                         DesktopAppActions.readDesktopAppAllList();
                     }
@@ -145,7 +146,7 @@ class DesktopAppDialog extends Component {
             title = "데스크톱앱 등록";
         } else if(dialogType === DesktopAppDialog.TYPE_VIEW) {
             title = "데스크톱앱 정보";
-        } else if(dialogType === DesktopAppDialog.TYPE_EDIT) {
+        } else if(dialogType === DesktopAppDialog.TYPE_EDIT_INAPP) {
             title = "데스크톱앱 수정";
         } else if(dialogType === DesktopAppDialog.TYPE_EDIT_INCONF) {
             title = "데스크톱앱 수정";
@@ -157,7 +158,7 @@ class DesktopAppDialog extends Component {
             <Dialog open={DesktopAppProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
-                    {(dialogType === DesktopAppDialog.TYPE_EDIT || dialogType === DesktopAppDialog.TYPE_EDIT_INCONF || dialogType === DesktopAppDialog.TYPE_ADD) &&
+                    {(dialogType === DesktopAppDialog.TYPE_EDIT_INAPP || dialogType === DesktopAppDialog.TYPE_EDIT_INCONF || dialogType === DesktopAppDialog.TYPE_ADD) &&
                     <div>
                     <TextField label="이름" className={classes.fullWidth}
                         value={(editingItem.get('appNm')) ? editingItem.get('appNm') : ''}
@@ -274,7 +275,7 @@ class DesktopAppDialog extends Component {
                 {(dialogType === DesktopAppDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
                 }
-                {(dialogType === DesktopAppDialog.TYPE_EDIT) &&
+                {(dialogType === DesktopAppDialog.TYPE_EDIT_INAPP) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
                 {(dialogType === DesktopAppDialog.TYPE_EDIT_INCONF) &&
