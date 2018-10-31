@@ -105,12 +105,12 @@ class ClientProfileSetDialog extends Component {
         if(confirmValue) {
             const { ClientProfileSetProps, ClientProfileSetActions, compId } = this.props;
             const { ClientGroupProps, ClientManageProps } = this.props;
-            const selectedClientGroupIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
-            const selectedClientIds = getDataObjectVariableInComp(ClientManageProps, compId, 'selectedIds');
+            const selectedClientGroupIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
+            const checkedClientIds = getDataObjectVariableInComp(ClientManageProps, compId, 'checkedIds');
 
             ClientProfileSetActions.createClientProfileSetJob({
                 profileNo: paramObject.get('profileNo'),
-                targetClientIds: (selectedClientIds) ? selectedClientIds.join() : '',
+                targetClientIds: (checkedClientIds) ? checkedClientIds.join() : '',
                 targetClientGroupIds: (selectedClientGroupIds) ? selectedClientGroupIds.join() : '',
                 isRemoval: paramObject.get('isRemoval')
             }).then((res) => {
@@ -132,26 +132,26 @@ class ClientProfileSetDialog extends Component {
         this.props.ClientProfileSetActions.setEditingItemValue({ name: 'clientNm', value: clientObj.get('clientName') });
     }
 
-    handleSelectClientArray = (selectedObj, selectedIds) => {
+    handleSelectClientArray = (selectedObj, checkedIds) => {
         // console.log('handleSelectClientArray selectedObj ::::::::::::::: ', selectedObj);
-        // console.log('handleSelectClientArray selectedIds ::::::::::::::: ', selectedIds);
+        // console.log('handleSelectClientArray checkedIds ::::::::::::::: ', checkedIds);
 
 
 
         // this.props.ClientProfileSetActions.setEditingItemValue({
         //   name: 'targetClientIdArray',
-        //   value: selectedIds
+        //   value: checkedIds
         // });
     }
 
-    handleSelectGroupArray = (selectedObj, selectedIds) => {
+    handleSelectGroupArray = (selectedObj, checkedIds) => {
         // console.log('handleSelectGroupArray selectedObj ::::::::::::::: ', selectedObj);
-        // console.log('handleSelectGroupArray selectedIds ::::::::::::::: ', selectedIds);
+        // console.log('handleSelectGroupArray checkedIds ::::::::::::::: ', checkedIds);
 
 
         // this.props.ClientProfileSetActions.setEditingItemValue({
         //   name: 'targetGroupIdArray',
-        //   value: selectedIds
+        //   value: checkedIds
         // });
     }
 

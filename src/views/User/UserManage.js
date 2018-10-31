@@ -130,8 +130,8 @@ class UserManage extends Component {
       viewItem: {
         userId: '',
         userNm: '',
-        userPassword: '',
-        showPassword: false
+        userPasswd: '',
+        showPasswd: false
       },
       dialogType: UserBasicDialog.TYPE_ADD
     }, false);

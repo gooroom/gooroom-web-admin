@@ -44,9 +44,6 @@ class GRClientSelector extends Component {
       value: selectedGroupObj.get('grpId'),
       compId: compId
     });
-    // if(this.props.handleGroupSelect) {
-    //   this.props.handleGroupSelect(selectedGroupObj, selectedGroupIds);
-    // }
 
     // show client list
     if(selectorType == 'single') {
@@ -71,7 +68,7 @@ class GRClientSelector extends Component {
   
 
   // handle click event in client list, set selected client data and call parent function if exixted.
-  handleClientSelect = (selectedClientObj, selectedClientIds) => {
+  handleClientSelect = (selectedClientObj) => {
     // call assigned handler from parameters(properties), don't save in local state
     // only call where type is 'single'
     if(this.props.selectorType == 'single') {

@@ -4,6 +4,8 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import sha256 from 'sha-256-js';
+
 import * as AdminUserActions from 'modules/AdminUserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
@@ -24,7 +26,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -50,6 +51,13 @@ class AdminUserDialog extends Component {
         });
     }
 
+    handleValuePasswordChange = name => event => {
+        this.props.AdminUserActions.setEditingItemValue({
+            name: name,
+            value: event.target.value
+        });
+    }
+
     // 생성
     handleCreateData = (event) => {
         const { AdminUserProps, GRConfirmActions } = this.props;
@@ -65,7 +73,7 @@ class AdminUserDialog extends Component {
             const { AdminUserProps, AdminUserActions, compId } = this.props;
             AdminUserActions.createAdminUserData({
                 adminId: paramObject.get('adminId'),
-                adminPw: paramObject.get('adminPw'),
+                adminPw: (paramObject.get('adminPw') !== '') ? sha256(paramObject.get('adminId') + sha256(paramObject.get('adminPw'))) : '',
                 adminNm: paramObject.get('adminNm')
             }).then((res) => {
                 AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
@@ -89,7 +97,7 @@ class AdminUserDialog extends Component {
             const { AdminUserProps, AdminUserActions, compId } = this.props;
             AdminUserActions.editAdminUserData({
                 adminId: paramObject.get('adminId'),
-                adminPw: paramObject.get('adminPw'),
+                adminPw: (paramObject.get('adminPw') !== '') ? sha256(paramObject.get('adminId') + sha256(paramObject.get('adminPw'))) : '',
                 adminNm: paramObject.get('adminNm')
             }).then((res) => {
                 AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
@@ -106,8 +114,8 @@ class AdminUserDialog extends Component {
         const { AdminUserProps, AdminUserActions } = this.props;
         const editingItem = AdminUserProps.get('editingItem');
         AdminUserActions.setEditingItemValue({
-            name: 'showPassword',
-            value: !editingItem.get('showPassword')
+            name: 'showPasswd',
+            value: !editingItem.get('showPasswd')
         });
     };
 
@@ -133,41 +141,38 @@ class AdminUserDialog extends Component {
             <Dialog open={AdminUserProps.get('dialogOpen')}>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
-
-                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
-                        <TextField
-                            label="관리자아이디"
-                            value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
-                            onChange={this.handleValueChange("adminId")}
-                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            disabled={(dialogType == AdminUserDialog.TYPE_EDIT) ? true : false}
+                    <TextField
+                        label="관리자아이디"
+                        value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
+                        onChange={this.handleValueChange("adminId")}
+                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                        disabled={(dialogType == AdminUserDialog.TYPE_EDIT) ? true : false}
+                    />
+                    <TextField
+                        label="관리자이름"
+                        value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
+                        onChange={this.handleValueChange("adminNm")}
+                        className={classes.fullWidth}
+                    />
+                    <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
+                        <InputLabel htmlFor="adornment-password">Password</InputLabel>
+                        <Input
+                            type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
+                            value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
+                            onChange={this.handleValuePasswordChange('adminPw')}
+                            endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                aria-label="Toggle password visibility"
+                                onClick={this.handleClickShowPassword}
+                                onMouseDown={this.handleMouseDownPassword}
+                                >
+                                {(editingItem && editingItem.get('showPasswd')) ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                            }
                         />
-                        <TextField
-                            label="관리자이름"
-                            value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
-                            onChange={this.handleValueChange("adminNm")}
-                            className={classes.fullWidth}
-                        />
-                        <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
-                            <InputLabel htmlFor="adornment-password">Password</InputLabel>
-                            <Input
-                                type={(editingItem && editingItem.get('showPassword')) ? 'text' : 'password'}
-                                value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
-                                onChange={this.handleValueChange('adminPw')}
-                                endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                    aria-label="Toggle password visibility"
-                                    onClick={this.handleClickShowPassword}
-                                    onMouseDown={this.handleMouseDownPassword}
-                                    >
-                                    {(editingItem && editingItem.get('showPassword')) ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                                }
-                            />
-                        </FormControl>
-                    </form>
+                    </FormControl>
 
                 </DialogContent>
                 <DialogActions>
