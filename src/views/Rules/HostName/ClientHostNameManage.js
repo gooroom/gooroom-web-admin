@@ -284,8 +284,8 @@ class ClientHostNameManage extends Component {
         <ClientHostNameSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditItemClick}
+          onClickCopy={this.handleCopyClick}
+          onClickEdit={this.handleEditItemClick}
         />
         <ClientHostNameDialog compId={compId} />
         <GRConfirm />

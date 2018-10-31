@@ -72,12 +72,12 @@ class DesktopConfSpec extends Component {
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.handleEditClick(viewItem, compType)}
+                    onClick={() => this.props.onClickEdit(viewItem, compType)}
                   ><SettingsApplicationsIcon /></Button>
-                  {(this.props.handleCopyClick) &&
+                  {(this.props.onClickCopy) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.handleCopyClick(viewItem)}
+                    onClick={() => this.props.onClickCopy(viewItem)}
                   ><CopyIcon /></Button>
                   }
                 </div>

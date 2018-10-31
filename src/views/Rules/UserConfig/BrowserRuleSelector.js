@@ -108,7 +108,7 @@ class BrowserRuleSelector extends Component {
           <BrowserRuleSpec compId={compId} 
             specType="inform" targetType={targetType}
             selectedItem={selectedBrowserRuleItem}
-            handleEditClick={this.handleEditClickForBrowserRule}
+            onClickEdit={this.handleEditClickForBrowserRule}
           />
         }
         </CardContent>

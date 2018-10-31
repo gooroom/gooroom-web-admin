@@ -306,8 +306,8 @@ class SecurityRuleManage extends Component {
         <SecurityRuleSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditItemClick}
+          onClickCopy={this.handleCopyClick}
+          onClickEdit={this.handleEditItemClick}
         />
         <SecurityRuleDialog compId={compId} />
         <GRConfirm />
