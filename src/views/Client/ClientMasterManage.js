@@ -40,10 +40,10 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 import ClientManageComp from 'views/Client/ClientManageComp';
-import ClientManageInform from 'views/Client/ClientManageInform';
+import ClientManageSpec from 'views/Client/ClientManageSpec';
 
 import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
-import ClientGroupInform from 'views/ClientGroup/ClientGroupInform';
+import ClientGroupSpec from 'views/ClientGroup/ClientGroupSpec';
 import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -380,8 +380,8 @@ class ClientMasterManage extends Component {
             </Grid>
 
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef', padding: 0, marginTop: 20}}>
-              <ClientManageInform compId={compId} />
-              <ClientGroupInform compId={compId} />
+              <ClientManageSpec compId={compId} />
+              <ClientGroupSpec compId={compId} />
             </Grid>
           </Grid>
           <ClientGroupDialog compId={compId} />

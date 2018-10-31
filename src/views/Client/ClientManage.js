@@ -44,7 +44,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Checkbox from "@material-ui/core/Checkbox";
 import InputLabel from "@material-ui/core/InputLabel";
 
-import ClientManageInform from "./ClientManageInform";
+import ClientManageSpec from "./ClientManageSpec";
 // option components
 import ClientGroupSelect from 'views/Options/ClientGroupSelect';
 import ClientStatusSelect from 'views/Options/ClientStatusSelect';
@@ -313,7 +313,7 @@ class ClientManage extends Component {
           }
 
         </GRPane>
-        <ClientManageInform compId={compId} />
+        <ClientManageSpec compId={compId} />
 
         <BrowserRuleDialog compId={compId} />
         <SecurityRuleDialog compId={compId} />
