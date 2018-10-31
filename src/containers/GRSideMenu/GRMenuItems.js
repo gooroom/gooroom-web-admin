@@ -17,8 +17,8 @@ export default {
       level: 1,
       children: [
         {
-          name: '통합관리',
-          url: '/clients/clientmastermanage/GRM0101/통합관리',
+          name: '단말관리',
+          url: '/clients/clientmastermanage/GRM0101/단말관리',
           icon: 'icon-wrench',
           level: 2,
         }, {

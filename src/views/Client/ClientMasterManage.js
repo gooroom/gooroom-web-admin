@@ -37,10 +37,14 @@ import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDia
 
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import DeleteIcon from '@material-ui/icons/Delete';
+import GroupIcon from '@material-ui/icons/GroupWork';
+import ClientIcon from '@material-ui/icons/Laptop';
 
 import ClientManageComp from 'views/Client/ClientManageComp';
 import ClientManageSpec from 'views/Client/ClientManageSpec';
@@ -323,12 +327,45 @@ class ClientMasterManage extends Component {
             
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}}>
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
-                  <AddIcon />등록
-                </Button>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
-                  <RemoveIcon />삭제
-                </Button>
+              <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
+                <Grid item>
+
+                  <Tooltip title="신규 단말그룹 등록">
+                  <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
+                      <AddIcon /><GroupIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
+                  <Tooltip title="단말그룹 삭제">
+                  <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
+                      <RemoveIcon /><GroupIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
+
+                </Grid>
+                <Grid item>
+
+                  <Tooltip title="그룹에 단말추가">
+                  <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
+                      <AddIcon /><ClientIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
+
+                  <Tooltip title="그룹에 단말삭제">
+                  <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
+                      <RemoveIcon /><ClientIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
+
+                </Grid>
+              </Grid>
               </Toolbar>
               <ClientGroupComp compId={compId}
                 selectorType='multiple'
@@ -344,18 +381,15 @@ class ClientMasterManage extends Component {
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
-                      <AddIcon />그룹단말추가
-                    </Button>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
-                      <RemoveIcon />그룹단말제거
-                    </Button>
                   </Grid>
-
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientSelected()} style={{marginLeft: "10px"}}>
-                      <AddIcon />삭제
-                    </Button>
+                    <Tooltip title="단말 폐기">
+                    <span>
+                      <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientSelected()} style={{marginLeft: "10px"}}>
+                        <DeleteIcon /><ClientIcon />
+                      </Button>
+                    </span>
+                    </Tooltip>
                   </Grid>
                 </Grid>
               </Toolbar>
