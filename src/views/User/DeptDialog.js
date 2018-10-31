@@ -139,7 +139,7 @@ class DeptDialog extends Component {
             {(DeptProps.get('dialogOpen') && editingItem) &&
                 <Dialog open={DeptProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                     <DialogTitle>{title}</DialogTitle>
-                    <DialogContent>
+                    <DialogContent style={{minHeight:567}}>
                         {(dialogType === DeptDialog.TYPE_ADD) &&
                         <TextField
                             label="상위조직"
