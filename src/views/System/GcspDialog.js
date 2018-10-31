@@ -114,8 +114,8 @@ class GcspDialog extends Component {
         const { GcspManageProps, GcspManageActions } = this.props;
         const editingItem = GcspManageProps.get('editingItem');
         GcspManageActions.setEditingItemValue({
-            name: 'showPassword',
-            value: !editingItem.get('showPassword')
+            name: 'showPasswd',
+            value: !editingItem.get('showPasswd')
         });
     };
 

@@ -144,17 +144,17 @@ class ClientPackageManage extends Component {
   }
 
   isClientGroupRemovable = () => {
-    const selectedIds = getDataObjectVariableInComp(this.props.ClientGroupProps, this.props.match.params.grMenuId, 'selectedIds');
-    return !(selectedIds && selectedIds.size > 0);
+    const checkedIds = getDataObjectVariableInComp(this.props.ClientGroupProps, this.props.match.params.grMenuId, 'checkedIds');
+    return !(checkedIds && checkedIds.size > 0);
   }
 
   // delete group
   handleDeleteButtonForClientGroup = () => {
-    const selectedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
-    if(selectedIds && selectedIds.size > 0) {
+    const checkedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    if(checkedIds && checkedIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
         confirmTitle: '단말그룹 삭제',
-        confirmMsg: '단말그룹(' + selectedIds.size + '개)을 삭제하시겠습니까?',
+        confirmMsg: '단말그룹(' + checkedIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
         confirmObject: null
       });
@@ -164,10 +164,10 @@ class ClientPackageManage extends Component {
     if(confirmValue) {
       const { ClientGroupProps, ClientGroupActions } = this.props;
       const compId = this.props.match.params.grMenuId;
-      const selectedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
-      if(selectedIds && selectedIds.size > 0) {
+      const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
+      if(checkedIds && checkedIds.size > 0) {
         ClientGroupActions.deleteSelectedClientGroupData({
-          grpIds: selectedIds.toArray()
+          grpIds: checkedIds.toArray()
         }).then(() => {
           ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
         });
@@ -191,7 +191,7 @@ class ClientPackageManage extends Component {
 
   isClientSelected = () => {
     const checkedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-    // const selectedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
+    // const checkedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'checkedIds');
     return !(checkedIds && checkedIds.size > 0);
   }
 
@@ -203,13 +203,13 @@ class ClientPackageManage extends Component {
   // install package user selected
   handleClientPackageInstall = (selectedPackage) => {
     const { ClientManageProps, GRConfirmActions } = this.props;
-    const selectedIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    const checkedIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     GRConfirmActions.showConfirm({
         confirmTitle: '선택한 패키지 설치',
         confirmMsg: '선택한 패키지를 설치하시겠습니까?',
         handleConfirmResult: this.handleClientPackageInstallConfirmResult,
         confirmObject: {
-          selectedClientIds: selectedIds.toJS(),
+          checkedClientIds: checkedIds.toJS(),
           selectedPackageIds: selectedPackage.toJS()
         }
     });
@@ -218,7 +218,7 @@ class ClientPackageManage extends Component {
     if(confirmValue) {
       const { ClientPackageProps, ClientPackageActions } = this.props;
       ClientPackageActions.updatePackageInClient({
-        clientIds: paramObject.selectedClientIds.join(','),
+        clientIds: paramObject.checkedClientIds.join(','),
         packageIds: paramObject.selectedPackageIds.join(',')
       }).then((res) => {
         // close dialog
@@ -264,7 +264,7 @@ class ClientPackageManage extends Component {
   // remove client in group - save
   handleRemoveClientInGroup = (event) => {
     const { ClientManageProps, GRConfirmActions } = this.props;
-    const selectedClients = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    const selectedClients = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     if(selectedClients && selectedClients !== '') {
       GRConfirmActions.showConfirm({
         confirmTitle: '그룹에서 단말 삭제',
@@ -321,8 +321,8 @@ class ClientPackageManage extends Component {
       const { ClientPackageProps, ClientPackageAction, ClientManageProps } = this.props;
       const compId = this.props.match.params.grMenuId;
       
-      //const selectedGroupIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
-      const selectedClientIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+      //const checkedGroupIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+      const checkedClientIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
 
       ClientPackageActions.updateAllPackage({
         compId: compId
@@ -333,8 +333,8 @@ class ClientPackageManage extends Component {
   };
 
   handleAddPackage = (event) => {
-    const selectedClientIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
-    if(selectedClientIds && selectedClientIds.size > 0) {
+    const checkedClientIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    if(checkedClientIds && checkedClientIds.size > 0) {
       this.setState({
         isOpenClientPackageSelect: true
       });

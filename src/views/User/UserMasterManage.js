@@ -224,7 +224,7 @@ class UserMasterManage extends Component {
   handleDeleteUserInDept = (event) => {
     const { UserProps, DeptProps, GRConfirmActions } = this.props;
     const selectedDeptCd = DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
-    const selectedUsers = UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
+    const selectedUsers = UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     if(selectedUsers && selectedUsers !== '') {
       GRConfirmActions.showConfirm({
         confirmTitle: '사용자 삭제',
@@ -373,8 +373,8 @@ class UserMasterManage extends Component {
       ruleSelectedViewItem: {
         userId: '',
         userNm: '',
-        userPassword: '',
-        showPassword: false
+        userPasswd: '',
+        showPasswd: false
       },
       ruleDialogType: UserDialog.TYPE_ADD
     }, true);

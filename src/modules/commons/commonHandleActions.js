@@ -124,7 +124,7 @@ export const handleListPagedAction = (state, action) => {
 
     if(action.extOption) {
         if(action.extOption.isResetSelect) {
-            newState = newState.deleteIn(['viewItems', action.compId, 'selectedIds']);
+            newState = newState.deleteIn(['viewItems', action.compId, 'checkedIds']);
         }
         if(action.extOption.isCloseInform) {
             newState = newState.deleteIn(['viewItems', action.compId, 'informOpen'])

@@ -1,6 +1,7 @@
 
 import { handleActions } from 'redux-actions';
 import { Map, List, fromJS } from 'immutable';
+import sha256 from 'sha-256-js';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -155,11 +156,13 @@ export const changeStoreData = (param) => dispatch => {
 
 const makeParameter = (param) => {
 
-    const isChangePasswd = (param.userPassword && param.userPassword != '') ? 'Y' : 'N';
+    console.log('param ::::: ', param);
+    const isChangePasswd = (param.userPasswd && param.userPasswd != '') ? 'Y' : 'N';
 
     return {
         userId: param.userId,
-        userPasswd: param.userPassword,
+        userPasswd: (param.userPasswd !== '') ? sha256(param.userId + sha256(param.userPasswd)) : '',
+
         userNm: param.userNm,
         deptCd: param.deptCd,
         isChangePasswd: isChangePasswd,

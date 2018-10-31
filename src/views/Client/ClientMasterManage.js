@@ -154,17 +154,17 @@ class ClientMasterManage extends Component {
   }
 
   isClientGroupRemovable = () => {
-    const selectedIds = getDataObjectVariableInComp(this.props.ClientGroupProps, this.props.match.params.grMenuId, 'selectedIds');
-    return !(selectedIds && selectedIds.size > 0);
+    const checkedIds = getDataObjectVariableInComp(this.props.ClientGroupProps, this.props.match.params.grMenuId, 'checkedIds');
+    return !(checkedIds && checkedIds.size > 0);
   }
 
   // delete group
   handleDeleteButtonForClientGroup = () => {
-    const selectedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
-    if(selectedIds && selectedIds.size > 0) {
+    const checkedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    if(checkedIds && checkedIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
         confirmTitle: '단말그룹 삭제',
-        confirmMsg: '단말그룹(' + selectedIds.size + '개)을 삭제하시겠습니까?',
+        confirmMsg: '단말그룹(' + checkedIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
         confirmObject: null
       });
@@ -174,10 +174,10 @@ class ClientMasterManage extends Component {
     if(confirmValue) {
       const { ClientGroupProps, ClientGroupActions } = this.props;
       const compId = this.props.match.params.grMenuId;
-      const selectedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectedIds');
-      if(selectedIds && selectedIds.size > 0) {
+      const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
+      if(checkedIds && checkedIds.size > 0) {
         ClientGroupActions.deleteSelectedClientGroupData({
-          grpIds: selectedIds.toArray()
+          grpIds: checkedIds.toArray()
         }).then(() => {
           ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
         });
@@ -201,7 +201,7 @@ class ClientMasterManage extends Component {
 
   isClientSelected = () => {
     const checkedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-    // const selectedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
+    // const checkedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'checkedIds');
     return !(checkedIds && checkedIds.size > 0);
   }
 
@@ -211,7 +211,7 @@ class ClientMasterManage extends Component {
   }
 
   // add client in group - save
-  handleClientSelectSave = (selectedClients) => {
+  handleClientSelectSave = (checkedClientIds) => {
     const { ClientGroupProps, GRConfirmActions } = this.props;
     const selectedGroupItem = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
     GRConfirmActions.showConfirm({
@@ -220,7 +220,7 @@ class ClientMasterManage extends Component {
         handleConfirmResult: this.handleClientSelectSaveConfirmResult,
         confirmObject: {
           selectedGroupId: selectedGroupItem.get('grpId'),
-          selectedClients: selectedClients
+          checkedClientIds: checkedClientIds
         }
     });
   }
@@ -231,7 +231,7 @@ class ClientMasterManage extends Component {
       const compId = this.props.match.params.grMenuId;
       ClientGroupActions.addClientsInGroup({
           groupId: paramObject.selectedGroupId,
-          clients: paramObject.selectedClients.join(',')
+          clients: paramObject.checkedClientIds.join(',')
       }).then((res) => {
         // show clients list in group
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
@@ -247,18 +247,18 @@ class ClientMasterManage extends Component {
   // remove client in group - save
   handleRemoveClientInGroup = (event) => {
     const { ClientManageProps, GRConfirmActions } = this.props;
-    const selectedClients = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
-    if(selectedClients && selectedClients !== '') {
+    const checkedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    if(checkedClientIds && checkedClientIds !== '') {
       GRConfirmActions.showConfirm({
         confirmTitle: '그룹에서 단말 삭제',
         confirmMsg: '선택하신 단말을 그룹에서 삭제하시겠습니까?',
         handleConfirmResult: this.handleRemoveClientInGroupConfirmResult,
         confirmObject: {
-          selectedClients: selectedClients
+          checkedClientIds: checkedClientIds
         }
       });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 선택하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, '단말을 선택하세요.');
     }
   }
   handleRemoveClientInGroupConfirmResult = (confirmValue, paramObject) => {
@@ -266,7 +266,7 @@ class ClientMasterManage extends Component {
       const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
       const compId = this.props.match.params.grMenuId;
       ClientGroupActions.removeClientsInGroup({
-        clients: paramObject.selectedClients.join(',')
+        clients: paramObject.checkedClientIds.join(',')
       }).then(() => {
         // show user list in dept.
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
@@ -281,13 +281,13 @@ class ClientMasterManage extends Component {
   // delete client
   handleDeleteClient = () => {
     const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
-    const selectedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedIds']);
-    if(selectedClientIds && selectedClientIds.size > 0) {
+    const checkedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    if(checkedClientIds && checkedClientIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
         confirmTitle: '단말 삭제',
-        confirmMsg: '단말(' + selectedClientIds.size + '개)을 삭제하시겠습니까?',
+        confirmMsg: '단말(' + checkedClientIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteClientConfirmResult,
-        confirmObject: {selectedClientIds: selectedClientIds}
+        confirmObject: {checkedClientIds: checkedClientIds}
       });
     }
   }
@@ -296,7 +296,7 @@ class ClientMasterManage extends Component {
       const { ClientManageProps, ClientManageActions } = this.props;
       const compId = this.props.match.params.grMenuId;
       ClientManageActions.deleteClientData({
-        clientIds: confirmObject.selectedClientIds.join(',')
+        clientIds: confirmObject.checkedClientIds.join(',')
       }).then(() => {
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
           page:0
