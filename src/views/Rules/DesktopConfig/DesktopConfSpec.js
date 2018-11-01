@@ -10,36 +10,23 @@ import { connect } from 'react-redux';
 import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
-import DesktopConfDialog from './DesktopConfDialog';
+import * as DesktopAppActions from 'modules/DesktopAppModule';
+
+import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
+import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
+import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
+
+import DesktopApp from './DesktopApp';
 
 import Grid from '@material-ui/core/Grid';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardMedia from '@material-ui/core/CardMedia';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-
-import Typography from '@material-ui/core/Typography';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 import CopyIcon from '@material-ui/icons/FileCopy';
-
-
-
-import Avatar from '@material-ui/core/Avatar';
-import DefaultIcon from '@material-ui/icons/Language';
-
-import red from '@material-ui/core/colors/red';
-
-
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -49,68 +36,92 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 class DesktopConfSpec extends Component {
 
+  handleEditAppClick = (viewItem) => {
+    this.props.DesktopAppActions.showDialog({
+      viewItem: viewItem,
+      dialogType: DesktopAppDialog.TYPE_EDIT_INCONF
+    });
+  };
+
+  handleInheritClick = (confId, compType) => {
+    const { DesktopConfProps, DesktopConfActions, compId, targetType } = this.props;
+    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(DesktopConfProps, compId, 'confId', targetType) : getSelectedObjectInComp(DesktopConfProps, compId, targetType);
+
+    DesktopConfActions.showDialog({
+      viewItem: viewItem,
+      dialogType: DesktopConfDialog.TYPE_INHERIT
+    });
+  };
+  
   // .................................................
   render() {
 
     const { classes } = this.props;
     const { compId, compType, targetType, selectedItem } = this.props;
-    const bull = <span className={classes.bullet}>•</span>;
 
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateDesktopConfObject(selectedItem.get('viewItem'));
+      viewItem = selectedItem.get('viewItem');
       RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+    }
+
+    let appPaneWidth = 0;
+    if(viewItem && viewItem.get('apps') && viewItem.get('apps').size > 0) {
+      appPaneWidth = viewItem.get('apps').size * (120 + 16) + 40;
     }
     
     return (
       <React.Fragment>
         {viewItem && 
           <Card elevation={4} style={{marginBottom:20}}>
-            <CardHeader
+            <GRRuleCardHeader
               avatar={RuleAvartar}
+              category='데스크톱설정'
               title={viewItem.get('confNm')}
               subheader={viewItem.get('confId')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.handleEditClick(viewItem, compType)}
+                    onClick={() => this.props.onClickEdit(viewItem, compType)}
                   ><SettingsApplicationsIcon /></Button>
-                  {(this.props.handleCopyClick) &&
+                  {(this.props.onClickCopy) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.handleCopyClick(viewItem)}
+                    onClick={() => this.props.onClickCopy(viewItem)}
                   ><CopyIcon /></Button>
+                  }
+                  {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
+                  <Button size="small"
+                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.handleInheritClick(viewItem.get('confId'), compType)}
+                  ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
               }
               style={{paddingBottom:0}}
             />
-            <CardContent>
-              
-
-              {viewItem.get('apps') && viewItem.get('apps').map(n => {
-                return (
-                  <div key={n.get('appId')}>
-                        <Grid container direction="column" justify="space-between" alignItems="center" >
-                          <Grid item xs={12} >
-                            <Typography><img src={n.get('iconUrl')} style={{width:40}}></img></Typography>
-                          </Grid>
-                          <Grid item xs={12} >
-                            <Typography gutterBottom variant="body2">{n.get('appNm')}</Typography>
-                          </Grid>
-                        </Grid>
-                  </div>
-                );
-              })}
-
-
-                       
+            <CardContent style={{paddingTop:0}}>
+              <div style={{overflowY: 'auto'}}>
+                <Grid container spacing={16} direction="row" justify="flex-start" alignItems="flex-start" style={{width:appPaneWidth,margin:'0 10 0 10'}}>
+                  {viewItem.get('apps') && viewItem.get('apps').map(n => {
+                    return (
+                      <Grid key={n.get('appId')} item>
+                        <DesktopApp 
+                            key={n.get('appId')}
+                            appObj={n}
+                            themeId={viewItem.get('themeId')}
+                            onEditClick={this.handleEditAppClick}
+                          />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </div>
             </CardContent>
           </Card>
         }
-        <DesktopConfDialog compId={compId} />
       </React.Fragment>
     );
   }
@@ -121,83 +132,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
+  DesktopAppActions: bindActionCreators(DesktopAppActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopConfSpec));
-
-export const generateDesktopConfObject = (param) => {
-
-  if(false && param) {
-    let usbMemory = '';
-    let usbReadonly = '';
-    let wireless = '';
-    let bluetoothState = '';
-    let cdAndDvd = '';
-    let printer = '';
-    let screenCapture = '';
-    let camera = '';
-    let sound = '';
-    let keyboard = '';
-    let mouse = '';
-    let macAddress = [];
-
-    param.get('propList').forEach(function(e) {
-      const ename = e.get('propNm');
-      const evalue = e.get('propValue');
-      if(ename == 'usb_memory') {
-        usbMemory = evalue;
-        if(usbMemory == 'read_only') {
-          usbReadonly = 'allow';
-        } else {
-          usbReadonly = 'disallow';
-        }
-      } else if(ename == 'cd_dvd') {
-        cdAndDvd = evalue;
-      } else if(ename == 'printer') {
-        printer = evalue;
-      } else if(ename == 'screen_capture') {
-        screenCapture = evalue;
-      } else if(ename == 'sound') {
-        sound = evalue;
-      } else if(ename == 'camera') {
-        camera = evalue;
-      } else if(ename == 'keyboard') {
-        keyboard = evalue;
-      } else if(ename == 'mouse') {
-        mouse = evalue;
-      } else if(ename == 'wireless') {
-        wireless = evalue;
-      } else if(ename == 'bluetooth_state') {
-        bluetoothState = evalue;
-      } else if(ename == 'mac_address') {
-        macAddress.push(evalue);
-      }
-    });
-  
-    return Map({
-      objId: param.get('objId'),
-      objNm: param.get('objNm'),
-      comment: param.get('comment'),
-      modDate: param.get('modDate'),
-
-      usbMemory: usbMemory,
-      usbReadonly: usbReadonly,
-      cdAndDvd: cdAndDvd,
-      printer: printer,
-      screenCapture: screenCapture,
-      sound: sound,
-      camera: camera,
-      keyboard: keyboard,
-      mouse: mouse,
-
-      wireless: wireless,
-      bluetoothState: bluetoothState,
-      macAddress: List(macAddress)  
-    });
-  
-  } else {
-    return param;
-  }
-
-};

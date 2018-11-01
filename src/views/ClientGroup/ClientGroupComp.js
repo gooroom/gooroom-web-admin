@@ -42,15 +42,12 @@ import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from '@material-ui/core/Button';
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import Search from '@material-ui/icons/Search'; 
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class ClientGroupComp extends Component {
 
   columnHeaders = [
@@ -93,56 +90,6 @@ class ClientGroupComp extends Component {
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
-  
-  handleCheckAllClick = (event, checked) => {
-    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    const newCheckedIds = getDataPropertyInCompByParam(ClientGroupProps, compId, 'grpId', checked);
-    ClientGroupActions.changeCompVariable({
-      name: 'checkedIds',
-      value: newCheckedIds,
-      compId: compId
-    });
-
-    if(this.props.onCheckAll) {
-      this.props.onCheckAll(null, newCheckedIds);
-    }
-  };
-
-  getClientGroupRules = (grpId) => {
-    const { ClientGroupProps, compId } = this.props;
-    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
-
-    ClientConfSettingActions.getClientConfByGroupId({
-      compId: compId, groupId: grpId
-    });   
-    ClientHostNameActions.getClientHostNameByGroupId({
-      compId: compId, groupId: grpId
-    });   
-    ClientUpdateServerActions.getClientUpdateServerByGroupId({
-      compId: compId, groupId: grpId
-    });   
-
-    // get browser rule info
-    BrowserRuleActions.getBrowserRuleByGroupId({
-      compId: compId, groupId: grpId
-    });
-    // get media control setting info
-    MediaRuleActions.getMediaRuleByGroupId({
-      compId: compId, groupId: grpId
-    });
-    // get client secu info
-    SecurityRuleActions.getSecurityRuleByGroupId({
-      compId: compId, groupId: grpId
-    });   
-
-  // '데스크톱 정보설정' : 정책 정보 변경
-  // 사용자, 조직
-  // ClientDesktopConfigActions.getClientDesktopConfig({
-  //   compId: compId, desktopConfId: selectRowObject.get('desktopConfigId')
-  // });   
-
-  }
 
   handleCheckClick = (event, id) => {
     event.stopPropagation();
@@ -155,58 +102,53 @@ class ClientGroupComp extends Component {
       compId: compId
     });
 
-    // this.handleSelectRow(event, id);
     if(this.props.onCheck) {
       this.props.onCheck(getRowObjectById(ClientGroupProps, compId, id, 'grpId'), newCheckedIds);
     }
-
-    if(this.props.hasShowRule) {
-      this.getClientGroupRules(id);
-    }
   }
+
+  handleCheckAllClick = (event, checked) => {
+
+    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
+    const newCheckedIds = getDataPropertyInCompByParam(ClientGroupProps, compId, 'grpId', checked);
+
+    ClientGroupActions.changeCompVariable({
+      name: 'checkedIds',
+      value: newCheckedIds,
+      compId: compId
+    });
+
+    if(this.props.onCheckAll) {
+      this.props.onCheckAll(null, newCheckedIds);
+    }
+  };
 
   handleSelectRow = (event, id) => {
     event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-
     // get Object
     const selectRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
     if(this.props.onSelect && selectRowObject) {
       this.props.onSelect(selectRowObject);
     }
 
-
-    // console.log('handleSelectRow :::: ', selectRowObject);
-    // console.log('this.props.selectorType :::: ', this.props.selectorType);
-    // if(this.props.selectorType && this.props.selectorType == 'multiple') {
-    //   const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
-    //   console.log('checkedIds :::: ', checkedIds);
-    //   if(checkedIds && this.props.onSelect) {
-    //     console.log('this.props.onSelect :::: ', selectRowObject);
-    //     this.props.onSelect(selectRowObject, checkedIds);
-    //   }
-    // } else {
-    //   ClientGroupActions.changeCompVariable({ name: 'checkedIds', value: id, compId: compId });
-    //   if(this.props.onSelect) {
-    //     this.props.onSelect(selectRowObject, List([id]));
-    //   }
-    // }
-
-    if(this.props.hasShowRule) {
-      this.getClientGroupRules(id);
-    }
   };
 
   isChecked = id => {
     const { ClientGroupProps, compId } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
 
   isSelected = id => {
     const { ClientGroupProps, compId } = this.props;
-    const viewItem = getDataObjectVariableInComp(ClientGroupProps, compId, 'viewItem');
-    return (viewItem && viewItem.get('grpId') == id);
+    const selectId = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectId');
+    return (selectId == id);
   }
 
   // .................................................
@@ -229,7 +171,7 @@ class ClientGroupComp extends Component {
 
     const listObj = ClientGroupProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
-    if(listObj) {
+    if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
 
@@ -244,7 +186,7 @@ class ClientGroupComp extends Component {
             </FormControl>
           </Grid>
           <Grid item xs={6} >
-            <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
               <Search />조회
             </Button>
           </Grid>
@@ -276,10 +218,10 @@ class ClientGroupComp extends Component {
           />
           }
           <TableBody>
-          {listObj.get('listData').map(n => {
+          {listObj.get('listData') && listObj.get('listData').map(n => {
             const isChecked = this.isChecked(n.get('grpId'));
             const isSelected = this.isSelected(n.get('grpId'));
-            
+
             return (
               <TableRow
                 hover
@@ -290,21 +232,16 @@ class ClientGroupComp extends Component {
               >
                 {(this.props.selectorType && this.props.selectorType == 'multiple') && 
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isChecked} className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('grpId'))} />
+                    <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('grpId'))} />
                   </TableCell>
                 }
-                <TableCell className={classes.grSmallAndClickCell}>
-                  {n.get('grpNm')}
-                </TableCell>
-                <TableCell className={classes.grSmallAndClickCell}>
-                  {n.get('clientCount')}
-                </TableCell>
-
+                <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
+                <TableCell className={classes.grSmallAndClickCell}>{n.get('clientCount')}</TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>
                   <Button color='secondary' size="small" 
                     className={classes.buttonInTableRow} 
                     onClick={event => this.handleEditClick(event, n.get('grpId'))}>
-                    <BuildIcon />
+                    <SettingsApplicationsIcon />
                   </Button>
                 </TableCell>
               </TableRow>

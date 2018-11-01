@@ -45,6 +45,7 @@
     "react-table": "^6.8.0",
     "redux": "^4.0.0",
     "redux-actions": "^2.4.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "sha-256-js": "^1.0.3"
   }
 }

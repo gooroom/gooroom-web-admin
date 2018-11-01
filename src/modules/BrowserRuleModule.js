@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { List } from 'immutable';
+import { Map, List } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -393,13 +393,13 @@ export default handleActions({
         });
     },
     [GET_BROWSERRULE_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action);
+        return commonHandleActions.handleListAction(state, action, 'objId');
     }, 
     [GET_BROWSERRULE_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_BROWSERRULE_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'objId');
     },
     [SHOW_BROWSERRULE_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -440,7 +440,7 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_BROWSERRULE_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'objId');
     },
     [SET_WHITELIST_ITEM]: (state, action) => {
         const newWhiteList = state.getIn(['editingItem', 'trustUrlList']).set(action.index, action.value);

@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Map, List } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -9,9 +11,11 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
 import DesktopConfViewer from './DesktopConfViewer';
+import DesktopAppSelector from './DesktopAppSelector';
+
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
-import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -27,8 +31,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
 import Typography from "@material-ui/core/Typography";
+
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+
+
 import Checkbox from '@material-ui/core/Checkbox';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
@@ -47,6 +56,10 @@ class DesktopConfDialog extends Component {
     static TYPE_EDIT = 'EDIT';
     static TYPE_INHERIT = 'INHERIT';
     static TYPE_COPY = 'COPY';
+
+    componentDidMount() {
+        this.props.DesktopConfActions.readThemeInfoList();
+    }
 
     handleClose = (event) => {
         this.props.DesktopConfActions.closeDialog();
@@ -70,8 +83,8 @@ class DesktopConfDialog extends Component {
     handleCreateData = (event) => {
         const { DesktopConfProps, GRConfirmActions } = this.props;
         const re = GRConfirmActions.showConfirm({
-            confirmTitle: '매체제어정책정보 등록',
-            confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
+            confirmTitle: '데스크톱정보 등록',
+            confirmMsg: '데스크톱정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmObject: DesktopConfProps.get('editingItem')
         });
@@ -81,7 +94,7 @@ class DesktopConfDialog extends Component {
             const { DesktopConfProps, DesktopConfActions } = this.props;
             DesktopConfActions.createDesktopConfData(DesktopConfProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
+                    refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
                     this.handleClose();
                 });
         }
@@ -90,8 +103,8 @@ class DesktopConfDialog extends Component {
     handleEditData = (event, id) => {
         const { DesktopConfProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: '매체제어정책정보 수정',
-            confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
+            confirmTitle: '데스크톱정보 수정',
+            confirmMsg: '데스크톱정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmObject: DesktopConfProps.get('editingItem')
         });
@@ -101,7 +114,7 @@ class DesktopConfDialog extends Component {
             const { DesktopConfProps, DesktopConfActions } = this.props;
             DesktopConfActions.editDesktopConfData(DesktopConfProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComp(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
+                    refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
                     this.handleClose();
                 });
         }
@@ -112,12 +125,12 @@ class DesktopConfDialog extends Component {
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
         DesktopConfActions.inheritDesktopConfData({
-            'objId': DesktopConfProps.getIn(['editingItem', 'objId']),
+            'confId': DesktopConfProps.getIn(['editingItem', 'confId']),
             'deptCd': selectedDeptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: '시스템알림',
-                alertMsg: '매체제어설정이 하위 조직에 적용되었습니다.'
+                alertMsg: '데스크톱정보가 하위 조직에 적용되었습니다.'
             });
             this.handleClose();
         });
@@ -126,207 +139,87 @@ class DesktopConfDialog extends Component {
     handleCopyCreateData = (event, id) => {
         const { DesktopConfProps, DesktopConfActions } = this.props;
         DesktopConfActions.cloneDesktopConfData({
-            'objId': DesktopConfProps.getIn(['editingItem', 'objId'])
+            'confId': DesktopConfProps.getIn(['editingItem', 'confId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: '시스템알림',
-                alertMsg: '매체제어설정을 복사하였습니다.'
+                alertMsg: '데스크톱정보를 복사하였습니다.'
             });
-            refreshDataListInComp(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
+            refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
             this.handleClose();
         });
     }
 
-    handleAddBluetoothMac = () => {
-        const { DesktopConfActions } = this.props;
-        DesktopConfActions.addBluetoothMac();
-    }
-
-    handleDeleteBluetoothMac = index => event => {
-        const { DesktopConfActions } = this.props;
-        DesktopConfActions.deleteBluetoothMac(index);
-    }
-
-    checkAllow = value => {
-        return (value == 'allow');
-    }
-
     render() {
         const { classes } = this.props;
-        const bull = <span className={classes.bullet}>•</span>;
 
-        const { DesktopConfProps } = this.props;
+        const { DesktopConfProps, DesktopAppProps, compId } = this.props;
         const dialogType = DesktopConfProps.get('dialogType');
         const editingItem = (DesktopConfProps.get('editingItem')) ? DesktopConfProps.get('editingItem') : null;
+        const selectedThemeId = (editingItem && editingItem.get('themeId')) ? editingItem.get('themeId') : '';
+        const themeListData = DesktopConfProps.get('themeListData');
+
+        // const appListAllData = DesktopAppProps.getIn(['viewItems', compId, 'listAllData']);
+        // const appListAllData = DesktopAppProps.get('listAllData');
+        // let allAppPaneWidth = 0;
+        // if(appListAllData && appListAllData.size > 0) {
+        //     allAppPaneWidth = appListAllData.size * (120 + 16) + 40;
+        // }
 
         let title = "";
         if(dialogType === DesktopConfDialog.TYPE_ADD) {
-            title = "매체제어정책설정 등록";
+            title = "데스크톱정보 등록";
         } else if(dialogType === DesktopConfDialog.TYPE_VIEW) {
-            title = "매체제어정책설정 정보";
+            title = "데스크톱정보 정보";
         } else if(dialogType === DesktopConfDialog.TYPE_EDIT) {
-            title = "매체제어정책설정 수정";
+            title = "데스크톱정보 수정";
         } else if(dialogType === DesktopConfDialog.TYPE_INHERIT) {
-            title = "매체제어정책설정 상속";
+            title = "데스크톱정보 상속";
         } else if(dialogType === DesktopConfDialog.TYPE_COPY) {
-            title = "매체제어정책설정 복사";
+            title = "데스크톱정보 복사";
         }
 
         return (
             <div>
             {(DesktopConfProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={DesktopConfProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
+            <Dialog open={DesktopConfProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === DesktopConfDialog.TYPE_EDIT || dialogType === DesktopConfDialog.TYPE_ADD) &&
-                    <div>
+                        <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+                            <Grid item xs={8} >
+                                <TextField label="이름" value={(editingItem.get('confNm')) ? editingItem.get('confNm') : ''}
+                                    onChange={this.handleValueChange("confNm")}
+                                    className={classes.fullWidth}
+                                    disabled={(dialogType === DesktopConfDialog.TYPE_VIEW)}
+                                />
+                            </Grid>
+                            <Grid item xs={4} >
+                                <InputLabel>테마</InputLabel>
+                                <Select
+                                    value={selectedThemeId} style={{width:'100%'}}
+                                    onChange={this.handleValueChange('themeId')}
+                                >
+                                    {themeListData && themeListData.map(x => (
+                                    <MenuItem value={x.get('themeId')} key={x.get('themeId')}>
+                                        {x.get('themeNm')}
+                                    </MenuItem>
+                                    ))}
+                                </Select>
+                            </Grid>
 
-                    <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                        onChange={this.handleValueChange("objNm")}
-                        className={classes.fullWidth}
-                        disabled={(dialogType === DesktopConfDialog.TYPE_VIEW)}
-                    />
-                    <TextField label="설명" value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                        onChange={this.handleValueChange("comment")}
-                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === DesktopConfDialog.TYPE_VIEW)}
-                    />
-                    {(dialogType === DesktopConfDialog.TYPE_VIEW) &&
-                        <div>
-                            <Grid container spacing={24} >
-                                <Grid item xs={12}>
-                                </Grid> 
+                            <Grid item xs={12} >
+                                <DesktopAppSelector 
+                                    selectedApp__Ids={List(['DEAP000005', 'DEAP000007'])} 
+                                    selectedApps={editingItem.get('apps') ? editingItem.get('apps') : List([])} />
                             </Grid>
-                        </div>                        
-                    }
-                    {(dialogType === DesktopConfDialog.TYPE_EDIT || dialogType === DesktopConfDialog.TYPE_ADD) &&
-                        <div>
-                        <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={6}>
-                            <FormControlLabel
-                                control={<Switch onChange={this.handleValueChange('usbMemory')}
-                                    checked={this.checkAllow(editingItem.get('usbMemory'))}
-                                    color="primary" />}
-                                label={(editingItem.get('usbMemory')) ? 'USB 메모리 허가' : 'USB 메모리 금지'}
-                            />
-                            </Grid>
-                            <Grid item xs={6}>
-                            <FormControlLabel label="Readonly"
-                                control={<Checkbox onChange={this.handleValueChange('usbReadonly')}
-                                    checked={this.checkAllow(editingItem.get('usbReadonly'))}
-                                />}                                
-                            />
-                            </Grid>
+                            
                         </Grid>
-
-                        <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={6}>
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('cdAndDvd')} 
-                                        checked={this.checkAllow(editingItem.get('cdAndDvd'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('cdAndDvd') == 'allow') ? 'CD/DVD 허가' : 'CD/DVD 금지'}
-                                />
-                            </Grid>
-                            <Grid item xs={6} >
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('printer')} 
-                                        checked={this.checkAllow(editingItem.get('printer'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('printer') == 'allow') ? '프린터 허가' : '프린터 금지'}
-                                />
-                            </Grid>
-                        </Grid>
-
-                        <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={6}>
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('screenCapture')} 
-                                        checked={this.checkAllow(editingItem.get('screenCapture'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('screenCapture') == 'allow') ? '화면캡쳐 허가' : '화면캡쳐 금지'}
-                                />
-                            </Grid>
-                            <Grid item xs={6} >
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('camera')} 
-                                        checked={this.checkAllow(editingItem.get('camera'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('camera') == 'allow') ? '카메라 허가' : '카메라 금지'}
-                                />
-                            </Grid>
-                        </Grid>
-
-                        <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={6}>
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('sound')} 
-                                        checked={this.checkAllow(editingItem.get('sound'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('sound') == 'allow') ? '사운드(소리, 마이크) 허가' : '사운드(소리, 마이크) 금지'}
-                                />
-                            </Grid>
-                            <Grid item xs={6} >
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('wireless')} 
-                                        checked={this.checkAllow(editingItem.get('wireless'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('wireless') == 'allow') ? '무선랜 허가' : '무선랜 금지'}
-                                />
-                            </Grid>
-                        </Grid>
-
-                        <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={6}>
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('keyboard')} 
-                                        checked={this.checkAllow(editingItem.get('keyboard'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('keyboard') == 'allow') ? 'USB키보드 허가' : 'USB키보드 금지'}
-                                />
-                            </Grid>
-                            <Grid item xs={6} >
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('mouse')} 
-                                        checked={this.checkAllow(editingItem.get('mouse'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('mouse') == 'allow') ? 'USB마우스 허가' : 'USB마우스 금지'}
-                                />
-                            </Grid>
-                        </Grid>
-
-                        <FormControlLabel
-                            control={<Switch onChange={this.handleValueChange('bluetoothState')} 
-                            checked={this.checkAllow(editingItem.get('bluetoothState'))}
-                            color="primary" />}
-                            label={(editingItem.get('bluetoothState') == 'allow') ? '블루투스 허가' : '블루투스 금지'}
-                        />
-
-                        <FormLabel component="legend">연결가능 블루투스 Mac 주소
-                            <Button size="small" variant="contained" color="primary" style={{marginLeft:30}}
-                                    className={classes.smallIconButton}
-                                    onClick={this.handleAddBluetoothMac}
-                            ><AddIcon /></Button>
-                        </FormLabel>
-                        <List>
-                        {editingItem.get('macAddress') && editingItem.get('macAddress').size > 0 && editingItem.get('macAddress').map((value, index) => (
-                            <ListItem key={index} style={{padding:0}} >
-                                <Input value={value} onChange={this.handleBluetoothMacValueChange(index)} fullWidth={true} style={{padding:0}} />
-                                <IconButton onClick={this.handleDeleteBluetoothMac(index)}>
-                                    <DeleteForeverIcon />
-                                </IconButton>
-                            </ListItem>
-                        ))}
-                        </List>
-
-                        </div>
-                    }
-                    </div>
                     }
                     {(dialogType === DesktopConfDialog.TYPE_INHERIT) &&
                         <div>
                         <Typography variant="body1">
-                            이 설정을 하위 조직에 적용 하시겠습니까?
+                            이 정책을 하위 조직에 적용 하시겠습니까?
                         </Typography>
                         <DesktopConfViewer viewItem={editingItem} />
                         </div>
@@ -368,6 +261,7 @@ class DesktopConfDialog extends Component {
 
 const mapStateToProps = (state) => ({
     DesktopConfProps: state.DesktopConfModule,
+    DesktopAppProps: state.DesktopAppModule,
     DeptProps: state.DeptModule
 });
 

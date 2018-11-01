@@ -25,7 +25,7 @@ export const getCommonInitialState = (initOrderColumn, initOrder = '', extValue 
     return initialState.merge(fromJS(extValue)).set('defaultListParam', initialState.get('defaultListParam').merge(fromJS(extParam)));
 }
 
-export const handleListAction = (state, action) => {
+export const handleListAction = (state, action, idName) => {
     const { data } = action.response.data;
     const targetType = action.targetType;
     const targetNames = (targetType && targetType != '') ? ['viewItems', action.compId, targetType] : ['viewItems', action.compId];
@@ -34,7 +34,41 @@ export const handleListAction = (state, action) => {
         if(state.hasIn(targetNames)) {
 
             const beforeItemId = state.getIn(List(targetNames).push('selectedOptionItemId'));
-            const pos = (beforeItemId) ? data.map((e) => (e.objId)).indexOf(beforeItemId) : -1;
+            const pos = (beforeItemId) ? data.map((e) => (e[idName])).indexOf(beforeItemId) : -1;
+            if(pos < 0) {
+                // no exist or selected id was deleted
+                return state
+                    .setIn(List(targetNames).push('listAllData'), fromJS(data))
+                    .setIn(List(targetNames).push('selectedOptionItemId'), '-');
+            } else {
+                // before exist and selected id is exist
+                return state
+                    .setIn(List(targetNames).push('listAllData'), fromJS(data))
+                    .setIn(List(targetNames).push('selectedOptionItemId'), beforeItemId);
+            }
+        }
+
+        return state
+            .setIn(targetNames, Map({'listAllData': List(data.map((e) => {return Map(e)}))
+        }));
+        
+    } else {
+        return state
+        .deleteIn(List(targetNames).push('listAllData'))
+        .deleteIn(List(targetNames).push('selectedOptionItemId'));
+    }
+}
+
+export const handleListActionForDesktopConf = (state, action) => {
+    const { data } = action.response.data;
+    const targetType = action.targetType;
+    const targetNames = (targetType && targetType != '') ? ['viewItems', action.compId, targetType] : ['viewItems', action.compId];
+
+    if(data && data.length > 0) {
+        if(state.hasIn(targetNames)) {
+
+            const beforeItemId = state.getIn(List(targetNames).push('selectedOptionItemId'));
+            const pos = (beforeItemId) ? data.map((e) => (e.confId)).indexOf(beforeItemId) : -1;
             if(pos < 0) {
                 // no exist or selected id was deleted
                 return state
@@ -72,7 +106,8 @@ export const handleListPagedAction = (state, action) => {
                 rowsPerPage: parseInt(rowLength, 10),
                 orderColumn: orderColumn,
                 orderDir: orderDir
-            }));
+            }))
+            .deleteIn(['viewItems', action.compId, 'checkedIds']);
     } else {
         newState = state.setIn(['viewItems', action.compId], Map({
             'listData': List(data.map((e) => {return Map(e)})),
@@ -87,18 +122,24 @@ export const handleListPagedAction = (state, action) => {
         }));
     }
 
-    if(action.isResetSelect) {
-        return newState.deleteIn(['viewItems', action.compId, 'selectedIds']);
-    } else {
-        return newState;
+    if(action.extOption) {
+        if(action.extOption.isResetSelect) {
+            newState = newState.deleteIn(['viewItems', action.compId, 'checkedIds']);
+        }
+        if(action.extOption.isCloseInform) {
+            newState = newState.deleteIn(['viewItems', action.compId, 'informOpen'])
+                        .deleteIn(['viewItems', action.compId, 'viewItem']);
+        }
     }
+
+    return newState;
 }
 
-export const handleGetObjectAction = (state, compId, data, extend, target) => {
+export const handleGetObjectAction = (state, compId, data, extend, target, idName) => {
     if(data && data.length > 0) {
 
         const ruleGrade = (extend && extend.length > 0) ? extend[0] : '';
-        let selectedOptionItemId = data[0].objId;
+        let selectedOptionItemId = data[0][idName];
 
         if(target && target != '') {
             
@@ -112,13 +153,45 @@ export const handleGetObjectAction = (state, compId, data, extend, target) => {
             return state
             .setIn(['viewItems', compId, target, 'viewItem'], fromJS(data[0]))
             .setIn(['viewItems', compId, target, 'selectedOptionItemId'], selectedOptionItemId)
-            .setIn(['viewItems', compId, target, 'ruleGrade'], (extend && extend.length > 0) ? extend[0] : '')
+            .setIn(['viewItems', compId, target, 'ruleGrade'], ruleGrade)
             .setIn(['viewItems', compId, target, 'informOpen'], true);
         } else {
             return state
             .setIn(['viewItems', compId, 'viewItem'], fromJS(data[0]))
             .setIn(['viewItems', compId, 'selectedOptionItemId'], selectedOptionItemId)
-            .setIn(['viewItems', compId, 'ruleGrade'], (extend && extend.length > 0) ? extend[0] : '')
+            .setIn(['viewItems', compId, 'ruleGrade'], ruleGrade)
+            .setIn(['viewItems', compId, 'informOpen'], true);
+        }
+    } else  {
+        return state.deleteIn(['viewItems', compId]);
+    }
+}
+
+export const handleGetObjectActionForDesktopConf = (state, compId, data, extend, target) => {
+    if(data && data.length > 0) {
+
+        const ruleGrade = (extend && extend.length > 0) ? extend[0] : '';
+        let selectedOptionItemId = data[0].confId;
+
+        if(target && target != '') {
+            
+            if(target == 'DEPT' && ruleGrade != 'DEPT') {
+                selectedOptionItemId = '';
+            } else if(target == 'USER' && ruleGrade != 'USER') {
+                selectedOptionItemId = '';
+            } else if(target == 'GROUP' && ruleGrade != 'GROUP') {
+                selectedOptionItemId = '';
+            }
+            return state
+            .setIn(['viewItems', compId, target, 'viewItem'], fromJS(data[0]))
+            .setIn(['viewItems', compId, target, 'selectedOptionItemId'], selectedOptionItemId)
+            .setIn(['viewItems', compId, target, 'ruleGrade'], ruleGrade)
+            .setIn(['viewItems', compId, target, 'informOpen'], true);
+        } else {
+            return state
+            .setIn(['viewItems', compId, 'viewItem'], fromJS(data[0]))
+            .setIn(['viewItems', compId, 'selectedOptionItemId'], selectedOptionItemId)
+            .setIn(['viewItems', compId, 'ruleGrade'], ruleGrade)
             .setIn(['viewItems', compId, 'informOpen'], true);
         }
     } else  {
@@ -152,6 +225,7 @@ export const handleShowInformAction = (state, action) => {
 export const handleCloseInformAction = (state, action) => {
     return state
         .setIn(['viewItems', action.compId, 'informOpen'], false)
+        .deleteIn(['viewItems', action.compId, 'selectId'])
         .deleteIn(['viewItems', action.compId, 'viewItem']);
 }
 
@@ -164,7 +238,7 @@ export const handleEditSuccessAction = (state, action) => {
                     // replace
                     newState = newState
                         .setIn(['viewItems', i, 'viewItem'], fromJS(action.response.data.data[0]))
-                        .setIn(['viewItems', i, 'informOpen'], false);
+//                        .setIn(['viewItems', i, 'informOpen'], false);
             //     }
             // }
         });
@@ -177,12 +251,32 @@ export const handleEditSuccessAction = (state, action) => {
     });
 }
 
-export const handleDeleteSuccessAction = (state, action) => {
+export const handleDeleteSuccessAction = (state, action, idName) => {
     let newState = state;
     if(newState.get('viewItems')) {
         newState.get('viewItems').forEach((e, i) => {
             if(e.get('viewItem')) {
-                if(e.getIn(['viewItem', 'objId']) == action.objId) {
+                if(e.getIn(['viewItem', idName]) == action[idName]) {
+                    // replace
+                    newState = newState.deleteIn(['viewItems', i, 'viewItem']);
+                }
+            }
+        });
+    }
+    return state.merge(newState).merge({
+        pending: false,
+        error: false,
+        dialogOpen: false,
+        dialogType: ''
+    });
+}
+
+export const handleDeleteSuccessActionForDesktopConf = (state, action) => {
+    let newState = state;
+    if(newState.get('viewItems')) {
+        newState.get('viewItems').forEach((e, i) => {
+            if(e.get('viewItem')) {
+                if(e.getIn(['viewItem', 'confId']) == action.confId) {
                     // replace
                     newState = newState.deleteIn(['viewItems', i, 'viewItem']);
                 }

@@ -65,12 +65,15 @@ export const closeClientManageInform = (param) => dispatch => {
 };
 
 // ...
-export const readClientListPaged = (module, compId, extParam, isResetSelect=false) => dispatch => {
+export const readClientListPaged = (module, compId, extParam, extOption = {isResetSelect:false, isInitParam:false}) => dispatch => {
 
-    const newListParam = (module.getIn(['viewItems', compId])) ? 
+    let newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
-
+    
+    if(extOption.isInitParam) {
+        newListParam = module.get('defaultListParam');
+    }
     const groupIdParam = (newListParam.get('groupId') && List(newListParam.get('groupId')).size > 0) ? List(newListParam.get('groupId')).join() : '';
 
     dispatch({type: COMMON_PENDING});
@@ -89,7 +92,7 @@ export const readClientListPaged = (module, compId, extParam, isResetSelect=fals
                 type: GET_CLIENT_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
-                isResetSelect: isResetSelect,
+                extOption: extOption,
                 response: response
             });
         }
@@ -196,7 +199,7 @@ export default handleActions({
     // },
     
     [DELETE_CLIENT_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'clientId');
     },
 
 }, initialState);

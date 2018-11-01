@@ -15,7 +15,7 @@ class GRTreeItem extends Component {
     };
 
     render() {
-        const {nodeKey, primaryText, style, checked, imperfect} = this.props
+        const {nodeKey, primaryText, style, checked, imperfect, isShowCheck, isEnableEdit} = this.props
         const {onClickNode, leftIcon, editIcon, rightIcon, onCheckNode} = this.props
 
         const styles = {
@@ -33,16 +33,18 @@ class GRTreeItem extends Component {
             <ListItem button
                 style={Object.assign({}, styles.root, style)}
                 onClick={onClickNode}>
-                <Checkbox
+                {(isShowCheck) && 
+                <Checkbox color="primary"
                     onClick={this.onClickNode}
                     onChange={onCheckNode(nodeKey)}
                     checked={checked.indexOf(nodeKey) !== -1}
                     disableRipple
                     indeterminate={imperfect.indexOf(nodeKey) !== -1}
                 />
+                }
                 {leftIcon}
                 <ListItemText inset primary={primaryText} />
-                {editIcon}
+                {isEnableEdit && editIcon}
                 {rightIcon}
             </ListItem>
 

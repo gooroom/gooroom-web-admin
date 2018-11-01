@@ -36,7 +36,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search'; 
 import AddIcon from '@material-ui/icons/Add';
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import ClientPackageDialog from './ClientPackageDialog';
@@ -142,7 +142,11 @@ class ClientPackageMenu extends Component {
   isChecked = id => {
     const { ClientPackageProps } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientPackageProps, this.props.match.params.grMenuId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
   // .................................................
   handleKeywordChange = (name, value) => {
@@ -157,9 +161,12 @@ class ClientPackageMenu extends Component {
     const { classes } = this.props;
     const { ClientPackageProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;// = ClientPackageProps.listParam.rowsPerPage - ClientPackageProps.listData.length;
 
     const listObj = ClientPackageProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
 
@@ -168,20 +175,22 @@ class ClientPackageMenu extends Component {
         <GRPane>
 
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-              <Grid item xs={6} >
-                <FormControl fullWidth={true}>
-                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={6} >
-                <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                  <Search />조회
-                </Button>
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={6} >
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                <Grid item xs={6} >
+                  <FormControl fullWidth={true}>
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={6} >
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                    <Search />조회
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
+            <Grid item xs={6} >
             {/*
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />등록
@@ -218,7 +227,7 @@ class ClientPackageMenu extends Component {
                       selected={isChecked}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                        <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                        <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} />
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('packageId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('packageArch')}</TableCell>
@@ -227,14 +236,14 @@ class ClientPackageMenu extends Component {
                   );
                 })}
 
-                {emptyRows > 0 && (
-                <TableRow >
-                  <TableCell
-                    colSpan={this.columnHeaders.length + 1}
-                    className={classes.grSmallAndClickCell}
-                  />
-                </TableRow>
-                )}
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
+                  </TableRow>
+                )}))}
               </TableBody>
             </Table>
             <TablePagination

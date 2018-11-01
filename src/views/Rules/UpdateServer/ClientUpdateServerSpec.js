@@ -12,9 +12,10 @@ import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import ClientUpdateServerDialog from './ClientUpdateServerDialog';
 
+import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
+
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 
 import Table from '@material-ui/core/Table';
@@ -50,20 +51,21 @@ class ClientUpdateServerSpec extends Component {
       <React.Fragment>
         {viewItem && 
           <Card elevation={4} style={{marginBottom:20}}>
-            <CardHeader
+            <GRRuleCardHeader
               avatar={RuleAvartar}
+              category='업데이트서버정보'
               title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.handleEditClick(viewItem, compType)}
+                    onClick={() => this.props.onClickEdit(viewItem, compType)}
                   ><SettingsApplicationsIcon /></Button>
-                  {(this.props.handleCopyClick) &&
+                  {(this.props.onClickCopy) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.handleCopyClick(viewItem)}
+                    onClick={() => this.props.onClickCopy(viewItem)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(selectedItem.get('isDefault'))) && 

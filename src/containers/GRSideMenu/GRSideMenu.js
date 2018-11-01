@@ -30,40 +30,7 @@ import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import menuItems from "./GRMenuItems";
 
 import { withStyles } from '@material-ui/core/styles';
-
-const localStyles = {
-
-  menuContainerClass: {
-    top: grLayout.headerHeight + " !important",
-    position: "fixed",
-    zIndex: 1019,
-    width: grLayout.sideBarWidth,
-    height: "calc(100vh - " + grLayout.headerHeight + ") !important",
-    flex: "0 0 200px",
-    order: "-1",
-    transition: "margin-left 0.25s, margin-right 0.25s, width 0.25s, flex 0.25s",
-    overflowX: "hidden",
-    display: "flex",
-    flexDirection: "column",
-    padding: 0,
-  },
-
-  menuItemClass: {
-    padding: "3px 5px 0px 20px !important",
-    '&:focus': {
-      backgroundColor: "#78909C",
-    }
-  },
-
-  nestedClass: {
-    padding: "3px 5px 0px 30px !important"
-  },
-
-  iconClass: {
-    margin: 0,
-    padding: 0
-  }
-}
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 class GRSideMenu extends React.Component {
@@ -132,7 +99,7 @@ class GRSideMenu extends React.Component {
           className={menuclass} 
           component={Link}
           to={item.url}>
-          <ListItemIcon className={classes.iconClass}>{menuIcon}</ListItemIcon>
+          <ListItemIcon style={{padding:0,margin:0}} >{menuIcon}</ListItemIcon>
           <Typography variant="button" color="textSecondary">
             {item.name}
           </Typography>
@@ -197,4 +164,4 @@ class GRSideMenu extends React.Component {
   }
 }
 
-export default withStyles(localStyles)(GRSideMenu);
+export default withStyles(GRCommonStyle)(GRSideMenu);

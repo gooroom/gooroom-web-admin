@@ -194,7 +194,7 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_ADMINUSER_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'userId');
     }
 
 }, initialState);

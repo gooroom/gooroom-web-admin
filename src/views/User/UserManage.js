@@ -28,7 +28,7 @@ import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
 
-import UserRuleInform from "views/User/UserRuleInform";
+import UserSpec from "views/User/UserSpec";
 import GRPane from "containers/GRContent/GRPane";
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
@@ -49,7 +49,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -130,8 +130,8 @@ class UserManage extends Component {
       viewItem: {
         userId: '',
         userNm: '',
-        userPassword: '',
-        showPassword: false
+        userPasswd: '',
+        showPasswd: false
       },
       dialogType: UserBasicDialog.TYPE_ADD
     }, false);
@@ -149,12 +149,15 @@ class UserManage extends Component {
       compId: compId
     });
   };
-  
-  
+    
   isChecked = id => {
     const { UserProps } = this.props;
     const checkedIds = getDataObjectVariableInComp(UserProps, this.props.match.params.grMenuId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
   
   handleEditClick = (event, id) => { 
@@ -211,35 +214,39 @@ class UserManage extends Component {
     const { classes } = this.props;
     const { UserProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;//UserProps.listParam.rowsPerPage - UserProps.listData.length;
+    
     const listObj = UserProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
       <React.Fragment>
         <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GRPane>
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-            
-              <Grid item xs={4} >
-                <FormControl fullWidth={true}>
-                  <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <FormControl fullWidth={true}>
-                  <KeywordOption handleKeywordChange={this.handleKeywordChange} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />조회
-                </Button>
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10} >
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                <Grid item xs={4} >
+                  <FormControl fullWidth={true}>
+                    <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControl fullWidth={true}>
+                    <KeywordOption handleKeywordChange={this.handleKeywordChange} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                    <Search />조회
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-
-            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end" >
+            <Grid item xs={2} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
                 <AddIcon />등록
               </Button>
@@ -274,7 +281,7 @@ class UserManage extends Component {
                       selected={isChecked}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                        <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                        <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} />
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
@@ -287,7 +294,7 @@ class UserManage extends Component {
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('userId'))}>
-                          <BuildIcon />
+                          <SettingsApplicationsIcon />
                         </Button>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
@@ -300,14 +307,14 @@ class UserManage extends Component {
                   );
                 })}
 
-                {emptyRows > 0 && (
-                  <TableRow >
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
                     <TableCell
                       colSpan={this.columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
-                )}
+                )}))}
               </TableBody>
             </Table>
             <TablePagination
@@ -329,7 +336,7 @@ class UserManage extends Component {
           </div>
           }
         </GRPane>
-        <UserRuleInform compId={compId} />
+        <UserSpec compId={compId} />
         <UserBasicDialog compId={compId} />
         <UserDialog compId={compId} />
 

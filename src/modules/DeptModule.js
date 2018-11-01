@@ -211,6 +211,7 @@ const makeParameter = (param) => {
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
         securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
+        desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId,
 
         paramIsInherit: (param.paramIsInherit) ? param.paramIsInherit : false
     };
@@ -351,13 +352,13 @@ export default handleActions({
         });
     },
     [GET_DEPT_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action);
+        return commonHandleActions.handleListAction(state, action, 'deptCd');
     }, 
     [GET_DEPT_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_DEPT_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, 'deptCd');
     },
     [SHOW_DEPT_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -416,7 +417,7 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_DEPT_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'deptCd');
     },
     [ADD_USERINDEPT_SUCCESS]: (state, action) => {
         return state.merge({

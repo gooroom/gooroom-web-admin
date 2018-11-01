@@ -42,7 +42,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -58,8 +58,8 @@ class UserListComp extends Component {
     { id: "chCheckbox", isCheckbox: true},
     { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
     { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
+    { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: "조직" },
     { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
-    { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
@@ -85,20 +85,21 @@ class UserListComp extends Component {
   // .................................................
 
   handleSelectRow = (event, id) => {
+    event.stopPropagation();
     const { UserProps, UserActions, compId } = this.props;
 
     const selectRowObject = getRowObjectById(UserProps, compId, id, 'userId');
-    const newCheckedIds = setCheckedIdsInComp(UserProps, compId, id);
+    // const newCheckedIds = setCheckedIdsInComp(UserProps, compId, id);
 
     // check select box
-    UserActions.changeCompVariable({
-      name: 'checkedIds',
-      value: newCheckedIds,
-      compId: compId
-    });
+    // UserActions.changeCompVariable({
+    //   name: 'checkedIds',
+    //   value: newCheckedIds,
+    //   compId: compId
+    // });
 
     if(this.props.onSelect) {
-      this.props.onSelect(selectRowObject, newCheckedIds);
+      this.props.onSelect(selectRowObject);
     }
   };
 
@@ -136,19 +137,56 @@ class UserListComp extends Component {
   };
 
 
+  handleClickAllCheck = (event, checked) => {
+    const { UserActions, UserProps, compId } = this.props;
+    const newCheckedIds = getDataPropertyInCompByParam(UserProps, compId, 'userId', checked);
+
+    UserActions.changeCompVariable({
+      name: 'checkedIds',
+      value: newCheckedIds,
+      compId: compId
+    });
+  };
+
+  handleCheckClick = (event, id) => {
+    event.stopPropagation();
+    const { UserActions, UserProps, compId } = this.props;
+    const newCheckedIds = setCheckedIdsInComp(UserProps, compId, id);  
+
+    UserActions.changeCompVariable({
+      name: 'checkedIds',
+      value: newCheckedIds,
+      compId: compId
+    });
+
+  }
+
   isChecked = id => {
     const { UserProps, compId } = this.props;
     const checkedIds = getDataObjectVariableInComp(UserProps, compId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
 
+  isSelected = id => {
+    const { UserProps, compId } = this.props;
+    const selectId = getDataObjectVariableInComp(UserProps, compId, 'selectId');
+    return (selectId == id);
+  }
 
   render() {
 
     const { classes } = this.props;
     const { UserProps, compId } = this.props;
-    const emptyRows = 0;//UserProps.listParam.rowsPerPage - UserProps.listData.length;
+    
     const listObj = UserProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
       <div>
@@ -166,19 +204,20 @@ class UserListComp extends Component {
             columnData={this.columnHeaders}
           />
           <TableBody>
-            {listObj.get('listData').map(n => {
+            {listObj.get('listData') && listObj.get('listData').map(n => {
               const isChecked = this.isChecked(n.get('userId'));
+              const isSelected = this.isSelected(n.get('userId'));
+
               return (
                 <TableRow
                   hover
+                  className={(isSelected) ? classes.grSelectedRow : ''}
                   onClick={event => this.handleSelectRow(event, n.get('userId'))}
                   role="checkbox"
-                  aria-checked={isChecked}
                   key={n.get('userId')}
-                  selected={isChecked}
                 >
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                    <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('userId'))}/>
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
@@ -188,7 +227,7 @@ class UserListComp extends Component {
                     <Button color="secondary" size="small" 
                       className={classes.buttonInTableRow}
                       onClick={event => this.handleEditClick(event, n.get('userId'))}>
-                      <BuildIcon />
+                      <SettingsApplicationsIcon />
                     </Button>
                     <Button color="secondary" size="small" 
                       className={classes.buttonInTableRow}
@@ -200,14 +239,14 @@ class UserListComp extends Component {
               );
             })}
 
-            {emptyRows > 0 && (
-              <TableRow >
+            {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+              <TableRow key={e}>
                 <TableCell
                   colSpan={this.columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
-            )}
+            )}))}
           </TableBody>
         </Table>
       }
@@ -229,7 +268,6 @@ class UserListComp extends Component {
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
       }
-      <UserBasicDialog compId={compId} />
       </div>
     );
 

@@ -303,7 +303,7 @@ class SecurityRuleNetwork extends Component {
                   key={n.get('no')}
                   selected={isSelected}
                 >
-                  <TableCell padding="checkbox"><Checkbox checked={isSelected} onClick={event => this.handleSelectRow(event, n.get('no'))} /></TableCell>
+                  <TableCell padding="checkbox"><Checkbox checked={isSelected} color="primary" onClick={event => this.handleSelectRow(event, n.get('no'))} /></TableCell>
                   <TableCell>
                     <FormControl className={classes.formControl}>
                       <Select

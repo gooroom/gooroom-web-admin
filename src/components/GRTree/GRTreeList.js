@@ -8,8 +8,9 @@ import List from '@material-ui/core/List';
 import OpenIcon from "@material-ui/icons/ExpandMore";
 import CloseIcon from "@material-ui/icons/ExpandLess";
 import FolderIcon from "@material-ui/icons/Folder";
+import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import FileIcon from "@material-ui/icons/InsertDriveFile";
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -29,6 +30,9 @@ class GRTreeList extends Component {
       keyName: props.keyName,
       title: props.title,
       startingDepth: props.startingDepth ? props.startingDepth: 0,
+      
+      isShowCheck: (props.isShowCheck !== undefined) ? props.isShowCheck : true,
+      isEnableEdit: (props.isEnableEdit !== undefined) ? props.isEnableEdit : false,
 
       treeData: [],
 
@@ -41,14 +45,16 @@ class GRTreeList extends Component {
   }
 
   componentDidMount() {
-    if(this.props.onInitTreeData) {
-      this.props.onInitTreeData();
-    }
+    
     if(this.props.onRef) {
       this.props.onRef(this);
     }
+
+    if(this.props.onInitTreeData) {
+      this.props.onInitTreeData();
+    }
     
-    this.fetchTreeData(this.state.rootKeyValue);
+    this.fetchTreeData(this.state.rootKeyValue, undefined, true);
   }
 
   componentWillUnmount() {
@@ -56,8 +62,9 @@ class GRTreeList extends Component {
       this.props.onRef(undefined)
     }
   }
+  
+  fetchTreeData(keyValue, index, isDoExpand) {
 
-  fetchTreeData(keyValue, index) {
     const keyName = this.state.keyName;
     const param = {};
     param[this.state.paramKeyName] = keyValue;
@@ -93,17 +100,19 @@ class GRTreeList extends Component {
         parents[index].children = resData.map(d => {
           return d.key;
         });
-        if(this.state.checked.includes(parents[index].key)) {
-          // add checked data, by default checked.
-          const newChecked = [...this.state.checked];
-          resData.map(d => {
-            newChecked.push(d.key);  
-            return d;
-          });
-          this.setState({
-            checked: newChecked  
-          });
-        }
+
+        // check child if parent checked
+        // if(this.state.checked.includes(parents[index].key)) {
+        //   // add checked data, by default checked.
+        //   const newChecked = [...this.state.checked];
+        //   resData.map(d => {
+        //     newChecked.push(d.key);  
+        //     return d;
+        //   });
+        //   this.setState({
+        //     checked: newChecked  
+        //   });
+        // }
         
         // data merge.
         // 1. delete children
@@ -137,10 +146,14 @@ class GRTreeList extends Component {
         });
 
       } else {
-
         this.setState({
           treeData: resData
         });
+
+        // init tree and expand
+        if(isDoExpand) {
+          this.handleClickNode(resData[0], 0);
+        }
       }
     });
   }
@@ -165,9 +178,8 @@ class GRTreeList extends Component {
           expandedListItems: newArray
         });
       }
-    } else {
-
     }
+
     // select node
     this.setState({
       activeListItem: index
@@ -277,7 +289,7 @@ class GRTreeList extends Component {
     };
   }
 
-  handleChange = nodeKey => event => {
+  handleCheckNode = nodeKey => event => {
     const { checked, imperfect, treeData } = this.state;
 
     let newChecked = checked;
@@ -384,10 +396,12 @@ class GRTreeList extends Component {
             nodeKey={listItem.key}
             primaryText={listItem._primaryText}
             style={Object.assign({}, listItem._styles.root)}
+            isShowCheck={this.state.isShowCheck}
+            isEnableEdit={this.state.isEnableEdit}
             checked={this.state.checked}
             imperfect={this.state.imperfect}
             leftIcon={getLeftIcon(listItem, this.props)}
-            editIcon={<BuildIcon style={{color: 'darkgray', fontSize: 18}} onClick={() => this.handleEditClickNode(listItem, i)} />}
+            editIcon={<SettingsApplicationsIcon style={{color: 'darkgray', fontSize: 18}} onClick={() => this.handleEditClickNode(listItem, i)} />}
             rightIcon={
               !listItem.children ? null : expandedListItems.indexOf(i) ===
               -1 ? (
@@ -402,7 +416,7 @@ class GRTreeList extends Component {
               }
               this.handleClickNode(listItem, i);
             }}
-            onCheckNode={this.handleChange}
+            onCheckNode={this.handleCheckNode}
           />
         );
       } else {
@@ -419,9 +433,9 @@ class GRTreeList extends Component {
     function getLeftIcon(listItem, localProps) {
       if (localProps.useFolderIcons) {
         if (listItem.children) {
-          return <FolderIcon className={localProps.classes.parentNodeClass} />;
+          return <FolderOpenIcon className={localProps.classes.parentNodeClass} />;
         } else {
-          return <FileIcon className={localProps.classes.childNodeClass} />;
+          return <FolderIcon className={localProps.classes.childNodeClass} />;
         }
       } else {
         return listItem.icon;

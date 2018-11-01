@@ -9,6 +9,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
 import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
+import DesktopConfSelector from 'views/Rules/DesktopConfig/DesktopConfSelector';
 
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -47,12 +48,14 @@ class UserRuleSelector extends Component {
                         <Tab label="브라우져정책" value={0} />
                         <Tab label="매체제어정책" value={1} />
                         <Tab label="단말보안정책" value={2} />
+                        <Tab label="데스크톱정보" value={3} />
                     </Tabs>
                 </AppBar>
-                <Paper elevation={0} style={{ maxHeight: 400, overflow: 'auto' }} >
+                <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
                 {selectedTab === 0 && <BrowserRuleSelector compId={compId} initId={module ? module.browserRuleId : '-'} targetType={targetType} />}
                 {selectedTab === 1 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 2 && <SecurityRuleSelector compId={compId} initId={module ? module.clientSecuRuleId : '-'} targetType={targetType} />}
+                {selectedTab === 2 && <SecurityRuleSelector compId={compId} initId={module ? module.securityRuleId : '-'} targetType={targetType} />}
+                {selectedTab === 3 && <DesktopConfSelector compId={compId} initId={module ? '+' : '-'} targetType={targetType} />}
                 </Paper>
             
             </React.Fragment>

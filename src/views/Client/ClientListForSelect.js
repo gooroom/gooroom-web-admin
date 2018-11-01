@@ -182,37 +182,44 @@ class ClientListForSelect extends Component {
     this.handleGetClientList(newListParam);
   };
 
-
   isChecked = id => {
     const checkedIds = this.state.stateData.get('checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
 
   render() {
     const { classes } = this.props;
-    const emptyRows = 0;//UserProps.listParam.rowsPerPage - UserProps.listData.length;
+    
     const listObj = this.state.stateData;
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
       <div>
         {/* data option area */}
-        <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-              <Grid item xs={4} >
-                <FormControl fullWidth={true}>
-                  <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <FormControl fullWidth={true}>
-                  <KeywordOption handleKeywordChange={this.handleKeywordChange} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={3}>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />
-                  조회
-                </Button>
-              </Grid>
+        <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+          <Grid item xs={4} >
+            <FormControl fullWidth={true}>
+              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={4}>
+            <FormControl fullWidth={true}>
+              <KeywordOption handleKeywordChange={this.handleKeywordChange} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={3}>
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+              <Search />
+              조회
+            </Button>
+          </Grid>
         </Grid>
       {(listObj) &&
         <Table>
@@ -240,7 +247,7 @@ class ClientListForSelect extends Component {
                   selected={isChecked}
                 >
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                    <Checkbox color="primary" checked={isChecked} className={classes.grObjInCell} />
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
@@ -250,14 +257,14 @@ class ClientListForSelect extends Component {
               );
             })}
 
-            {emptyRows > 0 && (
-              <TableRow >
+            {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+              <TableRow key={e}>
                 <TableCell
                   colSpan={this.columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
-            )}
+            )}))}
           </TableBody>
         </Table>
       }
