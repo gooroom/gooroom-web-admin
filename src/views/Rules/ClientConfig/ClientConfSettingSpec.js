@@ -12,9 +12,10 @@ import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import ClientConfSettingDialog from './ClientConfSettingDialog';
 
+import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
+
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 
 import Table from '@material-ui/core/Table';
@@ -51,8 +52,9 @@ class ClientConfSettingSpec extends Component {
       <React.Fragment>
         {viewItem && 
         <Card elevation={4} style={{marginBottom:20}}>
-          <CardHeader
+          <GRRuleCardHeader
             avatar={RuleAvartar}
+            category='단말설정'
             title={viewItem.get('objNm')} 
             subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             action={

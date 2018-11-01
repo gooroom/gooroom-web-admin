@@ -12,7 +12,7 @@ import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as DesktopAppActions from 'modules/DesktopAppModule';
 
-import DesktopConfDialog from './DesktopConfDialog';
+import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
 import DesktopApp from './DesktopApp';
@@ -21,7 +21,6 @@ import Grid from '@material-ui/core/Grid';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -64,8 +63,9 @@ class DesktopConfSpec extends Component {
       <React.Fragment>
         {viewItem && 
           <Card elevation={4} style={{marginBottom:20}}>
-            <CardHeader
+            <GRRuleCardHeader
               avatar={RuleAvartar}
+              category='데스크톱설정'
               title={viewItem.get('confNm')}
               subheader={viewItem.get('confId')}
               action={
