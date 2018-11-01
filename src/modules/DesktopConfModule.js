@@ -383,6 +383,26 @@ export const deleteDesktopConfData = (param) => dispatch => {
     });
 };
 
+// rule inherit
+export const inheritDesktopConfData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateDeptConfInherit', {
+            'objId': param.confId,
+            'confType': 'DESKTOPCONF',
+            'deptCd': param.deptCd
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_SECURITYRULE_SUCCESS,
+                compId: param.compId,
+                confId: param.confId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export const readThemeInfoList = () => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readThemeList', {
