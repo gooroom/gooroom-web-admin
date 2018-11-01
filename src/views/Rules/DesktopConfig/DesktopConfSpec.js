@@ -7,13 +7,14 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
+import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as DesktopAppActions from 'modules/DesktopAppModule';
 
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
+import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 
 import DesktopApp from './DesktopApp';
 
@@ -24,6 +25,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -38,6 +40,16 @@ class DesktopConfSpec extends Component {
     this.props.DesktopAppActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopAppDialog.TYPE_EDIT_INCONF
+    });
+  };
+
+  handleInheritClick = (confId, compType) => {
+    const { DesktopConfProps, DesktopConfActions, compId, targetType } = this.props;
+    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(DesktopConfProps, compId, 'confId', targetType) : getSelectedObjectInComp(DesktopConfProps, compId, targetType);
+
+    DesktopConfActions.showDialog({
+      viewItem: viewItem,
+      dialogType: DesktopConfDialog.TYPE_INHERIT
     });
   };
   
@@ -79,6 +91,12 @@ class DesktopConfSpec extends Component {
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(viewItem)}
                   ><CopyIcon /></Button>
+                  }
+                  {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
+                  <Button size="small"
+                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.handleInheritClick(viewItem.get('confId'), compType)}
+                  ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
               }
