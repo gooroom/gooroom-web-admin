@@ -108,7 +108,7 @@ class MediaRuleSelector extends Component {
           <MediaRuleSpec compId={compId}
             specType="inform" targetType={targetType}
             selectedItem={selectedMediaRuleItem}
-            handleEditClick={this.handleEditClickForMediaRule}
+            onClickEdit={this.handleEditClickForMediaRule}
           />
         }
         </CardContent>

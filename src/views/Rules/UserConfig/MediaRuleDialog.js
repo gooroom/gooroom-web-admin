@@ -11,7 +11,7 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 import MediaRuleViewer from './MediaRuleViewer';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
-import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -81,7 +81,7 @@ class MediaRuleDialog extends Component {
             const { MediaRuleProps, MediaRuleActions } = this.props;
             MediaRuleActions.createMediaRuleData(MediaRuleProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
+                    refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
                     this.handleClose();
                 });
         }
@@ -101,7 +101,7 @@ class MediaRuleDialog extends Component {
             const { MediaRuleProps, MediaRuleActions } = this.props;
             MediaRuleActions.editMediaRuleData(MediaRuleProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComp(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
+                    refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
                     this.handleClose();
                 });
         }
@@ -117,7 +117,7 @@ class MediaRuleDialog extends Component {
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: '시스템알림',
-                alertMsg: '매체제어설정이 하위 조직에 적용되었습니다.'
+                alertMsg: '매체제어정책이 하위 조직에 적용되었습니다.'
             });
             this.handleClose();
         });
@@ -130,9 +130,9 @@ class MediaRuleDialog extends Component {
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: '시스템알림',
-                alertMsg: '매체제어설정을 복사하였습니다.'
+                alertMsg: '매체제어정책을 복사하였습니다.'
             });
-            refreshDataListInComp(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
+            refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
             this.handleClose();
         });
     }
@@ -212,7 +212,7 @@ class MediaRuleDialog extends Component {
                             </Grid>
                             <Grid item xs={6}>
                             <FormControlLabel label="Readonly"
-                                control={<Checkbox onChange={this.handleValueChange('usbReadonly')}
+                                control={<Checkbox onChange={this.handleValueChange('usbReadonly')} color="primary"
                                     checked={this.checkAllow(editingItem.get('usbReadonly'))}
                                 />}                                
                             />

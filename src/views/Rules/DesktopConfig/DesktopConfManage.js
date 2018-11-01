@@ -7,10 +7,11 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
+import * as DesktopAppActions from 'modules/DesktopAppModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComp, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -20,7 +21,7 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import DesktopConfDialog from './DesktopConfDialog';
 import DesktopConfSpec from './DesktopConfSpec';
-import { generateDesktopConfObject } from './DesktopConfSpec';
+import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -39,7 +40,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -53,6 +54,7 @@ class DesktopConfManage extends Component {
   columnHeaders = [
     { id: 'chConfId', isOrder: false, numeric: false, disablePadding: true, label: '데스크톱환경아이디' },
     { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '데스크톱환경이름' },
+    { id: 'chThemeName', isOrder: false, numeric: false, disablePadding: true, label: '테마이름' },
     { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: '수정자' },
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
     { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: '등록자' },
@@ -121,6 +123,12 @@ class DesktopConfManage extends Component {
   };
 
   handleCreateButton = () => {
+    const compId = this.props.match.params.grMenuId;
+
+    // desktop app list for select
+    //this.props.DesktopAppActions.readDesktopAppList(compId);
+    // theme list for select option
+    //this.props.DesktopConfActions.readThemeInfoList();
     this.props.DesktopConfActions.showDialog({
       viewItem: Map(),
       dialogType: DesktopConfDialog.TYPE_ADD
@@ -132,7 +140,7 @@ class DesktopConfManage extends Component {
     const viewItem = getRowObjectById(DesktopConfProps, this.props.match.params.grMenuId, id, 'confId');
 
     DesktopConfActions.showDialog({
-      viewItem: generateDesktopConfObject(viewItem),
+      viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT
     });
   };
@@ -156,7 +164,7 @@ class DesktopConfManage extends Component {
         confId: paramObject.get('confId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComp(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
+        refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
       });
     }
   };
@@ -182,53 +190,57 @@ class DesktopConfManage extends Component {
     const { classes } = this.props;
     const { DesktopConfProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;
 
-    const selectedItem = DesktopConfProps.getIn(['viewItems', compId]);
+    const listObj = DesktopConfProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
       <div>
         <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GRPane>
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={6} >
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                <Grid item xs={6}>
+                  <FormControl fullWidth={true}>
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                  </FormControl>
+                </Grid>
 
-              <Grid item xs={6}>
-                <FormControl fullWidth={true}>
-                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
-                </FormControl>
+                <Grid item xs={6}>
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                    <Search />조회
+                  </Button>
+                </Grid>
               </Grid>
-
-              <Grid item xs={6}>
-                <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                  <Search />조회
-                </Button>
-              </Grid>
-
             </Grid>
 
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
+            <Grid item xs={6} style={{textAlign:'right'}}>
+              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" 
+                onClick={() => { this.handleCreateButton(); } } >
                 <AddIcon />등록
               </Button>
             </Grid>
           </Grid>            
 
           {/* data area */}
-          {(selectedItem) &&
+          {(listObj) &&
           <div>
             <Table>
               <GRCommonTableHead
                 classes={classes}
                 keyId="confId"
-                orderDir={selectedItem.getIn(['listParam', 'orderDir'])}
-                orderColumn={selectedItem.getIn(['listParam', 'orderColumn'])}
+                orderDir={listObj.getIn(['listParam', 'orderDir'])}
+                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {selectedItem.get('listData').map(n => {
+                {listObj && listObj.get('listData') && listObj.get('listData').map(n => {
                   return (
                     <TableRow 
                       hover
@@ -238,6 +250,7 @@ class DesktopConfManage extends Component {
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('confId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('confNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('themeNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
@@ -247,7 +260,7 @@ class DesktopConfManage extends Component {
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditListClick(event, n.get('confId'))}>
-                          <BuildIcon />
+                          <SettingsApplicationsIcon />
                         </Button>
 
                         <Button color="secondary" size="small" 
@@ -261,19 +274,22 @@ class DesktopConfManage extends Component {
                   );
                 })}
 
-                {emptyRows > 0 && (
-                  <TableRow >
-                    <TableCell colSpan={this.columnHeaders.columnData.length + 1} className={classes.grSmallAndClickCell} />
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
                   </TableRow>
-                )}
+                )}))}
               </TableBody>
             </Table>
             <TablePagination
               component='div'
-              count={selectedItem.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={selectedItem.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={selectedItem.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={selectedItem.getIn(['listParam', 'page'])}
+              count={listObj.getIn(['listParam', 'rowsFiltered'])}
+              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+              page={listObj.getIn(['listParam', 'page'])}
               backIconButtonProps={{
                 'aria-label': 'Previous Page'
               }}
@@ -289,11 +305,12 @@ class DesktopConfManage extends Component {
         {/* dialog(popup) component area */}
         <DesktopConfSpec 
           specType="inform" 
-          selectedItem={selectedItem}
-          handleCopyClick={this.handleCopyClick}
-          handleEditClick={this.handleEditItemClick}
+          selectedItem={listObj}
+          onClickCopy={this.handleCopyClick}
+          onClickEdit={this.handleEditItemClick}
         />
         <DesktopConfDialog compId={compId} />
+        <DesktopAppDialog compId={compId} />
         <GRConfirm />
         
       </div>
@@ -307,6 +324,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
+  DesktopAppActions: bindActionCreators(DesktopAppActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 

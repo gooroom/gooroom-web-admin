@@ -34,40 +34,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 
-
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-  },
-  overrides: {
-    MuiButton: {
-      sizeSmall: {
-        padding: 0,
-        minWidth: 48,
-        minHeight: 24
-      },
-    },
-    MuiIconButton: {
-      root: {
-        paddingTop: 0,
-        paddingBottom: 0
-      }
-    },
-    MuiTableCell: {
-      root: {
-        padding: '0 6 0 0'
-      }
-    },
-    MuiTableRow: {
-      root: {
-        height: 32
-      },
-      head: {
-        height: 44
-      }
-    }
-  }
-});
+import GRTheme from 'ui/theme/GRTheme';
 
 class GRFull extends Component {
 
@@ -121,7 +88,7 @@ class GRFull extends Component {
     const anchorEl = GlobalProps.get('popoverElement');
 
     return (
-      <MuiThemeProvider theme={theme}>
+      <MuiThemeProvider theme={createMuiTheme(GRTheme)}>
         <CssBaseline />
         <div className={classes.fullRoot} >
           <GRHeader toggleDrawer={this.toggleDrawer} onAdminClick={this.handleClickAdmin} onSystemClick={this.handleClickSystem} />
@@ -153,7 +120,6 @@ class GRFull extends Component {
             {GlobalProps.get('popoverText')}
           </Typography>
         </Popover>          
-        
       </MuiThemeProvider>
 
     );

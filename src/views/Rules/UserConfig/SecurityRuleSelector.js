@@ -108,7 +108,7 @@ class SecurityRuleSelector extends Component {
           <SecurityRuleSpec compId={compId}
             specType="inform" targetType={targetType}
             selectedItem={selectedSecurityRuleItem}
-            handleEditClick={this.handleEditClickForSecurityRule}
+            onClickEdit={this.handleEditClickForSecurityRule}
           />
         }
         </CardContent>

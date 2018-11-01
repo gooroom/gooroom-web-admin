@@ -45,11 +45,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search'; 
 import AddIcon from '@material-ui/icons/Add';
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import ClientGroupDialog from './ClientGroupDialog';
-import ClientGroupInform from './ClientGroupInform';
+import ClientGroupSpec from './ClientGroupSpec';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -198,9 +198,12 @@ class ClientGroupManage extends Component {
     const { classes } = this.props;
     const { ClientGroupProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
-
+    
     const listObj = ClientGroupProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
 
@@ -209,20 +212,22 @@ class ClientGroupManage extends Component {
         <GRPane>
 
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-              <Grid item xs={6} >
-                <FormControl fullWidth={true}>
-                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={6} >
-                <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                  <Search />조회
-                </Button>
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={6}>
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                <Grid item xs={6} >
+                  <FormControl fullWidth={true}>
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={6} >
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                    <Search />조회
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
+            <Grid item xs={6}>
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />등록
               </Button>
@@ -258,7 +263,7 @@ class ClientGroupManage extends Component {
                         <Button color='secondary' size="small" 
                           className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('grpId'))}>
-                          <BuildIcon />
+                          <SettingsApplicationsIcon />
                         </Button>
                         <Button color='secondary' size="small"
                           className={classes.buttonInTableRow} 
@@ -270,14 +275,14 @@ class ClientGroupManage extends Component {
                   );
                 })}
 
-                {emptyRows > 0 && (
-                <TableRow >
-                  <TableCell
-                    colSpan={this.columnHeaders.length + 1}
-                    className={classes.grSmallAndClickCell}
-                  />
-                </TableRow>
-                )}
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
+                  </TableRow>
+                )}))}
               </TableBody>
             </Table>
             <TablePagination
@@ -299,7 +304,7 @@ class ClientGroupManage extends Component {
           }
 
         </GRPane>
-        <ClientGroupInform compId={compId} />
+        <ClientGroupSpec compId={compId} />
         <ClientGroupDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>

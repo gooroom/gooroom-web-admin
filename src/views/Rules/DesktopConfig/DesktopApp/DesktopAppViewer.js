@@ -13,6 +13,8 @@ import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRule
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import DesktopAppDialog from './DesktopAppDialog';
 
+import Grid from '@material-ui/core/Grid';
+
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -33,47 +35,17 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class DesktopAppSpec extends Component {
+class DesktopAppViewer extends Component {
 
   render() {
 
-    const { classes } = this.props;
-    const { compId, compType, targetType, selectedItem } = this.props;
+    const { classes, viewItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
-    let viewItem = null;
-    let GRAvartar = null;
-    if(selectedItem) {
-      viewItem = selectedItem.get('viewItem');
-      GRAvartar = getAvatarForRuleGrade(targetType, "DESKTOP_APP");
-    }
-
-    console.log('viewItem ::::::::::  ', (viewItem) ? viewItem.toJS(): 'NNNN');
-    
     return (
       <React.Fragment>
         {(viewItem) && 
           <Card elevation={4} style={{marginBottom:20}}>
-            <CardHeader
-              avatar={GRAvartar}
-              title={viewItem.get('appNm')} 
-              subheader={viewItem.get('appId') + ', ' + viewItem.get('appInfo')}
-              action={
-                <div style={{paddingTop:16,paddingRight:24}}>
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.handleEditClick(viewItem, compType)}
-                  ><SettingsApplicationsIcon /></Button>
-                  {(this.props.handleCopyClick) &&
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.handleCopyClick(viewItem)}
-                  ><CopyIcon /></Button>
-                  }
-                </div>
-              }
-              style={{paddingBottom:0}}
-            />
           <CardContent>
             <Table>
               <TableBody>
@@ -81,7 +53,7 @@ class DesktopAppSpec extends Component {
                   <TableCell component="th" scope="row">{bull} 데스크톱앱 종류</TableCell>
                   <TableCell numeric>{viewItem.get('appGubun')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 실행 명령어</TableCell>
-                  <TableCell numeric style={{wordBreak: 'break-word'}}>{viewItem.get('appExec')}</TableCell>
+                  <TableCell numeric style={{wordBreak: 'break-word', maxWidth:200}}>{viewItem.get('appExec')}</TableCell>
                 </TableRow>
 
                 <TableRow>
@@ -110,7 +82,6 @@ class DesktopAppSpec extends Component {
             </CardContent>
           </Card>
         }
-      <DesktopAppDialog compId={compId} />
       </React.Fragment>
     );
   }
@@ -124,5 +95,5 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopAppSpec));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopAppViewer));
 

@@ -42,7 +42,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientWithPackageComp extends Component {
+class ClientManageCompWithPackage extends Component {
 
   columnHeaders = [
     { id: "chCheckbox", isCheckbox: true},
@@ -90,11 +90,10 @@ class ClientWithPackageComp extends Component {
     });
   };
 
-  handleSelectRow = (event, id) => {
+  handleCheckClick = (event, id) => {
+    event.stopPropagation();
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-
-    const selectRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
-    const newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);
+    const newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);  
 
     ClientManageActions.changeCompVariable({
       name: 'checkedIds',
@@ -102,8 +101,22 @@ class ClientWithPackageComp extends Component {
       compId: compId
     });
 
+  }
+
+  handleSelectRow = (event, id) => {
+    event.stopPropagation();
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
+    const selectRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
+
+    // const newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);
+    // ClientManageActions.changeCompVariable({
+    //   name: 'checkedIds',
+    //   value: newCheckedIds,
+    //   compId: compId
+    // });
+
     if(this.props.onSelect) {
-      this.props.onSelect(selectRowObject, newCheckedIds);
+      this.props.onSelect(selectRowObject);
     }
     
     // rest actions..
@@ -113,7 +126,17 @@ class ClientWithPackageComp extends Component {
   isChecked = id => {
     const { ClientManageProps, compId } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientManageProps, compId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
+  }
+
+  isSelected = id => {
+    const { ClientManageProps, compId } = this.props;
+    const selectId = getDataObjectVariableInComp(ClientManageProps, compId, 'selectId');
+    return (selectId == id);
   }
 
   // .................................................
@@ -127,7 +150,6 @@ class ClientWithPackageComp extends Component {
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       clientType: property, page:0
     });
-
   };
 
   handleKeywordChange = (name, value) => {
@@ -170,7 +192,7 @@ class ClientWithPackageComp extends Component {
             </FormControl>
           </Grid>
           <Grid item xs={4} >
-            <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
               <Search />조회
             </Button>
           </Grid>
@@ -193,17 +215,18 @@ class ClientWithPackageComp extends Component {
           <TableBody>
             {listObj.get('listData').map(n => {
               const isChecked = this.isChecked(n.get('clientId'));
+              const isSelected = this.isSelected(n.get('clientId'));
+
               return (
                 <TableRow
                   hover
+                  className={(isSelected) ? classes.grSelectedRow : ''}
                   onClick={event => this.handleSelectRow(event, n.get('clientId'))}
                   role="checkbox"
-                  aria-checked={isChecked}
                   key={n.get('clientId')}
-                  selected={isChecked}
                 >
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                    <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('clientId'))}/>
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
@@ -258,5 +281,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientWithPackageComp));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageCompWithPackage));
 

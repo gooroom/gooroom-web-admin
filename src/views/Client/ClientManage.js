@@ -44,7 +44,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Checkbox from "@material-ui/core/Checkbox";
 import InputLabel from "@material-ui/core/InputLabel";
 
-import ClientManageInform from "./ClientManageInform";
+import ClientManageSpec from "./ClientManageSpec";
 // option components
 import ClientGroupSelect from 'views/Options/ClientGroupSelect';
 import ClientStatusSelect from 'views/Options/ClientStatusSelect';
@@ -155,7 +155,11 @@ class ClientManage extends Component {
   isChecked = id => {
     const { ClientManageProps } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientManageProps, this.props.match.params.grMenuId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   };
 
 
@@ -182,8 +186,12 @@ class ClientManage extends Component {
     const { classes } = this.props;
     const { ClientManageProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
+    
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
       <React.Fragment>
@@ -191,38 +199,40 @@ class ClientManage extends Component {
         <GRPane>
 
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10}>
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
 
-              <Grid item xs={3} >
-                <FormControl fullWidth={true}>
-                  <InputLabel htmlFor="client-status">단말상태</InputLabel>
-                  <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
-                </FormControl>
+                <Grid item xs={3} >
+                  <FormControl fullWidth={true}>
+                    <InputLabel htmlFor="client-status">단말상태</InputLabel>
+                    <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={3} >
+                  <FormControl fullWidth={true}>
+                    <InputLabel htmlFor="client-status">단말그룹</InputLabel>
+                    <ClientGroupSelect onChangeSelect={this.handleChangeGroupSelect} />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={3} >
+                  <FormControl fullWidth={true}>
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={3} >
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                    <Search />조회
+                  </Button>
+                </Grid>
+
               </Grid>
-
-              <Grid item xs={3} >
-                <FormControl fullWidth={true}>
-                  <InputLabel htmlFor="client-status">단말그룹</InputLabel>
-                  <ClientGroupSelect onChangeSelect={this.handleChangeGroupSelect} />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={3} >
-                <FormControl fullWidth={true}>
-                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={3} >
-                <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                  <Search />조회
-                </Button>
-              </Grid>
-
             </Grid>
 
-            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
+            <Grid item xs={2}>
             {/*
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />등록
@@ -258,7 +268,7 @@ class ClientManage extends Component {
                       selected={isChecked}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                        <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                        <Checkbox color="primary" checked={isChecked} className={classes.grObjInCell} />
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('viewStatus')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
@@ -273,14 +283,14 @@ class ClientManage extends Component {
                   );
                 })}
 
-              {emptyRows > 0 && (
-                <TableRow >
-                  <TableCell
-                    colSpan={this.columnHeaders.length + 1}
-                    className={classes.grSmallAndClickCell}
-                  />
-                </TableRow>
-              )}
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
+                  </TableRow>
+                )}))}
             </TableBody>
           </Table>
           <TablePagination
@@ -303,7 +313,7 @@ class ClientManage extends Component {
           }
 
         </GRPane>
-        <ClientManageInform compId={compId} />
+        <ClientManageSpec compId={compId} />
 
         <BrowserRuleDialog compId={compId} />
         <SecurityRuleDialog compId={compId} />

@@ -10,7 +10,7 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
-import { refreshDataListInComp } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
 import ClientConfSettingViewer from './ClientConfSettingViewer';
 
@@ -89,7 +89,7 @@ class ClientConfSettingDialog extends Component {
             const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
             ClientConfSettingActions.createClientConfSettingData(ClientConfSettingProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComp(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
+                    refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
                     this.handleClose();
                 });
         }
@@ -109,7 +109,7 @@ class ClientConfSettingDialog extends Component {
             const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
             ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComp(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
+                    refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
                     this.handleClose();
                 });
         }
@@ -124,7 +124,7 @@ class ClientConfSettingDialog extends Component {
                 alertTitle: '시스템알림',
                 alertMsg: '단말정책정보를 복사하였습니다.'
             });
-            refreshDataListInComp(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
+            refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
             this.handleClose();
         });
     }
@@ -190,7 +190,7 @@ class ClientConfSettingDialog extends Component {
                         </div>
                         <div style={{marginTop:"10px"}}>
                             <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
-                            <Button onClick={this.handleAddNtp} variant="outlined" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
+                            <Button onClick={this.handleAddNtp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
                             <List>
                             {editingItem.get('ntpAddress') && editingItem.get('ntpAddress').size > 0 && editingItem.get('ntpAddress').map((value, index) => (
                                 <ListItem style={{paddingTop:"0px", paddingBottom:"0px"}} key={index} >

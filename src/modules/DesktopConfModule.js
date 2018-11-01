@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -26,7 +26,9 @@ const CHG_COMPDATA_VALUE = 'desktopConf/CHG_COMPDATA_VALUE';
 const DELETE_COMPDATA = 'desktopConf/DELETE_COMPDATA';
 const DELETE_COMPDATA_ITEM = 'desktopConf/DELETE_COMPDATA_ITEM';
 
-
+const GET_THEMEINFO_LIST_SUCCESS = 'desktopConf/GET_THEMEINFO_LIST_SUCCESS';
+const CHANGE_DESKTOPCONF_EDITING_SUCCESS = 'desktopConf/CHANGE_DESKTOPCONF_EDITING_SUCCESS';
+const CHANGE_DESKTOPCONF_VIEWITEM_SUCCESS = 'desktopConf/CHANGE_DESKTOPCONF_VIEWITEM_SUCCESS';
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId', 'asc');
 
@@ -60,7 +62,20 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readDesktopConfList = (module, compId) => dispatch => {
+export const changedDesktopApp = (module, callbacks, extParam, extOption) => dispatch => {
+    const viewItems = module.get('viewItems');
+    if(viewItems) {
+        viewItems.forEach((element, compId) => {
+            if(element && element.get('listParam')) {
+                callbacks.forEach((callback) => {
+                    callback(module, compId, extParam, extOption);
+                });
+            }
+        });
+    }
+}
+
+export const readDesktopConfList = (module, compId, targetType) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readDesktopConfList', {
     }).then(
@@ -68,6 +83,7 @@ export const readDesktopConfList = (module, compId) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_LIST_SUCCESS,
                 compId: compId,
+                targetType: targetType,
                 response: response
             });
         }
@@ -76,7 +92,7 @@ export const readDesktopConfList = (module, compId) => dispatch => {
     });
 };
 
-export const readDesktopConfListPaged = (module, compId, extParam) => dispatch => {
+export const readDesktopConfListPaged = (module, compId, extParam, extOption={isCloseInform:false}) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
@@ -96,6 +112,7 @@ export const readDesktopConfListPaged = (module, compId, extParam) => dispatch =
                 type: GET_DESKTOPCONF_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
+                extOption: extOption,
                 response: response
             });
         }
@@ -106,9 +123,9 @@ export const readDesktopConfListPaged = (module, compId, extParam) => dispatch =
 
 export const getDesktopConf = (param) => dispatch => {
     const compId = param.compId;
-    if(param.objId && param.objId !== '') {
+    if(param.confId && param.confId !== '') {
         dispatch({type: COMMON_PENDING});
-        return requestPostAPI('readDesktopConf', {'objId': param.objId}).then(
+        return requestPostAPI('readDesktopConf', {'desktopConfId': param.confId}).then(
             (response) => {
                 dispatch({
                     type: GET_DESKTOPCONF_SUCCESS,
@@ -126,8 +143,58 @@ export const getDesktopConf = (param) => dispatch => {
             itemName: 'viewItem'
         });      
     }
-
 };
+
+export const changedDesktopConfForEdit = (propModule, actionModule) => dispatch => {
+    // 데이트 객체 변경    
+    if(propModule && propModule.get('editingItem')) {
+        actionModule.changeDesktopConfForEditing(propModule);
+    }
+    // 리스트와 조회 객체 변경
+    if(propModule && propModule.get('viewItems')) {
+        propModule.get('viewItems').forEach((element, compId) => {
+            if(element && element.get('listParam')) {
+                actionModule.readDesktopConfListPaged(propModule, compId, {}, {isCloseInform:false});
+            }
+            actionModule.changeDesktopConfForViewItem(propModule, compId);
+        });
+    }
+}
+
+export const changeDesktopConfForEditing = (module) => dispatch => {
+    const confId = module.getIn(['editingItem', 'confId']);
+    if(confId && confId !== '') {
+        dispatch({type: COMMON_PENDING});
+        return requestPostAPI('readDesktopConf', {'desktopConfId': confId}).then(
+            (response) => {
+                dispatch({
+                    type: CHANGE_DESKTOPCONF_EDITING_SUCCESS,
+                    response: response
+                });
+            }
+        ).catch(error => {
+            dispatch({ type: COMMON_FAILURE, error: error });
+        });
+    }
+}
+
+export const changeDesktopConfForViewItem = (module, compId) => dispatch => {
+    const confId = module.getIn(['viewItems', compId, 'viewItem', 'confId']);
+    if(confId && confId !== '') {
+        dispatch({type: COMMON_PENDING});
+        return requestPostAPI('readDesktopConf', {'desktopConfId': confId}).then(
+            (response) => {
+                dispatch({
+                    type: CHANGE_DESKTOPCONF_VIEWITEM_SUCCESS,
+                    compId: compId,
+                    response: response
+                });
+            }
+        ).catch(error => {
+            dispatch({ type: COMMON_FAILURE, error: error });
+        });
+    }
+}
 
 export const getDesktopConfByUserId = (param) => dispatch => {
     const compId = param.compId;
@@ -137,6 +204,7 @@ export const getDesktopConfByUserId = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
+                target: 'USER',
                 response: response
             });
         }
@@ -153,6 +221,7 @@ export const getDesktopConfByDeptCd = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
+                target: 'DEPT',
                 response: response
             });
         }
@@ -169,6 +238,7 @@ export const getDesktopConfByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
+                target: 'GROUP',
                 response: response
             });
         }
@@ -213,22 +283,17 @@ export const deleteCompData = (param) => dispatch => {
 
 const makeParameter = (param) => {
     return {
-        objId: param.get('objId'),
-        objName: param.get('objNm'),
-        objComment: param.get('comment'),
-
-        webSocket: param.get('webSocket'),
-        webWorker: param.get('webWorker'),
-        trustSetupId: param.get('trustSetupId'),
-        untrustSetupId: param.get('untrustSetupId'),
-        trustUrlList: (param.get('trustUrlList')) ? param.get('trustUrlList').toArray() : []
+        desktopConfId: param.get('confId'),
+        desktopConfNm: param.get('confNm'),
+        appDatas: param.get('apps').map(x => x.get('appId')).toJS(),
+        desktopTheme: param.get('themeId')
     };
 }
 
 // create (add)
 export const createDesktopConfData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createDesktopConfConf', makeParameter(itemObj)).then(
+    return requestPostAPI('createDesktopConf', makeParameter(itemObj)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
@@ -245,19 +310,34 @@ export const createDesktopConfData = (itemObj) => dispatch => {
     });
 };
 
+// clone create
+export const cloneDesktopConfData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createClonedDesktopConf', {
+            'desktopConfId': param.confId
+        }).then(
+        (response) => {
+            dispatch({
+                type: CREATE_DESKTOPCONF_SUCCESS
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 // edit
 export const editDesktopConfData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateDesktopConfConf', makeParameter(itemObj)).then(
+    return requestPostAPI('updateDesktopConf', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success
                 // change selected object
-                requestPostAPI('readDesktopConf', {'objId': itemObj.get('objId')}).then(
+                requestPostAPI('readDesktopConf', {'desktopConfId': itemObj.get('confId')}).then(
                     (response) => {
                         dispatch({
                             type: EDIT_DESKTOPCONF_SUCCESS,
-                            objId: itemObj.get('objId'),
                             response: response
                         });
                     }
@@ -266,18 +346,18 @@ export const editDesktopConfData = (itemObj, compId) => dispatch => {
                 });
 
                 // change object array for selector
-                requestPostAPI('readDesktopConfList', {
-                }).then(
-                    (response) => {
-                        dispatch({
-                            type: GET_DESKTOPCONF_LIST_SUCCESS,
-                            compId: compId,
-                            response: response
-                        });
-                    }
-                ).catch(error => {
-                    dispatch({ type: COMMON_FAILURE, error: error });
-                });
+                // requestPostAPI('readDesktopConfList', {
+                // }).then(
+                //     (response) => {
+                //         dispatch({
+                //             type: GET_DESKTOPCONF_LIST_SUCCESS,
+                //             compId: compId,
+                //             response: response
+                //         });
+                //     }
+                // ).catch(error => {
+                //     dispatch({ type: COMMON_FAILURE, error: error });
+                // });
             } else {
                 dispatch({ type: COMMON_FAILURE, error: error });
             }
@@ -290,18 +370,98 @@ export const editDesktopConfData = (itemObj, compId) => dispatch => {
 // delete
 export const deleteDesktopConfData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteDesktopConfConf', {'objId': param.objId}).then(
+    return requestPostAPI('deleteDesktopConf', {'desktopConfId': param.confId}).then(
         (response) => {
             dispatch({
                 type: DELETE_DESKTOPCONF_SUCCESS,
                 compId: param.compId,
-                objId: param.objId
+                confId: param.confId
             });
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
+
+// rule inherit
+export const inheritDesktopConfData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateDeptConfInherit', {
+            'objId': param.confId,
+            'confType': 'DESKTOPCONF',
+            'deptCd': param.deptCd
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_SECURITYRULE_SUCCESS,
+                compId: param.compId,
+                confId: param.confId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+export const readThemeInfoList = () => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readThemeList', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_THEMEINFO_LIST_SUCCESS,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+
+
+// edit app data
+// export const editDesktopAppData = (itemObj, compId) => dispatch => {
+//     dispatch({type: COMMON_PENDING});
+//     return requestPostAPI('updateDesktopApp', makeParameter(itemObj)).then(
+//         (response) => {
+//             if(response && response.data && response.data.status && response.data.status.result == 'success') {
+//                 // alarm ... success
+//                 // change selected object
+//                 requestPostAPI('readDesktopConfData', {'desktopAppId': itemObj.get('appId')}).then(
+//                     (response) => {
+//                         dispatch({
+//                             type: EDIT_DESKTOPAPP_SUCCESS,
+//                             appId: itemObj.get('appId'),
+//                             response: response
+//                         });
+//                     }
+//                 ).catch(error => {
+//                     dispatch({ type: COMMON_FAILURE, error: error });
+//                 });
+
+//                 // // change object array for selector
+//                 // IS NEED ????????????????????????????????????????????????????????????
+//                 // requestPostAPI('readDesktopAppList', {
+//                 // }).then(
+//                 //     (response) => {
+//                 //         dispatch({
+//                 //             type: GET_DESKTOPAPP_LIST_SUCCESS,
+//                 //             compId: compId,
+//                 //             response: response
+//                 //         });
+//                 //     }
+//                 // ).catch(error => {
+//                 //     dispatch({ type: COMMON_FAILURE, error: error });
+//                 // });
+//             } else {
+//                 dispatch({ type: COMMON_FAILURE, error: error });
+//             }
+//         }
+//     ).catch(error => {
+//         dispatch({ type: COMMON_FAILURE, error: error });
+//     });
+// };
 
 
 export default handleActions({
@@ -316,13 +476,29 @@ export default handleActions({
         });
     },
     [GET_DESKTOPCONF_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action);
+        return commonHandleActions.handleListAction(state, action, 'confId');
     }, 
     [GET_DESKTOPCONF_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_DESKTOPCONF_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'confId');
+    },
+    [CHANGE_DESKTOPCONF_EDITING_SUCCESS]: (state, action) => {
+        const data = action.response.data.data;
+        if(data && data.length > 0) {
+            return state.set('editingItem', fromJS(data[0]));
+        } else  {
+            return state;//.deleteIn('editingItem');
+        }
+    },
+    [CHANGE_DESKTOPCONF_VIEWITEM_SUCCESS]: (state, action) => {
+        const data = action.response.data.data;
+        if(data && data.length > 0) {
+            return state.setIn(['viewItems', action.compId, 'viewItem'], fromJS(data[0]));
+        } else  {
+            return state;//.deleteIn('editingItem');
+        }
     },
     [SHOW_DESKTOPCONF_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -363,8 +539,14 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_DESKTOPCONF_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
-    }
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'confId');
+    },
+    [GET_THEMEINFO_LIST_SUCCESS]: (state, action) => {
+        const { data } = action.response.data;
+        if(data && data.length > 0) {
+            return state.set('themeListData', List(data.map((e) => {return Map(e)})));
+        };
+    }, 
 
 }, initialState);
 

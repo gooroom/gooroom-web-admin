@@ -124,7 +124,11 @@ class ClientPackageComp extends Component {
   isChecked = id => {
     const { ClientPackageProps, compId } = this.props;
     const checkedIds = getDataObjectVariableInComp(ClientPackageProps, compId, 'checkedIds');
-    return (checkedIds && checkedIds.includes(id));
+    if(checkedIds) {
+      return checkedIds.includes(id);
+    } else {
+      return false;
+    }
   }
 
   // .................................................
@@ -152,7 +156,7 @@ class ClientPackageComp extends Component {
 
       <div>
         {/* data option area */}
-        <Grid item xs={12} spacing={16} container alignItems="flex-end" direction="row" justify="space-between" >
+        <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4} >
             <FormControl fullWidth={true}>
               <TextField label="단말아이디" value={(selectedClientId) ? selectedClientId : ""} disabled={true} />
@@ -164,7 +168,7 @@ class ClientPackageComp extends Component {
             </FormControl>
           </Grid>
           <Grid item xs={4} >
-            <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
               <Search />조회
             </Button>
           </Grid>
@@ -194,7 +198,7 @@ class ClientPackageComp extends Component {
                 key={n.get('packageId')}
               >
                 <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                  <Checkbox checked={isChecked} className={classes.grObjInCell} />
+                  <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} />
                 </TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('packageId')}</TableCell>

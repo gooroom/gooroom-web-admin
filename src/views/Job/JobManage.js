@@ -123,9 +123,12 @@ class JobManage extends Component {
     const { classes } = this.props;
     const { JobManageProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
-
+    
     const listObj = JobManageProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
 
@@ -134,29 +137,28 @@ class JobManage extends Component {
         <GRPane>
 
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-              <Grid item xs={4} >
-                <FormControl fullWidth={true}>
-                  <InputLabel htmlFor="job-status">작업상태</InputLabel>
-                  <JobStatusSelect onChangeSelect={this.handleChangeJobStatusSelect} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4} >
-                <FormControl fullWidth={true}>
-                  <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4} >
-                <Button className={classes.GRIconSmallButton} variant="outlined" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                  <Search />조회
-                </Button>
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10} >
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                <Grid item xs={4} >
+                  <FormControl fullWidth={true}>
+                    <InputLabel htmlFor="job-status">작업상태</InputLabel>
+                    <JobStatusSelect onChangeSelect={this.handleChangeJobStatusSelect} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4} >
+                  <FormControl fullWidth={true}>
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4} >
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                    <Search />조회
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-                <AddIcon />등록
-              </Button>
+            <Grid item xs={2} style={{textAlign:'right'}}>
             </Grid>
           </Grid>
 
@@ -192,11 +194,14 @@ class JobManage extends Component {
                   );
                 })}
 
-                {emptyRows > 0 && (
-                  <TableRow >
-                    <TableCell colSpan={this.columnHeaders.length + 1} className={classes.grSmallAndClickCell} />
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
                   </TableRow>
-                )}
+                )}))}
               </TableBody>
             </Table>
             <TablePagination

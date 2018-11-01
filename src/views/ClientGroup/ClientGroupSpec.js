@@ -17,6 +17,7 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
@@ -45,7 +46,7 @@ import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
-
+import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -57,7 +58,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientGroupInform extends Component {
+class ClientGroupSpec extends Component {
 
   // edit
   handleEditClick = (id) => {
@@ -107,7 +108,12 @@ class ClientGroupInform extends Component {
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
-
+  handleEditClickForDesktopConf = (viewItem, compType) => {
+    this.props.DesktopConfActions.showDialog({
+      viewItem: viewItem,
+      dialogType: DesktopConfDialog.TYPE_EDIT
+    });
+  };
   // ===================================================================
   
   render() {
@@ -124,7 +130,8 @@ class ClientGroupInform extends Component {
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'GROUP']);
-    
+    const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'GROUP']);
+
     let groupInfo = '';
     if(viewItem) {
       groupInfo = viewItem.get('grpId');
@@ -155,48 +162,60 @@ class ClientGroupInform extends Component {
           <Divider />
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
-              <Grid item xs={12} sm={12} lg={6}>
+              <Grid item xs={12} md={12} lg={6} xl={4}>
                 <ClientConfSettingSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientConfSettingItem}
-                  handleEditClick={this.handleEditClickForClientConfSetting}
-                  inherit={false}
-                />
-                <MediaRuleSpec compId={compId}
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedMediaRuleItem}
-                  handleEditClick={this.handleEditClickForMediaRule}
-                  inherit={false}
-                />
-                <ClientUpdateServerSpec compId={compId}
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedClientUpdateServerItem}
-                  handleEditClick={this.handleEditClickForClientUpdateServer}
+                  onClickEdit={this.handleEditClickForClientConfSetting}
                   inherit={false}
                 />
               </Grid>
-              <Grid item xs={12} sm={12} lg={6}>
+              <Grid item xs={12} md={12} lg={6} xl={4} >
+                <MediaRuleSpec compId={compId}
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedMediaRuleItem}
+                  onClickEdit={this.handleEditClickForMediaRule}
+                  inherit={false}
+                />
+              </Grid>
+              <Grid item xs={12} md={12} lg={6} xl={4} >
+                <ClientUpdateServerSpec compId={compId}
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedClientUpdateServerItem}
+                  onClickEdit={this.handleEditClickForClientUpdateServer}
+                  inherit={false}
+                />
+              </Grid>
+              <Grid item xs={12} md={12} lg={6} xl={4}>
                 <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedBrowserRuleItem}
-                  handleEditClick={this.handleEditClickForBrowserRule}
+                  onClickEdit={this.handleEditClickForBrowserRule}
                   inherit={false}
                 />
+              </Grid>
+              <Grid item xs={12} md={12} lg={6} xl={4} >
                 <SecurityRuleSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedSecurityRuleItem}
-                  handleEditClick={this.handleEditClickForSecurityRule}
+                  onClickEdit={this.handleEditClickForSecurityRule}
                   inherit={false}
                 />
+              </Grid>
+              <Grid item xs={12} md={12} lg={6} xl={4} >
                 <ClientHostNameSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientHostNameItem}
-                  handleEditClick={this.handleEditClickForClientHostName}
+                  onClickEdit={this.handleEditClickForClientHostName}
                   inherit={false}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
-                <DesktopConfSpec compId={compId} targetType="GROUP" inherit={false} />
+                <DesktopConfSpec compId={compId}
+                specType="inform" targetType="GROUP" 
+                selectedItem={selectedDesktopConfItem}
+                onClickEdit={this.handleEditClickForDesktopConf}
+                inherit={false} />
               </Grid>
             </Grid>
 
@@ -219,7 +238,8 @@ const mapStateToProps = (state) => ({
   
   MediaRuleProps: state.MediaRuleModule,
   BrowserRuleProps: state.BrowserRuleModule,
-  SecurityRuleProps: state.SecurityRuleModule
+  SecurityRuleProps: state.SecurityRuleModule,
+  DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -232,8 +252,9 @@ const mapDispatchToProps = (dispatch) => ({
 
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
-  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupSpec));
 

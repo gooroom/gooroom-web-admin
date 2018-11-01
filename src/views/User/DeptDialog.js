@@ -57,16 +57,17 @@ class DeptDialog extends Component {
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
-
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
+            const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
             DeptActions.createDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
                 uprDeptCd: DeptProps.getIn(['editingItem', 'selectedDeptCd']),
 
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                clientSecuRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
+                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
@@ -90,17 +91,18 @@ class DeptDialog extends Component {
         if(confirmValue) {
             const isInherit = isChecked;
             const { DeptProps, DeptActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
-    
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
+            const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
             DeptActions.editDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                 deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
     
                 paramIsInherit: (isInherit) ? 'Y' : 'N',
     
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
+                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
@@ -137,7 +139,7 @@ class DeptDialog extends Component {
             {(DeptProps.get('dialogOpen') && editingItem) &&
                 <Dialog open={DeptProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                     <DialogTitle>{title}</DialogTitle>
-                    <DialogContent>
+                    <DialogContent style={{minHeight:567}}>
                         {(dialogType === DeptDialog.TYPE_ADD) &&
                         <TextField
                             label="상위조직"
@@ -188,7 +190,8 @@ const mapStateToProps = (state) => ({
     DeptProps: state.DeptModule,
     BrowserRuleProps: state.BrowserRuleModule,
     MediaRuleProps: state.MediaRuleModule,
-    SecurityRuleProps: state.SecurityRuleModule
+    SecurityRuleProps: state.SecurityRuleModule,
+    DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

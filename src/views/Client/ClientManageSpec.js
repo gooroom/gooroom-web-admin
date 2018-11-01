@@ -32,7 +32,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientManageInform extends Component {
+class ClientManageSpec extends Component {
 
   // .................................................
   render() {
@@ -92,30 +92,30 @@ class ClientManageInform extends Component {
                   <TableBody>
                     
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} isBootProtector</TableCell>
+                      <TableCell component="th" scope="row">{bull} 부팅보안침해</TableCell>
                       <TableCell numeric>{(viewItem.get('isBootProtector') == '0') ? '미침해' : '침해'}</TableCell>
                     </TableRow>
 
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} isExeProtector</TableCell>
+                      <TableCell component="th" scope="row">{bull} 실행보안침해</TableCell>
                       <TableCell numeric>{(viewItem.get('isExeProtector') == '0') ? '미침해' : '침해'}</TableCell>
                     </TableRow>
 
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} isMediaProtector</TableCell>
+                      <TableCell component="th" scope="row">{bull} 매체보안침해</TableCell>
                       <TableCell numeric>{(viewItem.get('isMediaProtector') == '0') ? '미침해' : '침해'}</TableCell>
                     </TableRow>
 
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} isOsProtector</TableCell>
+                      <TableCell component="th" scope="row">{bull} OS보안침해</TableCell>
                       <TableCell numeric>{(viewItem.get('isOsProtector') == '0') ? '미침해' : '침해'}</TableCell>
                     </TableRow>
-
+                    {/**
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} isProtector</TableCell>
                       <TableCell numeric>{(viewItem.get('isProtector') == '0') ? '미침해' : '침해'}</TableCell>
                     </TableRow>
-
+                    */}
                   </TableBody>
 
                 </Table>
@@ -141,5 +141,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageInform));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageSpec));
 

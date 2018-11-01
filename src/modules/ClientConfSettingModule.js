@@ -63,7 +63,7 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readClientConfSettingList = (module, compId) => dispatch => {
+export const readClientConfSettingList = (module, compId, targetType) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientConfList', {
     }).then(
@@ -71,6 +71,7 @@ export const readClientConfSettingList = (module, compId) => dispatch => {
             dispatch({
                 type: GET_CONFSETTING_LIST_SUCCESS,
                 compId: compId,
+                targetType: targetType,
                 response: response
             });
         }
@@ -324,13 +325,13 @@ export default handleActions({
         });
     },
     [GET_CONFSETTING_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action);
+        return commonHandleActions.handleListAction(state, action, 'objId');
     }, 
     [GET_CONFSETTING_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_CONFSETTING_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'objId');
     },
     [SHOW_CONFSETTING_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -371,7 +372,7 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_CONFSETTING_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'objId');
     },
     [SET_NTP_VALUE]: (state, action) => {
         const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).set(action.index, action.value);

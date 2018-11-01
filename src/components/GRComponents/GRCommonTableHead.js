@@ -44,7 +44,7 @@ class GRCommonTableHead extends Component {
                   className={classes.grSmallAndHeaderCell} 
                   key={column.id}
                 >
-                  <Checkbox
+                  <Checkbox color="primary"
                     indeterminate={checkSelection === 50}
                     checked={checkSelection === 100}
                     onChange={onClickAllCheck}

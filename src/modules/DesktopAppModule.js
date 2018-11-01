@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -7,6 +7,8 @@ import * as commonHandleActions from 'modules/commons/commonHandleActions';
 const COMMON_PENDING = 'desktopApp/COMMON_PENDING';
 const COMMON_FAILURE = 'desktopApp/COMMON_FAILURE';
 
+
+const GET_DESKTOPAPP_ALLLIST_SUCCESS = 'desktopApp/GET_DESKTOPAPP_ALLLIST_SUCCESS';
 const GET_DESKTOPAPP_LIST_SUCCESS = 'desktopApp/GET_DESKTOPAPP_LIST_SUCCESS';
 const GET_DESKTOPAPP_LISTPAGED_SUCCESS = 'desktopApp/GET_DESKTOPAPP_LISTPAGED_SUCCESS';
 const GET_DESKTOPAPP_SUCCESS = 'desktopApp/GET_DESKTOPAPP_SUCCESS';
@@ -60,7 +62,22 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readDesktopAppList = (module, compId) => dispatch => {
+export const readDesktopAppAllList = () => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readDesktopAppList', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_DESKTOPAPP_ALLLIST_SUCCESS,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+export const readDesktopAppList = (compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readDesktopAppList', {
     }).then(
@@ -253,6 +270,22 @@ export const createDesktopAppData = (itemObj) => dispatch => {
     });
 };
 
+// clone create
+export const cloneDesktopAppData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createClonedDesktopApp', {
+            'appId': param.appId
+        }).then(
+        (response) => {
+            dispatch({
+                type: CREATE_DESKTOPAPP_SUCCESS
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 // edit
 export const editDesktopAppData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
@@ -299,7 +332,7 @@ export const editDesktopAppData = (itemObj, compId) => dispatch => {
 // delete
 export const deleteDesktopAppData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteDesktopApp', {'appId': param.appId}).then(
+    return requestPostAPI('deleteDesktopApp', {'desktopAppId': param.appId}).then(
         (response) => {
             dispatch({
                 type: DELETE_DESKTOPAPP_SUCCESS,
@@ -324,14 +357,21 @@ export default handleActions({
             errorObj: (action.error) ? action.error : ''
         });
     },
+    
+    [GET_DESKTOPAPP_ALLLIST_SUCCESS]: (state, action) => {
+        const { data } = action.response.data;
+        if(data && data.length > 0) {
+            return state.set('listAllData', List(data.map((e) => {return fromJS(e)})));
+        };
+    }, 
     [GET_DESKTOPAPP_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action);
+        return commonHandleActions.handleListAction(state, action, 'appId');
     }, 
     [GET_DESKTOPAPP_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_DESKTOPAPP_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend);
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, 'appId');
     },
     [SHOW_DESKTOPAPP_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -372,7 +412,7 @@ export default handleActions({
         return commonHandleActions.handleEditSuccessAction(state, action);
     },
     [DELETE_DESKTOPAPP_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action);
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'appId');
     }
 
 }, initialState);

@@ -8,8 +8,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
-import DesktopConfSpec from 'views/Rules/UserConfig/DesktopConfSpec';
-import DesktopConfDialog from 'views/Rules/UserConfig/DesktopConfDialog';
+import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
+import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -80,7 +80,7 @@ class DesktopConfSelector extends Component {
     let selectedDesktopConfItem = null;
     if(listAllData && listAllData.size > 0) {
       const selectedData = listAllData.find((element) => {
-        return element.get('objId') == selectedOptionItemId;
+        return element.get('confId') == selectedOptionItemId;
       });
       if(selectedData) {
         selectedDesktopConfItem = Map({'viewItem': selectedData});
@@ -98,7 +98,7 @@ class DesktopConfSelector extends Component {
           >
           <MenuItem key={'-'} value={'-'}>없음</MenuItem>
           {listAllData.map(item => (
-            <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
+            <MenuItem key={item.get('confId')} value={item.get('confId')}>{item.get('confNm')}</MenuItem>
           ))}
           </Select>
           <FormHelperText>정책 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
@@ -108,7 +108,7 @@ class DesktopConfSelector extends Component {
           <DesktopConfSpec 
             specType="inform" targetType={targetType}
             selectedItem={selectedDesktopConfItem}
-            handleEditClick={this.handleEditClickForDesktopConf}
+            onClickEdit={this.handleEditClickForDesktopConf}
           />
         }
         </CardContent>

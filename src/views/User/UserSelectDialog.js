@@ -48,7 +48,7 @@ class UserSelectDialog extends Component {
     handleSelectUser = (newSelectedIds) => {
         this.setState({
             selectedUser: newSelectedIds
-        })
+        });
     }
 
     handleAddButton = (event) => {
@@ -59,41 +59,17 @@ class UserSelectDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { isOpen } = this.props;
+        const { isOpen, selectedDept } = this.props;
 
         return (
             <div>
             {(isOpen) &&
                 <Dialog open={isOpen} fullWidth={true} >
-                    <DialogTitle>{"사용자 선택"}</DialogTitle>
+                    <DialogTitle>{"조직(" + selectedDept.deptNm + ")에 사용자 추가"}</DialogTitle>
                     <DialogContent>
-                        <Grid container spacing={8}>
-                            {/* <Grid item xs={12} sm={12} lg={4}>
-                                <Card className={classNames(classes.deptTreeCard)}>
-                                    <GRTreeList
-                                        useFolderIcons={true}
-                                        listHeight='24px'
-                                        url='readChildrenDeptList'
-                                        paramKeyName='deptCd'
-                                        rootKeyValue='0'
-                                        keyName='key'
-                                        title='title'
-                                        startingDepth='2'
-                                        relative={true}
-                                        onSelectNode={this.handleSelectDept}
-                                    />
-                                </Card>
-                            </Grid> */}
-                            <Grid item xs={12} sm={12} lg={12}>
-                                <Card className={classes.deptUserCard}>
-                                    <CardContent>
-                                        <UserListForSelect name='UserListForSelect' deptCd={this.state.selectedDeptCd} 
-                                            onSelectUser={this.handleSelectUser}
-                                        />
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        </Grid>
+                        <UserListForSelect name='UserListForSelect' deptCd={this.state.selectedDeptCd} 
+                            onSelectUser={this.handleSelectUser}
+                        />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.handleAddButton} variant='contained' color="secondary">추가</Button>

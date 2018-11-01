@@ -59,8 +59,8 @@ class UserBasicDialog extends Component {
         const { UserProps, UserActions } = this.props;
         const editingItem = UserProps.get('editingItem');
         UserActions.setEditingItemValue({
-            name: 'showPassword',
-            value: !editingItem.get('showPassword')
+            name: 'showPasswd',
+            value: !editingItem.get('showPasswd')
         });
     };
 
@@ -153,10 +153,9 @@ class UserBasicDialog extends Component {
                         <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
                             <InputLabel htmlFor="adornment-password">Password</InputLabel>
                             <Input
-                                id="userPassword"
-                                type={(editingItem && editingItem.get('showPassword')) ? 'text' : 'password'}
-                                value={(editingItem.get('userPassword')) ? editingItem.get('userPassword') : ''}
-                                onChange={this.handleValueChange('userPassword')}
+                                type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
+                                value={(editingItem.get('userPasswd')) ? editingItem.get('userPasswd') : ''}
+                                onChange={this.handleValueChange('userPasswd')}
                                 endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
@@ -164,7 +163,7 @@ class UserBasicDialog extends Component {
                                     onClick={this.handleClickShowPassword}
                                     onMouseDown={this.handleMouseDownPassword}
                                     >
-                                    {(editingItem && editingItem.get('showPassword')) ? <VisibilityOff /> : <Visibility />}
+                                    {(editingItem && editingItem.get('showPasswd')) ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
                                 }
