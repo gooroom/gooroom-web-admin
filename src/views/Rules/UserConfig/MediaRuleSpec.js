@@ -12,9 +12,10 @@ import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRule
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import MediaRuleDialog from './MediaRuleDialog';
 
+import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
+
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 
 import Table from '@material-ui/core/Table';
@@ -62,8 +63,9 @@ class MediaRuleSpec extends Component {
       <React.Fragment>
         {viewItem && 
           <Card elevation={4} style={{marginBottom:20}}>
-            <CardHeader
+            <GRRuleCardHeader
               avatar={RuleAvartar}
+              category='매체제어정책'
               title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
