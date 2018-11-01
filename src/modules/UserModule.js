@@ -155,13 +155,10 @@ export const changeStoreData = (param) => dispatch => {
 };
 
 const makeParameter = (param) => {
-
-    console.log('param ::::: ', param);
     const isChangePasswd = (param.userPasswd && param.userPasswd != '') ? 'Y' : 'N';
-
     return {
         userId: param.userId,
-        userPasswd: (param.userPasswd !== '') ? sha256(param.userId + sha256(param.userPasswd)) : '',
+        userPasswd: (param.userPasswd && param.userPasswd !== '') ? sha256(param.userId + sha256(param.userPasswd)) : '',
 
         userNm: param.userNm,
         deptCd: param.deptCd,
