@@ -5,8 +5,8 @@ import qs from "qs";
 //export const GPMS_URL = 'https://gpms.gooroom.kr/gpms/';
 
 
-//export const GPMS_URL = 'http://ain.gooroom.kr:8080/gpms/';
-export const GPMS_URL = '/gpms/';
+export const GPMS_URL = 'http://ain.gooroom.kr:8080/gpms/';
+//export const GPMS_URL = '/gpms/';
 
 
 function collection() {

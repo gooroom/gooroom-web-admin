@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
 
+import axios, { post } from 'axios';
+
+
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -30,7 +34,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-
+import Divider from "@material-ui/core/Divider";
 import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
@@ -38,6 +42,10 @@ import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
+
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import KeyboardVoiceICon from '@material-ui/icons/KeyboardVoice';
+import Icon from '@material-ui/core/Icon';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -61,7 +69,9 @@ class BrowserRuleManage extends Component {
 
     this.state = {
       loading: true,
+      file:null
     }
+
   }
 
   componentDidMount() {
@@ -181,6 +191,35 @@ class BrowserRuleManage extends Component {
     });
   };
   // ===================================================================
+
+
+
+
+
+  goUpload = e => {
+    e.preventDefault() // Stop form submit
+    this.fileUpload(this.state.file).then((response)=>{
+      console.log(response.data);
+    })
+  }
+  onChange = e => {
+
+    console.log('e :::: ', e.target.files);
+    this.setState({file:e.target.files[0]})
+  }
+  fileUpload(file){
+    const url = 'http://ain.gooroom.kr:8080/gpms/createWallpaperData';
+    const formData = new FormData();
+    formData.append('wallpaperFile',file);
+    formData.append('wallpaperNm', 'FILENAME_777');
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    }
+    return post(url, formData, config)
+  }
+
 
 
   render() {
@@ -303,6 +342,30 @@ class BrowserRuleManage extends Component {
         />
         <BrowserRuleDialog compId={compId} />
         <GRConfirm />
+
+        <Divider />
+
+          <h1>File Upload</h1>
+          
+
+            <input
+              style={{display:'none'}}
+              id="contained-button-file"
+              type="file"
+              onChange={this.onChange}
+            />
+            <label htmlFor="contained-button-file">
+              <Button variant="contained" size='small' component="span" className={classes.button}>
+                File선택
+              </Button>
+            </label>
+
+            <Button variant="contained" color="default" onClick={this.goUpload} size='small'>
+        Upload
+        <CloudUploadIcon  />
+      </Button>
+
+
       </div>
     );
   }
