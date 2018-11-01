@@ -55,7 +55,7 @@ class DesktopApp extends Component {
 
     let iconUrl = '';
     if(appObj && appObj.get('iconGubun')) {
-      iconUrl = (appObj.get('iconGubun') == 'library') ? 'https://gpms.gooroom.kr/gpms/images/gr_icons/1_' + appObj.get('iconId') + '.svg' : appObj.get('iconUrl');
+      iconUrl = (appObj.get('iconGubun') == 'library') ? '/gpms/images/gr_icons/1_' + appObj.get('iconId') + '.svg' : appObj.get('iconUrl');
     }
 
     return (

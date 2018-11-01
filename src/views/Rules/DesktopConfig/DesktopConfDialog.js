@@ -54,6 +54,7 @@ class DesktopConfDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+    static TYPE_INHERIT = 'INHERIT';
     static TYPE_COPY = 'COPY';
 
     componentDidMount() {
@@ -119,6 +120,22 @@ class DesktopConfDialog extends Component {
         }
     }
 
+    handleInheritSaveData = (event, id) => {
+        const { DesktopConfProps, DeptProps, DesktopConfActions, compId } = this.props;
+        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+
+        DesktopConfActions.inheritDesktopConfData({
+            'confId': DesktopConfProps.getIn(['editingItem', 'confId']),
+            'deptCd': selectedDeptCd
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: '시스템알림',
+                alertMsg: '데스크톱정보가 하위 조직에 적용되었습니다.'
+            });
+            this.handleClose();
+        });
+    }
+
     handleCopyCreateData = (event, id) => {
         const { DesktopConfProps, DesktopConfActions } = this.props;
         DesktopConfActions.cloneDesktopConfData({
@@ -156,6 +173,8 @@ class DesktopConfDialog extends Component {
             title = "데스크톱정보 정보";
         } else if(dialogType === DesktopConfDialog.TYPE_EDIT) {
             title = "데스크톱정보 수정";
+        } else if(dialogType === DesktopConfDialog.TYPE_INHERIT) {
+            title = "데스크톱정보 상속";
         } else if(dialogType === DesktopConfDialog.TYPE_COPY) {
             title = "데스크톱정보 복사";
         }
@@ -197,6 +216,14 @@ class DesktopConfDialog extends Component {
                             
                         </Grid>
                     }
+                    {(dialogType === DesktopConfDialog.TYPE_INHERIT) &&
+                        <div>
+                        <Typography variant="body1">
+                            이 정책을 하위 조직에 적용 하시겠습니까?
+                        </Typography>
+                        <DesktopConfViewer viewItem={editingItem} />
+                        </div>
+                    }
                     {(dialogType === DesktopConfDialog.TYPE_COPY) &&
                         <div>
                         <Typography variant="body1">
@@ -213,6 +240,9 @@ class DesktopConfDialog extends Component {
                 }
                 {(dialogType === DesktopConfDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                }
+                {(dialogType === DesktopConfDialog.TYPE_INHERIT) &&
+                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">적용</Button>
                 }
                 {(dialogType === DesktopConfDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>

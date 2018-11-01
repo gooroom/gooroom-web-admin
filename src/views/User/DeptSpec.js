@@ -147,7 +147,7 @@ class DeptSpec extends Component {
                   specType="inform" targetType="DEPT" 
                   selectedItem={selectedDesktopConfItem}
                   onClickEdit={this.handleEditClickForDesktopConf}
-                  inherit={false} />
+                  inherit={true} />
               </Grid>
             </Grid>
           </CardContent>

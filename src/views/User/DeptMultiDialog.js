@@ -72,7 +72,8 @@ class DeptMultiDialog extends Component {
                 deptCds: (checkedDeptCd) ? checkedDeptCd.join(',') : '',
                 browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
                 mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
+                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
                 // tree refresh
@@ -135,7 +136,8 @@ const mapStateToProps = (state) => ({
     DeptProps: state.DeptModule,
     BrowserRuleProps: state.BrowserRuleModule,
     MediaRuleProps: state.MediaRuleModule,
-    SecurityRuleProps: state.SecurityRuleModule
+    SecurityRuleProps: state.SecurityRuleModule,
+    DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
