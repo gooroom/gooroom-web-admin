@@ -260,7 +260,7 @@ const makeParameter = (param) => {
         screen_time: param.get('screenTime'),
         password_time: param.get('passwordTime'),
         package_handle: (param.get('packageHandle') == 'allow') ? 'allow' : 'disallow',
-        global_network: (param.get('globalNetwork')) ? param.get('globalNetwork') : 'DROP',
+        global_network: (param.get('globalNetwork')) ? param.get('globalNetwork') : 'drop',
         firewall_network: (firewallNetworkItem) ? firewallNetworkItem.toJS() : null
     };
 }

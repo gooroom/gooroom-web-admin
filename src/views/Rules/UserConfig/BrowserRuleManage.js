@@ -346,7 +346,7 @@ class BrowserRuleManage extends Component {
         <Divider />
 
           <h1>File Upload</h1>
-          
+
 
             <input
               style={{display:'none'}}
