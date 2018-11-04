@@ -30,7 +30,7 @@ import UserManage from "views/User/UserManage";
 import AdminUserManage from "views/System/AdminUserManage";
 import ServerUrlInfo from "views/System/ServerUrlInfo";
 import GcspManage from "views/System/GcspManage";
-
+import ThemeManage from "views/System/ThemeManage";
 
 import DesktopAppManage from "views/Rules/DesktopConfig/DesktopApp/DesktopAppManage";
 import DesktopConfManage from "views/Rules/DesktopConfig/DesktopConfManage";
@@ -76,7 +76,7 @@ class GRRouters extends Component {
           <Route path="/system/adminusermng/:grMenuId/:grMenuName" component={AdminUserManage} />
           <Route path="/system/serverurl/:grMenuId/:grMenuName" component={ServerUrlInfo} />
           <Route path="/system/cloudservicemng/:grMenuId/:grMenuName" component={GcspManage} />
-          
+          <Route path="/system/thememng/:grMenuId/:grMenuName" component={ThemeManage} />
           
           <Route path="/test/components/:grMenuId/:grMenuName" component={ComponentTests} />
         </Switch>
