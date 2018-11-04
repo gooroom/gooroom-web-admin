@@ -31,6 +31,8 @@ import Typography from "@material-ui/core/Typography";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Divider from "@material-ui/core/Divider";
+
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -67,6 +69,7 @@ class BrowserRuleDialog extends Component {
     }
 
     handleCreateData = (event) => {
+        event.preventDefault();
         const { BrowserRuleProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
             confirmTitle: '브라우저제어정보 등록',
@@ -150,6 +153,32 @@ class BrowserRuleDialog extends Component {
         return (value == 'allow');
     }
 
+    // file select
+    handleChangeSetupFileInput = (event, setupName) => {
+
+        console.log('event :::: ', event);
+        console.log('name :::: ', name);
+
+        this.readFileContent(event.target.files[0]).then(content => {
+            if(content) {
+                this.props.BrowserRuleActions.setEditingItemValue({
+                    name: setupName,
+                    value: content
+                });
+            }
+                
+        }).catch(error => console.log(error));
+    }
+
+    readFileContent(file) {
+        const reader = new FileReader()
+        return new Promise((resolve, reject) => {
+          reader.onload = event => resolve(event.target.result)
+          reader.onerror = error => reject(error)
+          reader.readAsText(file)
+        });
+    }
+
     render() {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
@@ -213,23 +242,36 @@ class BrowserRuleDialog extends Component {
                             </Grid>
                         </Grid>
                         
-                        <TextField label="신뢰사이트 설정" className={classes.fullWidth} multiline
-                            value={(editingItem.get('trustSetupId')) ? editingItem.get('trustSetupId') : ''}
-                            onChange={this.handleValueChange("trustSetupId")} />
-                        <TextField label="비신뢰사이트 설정" className={classes.fullWidth} multiline style={{marginBottom:20}}
-                            value={(editingItem.get('untrustSetupId')) ? editingItem.get('untrustSetupId') : ''}
-                            onChange={this.handleValueChange("untrustSetupId")} />
+                        <TextField label="신뢰사이트 설정" className={classes.fullWidth} multiline rowsMax={6}
+                            style={{marginTop:10}}
+                            value={(editingItem.get('trustSetup')) ? editingItem.get('trustSetup') : ''}
+                            onChange={this.handleValueChange("trustSetup")} />
+                        <div style={{marginTop:5,textAlign:'right'}}>
+                            <input style={{display:'none'}} id="trust-btn-file" type="file" onChange={event => this.handleChangeSetupFileInput(event, 'trustSetup')} />
+                            <label htmlFor="trust-btn-file">
+                                <Button variant="contained" size='small' component="span" style={{width:270}}>파일을 이용하여 신뢰사이트 내용 등록</Button>
+                            </label>
+                        </div>
+                        <TextField label="비신뢰사이트 설정" className={classes.fullWidth} multiline rowsMax={6}
+                            style={{marginTop:10}}
+                            value={(editingItem.get('untrustSetup')) ? editingItem.get('untrustSetup') : ''}
+                            onChange={this.handleValueChange("untrustSetup")} />
 
-                        <FormLabel>{bull} White Address List</FormLabel>
+                        <div style={{marginTop:5,textAlign:'right'}}>
+                            <input style={{display:'none'}} id="untrust-btn-file" type="file" onChange={event => this.handleChangeSetupFileInput(event, 'untrustSetup')} />
+                            <label htmlFor="untrust-btn-file">
+                                <Button variant="contained" size='small' component="span" style={{width:270}}>파일을 이용하여 비신뢰사이트 내용 등록</Button>
+                            </label>
+                        </div>
+
+                        <FormLabel style={{paddingTop:5,marginTop:10}}>White Address List</FormLabel>
                         <Button size="small" variant="contained" color="primary" style={{marginLeft:20}}
-                            className={classes.smallIconButton}
-                            onClick={this.handleAddWhiteList}
-                        >
-                            <AddIcon />
-                        </Button>
+                            className={classes.smallIconButton} onClick={this.handleAddWhiteList}
+                        ><AddIcon /></Button>
+                        <Divider />
                         <List>
                         {editingItem.get('trustUrlList') && editingItem.get('trustUrlList').size > 0 && editingItem.get('trustUrlList').map((value, index) => (
-                            <ListItem key={index} style={{paddingTop:0,paddingBottom:0}}>
+                            <ListItem key={index} style={{padding:'0 40 0 0'}}>
                                 <Input value={value} style={{width:"100%"}} onChange={this.handleWhiteListValueChange(index)}/>
                                 <ListItemSecondaryAction>
                                     <IconButton onClick={this.handleDeleteWhiteList(index)}>

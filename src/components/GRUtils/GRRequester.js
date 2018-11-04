@@ -1,12 +1,12 @@
-import axios from "axios";
+import axios, { post }  from "axios";
 import qs from "qs";
 
 //export const GPMS_URL = 'http://localhost:8080/gpms/';
 //export const GPMS_URL = 'https://gpms.gooroom.kr/gpms/';
 
 
-//export const GPMS_URL = 'http://ain.gooroom.kr:8080/gpms/';
-export const GPMS_URL = '/gpms/';
+export const GPMS_URL = 'http://ain.gooroom.kr:8080/gpms/';
+//export const GPMS_URL = '/gpms/';
 
 
 function collection() {
@@ -87,6 +87,36 @@ export function requestPostAPI(url, param, headers) {
       transformRequest: [
         function(data, headers) {
           return qs.stringify(data, {arrayFormat:'brackets'});
+        }
+      ],
+      data: param,
+      withCredentials: false
+    });
+};
+
+// multipartform
+export function requestMultipartFormAPI(url, param, headers) {
+
+  console.log('requestMultipartFormAPI.....', url);
+
+  return axios({
+      method: "post",
+      url: GPMS_URL + url,
+      headers: { "Content-Type": "multipart/form-data" },
+      transformRequest: [
+        function(data, headers) {
+
+          // const formData = new FormData();
+          // formData.append('wallpaperFile','file');
+          // formData.append('wallpaperNm', 'FILENAME_777');
+
+          let formData = new FormData();
+          for( let key in data ) {
+            formData.append(key, data[key]);
+          }
+
+
+          return formData;
         }
       ],
       data: param,

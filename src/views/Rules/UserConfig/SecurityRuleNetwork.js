@@ -92,10 +92,10 @@ let EnhancedTableToolbar = props => {
             <FormControlLabel
                 control={
                 <Switch onChange={props.onGlobalNetworkChange('globalNetwork')} 
-                    checked={(props.globalNetwork == 'ACCEPT')}
+                    checked={(props.globalNetwork == 'accept')}
                     color="primary" />
                 }
-                label={(props.globalNetwork == 'ACCEPT') ? '기본네트워크 허가' : '기본네트워크 차단'}
+                label={(props.globalNetwork == 'accept') ? '기본네트워크 허가' : '기본네트워크 차단'}
             />
 
           </Grid>
@@ -155,7 +155,7 @@ class SecurityRuleNetwork extends Component {
   handleAddClick = () => {
     const { SecurityRuleProps } = this.props;
     const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
-    this.props.SecurityRuleActions.addNetworkItem(createNetworkItem(editingItem, 'INPUT', 'TCP', '', '', '', 'ACCEPT'));
+    this.props.SecurityRuleActions.addNetworkItem(createNetworkItem(editingItem, 'input', 'tcp', '', '', '', 'accept'));
   }
 
   handleDeleteClick = () => {
@@ -208,7 +208,7 @@ class SecurityRuleNetwork extends Component {
   };
 
   handleValueChange = name => event => {
-    const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'ACCEPT' : 'DROP') : event.target.value;
+    const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'accept' : 'drop') : event.target.value;
     this.props.SecurityRuleActions.setEditingItemValue({
         name: name,
         value: value
@@ -274,7 +274,7 @@ class SecurityRuleNetwork extends Component {
         onUpwardClick={this.handleSelectUpwardClick}
         onDownwardClick={this.handleSelectDownwardClick}
         onGlobalNetworkChange={this.handleValueChange}
-        globalNetwork={(editingItem) ? editingItem.get('globalNetwork') : 'DROP'}
+        globalNetwork={(editingItem) ? editingItem.get('globalNetwork') : 'drop'}
       />
       
       <div>
@@ -311,9 +311,9 @@ class SecurityRuleNetwork extends Component {
                         name="direction"
                         onChange={this.changeNetworkOption(n.get('no'))}
                       >
-                        <MenuItem value={'INPUT'}>INPUT</MenuItem>
-                        <MenuItem value={'OUTPUT'}>OUTPUT</MenuItem>
-                        <MenuItem value={'ALL'}>ALL</MenuItem>
+                        <MenuItem value={'input'}>input</MenuItem>
+                        <MenuItem value={'output'}>output</MenuItem>
+                        <MenuItem value={'all'}>all</MenuItem>
                       </Select>
                     </FormControl>
                   </TableCell>
@@ -324,9 +324,9 @@ class SecurityRuleNetwork extends Component {
                         name="protocol"
                         onChange={this.changeNetworkOption(n.get('no'))}
                       >
-                        <MenuItem value={'TCP'}>TCP</MenuItem>
-                        <MenuItem value={'UDP'}>UDP</MenuItem>
-                        <MenuItem value={'ICMP'}>ICMP</MenuItem>
+                        <MenuItem value={'tcp'}>tcp</MenuItem>
+                        <MenuItem value={'udp'}>udp</MenuItem>
+                        <MenuItem value={'icmp'}>icmp</MenuItem>
                       </Select>
                     </FormControl>
                   </TableCell>
@@ -368,8 +368,8 @@ class SecurityRuleNetwork extends Component {
                         name="state"
                         onChange={this.changeNetworkOption(n.get('no'))}
                       >
-                        <MenuItem value={'ACCEPT'}>ACCEPT</MenuItem>
-                        <MenuItem value={'DROP'}>DROP</MenuItem>
+                        <MenuItem value={'accept'}>accept</MenuItem>
+                        <MenuItem value={'drop'}>drop</MenuItem>
                       </Select>
                     </FormControl>
                   
