@@ -155,10 +155,6 @@ class BrowserRuleDialog extends Component {
 
     // file select
     handleChangeSetupFileInput = (event, setupName) => {
-
-        console.log('event :::: ', event);
-        console.log('name :::: ', name);
-
         this.readFileContent(event.target.files[0]).then(content => {
             if(content) {
                 this.props.BrowserRuleActions.setEditingItemValue({
@@ -166,10 +162,8 @@ class BrowserRuleDialog extends Component {
                     value: content
                 });
             }
-                
         }).catch(error => console.log(error));
     }
-
     readFileContent(file) {
         const reader = new FileReader()
         return new Promise((resolve, reject) => {

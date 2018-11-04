@@ -1,12 +1,13 @@
 import React, { Component } from "react";
+import { Map, List, fromJS } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import sha256 from 'sha-256-js';
 
-import * as AdminUserActions from 'modules/AdminUserModule';
+import * as ThemeManageActions from 'modules/ThemeManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -18,6 +19,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import FormLabel from '@material-ui/core/FormLabel';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
 
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
@@ -40,43 +48,81 @@ class ThemeDialog extends Component {
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
 
+    static APP_LIST = [
+        {no:1, title:'cloud storage', name:'cloud_storage'},
+        {no:2, title:'web office', name:'web_office'},
+        {no:3, title:'office SNS', name:'office_sns'},
+        {no:4, title:'team', name:'team'},
+        {no:5, title:'video conferencing system', name:'video_conferencing_system'},
+        {no:6, title:'groupware', name:'groupware'},
+        {no:7, title:'memo', name:'memo'},
+        {no:8, title:'KMS', name:'kms'},
+        {no:9, title:'ERP', name:'erp'},
+        {no:10, title:'accounting management', name:'accounting_management'},
+        {no:11, title:'personnel management', name:'personnel_management'},
+        {no:12, title:'etc applications', name:'etc_applications'},
+        {no:13, title:'security status', name:'security_status'},
+        {no:14, title:'screenshot', name:'screenshot'},
+        {no:15, title:'smartcard register', name:'smartcard_register'},
+        {no:16, title:'gooroom terminal server', name:'gooroom_terminal_server'},
+        {no:17, title:'package management', name:'package_management'},
+        {no:18, title:'updater', name:'updater'},
+        {no:19, title:'archiver', name:'archiver'},
+        {no:20, title:'multimedia', name:'multimedia'},
+        {no:21, title:'calculator', name:'calculator'},
+        {no:22, title:'network management', name:'network_management'},
+        {no:23, title:'file manager', name:'file_manager'},
+        {no:24, title:'gooroom browser', name:'gooroom_browser'}
+    ];
+
     handleClose = (event) => {
-        this.props.AdminUserActions.closeDialog(this.props.compId);
+        this.props.ThemeManageActions.closeDialog(this.props.compId);
     }
 
     handleValueChange = name => event => {
-        this.props.AdminUserActions.setEditingItemValue({
+        this.props.ThemeManageActions.setEditingItemValue({
             name: name,
             value: event.target.value
         });
     }
 
     handleValuePasswordChange = name => event => {
-        this.props.AdminUserActions.setEditingItemValue({
+        this.props.ThemeManageActions.setEditingItemValue({
             name: name,
             value: event.target.value
         });
     }
 
+    makeParameter = (paramObject) => {
+
+        let dataParam = Map({
+            themeId: paramObject.get('themeId'),
+            themeNm: paramObject.get('themeNm'),
+            themeCmt: paramObject.get('themeCmt')
+        });
+        ThemeDialog.APP_LIST.map(n => {
+            dataParam = dataParam.set(n.name, paramObject.get(n.name));
+        });
+
+        console.log('dataParam :::: ', (dataParam) ? dataParam.toJS() : '?');
+        return dataParam.toJS();
+    }
+
     // 생성
     handleCreateData = (event) => {
-        const { AdminUserProps, GRConfirmActions } = this.props;
+        const { ThemeManageProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: '관리자계정 등록',
-            confirmMsg: '관리자계정을 등록하시겠습니까?',
+            confirmTitle: '테마 등록',
+            confirmMsg: '테마를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: AdminUserProps.get('editingItem')
+            confirmObject: ThemeManageProps.get('editingItem')
         });
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { AdminUserProps, AdminUserActions, compId } = this.props;
-            AdminUserActions.createAdminUserData({
-                adminId: paramObject.get('adminId'),
-                adminPw: (paramObject.get('adminPw') !== '') ? sha256(paramObject.get('adminId') + sha256(paramObject.get('adminPw'))) : '',
-                adminNm: paramObject.get('adminNm')
-            }).then((res) => {
-                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
+            const { ThemeManageProps, ThemeManageActions, compId } = this.props;
+            ThemeManageActions.createThemeData(this.makeParameter(paramObject)).then((res) => {
+                ThemeManageActions.readThemeListPaged(ThemeManageProps, compId);
                 this.handleClose();
             });
         }
@@ -84,99 +130,120 @@ class ThemeDialog extends Component {
 
     // 수정
     handleEditData = (event) => {
-        const { AdminUserProps, GRConfirmActions } = this.props;
+        const { ThemeManageProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: '관리자계정 수정',
-            confirmMsg: '관리자계정을 수정하시겠습니까?',
+            confirmTitle: '테마 수정',
+            confirmMsg: '테마를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditDataConfirmResult,
-            confirmObject: AdminUserProps.get('editingItem')
+            confirmObject: ThemeManageProps.get('editingItem')
         });
     }
     handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
-            const { AdminUserProps, AdminUserActions, compId } = this.props;
-            AdminUserActions.editAdminUserData({
-                adminId: paramObject.get('adminId'),
-                adminPw: (paramObject.get('adminPw') !== '') ? sha256(paramObject.get('adminId') + sha256(paramObject.get('adminPw'))) : '',
-                adminNm: paramObject.get('adminNm')
+            const { ThemeManageProps, ThemeManageActions, compId } = this.props;
+            ThemeManageActions.editThemeData({
+                themeId: paramObject.get('themeId'),
+                themeNm: paramObject.get('themeNm')
             }).then((res) => {
-                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
+                ThemeManageActions.readThemeListPaged(ThemeManageProps, compId);
                 this.handleClose();
             });
         }
     }
 
-    handleMouseDownPassword = event => {
-        event.preventDefault();
-    };
-
-    handleClickShowPassword = () => {
-        const { AdminUserProps, AdminUserActions } = this.props;
-        const editingItem = AdminUserProps.get('editingItem');
-        AdminUserActions.setEditingItemValue({
-            name: 'showPasswd',
-            value: !editingItem.get('showPasswd')
+    ___handleImageFileChange = (event, gubunName) => {
+        if(event.target.files && event.target.files.length > 0) {
+            this.props.ThemeManageActions.setEditingItemValue({
+                name: gubunName,
+                value: event.target.files[0]
+            });
+        }
+    }
+    // file select
+    handleImageFileChange = (event, gubunName) => {
+        const selectedFile = event.target.files[0];
+        const viewFileName = gubunName + '_GRFILE';
+        this.readFileContent(event.target.files[0]).then(content => {
+            //console.log('content :::::::::::: ', content);
+            //console.log('gubunName :::::::::::: ', gubunName);
+            if(content) {
+                this.props.ThemeManageActions.setEditingItemObject({
+                    [gubunName]: selectedFile,
+                    [viewFileName]: content
+                });
+            }
+        }).catch(error => console.log(error));
+    }
+    readFileContent(file) {
+        const reader = new FileReader()
+        return new Promise((resolve, reject) => {
+            reader.onload = event => resolve(event.target.result)
+            reader.onerror = error => reject(error)
+            reader.readAsDataURL(file)
         });
-    };
+    }
+    
 
     render() {
         const { classes } = this.props;
-        const { AdminUserProps, compId } = this.props;
+        const { ThemeManageProps, compId } = this.props;
 
-        const dialogType = AdminUserProps.get('dialogType');
-        const editingItem = (AdminUserProps.get('editingItem')) ? AdminUserProps.get('editingItem') : null;
+        const dialogType = ThemeManageProps.get('dialogType');
+        const editingItem = (ThemeManageProps.get('editingItem')) ? ThemeManageProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === ThemeDialog.TYPE_ADD) {
-            title = "관리자계정 등록";
+            title = "테마 등록";
         } else if(dialogType === ThemeDialog.TYPE_VIEW) {
-            title = "관리자계정 정보";
+            title = "테마 정보";
         } else if(dialogType === ThemeDialog.TYPE_EDIT) {
-            title = "관리자계정 수정";
+            title = "테마 수정";
         }
 
         return (
             <div>
-            {(AdminUserProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={AdminUserProps.get('dialogOpen')}>
+            {(ThemeManageProps.get('dialogOpen') && editingItem) &&
+            <Dialog open={ThemeManageProps.get('dialogOpen')} fullWidth={true} maxWidth="sm">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        label="관리자아이디"
-                        value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
-                        onChange={this.handleValueChange("adminId")}
-                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType == ThemeDialog.TYPE_EDIT) ? true : false}
+                {(dialogType === ThemeDialog.TYPE_EDIT) &&
+                    <TextField label="테마 아이디" className={classes.fullWidth}
+                        value={(editingItem.get('themeId')) ? editingItem.get('themeId') : ''}
                     />
-                    <TextField
-                        label="관리자이름"
-                        value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
-                        onChange={this.handleValueChange("adminNm")}
-                        className={classes.fullWidth}
+                }
+                    <TextField label="테마 이름" className={classes.fullWidth}
+                        value={(editingItem.get('themeNm')) ? editingItem.get('themeNm') : ''}
+                        onChange={this.handleValueChange("themeNm")}
                     />
-                    <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
-                        <InputLabel htmlFor="adornment-password">Password</InputLabel>
-                        <Input
-                            type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
-                            value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
-                            onChange={this.handleValuePasswordChange('adminPw')}
-                            endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                aria-label="Toggle password visibility"
-                                onClick={this.handleClickShowPassword}
-                                onMouseDown={this.handleMouseDownPassword}
-                                >
-                                {(editingItem && editingItem.get('showPasswd')) ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                            }
-                        />
-                    </FormControl>
+                    <TextField label="테마 설명" className={classes.fullWidth}
+                        value={(editingItem.get('themeCmt')) ? editingItem.get('themeCmt') : ''}
+                        onChange={this.handleValueChange("themeCmt")}
+                    />
+                    <div style={{marginTop:20}}></div>
+                    <FormLabel>업무환경(Application) 아이콘 설정</FormLabel>
+                    <Table>
+                        <TableBody>
+                            {ThemeDialog.APP_LIST && ThemeDialog.APP_LIST.map(n => {
+                                return (
+                                    <TableRow hover key={n.no}>
+                                        <TableCell style={{width:240}}>{n.no}. {n.title}</TableCell>
+                                        <TableCell style={{width:80}}>
+                                            <input style={{display:'none'}} id={n.name + '-file'} type="file" onChange={event => this.handleImageFileChange(event, n.name)} />
+                                            <label htmlFor={n.name + '-file'}>
+                                                <Button variant="contained" size='small' component="span" className={classes.button}>File선택</Button>
+                                            </label>
+                                        </TableCell>
+                                        <TableCell>
+                                            <img src={editingItem.get(n.name + '_GRFILE')} height="50"/>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
 
                 </DialogContent>
                 <DialogActions>
-                    
                 {(dialogType === ThemeDialog.TYPE_ADD) &&
                     <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
                 }
@@ -184,7 +251,6 @@ class ThemeDialog extends Component {
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
-
                 </DialogActions>
             </Dialog>
             }
@@ -194,12 +260,12 @@ class ThemeDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    AdminUserProps: state.AdminUserModule
+  ThemeManageProps: state.ThemeManageModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    AdminUserActions: bindActionCreators(AdminUserActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+  ThemeManageActions: bindActionCreators(ThemeManageActions, dispatch),
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ThemeDialog));

@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions';
 
-import { requestPostAPI } from 'components/GRUtils/GRRequester';
+import { requestPostAPI, requestMultipartFormAPI } from 'components/GRUtils/GRRequester';
 
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
@@ -9,6 +9,7 @@ const COMMON_FAILURE = 'themeManage/COMMON_FAILURE';
 
 const CHG_LISTPARAM_DATA = 'themeManage/CHG_LISTPARAM_DATA';
 const SET_EDITING_ITEM_VALUE = 'themeManage/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_ITEM_OBJECT = 'themeManage/SET_EDITING_ITEM_OBJECT';
 
 const GET_THEMEMANAGE_LISTPAGED_SUCCESS = 'themeManage/GET_THEMEMANAGE_LISTPAGED_SUCCESS';
 
@@ -21,7 +22,7 @@ const CLOSE_THEMEMANAGE_DIALOG = 'themeManage/CLOSE_THEMEMANAGE_DIALOG';
 
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chThemeNm', 'asc', {}, {status: 'STAT010', keyword: ''});
+const initialState = commonHandleActions.getCommonInitialState('chThemeNm', 'asc', {});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -73,6 +74,13 @@ export const setEditingItemValue = (param) => dispatch => {
     });
 };
 
+export const setEditingItemObject = (param) => dispatch => {
+    return dispatch({
+        type: SET_EDITING_ITEM_OBJECT,
+        param: param
+    });
+};
+
 export const changeListParamData = (param) => dispatch => {
     return dispatch({
         type: CHG_LISTPARAM_DATA,
@@ -82,10 +90,22 @@ export const changeListParamData = (param) => dispatch => {
     });
 };
 
+const makeParameter = (param) => {
+    return {
+        themeId: param.get('themeId'),
+        themeNm: param.get('themeNm'),
+        themeCmt: param.get('themeCmt'),
+
+        cloud_storage: (param.get('cloud_storage')) ? param.get('cloud_storage') : '',
+
+        wallpaperFile: (param.get('wallpaperFile')) ? param.get('wallpaperFile') : ''
+    };
+}
+
 // create (add)
-export const createThemeData = (param) => dispatch => {
+export const createThemeData = (paramObject) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createTheme', param).then(
+    return requestMultipartFormAPI('createThemeData', paramObject).then(
         (response) => {
             try {
                 if(response.data.status.result === 'success') {
@@ -158,6 +178,11 @@ export default handleActions({
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
             editingItem: state.get('editingItem').merge({[action.name]: action.value})
+        });
+    },
+    [SET_EDITING_ITEM_OBJECT]: (state, action) => {
+        return state.merge({
+            editingItem: state.get('editingItem').merge(action.param)
         });
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
