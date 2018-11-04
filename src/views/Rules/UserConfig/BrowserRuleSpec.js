@@ -100,11 +100,11 @@ class BrowserRuleSpec extends Component {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('trustSetupId')}</pre></TableCell>
+                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('trustSetup')}</pre></TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 비신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('untrustSetupId')}</pre></TableCell>
+                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('untrustSetup')}</pre></TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} White List</TableCell>
@@ -138,8 +138,8 @@ export const generateBrowserRuleObject = (param) => {
   if(param) {
     let webSocket = '';
     let webWorker = '';
-    let trustSetupId = '';
-    let untrustSetupId = '';
+    let trustSetup = '';
+    let untrustSetup = '';
     let trustUrlList = [];
 
     param.get('propList').forEach(function(e) {
@@ -149,10 +149,10 @@ export const generateBrowserRuleObject = (param) => {
         webSocket = evalue;
       } else if(ename == 'webworker') {
         webWorker = evalue;
-      } else if(ename == 'trustSetupId') {
-        trustSetupId = evalue;
-      } else if(ename == 'untrustSetupId') {
-        untrustSetupId = evalue;
+      } else if(ename == 'trustSetup') {
+        trustSetup = evalue;
+      } else if(ename == 'untrustSetup') {
+        untrustSetup = evalue;
       } else if(ename == 'trust') {
         trustUrlList.push(evalue);
       }
@@ -165,8 +165,8 @@ export const generateBrowserRuleObject = (param) => {
       modDate: param.get('modDate'),
       webSocket: webSocket,
       webWorker: webWorker,
-      trustSetupId: trustSetupId,
-      untrustSetupId: untrustSetupId,
+      trustSetup: trustSetup,
+      untrustSetup: untrustSetup,
       trustUrlList: List(trustUrlList)
     });
   

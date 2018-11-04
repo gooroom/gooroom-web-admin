@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { Map, List } from 'immutable';
 
-import { requestPostAPI } from 'components/GRUtils/GRRequester';
+import { requestPostAPI, requestMultipartFormAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'browserRule/COMMON_PENDING';
@@ -235,10 +235,10 @@ const makeParameter = (param) => {
         objName: param.get('objNm'),
         objComment: param.get('comment'),
 
-        webSocket: param.get('webSocket'),
-        webWorker: param.get('webWorker'),
-        trustSetupId: param.get('trustSetupId'),
-        untrustSetupId: param.get('untrustSetupId'),
+        webSocket: (param.get('webSocket')) ? param.get('webSocket') : 'disallow',
+        webWorker: (param.get('webWorker')) ? param.get('webWorker') : 'disallow',
+        trustSetup: (param.get('trustSetup')) ? param.get('trustSetup') : '',
+        untrustSetup: (param.get('untrustSetup')) ? param.get('untrustSetup') : '',
         trustUrlList: (param.get('trustUrlList')) ? param.get('trustUrlList').toArray() : []
     };
 }
@@ -246,7 +246,7 @@ const makeParameter = (param) => {
 // create (add)
 export const createBrowserRuleData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createBrowserRuleConf', makeParameter(itemObj)).then(
+    return requestMultipartFormAPI('createBrowserRuleConf', makeParameter(itemObj)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {

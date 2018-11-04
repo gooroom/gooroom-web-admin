@@ -53,11 +53,11 @@ class BrowserRuleViewer extends Component {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('trustSetupId')}</pre></TableCell>
+                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('trustSetup')}</pre></TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" style={{width:"170px"}}>{bull} 비신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('untrustSetupId')}</pre></TableCell>
+                  <TableCell colSpan={3} style={{fontSize:"17px"}}><pre>{viewItem.get('untrustSetup')}</pre></TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} White List</TableCell>
