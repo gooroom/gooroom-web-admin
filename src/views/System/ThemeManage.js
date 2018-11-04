@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
 import * as ThemeManageActions from 'modules/ThemeManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
@@ -92,7 +93,7 @@ class ThemeManage extends Component {
   
   handleSelectRow = (event, id) => {
     const { ThemeManageProps, ThemeManageActions } = this.props;
-    const viewItem = getRowObjectById(ThemeManageProps, this.props.match.params.grMenuId, id, 'adminId');
+    const viewItem = getRowObjectById(ThemeManageProps, this.props.match.params.grMenuId, id, 'themeId');
     ThemeManageActions.showDialog({
       viewItem: viewItem,
       dialogType: ThemeDialog.TYPE_VIEW
@@ -138,7 +139,7 @@ class ThemeManage extends Component {
       const compId = this.props.match.params.grMenuId;
       ThemeManageActions.deleteThemeData({
         compId: compId,
-        adminId: confirmObject.get('themeId')
+        themeId: confirmObject.get('themeId')
       }).then(() => {
         ThemeManageActions.readThemeListPaged(ThemeManageProps, compId);
       });
@@ -198,7 +199,7 @@ class ThemeManage extends Component {
             <Table>
               <GRCommonTableHead
                 classes={classes}
-                keyId="adminId"
+                keyId="themeId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
@@ -209,8 +210,8 @@ class ThemeManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('adminId'))}
-                      key={n.get('adminId')}
+                      onClick={event => this.handleSelectRow(event, n.get('themeId'))}
+                      key={n.get('themeId')}
                     >
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeNm')}</TableCell>
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeId')}</TableCell>

@@ -246,7 +246,8 @@ const makeParameter = (itemObj) => {
 
         iconUrl: itemObj.get('iconUrl'),
         // chnage name for server api
-        iconId: itemObj.get('iconNm')
+        iconId: itemObj.get('iconId'),
+        iconNm: itemObj.get('iconNm')
     };
 }
 

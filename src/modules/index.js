@@ -71,6 +71,7 @@ export default combineReducers({
     DesktopConfModule,
     AdminUserModule,
     GcspManageModule,
+    ThemeManageModule,
 
     AdminModule
 

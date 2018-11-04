@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions';
 import { Map, List } from 'immutable';
 
-import { requestPostAPI, requestMultipartFormAPI } from 'components/GRUtils/GRRequester';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'browserRule/COMMON_PENDING';
@@ -246,7 +246,7 @@ const makeParameter = (param) => {
 // create (add)
 export const createBrowserRuleData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestMultipartFormAPI('createBrowserRuleConf', makeParameter(itemObj)).then(
+    return requestPostAPI('createBrowserRuleConf', makeParameter(itemObj)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
