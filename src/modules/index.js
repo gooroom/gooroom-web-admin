@@ -32,6 +32,7 @@ import DesktopAppModule from './DesktopAppModule';
 import DesktopConfModule from './DesktopConfModule';
 import AdminUserModule from './AdminUserModule';
 import GcspManageModule from './GcspManageModule';
+import ThemeManageModule from './ThemeManageModule';
 
 import AdminModule from './AdminModule';
 
