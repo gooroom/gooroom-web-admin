@@ -72,8 +72,8 @@ class BrowserRuleDialog extends Component {
         event.preventDefault();
         const { BrowserRuleProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: '브라우저제어정보 등록',
-            confirmMsg: '브라우저제어정보를 등록하시겠습니까?',
+            confirmTitle: '브라우저제어정책 등록',
+            confirmMsg: '브라우저제어정책을 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmObject: BrowserRuleProps.get('editingItem')
         });
@@ -92,8 +92,8 @@ class BrowserRuleDialog extends Component {
     handleEditData = (event, id) => {
         const { BrowserRuleProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: '브라우저제어정보 수정',
-            confirmMsg: '브라우저제어정보를 수정하시겠습니까?',
+            confirmTitle: '브라우저제어정책 수정',
+            confirmMsg: '브라우저제어정책을 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmObject: BrowserRuleProps.get('editingItem')
         });
@@ -119,7 +119,7 @@ class BrowserRuleDialog extends Component {
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: '시스템알림',
-                alertMsg: '브라우저제어설정이 하위 조직에 적용되었습니다.'
+                alertMsg: '브라우저제어정책이 하위 조직에 적용되었습니다.'
             });
             this.handleClose();
         });
@@ -132,7 +132,7 @@ class BrowserRuleDialog extends Component {
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: '시스템알림',
-                alertMsg: '브라우저제어설정을 복사하였습니다.'
+                alertMsg: '브라우저제어정책을 복사하였습니다.'
             });
             refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
             this.handleClose();
@@ -183,15 +183,15 @@ class BrowserRuleDialog extends Component {
 
         let title = "";
         if(dialogType === BrowserRuleDialog.TYPE_ADD) {
-            title = "브라우저제어설정 등록";
+            title = "브라우저제어정책 등록";
         } else if(dialogType === BrowserRuleDialog.TYPE_VIEW) {
-            title = "브라우저제어설정 정보";
+            title = "브라우저제어정책 정보";
         } else if(dialogType === BrowserRuleDialog.TYPE_EDIT) {
-            title = "브라우저제어설정 수정";
+            title = "브라우저제어정책 수정";
         } else if(dialogType === BrowserRuleDialog.TYPE_INHERIT) {
-            title = "브라우저제어설정 상속";
+            title = "브라우저제어정책 상속";
         } else if(dialogType === BrowserRuleDialog.TYPE_COPY) {
-            title = "브라우저제어설정 복사";
+            title = "브라우저제어정책 복사";
         }
 
         return (

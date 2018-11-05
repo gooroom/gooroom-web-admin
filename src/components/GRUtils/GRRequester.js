@@ -96,9 +96,6 @@ export function requestPostAPI(url, param, headers) {
 
 // multipartform
 export function requestMultipartFormAPI(url, param, headers) {
-
-  console.log('requestMultipartFormAPI.....', url);
-
   return axios({
       method: "post",
       url: GPMS_URL + url,
@@ -124,7 +121,7 @@ export function requestMultipartFormAPI(url, param, headers) {
     });
 };
 
-const instanceOfCollection = collection();
+// const instanceOfCollection = collection();
 
 
 

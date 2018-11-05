@@ -17,6 +17,8 @@ const CREATE_THEMEMANAGE_SUCCESS = 'themeManage/CREATE_THEMEMANAGE_SUCCESS';
 const EDIT_THEMEMANAGE_SUCCESS = 'themeManage/EDIT_THEMEMANAGE_SUCCESS';
 const DELETE_THEMEMANAGE_SUCCESS = 'themeManage/DELETE_THEMEMANAGE_SUCCESS';
 
+const SHOW_THEMEMANAGE_INFORM = 'themeManage/SHOW_THEMEMANAGE_INFORM';
+const CLOSE_THEMEMANAGE_INFORM = 'themeManage/CLOSE_THEMEMANAGE_INFORM';
 const SHOW_THEMEMANAGE_DIALOG = 'themeManage/SHOW_THEMEMANAGE_DIALOG';
 const CLOSE_THEMEMANAGE_DIALOG = 'themeManage/CLOSE_THEMEMANAGE_DIALOG';
 
@@ -35,6 +37,22 @@ export const showDialog = (param) => dispatch => {
 export const closeDialog = () => dispatch => {
     return dispatch({
         type: CLOSE_THEMEMANAGE_DIALOG
+    });
+};
+
+export const showInform = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_THEMEMANAGE_INFORM,
+        compId: param.compId,
+        selectId: (param.viewItem) ? param.viewItem.get('themeId') : '',
+        viewItem: param.viewItem
+    });
+};
+
+export const closeInform = (param) => dispatch => {
+    return dispatch({
+        type: CLOSE_THEMEMANAGE_INFORM,
+        compId: param.compId
     });
 };
 
@@ -174,6 +192,12 @@ export default handleActions({
     },
     [CLOSE_THEMEMANAGE_DIALOG]: (state, action) => {
         return commonHandleActions.handleCloseDialogAction(state.set('dialogTabValue', 0), action);
+    },
+    [SHOW_THEMEMANAGE_INFORM]: (state, action) => {
+        return commonHandleActions.handleShowInformAction(state, action);
+    },
+    [CLOSE_THEMEMANAGE_INFORM]: (state, action) => {
+        return commonHandleActions.handleCloseInformAction(state, action);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({

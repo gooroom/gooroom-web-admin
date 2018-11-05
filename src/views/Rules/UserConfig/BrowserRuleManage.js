@@ -202,54 +202,51 @@ class BrowserRuleManage extends Component {
   // ===================================================================
 
 
+  // goUpload = e => {
+  //   e.preventDefault() // Stop form submit
+  //   this.fileUpload(this.state.file);
 
+  //   // this.fileUpload(this.state.file).then((response)=>{
+  //   //   console.log(response.data);
+  //   // })
 
+  // }
+  // onChange = e => {
+  //   console.log('e :::: ', e.target.files);
+  //   this.setState({file:e.target.files[0]});
+  //   this.readFileContent(e.target.files[0]).then(content => {
+  //     document.getElementById('content-target').value = content
+  //   }).catch(error => console.log(error));
 
-  goUpload = e => {
-    e.preventDefault() // Stop form submit
-    this.fileUpload(this.state.file);
+  // }
 
-    // this.fileUpload(this.state.file).then((response)=>{
-    //   console.log(response.data);
-    // })
+  // readFileContent(file) {
+  //   const reader = new FileReader()
+  //   return new Promise((resolve, reject) => {
+  //     reader.onload = event => resolve(event.target.result)
+  //     reader.onerror = error => reject(error)
+  //     reader.readAsText(file)
+  //   })
+  // }
 
-  }
-  onChange = e => {
-    console.log('e :::: ', e.target.files);
-    this.setState({file:e.target.files[0]});
-    this.readFileContent(e.target.files[0]).then(content => {
-      document.getElementById('content-target').value = content
-    }).catch(error => console.log(error));
+  // fileUpload(file){
+  //   // console.log('fileUpload.....', file);
 
-  }
+  //   const reader = new FileReader()
+  //   reader.readAsText(file) // you could also read images and other binaries
 
-  readFileContent(file) {
-    const reader = new FileReader()
-    return new Promise((resolve, reject) => {
-      reader.onload = event => resolve(event.target.result)
-      reader.onerror = error => reject(error)
-      reader.readAsText(file)
-    })
-  }
+  //   console.log('requestMultipartFormAPI.....', reader);
 
-  fileUpload(file){
-    // console.log('fileUpload.....', file);
-
-    const reader = new FileReader()
-reader.readAsText(file) // you could also read images and other binaries
-
-    console.log('requestMultipartFormAPI.....', reader);
-
-    // requestMultipartFormAPI('createWallpaperData', {
-    //   'wallpaperFile': file,
-    //   'wallpaperNm': 'FILENAME_777'
-    // }).then(
-    //   (response) => {
-    //     console.log('response :::: ', response);
-    //   }
-    // ).catch(error => {
-    //   console.log('error :::: ', error);
-    // });
+  //   // requestMultipartFormAPI('createWallpaperData', {
+  //   //   'wallpaperFile': file,
+  //   //   'wallpaperNm': 'FILENAME_777'
+  //   // }).then(
+  //   //   (response) => {
+  //   //     console.log('response :::: ', response);
+  //   //   }
+  //   // ).catch(error => {
+  //   //   console.log('error :::: ', error);
+  //   // });
 
 
 
@@ -257,19 +254,19 @@ reader.readAsText(file) // you could also read images and other binaries
 
 
 
-    // const url = 'http://ain.gooroom.kr:8080/gpms/createWallpaperData';
-    // const formData = new FormData();
-    // formData.append('wallpaperFile',file);
-    // formData.append('wallpaperNm', 'FILENAME_777');
-    // const config = {
-    //     headers: {
-    //         'content-type': 'multipart/form-data'
-    //     }
-    // }
-    // return post(url, formData, config)
+  //   // const url = 'http://ain.gooroom.kr:8080/gpms/createWallpaperData';
+  //   // const formData = new FormData();
+  //   // formData.append('wallpaperFile',file);
+  //   // formData.append('wallpaperNm', 'FILENAME_777');
+  //   // const config = {
+  //   //     headers: {
+  //   //         'content-type': 'multipart/form-data'
+  //   //     }
+  //   // }
+  //   // return post(url, formData, config)
     
     
-  }
+  // }
 
 
 
@@ -393,9 +390,8 @@ reader.readAsText(file) // you could also read images and other binaries
         />
         <BrowserRuleDialog compId={compId} />
         <GRConfirm />
-
+        {/* 
         <Divider />
-
           <h1>File Upload</h1>
             <input style={{display:'none'}}
               id="contained-button-file" type="file"
@@ -408,10 +404,9 @@ reader.readAsText(file) // you could also read images and other binaries
             </label>
             <textarea id="content-target"></textarea>
 
-            <Button variant="contained" color="default" onClick={this.goUpload} size='small'>
-        Upload
-        <CloudUploadIcon  />
-      </Button>
+            <Button variant="contained" color="default" onClick={this.goUpload} size='small'> Upload <CloudUploadIcon  />
+            </Button>
+      */}
 
 
       </div>
