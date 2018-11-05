@@ -24,20 +24,10 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -103,8 +93,6 @@ class ThemeDialog extends Component {
         ThemeDialog.APP_LIST.map(n => {
             dataParam = dataParam.set(n.name, paramObject.get(n.name));
         });
-
-        console.log('dataParam :::: ', (dataParam) ? dataParam.toJS() : '?');
         return dataParam.toJS();
     }
 
@@ -224,9 +212,26 @@ class ThemeDialog extends Component {
                     <Table>
                         <TableBody>
                             {ThemeDialog.APP_LIST && ThemeDialog.APP_LIST.map(n => {
+                                let beforeImg = '';
+                                if(dialogType == ThemeDialog.TYPE_EDIT) {
+                                    const iconItem = editingItem.get('themeIcons').find(icon => {
+                                        return icon.get('fileEtcInfo') == n.name;
+                                    });
+                                    if(iconItem.get('fileName') && iconItem.get('fileName') !== '') {
+                                        beforeImg = iconItem.get('imgUrl') + iconItem.get('fileName');
+                                    }                                    
+                                }
+
                                 return (
                                     <TableRow hover key={n.no}>
-                                        <TableCell style={{width:240}}>{n.no}. {n.title}</TableCell>
+                                        <TableCell style={{width:230}}>{n.no}. {n.title}</TableCell>
+                                        {(dialogType === ThemeDialog.TYPE_EDIT) &&
+                                            <TableCell style={{width:50}}>
+                                            {(beforeImg && beforeImg !== '') && 
+                                                <img src={beforeImg} height="50" style={{border:'solid 1 red'}} />
+                                            }
+                                            </TableCell>
+                                        }
                                         <TableCell style={{width:80}}>
                                             <input style={{display:'none'}} id={n.name + '-file'} type="file" onChange={event => this.handleImageFileChange(event, n.name)} />
                                             <label htmlFor={n.name + '-file'}>
@@ -234,7 +239,7 @@ class ThemeDialog extends Component {
                                             </label>
                                         </TableCell>
                                         <TableCell>
-                                            <img src={editingItem.get(n.name + '_GRFILE')} height="50"/>
+                                            <img src={editingItem.get(n.name + '_GRFILE')} height="50" />
                                         </TableCell>
                                     </TableRow>
                                 );

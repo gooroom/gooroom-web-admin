@@ -18,6 +18,7 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import ThemeDialog from './ThemeDialog';
+import ThemeSpec from './ThemeSpec';
 
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -86,17 +87,28 @@ class ThemeManage extends Component {
     });
   };
 
+  // .................................................
   handleSelectBtnClick = () => {
     const { ThemeManageActions, ThemeManageProps } = this.props;
     ThemeManageActions.readThemeListPaged(ThemeManageProps, this.props.match.params.grMenuId, {page: 0});
   };
-  
+
+  handleKeywordChange = (name, value) => {
+    this.props.ThemeManageActions.changeListParamData({
+      name: name, 
+      value: value,
+      compId: this.props.match.params.grMenuId
+    });
+  }
+
   handleSelectRow = (event, id) => {
     const { ThemeManageProps, ThemeManageActions } = this.props;
-    const viewItem = getRowObjectById(ThemeManageProps, this.props.match.params.grMenuId, id, 'themeId');
-    ThemeManageActions.showDialog({
-      viewItem: viewItem,
-      dialogType: ThemeDialog.TYPE_VIEW
+    const compId = this.props.match.params.grMenuId;
+
+    const viewItem = getRowObjectById(ThemeManageProps, compId, id, 'themeId');
+    ThemeManageActions.showInform({
+      compId: compId,
+      viewItem: viewItem
     });
   };
 
@@ -146,14 +158,21 @@ class ThemeManage extends Component {
     }
   };
 
-  // .................................................
-  handleKeywordChange = (name, value) => {
-    this.props.ThemeManageActions.changeListParamData({
-      name: name, 
-      value: value,
-      compId: this.props.match.params.grMenuId
+  // ===================================================================
+  handleCopyClick = (viewItem) => {
+    this.props.ThemeManageActions.showDialog({
+      viewItem: viewItem,
+      dialogType: ThemeDialog.TYPE_COPY
     });
-  }
+  };
+
+  handleEditItemClick = (viewItem, compType) => {
+    this.props.ThemeManageActions.showDialog({
+      viewItem: viewItem,
+      dialogType: ThemeDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
 
   render() {
     const { classes } = this.props;
@@ -263,6 +282,12 @@ class ThemeManage extends Component {
         </GRPane>
         {/* dialog(popup) component area */}
         <ThemeDialog compId={compId} />
+        <ThemeSpec compId={compId}
+          specType="inform" 
+          selectedItem={listObj}
+          onClickCopy={this.handleCopyClick}
+          onClickEdit={this.handleEditItemClick}
+        />
         <GRConfirm />
       </React.Fragment>
     );
