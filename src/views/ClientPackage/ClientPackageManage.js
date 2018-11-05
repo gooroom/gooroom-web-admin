@@ -22,44 +22,23 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import ClientSelectDialog from "views/Client/ClientSelectDialog";
 import ClientPackageSelectDialog from "views/ClientPackage/ClientPackageSelectDialog";
-import ClientStatusSelect from "views/Options/ClientStatusSelect";
-
-import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
+import Tooltip from '@material-ui/core/Tooltip';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-
-import Checkbox from "@material-ui/core/Checkbox";
-
-import TextField from '@material-ui/core/TextField';
-import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
-import Search from '@material-ui/icons/Search'; 
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import InputLabel from "@material-ui/core/InputLabel";
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import DeleteIcon from '@material-ui/icons/Delete';
+import GroupIcon from '@material-ui/icons/GroupWork';
+import ClientIcon from '@material-ui/icons/Laptop';
 
 import ClientManageCompWithPackage from 'views/Client/ClientManageCompWithPackage';
-import ClientManageSpec from 'views/Client/ClientManageSpec';
 
 import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
-import ClientGroupSpec from 'views/ClientGroup/ClientGroupSpec';
 import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
 
 import ClientPackageComp from 'views/ClientPackage/ClientPackageComp';
-
-import ClientPackageDialog from './ClientPackageDialog';
-import ClientPackageInform from './ClientPackageInform';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -353,17 +332,49 @@ class ClientPackageManage extends Component {
       <React.Fragment>
         <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GRPane>
-          <Grid container spacing={24}>
-
+          <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
+            
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}}>
-
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
-                  <AddIcon />등록
-                </Button>
-                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
-                  <RemoveIcon />삭제
-                </Button>
+              <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
+                <Grid item>
+
+                  <Tooltip title="신규 단말그룹 등록">
+                  <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
+                      <AddIcon /><GroupIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
+                  <Tooltip title="단말그룹 삭제">
+                  <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
+                      <RemoveIcon /><GroupIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
+
+                </Grid>
+                <Grid item>
+
+                  <Tooltip title="그룹에 단말추가">
+                  <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
+                      <AddIcon /><ClientIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
+
+                  <Tooltip title="그룹에 단말삭제">
+                  <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
+                      <RemoveIcon /><ClientIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
+
+                </Grid>
+              </Grid>
               </Toolbar>
 
               <ClientGroupComp compId={compId} 
@@ -371,16 +382,10 @@ class ClientPackageManage extends Component {
                 onSelect={this.handleClientGroupSelect} />
             </Grid>
 
-            <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
+              <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
-                      <AddIcon />그룹단말추가
-                    </Button>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
-                      <RemoveIcon />그룹단말제거
-                    </Button>
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleAllUpdateForClient} disabled={this.isClientSelected()} style={{marginLeft: "10px"}}>
@@ -392,17 +397,14 @@ class ClientPackageManage extends Component {
                   </Grid>
                 </Grid>
               </Toolbar>
-
               <ClientManageCompWithPackage compId={compId} onSelectAll={this.handleClientSelectAll} onSelect={this.handleClientSelect} />
             </Grid>
 
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef'}}>
               <ClientPackageComp compId={compId} onSelectAll={this.handleClientPackageSelectAll} onSelect={this.handleClientPackageSelect} />
             </Grid>
-
           </Grid>
 
-        </GRPane>
         <ClientGroupDialog compId={compId} />
         <ClientSelectDialog 
           isOpen={this.state.isOpenClientSelect} 
@@ -412,6 +414,8 @@ class ClientPackageManage extends Component {
         />
         <ClientPackageSelectDialog isOpen={this.state.isOpenClientPackageSelect} onInstallHandle={this.handleClientPackageInstall} onClose={this.handleClientPackageSelectClose} />
         <GRConfirm />
+        
+        </GRPane>
       </React.Fragment>
 
     );

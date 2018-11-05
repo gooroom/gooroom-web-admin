@@ -22,13 +22,10 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import FormControl from '@material-ui/core/FormControl';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Checkbox from "@material-ui/core/Checkbox";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -255,7 +252,6 @@ class ClientManageCompWithPackage extends Component {
           rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
           rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
           page={listObj.getIn(['listParam', 'page'])}
-          labelDisplayedRows={() => {return ''}}
           backIconButtonProps={{
             'aria-label': 'Previous Page'
           }}

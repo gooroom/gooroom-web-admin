@@ -38,8 +38,8 @@ import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDia
 import Grid from '@material-ui/core/Grid';
 import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
-
 import Button from '@material-ui/core/Button';
+
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import DeleteIcon from '@material-ui/icons/Delete';
