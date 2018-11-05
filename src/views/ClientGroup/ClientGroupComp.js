@@ -236,8 +236,8 @@ class ClientGroupComp extends Component {
                   </TableCell>
                 }
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
-                <TableCell className={classes.grSmallAndClickCell}>{n.get('clientCount')}</TableCell>
-                <TableCell className={classes.grSmallAndClickCell}>
+                <TableCell numeric={true} className={classes.grSmallAndClickAndNumericCell}>{n.get('clientCount')}</TableCell>
+                <TableCell className={classes.grSmallAndClickAndCenterCell}>
                   <Button color='secondary' size="small" 
                     className={classes.buttonInTableRow} 
                     onClick={event => this.handleEditClick(event, n.get('grpId'))}>
