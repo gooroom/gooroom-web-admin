@@ -57,7 +57,19 @@
       },
       "MuiTableCell": {
           "root": {
-            "padding": "0 6 0 0"
+            "padding": "0 6 0 0",
+            "&:last-child": {
+              "paddingRight": "6px"
+            }
+          },
+          "head": {
+            "textAlign": "center"
+          },
+          "numeric": {
+            "paddingRight": 10
+          },
+          "paddingCheckbox": {
+            "textAlign": "center"
           }
       },
       "MuiTableRow": {

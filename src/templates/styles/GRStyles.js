@@ -310,6 +310,15 @@ export const GRCommonStyle = theme => ({
         padding: "0px",
         cursor: "pointer"
     },
+    grSmallAndClickAndNumericCell: {
+        padding: "0 10 0 0",
+        cursor: "pointer"
+    },
+    grSmallAndClickAndCenterCell: {
+        padding: "0 0 0 0",
+        cursor: "pointer",
+        textAlign: "center"
+    },
     grObjInCell: {
         height: "inherit"
     },
