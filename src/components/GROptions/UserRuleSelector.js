@@ -57,7 +57,6 @@ class UserRuleSelector extends Component {
                 {selectedTab === 2 && <SecurityRuleSelector compId={compId} initId={module ? module.securityRuleId : '-'} targetType={targetType} />}
                 {selectedTab === 3 && <DesktopConfSelector compId={compId} initId={module ? '+' : '-'} targetType={targetType} />}
                 </Paper>
-            
             </React.Fragment>
         );
     }
