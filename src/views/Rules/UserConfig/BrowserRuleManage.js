@@ -146,7 +146,20 @@ class BrowserRuleManage extends Component {
 
   handleCreateButton = () => {
     this.props.BrowserRuleActions.showDialog({
-      viewItem: Map(),
+      viewItem: Map({
+        webSocket: 'disallow',
+        webWorker: 'disallow',
+        
+        'devToolRule_trust': '1',
+        'downloadRule_trust': '0',
+        'printRule_trust': 'true',
+        'viewSourceRule_trust': 'true',
+
+        'devToolRule_untrust': '1',
+        'downloadRule_untrust': '0',
+        'printRule_untrust': 'true',
+        'viewSourceRule_untrust': 'true'
+      }),
       dialogType: BrowserRuleDialog.TYPE_ADD
     });
   }
