@@ -174,9 +174,6 @@ class ClientConfSettingDialog extends Component {
                             value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                             onChange={this.handleValueChange("comment")} />
 
-                        <TextField label="에이전트폴링주기(초)" className={classes.fullWidth}
-                            value={(editingItem.get('pollingTime')) ? editingItem.get('pollingTime') : ''}
-                            onChange={this.handleValueChange("pollingTime")} />
                         <div style={{marginTop:"10px"}}>
                             <FormLabel style={{marginRight:"50px"}}>{bull} 운영체제 보호</FormLabel>
                             <FormControlLabel

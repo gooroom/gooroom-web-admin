@@ -188,7 +188,6 @@ const makeParameter = (param) => {
         objName: param.get('objNm'),
         objComment: param.get('comment'),
 
-        AGENTPOLLINGTIME: param.get('pollingTime'),
         USEHYPERVISOR: param.get('useHypervisor'),
         NTPSELECTADDRESS: (param.get('selectedNtpIndex') > -1) ? param.getIn(['ntpAddress', param.get('selectedNtpIndex')]) : '',
         NTPADDRESSES: (param.get('ntpAddress')) ? param.get('ntpAddress').toArray() : []
