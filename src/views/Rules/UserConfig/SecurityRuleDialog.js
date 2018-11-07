@@ -185,17 +185,22 @@ class SecurityRuleDialog extends Component {
                 <DialogContent>
                     {(dialogType === SecurityRuleDialog.TYPE_EDIT || dialogType === SecurityRuleDialog.TYPE_ADD) &&
                     <div>
-
-                    <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                        onChange={this.handleValueChange("objNm")}
-                        className={classes.fullWidth}
-                        disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
-                    />
-                    <TextField label="설명" value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                        onChange={this.handleValueChange("comment")}
-                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
-                    />
+                    <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+                        <Grid item xs={12} sm={4} md={4}>
+                        <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            onChange={this.handleValueChange("objNm")}
+                            className={classes.fullWidth}
+                            disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
+                        />
+                        </Grid>
+                        <Grid item xs={12} sm={8} md={8}>
+                        <TextField label="설명" value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                            onChange={this.handleValueChange("comment")}
+                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                            disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
+                        />
+                        </Grid>
+                    </Grid>
                     {(dialogType === SecurityRuleDialog.TYPE_EDIT || dialogType === SecurityRuleDialog.TYPE_ADD) &&
                         <div>
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >

@@ -36,7 +36,7 @@ export function grRequestPromise(url, param) {
         }
       ],
       data: param,
-      withCredentials: true
+      withCredentials: false
     }).then(function(response) {
 
       if (response.data) {
