@@ -83,10 +83,6 @@ class ClientConfSettingSpec extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
-                  <TableCell numeric>{viewItem.get('pollingTime')}</TableCell>
-                </TableRow>
-                <TableRow>
                     <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
                   <TableCell numeric>{(viewItem.get('useHypervisor')) ? '구동' : '중단'}</TableCell>
                 </TableRow>
@@ -124,7 +120,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonS
 export const generateClientConfSettingObject = (param) => {
 
   if(param) {
-    let pollingTime = '';
     let useHypervisor = false;
     let selectedNtpIndex = -1;
     let ntpAddrSelected = '';
@@ -134,9 +129,7 @@ export const generateClientConfSettingObject = (param) => {
       const ename = e.get('propNm');
       const evalue = e.get('propValue');
       
-      if(ename == 'AGENTPOLLINGTIME') {
-        pollingTime = evalue;
-      } else if(ename == 'USEHYPERVISOR') {
+      if(ename == 'USEHYPERVISOR') {
         useHypervisor = (evalue == "true");
       } else if(ename == 'NTPSELECTADDRESS') {
         ntpAddrSelected = evalue;
@@ -156,7 +149,6 @@ export const generateClientConfSettingObject = (param) => {
       comment: param.get('comment'),
       modDate: param.get('modDate'),
       useHypervisor: useHypervisor,
-      pollingTime: pollingTime,
       selectedNtpAddress: ntpAddrSelected,
       selectedNtpIndex: selectedNtpIndex,
       ntpAddress: List(ntpAddress)

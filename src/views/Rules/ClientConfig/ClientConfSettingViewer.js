@@ -46,10 +46,6 @@ class ClientConfSettingViewer extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} 에이전트 폴링주기(초)</TableCell>
-                  <TableCell numeric>{viewItem.get('pollingTime')}</TableCell>
-                </TableRow>
-                <TableRow>
                     <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
                   <TableCell numeric>{(viewItem.get('useHypervisor')) ? '구동' : '중단'}</TableCell>
                 </TableRow>
