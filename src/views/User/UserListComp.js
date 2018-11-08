@@ -257,7 +257,6 @@ class UserListComp extends Component {
           rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
           rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
           page={listObj.getIn(['listParam', 'page'])}
-          labelDisplayedRows={() => {return ''}}
           backIconButtonProps={{
             'aria-label': 'Previous Page'
           }}

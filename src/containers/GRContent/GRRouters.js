@@ -20,6 +20,7 @@ import ClientUpdateServerManage from "views/Rules/UpdateServer/ClientUpdateServe
 import MediaRuleManage from "views/Rules/UserConfig/MediaRuleManage";
 import BrowserRuleManage from "views/Rules/UserConfig/BrowserRuleManage";
 import SecurityRuleManage from "views/Rules/UserConfig/SecurityRuleManage";
+import SoftwareFilterManage from "views/Rules/UserConfig/SoftwareFilterManage";
 
 import JobManage from "views/Job/JobManage";
 import PackageManage from 'views/ClientPackage/ClientPackageManage';
@@ -54,17 +55,23 @@ class GRRouters extends Component {
         <Switch>
           <Route exact path="/" name="Home" component={Dashboard} />
           <Route path="/dashboard" name="Dashboard" component={Dashboard} />
+          
           <Route path="/clients/clientmastermanage/:grMenuId/:grMenuName" component={ClientMasterManage} />
           <Route path="/clients/clientmanage/:grMenuId/:grMenuName" component={ClientManage} />
           <Route path="/clients/clientgroupmanage/:grMenuId/:grMenuName" component={ClientGroupManage} />
+
           <Route path="/clientconfig/regkey/:grMenuId/:grMenuName" component={ClientRegKey} />
           <Route path="/clientconfig/profileset/:grMenuId/:grMenuName" component={ClientProfileSet} />
+          
           <Route path="/clientconfig/setting/:grMenuId/:grMenuName" component={ClientConfSettingManage} />
           <Route path="/clientconfig/host/:grMenuId/:grMenuName" component={ClientHostNameManage} />
           <Route path="/clientconfig/update/:grMenuId/:grMenuName" component={ClientUpdateServerManage} />
+          
           <Route path="/userconfig/media/:grMenuId/:grMenuName" component={MediaRuleManage} />
           <Route path="/userconfig/browser/:grMenuId/:grMenuName" component={BrowserRuleManage} />
           <Route path="/userconfig/security/:grMenuId/:grMenuName" component={SecurityRuleManage} />
+          <Route path="/userconfig/swfilter/:grMenuId/:grMenuName" component={SoftwareFilterManage} />
+          
           <Route path="/jobs/jobmanage/:grMenuId/:grMenuName" component={JobManage} />
           <Route path="/package/packagemanage/:grMenuId/:grMenuName" component={PackageManage} />
           <Route path="/user/usermastermanage/:grMenuId/:grMenuName" component={UserMasterManage} />
