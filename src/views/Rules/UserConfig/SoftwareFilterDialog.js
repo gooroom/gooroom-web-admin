@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -76,6 +77,14 @@ class SoftwareFilterDialog extends Component {
     handleValueChange = name => event => {
         const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'allow' : 'disallow') : event.target.value;
         this.props.SoftwareFilterActions.setEditingItemValue({
+            name: name,
+            value: value
+        });
+    }
+
+    handleSoftwareValueChange = name => event => {
+        const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'allow' : 'disallow') : event.target.value;
+        this.props.SoftwareFilterActions.setEditingSoftwareItemValue({
             name: name,
             value: value
         });
@@ -223,88 +232,19 @@ class SoftwareFilterDialog extends Component {
                     {(dialogType === SoftwareFilterDialog.TYPE_EDIT || dialogType === SoftwareFilterDialog.TYPE_ADD) &&
                         <div>
                         <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={6}>
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('cdAndDvd')} 
-                                        checked={this.checkAllow(editingItem.get('cdAndDvd'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('cdAndDvd') == 'allow') ? 'CD/DVD 허가' : 'CD/DVD 금지'}
-                                />
-                            </Grid>
-                            <Grid item xs={6} >
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('printer')} 
-                                        checked={this.checkAllow(editingItem.get('printer'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('printer') == 'allow') ? '프린터 허가' : '프린터 금지'}
-                                />
-                            </Grid>
+                        {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
+                                return (
+                                    <Grid item xs={6} key={n.no}>
+                                    <FormControlLabel label={n.name}
+                                        control={<Checkbox onChange={this.handleSoftwareValueChange(n.tag)} color="primary"
+                                            checked={this.checkAllow(editingItem.getIn(['SWITEM', n.tag]))}
+                                        />}                                
+                                    />
+                                    </Grid>
+                                );
+                            })
+                        }
                         </Grid>
-
-                        <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={6}>
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('screenCapture')} 
-                                        checked={this.checkAllow(editingItem.get('screenCapture'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('screenCapture') == 'allow') ? '화면캡쳐 허가' : '화면캡쳐 금지'}
-                                />
-                            </Grid>
-                            <Grid item xs={6} >
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('camera')} 
-                                        checked={this.checkAllow(editingItem.get('camera'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('camera') == 'allow') ? '카메라 허가' : '카메라 금지'}
-                                />
-                            </Grid>
-                        </Grid>
-
-                        <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={6}>
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('sound')} 
-                                        checked={this.checkAllow(editingItem.get('sound'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('sound') == 'allow') ? '사운드(소리, 마이크) 허가' : '사운드(소리, 마이크) 금지'}
-                                />
-                            </Grid>
-                            <Grid item xs={6} >
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('wireless')} 
-                                        checked={this.checkAllow(editingItem.get('wireless'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('wireless') == 'allow') ? '무선랜 허가' : '무선랜 금지'}
-                                />
-                            </Grid>
-                        </Grid>
-
-                        <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={6}>
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('keyboard')} 
-                                        checked={this.checkAllow(editingItem.get('keyboard'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('keyboard') == 'allow') ? 'USB키보드 허가' : 'USB키보드 금지'}
-                                />
-                            </Grid>
-                            <Grid item xs={6} >
-                                <FormControlLabel
-                                    control={<Switch onChange={this.handleValueChange('mouse')} 
-                                        checked={this.checkAllow(editingItem.get('mouse'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('mouse') == 'allow') ? 'USB마우스 허가' : 'USB마우스 금지'}
-                                />
-                            </Grid>
-                        </Grid>
-
-                        <FormControlLabel
-                            control={<Switch onChange={this.handleValueChange('bluetoothState')} 
-                            checked={this.checkAllow(editingItem.get('bluetoothState'))}
-                            color="primary" />}
-                            label={(editingItem.get('bluetoothState') == 'allow') ? '블루투스 허가' : '블루투스 금지'}
-                        />
-
                         </div>
                     }
                     </div>
