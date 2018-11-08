@@ -14,6 +14,7 @@ import * as DeptActions from 'modules/DeptModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import DeptDialog from './DeptDialog';
@@ -34,6 +35,8 @@ import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
+import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
+import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
@@ -76,6 +79,12 @@ class DeptSpec extends Component {
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
+  handleEditClickForSoftwareFilter = (viewItem, compType) => {
+    this.props.SoftwareFilterActions.showDialog({
+      viewItem: viewItem,
+      dialogType: SoftwareFilterDialog.TYPE_EDIT
+    });
+  };
   handleEditClickForDesktopConf = (viewItem, compType) => {
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
@@ -97,6 +106,7 @@ class DeptSpec extends Component {
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'DEPT']);
+    const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'DEPT']);
 
     return (
@@ -142,6 +152,14 @@ class DeptSpec extends Component {
                   inherit={true}
                 />
               </Grid>
+              <Grid item xs={12} md={12} lg={6} xl={4} >
+                <SoftwareFilterSpec compId={compId}
+                  specType="inform" targetType="DEPT"
+                  selectedItem={selectedSoftwareFilterItem}
+                  onClickEdit={this.handleEditClickForSoftwareFilter}
+                  inherit={true}
+                />
+              </Grid>
               <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfSpec compId={compId}
                   specType="inform" targetType="DEPT" 
@@ -165,6 +183,7 @@ const mapStateToProps = (state) => ({
   MediaRuleProps: state.MediaRuleModule,
   BrowserRuleProps: state.BrowserRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
+  SoftwareFilterProps: state.SoftwareFilterModule,
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -174,6 +193,7 @@ const mapDispatchToProps = (dispatch) => ({
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 

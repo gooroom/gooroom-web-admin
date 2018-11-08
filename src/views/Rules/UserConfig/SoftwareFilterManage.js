@@ -122,7 +122,7 @@ class SoftwareFilterManage extends Component {
   handleCreateButton = () => {
     this.props.SoftwareFilterActions.showDialog({
       viewItem: Map({
-        'SWITEM': {}
+        'SWITEM': Map({})
       }),
       dialogType: SoftwareFilterDialog.TYPE_ADD
     });
@@ -171,7 +171,10 @@ class SoftwareFilterManage extends Component {
     });
   };
 
-  handleEditItemClick = (viewItem, compType) => {
+  handleEditItemClick = (viewItem) => {
+
+    console.log('viewItem ::: ', (viewItem)? viewItem.toJS(): '--');
+
     this.props.SoftwareFilterActions.showDialog({
       viewItem: viewItem,
       dialogType: SoftwareFilterDialog.TYPE_EDIT

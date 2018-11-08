@@ -17,9 +17,12 @@ import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
+import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
@@ -91,53 +94,33 @@ class SoftwareFilterSpec extends Component {
               style={{paddingBottom:0}}
             />
             <CardContent>
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} USB메모리</TableCell>
-                    <TableCell numeric>{viewItem.get('usbMemory')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} CD/DVD</TableCell>
-                    <TableCell numeric>{viewItem.get('cdAndDvd')}</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} 프린터</TableCell>
-                    <TableCell numeric>{viewItem.get('printer')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 화면캡쳐</TableCell>
-                    <TableCell numeric>{viewItem.get('screenCapture')}</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} 사운드(소리,마이크)</TableCell>
-                    <TableCell numeric>{viewItem.get('sound')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 카메라</TableCell>
-                    <TableCell numeric>{viewItem.get('camera')}</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} USB키보드</TableCell>
-                    <TableCell numeric>{viewItem.get('keyboard')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} USB마우스</TableCell>
-                    <TableCell numeric>{viewItem.get('mouse')}</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} 무선랜</TableCell>
-                    <TableCell numeric>{viewItem.get('wireless')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 블루투스</TableCell>
-                    <TableCell numeric>{viewItem.get('bluetoothState')}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row"></TableCell>
-                    <TableCell numeric></TableCell>
-                    <TableCell component="th" scope="row">{bull} 맥주소(블루투스)</TableCell>
-                    <TableCell numeric>{viewItem.get('macAddress').map(function(prop, index) {
-                      return <span key={index}>{prop}<br/></span>;
-                    })}</TableCell>
-                  </TableRow>
-
-                </TableBody>
-              </Table>
+            <div style={{marginTop:20}}>
+              <InputLabel>Red 색상의 소프트웨어는 설치불가(설치금지)로 지정된 소프트웨어입니다.</InputLabel>
+              <Grid container spacing={8} alignItems="flex-start" direction="row" justify="flex-start" style={{marginTop:10}}>
+              {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
+                const selected = (viewItem.getIn(['SWITEM', n.tag])) ? true : false;
+                const swStyle = (selected) ? {color:'red'} : {color:'gray'};
+                return (
+                  <Grid item xs={12} sm={12} md={6} lg={4} xl={3} key={n.no}>
+                    <Card>
+                      <CardContent style={{padding:3}}>
+                        <Typography className={classes.title} color="textSecondary" gutterBottom>
+                        [{n.tag}]
+                        </Typography>
+                        <Typography variant="h6" component="h4" style={swStyle}>
+                          {n.name}
+                        </Typography>
+                        <Typography className={classes.pos} color="textSecondary">
+                          {n.name_kr}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  );
+                })
+              }
+              </Grid>
+            </div>
             </CardContent>
           </Card>
         }
@@ -160,51 +143,20 @@ export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonS
 export const generateSoftwareFilterObject = (param) => {
 
   if(param) {
-    let usbMemory = '';
-    let usbReadonly = '';
-    let wireless = '';
-    let bluetoothState = '';
-    let cdAndDvd = '';
-    let printer = '';
-    let screenCapture = '';
-    let camera = '';
-    let sound = '';
-    let keyboard = '';
-    let mouse = '';
-    let macAddress = [];
+    let filtered_software = [];
 
     param.get('propList').forEach(function(e) {
       const ename = e.get('propNm');
       const evalue = e.get('propValue');
-      if(ename == 'usb_memory') {
-        usbMemory = evalue;
-        if(usbMemory == 'read_only') {
-          usbReadonly = 'allow';
-        } else {
-          usbReadonly = 'disallow';
-        }
-      } else if(ename == 'cd_dvd') {
-        cdAndDvd = evalue;
-      } else if(ename == 'printer') {
-        printer = evalue;
-      } else if(ename == 'screen_capture') {
-        screenCapture = evalue;
-      } else if(ename == 'sound') {
-        sound = evalue;
-      } else if(ename == 'camera') {
-        camera = evalue;
-      } else if(ename == 'keyboard') {
-        keyboard = evalue;
-      } else if(ename == 'mouse') {
-        mouse = evalue;
-      } else if(ename == 'wireless') {
-        wireless = evalue;
-      } else if(ename == 'bluetooth_state') {
-        bluetoothState = evalue;
-      } else if(ename == 'mac_address') {
-        macAddress.push(evalue);
+      if(ename == 'filtered_software') {
+        filtered_software.push(evalue);
       }
     });
+
+    let selectedSoftware = Map({});
+    filtered_software.map(n => {
+      selectedSoftware = selectedSoftware.set(n, 'allow');
+    })
   
     return Map({
       objId: param.get('objId'),
@@ -212,19 +164,7 @@ export const generateSoftwareFilterObject = (param) => {
       comment: param.get('comment'),
       modDate: param.get('modDate'),
 
-      usbMemory: usbMemory,
-      usbReadonly: usbReadonly,
-      cdAndDvd: cdAndDvd,
-      printer: printer,
-      screenCapture: screenCapture,
-      sound: sound,
-      camera: camera,
-      keyboard: keyboard,
-      mouse: mouse,
-
-      wireless: wireless,
-      bluetoothState: bluetoothState,
-      macAddress: List(macAddress)  
+      SWITEM: selectedSoftware
     });
   
   } else {
