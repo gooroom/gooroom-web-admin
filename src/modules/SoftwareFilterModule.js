@@ -20,6 +20,7 @@ const SHOW_SOFTWAREFILTER_DIALOG = 'softwareFilter/SHOW_SOFTWAREFILTER_DIALOG';
 const CLOSE_SOFTWAREFILTER_DIALOG = 'softwareFilter/CLOSE_SOFTWAREFILTER_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'softwareFilter/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_SWITEM_VALUE = 'softwareFilter/SET_EDITING_SWITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'softwareFilter/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'softwareFilter/CHG_COMPDATA_VALUE';
@@ -192,6 +193,14 @@ export const setEditingItemValue = (param) => dispatch => {
     });
 };
 
+export const setEditingSoftwareItemValue = (param) => dispatch => {
+    return dispatch({
+        type: SET_EDITING_SWITEM_VALUE,
+        name: param.name,
+        value: param.value
+    });
+};
+
 export const changeListParamData = (param) => dispatch => {
     return dispatch({
         type: CHG_LISTPARAM_DATA,
@@ -235,7 +244,6 @@ const makeParameter = (param) => {
         objName: param.get('objNm'),
         objComment: param.get('comment'),
         
-        usb_memory: (param.get('usbMemory') == 'allow') ? ((usbReadonly == 'allow') ? 'read_only' : 'allow') : 'disallow',
         cd_dvd: (param.get('cdAndDvd') == 'allow') ? 'allow' : 'disallow',
         printer: (param.get('printer') == 'allow') ? 'allow' : 'disallow',
         screen_capture: (param.get('screenCapture') == 'allow') ? 'allow' : 'disallow',
@@ -423,6 +431,22 @@ export default handleActions({
         return state.merge({
             editingItem: state.get('editingItem').merge({[action.name]: action.value})
         });
+    },
+    [SET_EDITING_SWITEM_VALUE]: (state, action) => {
+
+        const value = state.setIn(['editingItem', 'SWITEM', action.name]);
+
+        if(value) {
+            return state.setIn(['editingItem', 'SWITEM', action.name], action.value);
+        } else {
+            return state.setIn(['editingItem', 'SWITEM', action.name], action.value);
+        }
+
+        
+
+        // return state.merge({
+        //     editingItem: state.get('editingItem').setIn(['SWITEM', {[action.name]: action.value}])
+        // });
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);

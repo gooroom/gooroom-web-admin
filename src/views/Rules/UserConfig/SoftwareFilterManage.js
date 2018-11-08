@@ -121,7 +121,9 @@ class SoftwareFilterManage extends Component {
 
   handleCreateButton = () => {
     this.props.SoftwareFilterActions.showDialog({
-      viewItem: Map(),
+      viewItem: Map({
+        'SWITEM': {}
+      }),
       dialogType: SoftwareFilterDialog.TYPE_ADD
     });
   }
