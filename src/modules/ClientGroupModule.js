@@ -123,6 +123,7 @@ const makeParameter = (param) => {
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
         securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
+        filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
         desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId
     };
 }

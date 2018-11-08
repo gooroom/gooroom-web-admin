@@ -17,6 +17,7 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
@@ -46,6 +47,8 @@ import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
+import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
+import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
@@ -108,6 +111,12 @@ class ClientGroupSpec extends Component {
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
+  handleEditClickForSoftwareFilter = (viewItem, compType) => {
+    this.props.SoftwareFilterActions.showDialog({
+      viewItem: viewItem,
+      dialogType: SoftwareFilterDialog.TYPE_EDIT
+    });
+  };
   handleEditClickForDesktopConf = (viewItem, compType) => {
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
@@ -130,6 +139,7 @@ class ClientGroupSpec extends Component {
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'GROUP']);
+    const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'GROUP']);
 
     let groupInfo = '';
@@ -203,6 +213,14 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
+                <SoftwareFilterSpec compId={compId}
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedSoftwareFilterItem}
+                  onClickEdit={this.handleEditClickForSoftwareFilter}
+                  inherit={false}
+                />
+              </Grid>
+              <Grid item xs={12} md={12} lg={6} xl={4} >
                 <ClientHostNameSpec compId={compId}
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientHostNameItem}
@@ -239,6 +257,7 @@ const mapStateToProps = (state) => ({
   MediaRuleProps: state.MediaRuleModule,
   BrowserRuleProps: state.BrowserRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
+  SoftwareFilterProps: state.SoftwareFilterModule,
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -253,6 +272,7 @@ const mapDispatchToProps = (dispatch) => ({
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 

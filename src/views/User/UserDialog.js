@@ -89,7 +89,7 @@ class UserDialog extends Component {
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { UserProps, UserActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
             const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
             UserActions.createUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
@@ -100,6 +100,7 @@ class UserDialog extends Component {
                 browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                 securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
                 desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
@@ -120,7 +121,7 @@ class UserDialog extends Component {
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { UserProps, UserActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
             const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
             UserActions.editUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
@@ -131,6 +132,7 @@ class UserDialog extends Component {
                 browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                 securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
                 desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
@@ -258,6 +260,7 @@ const mapStateToProps = (state) => ({
     BrowserRuleProps: state.BrowserRuleModule,
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
+    SoftwareFilterProps: state.SoftwareFilterModule,
     DesktopConfProps: state.DesktopConfModule
 });
 
