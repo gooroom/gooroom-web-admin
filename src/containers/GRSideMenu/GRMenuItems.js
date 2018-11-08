@@ -84,6 +84,12 @@ export default {
           icon: 'icon-layers',
           level: 2,
         },
+        {
+          name: 'SW필터관리',
+          url: '/userconfig/swfilter/GRM0404/SW필터관리',
+          icon: 'icon-notebook',
+          level: 2,
+        },
       ]
     }, {
       name: '데스크톱',
