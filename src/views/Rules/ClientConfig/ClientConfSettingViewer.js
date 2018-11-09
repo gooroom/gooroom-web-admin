@@ -50,6 +50,10 @@ class ClientConfSettingViewer extends Component {
                   <TableCell numeric>{(viewItem.get('useHypervisor')) ? '구동' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
+                    <TableCell component="th" scope="row">{bull} 홈폴더 초기화</TableCell>
+                  <TableCell numeric>{(viewItem.get('useHomeReset')) ? '실행' : '중단'}</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
                   <TableCell numeric>{viewItem.get('selectedNtpAddress')}</TableCell>
                 </TableRow>

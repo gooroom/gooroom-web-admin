@@ -21,10 +21,6 @@ import Typography from '@material-ui/core/Typography';
 
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
@@ -68,7 +64,7 @@ class SoftwareFilterSpec extends Component {
           <Card elevation={4} style={{marginBottom:20}}>
             <GRRuleCardHeader
               avatar={RuleAvartar}
-              category='매체제어정책'
+              category='소프트웨어 제한 정책'
               title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={

@@ -64,7 +64,7 @@ class BrowserRuleSpec extends Component {
           <Card elevation={4} style={{marginBottom:20}}>
             <GRRuleCardHeader
               avatar={RuleAvartar}
-              category='브라우저제어정책'
+              category='브라우저제어 정책'
               title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
