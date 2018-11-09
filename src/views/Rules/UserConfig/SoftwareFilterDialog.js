@@ -23,6 +23,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
 import FormLabel from '@material-ui/core/FormLabel';
+import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
@@ -230,8 +231,9 @@ class SoftwareFilterDialog extends Component {
                         </div>                        
                     }
                     {(dialogType === SoftwareFilterDialog.TYPE_EDIT || dialogType === SoftwareFilterDialog.TYPE_ADD) &&
-                        <div>
-                        <Grid container alignItems="center" direction="row" justify="space-between" >
+                        <div style={{marginTop:20}}>
+                        <InputLabel>설치불가(설치금지)로 지정할 소프트웨어를 선택하세요.</InputLabel>
+                        <Grid container alignItems="center" direction="row" justify="space-between" style={{marginTop:10}}>
                         {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
                                 return (
                                     <Grid item xs={6} key={n.no}>

@@ -56,7 +56,7 @@ class ClientGroupDialog extends Component {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
             const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
 
             const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
             ClientGroupActions.createClientGroupData({
@@ -70,6 +70,7 @@ class ClientGroupDialog extends Component {
                 browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                 securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
                 desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
 
             }).then((res) => {
@@ -91,7 +92,7 @@ class ClientGroupDialog extends Component {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
             const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
 
             const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
             ClientGroupActions.editClientGroupData({
@@ -106,6 +107,7 @@ class ClientGroupDialog extends Component {
                 browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                 securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
                 desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                 
             }).then((res) => {
@@ -174,6 +176,7 @@ const mapStateToProps = (state) => ({
     BrowserRuleProps: state.BrowserRuleModule,
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
+    SoftwareFilterProps: state.SoftwareFilterModule,
     DesktopConfProps: state.DesktopConfModule
 });
 

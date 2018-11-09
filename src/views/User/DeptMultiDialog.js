@@ -64,7 +64,7 @@ class DeptMultiDialog extends Component {
 
         if(confirmValue) {
             const { DeptProps, DeptActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
 
             const checkedDeptCd = DeptProps.getIn(['viewItems', compId, 'checkedDeptCd']);
 
@@ -73,6 +73,7 @@ class DeptMultiDialog extends Component {
                 browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
                 mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
                 securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                filteredSoftwareRuleId: SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
                 desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
@@ -137,6 +138,7 @@ const mapStateToProps = (state) => ({
     BrowserRuleProps: state.BrowserRuleModule,
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
+    SoftwareFilterProps: state.SoftwareFilterModule,
     DesktopConfProps: state.DesktopConfModule
 });
 
