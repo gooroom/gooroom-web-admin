@@ -27,10 +27,6 @@ const CHG_COMPDATA_VALUE = 'softwareFilter/CHG_COMPDATA_VALUE';
 const DELETE_COMPDATA = 'softwareFilter/DELETE_COMPDATA';
 const DELETE_COMPDATA_ITEM = 'softwareFilter/DELETE_COMPDATA_ITEM';
 
-const SET_BLUETOOTHMAC_ITEM = 'softwareFilter/SET_BLUETOOTHMAC_ITEM';
-const ADD_BLUETOOTHMAC_ITEM = 'softwareFilter/ADD_BLUETOOTHMAC_ITEM';
-const DELETE_BLUETOOTHMAC_ITEM = 'softwareFilter/DELETE_BLUETOOTHMAC_ITEM';
-
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId');
@@ -340,7 +336,7 @@ export const inheritSoftwareFilterData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptConfInherit', {
             'objId': param.objId,
-            'confType': 'MEDIARULE',
+            'confType': 'FILTEREDSWRULE',
             'deptCd': param.deptCd
         }).then(
         (response) => {
@@ -372,28 +368,6 @@ export const cloneSoftwareFilterData = (param) => dispatch => {
         dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
-
-export const addBluetoothMac = () => dispatch => {
-    return dispatch({
-        type: ADD_BLUETOOTHMAC_ITEM
-    });
-}
-
-export const deleteBluetoothMac = (index) => dispatch => {
-    return dispatch({
-        type: DELETE_BLUETOOTHMAC_ITEM,
-        index: index
-    });
-}
-
-export const setBluetoothMac = (param) => dispatch => {
-    return dispatch({
-        type: SET_BLUETOOTHMAC_ITEM,
-        index: param.index,
-        value: param.value
-    });
-};
-
 
 export default handleActions({
 
@@ -472,18 +446,6 @@ export default handleActions({
     [DELETE_SOFTWAREFILTER_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action, 'objId');
     },
-    [SET_BLUETOOTHMAC_ITEM]: (state, action) => {
-        const newBluetoothMac = state.getIn(['editingItem', 'macAddress']).set(action.index, action.value);
-        return state.setIn(['editingItem', 'macAddress'], newBluetoothMac);
-    },
-    [ADD_BLUETOOTHMAC_ITEM]: (state, action) => {
-        const newBluetoothMac = (state.getIn(['editingItem', 'macAddress'])) ? state.getIn(['editingItem', 'macAddress']).push('') : List(['']);
-        return state.setIn(['editingItem', 'macAddress'], newBluetoothMac);
-    },
-    [DELETE_BLUETOOTHMAC_ITEM]: (state, action) => {
-        const newBluetoothMac = state.getIn(['editingItem', 'macAddress']).delete(action.index);
-        return state.setIn(['editingItem', 'macAddress'], newBluetoothMac);
-    }
 
 }, initialState);
 
