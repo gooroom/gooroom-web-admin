@@ -150,15 +150,15 @@ class BrowserRuleManage extends Component {
         webSocket: 'disallow',
         webWorker: 'disallow',
         
-        'devToolRule_trust': '1',
-        'downloadRule_trust': '0',
-        'printRule_trust': 'true',
-        'viewSourceRule_trust': 'true',
+        'devToolRule__trust': '1',
+        'downloadRule__trust': '0',
+        'printRule__trust': 'true',
+        'viewSourceRule__trust': 'true',
 
-        'devToolRule_untrust': '1',
-        'downloadRule_untrust': '0',
-        'printRule_untrust': 'true',
-        'viewSourceRule_untrust': 'true'
+        'devToolRule__untrust': '1',
+        'downloadRule__untrust': '0',
+        'printRule__untrust': 'true',
+        'viewSourceRule__untrust': 'true'
       }),
       dialogType: BrowserRuleDialog.TYPE_ADD
     });

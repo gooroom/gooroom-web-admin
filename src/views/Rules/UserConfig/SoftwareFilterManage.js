@@ -172,9 +172,6 @@ class SoftwareFilterManage extends Component {
   };
 
   handleEditItemClick = (viewItem) => {
-
-    console.log('viewItem ::: ', (viewItem)? viewItem.toJS(): '--');
-
     this.props.SoftwareFilterActions.showDialog({
       viewItem: viewItem,
       dialogType: SoftwareFilterDialog.TYPE_EDIT

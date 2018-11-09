@@ -238,16 +238,16 @@ const makeParameter = (param) => {
         webSocket: (param.get('webSocket')) ? param.get('webSocket') : 'disallow',
         webWorker: (param.get('webWorker')) ? param.get('webWorker') : 'disallow',
 
-        'devToolRule_trust': (param.get('devToolRule_trust')) ? param.get('devToolRule_trust') : '1',
-        'downloadRule_trust': (param.get('downloadRule_trust')) ? param.get('downloadRule_trust') : '0',
-        'printRule_trust': (param.get('printRule_trust')) ? param.get('printRule_trust') : 'true',
-        'viewSourceRule_trust': (param.get('viewSourceRule_trust')) ? param.get('viewSourceRule_trust') : 'true',
+        devToolRule__trust: (param.get('devToolRule__trust')) ? param.get('devToolRule__trust') : '1',
+        downloadRule__trust: (param.get('downloadRule__trust')) ? param.get('downloadRule__trust') : '0',
+        printRule__trust: (param.get('printRule__trust')) ? param.get('printRule__trust') : 'true',
+        viewSourceRule__trust: (param.get('viewSourceRule__trust')) ? param.get('viewSourceRule__trust') : 'true',
         trustSetup: (param.get('trustSetup')) ? param.get('trustSetup') : '',
         
-        'devToolRule_untrust': (param.get('devToolRule_untrust')) ? param.get('devToolRule_untrust') : '1',
-        'downloadRule_untrust': (param.get('downloadRule_untrust')) ? param.get('downloadRule_untrust') : '0',
-        'printRule_untrust': (param.get('printRule_untrust')) ? param.get('printRule_untrust') : 'true',
-        'viewSourceRule_untrust': (param.get('viewSourceRule_untrust')) ? param.get('viewSourceRule_untrust') : 'true',
+        devToolRule__untrust: (param.get('devToolRule__untrust')) ? param.get('devToolRule__untrust') : '1',
+        downloadRule__untrust: (param.get('downloadRule__untrust')) ? param.get('downloadRule__untrust') : '0',
+        printRule__untrust: (param.get('printRule__untrust')) ? param.get('printRule__untrust') : 'true',
+        viewSourceRule__untrust: (param.get('viewSourceRule__untrust')) ? param.get('viewSourceRule__untrust') : 'true',
         untrustSetup: (param.get('untrustSetup')) ? param.get('untrustSetup') : '',
         
         trustUrlList: (param.get('trustUrlList')) ? param.get('trustUrlList').toArray() : []
