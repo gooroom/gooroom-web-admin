@@ -245,10 +245,6 @@ const makeParameter = (param) => {
         } 
     });
 
-    console.log('>1>>> ', param.get('SWITEM').toArray() );
-    console.log('>2>>> ', param.get('SWITEM').toObject() );
-    console.log('>3>>> ', (swList) ? swList.toJS() : '----' );
-
     return {
         objId: param.get('objId'),
         objName: param.get('objNm'),
