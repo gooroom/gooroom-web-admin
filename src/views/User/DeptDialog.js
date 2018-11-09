@@ -57,7 +57,7 @@ class DeptDialog extends Component {
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
             const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
             DeptActions.createDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
@@ -67,6 +67,7 @@ class DeptDialog extends Component {
                 browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                 securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
                 desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
@@ -91,7 +92,7 @@ class DeptDialog extends Component {
         if(confirmValue) {
             const isInherit = isChecked;
             const { DeptProps, DeptActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, DesktopConfProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
             const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
             DeptActions.editDeptInfo({
                 deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
@@ -102,6 +103,8 @@ class DeptDialog extends Component {
                 browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                 securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                
                 desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             }).then((res) => {
                 // DeptActions.readDeptListPaged(DeptProps, compId);
@@ -191,6 +194,7 @@ const mapStateToProps = (state) => ({
     BrowserRuleProps: state.BrowserRuleModule,
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
+    SoftwareFilterProps: state.SoftwareFilterModule,
     DesktopConfProps: state.DesktopConfModule
 });
 

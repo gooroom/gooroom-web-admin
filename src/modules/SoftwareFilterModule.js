@@ -4,6 +4,8 @@ import { Map, List } from 'immutable';
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
+import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
+
 const COMMON_PENDING = 'softwareFilter/COMMON_PENDING';
 const COMMON_FAILURE = 'softwareFilter/COMMON_FAILURE';
 
@@ -234,22 +236,25 @@ export const deleteCompDataItem = (param) => dispatch => {
 
 const makeParameter = (param) => {
 
-    const usbReadonly = (param.get('usbReadonly') == 'allow') ? 'allow' : 'disallow';
+    // create software select list
+    const swItems = param.get('SWITEM');
+    let swList = List([]);
+    SoftwareFilterDialog.SW_LIST.map(n => {
+        if(swItems.get(n.tag) && swItems.get(n.tag) == 'allow') {
+            swList = swList.push(n.tag);
+        } 
+    });
+
+    console.log('>1>>> ', param.get('SWITEM').toArray() );
+    console.log('>2>>> ', param.get('SWITEM').toObject() );
+    console.log('>3>>> ', (swList) ? swList.toJS() : '----' );
+
     return {
         objId: param.get('objId'),
         objName: param.get('objNm'),
         objComment: param.get('comment'),
-        
-        cd_dvd: (param.get('cdAndDvd') == 'allow') ? 'allow' : 'disallow',
-        printer: (param.get('printer') == 'allow') ? 'allow' : 'disallow',
-        screen_capture: (param.get('screenCapture') == 'allow') ? 'allow' : 'disallow',
-        camera: (param.get('camera') == 'allow') ? 'allow' : 'disallow',
-        sound: (param.get('sound') == 'allow') ? 'allow' : 'disallow',
-        keyboard: (param.get('keyboard') == 'allow') ? 'allow' : 'disallow',
-        mouse: (param.get('mouse') == 'allow') ? 'allow' : 'disallow',
-        wireless: (param.get('wireless') == 'allow') ? 'allow' : 'disallow',
-        bluetooth_state: (param.get('bluetoothState') == 'allow') ? 'allow' : 'disallow',
-        macAddressList: (param.get('macAddress')) ? param.get('macAddress').toArray() : []
+
+        swList: (swList) ? swList.toJS() : []
     };
 }
 
@@ -407,20 +412,7 @@ export default handleActions({
         });
     },
     [SET_EDITING_SWITEM_VALUE]: (state, action) => {
-
-        const value = state.setIn(['editingItem', 'SWITEM', action.name]);
-
-        if(value) {
-            return state.setIn(['editingItem', 'SWITEM', action.name], action.value);
-        } else {
-            return state.setIn(['editingItem', 'SWITEM', action.name], action.value);
-        }
-
-        
-
-        // return state.merge({
-        //     editingItem: state.get('editingItem').setIn(['SWITEM', {[action.name]: action.value}])
-        // });
+        return state.setIn(['editingItem', 'SWITEM', action.name], action.value);
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
