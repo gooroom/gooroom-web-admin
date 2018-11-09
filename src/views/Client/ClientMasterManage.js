@@ -20,6 +20,8 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { getRowObjectById, getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
@@ -121,7 +123,7 @@ class ClientMasterManage extends Component {
   resetClientGroupRules(compId, grpId) {
     const { ClientGroupProps } = this.props;
     const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, DesktopConfActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
 
     const selectedGroupObj = getRowObjectById(ClientGroupProps, compId, grpId, 'grpId');
     if(selectedGroupObj) {
@@ -135,6 +137,8 @@ class ClientMasterManage extends Component {
       MediaRuleActions.getMediaRuleByGroupId({ compId: compId, groupId: grpId });
       // get client secu info
       SecurityRuleActions.getSecurityRuleByGroupId({ compId: compId, groupId: grpId });   
+      // get filtered software rule
+      SoftwareFilterActions.getSoftwareFilterByGroupId({ compId: compId, groupId: grpId });   
       // get desktop conf info
       DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: grpId });   
 
@@ -447,6 +451,8 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
 
 });

@@ -181,10 +181,10 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <MediaRuleSpec compId={compId}
+                <ClientHostNameSpec compId={compId}
                   specType="inform" targetType="GROUP"
-                  selectedItem={selectedMediaRuleItem}
-                  onClickEdit={this.handleEditClickForMediaRule}
+                  selectedItem={selectedClientHostNameItem}
+                  onClickEdit={this.handleEditClickForClientHostName}
                   inherit={false}
                 />
               </Grid>
@@ -193,6 +193,14 @@ class ClientGroupSpec extends Component {
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedClientUpdateServerItem}
                   onClickEdit={this.handleEditClickForClientUpdateServer}
+                  inherit={false}
+                />
+              </Grid>
+              <Grid item xs={12} md={12} lg={6} xl={4} >
+                <MediaRuleSpec compId={compId}
+                  specType="inform" targetType="GROUP"
+                  selectedItem={selectedMediaRuleItem}
+                  onClickEdit={this.handleEditClickForMediaRule}
                   inherit={false}
                 />
               </Grid>
@@ -217,14 +225,6 @@ class ClientGroupSpec extends Component {
                   specType="inform" targetType="GROUP"
                   selectedItem={selectedSoftwareFilterItem}
                   onClickEdit={this.handleEditClickForSoftwareFilter}
-                  inherit={false}
-                />
-              </Grid>
-              <Grid item xs={12} md={12} lg={6} xl={4} >
-                <ClientHostNameSpec compId={compId}
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedClientHostNameItem}
-                  onClickEdit={this.handleEditClickForClientHostName}
                   inherit={false}
                 />
               </Grid>
