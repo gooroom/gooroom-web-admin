@@ -190,14 +190,12 @@ class SecurityRuleDialog extends Component {
                         <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                             onChange={this.handleValueChange("objNm")}
                             className={classes.fullWidth}
-                            disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
                         />
                         </Grid>
                         <Grid item xs={12} sm={8} md={8}>
                         <TextField label="설명" value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                             onChange={this.handleValueChange("comment")}
                             className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            disabled={(dialogType === SecurityRuleDialog.TYPE_VIEW)}
                         />
                         </Grid>
                     </Grid>
