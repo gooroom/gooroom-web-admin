@@ -11,6 +11,7 @@ import * as UserActions from 'modules/UserModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -96,7 +97,7 @@ class UserMasterManage extends Component {
   handleSelectDept = (node) => {
     const { DeptProps, DeptActions } = this.props;
     const { UserProps, UserActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, DesktopConfActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     this.setState({
@@ -125,6 +126,9 @@ class UserMasterManage extends Component {
     MediaRuleActions.getMediaRuleByDeptCd({ compId: compId, deptCd: node.key });
     // get client secu info
     SecurityRuleActions.getSecurityRuleByDeptCd({ compId: compId, deptCd: node.key });
+    // get filtered software rule
+    SoftwareFilterActions.getSoftwareFilterByDeptCd({ compId: compId, deptCd: node.key });   
+    
     // get desktop conf info
     DesktopConfActions.getDesktopConfByDeptCd({ compId: compId, deptCd: node.key });
 
@@ -316,7 +320,7 @@ class UserMasterManage extends Component {
   // Select User Item
   handleUserSelect = (selectedUserObj, selectedUserIdArray) => {
     const { UserActions, DeptActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, DesktopConfActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
 
     const compId = this.props.match.params.grMenuId;
 
@@ -335,6 +339,9 @@ class UserMasterManage extends Component {
       MediaRuleActions.getMediaRuleByUserId({ compId: compId, userId: userId });
       // get client secu info
       SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
+      // get filtered software rule
+      SoftwareFilterActions.getSoftwareFilterByUserId({ compId: compId, userId: userId });   
+
       // get desktop conf info
       DesktopConfActions.getDesktopConfByUserId({ compId: compId, userId: userId });
       
@@ -342,28 +349,6 @@ class UserMasterManage extends Component {
       // show user inform pane.
       UserActions.showInform({ compId: compId, viewItem: selectedUserObj });
       
-
-      // // show client group info.
-      // const groupId = selectedClientObj.get('clientGroupId');
-      // const selectedGroupObj = getRowObjectById(ClientGroupProps, compId, groupId, 'grpId');
-      // if(selectedGroupObj) {
-      //   // get browser rule info
-      //   BrowserRuleActions.getBrowserRuleByGroupId({
-      //     compId: compId, groupId: groupId
-      //   });
-      //   // get media control setting info
-      //   MediaRuleActions.getMediaRuleByGroupId({
-      //     compId: compId, groupId: groupId
-      //   });
-      //   // get client secu info
-      //   SecurityRuleActions.getSecurityRuleByGroupId({
-      //     compId: compId, groupId: groupId
-      //   });   
-
-      //   ClientGroupActions.showClientGroupInform({
-      //     compId: compId, viewItem: selectedGroupObj,
-      //   });
-      // }
     }
   };
 
@@ -536,6 +521,7 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });

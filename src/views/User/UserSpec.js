@@ -13,6 +13,7 @@ import * as UserActions from 'modules/UserModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import UserDialog from './UserDialog';
@@ -32,6 +33,8 @@ import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
+import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
+import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
@@ -75,6 +78,12 @@ class UserSpec extends Component {
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
+  handleEditClickForSoftwareFilter = (viewItem, compType) => {
+    this.props.SoftwareFilterActions.showDialog({
+      viewItem: viewItem,
+      dialogType: SoftwareFilterDialog.TYPE_EDIT
+    });
+  };
   handleEditClickForDesktopConf = (viewItem, compType) => {
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
@@ -95,6 +104,7 @@ class UserSpec extends Component {
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'USER']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'USER']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'USER']);
+    const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'USER']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'USER']);
 
     return (
@@ -138,6 +148,14 @@ class UserSpec extends Component {
                   onClickEdit={this.handleEditClickForSecurityRule}
                 />
               </Grid>
+              <Grid item xs={12} md={12} lg={6} xl={4} >
+                <SoftwareFilterSpec compId={compId}
+                  specType="inform" targetType="USER"
+                  selectedItem={selectedSoftwareFilterItem}
+                  onClickEdit={this.handleEditClickForSoftwareFilter}
+                  inherit={true}
+                />
+              </Grid>
               <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfSpec compId={compId}
                   specType="inform" targetType="USER" 
@@ -162,6 +180,7 @@ const mapStateToProps = (state) => ({
   MediaRuleProps: state.MediaRuleModule,
   BrowserRuleProps: state.BrowserRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
+  SoftwareFilterProps: state.SoftwareFilterModule,
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -170,6 +189,7 @@ const mapDispatchToProps = (dispatch) => ({
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 
