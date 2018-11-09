@@ -67,7 +67,7 @@ class SecurityRuleSpec extends Component {
           <Card elevation={4} style={{marginBottom:20}}>
             <GRRuleCardHeader
               avatar={RuleAvartar}
-              category='단말보안정책'
+              category='단말보안 정책'
               title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={

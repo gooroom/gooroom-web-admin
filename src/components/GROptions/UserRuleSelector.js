@@ -49,7 +49,7 @@ class UserRuleSelector extends Component {
                         <Tab label="브라우져정책" value={0} />
                         <Tab label="매체제어정책" value={1} />
                         <Tab label="단말보안정책" value={2} />
-                        <Tab label="SW필터(제한)정책" value={3} />
+                        <Tab label="Software제한정책" value={3} />
                         <Tab label="데스크톱정보" value={4} />
                     </Tabs>
                 </AppBar>

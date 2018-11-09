@@ -54,7 +54,7 @@ class ClientConfSettingSpec extends Component {
         <Card elevation={4} style={{marginBottom:20}}>
           <GRRuleCardHeader
             avatar={RuleAvartar}
-            category='단말설정'
+            category='단말 설정'
             title={viewItem.get('objNm')} 
             subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             action={
@@ -85,6 +85,10 @@ class ClientConfSettingSpec extends Component {
                 <TableRow>
                     <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
                   <TableCell numeric>{(viewItem.get('useHypervisor')) ? '구동' : '중단'}</TableCell>
+                </TableRow>
+                <TableRow>
+                    <TableCell component="th" scope="row">{bull} 홈폴더 초기화</TableCell>
+                  <TableCell numeric>{(viewItem.get('useHomeReset')) ? '실행' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
@@ -121,6 +125,7 @@ export const generateClientConfSettingObject = (param) => {
 
   if(param) {
     let useHypervisor = false;
+    let useHomeReset = false;
     let selectedNtpIndex = -1;
     let ntpAddrSelected = '';
     let ntpAddress = [];
@@ -131,6 +136,8 @@ export const generateClientConfSettingObject = (param) => {
       
       if(ename == 'USEHYPERVISOR') {
         useHypervisor = (evalue == "true");
+      } else if(ename == 'USEHOMERESET') {
+        useHomeReset = (evalue == "true");
       } else if(ename == 'NTPSELECTADDRESS') {
         ntpAddrSelected = evalue;
       } else if(ename == 'NTPADDRESSES') {
@@ -149,6 +156,7 @@ export const generateClientConfSettingObject = (param) => {
       comment: param.get('comment'),
       modDate: param.get('modDate'),
       useHypervisor: useHypervisor,
+      useHomeReset: useHomeReset,
       selectedNtpAddress: ntpAddrSelected,
       selectedNtpIndex: selectedNtpIndex,
       ntpAddress: List(ntpAddress)

@@ -186,6 +186,17 @@ class ClientConfSettingDialog extends Component {
                             />
                         </div>
                         <div style={{marginTop:"10px"}}>
+                            <FormLabel style={{marginRight:"50px"}}>{bull} 홈폴더 초기화</FormLabel>
+                            <FormControlLabel
+                                control={
+                                <Switch onChange={this.handleValueChange('useHomeReset')} 
+                                    checked={(editingItem.get('useHomeReset')) ? editingItem.get('useHomeReset') : false}
+                                    color="primary" />
+                                }
+                                label={(editingItem.get('useHomeReset')) ? '실행' : '중단'}
+                            />
+                        </div>
+                        <div style={{marginTop:"10px"}}>
                             <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
                             <Button onClick={this.handleAddNtp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
                             <List>

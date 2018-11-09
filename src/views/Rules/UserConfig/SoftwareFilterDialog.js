@@ -101,8 +101,8 @@ class SoftwareFilterDialog extends Component {
     handleCreateData = (event) => {
         const { SoftwareFilterProps, GRConfirmActions } = this.props;
         const re = GRConfirmActions.showConfirm({
-            confirmTitle: 'SW필터정책정보 등록',
-            confirmMsg: 'SW필터정책정보를 등록하시겠습니까?',
+            confirmTitle: 'Software제한정책정보 등록',
+            confirmMsg: 'Software제한정책정보를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmObject: SoftwareFilterProps.get('editingItem')
         });
@@ -121,8 +121,8 @@ class SoftwareFilterDialog extends Component {
     handleEditData = (event, id) => {
         const { SoftwareFilterProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: 'SW필터정책정보 수정',
-            confirmMsg: 'SW필터정책정보를 수정하시겠습니까?',
+            confirmTitle: 'Software제한정책정보 수정',
+            confirmMsg: 'Software제한정책정보를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmObject: SoftwareFilterProps.get('editingItem')
         });
@@ -148,7 +148,7 @@ class SoftwareFilterDialog extends Component {
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: '시스템알림',
-                alertMsg: 'SW필터정책이 하위 조직에 적용되었습니다.'
+                alertMsg: 'Software제한정책이 하위 조직에 적용되었습니다.'
             });
             this.handleClose();
         });
@@ -161,7 +161,7 @@ class SoftwareFilterDialog extends Component {
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: '시스템알림',
-                alertMsg: 'SW필터정책을 복사하였습니다.'
+                alertMsg: 'Software제한정책을 복사하였습니다.'
             });
             refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
             this.handleClose();
@@ -192,21 +192,21 @@ class SoftwareFilterDialog extends Component {
 
         let title = "";
         if(dialogType === SoftwareFilterDialog.TYPE_ADD) {
-            title = "SW필터정책설정 등록";
+            title = "Software제한정책설정 등록";
         } else if(dialogType === SoftwareFilterDialog.TYPE_VIEW) {
-            title = "SW필터정책설정 정보";
+            title = "Software제한정책설정 정보";
         } else if(dialogType === SoftwareFilterDialog.TYPE_EDIT) {
-            title = "SW필터정책설정 수정";
+            title = "Software제한정책설정 수정";
         } else if(dialogType === SoftwareFilterDialog.TYPE_INHERIT) {
-            title = "SW필터정책설정 상속";
+            title = "Software제한정책설정 상속";
         } else if(dialogType === SoftwareFilterDialog.TYPE_COPY) {
-            title = "SW필터정책설정 복사";
+            title = "Software제한정책설정 복사";
         }
 
         return (
             <div>
             {(SoftwareFilterProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={SoftwareFilterProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
+            <Dialog open={SoftwareFilterProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === SoftwareFilterDialog.TYPE_EDIT || dialogType === SoftwareFilterDialog.TYPE_ADD) &&

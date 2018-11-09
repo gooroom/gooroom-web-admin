@@ -77,7 +77,7 @@ class DesktopConfSpec extends Component {
           <Card elevation={4} style={{marginBottom:20}}>
             <GRRuleCardHeader
               avatar={RuleAvartar}
-              category='데스크톱설정'
+              category='데스크톱 설정'
               title={viewItem.get('confNm')}
               subheader={viewItem.get('confId')}
               action={

@@ -53,7 +53,7 @@ class ClientUpdateServerSpec extends Component {
           <Card elevation={4} style={{marginBottom:20}}>
             <GRRuleCardHeader
               avatar={RuleAvartar}
-              category='업데이트서버정보'
+              category='업데이트서버 정보'
               title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={

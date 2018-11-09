@@ -57,7 +57,7 @@ class ClientRuleSelector extends Component {
                         <Tab label="브라우져정책" value={3} />
                         <Tab label="매체제어정책" value={4} />
                         <Tab label="단말보안정책" value={5} />
-                        <Tab label="SW필터(제한)정책" value={6} />
+                        <Tab label="Software제한정책" value={6} />
                         <Tab label="데스크톱정보" value={7} />
                     </Tabs>
                 </AppBar>
