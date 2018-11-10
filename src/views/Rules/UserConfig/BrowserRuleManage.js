@@ -50,18 +50,6 @@ import Icon from '@material-ui/core/Icon';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-
-
-
-
-
-
-
-import { requestMultipartFormAPI } from 'components/GRUtils/GRRequester';
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class BrowserRuleManage extends Component {
 
   columnHeaders = [
@@ -73,31 +61,19 @@ class BrowserRuleManage extends Component {
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-      file:null
-    }
-
-  }
-
   componentDidMount() {
     this.handleSelectBtnClick();
   }
 
   handleChangePage = (event, page) => {
     const { BrowserRuleActions, BrowserRuleProps } = this.props;
-    BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId, {
-      page: page
-    });
+    BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId, { page: page });
   };
 
   handleChangeRowsPerPage = event => {
     const { BrowserRuleActions, BrowserRuleProps } = this.props;
-    BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value, page: 0
+    BrowserRuleActions.readBrowserRuleListPaged(BrowserRuleProps, this.props.match.params.grMenuId, { 
+      rowsPerPage: event.target.value, page: 0 
     });
   };
   
@@ -150,21 +126,21 @@ class BrowserRuleManage extends Component {
         webSocket: 'disallow',
         webWorker: 'disallow',
         
-        'devToolRule__trust': '1',
-        'downloadRule__trust': '0',
-        'printRule__trust': 'true',
-        'viewSourceRule__trust': 'true',
+        devToolRule__trust: '1',
+        downloadRule__trust: '0',
+        printRule__trust: 'true',
+        viewSourceRule__trust: 'true',
 
-        'devToolRule__untrust': '1',
-        'downloadRule__untrust': '0',
-        'printRule__untrust': 'true',
-        'viewSourceRule__untrust': 'true'
+        devToolRule__untrust: '1',
+        downloadRule__untrust: '0',
+        printRule__untrust: 'true',
+        viewSourceRule__untrust: 'true'
       }),
       dialogType: BrowserRuleDialog.TYPE_ADD
     });
   }
 
-  handleEditListClick = (event, id) => { 
+  handleClickEditInRow = (event, id) => { 
     const { BrowserRuleProps, BrowserRuleActions } = this.props;
     const viewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
@@ -175,27 +151,25 @@ class BrowserRuleManage extends Component {
   };
 
   // delete
-  handleDeleteClick = (event, id) => {
+  handleClickDeleteInRow = (event, id) => {
     const { BrowserRuleProps, GRConfirmActions } = this.props;
     const viewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
       confirmMsg: '단말정책정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
-      handleConfirmResult: this.handleDeleteConfirmResult,
+      handleConfirmResult: (confirmValue, paramObject) => {
+        if(confirmValue) {
+          const { BrowserRuleProps, BrowserRuleActions } = this.props;
+          BrowserRuleActions.deleteBrowserRuleData({
+            objId: paramObject.get('objId'),
+            compId: this.props.match.params.grMenuId
+          }).then((res) => {
+            refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
+          });
+        }
+      },
       confirmObject: viewItem
     });
-  };
-  handleDeleteConfirmResult = (confirmValue, paramObject) => {
-    if(confirmValue) {
-      const { BrowserRuleProps, BrowserRuleActions } = this.props;
-
-      BrowserRuleActions.deleteBrowserRuleData({
-        objId: paramObject.get('objId'),
-        compId: this.props.match.params.grMenuId
-      }).then((res) => {
-        refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
-      });
-    }
   };
 
   // ===================================================================
@@ -215,71 +189,6 @@ class BrowserRuleManage extends Component {
   // ===================================================================
 
 
-  // goUpload = e => {
-  //   e.preventDefault() // Stop form submit
-  //   this.fileUpload(this.state.file);
-
-  //   // this.fileUpload(this.state.file).then((response)=>{
-  //   //   console.log(response.data);
-  //   // })
-
-  // }
-  // onChange = e => {
-  //   console.log('e :::: ', e.target.files);
-  //   this.setState({file:e.target.files[0]});
-  //   this.readFileContent(e.target.files[0]).then(content => {
-  //     document.getElementById('content-target').value = content
-  //   }).catch(error => console.log(error));
-
-  // }
-
-  // readFileContent(file) {
-  //   const reader = new FileReader()
-  //   return new Promise((resolve, reject) => {
-  //     reader.onload = event => resolve(event.target.result)
-  //     reader.onerror = error => reject(error)
-  //     reader.readAsText(file)
-  //   })
-  // }
-
-  // fileUpload(file){
-  //   // console.log('fileUpload.....', file);
-
-  //   const reader = new FileReader()
-  //   reader.readAsText(file) // you could also read images and other binaries
-
-  //   console.log('requestMultipartFormAPI.....', reader);
-
-  //   // requestMultipartFormAPI('createWallpaperData', {
-  //   //   'wallpaperFile': file,
-  //   //   'wallpaperNm': 'FILENAME_777'
-  //   // }).then(
-  //   //   (response) => {
-  //   //     console.log('response :::: ', response);
-  //   //   }
-  //   // ).catch(error => {
-  //   //   console.log('error :::: ', error);
-  //   // });
-
-
-
-
-
-
-
-  //   // const url = 'http://ain.gooroom.kr:8080/gpms/createWallpaperData';
-  //   // const formData = new FormData();
-  //   // formData.append('wallpaperFile',file);
-  //   // formData.append('wallpaperNm', 'FILENAME_777');
-  //   // const config = {
-  //   //     headers: {
-  //   //         'content-type': 'multipart/form-data'
-  //   //     }
-  //   // }
-  //   // return post(url, formData, config)
-    
-    
-  // }
 
 
 
@@ -351,13 +260,13 @@ class BrowserRuleManage extends Component {
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditListClick(event, n.get('objId'))}>
+                          onClick={event => this.handleClickEditInRow(event, n.get('objId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
-                          onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
+                          onClick={event => this.handleClickDeleteInRow(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>                        
 
@@ -368,10 +277,7 @@ class BrowserRuleManage extends Component {
 
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
-                    <TableCell
-                      colSpan={this.columnHeaders.length + 1}
-                      className={classes.grSmallAndClickCell}
-                    />
+                    <TableCell colSpan={this.columnHeaders.length + 1} />
                   </TableRow>
                 )}))}
               </TableBody>
@@ -403,25 +309,6 @@ class BrowserRuleManage extends Component {
         />
         <BrowserRuleDialog compId={compId} />
         <GRConfirm />
-        {/* 
-        <Divider />
-          <h1>File Upload</h1>
-            <input style={{display:'none'}}
-              id="contained-button-file" type="file"
-              onChange={this.onChange}
-            />
-            <label htmlFor="contained-button-file">
-              <Button variant="contained" size='small' component="span" className={classes.button}>
-                File선택
-              </Button>
-            </label>
-            <textarea id="content-target"></textarea>
-
-            <Button variant="contained" color="default" onClick={this.goUpload} size='small'> Upload <CloudUploadIcon  />
-            </Button>
-      */}
-
-
       </div>
     );
   }
