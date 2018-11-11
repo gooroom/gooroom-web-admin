@@ -135,6 +135,84 @@ export const handleListPagedAction = (state, action) => {
     return newState;
 }
 
+
+export const handleCustomListPagedAction = (state, action, customTag) => {
+    const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
+    let newState = null;
+    const listDataName = 'listData_' + customTag;
+    const listParamName = 'listParam_' + customTag;
+    const checkedIdsName = 'checkedIds_' + customTag;
+    if(state.getIn(['viewItems', action.compId])) {
+
+        if(state.getIn(['viewItems', action.compId, listDataName])) {
+            newState = state
+            .setIn(['viewItems', action.compId, listDataName], List(data.map((e) => {return Map(e)})))
+            .setIn(['viewItems', action.compId, listParamName], action.listParam.merge({
+                rowsFiltered: parseInt(recordsFiltered, 10),
+                rowsTotal: parseInt(recordsTotal, 10),
+                page: parseInt(draw, 10),
+                rowsPerPage: parseInt(rowLength, 10),
+                orderColumn: orderColumn,
+                orderDir: orderDir
+            }))
+            .deleteIn(['viewItems', action.compId, checkedIdsName]);
+        } else {
+            const tempObj = state
+            .getIn(['viewItems', action.compId]).merge(
+                Map({
+                    [listDataName]: List(data.map((e) => {return Map(e)})),
+                    [listParamName]: action.listParam.merge({
+                        rowsFiltered: parseInt(((recordsFiltered) ? recordsFiltered: 0), 10),
+                        rowsTotal: parseInt(((recordsTotal) ? recordsTotal: 0), 10),
+                        page: parseInt(((draw) ? draw: 0), 10),
+                        rowsPerPage: parseInt(((rowLength) ? rowLength: 0), 10),
+                        orderColumn: orderColumn,
+                        orderDir: orderDir
+                    })
+                })
+            );
+            newState = state.setIn(['viewItems', action.compId], tempObj);
+
+
+            // newState = state
+            // .setIn(['viewItems', action.compId, listDataName], List(data.map((e) => {return Map(e)})))
+            // .setIn(['viewItems', action.compId, listParamName], action.listParam.merge({
+            //     rowsFiltered: parseInt(recordsFiltered, 10),
+            //     rowsTotal: parseInt(recordsTotal, 10),
+            //     page: parseInt(draw, 10),
+            //     rowsPerPage: parseInt(rowLength, 10),
+            //     orderColumn: orderColumn,
+            //     orderDir: orderDir
+            // }));
+        }
+
+    } else {
+        newState = state.setIn(['viewItems', action.compId], Map({
+            [listDataName]: List(data.map((e) => {return Map(e)})),
+            [listParamName]: action.listParam.merge({
+                rowsFiltered: parseInt(((recordsFiltered) ? recordsFiltered: 0), 10),
+                rowsTotal: parseInt(((recordsTotal) ? recordsTotal: 0), 10),
+                page: parseInt(((draw) ? draw: 0), 10),
+                rowsPerPage: parseInt(((rowLength) ? rowLength: 0), 10),
+                orderColumn: orderColumn,
+                orderDir: orderDir
+            })
+        }));
+    }
+
+    if(action.extOption) {
+        if(action.extOption.isResetSelect) {
+            newState = newState.deleteIn(['viewItems', action.compId, 'checkedIds']);
+        }
+        if(action.extOption.isCloseInform) {
+            newState = newState.deleteIn(['viewItems', action.compId, 'informOpen'])
+                        .deleteIn(['viewItems', action.compId, 'viewItem']);
+        }
+    }
+
+    return newState;
+}
+
 export const handleGetObjectAction = (state, compId, data, extend, target, idName) => {
     if(data && data.length > 0) {
 

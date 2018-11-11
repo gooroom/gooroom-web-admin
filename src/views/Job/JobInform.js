@@ -11,6 +11,8 @@ import { getMergedObject } from 'components/GRUtils/GRCommonUtils';
 import * as JobManageActions from 'modules/JobManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
+import JobTargetComp from './JobTargetComp';
+
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -106,6 +108,8 @@ class JobInform extends Component {
           </Grid>
           </Grid>
         </Card>
+
+        
       }
       </div>
     );

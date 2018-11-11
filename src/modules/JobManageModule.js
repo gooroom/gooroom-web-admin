@@ -1,22 +1,21 @@
 import { handleActions } from 'redux-actions';
+import { Map, List } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
 const COMMON_PENDING = 'jobManage/COMMON_PENDING';
 const COMMON_FAILURE = 'jobManage/COMMON_FAILURE';
+const SET_EDITING_ITEM_VALUE = 'jobManage/SET_EDITING_ITEM_VALUE';
+const CHG_LISTPARAM_DATA = 'jobManage/CHG_LISTPARAM_DATA';
+const CHG_COMPDATA_VALUE = 'jobManage/CHG_COMPDATA_VALUE';
 
 
-const GET_JOB_LISTPAGED_SUCCESS = 'jobManage/GET_LIST_SUCCESS';
+const GET_JOB_LISTPAGED_SUCCESS = 'jobManage/GET_JOB_LISTPAGED_SUCCESS';
+const GET_JOBTARGET_LISTPAGED_SUCCESS = 'jobManage/GET_JOBTARGET_LISTPAGED_SUCCESS';
 
 const SHOW_JOB_INFORM = 'jobManage/SHOW_JOB_INFORM';
 const CLOSE_JOB_INFORM = 'jobManage/CLOSE_JOB_INFORM';
-
-const SET_EDITING_ITEM_VALUE = 'jobManage/SET_EDITING_ITEM_VALUE';
-
-const CHG_LISTPARAM_DATA = 'jobManage/CHG_LISTPARAM_DATA';
-const CHG_COMPDATA_VALUE = 'jobManage/CHG_COMPDATA_VALUE';
-const CHG_STORE_DATA = 'jobManage/CHG_STORE_DATA';
 
 
 // ...
@@ -26,7 +25,7 @@ export const showJobInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_JOB_INFORM,
         compId: param.compId,
-        selectId: (param.viewItem) ? param.viewItem.get('jobId') : '',
+        selectId: (param.viewItem) ? param.viewItem.get('jobNo') : '',
         viewItem: param.viewItem
     });
 };
@@ -66,6 +65,34 @@ export const readJobManageListPaged = (module, compId, extParam) => dispatch => 
     });
 };
 
+export const readClientListInJobPaged = (module, compId, extParam) => dispatch => {
+    const newListParam = (module.getIn(['viewItems', compId, 'listParam_target'])) ? 
+        module.getIn(['viewItems', compId, 'listParam_target']).merge(extParam) : 
+        module.get('defaultListParam');
+
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readClientListInJobPaged', {
+        jobNo: newListParam.get('jobNo'),
+        keyword: newListParam.get('keyword'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_JOBTARGET_LISTPAGED_SUCCESS,
+                compId: compId,
+                listParam: newListParam,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export const changeListParamData = (param) => dispatch => {
     return dispatch({
         type: CHG_LISTPARAM_DATA,
@@ -91,6 +118,9 @@ export default handleActions({
     },
     [GET_JOB_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
+    },
+    [GET_JOBTARGET_LISTPAGED_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleCustomListPagedAction(state, action, 'target');
     },
     [SHOW_JOB_INFORM]: (state, action) => {
         return commonHandleActions.handleShowInformAction(state, action);
