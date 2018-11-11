@@ -49,11 +49,11 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class DeptSpec extends Component {
 
   // edit
-  handleEditClick = (selectedDept) => {
+  handleEditClick = (paramObj) => {
     this.props.DeptActions.showDialog({
       viewItem: {
-        deptCd: selectedDept.get('selectedDeptCd'),
-        deptNm: selectedDept.get('selectedDeptNm')
+        deptCd: paramObj.get('selectedDeptCd'),
+        deptNm: paramObj.get('selectedDeptNm')
       },
       dialogType: DeptDialog.TYPE_EDIT
     });
@@ -101,7 +101,7 @@ class DeptSpec extends Component {
     const { UserProps, DeptProps, compId } = this.props;
 
     const informOpen = DeptProps.getIn(['viewItems', compId, 'informOpen']);
-    const selectedDept = DeptProps.getIn(['viewItems', compId]);
+    const viewItem = DeptProps.getIn(['viewItems', compId]);
 
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'DEPT']);
@@ -111,16 +111,16 @@ class DeptSpec extends Component {
 
     return (
       <div style={{marginTop: 10}}>
-      {(informOpen && selectedDept) &&
+      {(informOpen && viewItem) &&
         <Card>
           <CardHeader
-            title={selectedDept.get('selectedDeptNm')}
-            subheader={selectedDept.get('selectedDeptCd')}
+            title={viewItem.get('selectedDeptNm')}
+            subheader={viewItem.get('selectedDeptCd')}
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.handleEditClick(selectedDept)}
+                  onClick={() => this.handleEditClick(viewItem)}
                 ><SettingsApplicationsIcon /></Button>
               </div>
             }
@@ -133,7 +133,7 @@ class DeptSpec extends Component {
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedBrowserRuleItem}
                   onClickEdit={this.handleEditClickForBrowserRule}
-                  inherit={true}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -141,7 +141,7 @@ class DeptSpec extends Component {
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedMediaRuleItem}
                   onClickEdit={this.handleEditClickForMediaRule}
-                  inherit={true}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -149,7 +149,7 @@ class DeptSpec extends Component {
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedSecurityRuleItem}
                   onClickEdit={this.handleEditClickForSecurityRule}
-                  inherit={true}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -157,7 +157,7 @@ class DeptSpec extends Component {
                   specType="inform" targetType="DEPT"
                   selectedItem={selectedSoftwareFilterItem}
                   onClickEdit={this.handleEditClickForSoftwareFilter}
-                  inherit={true}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -165,7 +165,7 @@ class DeptSpec extends Component {
                   specType="inform" targetType="DEPT" 
                   selectedItem={selectedDesktopConfItem}
                   onClickEdit={this.handleEditClickForDesktopConf}
-                  inherit={true} />
+                  inherit={viewItem.get('hasChildren')} />
               </Grid>
             </Grid>
           </CardContent>

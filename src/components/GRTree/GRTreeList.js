@@ -63,7 +63,7 @@ class GRTreeList extends Component {
     }
   }
   
-  fetchTreeData(keyValue, index, isDoExpand) {
+  fetchTreeData(keyValue, index, isDoExpand, onCallback) {
 
     const keyName = this.state.keyName;
     const param = {};
@@ -155,37 +155,53 @@ class GRTreeList extends Component {
           this.handleClickNode(resData[0], 0);
         }
       }
+
+      if(onCallback) {
+        onCallback((resData && resData.length > 0) ? true : false);
+      }
     });
   }
 
   handleClickNode(listItem, index) {
+
     if (listItem.children) {
       // fetch children data
       // request to server if children array is empty.
       if (listItem.children.length < 1) {
-        this.fetchTreeData(listItem.key, index);
+        this.fetchTreeData(listItem.key, index, false, (hasChildren) => {
+          // call select node event
+          listItem['hasChildren'] = hasChildren;
+          if (this.props.onSelectNode) this.props.onSelectNode(listItem);
+        });
+      } else {
+        // call select node event
+        listItem['hasChildren'] = true;
+        if (this.props.onSelectNode) this.props.onSelectNode(listItem);
       }
 
       const indexOfListItemInArray = this.state.expandedListItems.indexOf(index);
       if (indexOfListItemInArray === -1) {
+        listItem['hasChildren'] = false;
         this.setState({
           expandedListItems: this.state.expandedListItems.concat([index])
         });
       } else {
+        listItem['hasChildren'] = true;
         let newArray = [].concat(this.state.expandedListItems);
         newArray.splice(indexOfListItemInArray, 1);
         this.setState({
           expandedListItems: newArray
         });
       }
+    } else {
+      listItem['hasChildren'] = false;
+      if (this.props.onSelectNode) this.props.onSelectNode(listItem);
     }
 
     // select node
     this.setState({
       activeListItem: index
     });
-    // call select node event
-    if (this.props.onSelectNode) this.props.onSelectNode(listItem);
   }
 
   resetTreeNode(keyValue) {

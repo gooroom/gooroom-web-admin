@@ -79,8 +79,23 @@
           "head": {
             "height": 44
           }
+      },
+      "MuiPrivateTabIndicator": {
+        "root": {
+          "height": 4
+        },
+        "colorPrimary": {
+          "backgroundColor": "#f5c5c5"
+        }
+      },
+      "MuiTab": {
+        "textColorPrimary": {
+          "&$selected": {
+            "fontWeight": "bold",
+            "color": "#f77777"
+          }
+        }
       }
-
     },
     "transitions": {
       "easing": {
