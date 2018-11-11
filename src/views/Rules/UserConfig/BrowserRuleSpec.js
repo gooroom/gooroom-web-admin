@@ -13,20 +13,7 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import BrowserRuleDialog from './BrowserRuleDialog';
 import BrowserRuleViewer from './BrowserRuleViewer';
 
-
-
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
-import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -63,11 +50,12 @@ class BrowserRuleSpec extends Component {
       <React.Fragment>
         {(viewItem) && 
           <Card elevation={4} style={{marginBottom:20}}>
-            <BrowserRuleViewer viewItem={viewItem} hasAction={true}
+            <BrowserRuleViewer viewItem={viewItem} hasAction={true} inherit={this.props.inherit}
               avater={RuleAvartar}
               compType={compType}
               onClickEdit={this.props.onClickEdit}
               onClickCopy={this.props.onClickCopy}
+              onClickInherit={this.handleInheritClick}
             />
           </Card>
         }

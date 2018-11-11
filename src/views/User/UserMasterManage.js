@@ -116,7 +116,10 @@ class UserMasterManage extends Component {
     // Check selectedDeptCd
     DeptActions.changeCompVariableObject({
       compId: compId,
-      valueObj: {selectedDeptCd: node.key, selectedDeptNm: node.title}
+      valueObj: {
+        selectedDeptCd: node.key, selectedDeptNm: node.title,
+        hasChildren: node.hasChildren
+      }
     });
 
     // show rules
@@ -128,10 +131,8 @@ class UserMasterManage extends Component {
     SecurityRuleActions.getSecurityRuleByDeptCd({ compId: compId, deptCd: node.key });
     // get filtered software rule
     SoftwareFilterActions.getSoftwareFilterByDeptCd({ compId: compId, deptCd: node.key });   
-    
     // get desktop conf info
     DesktopConfActions.getDesktopConfByDeptCd({ compId: compId, deptCd: node.key });
-
 
     // show Dept. inform pane.
     DeptActions.showInform({ compId: compId, viewItem: null });

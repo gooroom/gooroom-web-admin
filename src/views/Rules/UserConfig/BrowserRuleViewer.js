@@ -54,10 +54,10 @@ class BrowserRuleViewer extends Component {
                     onClick={() => this.props.onClickCopy(viewItem)}
                   ><CopyIcon /></Button>
                   }
-                  {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
+                  {(this.props.inherit && !(viewItem.get('isDefault'))) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.handleInheritClick(viewItem.get('objId'), compType)}
+                    onClick={() => this.props.onClickInherit(viewItem.get('objId'), compType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
@@ -89,12 +89,14 @@ class BrowserRuleViewer extends Component {
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} Web Socket 사용</TableCell>
                   <TableCell numeric>{viewItem.get('webSocket')}</TableCell>
-                  <TableCell colSpan={2} component="th" scope="row">{bull} Web Worker 사용</TableCell>
+                  <TableCell component="th" scope="row">{bull} Web Worker 사용</TableCell>
                   <TableCell numeric>{viewItem.get('webWorker')}</TableCell>
                 </TableRow>
 
                 <TableRow>
-                  <TableCell rowSpan={3} component="th" scope="row">{bull} 신뢰사이트</TableCell>
+                  <TableCell colSpan={4} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 신뢰사이트 설정 ]</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell component="th" scope="row" style={{width:240}}>{bull} 개발자도구(웹 인스펙터) 사용통제</TableCell>
                   <TableCell numeric>{
                     (viewItem.get('devToolRule__trust') == '0') && "익스텐션내 개발자도구 사용불가"
@@ -138,7 +140,9 @@ class BrowserRuleViewer extends Component {
                 </TableRow>
                 
                 <TableRow>
-                  <TableCell rowSpan={3} component="th" scope="row">{bull} 비신뢰사이트</TableCell>
+                  <TableCell colSpan={4} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 비신뢰사이트 설정 ]</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell component="th" scope="row" style={{width:240}}>{bull} 개발자도구(웹 인스펙터) 사용통제</TableCell>
                   <TableCell numeric>{
                     (viewItem.get('devToolRule__untrust') == '0') && "익스텐션내 개발자도구 사용불가"
@@ -181,8 +185,11 @@ class BrowserRuleViewer extends Component {
                   </TableCell>
                 </TableRow>
                 <TableRow>
+                  <TableCell colSpan={4} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 접속가능 주소설정 ]</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell component="th" scope="row">{bull} White List</TableCell>
-                  <TableCell colSpan={4} numeric>{viewItem.get('trustUrlList').map(function(prop, index) {
+                  <TableCell colSpan={3} numeric>{viewItem.get('trustUrlList').map(function(prop, index) {
                     return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
                 </TableRow>

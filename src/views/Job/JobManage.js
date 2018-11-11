@@ -176,20 +176,29 @@ class JobManage extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+                  let jobStatus = '';
+                  if(n.runCount != 0) {
+                    jobStatus = '작업중';
+                  } else if(n.readyCount != 0) {
+                    jobStatus = '진행중';
+                  } else {
+                    jobStatus = '완료';
+                  }
+
                   return (
                     <TableRow
                       hover
                       onClick={event => this.handleSelectRow(event, n.get('jobNo'))}
                       key={n.get('jobNo')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('jobNo')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('jobNo')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('jobName')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('readyCount')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('clientCount')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('errorCount')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('compCount')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{jobStatus}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('errorCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('compCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                     </TableRow>
                   );
                 })}
