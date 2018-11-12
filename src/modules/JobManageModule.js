@@ -10,6 +10,7 @@ const SET_EDITING_ITEM_VALUE = 'jobManage/SET_EDITING_ITEM_VALUE';
 const CHG_LISTPARAM_DATA = 'jobManage/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'jobManage/CHG_COMPDATA_VALUE';
 
+const CHG_TARGET_LISTPARAM_DATA = 'jobManage/CHG_TARGET_LISTPARAM_DATA';
 
 const GET_JOB_LISTPAGED_SUCCESS = 'jobManage/GET_JOB_LISTPAGED_SUCCESS';
 const GET_JOBTARGET_LISTPAGED_SUCCESS = 'jobManage/GET_JOBTARGET_LISTPAGED_SUCCESS';
@@ -34,6 +35,16 @@ export const closeJobInform = (param) => dispatch => {
     return dispatch({
         type: CLOSE_JOB_INFORM,
         compId: param.compId
+    });
+};
+
+export const changeCompVariable = (param) => dispatch => {
+    return dispatch({
+        type: CHG_COMPDATA_VALUE,
+        compId: param.compId,
+        name: param.name,
+        value: param.value,
+        targetType: param.targetType
     });
 };
 
@@ -66,9 +77,10 @@ export const readJobManageListPaged = (module, compId, extParam) => dispatch => 
 };
 
 export const readClientListInJobPaged = (module, compId, extParam) => dispatch => {
+
     const newListParam = (module.getIn(['viewItems', compId, 'listParam_target'])) ? 
         module.getIn(['viewItems', compId, 'listParam_target']).merge(extParam) : 
-        module.get('defaultListParam');
+        module.get('defaultListParam').merge(extParam);
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readClientListInJobPaged', {
@@ -102,6 +114,14 @@ export const changeListParamData = (param) => dispatch => {
     });
 };
 
+export const changeTargetListParamData = (param) => dispatch => {
+    return dispatch({
+        type: CHG_TARGET_LISTPARAM_DATA,
+        compId: param.compId,
+        name: param.name,
+        value: param.value
+    });
+};
 
 
 
@@ -115,6 +135,9 @@ export default handleActions({
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
             errorObj: (action.error) ? action.error : ''
         });
+    },
+    [CHG_COMPDATA_VALUE]: (state, action) => {
+        return commonHandleActions.handleChangeCompValue(state, action);
     },
     [GET_JOB_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
@@ -131,6 +154,9 @@ export default handleActions({
 
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
+    },
+    [CHG_TARGET_LISTPARAM_DATA]: (state, action) => {
+        return state.setIn(['viewItems', action.compId, 'listParam_target', action.name], action.value);
     },
 
 

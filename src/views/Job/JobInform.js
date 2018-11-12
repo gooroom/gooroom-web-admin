@@ -39,77 +39,113 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class JobInform extends Component {
 
+  handleClickTargetSelect = (selectedTargetObj) => {
+    const { ClientGroupActions, ClientManageActions } = this.props;
+    const compId = this.props.match.params.grMenuId; 
+
+    // show client group info.
+    if(selectedGroupObj) {
+      // close client inform
+      ClientManageActions.closeClientManageInform({compId: compId});
+      // show client group inform
+      ClientGroupActions.showClientGroupInform({
+        compId: compId, viewItem: selectedGroupObj, selectId: selectedGroupObj.get('grpId')
+      });
+      this.resetClientGroupRules(compId, selectedGroupObj.get('grpId'));
+    }
+  };
+
   render() {
-    const { compId, JobManageProps } = this.props;
+    const { classes, compId, JobManageProps } = this.props;
+    const bull = <span className={classes.bullet}>•</span>;
+    
     const informOpen = JobManageProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = JobManageProps.getIn(['viewItems', compId, 'viewItem']);
-
+    const selectTargetObj = JobManageProps.getIn(['viewItems', compId, 'selectTargetObj']);
+    
+    // json parse.
+    let targetModuleList = <Typography variant="button" gutterBottom>결과가 없습니다.</Typography>;
+    if(selectTargetObj && selectTargetObj.get('resultData')) {
+      const result = JSON.parse(selectTargetObj.get('resultData'));
+      if(result && result.length > 0) {
+        targetModuleList = (
+          <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>모듈</TableCell>
+              <TableCell>타스크</TableCell>
+              <TableCell>메세지</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+          {
+            result.map(n => {
+              return (
+                <TableRow key={n.module.task.task_name}>
+                  <TableCell >{n.module.module_name}</TableCell>
+                  <TableCell >{n.module.task.task_name}</TableCell>
+                  <TableCell >{n.module.task.out.message}</TableCell>
+                </TableRow>
+              );
+            })
+          }
+          </TableBody>
+          </Table>
+        );
+      }
+    }
+    
     return (
       <div>
       {(informOpen && viewItem) &&
-        <Card >
-          <CardHeader
-            title={viewItem.get('jobName')}
-            subheader={viewItem.get('jobNo') + ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}
-          />
-          <Grid container spacing={24}>
-          <Grid item xs={12} sm={5}>
-            <CardContent>
-              <Typography component="pre">
-                {viewItem.get('jobData')}
-              </Typography>
-            </CardContent>
-          </Grid>
-          <Grid item xs={12} sm={7}>
-          <CardContent>
-{/*
-          <Table >
-            <JobTargetListHead
-              classes={classes}
-              orderDir={JobManageProps.targetListParam.orderDir}
-              orderColumn={JobManageProps.targetListParam.orderColumn}
-              onRequestSort={this.handleRequestSort}
+
+        <Grid container spacing={16} direction="row" justify="space-between" alignItems="stretch" >
+          <Grid item xs={6}>
+            <JobTargetComp compId={compId} 
+              onSelect={this.handleClickTargetSelect} 
             />
-            <TableBody>
-              {JobManageProps.targetListData.map(n => {
-                return (
-                  <TableRow
-                    hover
-                    key={n.clientId}
-                  >
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.clientId}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.jobStat}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.grpNm}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.isOn}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-
-              {emptyRows > 0 && (
-                <TableRow >
-                  <TableCell
-                    colSpan={JobTargetListHead.columnData.length + 1}
-                    className={classes.grSmallAndClickCell}
-                  />
+          </Grid>
+          <Grid item xs={6}>
+            {(selectTargetObj) &&
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 작업정보 ]</TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-*/}
-          </CardContent>
+                <TableRow>
+                  <TableCell component="th" scope="row" >{bull} 작업번호</TableCell>
+                  <TableCell numeric>{viewItem.get('jobNo')}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" >{bull} 작업이름</TableCell>
+                  <TableCell numeric>{viewItem.get('jobName')}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" >{bull} 작업생성일</TableCell>
+                  <TableCell numeric>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 작업대상 결과정보 ]</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" >{bull} 단말아이디</TableCell>
+                  <TableCell numeric>{selectTargetObj.get('clientId')}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" >{bull} 작업상태(결과)</TableCell>
+                  <TableCell numeric>{selectTargetObj.get('jobStat')}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 작업모듈 정보 ]</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={2} >{targetModuleList}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            }
           </Grid>
-          </Grid>
-        </Card>
-
-        
+        </Grid>
       }
       </div>
     );

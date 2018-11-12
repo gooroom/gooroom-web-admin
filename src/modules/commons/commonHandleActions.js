@@ -172,18 +172,6 @@ export const handleCustomListPagedAction = (state, action, customTag) => {
                 })
             );
             newState = state.setIn(['viewItems', action.compId], tempObj);
-
-
-            // newState = state
-            // .setIn(['viewItems', action.compId, listDataName], List(data.map((e) => {return Map(e)})))
-            // .setIn(['viewItems', action.compId, listParamName], action.listParam.merge({
-            //     rowsFiltered: parseInt(recordsFiltered, 10),
-            //     rowsTotal: parseInt(recordsTotal, 10),
-            //     page: parseInt(draw, 10),
-            //     rowsPerPage: parseInt(rowLength, 10),
-            //     orderColumn: orderColumn,
-            //     orderDir: orderDir
-            // }));
         }
 
     } else {

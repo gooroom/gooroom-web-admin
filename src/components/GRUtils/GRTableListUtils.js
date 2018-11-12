@@ -35,6 +35,17 @@ export const getRowObjectById = (propObj, compId, id, keyId) => {
     return null;
 }
 
+export const getRowObjectByIdInCustomList = (propObj, compId, id, keyId, listName) => {
+    if(propObj.getIn(['viewItems', compId, listName])) {
+        const viewItem = propObj.getIn(['viewItems', compId, listName]).find((element) => {
+            return element.get(keyId) == id;
+        });
+        return (viewItem) ? fromJS(viewItem.toJS()) : null;
+    } 
+    return null;
+}
+
+
 export const getDataObjectVariableInComp = (propObj, compId, name) => {
     if(propObj.getIn(['viewItems', compId, name])) {
         return propObj.getIn(['viewItems', compId, name]);

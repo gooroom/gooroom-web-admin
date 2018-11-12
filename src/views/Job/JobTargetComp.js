@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import * as JobManageActions from 'modules/JobManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectByIdInCustomList} from 'components/GRUtils/GRTableListUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
@@ -48,47 +48,56 @@ class JobTargetComp extends Component {
   ];
 
   componentDidMount() {
-    this.props.JobManageActions.readClientListInJobPaged(this.props.JobManageProps, this.props.compId);
+    this.props.JobManageActions.readClientListInJobPaged(this.props.JobManageProps, this.props.compId, {
+      jobNo: this.props.JobManageProps.getIn(['viewItems', this.props.compId, 'selectId'])
+    });
   }
 
   handleChangePage = (event, page) => {
     this.props.JobManageActions.readClientListInJobPaged(this.props.JobManageProps, this.props.compId, {
+      jobNo: this.props.JobManageProps.getIn(['viewItems', this.props.compId, 'selectId']),
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
     this.props.JobManageActions.readClientListInJobPaged(this.props.JobManageProps, this.props.compId, {
-      rowsPerPage: event.target.value, page: 0
+      jobNo: this.props.JobManageProps.getIn(['viewItems', this.props.compId, 'selectId']),
+      rowsPerPage: event.target.value, 
+      page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
     this.props.JobManageActions.readClientListInJobPaged(this.props.JobManageProps, this.props.compId, {
+      jobNo: this.props.JobManageProps.getIn(['viewItems', this.props.compId, 'selectId']),
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
   
   handleSelectBtnClick = () => {
     const { JobManageActions, JobManageProps, compId } = this.props;
-    JobManageActions.readClientListInJobPaged(JobManageProps, compId, {page: 0});
+    JobManageActions.readClientListInJobPaged(JobManageProps, compId, {
+      jobNo: JobManageProps.getIn(['viewItems', compId, 'listParam_target', 'jobNo']),
+      page: 0
+    });
   };
 
   handleSelectRow = (event, id) => {
     const { JobManageProps, compId } = this.props;
     const { JobManageActions } = this.props;
 
-    const selectRowObject = getRowObjectById(JobManageProps, compId, id, 'clientId');
-    const newCheckedIds = setCheckedIdsInComp(JobManageProps, compId, id);
-
-    if(this.props.onSelect) {
-      this.props.onSelect(selectRowObject, newCheckedIds);
-    }
+    const selectRowObject = getRowObjectByIdInCustomList(JobManageProps, compId, id, 'clientId', 'listData_target');
+    JobManageActions.changeCompVariable({
+      name: 'selectTargetObj',
+      value: selectRowObject,
+      compId: compId
+    });
   };  
 
   // .................................................
   handleKeywordChange = (name, value) => {
-    this.props.JobManageActions.changeListParamData({
+    this.props.JobManageActions.changeTargetListParamData({
       name: name, 
       value: value,
       compId: this.props.compId
@@ -100,8 +109,9 @@ class JobTargetComp extends Component {
     const { JobManageProps, compId } = this.props;
 
     const listObj = JobManageProps.getIn(['viewItems', compId]);
+
     let emptyRows = 0; 
-    if(listObj) {
+    if(listObj && listObj.get('listData_target')) {
       emptyRows = listObj.getIn(['listParam_target', 'rowsPerPage']) - listObj.get('listData_target').size;
     }
 
@@ -130,7 +140,7 @@ class JobTargetComp extends Component {
         </Grid>
 
         {/* data area */}
-        {listObj &&
+        {listObj && listObj.get('listData_target') &&
         <Table>
           <GRCommonTableHead
             classes={classes}
@@ -142,6 +152,7 @@ class JobTargetComp extends Component {
           />
           <TableBody>
           {listObj.get('listData_target').map(n => {
+            const clientStatus = ((n.get('jobStat') == 'R') ? '작업전' : ((n.get('jobStat') == 'C') ? '작업완료' : '작업오류')) + '(' + n.get('jobStat') + ')';
             return (
               <TableRow
                 hover
@@ -149,8 +160,8 @@ class JobTargetComp extends Component {
                 key={n.get('clientId')}
               >
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
-                <TableCell className={classes.grSmallAndClickCell}>{n.get('groupNm')}</TableCell>
-                <TableCell className={classes.grSmallAndClickCell}>{n.get('jobStatus')}</TableCell>
+                <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
+                <TableCell className={classes.grSmallAndClickAndCenterCell}>{clientStatus}</TableCell>
               </TableRow>
             );
           })}
