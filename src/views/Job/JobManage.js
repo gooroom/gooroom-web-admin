@@ -94,8 +94,10 @@ class JobManage extends Component {
     const compId = this.props.match.params.grMenuId;
 
     const selectRowObject = getRowObjectById(JobManageProps, compId, id, 'jobNo');
+
     JobManageActions.readClientListInJobPaged(JobManageProps, compId, {
-      jobNo: selectRowObject.get('jobNo'), page:0
+      jobNo: selectRowObject.get('jobNo'), 
+      page:0
     });
 
     JobManageActions.showJobInform({
@@ -233,9 +235,9 @@ class JobManage extends Component {
             />
           </div>
         }
-        </GRPane>
         <JobInform compId={compId} />
         <GRConfirm />
+        </GRPane>
       </React.Fragment>
       
     );
