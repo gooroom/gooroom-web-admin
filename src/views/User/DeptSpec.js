@@ -131,6 +131,7 @@ class DeptSpec extends Component {
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="DEPT"
+                  hasAction={true}
                   selectedItem={selectedBrowserRuleItem}
                   onClickEdit={this.handleEditClickForBrowserRule}
                   inherit={viewItem.get('hasChildren')}

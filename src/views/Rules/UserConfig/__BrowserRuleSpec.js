@@ -39,28 +39,34 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 class BrowserRuleSpec extends Component {
 
-  // handleInheritClick = (objId, compType) => {
-  //   const { BrowserRuleProps, BrowserRuleActions, compId, targetType } = this.props;
-  //   const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(BrowserRuleProps, compId, targetType);
+  handleInheritClick = (objId, compType) => {
+    const { BrowserRuleProps, BrowserRuleActions, compId, targetType } = this.props;
+    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(BrowserRuleProps, compId, targetType);
 
-  //   BrowserRuleActions.showDialog({
-  //     viewItem: generateBrowserRuleObject(viewItem),
-  //     dialogType: BrowserRuleDialog.TYPE_INHERIT
-  //   });
-  // };
+    BrowserRuleActions.showDialog({
+      viewItem: generateBrowserRuleObject(viewItem),
+      dialogType: BrowserRuleDialog.TYPE_INHERIT
+    });
+  };
 
   render() {
 
     const { classes } = this.props;
-    const bull = <span className={classes.bullet}>•</span>;
-    const { compType, targetType, selectedItem, ruleGrade } = this.props;
+    const { BrowserRuleProps, compId, compType, targetType } = this.props;
     const { hasAction } = this.props;
 
+    const selectedItem = BrowserRuleProps.getIn(['viewItems', compId, 'viewItem']);
+
+
+    const bull = <span className={classes.bullet}>•</span>;
+
     let viewItem = null;
+    let objItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
       viewItem = generateBrowserRuleObject(selectedItem, true);
-      RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
+      objItem = generateBrowserRuleObject(selectedItem, false);
+      RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem);
     }
     
     return (
@@ -78,18 +84,18 @@ class BrowserRuleSpec extends Component {
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(selectedItem, compType)}
+                    onClick={() => this.props.onClickEdit(viewItem, compType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(selectedItem)}
+                    onClick={() => this.props.onClickCopy(objItem)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(viewItem.get('isDefault'))) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickInherit(viewItem.get('objId'), compType)}
+                    onClick={() => this.handleInheritClick(viewItem.get('objId'), compType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
@@ -98,16 +104,26 @@ class BrowserRuleSpec extends Component {
             />
           }
           <CardContent style={{padding: 10}}>
+          { !hasAction &&
+            <div>
+            <Grid container>
+              <Grid item xs={6}>
+                <Typography color="default">
+                {(viewItem.get('objNm') != '') ? viewItem.get('objNm') : ''}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+              </Grid>
+            </Grid>
+            <Typography color="textSecondary">
+              {(viewItem.get('comment') != '') ? '"' + viewItem.get('comment') + '"' : ''}
+            </Typography>
+            <Divider />
+            </div>
+          }
             <Table>
               <TableBody>
-              { !hasAction &&
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 이름</TableCell>
-                  <TableCell numeric>{viewItem.get('objNm')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 설명</TableCell>
-                  <TableCell numeric>{viewItem.get('comment')}</TableCell>
-                </TableRow>
-              }
+
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} Web Socket 사용</TableCell>
                   <TableCell numeric>{viewItem.get('webSocket')}</TableCell>
@@ -178,12 +194,21 @@ class BrowserRuleSpec extends Component {
           </Card>
 
         }
+      <BrowserRuleDialog compId={compId} />
       </React.Fragment>
     );
   }
 }
 
-export default withStyles(GRCommonStyle)(BrowserRuleSpec);
+const mapStateToProps = (state) => ({
+  BrowserRuleProps: state.BrowserRuleModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleSpec));
 
 export const generateBrowserRuleObject = (param, isForViewer) => {
 

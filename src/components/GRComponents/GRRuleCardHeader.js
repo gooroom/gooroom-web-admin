@@ -10,15 +10,19 @@ export const styles = theme => ({
   root: theme.mixins.gutters({
     display: 'flex',
     alignItems: 'center',
-    paddingTop: 0,
+    paddingTop: 10,
     paddingBottom: 16,
+    "@media (min-width:600px)": {
+      paddingLeft: 10,
+      paddingRight: 10
+    }
   }),
   /* Styles applied to the card category name. */
   category: {
     margin: 0,
     fontSize: 12,
     fontWeight:'bold',
-    background: 'linear-gradient(45deg, #A3A3A2 30%, #BBBCBF 90%)',
+    background: 'linear-gradient(45deg, #A3A3A2 30%, #45464a 90%)',
     color: 'white',
     padding: '0 5'
   },

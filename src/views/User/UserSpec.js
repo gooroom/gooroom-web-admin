@@ -130,6 +130,7 @@ class UserSpec extends Component {
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId}
                   specType="inform" targetType="USER"
+                  hasAction={true}
                   selectedItem={selectedBrowserRuleItem}
                   onClickEdit={this.handleEditClickForBrowserRule}
                 />
