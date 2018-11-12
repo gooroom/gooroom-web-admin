@@ -28,7 +28,39 @@ class ClientConfSettingViewer extends Component {
     return (
       <React.Fragment>
         {viewItem && 
-        <Card>
+        <Card elevation={0} className={classes.ruleViewerCard}>
+        { hasAction &&
+          <GRRuleCardHeader
+            avatar={this.props.avater}
+            category='단말 설정'
+            title={viewItem.get('objNm')} 
+            subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
+            action={
+              <div style={{paddingTop:16,paddingRight:24}}>
+                <Button size="small"
+                  variant="outlined" color="primary" style={{minWidth:32}}
+                  onClick={() => this.props.onClickEdit(viewItem, compType)}
+                ><SettingsApplicationsIcon /></Button>
+                {(this.props.onClickCopy) &&
+                <Button size="small"
+                  variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                  onClick={() => this.props.onClickCopy(viewItem)}
+                ><CopyIcon /></Button>
+                }
+                {(this.props.inherit && !(viewItem.get('isDefault'))) && 
+                <Button size="small"
+                  variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                  onClick={() => this.props.onClickInherit(viewItem.get('objId'), compType)}
+                ><ArrowDropDownCircleIcon /></Button>
+                }
+              </div>
+            }
+            style={{paddingBottom:0}}
+          />
+        }
+          
+
+
           <CardContent>
             <Grid container>
               <Grid item xs={6}>
