@@ -145,7 +145,7 @@ class BrowserRuleManage extends Component {
     const viewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     BrowserRuleActions.showDialog({
-      viewItem: generateBrowserRuleObject(viewItem, true),
+      viewItem: generateBrowserRuleObject(viewItem, false),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -182,7 +182,7 @@ class BrowserRuleManage extends Component {
 
   handleEditItemClick = (viewItem, compType) => {
     this.props.BrowserRuleActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateBrowserRuleObject(viewItem, false),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -299,14 +299,15 @@ class BrowserRuleManage extends Component {
             />
           </div>
         }
-        </GRPane>
         {/* dialog(popup) component area */}
         <BrowserRuleSpec compId={compId}
           specType="inform" 
-          selectedItem={listObj}
+          selectedItem={(listObj) ? listObj.get('viewItem') : null}
+          hasAction={true}
           onClickCopy={this.handleCopyClick}
           onClickEdit={this.handleEditItemClick}
         />
+        </GRPane>
         <BrowserRuleDialog compId={compId} />
         <GRConfirm />
       </div>

@@ -206,8 +206,11 @@ class ClientGroupSpec extends Component {
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4}>
                 <BrowserRuleSpec compId={compId}
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedBrowserRuleItem}
+                  specType="inform" 
+                  targetType="GROUP"
+                  hasAction={true}
+                  selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
+                  ruleGrade={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleEditClickForBrowserRule}
                   inherit={false}
                 />

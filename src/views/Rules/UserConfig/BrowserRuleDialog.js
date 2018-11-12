@@ -12,7 +12,7 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
-import BrowserRuleViewer from './BrowserRuleViewer';
+import BrowserRuleSpec from './BrowserRuleSpec';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -196,6 +196,8 @@ class BrowserRuleDialog extends Component {
         const { BrowserRuleProps } = this.props;
         const dialogType = BrowserRuleProps.get('dialogType');
         const editingItem = (BrowserRuleProps.get('editingItem')) ? BrowserRuleProps.get('editingItem') : null;
+
+        console.log('DIALOG editingItem ::::::::::: ', editingItem);
 
         let title = "";
         if(dialogType === BrowserRuleDialog.TYPE_ADD) {
@@ -484,7 +486,7 @@ class BrowserRuleDialog extends Component {
                         <Typography variant="body1">
                             이 정책을 하위 조직에 적용 하시겠습니까?
                         </Typography>
-                        <BrowserRuleViewer viewItem={editingItem} hasAction={false} />
+                        <BrowserRuleSpec viewItem={editingItem} hasAction={false} />
                         </div>
                     }
                     {(dialogType === BrowserRuleDialog.TYPE_COPY) &&
@@ -492,7 +494,7 @@ class BrowserRuleDialog extends Component {
                         <Typography variant="body1">
                             이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
                         </Typography>
-                        <BrowserRuleViewer viewItem={editingItem} hasAction={false} />
+                        <BrowserRuleSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                 </DialogContent>

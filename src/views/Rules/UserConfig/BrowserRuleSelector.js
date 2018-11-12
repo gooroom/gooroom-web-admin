@@ -78,8 +78,9 @@ class BrowserRuleSelector extends Component {
     }
 
     let selectedBrowserRuleItem = null;
+    let selectedData = null;
     if(listAllData && listAllData.size > 0) {
-      const selectedData = listAllData.find((element) => {
+      selectedData = listAllData.find((element) => {
         return element.get('objId') == selectedOptionItemId;
       });
       if(selectedData) {
@@ -107,7 +108,8 @@ class BrowserRuleSelector extends Component {
         {selectedOptionItemId && selectedOptionItemId != '' &&
           <BrowserRuleSpec compId={compId} 
             specType="inform" targetType={targetType}
-            selectedItem={selectedBrowserRuleItem}
+            hasAction={true}
+            selectedItem={selectedData}
             onClickEdit={this.handleEditClickForBrowserRule}
           />
         }
