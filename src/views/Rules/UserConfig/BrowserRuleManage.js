@@ -145,7 +145,7 @@ class BrowserRuleManage extends Component {
     const viewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     BrowserRuleActions.showDialog({
-      viewItem: generateBrowserRuleObject(viewItem),
+      viewItem: generateBrowserRuleObject(viewItem, true),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
