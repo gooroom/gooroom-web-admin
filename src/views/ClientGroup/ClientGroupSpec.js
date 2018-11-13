@@ -20,7 +20,8 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
-import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { generateBrowserRuleObject } from 'views/Rules/UserConfig/BrowserRuleSpec';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -99,9 +100,14 @@ class ClientGroupSpec extends Component {
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
-  handleEditClickForBrowserRule = (viewItem, compType) => {
+  handleClickEditForBrowserRule = (compId, compType) => {
+    console.log('handleClickEditForBrowserRule.............................');
+    console.log('compId ::::::::: ', compId);
+    console.log('compType ::::::::: ', compType);
+
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
     this.props.BrowserRuleActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateBrowserRuleObject(viewItem, false),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -206,12 +212,11 @@ class ClientGroupSpec extends Component {
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4}>
                 <BrowserRuleSpec compId={compId}
-                  specType="inform" 
-                  targetType="GROUP"
+                  specType="inform" compType="GROUP"
                   hasAction={true}
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('ruleGrade') : null}
-                  onClickEdit={this.handleEditClickForBrowserRule}
+                  onClickEdit={this.handleClickEditForBrowserRule}
                   inherit={false}
                 />
               </Grid>

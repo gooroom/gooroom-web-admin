@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getViewItem } from 'components/GRUtils/GRCommonUtils';
+import { getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
 import * as DeptActions from 'modules/DeptModule';
@@ -16,6 +17,8 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
+
+import { generateBrowserRuleObject } from 'views/Rules/UserConfig/BrowserRuleSpec';
 
 import DeptDialog from './DeptDialog';
 
@@ -67,12 +70,6 @@ class DeptSpec extends Component {
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
-  handleEditClickForBrowserRule = (viewItem, compType) => {
-    this.props.BrowserRuleActions.showDialog({
-      viewItem: viewItem,
-      dialogType: BrowserRuleDialog.TYPE_EDIT
-    });
-  };
   handleEditClickForSecurityRule = (viewItem, compType) => {
     this.props.SecurityRuleActions.showDialog({
       viewItem: viewItem,
@@ -91,6 +88,27 @@ class DeptSpec extends Component {
       dialogType: DesktopConfDialog.TYPE_EDIT
     });
   };
+
+  handleClickEditForBrowserRule = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
+    console.log('EDIT viewItem :::::::::::: ', (viewItem)? viewItem.toJS(): 'AAAAAAAAAAAAAA');
+    this.props.BrowserRuleActions.showDialog({
+      viewItem: generateBrowserRuleObject(viewItem, false),
+      dialogType: BrowserRuleDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+  handleClickInheritForBrowserRule = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
+
+    console.log('INHERIT viewItem :::::::::::: ', (viewItem)? viewItem.toJS(): 'AAAAAAAAAAAAAA');
+
+    this.props.BrowserRuleActions.showDialog({
+      viewItem: viewItem,
+      dialogType: BrowserRuleDialog.TYPE_INHERIT
+    });
+  };
+
   // ===================================================================
 
   // .................................................
@@ -130,10 +148,11 @@ class DeptSpec extends Component {
             <Grid container spacing={16}>
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId}
-                  specType="inform" targetType="DEPT"
+                  specType="inform" compType="DEPT"
                   hasAction={true}
-                  selectedItem={selectedBrowserRuleItem}
-                  onClickEdit={this.handleEditClickForBrowserRule}
+                  selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
+                  onClickEdit={this.handleClickEditForBrowserRule}
+                  onClickInherit={this.handleClickInheritForBrowserRule}
                   inherit={viewItem.get('hasChildren')}
                 />
               </Grid>

@@ -14,7 +14,7 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -24,7 +24,7 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import BrowserRuleDialog from './BrowserRuleDialog';
 import BrowserRuleSpec from './BrowserRuleSpec';
-import { generateBrowserRuleObject} from './BrowserRuleSpec';
+import { generateBrowserRuleObject } from './BrowserRuleSpec';
 
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -173,24 +173,22 @@ class BrowserRuleManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (viewItem) => {
+  handleCopyClick = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
     this.props.BrowserRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_COPY
     });
   };
 
-  handleEditItemClick = (viewItem, compType) => {
+  onClickEdit = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
     this.props.BrowserRuleActions.showDialog({
       viewItem: generateBrowserRuleObject(viewItem, false),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
   // ===================================================================
-
-
-
-
 
   render() {
     const { classes } = this.props;
@@ -305,7 +303,7 @@ class BrowserRuleManage extends Component {
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           hasAction={true}
           onClickCopy={this.handleCopyClick}
-          onClickEdit={this.handleEditItemClick}
+          onClickEdit={this.onClickEdit}
         />
         </GRPane>
         <BrowserRuleDialog compId={compId} />
