@@ -170,7 +170,7 @@ class DesktopConfManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (viewItem) => {
+  handleClickCopy = (viewItem) => {
     const { DesktopConfActions } = this.props;
     DesktopConfActions.showDialog({
       viewItem: viewItem,
@@ -306,7 +306,7 @@ class DesktopConfManage extends Component {
         <DesktopConfSpec 
           specType="inform" 
           selectedItem={listObj}
-          onClickCopy={this.handleCopyClick}
+          onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleEditItemClick}
         />
         <DesktopConfDialog compId={compId} />

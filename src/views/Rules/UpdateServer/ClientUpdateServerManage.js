@@ -161,7 +161,7 @@ class ClientUpdateServerManage extends Component {
   }
 
   // ===================================================================
-  handleCopyClick = (viewItem) => {
+  handleClickCopy = (viewItem) => {
     const { ClientUpdateServerActions } = this.props;
     ClientUpdateServerActions.showDialog({
       viewItem: viewItem,
@@ -286,7 +286,7 @@ class ClientUpdateServerManage extends Component {
         <ClientUpdateServerSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          onClickCopy={this.handleCopyClick}
+          onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleEditItemClick}
         />
         <ClientUpdateServerDialog compId={compId} />

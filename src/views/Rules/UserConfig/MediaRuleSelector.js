@@ -56,7 +56,7 @@ class MediaRuleSelector extends Component {
   };
 
   // ===================================================================
-  handleEditClickForMediaRule = (viewItem, compType) => {
+  handleClickEdit = (viewItem, compType) => {
     this.props.MediaRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_EDIT
@@ -78,8 +78,9 @@ class MediaRuleSelector extends Component {
     }
 
     let selectedMediaRuleItem = null;
+    let selectedData = null;
     if(listAllData && listAllData.size > 0) {
-      const selectedData = listAllData.find((element) => {
+      selectedData = listAllData.find((element) => {
         return element.get('objId') == selectedOptionItemId;
       });
       if(selectedData) {
@@ -105,10 +106,10 @@ class MediaRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <MediaRuleSpec compId={compId}
-            specType="inform" targetType={targetType}
-            selectedItem={selectedMediaRuleItem}
-            onClickEdit={this.handleEditClickForMediaRule}
+          <MediaRuleSpec compId={compId} specType="inform" 
+            targetType={targetType} selectedItem={selectedData}
+            hasAction={true}
+            onClickEdit={this.handleClickEdit}
           />
         }
         </CardContent>

@@ -10,7 +10,7 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -173,22 +173,22 @@ class SecurityRuleManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (viewItem) => {
-    const { SecurityRuleActions } = this.props;
-    SecurityRuleActions.showDialog({
+  handleClickCopy = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, compType);
+    this.props.SecurityRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_COPY
     });
   };
 
-  handleEditItemClick = (viewItem, compType) => {
+  handleClickEdit = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, compType);
     this.props.SecurityRuleActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateSecurityRuleObject(viewItem, false),
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
   // ===================================================================
-
 
   render() {
     const { classes } = this.props;
@@ -301,14 +301,14 @@ class SecurityRuleManage extends Component {
             />
           </div>
         }
-        </GRPane>
         {/* dialog(popup) component area */}
-        <SecurityRuleSpec compId={compId}
-          specType="inform" 
-          selectedItem={listObj}
-          onClickCopy={this.handleCopyClick}
-          onClickEdit={this.handleEditItemClick}
+        <SecurityRuleSpec compId={compId} specType="inform" 
+          selectedItem={(listObj) ? listObj.get('viewItem') : null}
+          hasAction={true}
+          onClickCopy={this.handleClickCopy}
+          onClickEdit={this.handleClickEdit}
         />
+        </GRPane>
         <SecurityRuleDialog compId={compId} />
         <GRConfirm />
       </div>

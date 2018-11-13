@@ -160,7 +160,7 @@ class ClientHostNameManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (viewItem) => {
+  handleClickCopy = (viewItem) => {
     const { ClientHostNameActions } = this.props;
     ClientHostNameActions.showDialog({
       viewItem: viewItem,
@@ -284,7 +284,7 @@ class ClientHostNameManage extends Component {
         <ClientHostNameSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          onClickCopy={this.handleCopyClick}
+          onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleEditItemClick}
         />
         <ClientHostNameDialog compId={compId} />

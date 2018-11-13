@@ -10,7 +10,7 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -131,7 +131,7 @@ class MediaRuleManage extends Component {
     const viewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     MediaRuleActions.showDialog({
-      viewItem: generateMediaRuleObject(viewItem),
+      viewItem: generateMediaRuleObject(viewItem, false),
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
@@ -161,17 +161,18 @@ class MediaRuleManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (viewItem) => {
-    const { MediaRuleActions } = this.props;
-    MediaRuleActions.showDialog({
+  handleClickCopy = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, compType);
+    this.props.MediaRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_COPY
     });
   };
 
-  handleEditItemClick = (viewItem, compType) => {
+  handleClickEdit = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, compType);
     this.props.MediaRuleActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateMediaRuleObject(viewItem, false),
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
@@ -287,14 +288,14 @@ class MediaRuleManage extends Component {
             />
           </div>
         }
-        </GRPane>
         {/* dialog(popup) component area */}
-        <MediaRuleSpec compId={compId}
-          specType="inform" 
-          selectedItem={listObj}
-          onClickCopy={this.handleCopyClick}
-          onClickEdit={this.handleEditItemClick}
+        <MediaRuleSpec compId={compId} specType="inform" 
+          selectedItem={(listObj) ? listObj.get('viewItem') : null}
+          hasAction={true}
+          onClickCopy={this.handleClickCopy}
+          onClickEdit={this.handleClickEdit}
         />
+        </GRPane>
         <MediaRuleDialog compId={compId} />
         <GRConfirm />
         

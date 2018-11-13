@@ -159,7 +159,7 @@ class ThemeManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (viewItem) => {
+  handleClickCopy = (viewItem) => {
     this.props.ThemeManageActions.showDialog({
       viewItem: viewItem,
       dialogType: ThemeDialog.TYPE_COPY
@@ -285,7 +285,7 @@ class ThemeManage extends Component {
         <ThemeSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          onClickCopy={this.handleCopyClick}
+          onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleEditItemClick}
         />
         <GRConfirm />

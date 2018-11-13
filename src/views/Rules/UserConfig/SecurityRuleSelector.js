@@ -56,7 +56,7 @@ class SecurityRuleSelector extends Component {
   };
 
   // ===================================================================
-  handleEditClickForSecurityRule = (viewItem, compType) => {
+  handleClickEdit = (viewItem, compType) => {
     this.props.SecurityRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_EDIT
@@ -77,14 +77,11 @@ class SecurityRuleSelector extends Component {
       selectedOptionItemId = '-';
     }
 
-    let selectedSecurityRuleItem = null;
+    let selectedData = null;
     if(listAllData && listAllData.size > 0) {
-      const selectedData = listAllData.find((element) => {
+      selectedData = listAllData.find((element) => {
         return element.get('objId') == selectedOptionItemId;
       });
-      if(selectedData) {
-        selectedSecurityRuleItem = Map({'viewItem': selectedData});
-      }      
     };
 
     return (
@@ -105,10 +102,10 @@ class SecurityRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <SecurityRuleSpec compId={compId}
-            specType="inform" targetType={targetType}
-            selectedItem={selectedSecurityRuleItem}
-            onClickEdit={this.handleEditClickForSecurityRule}
+          <SecurityRuleSpec compId={compId} specType="inform" 
+            targetType={targetType} selectedItem={selectedData}
+            hasAction={true}
+            onClickEdit={this.handleClickEdit}
           />
         }
         </CardContent>

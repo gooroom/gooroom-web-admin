@@ -159,7 +159,7 @@ class DesktopAppManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (viewItem) => {
+  handleClickCopy = (viewItem) => {
     this.props.DesktopAppActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopAppDialog.TYPE_COPY
@@ -300,7 +300,7 @@ class DesktopAppManage extends Component {
         <DesktopAppSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          onClickCopy={this.handleCopyClick}
+          onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleEditItemClick}
         />
         <DesktopAppDialog compId={compId} />

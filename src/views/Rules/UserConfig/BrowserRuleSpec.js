@@ -1,26 +1,12 @@
 import React, { Component } from "react";
 import { Map, List } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
-import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
-
-import * as BrowserRuleActions from 'modules/BrowserRuleModule';
-import BrowserRuleDialog from './BrowserRuleDialog';
-
+import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -34,29 +20,13 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class BrowserRuleSpec extends Component {
-
-  // handleInheritClick = (objId, compType) => {
-  //   const { BrowserRuleProps, BrowserRuleActions, compId, targetType } = this.props;
-  //   const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(BrowserRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(BrowserRuleProps, compId, targetType);
-
-  //   BrowserRuleActions.showDialog({
-  //     viewItem: generateBrowserRuleObject(viewItem),
-  //     dialogType: BrowserRuleDialog.TYPE_INHERIT
-  //   });
-  // };
 
   render() {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, compType, targetType, selectedItem, ruleGrade } = this.props;
-    const { hasAction } = this.props;
-
-    console.log('selectedItem :::::::::::::::::::: ', (selectedItem) ? selectedItem.toJS() : 'NNNNNNNNNNNNN');
+    const { compId, compType, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -68,35 +38,28 @@ class BrowserRuleSpec extends Component {
     return (
       <React.Fragment>
         {(viewItem) && 
-
           <Card elevation={4} className={classes.ruleViewerCard}>
           { hasAction &&
-            <GRRuleCardHeader
-              avatar={RuleAvartar}
-              category='브라우저제어 정책'
-              title={viewItem.get('objNm')} 
+            <GRRuleCardHeader avatar={RuleAvartar}
+              category='브라우저제어 정책' title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32}}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, compType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, compType)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(viewItem.get('isDefault'))) && 
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickInherit(compId, compType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
               }
-              style={{paddingBottom:0}}
             />
           }
           <CardContent style={{padding: 10}}>
@@ -178,7 +141,6 @@ class BrowserRuleSpec extends Component {
             </Table>
             </CardContent>
           </Card>
-
         }
       </React.Fragment>
     );

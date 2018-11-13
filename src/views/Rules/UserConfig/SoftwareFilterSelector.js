@@ -56,7 +56,7 @@ class SoftwareFilterSelector extends Component {
   };
 
   // ===================================================================
-  handleEditClickForSoftwareFilter = (viewItem, compType) => {
+  handleClickEdit = (viewItem, compType) => {
     this.props.SoftwareFilterActions.showDialog({
       viewItem: viewItem,
       dialogType: SoftwareFilterDialog.TYPE_EDIT
@@ -77,14 +77,11 @@ class SoftwareFilterSelector extends Component {
       selectedOptionItemId = '-';
     }
 
-    let selectedSoftwareFilterItem = null;
+    let selectedData = null;
     if(listAllData && listAllData.size > 0) {
-      const selectedData = listAllData.find((element) => {
+      selectedData = listAllData.find((element) => {
         return element.get('objId') == selectedOptionItemId;
       });
-      if(selectedData) {
-        selectedSoftwareFilterItem = Map({'viewItem': selectedData});
-      }      
     };
 
     return (
@@ -105,10 +102,10 @@ class SoftwareFilterSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <SoftwareFilterSpec compId={compId}
-            specType="inform" targetType={targetType}
-            selectedItem={selectedSoftwareFilterItem}
-            onClickEdit={this.handleEditClickForSoftwareFilter}
+          <SoftwareFilterSpec compId={compId} specType="inform" 
+            targetType={targetType} selectedItem={selectedData}
+            hasAction={true}
+            onClickEdit={this.handleClickEdit}
           />
         }
         </CardContent>

@@ -156,7 +156,7 @@ class ClientConfSettingManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (viewItem) => {
+  handleClickCopy = (viewItem) => {
     const { ClientConfSettingActions } = this.props;
     ClientConfSettingActions.showDialog({
       viewItem: viewItem,
@@ -285,7 +285,7 @@ class ClientConfSettingManage extends Component {
         <ClientConfSettingSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          onClickCopy={this.handleCopyClick}
+          onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleEditItemClick}
         />
         <ClientConfSettingDialog compId={compId} />

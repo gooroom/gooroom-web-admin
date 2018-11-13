@@ -9,10 +9,10 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
 import SecurityRuleNetwork from './SecurityRuleNetwork';
-import SecurityRuleViewer from './SecurityRuleViewer';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
+import SecurityRuleSpec from './SecurityRuleSpec';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -243,7 +243,7 @@ class SecurityRuleDialog extends Component {
                         <Typography variant="body1">
                             이 정책을 하위 조직에 적용 하시겠습니까?
                         </Typography>
-                        <SecurityRuleViewer viewItem={editingItem} />
+                        <SecurityRuleSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                     {(dialogType === SecurityRuleDialog.TYPE_COPY) &&
@@ -251,7 +251,7 @@ class SecurityRuleDialog extends Component {
                         <Typography variant="body1">
                             이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
                         </Typography>
-                        <SecurityRuleViewer viewItem={editingItem} />
+                        <SecurityRuleSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                 </DialogContent>
