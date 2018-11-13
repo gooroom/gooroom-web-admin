@@ -9,7 +9,7 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
-import MediaRuleViewer from './MediaRuleViewer';
+import MediaRuleSpec from './MediaRuleSpec';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
@@ -329,7 +329,7 @@ class MediaRuleDialog extends Component {
                         <Typography variant="body1">
                             이 설정을 하위 조직에 적용 하시겠습니까?
                         </Typography>
-                        <MediaRuleViewer viewItem={editingItem} />
+                        <MediaRuleSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                     {(dialogType === MediaRuleDialog.TYPE_COPY) &&
@@ -337,7 +337,7 @@ class MediaRuleDialog extends Component {
                         <Typography variant="body1">
                             이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
                         </Typography>
-                        <MediaRuleViewer viewItem={editingItem} />
+                        <MediaRuleSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                 </DialogContent>

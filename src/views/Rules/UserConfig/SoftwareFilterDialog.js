@@ -9,7 +9,7 @@ import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
-import SoftwareFilterViewer from './SoftwareFilterViewer';
+import SoftwareFilterSpec from './SoftwareFilterSpec';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
@@ -256,7 +256,7 @@ class SoftwareFilterDialog extends Component {
                         <Typography variant="body1">
                             이 설정을 하위 조직에 적용 하시겠습니까?
                         </Typography>
-                        <SoftwareFilterViewer viewItem={editingItem} />
+                        <SoftwareFilterSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                     {(dialogType === SoftwareFilterDialog.TYPE_COPY) &&
@@ -264,7 +264,7 @@ class SoftwareFilterDialog extends Component {
                         <Typography variant="body1">
                             이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
                         </Typography>
-                        <SoftwareFilterViewer viewItem={editingItem} />
+                        <SoftwareFilterSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                 </DialogContent>

@@ -94,36 +94,40 @@ class ClientGroupSpec extends Component {
       dialogType: ClientUpdateServerDialog.TYPE_EDIT
     });
   };
-  handleEditClickForMediaRule = (viewItem, compType) => {
-    this.props.MediaRuleActions.showDialog({
-      viewItem: viewItem,
-      dialogType: MediaRuleDialog.TYPE_EDIT
-    });
-  };
-  handleClickEditForBrowserRule = (compId, compType) => {
-    console.log('handleClickEditForBrowserRule.............................');
-    console.log('compId ::::::::: ', compId);
-    console.log('compType ::::::::: ', compType);
 
+
+  handleClickEditForBrowserRule = (compId, compType) => {
     const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
     this.props.BrowserRuleActions.showDialog({
       viewItem: generateBrowserRuleObject(viewItem, false),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
-  handleEditClickForSecurityRule = (viewItem, compType) => {
+  handleClickEditForMediaRule = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, compType);
+    this.props.MediaRuleActions.showDialog({
+      viewItem: generateMediaRuleObject(viewItem, false),
+      dialogType: MediaRuleDialog.TYPE_EDIT
+    });
+  };
+  handleClickEditForSecurityRule = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, compType);
     this.props.SecurityRuleActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateSecurityRuleObject(viewItem, false),
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
-  handleEditClickForSoftwareFilter = (viewItem, compType) => {
+  handleClickEditForSoftwareFilter = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, compType);
     this.props.SoftwareFilterActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateSoftwareFilterObject(viewItem, false),
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
-  handleEditClickForDesktopConf = (viewItem, compType) => {
+
+
+
+  handleClickEditForDesktopConf = (viewItem, compType) => {
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT
@@ -203,45 +207,42 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <MediaRuleSpec compId={compId}
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedMediaRuleItem}
-                  onClickEdit={this.handleEditClickForMediaRule}
-                  inherit={false}
+                <MediaRuleSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
+                  ruleGrade={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForMediaRule}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4}>
-                <BrowserRuleSpec compId={compId}
-                  specType="inform" compType="GROUP"
-                  hasAction={true}
+                <BrowserRuleSpec compId={compId} specType="inform" compType="GROUP"
+                  hasAction={true} inherit={false}
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForBrowserRule}
-                  inherit={false}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <SecurityRuleSpec compId={compId}
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedSecurityRuleItem}
-                  onClickEdit={this.handleEditClickForSecurityRule}
-                  inherit={false}
+                <SecurityRuleSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
+                  ruleGrade={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForSecurityRule}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <SoftwareFilterSpec compId={compId}
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedSoftwareFilterItem}
-                  onClickEdit={this.handleEditClickForSoftwareFilter}
-                  inherit={false}
+                <SoftwareFilterSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('viewItem') : null}
+                  ruleGrade={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForSoftwareFilter}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
-                <DesktopConfSpec compId={compId}
-                specType="inform" targetType="GROUP" 
-                selectedItem={selectedDesktopConfItem}
-                onClickEdit={this.handleEditClickForDesktopConf}
-                inherit={false} />
+                <DesktopConfSpec compId={compId} specType="inform" targetType="GROUP" 
+                  selectedItem={selectedDesktopConfItem}
+                  onClickEdit={this.handleClickEditForDesktopConf}
+                  inherit={false} />
               </Grid>
             </Grid>
 

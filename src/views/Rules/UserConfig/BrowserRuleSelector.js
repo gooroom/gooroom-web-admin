@@ -56,7 +56,7 @@ class BrowserRuleSelector extends Component {
   };
 
   // ===================================================================
-  handleEditClickForBrowserRule = (viewItem, compType) => {
+  handleClickEdit = (viewItem, compType) => {
     this.props.BrowserRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_EDIT
@@ -77,15 +77,11 @@ class BrowserRuleSelector extends Component {
       selectedOptionItemId = '-';
     }
 
-    let selectedBrowserRuleItem = null;
     let selectedData = null;
     if(listAllData && listAllData.size > 0) {
       selectedData = listAllData.find((element) => {
         return element.get('objId') == selectedOptionItemId;
       });
-      if(selectedData) {
-        selectedBrowserRuleItem = Map({'viewItem': selectedData});
-      }      
     };
 
     return (
@@ -106,11 +102,10 @@ class BrowserRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <BrowserRuleSpec compId={compId} 
-            specType="inform" targetType={targetType}
+          <BrowserRuleSpec compId={compId} specType="inform" 
+            targetType={targetType} selectedItem={selectedData}
             hasAction={true}
-            selectedItem={selectedData}
-            onClickEdit={this.handleEditClickForBrowserRule}
+            onClickEdit={this.handleClickEdit}
           />
         }
         </CardContent>

@@ -1,17 +1,7 @@
 import React, { Component } from "react";
 import { Map, List } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
-import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
-
-import * as MediaRuleActions from 'modules/MediaRuleModule';
-import MediaRuleDialog from './MediaRuleDialog';
-
+import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 
 import Button from '@material-ui/core/Button';
@@ -30,69 +20,59 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class MediaRuleSpec extends Component {
 
-  handleInheritClick = (objId, compType) => {
-    const { MediaRuleProps, MediaRuleActions, compId, targetType } = this.props;
-    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(MediaRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(MediaRuleProps, compId, targetType);
-
-    MediaRuleActions.showDialog({
-      viewItem: generateMediaRuleObject(viewItem),
-      dialogType: MediaRuleDialog.TYPE_INHERIT
-    });
-  };
-
-  // .................................................
   render() {
 
     const { classes } = this.props;
-    const { compId, compType, targetType, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
+    const { compId, compType, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateMediaRuleObject(selectedItem.get('viewItem'));
-      RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+      viewItem = generateMediaRuleObject(selectedItem, true);
+      RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
     
     return (
       <React.Fragment>
         {viewItem && 
-          <Card elevation={4} style={{marginBottom:20}}>
-            <GRRuleCardHeader
-              avatar={RuleAvartar}
-              category='매체제어 정책'
-              title={viewItem.get('objNm')} 
+          <Card elevation={4} className={classes.ruleViewerCard}>
+          { hasAction &&
+            <GRRuleCardHeader avatar={RuleAvartar}
+              category='매체제어 정책' title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(viewItem, compType)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
+                    onClick={() => this.props.onClickEdit(compId, compType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(viewItem)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.props.onClickCopy(compId, compType)}
                   ><CopyIcon /></Button>
                   }
-                  {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.handleInheritClick(viewItem.get('objId'), compType)}
+                  {(this.props.inherit && !(viewItem.get('isDefault'))) && 
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.props.onClickInherit(compId, compType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
               }
-              style={{paddingBottom:0}}
             />
-            <CardContent>
+            }
+            <CardContent style={{padding: 10}}>
               <Table>
                 <TableBody>
+                { !hasAction &&
+                  <TableRow>
+                    <TableCell component="th" scope="row">{bull} 이름</TableCell>
+                    <TableCell numeric>{viewItem.get('objNm')}</TableCell>
+                    <TableCell component="th" scope="row">{bull} 설명</TableCell>
+                    <TableCell numeric>{viewItem.get('comment')}</TableCell>
+                  </TableRow>
+                }
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} USB메모리</TableCell>
                     <TableCell numeric>{viewItem.get('usbMemory')}</TableCell>
@@ -141,23 +121,14 @@ class MediaRuleSpec extends Component {
             </CardContent>
           </Card>
         }
-        <MediaRuleDialog compId={compId} />
       </React.Fragment>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  MediaRuleProps: state.MediaRuleModule
-});
+export default withStyles(GRCommonStyle)(MediaRuleSpec);
 
-const mapDispatchToProps = (dispatch) => ({
-  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(MediaRuleSpec));
-
-export const generateMediaRuleObject = (param) => {
+export const generateMediaRuleObject = (param, isForViewer) => {
 
   if(param) {
     let usbMemory = '';

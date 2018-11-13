@@ -1,17 +1,8 @@
 import React, { Component } from "react";
 import { Map, List } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
-import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
-
-import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 import SoftwareFilterDialog from './SoftwareFilterDialog';
-
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 
 import Button from '@material-ui/core/Button';
@@ -29,66 +20,48 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class SoftwareFilterSpec extends Component {
 
-  handleInheritClick = (objId, compType) => {
-    const { SoftwareFilterProps, SoftwareFilterActions, compId, targetType } = this.props;
-    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SoftwareFilterProps, compId, 'objId', targetType) : getSelectedObjectInComp(SoftwareFilterProps, compId, targetType);
-
-    SoftwareFilterActions.showDialog({
-      viewItem: generateSoftwareFilterObject(viewItem),
-      dialogType: SoftwareFilterDialog.TYPE_INHERIT
-    });
-  };
-
-  // .................................................
   render() {
 
     const { classes } = this.props;
-    const { compId, compType, targetType, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
+    const { compId, compType, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateSoftwareFilterObject(selectedItem.get('viewItem'));
-      RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+      viewItem = generateSoftwareFilterObject(selectedItem, true);
+      RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
     
     return (
       <React.Fragment>
         {viewItem && 
-          <Card elevation={4} style={{marginBottom:20}}>
-            <GRRuleCardHeader
-              avatar={RuleAvartar}
-              category='소프트웨어 제한 정책'
-              title={viewItem.get('objNm')} 
+          <Card elevation={4} className={classes.ruleViewerCard}>
+          { hasAction &&
+            <GRRuleCardHeader avatar={RuleAvartar}
+              category='소프트웨어 제한 정책' title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(viewItem, compType)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
+                    onClick={() => this.props.onClickEdit(compId, compType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(viewItem)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.props.onClickCopy(compId, compType)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.handleInheritClick(viewItem.get('objId'), compType)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.props.onClickInherit(compId, compType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
               }
-              style={{paddingBottom:0}}
             />
+            }
             <CardContent>
             <div style={{marginTop:20}}>
               <InputLabel>Red 색상의 소프트웨어는 설치불가(설치금지)로 지정된 소프트웨어입니다.</InputLabel>
@@ -120,23 +93,14 @@ class SoftwareFilterSpec extends Component {
             </CardContent>
           </Card>
         }
-        <SoftwareFilterDialog compId={compId} />
       </React.Fragment>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  SoftwareFilterProps: state.SoftwareFilterModule
-});
+export default withStyles(GRCommonStyle)(SoftwareFilterSpec);
 
-const mapDispatchToProps = (dispatch) => ({
-  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SoftwareFilterSpec));
-
-export const generateSoftwareFilterObject = (param) => {
+export const generateSoftwareFilterObject = (param, isForViewer) => {
 
   if(param) {
     let filtered_software = [];

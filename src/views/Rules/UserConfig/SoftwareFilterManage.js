@@ -10,7 +10,7 @@ import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -163,17 +163,18 @@ class SoftwareFilterManage extends Component {
   };
 
   // ===================================================================
-  handleCopyClick = (viewItem) => {
-    const { SoftwareFilterActions } = this.props;
-    SoftwareFilterActions.showDialog({
+  handleClickCopy = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, compType);
+    this.props.SoftwareFilterActions.showDialog({
       viewItem: viewItem,
       dialogType: SoftwareFilterDialog.TYPE_COPY
     });
   };
 
-  handleEditItemClick = (viewItem) => {
+  handleClickEdit = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, compType);
     this.props.SoftwareFilterActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateSoftwareFilterObject(viewItem, false),
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
@@ -289,14 +290,14 @@ class SoftwareFilterManage extends Component {
             />
           </div>
         }
-        </GRPane>
         {/* dialog(popup) component area */}
-        <SoftwareFilterSpec compId={compId}
-          specType="inform" 
-          selectedItem={listObj}
-          onClickCopy={this.handleCopyClick}
-          onClickEdit={this.handleEditItemClick}
+        <SoftwareFilterSpec compId={compId} specType="inform" 
+          selectedItem={(listObj) ? listObj.get('viewItem') : null}
+          hasAction={true}
+          onClickCopy={this.handleClickCopy}
+          onClickEdit={this.handleClickEdit}
         />
+        </GRPane>
         <SoftwareFilterDialog compId={compId} />
         <GRConfirm />
         

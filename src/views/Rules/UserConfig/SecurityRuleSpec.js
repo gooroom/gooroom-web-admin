@@ -33,69 +33,58 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class SecurityRuleSpec extends Component {
-
-  handleInheritClick = (objId, compType) => {
-    const { SecurityRuleProps, SecurityRuleActions, compId, targetType } = this.props;
-    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(SecurityRuleProps, compId, 'objId', targetType) : getSelectedObjectInComp(SecurityRuleProps, compId, targetType);
-
-    SecurityRuleActions.showDialog({
-      viewItem: generateSecurityRuleObject(viewItem),
-      dialogType: SecurityRuleDialog.TYPE_INHERIT
-    });
-  };
 
   render() {
 
     const { classes } = this.props;
-    const { compId, compType, targetType, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
+    const { compId, compType, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateSecurityRuleObject(selectedItem.get('viewItem'));
-      RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+      viewItem = generateSecurityRuleObject(selectedItem, true);
+      RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
 
     return (
       <React.Fragment>
         {viewItem && 
-          <Card elevation={4} style={{marginBottom:20}}>
-            <GRRuleCardHeader
-              avatar={RuleAvartar}
-              category='단말보안 정책'
-              title={viewItem.get('objNm')} 
+          <Card elevation={4} className={classes.ruleViewerCard}>
+            <GRRuleCardHeader avatar={RuleAvartar}
+              category='단말보안 정책' title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(viewItem, compType)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
+                    onClick={() => this.props.onClickEdit(compId, compType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(viewItem)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.props.onClickCopy(compId, compType)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.handleInheritClick(viewItem.get('objId'), compType)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.props.onClickInherit(compId, compType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
               }
               style={{paddingBottom:0}}
             />
-            <CardContent>
-              <Table style={{marginBottom:30}}>
+            <CardContent style={{padding: 10}}>
+              <Table>
                 <TableBody>
-
+                { !hasAction &&
+                  <TableRow>
+                    <TableCell component="th" scope="row">{bull} 이름</TableCell>
+                    <TableCell numeric>{viewItem.get('objNm')}</TableCell>
+                    <TableCell component="th" scope="row">{bull} 설명</TableCell>
+                    <TableCell numeric>{viewItem.get('comment')}</TableCell>
+                  </TableRow>
+                }
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} 화면보호기 설정시간(분)</TableCell>
                     <TableCell numeric>{viewItem.get('screenTime')}</TableCell>
@@ -158,18 +147,9 @@ class SecurityRuleSpec extends Component {
   }
 }
 
+export default withStyles(GRCommonStyle)(SecurityRuleSpec);
 
-const mapStateToProps = (state) => ({
-  SecurityRuleProps: state.SecurityRuleModule
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityRuleSpec));
-
-export const generateSecurityRuleObject = (param) => {
+export const generateSecurityRuleObject = (param, isForViewer) => {
 
   if(param) {
     let screenTime = '';
