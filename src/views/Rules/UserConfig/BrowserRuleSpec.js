@@ -53,8 +53,10 @@ class BrowserRuleSpec extends Component {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compType, targetType, selectedItem, ruleGrade } = this.props;
+    const { compId, compType, targetType, selectedItem, ruleGrade } = this.props;
     const { hasAction } = this.props;
+
+    console.log('selectedItem :::::::::::::::::::: ', (selectedItem) ? selectedItem.toJS() : 'NNNNNNNNNNNNN');
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -78,18 +80,18 @@ class BrowserRuleSpec extends Component {
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(selectedItem, compType)}
+                    onClick={() => this.props.onClickEdit(compId, compType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(selectedItem)}
+                    onClick={() => this.props.onClickCopy(compId, compType)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(viewItem.get('isDefault'))) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickInherit(viewItem.get('objId'), compType)}
+                    onClick={() => this.props.onClickInherit(compId, compType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>

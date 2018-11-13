@@ -486,7 +486,7 @@ class BrowserRuleDialog extends Component {
                         <Typography variant="body1">
                             이 정책을 하위 조직에 적용 하시겠습니까?
                         </Typography>
-                        <BrowserRuleSpec viewItem={editingItem} hasAction={false} />
+                        <BrowserRuleSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                     {(dialogType === BrowserRuleDialog.TYPE_COPY) &&
