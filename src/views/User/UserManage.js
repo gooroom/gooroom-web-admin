@@ -287,9 +287,9 @@ class UserManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YYYY-MM-DD')}{(n.get('clientId') && n.get('clientId') != '') ? ', ' + n.get('clientId') : ''}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YYYY-MM-DD')}{(n.get('clientId') && n.get('clientId') != '') ? ', ' + n.get('clientId') : ''}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
