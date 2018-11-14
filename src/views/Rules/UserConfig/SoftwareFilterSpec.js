@@ -4,6 +4,7 @@ import { Map, List } from 'immutable';
 import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 import SoftwareFilterDialog from './SoftwareFilterDialog';
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
+import GRSoftwareCardHeader from 'components/GRComponents/GRSoftwareCardHeader';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -26,7 +27,7 @@ class SoftwareFilterSpec extends Component {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, compType, targetType, selectedItem, ruleGrade, hasAction } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -46,16 +47,16 @@ class SoftwareFilterSpec extends Component {
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(compId, compType)}
+                    onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(compId, compType)}
+                    onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickInherit(compId, compType)}
+                    onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
@@ -63,23 +64,20 @@ class SoftwareFilterSpec extends Component {
             />
             }
             <CardContent>
-            <div style={{marginTop:20}}>
-              <InputLabel>Red 색상의 소프트웨어는 설치불가(설치금지)로 지정된 소프트웨어입니다.</InputLabel>
+              <InputLabel>Red 색상의 소프트웨어는 설치불가(설치금지) 소프트웨어입니다.</InputLabel>
               <Grid container spacing={8} alignItems="flex-start" direction="row" justify="flex-start" style={{marginTop:10}}>
               {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
                 const selected = (viewItem.getIn(['SWITEM', n.tag])) ? true : false;
-                const swStyle = (selected) ? {color:'red'} : {color:'gray'};
+                const swStyle = (selected) ? {color:'red',fontWeight:'bold'} : {color:'gray',fontWeight:'bold'};
                 return (
                   <Grid item xs={12} sm={12} md={6} lg={4} xl={3} key={n.no}>
                     <Card>
-                      <CardContent style={{padding:3}}>
-                        <Typography className={classes.title} color="textSecondary" gutterBottom>
-                        [{n.tag}]
-                        </Typography>
-                        <Typography variant="h6" component="h4" style={swStyle}>
+                    <GRSoftwareCardHeader category={n.tag} />
+                      <CardContent style={{padding:'0 0 0 10'}}>
+                        <Typography variant="body1" style={swStyle}>
                           {n.name}
                         </Typography>
-                        <Typography className={classes.pos} color="textSecondary">
+                        <Typography variant="caption" color="textSecondary">
                           {n.name_kr}
                         </Typography>
                       </CardContent>
@@ -89,7 +87,6 @@ class SoftwareFilterSpec extends Component {
                 })
               }
               </Grid>
-            </div>
             </CardContent>
           </Card>
         }

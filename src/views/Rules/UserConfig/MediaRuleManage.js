@@ -161,16 +161,16 @@ class MediaRuleManage extends Component {
   };
 
   // ===================================================================
-  handleClickCopy = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, compType);
+  handleClickCopy = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, targetType);
     this.props.MediaRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_COPY
     });
   };
 
-  handleClickEdit = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, compType);
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, targetType);
     this.props.MediaRuleActions.showDialog({
       viewItem: generateMediaRuleObject(viewItem, false),
       dialogType: MediaRuleDialog.TYPE_EDIT

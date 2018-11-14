@@ -56,9 +56,10 @@ class MediaRuleSelector extends Component {
   };
 
   // ===================================================================
-  handleClickEdit = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, targetType);
     this.props.MediaRuleActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateMediaRuleObject(viewItem, false),
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
@@ -106,9 +107,8 @@ class MediaRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <MediaRuleSpec compId={compId} specType="inform" 
+          <MediaRuleSpec compId={compId} specType="inform" hasAction={false}
             targetType={targetType} selectedItem={selectedData}
-            hasAction={true}
             onClickEdit={this.handleClickEdit}
           />
         }

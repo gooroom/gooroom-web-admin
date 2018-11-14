@@ -10,7 +10,7 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -156,17 +156,18 @@ class ClientConfSettingManage extends Component {
   };
 
   // ===================================================================
-  handleClickCopy = (viewItem) => {
-    const { ClientConfSettingActions } = this.props;
-    ClientConfSettingActions.showDialog({
+  handleClickCopy = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientConfSettingProps, compId, targetType);
+    this.props.ClientConfSettingActions.showDialog({
       viewItem: viewItem,
       dialogType: ClientConfSettingDialog.TYPE_COPY
     });
   };
 
-  handleEditItemClick = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientConfSettingProps, compId, targetType);
     this.props.ClientConfSettingActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateClientConfSettingObject(viewItem, false),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -282,11 +283,10 @@ class ClientConfSettingManage extends Component {
           }
         </GRPane>
         {/* dialog(popup) component area */}
-        <ClientConfSettingSpec compId={compId}
-          specType="inform" 
-          selectedItem={listObj}
+        <ClientConfSettingSpec compId={compId} specType="inform" hasAction={true}
+          selectedItem={(listObj) ? listObj.get('viewItem') : null}
           onClickCopy={this.handleClickCopy}
-          onClickEdit={this.handleEditItemClick}
+          onClickEdit={this.handleClickEdit}
         />
         <ClientConfSettingDialog compId={compId} />
         <GRConfirm />

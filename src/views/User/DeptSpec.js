@@ -64,72 +64,72 @@ class DeptSpec extends Component {
   };
 
   // ===================================================================
-  handleClickEditForBrowserRule = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
+  handleClickEditForBrowserRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
       viewItem: generateBrowserRuleObject(viewItem, false),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
-  handleClickEditForMediaRule = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, compType);
+  handleClickEditForMediaRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, targetType);
     this.props.MediaRuleActions.showDialog({
       viewItem: generateMediaRuleObject(viewItem, false),
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
-  handleClickEditForSecurityRule = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, compType);
+  handleClickEditForSecurityRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, targetType);
     this.props.SecurityRuleActions.showDialog({
       viewItem: generateSecurityRuleObject(viewItem, false),
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
-  handleClickEditForSoftwareFilter = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, compType);
+  handleClickEditForSoftwareFilter = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, targetType);
     this.props.SoftwareFilterActions.showDialog({
       viewItem: generateSoftwareFilterObject(viewItem, false),
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
-  handleClickEditForDesktopConf = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, compType);
+  handleClickEditForDesktopConf = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT
     });
   };
   // ===================================================================
-  handleClickInheritForBrowserRule = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
+  handleClickInheritForBrowserRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_INHERIT
     });
   };
-  handleClickInheritForMediaRule = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, compType);
+  handleClickInheritForMediaRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, targetType);
     this.props.MediaRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: MediaRuleDialog.TYPE_INHERIT
     });
   };
-  handleClickInheritForSecurityRule = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, compType);
+  handleClickInheritForSecurityRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, targetType);
     this.props.SecurityRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_INHERIT
     });
   };
-  handleClickInheritForSoftwareFilter = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, compType);
+  handleClickInheritForSoftwareFilter = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, targetType);
     this.props.SoftwareFilterActions.showDialog({
       viewItem: viewItem,
       dialogType: SoftwareFilterDialog.TYPE_INHERIT
     });
   };
-  handleClickInheritForDesktopConf = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, compType);
+  handleClickInheritForDesktopConf = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_INHERIT
@@ -170,7 +170,7 @@ class DeptSpec extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <BrowserRuleSpec compId={compId} specType="inform" compType="DEPT" hasAction={true}
+                <BrowserRuleSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
                   onClickEdit={this.handleClickEditForBrowserRule}
                   onClickInherit={this.handleClickInheritForBrowserRule}
@@ -178,7 +178,7 @@ class DeptSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <MediaRuleSpec compId={compId} specType="inform" compType="DEPT" hasAction={true}
+                <MediaRuleSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
                   onClickEdit={this.handleClickEditForMediaRule}
                   onClickInherit={this.handleClickInheritForMediaRule}
@@ -186,15 +186,15 @@ class DeptSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <SecurityRuleSpec compId={compId} specType="inform" compType="DEPT" hasAction={true}
+                <SecurityRuleSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
                   selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
                   onClickEdit={this.handleClickEditForSecurityRule}
                   onClickInherit={this.handleClickInheritForSecurityRule}
                   inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
-              <Grid item xs={12} md={12} lg={6} xl={4} >
-                <SoftwareFilterSpec compId={compId} specType="inform" compType="DEPT" hasAction={true}
+              <Grid item xs={12} sm={12} lg={12}>
+                <SoftwareFilterSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
                   selectedItem={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('viewItem') : null}
                   onClickEdit={this.handleClickEditForSoftwareFilter}
                   onClickInherit={this.handleClickInheritForSoftwareFilter}
@@ -202,7 +202,7 @@ class DeptSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
-                <DesktopConfSpec compId={compId} specType="inform" compType="DEPT" hasAction={true}
+                <DesktopConfSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
                   onClickEdit={this.handleClickEditForDesktopConf}
                   onClickInherit={this.handleClickInheritForDesktopConf}

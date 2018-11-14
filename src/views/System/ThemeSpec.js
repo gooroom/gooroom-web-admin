@@ -40,31 +40,10 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 class ThemeSpec extends Component {
 
-  // edit
-  handleEditClick = (viewItem) => {
-    this.props.ThemeManageActions.showDialog({
-      viewItem: {
-        deptCd: viewItem.get('selectedDeptCd'),
-        deptNm: viewItem.get('selectedDeptNm')
-      },
-      dialogType: ThemeDialog.TYPE_EDIT
-    });
-  };
-
-  handleInheritClick = (objId, compType) => {
-    const { ThemeManageProps, ThemeManageActions, compId, targetType } = this.props;
-    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(ThemeManageProps, compId, 'objId', targetType) : getSelectedObjectInComp(ThemeManageProps, compId, targetType);
-
-    ThemeManageActions.showDialog({
-      viewItem: generateThemeObject(viewItem),
-      dialogType: ThemeDialog.TYPE_INHERIT
-    });
-  };
-
   render() {
 
     const { classes } = this.props;
-    const { compId, compType, targetType, selectedItem } = this.props;
+    const { compId, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
     let viewItem = null;

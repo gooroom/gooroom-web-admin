@@ -36,7 +36,7 @@ class SecurityRuleSpec extends Component {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, compType, targetType, selectedItem, ruleGrade, hasAction } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -56,16 +56,16 @@ class SecurityRuleSpec extends Component {
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(compId, compType)}
+                    onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(compId, compType)}
+                    onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickInherit(compId, compType)}
+                    onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
@@ -84,10 +84,10 @@ class SecurityRuleSpec extends Component {
                   </TableRow>
                 }
                   <TableRow>
-                    <TableCell component="th" scope="row">{bull} 화면보호기 설정시간(분)</TableCell>
-                    <TableCell numeric>{viewItem.get('screenTime')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 패스워드 변경주기(일)</TableCell>
-                    <TableCell numeric>{viewItem.get('passwordTime')}</TableCell>
+                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 화면보호기 설정시간(분)</TableCell>
+                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('screenTime')}</TableCell>
+                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 패스워드 변경주기(일)</TableCell>
+                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('passwordTime')}</TableCell>
                   </TableRow>
 
                   <TableRow>

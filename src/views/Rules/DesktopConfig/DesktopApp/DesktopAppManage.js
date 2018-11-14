@@ -166,7 +166,7 @@ class DesktopAppManage extends Component {
     });
   };
 
-  handleEditItemClick = (viewItem, compType) => {
+  handleClickEdit = (viewItem) => {
     this.props.DesktopAppActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopAppDialog.TYPE_EDIT_INAPP
@@ -301,7 +301,7 @@ class DesktopAppManage extends Component {
           specType="inform" 
           selectedItem={listObj}
           onClickCopy={this.handleClickCopy}
-          onClickEdit={this.handleEditItemClick}
+          onClickEdit={this.handleClickEdit}
         />
         <DesktopAppDialog compId={compId} />
         <GRConfirm />

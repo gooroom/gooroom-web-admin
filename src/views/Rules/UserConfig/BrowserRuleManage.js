@@ -173,16 +173,16 @@ class BrowserRuleManage extends Component {
   };
 
   // ===================================================================
-  handleClickCopy = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
+  handleClickCopy = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: BrowserRuleDialog.TYPE_COPY
     });
   };
 
-  handleClickEdit = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
       viewItem: generateBrowserRuleObject(viewItem, false),
       dialogType: BrowserRuleDialog.TYPE_EDIT
@@ -298,9 +298,8 @@ class BrowserRuleManage extends Component {
           </div>
         }
         {/* dialog(popup) component area */}
-        <BrowserRuleSpec compId={compId} specType="inform" 
+        <BrowserRuleSpec compId={compId} specType="inform" hasAction={true}
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
-          hasAction={true}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />

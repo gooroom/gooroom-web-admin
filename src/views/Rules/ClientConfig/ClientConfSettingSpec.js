@@ -1,17 +1,7 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
 import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
-
-import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
-import ClientConfSettingDialog from './ClientConfSettingDialog';
-
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 
 import Button from '@material-ui/core/Button';
@@ -29,29 +19,26 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class ClientConfSettingSpec extends Component {
 
   // .................................................
   render() {
     const { classes } = this.props;
-    const { compId, compType, targetType, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateClientConfSettingObject(selectedItem.get('viewItem'));
-      RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+      viewItem = generateClientConfSettingObject(selectedItem, false);
+      RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
 
     return (
       <React.Fragment>
         {viewItem && 
-        <Card elevation={4} style={{marginBottom:20}}>
+        <Card elevation={4} className={classes.ruleViewerCard}>
+        { hasAction &&
           <GRRuleCardHeader
             avatar={RuleAvartar}
             category='단말 설정'
@@ -61,33 +48,39 @@ class ClientConfSettingSpec extends Component {
               <div style={{paddingTop:16,paddingRight:24}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.props.onClickEdit(viewItem, compType)}
+                  onClick={() => this.props.onClickEdit(compId, targetType)}
                 ><SettingsApplicationsIcon /></Button>
                 {(this.props.onClickCopy) &&
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                  onClick={() => this.props.onClickCopy(viewItem)}
+                  onClick={() => this.props.onClickCopy(compId, targetType)}
                 ><CopyIcon /></Button>
-                }
-                {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
-                <Button size="small"
-                  variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                  onClick={() => this.handleInheritClick(viewItem.get('objId'), compType)}
-                ><ArrowDropDownCircleIcon /></Button>
                 }
               </div>
             }
-            style={{paddingBottom:0}}
           />
+          }
           <CardContent>
+          { !hasAction &&
             <Table>
               <TableBody>
                 <TableRow>
-                    <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
+                  <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 이름(아이디)</TableCell>
+                  <TableCell style={{width:'25%'}} numeric>{viewItem.get('objNm')} ({viewItem.get('objId')})</TableCell>
+                  <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 설명</TableCell>
+                  <TableCell style={{width:'25%'}} numeric>{viewItem.get('comment')}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          }
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
                   <TableCell numeric>{(viewItem.get('useHypervisor')) ? '구동' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell component="th" scope="row">{bull} 홈폴더 초기화</TableCell>
+                  <TableCell component="th" scope="row">{bull} 홈폴더 초기화</TableCell>
                   <TableCell numeric>{(viewItem.get('useHomeReset')) ? '실행' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
@@ -105,23 +98,14 @@ class ClientConfSettingSpec extends Component {
           </CardContent>
         </Card>
         }
-        <ClientConfSettingDialog compId={compId} />
       </React.Fragment>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  ClientConfSettingProps: state.ClientConfSettingModule
-});
+export default withStyles(GRCommonStyle)(ClientConfSettingSpec);
 
-const mapDispatchToProps = (dispatch) => ({
-  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingSpec));
-
-export const generateClientConfSettingObject = (param) => {
+export const generateClientConfSettingObject = (param, isForViewer) => {
 
   if(param) {
     let useHypervisor = false;

@@ -56,9 +56,10 @@ class SoftwareFilterSelector extends Component {
   };
 
   // ===================================================================
-  handleClickEdit = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, targetType);
     this.props.SoftwareFilterActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateSoftwareFilterObject(viewItem, false),
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
@@ -102,9 +103,8 @@ class SoftwareFilterSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <SoftwareFilterSpec compId={compId} specType="inform" 
+          <SoftwareFilterSpec compId={compId} specType="inform" hasAction={false}
             targetType={targetType} selectedItem={selectedData}
-            hasAction={true}
             onClickEdit={this.handleClickEdit}
           />
         }
