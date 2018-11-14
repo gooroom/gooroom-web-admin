@@ -267,6 +267,7 @@ export const GRCommonStyle = theme => ({
         display: 'inline-block',
         margin: '0 2px',
         transform: 'scale(1.8)',
+        fontSize: '16px'
     },
     smallIconButton: {
         minWidth: '34px'

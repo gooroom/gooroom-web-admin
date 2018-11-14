@@ -53,6 +53,16 @@ const initialState = {
         statusVal: 'R'
     },
 
+    logLevelData: [
+        { levelId: "Emergency", levelVal: "emerg", levelNm: "긴급" },
+        { levelId: "Alert", levelVal: "alert", levelNm: "경보" },
+        { levelId: "Critical", levelVal: "crit", levelNm: "위험" },
+        { levelId: "Error", levelVal: "err", levelNm: "오류" },
+        { levelId: "Warning", levelVal: "warnning", levelNm: "경고" },
+        { levelId: "Notice", levelVal: "notice", levelNm: "알림" },
+        { levelId: "Informational", levelVal: "info", levelNm: "정보" },
+        { levelId: "Debug", levelVal: "debug", levelNm: "디버깅" }
+    ]
 };
 
 export const readClientGroupListAll = (param) => dispatch => {
