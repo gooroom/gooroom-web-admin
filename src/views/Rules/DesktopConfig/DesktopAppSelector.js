@@ -120,9 +120,8 @@ class DesktopAppSelector extends Component {
           {selectedApps && selectedApps.map(n => {
               return (
               <Grid key={n.get('appId')} item>
-                  <DesktopApp 
-                      key={n.get('appId')}
-                      appObj={n}
+                  <DesktopApp key={n.get('appId')} appObj={n}
+                      hasAction={true}
                       type='select'
                       themeId={(n.get('themeId')) ? n.get('themeId') : '1'}
                       onEditClick={this.handleEditAppClick}
@@ -144,9 +143,8 @@ class DesktopAppSelector extends Component {
           {appAllDatas && appAllDatas.size > 0 && appAllDatas.map(n => {
               return (
               <Grid key={n.get('appId')} item>
-                  <DesktopApp 
-                      key={n.get('appId')}
-                      appObj={n}
+                  <DesktopApp key={n.get('appId')} appObj={n}
+                      hasAction={true}
                       type='main'
                       themeId={(n.get('themeId')) ? n.get('themeId') : '1'}
                       onAddClick={this.handleAddClick}
