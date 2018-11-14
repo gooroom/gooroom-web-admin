@@ -34,6 +34,7 @@ import ClientSelectDialog from "views/Client/ClientSelectDialog";
 import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
+import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import DesktopConfDialog from "views/Rules/DesktopConfig/DesktopConfDialog";
 import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
@@ -418,6 +419,7 @@ class ClientMasterManage extends Component {
           <BrowserRuleDialog compId={compId} />
           <SecurityRuleDialog compId={compId} />
           <MediaRuleDialog compId={compId} />
+          <SoftwareFilterDialog compId={compId} />
           <DesktopConfDialog compId={compId} />
           <DesktopAppDialog compId={compId} />
           

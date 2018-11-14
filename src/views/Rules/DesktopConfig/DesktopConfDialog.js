@@ -10,7 +10,7 @@ import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
-import DesktopConfViewer from './DesktopConfViewer';
+import DesktopConfSpec from './DesktopConfSpec';
 import DesktopAppSelector from './DesktopAppSelector';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -221,7 +221,7 @@ class DesktopConfDialog extends Component {
                         <Typography variant="body1">
                             이 정책을 하위 조직에 적용 하시겠습니까?
                         </Typography>
-                        <DesktopConfViewer viewItem={editingItem} />
+                        <DesktopConfSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                     {(dialogType === DesktopConfDialog.TYPE_COPY) &&
@@ -229,7 +229,7 @@ class DesktopConfDialog extends Component {
                         <Typography variant="body1">
                             이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
                         </Typography>
-                        <DesktopConfViewer viewItem={editingItem} />
+                        <DesktopConfSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                 </DialogContent>

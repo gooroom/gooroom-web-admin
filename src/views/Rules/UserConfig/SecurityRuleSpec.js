@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { Map, List } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -52,6 +49,7 @@ class SecurityRuleSpec extends Component {
       <React.Fragment>
         {viewItem && 
           <Card elevation={4} className={classes.ruleViewerCard}>
+          { hasAction &&
             <GRRuleCardHeader avatar={RuleAvartar}
               category='단말보안 정책' title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
@@ -72,8 +70,8 @@ class SecurityRuleSpec extends Component {
                   }
                 </div>
               }
-              style={{paddingBottom:0}}
             />
+          }
             <CardContent style={{padding: 10}}>
               <Table>
                 <TableBody>

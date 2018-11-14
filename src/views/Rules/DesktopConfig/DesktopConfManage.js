@@ -11,7 +11,7 @@ import * as DesktopAppActions from 'modules/DesktopAppModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -170,15 +170,16 @@ class DesktopConfManage extends Component {
   };
 
   // ===================================================================
-  handleClickCopy = (viewItem) => {
-    const { DesktopConfActions } = this.props;
-    DesktopConfActions.showDialog({
+  handleClickCopy = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, compType);
+    this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_COPY
     });
   };
 
-  handleEditItemClick = (viewItem, compType) => {
+  handleClickEdit = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, compType);
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT
@@ -303,11 +304,11 @@ class DesktopConfManage extends Component {
         }
         </GRPane>
         {/* dialog(popup) component area */}
-        <DesktopConfSpec 
-          specType="inform" 
-          selectedItem={listObj}
+        <DesktopConfSpec compId={compId} specType="inform" 
+          selectedItem={(listObj) ? listObj.get('viewItem') : null}
+          hasAction={true}
           onClickCopy={this.handleClickCopy}
-          onClickEdit={this.handleEditItemClick}
+          onClickEdit={this.handleClickEdit}
         />
         <DesktopConfDialog compId={compId} />
         <DesktopAppDialog compId={compId} />

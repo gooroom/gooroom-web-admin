@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -21,20 +22,21 @@ import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+
 import { generateBrowserRuleObject } from 'views/Rules/UserConfig/BrowserRuleSpec';
+import { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
+import { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
+import { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
 
 import ClientGroupDialog from './ClientGroupDialog';
-
 import ClientConfSettingDialog from 'views/Rules/ClientConfig/ClientConfSettingDialog';
 import ClientConfSettingSpec from 'views/Rules/ClientConfig/ClientConfSettingSpec';
 import ClientHostNameDialog from 'views/Rules/HostName/ClientHostNameDialog';
@@ -65,7 +67,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class ClientGroupSpec extends Component {
 
   // edit
-  handleEditClick = (id) => {
+  handleClickEdit = (id) => {
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
     const viewItem = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
     ClientGroupActions.showDialog({
@@ -73,7 +75,6 @@ class ClientGroupSpec extends Component {
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
-
 
   // ===================================================================
   handleEditClickForClientConfSetting = (viewItem, compType) => {
@@ -124,10 +125,8 @@ class ClientGroupSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
-
-
-
-  handleClickEditForDesktopConf = (viewItem, compType) => {
+  handleClickEditForDesktopConf = (compId, compType) => {
+    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, compType);
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT
@@ -136,7 +135,6 @@ class ClientGroupSpec extends Component {
   // ===================================================================
   
   render() {
-
     const { compId, ClientGroupProps } = this.props;
 
     const informOpen = ClientGroupProps.getIn(['viewItems', compId, 'informOpen']);
@@ -174,7 +172,7 @@ class ClientGroupSpec extends Component {
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.handleEditClick(viewItem.get('grpId'))}
+                  onClick={() => this.handleClickEdit(viewItem.get('grpId'))}
                 ><SettingsApplicationsIcon /></Button>
               </div>
             }
@@ -207,7 +205,7 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <MediaRuleSpec compId={compId} specType="inform" targetType="GROUP"
+                <MediaRuleSpec compId={compId} specType="inform" compType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('ruleGrade') : null}
@@ -223,7 +221,7 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <SecurityRuleSpec compId={compId} specType="inform" targetType="GROUP"
+                <SecurityRuleSpec compId={compId} specType="inform" compType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('ruleGrade') : null}
@@ -231,7 +229,7 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <SoftwareFilterSpec compId={compId} specType="inform" targetType="GROUP"
+                <SoftwareFilterSpec compId={compId} specType="inform" compType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('viewItem') : null}
                   ruleGrade={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('ruleGrade') : null}
@@ -239,10 +237,11 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
-                <DesktopConfSpec compId={compId} specType="inform" targetType="GROUP" 
-                  selectedItem={selectedDesktopConfItem}
+                <DesktopConfSpec compId={compId} specType="inform" compType="GROUP" 
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
                   onClickEdit={this.handleClickEditForDesktopConf}
-                  inherit={false} />
+                />
               </Grid>
             </Grid>
 

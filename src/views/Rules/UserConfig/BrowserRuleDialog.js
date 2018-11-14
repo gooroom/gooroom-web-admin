@@ -197,8 +197,6 @@ class BrowserRuleDialog extends Component {
         const dialogType = BrowserRuleProps.get('dialogType');
         const editingItem = (BrowserRuleProps.get('editingItem')) ? BrowserRuleProps.get('editingItem') : null;
 
-        console.log('DIALOG editingItem ::::::::::: ', editingItem);
-
         let title = "";
         if(dialogType === BrowserRuleDialog.TYPE_ADD) {
             title = "브라우저제어정책 등록";

@@ -50,13 +50,13 @@ class DesktopApp extends Component {
   render() {
 
     const { classes } = this.props;
-    const { isSelected } = this.props;
-    const { appObj } = this.props;
+    const { isSelected, appObj, hasAction } = this.props;
 
     let iconUrl = '';
     if(appObj && appObj.get('iconGubun')) {
       iconUrl = (appObj.get('iconGubun') == 'library') ? '/gpms/images/gr_icons/1_' + appObj.get('iconId') + '.svg' : appObj.get('iconUrl');
     }
+    const isHaveAction = (hasAction) ? hasAction : false;
 
     return (
       <Paper style={{width:120,height:174}} elevation={5}>
@@ -73,13 +73,13 @@ class DesktopApp extends Component {
               </TableCell>
 
               <TableCell style={{padding:0,textAlign:'right'}}>
-                {(this.props.onEditClick) &&
+                {(isHaveAction && this.props.onEditClick) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:18,minHeight:18}}
                     onClick={() => this.handleEditClick(appObj)}
                   ><SettingsApplicationsIcon style={{fontSize:18}} /></Button>
                 }
-                {(this.props.onDeleteClick) && 
+                {(isHaveAction && this.props.onDeleteClick) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:18,minHeight:18,marginLeft:3}}
                     onClick={() => this.handleDeleteClick(appObj.get('appId'))}

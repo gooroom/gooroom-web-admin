@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { Map, List } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -24,6 +21,11 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 import CopyIcon from '@material-ui/icons/FileCopy';
@@ -42,28 +44,19 @@ class DesktopConfSpec extends Component {
       dialogType: DesktopAppDialog.TYPE_EDIT_INCONF
     });
   };
-
-  handleInheritClick = (confId, compType) => {
-    const { DesktopConfProps, DesktopConfActions, compId, targetType } = this.props;
-    const viewItem = (compType == 'VIEW') ? getSelectedObjectInCompAndId(DesktopConfProps, compId, 'confId', targetType) : getSelectedObjectInComp(DesktopConfProps, compId, targetType);
-
-    DesktopConfActions.showDialog({
-      viewItem: viewItem,
-      dialogType: DesktopConfDialog.TYPE_INHERIT
-    });
-  };
   
   // .................................................
   render() {
 
     const { classes } = this.props;
-    const { compId, compType, targetType, selectedItem } = this.props;
+    const bull = <span className={classes.bullet}>•</span>;
+    const { compId, compType, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = selectedItem.get('viewItem');
-      RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+      viewItem = selectedItem;
+      RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
 
     let appPaneWidth = 0;
@@ -74,44 +67,51 @@ class DesktopConfSpec extends Component {
     return (
       <React.Fragment>
         {viewItem && 
-          <Card elevation={4} style={{marginBottom:20}}>
-            <GRRuleCardHeader
-              avatar={RuleAvartar}
-              category='데스크톱 설정'
-              title={viewItem.get('confNm')}
+          <Card elevation={4} className={classes.ruleViewerCard}>
+          { hasAction &&
+            <GRRuleCardHeader avatar={RuleAvartar}
+              category='데스크톱 설정' title={viewItem.get('confNm')}
               subheader={viewItem.get('confId')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(viewItem, compType)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
+                    onClick={() => this.props.onClickEdit(compId, compType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(viewItem)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.props.onClickCopy(compId, compType)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.handleInheritClick(viewItem.get('confId'), compType)}
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.props.onClickInherit(compId, compType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
               }
-              style={{paddingBottom:0}}
             />
-            <CardContent style={{paddingTop:0}}>
+            }
+            <CardContent style={{paddingTop: 10}}>
+            { !hasAction &&
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell component="th" scope="row">{bull} 이름</TableCell>
+                    <TableCell numeric>{viewItem.get('confNm')}</TableCell>
+                    <TableCell component="th" scope="row">{bull} 아이디</TableCell>
+                    <TableCell numeric>{viewItem.get('confId')}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            }
               <div style={{overflowY: 'auto'}}>
                 <Grid container spacing={16} direction="row" justify="flex-start" alignItems="flex-start" style={{width:appPaneWidth,margin:'0 10 0 10'}}>
                   {viewItem.get('apps') && viewItem.get('apps').map(n => {
                     return (
                       <Grid key={n.get('appId')} item>
-                        <DesktopApp 
-                            key={n.get('appId')}
-                            appObj={n}
+                        <DesktopApp key={n.get('appId')} appObj={n}
                             themeId={viewItem.get('themeId')}
+                            hasAction={false}
                             onEditClick={this.handleEditAppClick}
                           />
                       </Grid>

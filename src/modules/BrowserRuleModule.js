@@ -36,7 +36,6 @@ const DELETE_WHITELIST_ITEM = 'browserRule/DELETE_WHITELIST_ITEM';
 const initialState = commonHandleActions.getCommonInitialState('chConfId');
 
 export const showDialog = (param) => dispatch => {
-    console.log('showDialog ::::::::::::::::: ', param);
     return dispatch({
         type: SHOW_BROWSERRULE_DIALOG,
         viewItem: param.viewItem,
