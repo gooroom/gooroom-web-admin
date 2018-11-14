@@ -138,30 +138,35 @@ class UserSpec extends Component {
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
+                  ruleGrade={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForBrowserRule} inherit={false}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <MediaRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
+                  ruleGrade={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForMediaRule}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <SecurityRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
+                  ruleGrade={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSecurityRule} inherit={false}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
                 <SoftwareFilterSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('viewItem') : null}
+                  ruleGrade={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSoftwareFilter} inherit={false}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
+                  ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForDesktopConf} inherit={false}
                 />
               </Grid>
