@@ -117,7 +117,23 @@ class ClientConfSettingManage extends Component {
 
   handleCreateButton = () => {
     this.props.ClientConfSettingActions.showDialog({
-      viewItem: Map(),
+      viewItem: Map({
+        transmit_os: 'err',
+        notify_os: 'err',
+        show_os: 'notice',
+        transmit_exe: 'err',
+        notify_exe: 'err',
+        show_exe: 'notice',
+        transmit_boot: 'err',
+        notify_boot: 'err',
+        show_boot: 'notice',
+        transmit_media: 'crit',
+        notify_media: 'crit',
+        show_media: 'notice',
+        transmit_agent: 'crit',
+        notify_agent: 'crit',
+        show_agent: 'notice',
+      }),
       dialogType: ClientConfSettingDialog.TYPE_ADD
     });
   }
