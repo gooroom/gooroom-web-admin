@@ -219,9 +219,9 @@ class GcspManage extends Component {
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('gcspId'))}>

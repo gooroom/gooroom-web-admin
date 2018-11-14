@@ -239,8 +239,8 @@ class AdminUserManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('adminId'))}>
@@ -252,7 +252,7 @@ class AdminUserManage extends Component {
                           <DeleteIcon />
                         </Button>
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
                           onClick={event => this.handleShowRecord(event, n.get('adminId'))}>

@@ -235,8 +235,8 @@ class ThemeManage extends Component {
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeNm')}</TableCell>
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeId')}</TableCell>
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeCmt')}</TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
+                    <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                    <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       <Button size="small" color="secondary" 
                         className={classes.buttonInTableRow} 
                         onClick={event => this.handleEditClick(event, n.get('themeId'))}>
