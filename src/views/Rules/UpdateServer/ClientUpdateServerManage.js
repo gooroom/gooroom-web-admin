@@ -10,7 +10,7 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -161,17 +161,18 @@ class ClientUpdateServerManage extends Component {
   }
 
   // ===================================================================
-  handleClickCopy = (viewItem) => {
-    const { ClientUpdateServerActions } = this.props;
-    ClientUpdateServerActions.showDialog({
+  handleClickCopy = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientUpdateServerProps, compId, targetType);
+    this.props.ClientUpdateServerActions.showDialog({
       viewItem: viewItem,
       dialogType: ClientUpdateServerDialog.TYPE_COPY
     });
   };
 
-  handleEditItemClick = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientUpdateServerProps, compId, targetType);
     this.props.ClientUpdateServerActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateUpdateServerObject(viewItem, false),
       dialogType: ClientUpdateServerDialog.TYPE_EDIT
     });
   };
@@ -283,11 +284,10 @@ class ClientUpdateServerManage extends Component {
           }
         </GRPane>
         {/* dialog(popup) component area */}
-        <ClientUpdateServerSpec compId={compId}
-          specType="inform" 
-          selectedItem={listObj}
+        <ClientUpdateServerSpec compId={compId} specType="inform" hasAction={true}
+          selectedItem={(listObj) ? listObj.get('viewItem') : null}
           onClickCopy={this.handleClickCopy}
-          onClickEdit={this.handleEditItemClick}
+          onClickEdit={this.handleClickEdit}
         />
         <ClientUpdateServerDialog compId={compId} />
         <GRConfirm />

@@ -10,7 +10,7 @@ import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -160,17 +160,18 @@ class ClientHostNameManage extends Component {
   };
 
   // ===================================================================
-  handleClickCopy = (viewItem) => {
-    const { ClientHostNameActions } = this.props;
-    ClientHostNameActions.showDialog({
+  handleClickCopy = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientHostNameProps, compId, targetType);
+    this.props.ClientHostNameActions.showDialog({
       viewItem: viewItem,
       dialogType: ClientHostNameDialog.TYPE_COPY
     });
   };
 
-  handleEditItemClick = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientHostNameProps, compId, targetType);
     this.props.ClientHostNameActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateClientHostNameObject(viewItem, false),
       dialogType: ClientHostNameDialog.TYPE_EDIT
     });
   };
@@ -281,11 +282,10 @@ class ClientHostNameManage extends Component {
           }
         </GRPane>
         {/* dialog(popup) component area */}
-        <ClientHostNameSpec compId={compId}
-          specType="inform" 
-          selectedItem={listObj}
+        <ClientHostNameSpec compId={compId} specType="inform" hasAction={true}
+          selectedItem={(listObj) ? listObj.get('viewItem') : null}
           onClickCopy={this.handleClickCopy}
-          onClickEdit={this.handleEditItemClick}
+          onClickEdit={this.handleClickEdit}
         />
         <ClientHostNameDialog compId={compId} />
         <GRConfirm />

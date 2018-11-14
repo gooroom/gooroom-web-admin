@@ -22,7 +22,7 @@ export const styles = theme => ({
     margin: 0,
     fontSize: 12,
     fontWeight:'bold',
-    background: 'linear-gradient(45deg, #A3A3A2 30%, #45464a 90%)',
+    background: 'linear-gradient(45deg, #737357 30%, #a7a799 90%)',
     color: 'white',
     padding: '0 5'
   },
@@ -47,11 +47,12 @@ export const styles = theme => ({
   },
   /* Styles applied to the title Typography element. */
   title: {},
-  /* Styles applied to the subheader Typography element. */
+  /* Styles applied to the subheader Typography element. 
   subheader: {},
+  */
 });
 
-function GRRuleCardHeader(props) {
+function GRSoftwareCardHeader(props) {
   const {
     action,
     avatar,
@@ -59,7 +60,7 @@ function GRRuleCardHeader(props) {
     className: classNameProp,
     component: Component,
     disableTypography,
-    subheader: subheaderProp,
+    // subheader: subheaderProp,
     subheaderTypographyProps,
     title: titleProp,
     titleTypographyProps,
@@ -83,20 +84,20 @@ function GRRuleCardHeader(props) {
     );
   }
 
-  let subheader = subheaderProp;
-  if (subheader != null && subheader.type !== Typography && !disableTypography) {
-    subheader = (
-      <Typography
-        variant={avatar ? 'body2' : 'body1'}
-        className={classes.subheader}
-        color="textSecondary"
-        component="span"
-        {...subheaderTypographyProps}
-      >
-        {subheader}
-      </Typography>
-    );
-  }
+  // let subheader = subheaderProp;
+  // if (subheader != null && subheader.type !== Typography && !disableTypography) {
+  //   subheader = (
+  //     <Typography
+  //       variant={avatar ? 'body2' : 'body1'}
+  //       className={classes.subheader}
+  //       color="textSecondary"
+  //       component="span"
+  //       {...subheaderTypographyProps}
+  //     >
+  //       {subheader}
+  //     </Typography>
+  //   );
+  // }
 
   let category = categoryProp;
   if (category != null && category.type !== Typography && !disableTypography) {
@@ -115,23 +116,12 @@ function GRRuleCardHeader(props) {
 
   return (
     <Component {...other}>
-    {category}
-
-    <Component className={classNames(classes.root, classNameProp)} {...other}>
-      {avatar && <div className={classes.avatar}>{avatar}</div>}
-      <div className={classes.content}>
-        {title}
-        {subheader}
-      </div>
-      {action && <div className={classes.action}>{action}</div>}
-    </Component>
-
-
+      {category}
     </Component>
   );
 }
 
-GRRuleCardHeader.propTypes = {
+GRSoftwareCardHeader.propTypes = {
   /**
    * The action to display in the card header.
    */
@@ -181,9 +171,9 @@ GRRuleCardHeader.propTypes = {
   titleTypographyProps: PropTypes.object,
 };
 
-GRRuleCardHeader.defaultProps = {
+GRSoftwareCardHeader.defaultProps = {
   component: 'div',
   disableTypography: false,
 };
 
-export default withStyles(styles, { name: 'GRRuleCardHeader' })(GRRuleCardHeader);
+export default withStyles(styles, { name: 'GRSoftwareCardHeader' })(GRSoftwareCardHeader);

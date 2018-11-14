@@ -7,6 +7,9 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { generateClientHostNameObject } from './ClientHostNameSpec';
+
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import ClientHostNameSpec from './ClientHostNameSpec';
 import ClientHostNameDialog from './ClientHostNameDialog';
@@ -46,8 +49,8 @@ class ClientHostNameSelector extends Component {
   }
 
   handleChange = (event, value) => {
-    const { MediaRuleActions, compId, targetType } = this.props;
-    MediaRuleActions.changeCompVariable({
+    const { ClientHostNameActions, compId, targetType } = this.props;
+    ClientHostNameActions.changeCompVariable({
       compId: compId,
       name: 'selectedOptionItemId',
       value: event.target.value,
@@ -56,9 +59,10 @@ class ClientHostNameSelector extends Component {
   };
 
   // ===================================================================
-  handleEditClickForClientHostName = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientHostNameProps, compId, targetType);
     this.props.ClientHostNameActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateClientHostNameObject(viewItem, false),
       dialogType: ClientHostNameDialog.TYPE_EDIT
     });
   };
@@ -76,15 +80,12 @@ class ClientHostNameSelector extends Component {
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
       selectedOptionItemId = '-';
     }
-
-    let selectedClientHostNameItem = null;
+    
+    let selectedData = null;
     if(listAllData && listAllData.size > 0) {
-      const selectedData = listAllData.find((element) => {
+      selectedData = listAllData.find((element) => {
         return element.get('objId') == selectedOptionItemId;
       });
-      if(selectedData) {
-        selectedClientHostNameItem = Map({'viewItem': selectedData});
-      }      
     };
 
     return (
@@ -105,10 +106,9 @@ class ClientHostNameSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientHostNameSpec compId={compId}
-            specType="inform" targetType={targetType}
-            selectedItem={selectedClientHostNameItem}
-            onClickEdit={this.handleEditClickForClientHostName}
+          <ClientHostNameSpec compId={compId} specType="inform" hasAction={false}
+            targetType={targetType} selectedItem={selectedData}
+            onClickEdit={this.handleClickEdit}
           />
         }
         </CardContent>

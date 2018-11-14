@@ -163,16 +163,16 @@ class SoftwareFilterManage extends Component {
   };
 
   // ===================================================================
-  handleClickCopy = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, compType);
+  handleClickCopy = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, targetType);
     this.props.SoftwareFilterActions.showDialog({
       viewItem: viewItem,
       dialogType: SoftwareFilterDialog.TYPE_COPY
     });
   };
 
-  handleClickEdit = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, compType);
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, targetType);
     this.props.SoftwareFilterActions.showDialog({
       viewItem: generateSoftwareFilterObject(viewItem, false),
       dialogType: SoftwareFilterDialog.TYPE_EDIT

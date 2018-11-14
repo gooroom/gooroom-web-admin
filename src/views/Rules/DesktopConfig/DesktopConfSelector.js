@@ -56,7 +56,8 @@ class DesktopConfSelector extends Component {
   };
 
   // ===================================================================
-  handleEditClickForDesktopConf = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT
@@ -105,10 +106,9 @@ class DesktopConfSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <DesktopConfSpec 
-            specType="inform" targetType={targetType}
-            selectedItem={selectedDesktopConfItem}
-            onClickEdit={this.handleEditClickForDesktopConf}
+          <DesktopConfSpec compId={compId} specType="inform" hasAction={false}
+            targetType={targetType} selectedItem={selectedDesktopConfItem}
+            onClickEdit={this.handleClickEdit}
           />
         }
         </CardContent>

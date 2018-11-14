@@ -26,7 +26,7 @@ class BrowserRuleSpec extends Component {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, compType, targetType, selectedItem, ruleGrade, hasAction } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -46,16 +46,16 @@ class BrowserRuleSpec extends Component {
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(compId, compType)}
+                    onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(compId, compType)}
+                    onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(viewItem.get('isDefault'))) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickInherit(compId, compType)}
+                    onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
@@ -67,17 +67,17 @@ class BrowserRuleSpec extends Component {
               <TableBody>
               { !hasAction &&
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} 이름</TableCell>
-                  <TableCell numeric>{viewItem.get('objNm')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 이름(아이디)</TableCell>
+                  <TableCell numeric>{viewItem.get('objNm')} ({viewItem.get('objId')})</TableCell>
                   <TableCell component="th" scope="row">{bull} 설명</TableCell>
                   <TableCell numeric>{viewItem.get('comment')}</TableCell>
                 </TableRow>
               }
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} Web Socket 사용</TableCell>
-                  <TableCell numeric>{viewItem.get('webSocket')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} Web Worker 사용</TableCell>
-                  <TableCell numeric>{viewItem.get('webWorker')}</TableCell>
+                  <TableCell style={{width:'25%'}} component="th" scope="row">{bull} Web Socket 사용</TableCell>
+                  <TableCell style={{width:'25%'}} numeric>{viewItem.get('webSocket')}</TableCell>
+                  <TableCell style={{width:'25%'}} component="th" scope="row">{bull} Web Worker 사용</TableCell>
+                  <TableCell style={{width:'25%'}} numeric>{viewItem.get('webWorker')}</TableCell>
                 </TableRow>
 
                 <TableRow>

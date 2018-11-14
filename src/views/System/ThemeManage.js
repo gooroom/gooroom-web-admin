@@ -166,7 +166,7 @@ class ThemeManage extends Component {
     });
   };
 
-  handleEditItemClick = (viewItem, compType) => {
+  handleClickEdit = (viewItem) => {
     this.props.ThemeManageActions.showDialog({
       viewItem: viewItem,
       dialogType: ThemeDialog.TYPE_EDIT
@@ -286,7 +286,7 @@ class ThemeManage extends Component {
           specType="inform" 
           selectedItem={listObj}
           onClickCopy={this.handleClickCopy}
-          onClickEdit={this.handleEditItemClick}
+          onClickEdit={this.handleClickEdit}
         />
         <GRConfirm />
       </React.Fragment>

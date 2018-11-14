@@ -56,9 +56,10 @@ class SecurityRuleSelector extends Component {
   };
 
   // ===================================================================
-  handleClickEdit = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, targetType);
     this.props.SecurityRuleActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateSecurityRuleObject(viewItem, false),
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
@@ -102,9 +103,8 @@ class SecurityRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <SecurityRuleSpec compId={compId} specType="inform" 
+          <SecurityRuleSpec compId={compId} specType="inform" hasAction={false}
             targetType={targetType} selectedItem={selectedData}
-            hasAction={true}
             onClickEdit={this.handleClickEdit}
           />
         }

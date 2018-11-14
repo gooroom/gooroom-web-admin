@@ -7,6 +7,9 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { generateClientConfSettingObject } from './ClientConfSettingSpec';
+
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import ClientConfSettingSpec from './ClientConfSettingSpec';
 import ClientConfSettingDialog from './ClientConfSettingDialog';
@@ -56,9 +59,10 @@ class ClientConfSettingSelector extends Component {
   };
 
   // ===================================================================
-  handleEditClickForClientConfSetting = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientConfSettingProps, compId, targetType);
     this.props.ClientConfSettingActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateClientConfSettingObject(viewItem, false),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -77,15 +81,13 @@ class ClientConfSettingSelector extends Component {
       selectedOptionItemId = '-';
     }
 
-    let selectedClientConfSettingItem = null;
+    let selectedData = null;
     if(listAllData && listAllData.size > 0) {
-      const selectedData = listAllData.find((element) => {
+      selectedData = listAllData.find((element) => {
         return element.get('objId') == selectedOptionItemId;
       });
-      if(selectedData) {
-        selectedClientConfSettingItem = Map({'viewItem': selectedData});
-      }      
     };
+
 
     return (
       <Card className={classes.card}>
@@ -105,10 +107,9 @@ class ClientConfSettingSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientConfSettingSpec compId={compId}
-            specType="inform" targetType={targetType}
-            selectedItem={selectedClientConfSettingItem}
-            onClickEdit={this.handleEditClickForClientConfSetting}
+          <ClientConfSettingSpec compId={compId} specType="inform" hasAction={false}
+            targetType={targetType} selectedItem={selectedData}
+            onClickEdit={this.handleClickEdit}
           />
         }
         </CardContent>

@@ -4,14 +4,7 @@ import { Map, List } from 'immutable';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
 import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
-
-import * as ClientHostNameActions from 'modules/ClientHostNameModule';
-import ClientHostNameDialog from './ClientHostNameDialog';
-
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 
 import Button from '@material-ui/core/Button';
@@ -37,20 +30,21 @@ class ClientHostNameSpec extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { compId, compType, targetType, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateClientHostNameObject(selectedItem.get('viewItem'));
-      RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+      viewItem = generateClientHostNameObject(selectedItem, true);
+      RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
 
     return (
       <React.Fragment>
         {viewItem && 
-          <Card elevation={4} style={{marginBottom:20}}>
+          <Card elevation={4} className={classes.ruleViewerCard}>
+          { hasAction &&
             <GRRuleCardHeader
               avatar={RuleAvartar}
               category='HOSTS 정보'
@@ -60,25 +54,30 @@ class ClientHostNameSpec extends Component {
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(viewItem, compType)}
+                    onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(viewItem)}
-                  ><CopyIcon /></Button>
-                  }
-                  {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.handleInheritClick(viewItem.get('objId'), compType)}
-                  ><ArrowDropDownCircleIcon /></Button>
-                  }
+                    onClick={() => this.props.onClickCopy(compId, targetType)}
+                  ><CopyIcon /></Button>}
                 </div>
               }
-              style={{paddingBottom:0}}
             />
+            }
             <CardContent>
+            { !hasAction &&
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 이름(아이디)</TableCell>
+                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('objNm')} ({viewItem.get('objId')})</TableCell>
+                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 설명</TableCell>
+                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('comment')}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            }
               <Table>
                 <TableBody>
                   <TableRow>
@@ -90,25 +89,14 @@ class ClientHostNameSpec extends Component {
             </CardContent>
           </Card>
         }
-        <ClientHostNameDialog compId={compId} />
       </React.Fragment>
     );
   }
 }
 
+export default withStyles(GRCommonStyle)(ClientHostNameSpec);
 
-const mapStateToProps = (state) => ({
-  ClientHostNameProps: state.ClientHostNameModule
-});
-
-
-const mapDispatchToProps = (dispatch) => ({
-  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameSpec));
-
-export const generateClientHostNameObject = (param) => {
+export const generateClientHostNameObject = (param, isForViewer) => {
 
   if(param) {
     let hosts = '';

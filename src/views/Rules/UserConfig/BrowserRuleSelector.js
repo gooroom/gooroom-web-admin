@@ -7,6 +7,9 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { generateBrowserRuleObject } from './BrowserRuleSpec';
+
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
 import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
@@ -56,9 +59,10 @@ class BrowserRuleSelector extends Component {
   };
 
   // ===================================================================
-  handleClickEdit = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateBrowserRuleObject(viewItem, false),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -102,9 +106,8 @@ class BrowserRuleSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <BrowserRuleSpec compId={compId} specType="inform" 
+          <BrowserRuleSpec compId={compId} specType="inform" hasAction={false}
             targetType={targetType} selectedItem={selectedData}
-            hasAction={true}
             onClickEdit={this.handleClickEdit}
           />
         }

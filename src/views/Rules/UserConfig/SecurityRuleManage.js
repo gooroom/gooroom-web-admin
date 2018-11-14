@@ -173,16 +173,16 @@ class SecurityRuleManage extends Component {
   };
 
   // ===================================================================
-  handleClickCopy = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, compType);
+  handleClickCopy = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, targetType);
     this.props.SecurityRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: SecurityRuleDialog.TYPE_COPY
     });
   };
 
-  handleClickEdit = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, compType);
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, targetType);
     this.props.SecurityRuleActions.showDialog({
       viewItem: generateSecurityRuleObject(viewItem, false),
       dialogType: SecurityRuleDialog.TYPE_EDIT

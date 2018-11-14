@@ -13,7 +13,7 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
-import ClientHostNameViewer from './ClientHostNameViewer';
+import ClientHostNameSpec from './ClientHostNameSpec';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -146,7 +146,7 @@ class ClientHostNameDialog extends Component {
                         <Typography variant="body1">
                             이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
                         </Typography>
-                        <ClientHostNameViewer viewItem={editingItem} />
+                        <ClientHostNameSpec selectedItem={editingItem} hasAction={false} />
                         </div>
                     }
                 </DialogContent>

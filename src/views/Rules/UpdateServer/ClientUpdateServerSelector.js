@@ -7,6 +7,9 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { generateUpdateServerObject } from './ClientUpdateServerSpec';
+
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import ClientUpdateServerSpec from './ClientUpdateServerSpec';
 import ClientUpdateServerDialog from './ClientUpdateServerDialog';
@@ -46,8 +49,8 @@ class ClientUpdateServerSelector extends Component {
   }
 
   handleChange = (event, value) => {
-    const { MediaRuleActions, compId, targetType } = this.props;
-    MediaRuleActions.changeCompVariable({
+    const { ClientUpdateServerActions, compId, targetType } = this.props;
+    ClientUpdateServerActions.changeCompVariable({
       compId: this.props.compId,
       name: 'selectedOptionItemId',
       value: event.target.value,
@@ -56,9 +59,10 @@ class ClientUpdateServerSelector extends Component {
   };
 
   // ===================================================================
-  handleEditClickForClientUpdateServer = (viewItem, compType) => {
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientUpdateServerProps, compId, targetType);
     this.props.ClientUpdateServerActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateUpdateServerObject(viewItem, false),
       dialogType: ClientUpdateServerDialog.TYPE_EDIT
     });
   };
@@ -77,14 +81,11 @@ class ClientUpdateServerSelector extends Component {
       selectedOptionItemId = '-';
     }
 
-    let selectedClientUpdateServerItem = null;
+    let selectedData = null;
     if(listAllData && listAllData.size > 0) {
-      const selectedData = listAllData.find((element) => {
+      selectedData = listAllData.find((element) => {
         return element.get('objId') == selectedOptionItemId;
       });
-      if(selectedData) {
-        selectedClientUpdateServerItem = Map({'viewItem': selectedData});
-      }      
     };
 
     return (
@@ -105,10 +106,9 @@ class ClientUpdateServerSelector extends Component {
         </FormControl>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientUpdateServerSpec compId={compId}
-            specType="inform" targetType={targetType}
-            selectedItem={selectedClientUpdateServerItem}
-            onClickEdit={this.handleEditClickForClientUpdateServer}
+          <ClientUpdateServerSpec compId={compId} specType="inform" hasAction={false}
+            targetType={targetType} selectedItem={selectedData}
+            onClickEdit={this.handleClickEdit}
           />
         }
         </CardContent>

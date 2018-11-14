@@ -26,7 +26,7 @@ class MediaRuleSpec extends Component {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, compType, targetType, selectedItem, ruleGrade, hasAction } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -46,16 +46,16 @@ class MediaRuleSpec extends Component {
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(compId, compType)}
+                    onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(compId, compType)}
+                    onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
                   {(this.props.inherit && !(viewItem.get('isDefault'))) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickInherit(compId, compType)}
+                    onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
@@ -74,10 +74,10 @@ class MediaRuleSpec extends Component {
                   </TableRow>
                 }
                   <TableRow>
-                    <TableCell component="th" scope="row">{bull} USB메모리</TableCell>
-                    <TableCell numeric>{viewItem.get('usbMemory')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} CD/DVD</TableCell>
-                    <TableCell numeric>{viewItem.get('cdAndDvd')}</TableCell>
+                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} USB메모리</TableCell>
+                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('usbMemory')}</TableCell>
+                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} CD/DVD</TableCell>
+                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('cdAndDvd')}</TableCell>
                   </TableRow>
 
                   <TableRow>

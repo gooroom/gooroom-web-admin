@@ -170,16 +170,16 @@ class DesktopConfManage extends Component {
   };
 
   // ===================================================================
-  handleClickCopy = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, compType);
+  handleClickCopy = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_COPY
     });
   };
 
-  handleClickEdit = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, compType);
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT

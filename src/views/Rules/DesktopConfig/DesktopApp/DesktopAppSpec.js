@@ -40,7 +40,7 @@ class DesktopAppSpec extends Component {
   render() {
 
     const { classes } = this.props;
-    const { compId, compType, targetType, selectedItem } = this.props;
+    const { compId, targetType, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
     let viewItem = null;
@@ -62,7 +62,7 @@ class DesktopAppSpec extends Component {
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(viewItem, compType)}
+                    onClick={() => this.props.onClickEdit(viewItem, targetType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small"

@@ -4,12 +4,7 @@ import { Map, List } from 'immutable';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
 import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
-
-import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import ClientUpdateServerDialog from './ClientUpdateServerDialog';
 
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
@@ -37,20 +32,21 @@ class ClientUpdateServerSpec extends Component {
   // .................................................
   render() {
     const { classes } = this.props;
-    const { compId, compType, targetType, selectedItem } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateUpdateServerObject(selectedItem.get('viewItem'));
-      RuleAvartar = getAvatarForRuleGrade(targetType, selectedItem.get('ruleGrade'));
+      viewItem = generateUpdateServerObject(selectedItem, true);
+      RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
 
     return (
       <React.Fragment>
         {viewItem && 
-          <Card elevation={4} style={{marginBottom:20}}>
+          <Card elevation={4} className={classes.ruleViewerCard}>
+          { hasAction &&
             <GRRuleCardHeader
               avatar={RuleAvartar}
               category='업데이트서버 정보'
@@ -60,25 +56,31 @@ class ClientUpdateServerSpec extends Component {
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
-                    onClick={() => this.props.onClickEdit(viewItem, compType)}
+                    onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><SettingsApplicationsIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.props.onClickCopy(viewItem)}
+                    onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
-                  }
-                  {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
-                  <Button size="small"
-                    variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
-                    onClick={() => this.handleInheritClick(viewItem.get('objId'), compType)}
-                  ><ArrowDropDownCircleIcon /></Button>
                   }
                 </div>
               }
-              style={{paddingBottom:0}}
             />
+            }
             <CardContent>
+            { !hasAction &&
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 이름(아이디)</TableCell>
+                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('objNm')} ({viewItem.get('objId')})</TableCell>
+                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 설명</TableCell>
+                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('comment')}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            }
               <Table>
                 <TableBody>
                   <TableRow>
@@ -98,22 +100,12 @@ class ClientUpdateServerSpec extends Component {
             </CardContent>
           </Card>
         }
-        <ClientUpdateServerDialog compId={compId} />
       </React.Fragment>
     );
   }
 }
 
-
-const mapStateToProps = (state) => ({
-  ClientUpdateServerProps: state.ClientUpdateServerModule
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch)
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientUpdateServerSpec));
+export default withStyles(GRCommonStyle)(ClientUpdateServerSpec);
 
 export const generateUpdateServerObject = (param) => {
   

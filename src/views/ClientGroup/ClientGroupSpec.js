@@ -23,10 +23,15 @@ import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
-import { generateBrowserRuleObject } from 'views/Rules/UserConfig/BrowserRuleSpec';
-import { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
-import { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
-import { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import ClientConfSettingSpec, { generateClientConfSettingObject } from 'views/Rules/ClientConfig/ClientConfSettingSpec';
+import ClientHostNameSpec, { generateClientHostNameObject } from 'views/Rules/HostName/ClientHostNameSpec';
+import ClientUpdateServerSpec, { generateUpdateServerObject } from 'views/Rules/UpdateServer/ClientUpdateServerSpec';
+
+import BrowserRuleSpec, { generateBrowserRuleObject } from 'views/Rules/UserConfig/BrowserRuleSpec';
+import MediaRuleSpec, { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
+import SecurityRuleSpec, { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
+import SoftwareFilterSpec, { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -37,23 +42,16 @@ import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 import ClientGroupDialog from './ClientGroupDialog';
+
 import ClientConfSettingDialog from 'views/Rules/ClientConfig/ClientConfSettingDialog';
-import ClientConfSettingSpec from 'views/Rules/ClientConfig/ClientConfSettingSpec';
 import ClientHostNameDialog from 'views/Rules/HostName/ClientHostNameDialog';
-import ClientHostNameSpec from 'views/Rules/HostName/ClientHostNameSpec';
 import ClientUpdateServerDialog from 'views/Rules/UpdateServer/ClientUpdateServerDialog';
-import ClientUpdateServerSpec from 'views/Rules/UpdateServer/ClientUpdateServerSpec';
 
 import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
-import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
 import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
-import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
-import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
-import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
-import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
@@ -77,56 +75,58 @@ class ClientGroupSpec extends Component {
   };
 
   // ===================================================================
-  handleEditClickForClientConfSetting = (viewItem, compType) => {
+  handleEditClickForClientConfSetting = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientConfSettingProps, compId, targetType);
     this.props.ClientConfSettingActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateClientConfSettingObject(viewItem, false),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
-  handleEditClickForClientHostName = (viewItem, compType) => {
+  handleEditClickForClientHostName = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientHostNameProps, compId, targetType);
     this.props.ClientHostNameActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateClientHostNameObject(viewItem, false),
       dialogType: ClientHostNameDialog.TYPE_EDIT
     });
   };
-  handleEditClickForClientUpdateServer = (viewItem, compType) => {
+  handleEditClickForClientUpdateServer = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientUpdateServerProps, compId, targetType);
     this.props.ClientUpdateServerActions.showDialog({
-      viewItem: viewItem,
+      viewItem: generateUpdateServerObject(viewItem, false),
       dialogType: ClientUpdateServerDialog.TYPE_EDIT
     });
   };
-
-
-  handleClickEditForBrowserRule = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, compType);
+  // ===================================================================
+  handleClickEditForBrowserRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
       viewItem: generateBrowserRuleObject(viewItem, false),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
-  handleClickEditForMediaRule = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, compType);
+  handleClickEditForMediaRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, targetType);
     this.props.MediaRuleActions.showDialog({
       viewItem: generateMediaRuleObject(viewItem, false),
       dialogType: MediaRuleDialog.TYPE_EDIT
     });
   };
-  handleClickEditForSecurityRule = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, compType);
+  handleClickEditForSecurityRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, targetType);
     this.props.SecurityRuleActions.showDialog({
       viewItem: generateSecurityRuleObject(viewItem, false),
       dialogType: SecurityRuleDialog.TYPE_EDIT
     });
   };
-  handleClickEditForSoftwareFilter = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, compType);
+  handleClickEditForSoftwareFilter = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, targetType);
     this.props.SoftwareFilterActions.showDialog({
       viewItem: generateSoftwareFilterObject(viewItem, false),
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
-  handleClickEditForDesktopConf = (compId, compType) => {
-    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, compType);
+  handleClickEditForDesktopConf = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
       dialogType: DesktopConfDialog.TYPE_EDIT
@@ -181,31 +181,31 @@ class ClientGroupSpec extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
               <Grid item xs={12} md={12} lg={6} xl={4}>
-                <ClientConfSettingSpec compId={compId}
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedClientConfSettingItem}
+                <ClientConfSettingSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedClientConfSettingItem) ? selectedClientConfSettingItem.get('viewItem') : null}
+                  ruleGrade={(selectedClientConfSettingItem) ? selectedClientConfSettingItem.get('ruleGrade') : null}
                   onClickEdit={this.handleEditClickForClientConfSetting}
-                  inherit={false}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <ClientHostNameSpec compId={compId}
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedClientHostNameItem}
+                <ClientHostNameSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedClientHostNameItem) ? selectedClientHostNameItem.get('viewItem') : null}
+                  ruleGrade={(selectedClientHostNameItem) ? selectedClientHostNameItem.get('ruleGrade') : null}
                   onClickEdit={this.handleEditClickForClientHostName}
-                  inherit={false}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <ClientUpdateServerSpec compId={compId}
-                  specType="inform" targetType="GROUP"
-                  selectedItem={selectedClientUpdateServerItem}
+                <ClientUpdateServerSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedClientUpdateServerItem) ? selectedClientUpdateServerItem.get('viewItem') : null}
+                  ruleGrade={(selectedClientUpdateServerItem) ? selectedClientUpdateServerItem.get('ruleGrade') : null}
                   onClickEdit={this.handleEditClickForClientUpdateServer}
-                  inherit={false}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <MediaRuleSpec compId={compId} specType="inform" compType="GROUP"
+                <MediaRuleSpec compId={compId} specType="inform" targetType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('ruleGrade') : null}
@@ -213,7 +213,7 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4}>
-                <BrowserRuleSpec compId={compId} specType="inform" compType="GROUP"
+                <BrowserRuleSpec compId={compId} specType="inform" targetType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('ruleGrade') : null}
@@ -221,15 +221,15 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
-                <SecurityRuleSpec compId={compId} specType="inform" compType="GROUP"
+                <SecurityRuleSpec compId={compId} specType="inform" targetType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSecurityRule}
                 />
               </Grid>
-              <Grid item xs={12} md={12} lg={6} xl={4} >
-                <SoftwareFilterSpec compId={compId} specType="inform" compType="GROUP"
+              <Grid item xs={12} sm={12} lg={12}>
+                <SoftwareFilterSpec compId={compId} specType="inform" targetType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('viewItem') : null}
                   ruleGrade={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('ruleGrade') : null}
@@ -237,7 +237,7 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
-                <DesktopConfSpec compId={compId} specType="inform" compType="GROUP" 
+                <DesktopConfSpec compId={compId} specType="inform" targetType="GROUP" 
                   hasAction={true} inherit={false}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
                   onClickEdit={this.handleClickEditForDesktopConf}
