@@ -78,14 +78,11 @@ class DesktopConfSelector extends Component {
       selectedOptionItemId = '-';
     }
 
-    let selectedDesktopConfItem = null;
+    let selectedData = null;
     if(listAllData && listAllData.size > 0) {
-      const selectedData = listAllData.find((element) => {
+      selectedData = listAllData.find((element) => {
         return element.get('confId') == selectedOptionItemId;
       });
-      if(selectedData) {
-        selectedDesktopConfItem = Map({'viewItem': selectedData});
-      }      
     };
 
     return (
@@ -107,7 +104,7 @@ class DesktopConfSelector extends Component {
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
           <DesktopConfSpec compId={compId} specType="inform" hasAction={false}
-            targetType={targetType} selectedItem={selectedDesktopConfItem}
+            targetType={targetType} selectedItem={selectedData}
             onClickEdit={this.handleClickEdit}
           />
         }

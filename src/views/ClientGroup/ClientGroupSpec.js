@@ -240,6 +240,7 @@ class ClientGroupSpec extends Component {
                 <DesktopConfSpec compId={compId} specType="inform" targetType="GROUP" 
                   hasAction={true} inherit={false}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
+                  ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForDesktopConf}
                 />
               </Grid>
