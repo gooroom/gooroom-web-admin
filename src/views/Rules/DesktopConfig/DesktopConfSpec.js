@@ -59,8 +59,6 @@ class DesktopConfSpec extends Component {
       RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
 
-    console.log('viewItem ::::::::::: ', (viewItem) ? viewItem.toJS() : '?????????');
-
     let appPaneWidth = 0;
     if(viewItem && viewItem.get('apps') && viewItem.get('apps').size > 0) {
       appPaneWidth = viewItem.get('apps').size * (120 + 16) + 40;
