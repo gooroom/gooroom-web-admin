@@ -269,6 +269,12 @@ export const GRCommonStyle = theme => ({
         transform: 'scale(1.8)',
         fontSize: '16px'
     },
+    cartBullet: {
+        display: 'inline-block',
+        margin: '0 2px',
+        transform: 'scale(1.8)',
+        fontSize: '12px'
+    },
     smallIconButton: {
         minWidth: '34px'
     },

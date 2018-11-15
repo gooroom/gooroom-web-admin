@@ -146,7 +146,6 @@ class ClientRegKeyDialog extends Component {
                             value={(editingItem.get('validDate')) ? formatDateToSimple(editingItem.get('validDate'), 'YYYY-MM-DD') : ''}
                             onChange={this.handleValueChange("validDate")}
                             className={classes.fullWidth}
-                            
                             disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                         />
                         </Grid>

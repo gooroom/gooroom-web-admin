@@ -25,6 +25,7 @@ class ClientConfSettingSpec extends Component {
   render() {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
+    const cartBull = <span className={classes.cartBullet}>#</span>;
     const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
@@ -91,77 +92,118 @@ class ClientConfSettingSpec extends Component {
                 </TableRow>
               </TableBody>
             </Table>
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 단말로그 보관일수</TableCell>
-                  <TableCell numeric>{viewItem.get('logRemainDate')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 로그파일 최대크기(MB)</TableCell>
-                  <TableCell numeric>{viewItem.get('logMaxSize')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 보관할 로그파일 갯수</TableCell>
-                  <TableCell numeric>{viewItem.get('logMaxCount')}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
 
             <Table>
               <TableBody>
                 <TableRow>
-                    <TableCell component="th" colSpan={5} scope="row">{bull} 서버 전송 로그 레벨(수준)</TableCell>
+                    <TableCell component="th" colSpan={5} scope="row">{cartBull} 단말 로그 전송 설정</TableCell>
                 </TableRow>
-                <TableRow >
-                  <TableCell component="th" style={{textAlign:'center'}}>BOOT</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>OS</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>EXE(IMA)</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>MEDIA</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>AGENT</TableCell>
-                </TableRow>
-                <TableRow >
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_boot')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_os')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_exe')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_media')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_agent')}</TableCell>
-                </TableRow>
-
-                <TableRow>
-                    <TableCell component="th" colSpan={5} scope="row">{bull} 단말 알림 로그 레벨(수준)</TableCell>
-                </TableRow>
-                <TableRow >
-                  <TableCell component="th" style={{textAlign:'center'}}>BOOT</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>OS</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>EXE(IMA)</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>MEDIA</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>AGENT</TableCell>
-                </TableRow>
-                <TableRow >
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_boot')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_os')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_exe')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_media')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_agent')}</TableCell>
-                </TableRow>
-
-                <TableRow>
-                    <TableCell component="th" colSpan={5} scope="row">{bull} 서버 경고 표시 레벨(수준)</TableCell>
-                </TableRow>
-                <TableRow >
-                  <TableCell component="th" style={{textAlign:'center'}}>BOOT</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>OS</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>EXE(IMA)</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>MEDIA</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>AGENT</TableCell>
-                </TableRow>
-                <TableRow >
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('show_boot')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('show_os')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('show_exe')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('show_media')}</TableCell>
-                  <TableCell style={{textAlign:'center'}}>{viewItem.get('show_agent')}</TableCell>
-                </TableRow>
-
               </TableBody>
             </Table>
+            <div style={{marginLeft:16}}>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                      <TableCell component="th" colSpan={5} scope="row">{bull} 서버 전송 로그 레벨(수준)</TableCell>
+                  </TableRow>
+                  <TableRow >
+                    <TableCell component="th" style={{textAlign:'center'}}>BOOT 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>OS 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>EXE(IMA) 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>MEDIA 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>AGENT 로그</TableCell>
+                  </TableRow>
+                  <TableRow >
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_boot')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_os')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_exe')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_media')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_agent')}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell component="th" scope="row" >{bull} 삭제기능 사용여부</TableCell>
+                    <TableCell >{(viewItem.get('isDeleteLog')) ? '삭제함' : '삭제안함'}</TableCell>
+                    <TableCell component="th" scope="row" >{bull} 서버전송후 로그보관일수</TableCell>
+                    <TableCell >{(viewItem.get('isDeleteLog')) ? viewItem.get('logRemainDate') : <s>{viewItem.get('logRemainDate')}</s>}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+            
+            <Table>
+              <TableBody>
+                <TableRow>
+                    <TableCell component="th" colSpan={5} scope="row">{cartBull} 단말 알림 및 단말 서버 경고 설정</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+
+            <div style={{marginLeft:16}}>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                      <TableCell component="th" colSpan={5} scope="row">{bull} 단말 알림 로그 레벨(수준)</TableCell>
+                  </TableRow>
+                  <TableRow >
+                    <TableCell component="th" style={{textAlign:'center'}}>BOOT 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>OS 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>EXE(IMA) 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>MEDIA 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>AGENT 로그</TableCell>
+                  </TableRow>
+                  <TableRow >
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_boot')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_os')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_exe')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_media')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_agent')}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                      <TableCell component="th" colSpan={5} scope="row">{bull} 서버 경고 표시 레벨(수준)</TableCell>
+                  </TableRow>
+                  <TableRow >
+                    <TableCell component="th" style={{textAlign:'center'}}>BOOT 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>OS 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>EXE(IMA) 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>MEDIA 침해</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>AGENT 로그</TableCell>
+                  </TableRow>
+                  <TableRow >
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('show_boot')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('show_os')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('show_exe')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('show_media')}</TableCell>
+                    <TableCell style={{textAlign:'center'}}>{viewItem.get('show_agent')}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+            
+            <Table>
+              <TableBody>
+                <TableRow>
+                    <TableCell component="th" colSpan={5} scope="row">{cartBull} 단말 로그 (JournalD Log) 설정</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <div style={{marginLeft:16}}>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell component="th" scope="row">{bull} 로그파일 최대크기(MB)</TableCell>
+                    <TableCell numeric>{viewItem.get('logMaxSize')}</TableCell>
+                    <TableCell component="th" scope="row">{bull} 보관할 로그파일 갯수</TableCell>
+                    <TableCell numeric>{viewItem.get('logMaxCount')}</TableCell>
+                    <TableCell component="th" scope="row">{bull} 최소 확보 디스크 공간(%)</TableCell>
+                    <TableCell numeric>{viewItem.get('systemKeepFree')}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
 
           </CardContent>
         </Card>
@@ -204,9 +246,11 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
     let ntpAddrSelected = '';
     let ntpAddress = [];
 
+    let isDeleteLog = '';
     let logMaxSize = '';
     let logMaxCount = '';
     let logRemainDate = '';
+    let systemKeepFree = '';
 
     let transmit_boot = '';
     let transmit_exe = '';
@@ -239,12 +283,16 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
       } else if(ename == 'NTPADDRESSES') {
         ntpAddress.push(evalue);
 
+      } else if(ename == 'isDeleteLog') {
+        isDeleteLog = (evalue == "true");
       } else if(ename == 'logMaxSize') {
         logMaxSize = evalue;
       } else if(ename == 'logMaxCount') {
         logMaxCount = evalue;
       } else if(ename == 'logRemainDate') {
         logRemainDate = evalue;
+      } else if(ename == 'systemKeepFree') {
+        systemKeepFree = evalue;
 
       } else if(ename == 'transmit_boot') {
         transmit_boot = (isForViewer) ? convertLogLevelString(evalue) : evalue;
@@ -299,9 +347,11 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
       selectedNtpIndex: selectedNtpIndex,
       ntpAddress: List(ntpAddress),
 
+      isDeleteLog: isDeleteLog,
       logMaxSize: logMaxSize,
       logMaxCount: logMaxCount,
       logRemainDate: logRemainDate,
+      systemKeepFree: systemKeepFree,
 
       transmit_boot: transmit_boot,
       transmit_exe: transmit_exe,
