@@ -109,6 +109,18 @@ export default {
           icon: 'icon-wrench',
           level: 2,
         },
+        {
+          name: '클라우드서비스연동',
+          url: '/system/cloudservicemng/GRM0503/클라우드서비스연동',
+          icon: 'icon-notebook',
+          level: 2,
+        },
+        {
+          name: '테마관리',
+          url: '/system/thememng/GRM0504/테마관리',
+          icon: 'icon-notebook',
+          level: 2,
+        },
       ]
     }, {
       name: '작업',
@@ -145,38 +157,6 @@ export default {
           icon: 'icon-notebook',
           level: 2,
         }
-      ]
-    }, {
-      name: '시스템관리',
-      url: '/system',
-      icon: 'icon-screen-desktop',
-      level: 1,
-      children: [
-        {
-          name: '관리자계정관리',
-          url: '/system/adminusermng/GRM0901/관리자계정관리',
-          icon: 'icon-notebook',
-          level: 2,
-        },
-        {
-          name: '구름관리서버설정',
-          url: '/system/serverurl/GRM0902/구름관리서버설정',
-          icon: 'icon-notebook',
-          level: 2,
-        },
-        {
-          name: '클라우드서비스연동',
-          url: '/system/cloudservicemng/GRM0903/클라우드서비스연동',
-          icon: 'icon-notebook',
-          level: 2,
-        },
-        {
-          name: '테마관리',
-          url: '/system/thememng/GRM0904/테마관리',
-          icon: 'icon-notebook',
-          level: 2,
-        },
-        
       ]
     }
   ]

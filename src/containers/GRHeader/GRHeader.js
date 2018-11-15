@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+import { Link } from 'react-router-dom';
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -79,8 +81,8 @@ class GRHeader extends Component {
                   <Paper>
                     <ClickAwayListener onClickAway={this.handleClose}>
                       <MenuList>
-                        <MenuItem onClick={this.handleClose}>서버설정</MenuItem>
-                        <MenuItem onClick={this.handleClose}>관리자관리</MenuItem>
+                        <MenuItem component={Link} to={'/system/serverurl/GRM9901/구름관리서버설정'}>서버설정</MenuItem>
+                        <MenuItem component={Link} to={'/system/adminusermng/GRM9902/관리자계정관리'}>관리자관리</MenuItem>
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>
