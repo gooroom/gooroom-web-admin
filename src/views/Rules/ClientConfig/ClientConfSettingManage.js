@@ -118,6 +118,11 @@ class ClientConfSettingManage extends Component {
   handleCreateButton = () => {
     this.props.ClientConfSettingActions.showDialog({
       viewItem: Map({
+        isDeleteLog: false,
+        logRemainDate: '0',
+        logMaxSize: 100,
+        logMaxCount: 5,
+        systemKeepFree: 10,
         transmit_os: 'err',
         notify_os: 'err',
         show_os: 'notice',

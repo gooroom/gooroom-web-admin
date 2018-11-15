@@ -188,8 +188,10 @@ const makeParameter = (param) => {
         objName: param.get('objNm'),
         objComment: param.get('comment'),
 
+        isDeleteLog: param.get('isDeleteLog'),
         logMaxSize: param.get('logMaxSize'),
         logMaxCount: param.get('logMaxCount'),
+        systemKeepFree: param.get('systemKeepFree'),
         logRemainDate: param.get('logRemainDate'),
 
         transmit_boot: param.get('transmit_boot'),
