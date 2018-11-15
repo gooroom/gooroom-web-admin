@@ -353,20 +353,6 @@ class UserMasterManage extends Component {
     }
   };
 
-  handleCreateUserButton = value => {
-    const { UserActions } = this.props;
-    UserActions.showDialog({
-      ruleSelectedViewItem: {
-        userId: '',
-        userNm: '',
-        userPasswd: '',
-        showPasswd: false
-      },
-      ruleDialogType: UserDialog.TYPE_ADD
-    }, true);
-  };
-
-
   render() {
     const { classes } = this.props;
     const compId = this.props.match.params.grMenuId;
@@ -377,7 +363,7 @@ class UserMasterManage extends Component {
         <GRPane>
 
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
-            <Grid item xs={12} sm={5} style={{border: '0px solid #efefef'}} >
+            <Grid item xs={12} sm={5} style={{border: '0px solid #efefef', marginTop:21}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
                   <Grid item>
@@ -447,24 +433,9 @@ class UserMasterManage extends Component {
             </Grid>
 
             <Grid item xs={12} sm={7} style={{border: '0px solid #efefef'}} >
-              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Grid container spacing={0} alignItems="center" direction="row" justify="flex-end">
-                    <Tooltip title="부서이동">
-                      <span>
-                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleMoveUserToDept} disabled={this.isUserChecked()} >
-                        <MoveIcon /><DeptIcon />
-                      </Button>
-                      </span>
-                    </Tooltip>
-                    <Tooltip title="신규사용자 생성">
-                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateUserButton} style={{marginLeft: "4px"}}>
-                        <AddIcon /><AccountIcon />
-                      </Button>
-                    </Tooltip>
-                </Grid>
-              </Toolbar>
               <UserListComp name='UserListComp' compId={compId} deptCd='' 
                 onSelect={this.handleUserSelect}
+                onMoveUserToDept={this.handleMoveUserToDept}
               />
             </Grid>
 

@@ -95,8 +95,6 @@ class GRSideMenu extends React.Component {
       const menuclass = item.level == 1 ? classes.menuItemClass : classes.nestedClass;
       const menuIcon = (item.level == 1) ? <DashIcon /> : <ArrowRightIcon />
 
-
-      console.log('item.url :::::::::::: ', item.url );
       return (
         <MenuItem key={key} 
           className={menuclass} 

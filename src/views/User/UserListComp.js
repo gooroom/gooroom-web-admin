@@ -22,6 +22,7 @@ import GRPageHeader from "containers/GRContent/GRPageHeader";
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import UserBasicDialog from "views/User/UserBasicDialog";
+import UserDialog from "views/User/UserDialog";
 import GRPane from "containers/GRContent/GRPane";
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
@@ -38,12 +39,16 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import FormControl from '@material-ui/core/FormControl';
 
 import Checkbox from "@material-ui/core/Checkbox";
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
+import MoveIcon from '@material-ui/icons/Redo';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
+import AccountIcon from '@material-ui/icons/AccountBox';
+import DeptIcon from '@material-ui/icons/WebAsset';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -103,6 +108,11 @@ class UserListComp extends Component {
     }
   };
 
+  handleSelectBtnClick = () => {
+    const { UserActions, UserProps, compId } = this.props;
+    UserActions.readUserListPaged(UserProps, compId, {page: 0});
+  };
+
   // edit
   handleEditClick = (event, id) => { 
     const { UserProps, UserActions, compId } = this.props;
@@ -120,22 +130,20 @@ class UserListComp extends Component {
     GRConfirmActions.showConfirm({
       confirmTitle: '사용자정보 삭제',
       confirmMsg: '사용자정보(' + viewItem.get('userNm') + ')을 삭제하시겠습니까?',
-      handleConfirmResult: this.handleDeleteConfirmResult,
+      handleConfirmResult: (confirmValue, confirmObject) => {
+        if(confirmValue) {
+          const { UserProps, UserActions, compId } = this.props;
+          UserActions.deleteUserData({
+            compId: compId,
+            userId: confirmObject.get('userId')
+          }).then(() => {
+            UserActions.readUserListPaged(UserProps, compId);
+          });
+        }
+      },
       confirmObject: viewItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue, confirmObject) => {
-    if(confirmValue) {
-      const { UserProps, UserActions, compId } = this.props;
-      UserActions.deleteUserData({
-        compId: compId,
-        userId: confirmObject.get('userId')
-      }).then(() => {
-        UserActions.readUserListPaged(UserProps, compId);
-      });
-    }
-  };
-
 
   handleClickAllCheck = (event, checked) => {
     const { UserActions, UserProps, compId } = this.props;
@@ -177,6 +185,42 @@ class UserListComp extends Component {
     return (selectId == id);
   }
 
+  isUserChecked = () => {
+    const { UserProps, compId } = this.props;
+    const checkedIds = UserProps.getIn(['viewItems', compId, 'checkedIds']);
+    return (checkedIds && checkedIds.size > 0) ? false : true;
+  }
+
+  handleCreateUserButton = value => {
+    const { UserActions } = this.props;
+    UserActions.showDialog({
+      ruleSelectedViewItem: {
+        userId: '',
+        userNm: '',
+        userPasswd: '',
+        showPasswd: false
+      },
+      ruleDialogType: UserDialog.TYPE_ADD
+    }, true);
+  };
+
+  // .................................................
+  handleKeywordChange = (name, value) => {
+    this.props.UserActions.changeListParamData({
+      name: name, 
+      value: value,
+      compId: this.props.compId
+    });
+  }
+
+  handleChangeUserStatusSelect = (value) => {
+    this.props.UserActions.changeListParamData({
+      name: 'status', 
+      value: (value == 'ALL') ? '' : value,
+      compId: this.props.compId
+    });
+  }
+
   render() {
 
     const { classes } = this.props;
@@ -190,6 +234,39 @@ class UserListComp extends Component {
 
     return (
       <div>
+      {/* data option area */}
+        <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
+          <Grid item xs={3} >
+            <FormControl fullWidth={true}>
+              <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={3}>
+            <FormControl fullWidth={true}>
+              <KeywordOption handleKeywordChange={this.handleKeywordChange} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={2}>
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+              <Search />조회
+            </Button>
+          </Grid>
+          <Grid item xs={4} style={{textAlign:'right'}}>
+            <Tooltip title="부서이동">
+              <span>
+              <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.props.onMoveUserToDept} disabled={this.isUserChecked()} >
+                <MoveIcon /><DeptIcon />
+              </Button>
+              </span>
+            </Tooltip>
+            <Tooltip title="신규사용자 생성">
+              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateUserButton} style={{marginLeft: "4px"}}>
+                <AddIcon /><AccountIcon />
+              </Button>
+            </Tooltip>
+          </Grid>
+        </Grid>
+
       {(listObj) &&
         <Table>
           <GRCommonTableHead
