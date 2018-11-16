@@ -167,6 +167,15 @@ class ClientManageComp extends Component {
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {page: 0});
   };
 
+  formatBytes = (bytes, decimals) => {
+    if(bytes == 0) return '0 Bytes';
+    const k = 1024,
+        dm = decimals <= 0 ? 0 : decimals || 2,
+        sizes = ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'],
+        i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + sizes[i];
+  };
+
   render() {
     const { classes } = this.props;
     const { ClientManageProps, compId } = this.props;
@@ -231,6 +240,9 @@ class ClientManageComp extends Component {
               const isChecked = this.isChecked(n.get('clientId'));
               const isSelected = this.isSelected(n.get('clientId'));
 
+              const storageNumber = (n.get('strgSize') && n.get('strgSize') > 0) ? 
+                this.formatBytes(n.get('strgUse'), 1) + '/' + this.formatBytes(n.get('strgSize'), 1) : '-';
+
               return (
                 <TableRow
                   hover
@@ -244,14 +256,14 @@ class ClientManageComp extends Component {
                     <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('clientId'))}/>
                   </TableCell>
                 }
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('viewStatus')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('viewStatus')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('loginId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientGroupName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YYYY-MM-DD')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell} >{n.get('strgSize')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell} >{n.get('totalCnt')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell} >{storageNumber}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('totalCnt')}</TableCell>
                 </TableRow>
               );
             })}

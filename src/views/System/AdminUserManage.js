@@ -173,6 +173,15 @@ class AdminUserManage extends Component {
     });
   }
 
+  handleChangeUserStatusSelect = (value) => {
+    this.props.AdminUserActions.changeListParamData({
+      name: 'status', 
+      value: (value == 'ALL') ? '' : value,
+      compId: this.props.match.params.grMenuId
+    });
+  }
+
+
   render() {
     const { classes } = this.props;
     const { AdminUserProps } = this.props;

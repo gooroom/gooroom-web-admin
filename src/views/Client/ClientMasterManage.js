@@ -31,6 +31,10 @@ import GRPane from 'containers/GRContent/GRPane';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientSelectDialog from "views/Client/ClientSelectDialog";
 
+import ClientConfSettingDialog from "views/Rules/ClientConfig/ClientConfSettingDialog";
+import ClientHostNameDialog from "views/Rules/HostName/ClientHostNameDialog";
+import ClientUpdateServerDialog from "views/Rules/UpdateServer/ClientUpdateServerDialog";
+
 import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
@@ -415,6 +419,10 @@ class ClientMasterManage extends Component {
             onClose={this.handleClientSelectClose} 
             selectedGroupItem={ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem'])}
           />
+
+          <ClientConfSettingDialog compId={compId} />
+          <ClientHostNameDialog compId={compId} />
+          <ClientUpdateServerDialog compId={compId} />
 
           <BrowserRuleDialog compId={compId} />
           <SecurityRuleDialog compId={compId} />
