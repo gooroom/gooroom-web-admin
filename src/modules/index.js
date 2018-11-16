@@ -18,7 +18,6 @@ import JobManageModule from './JobManageModule';
 import CommonOptionModule from './CommonOptionModule';
 
 import ClientConfSettingModule from './ClientConfSettingModule';
-import ClientDesktopConfigModule from './ClientDesktopConfigModule';
 import ClientHostNameModule from './ClientHostNameModule';
 import ClientUpdateServerModule from './ClientUpdateServerModule';
 
@@ -46,7 +45,6 @@ export default combineReducers({
     ClientProfileSetModule,
 
     ClientConfSettingModule,
-    ClientDesktopConfigModule,
     ClientHostNameModule,
     ClientUpdateServerModule,
 

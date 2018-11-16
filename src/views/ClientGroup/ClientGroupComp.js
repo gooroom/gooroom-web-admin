@@ -17,8 +17,6 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
-import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
-
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
@@ -288,8 +286,7 @@ const mapStateToProps = (state) => ({
   ClientGroupProps: state.ClientGroupModule,
   ClientConfSettingProps: state.ClientConfSettingModule,
   ClientHostNameProps: state.ClientHostNameModule,
-  ClientUpdateServerProps: state.ClientUpdateServerModule,
-  ClientDesktopConfigProps: state.ClientDesktopConfigModule
+  ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -302,8 +299,6 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
-
-  ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch),
 
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
