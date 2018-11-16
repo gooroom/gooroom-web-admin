@@ -180,15 +180,7 @@ class ClientGroupSpec extends Component {
           <Divider />
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
-              <Grid item xs={12} md={12} lg={6} xl={4}>
-                <ClientConfSettingSpec compId={compId} specType="inform" targetType="GROUP"
-                  hasAction={true} inherit={false}
-                  selectedItem={(selectedClientConfSettingItem) ? selectedClientConfSettingItem.get('viewItem') : null}
-                  ruleGrade={(selectedClientConfSettingItem) ? selectedClientConfSettingItem.get('ruleGrade') : null}
-                  onClickEdit={this.handleEditClickForClientConfSetting}
-                />
-              </Grid>
-              <Grid item xs={12} md={12} lg={6} xl={4} >
+              <Grid item xs={12} md={12} lg={6} xl={6} >
                 <ClientHostNameSpec compId={compId} specType="inform" targetType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedClientHostNameItem) ? selectedClientHostNameItem.get('viewItem') : null}
@@ -196,7 +188,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientHostName}
                 />
               </Grid>
-              <Grid item xs={12} md={12} lg={6} xl={4} >
+              <Grid item xs={12} md={12} lg={6} xl={6} >
                 <ClientUpdateServerSpec compId={compId} specType="inform" targetType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedClientUpdateServerItem) ? selectedClientUpdateServerItem.get('viewItem') : null}
@@ -204,7 +196,15 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientUpdateServer}
                 />
               </Grid>
-              <Grid item xs={12} md={12} lg={6} xl={4} >
+              <Grid item xs={12} md={12} lg={6} xl={6}>
+                <ClientConfSettingSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedClientConfSettingItem) ? selectedClientConfSettingItem.get('viewItem') : null}
+                  ruleGrade={(selectedClientConfSettingItem) ? selectedClientConfSettingItem.get('ruleGrade') : null}
+                  onClickEdit={this.handleEditClickForClientConfSetting}
+                />
+              </Grid>
+              <Grid item xs={12} md={12} lg={6} xl={6} >
                 <MediaRuleSpec compId={compId} specType="inform" targetType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
@@ -212,7 +212,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForMediaRule}
                 />
               </Grid>
-              <Grid item xs={12} md={12} lg={6} xl={4}>
+              <Grid item xs={12} md={12} lg={6} xl={6}>
                 <BrowserRuleSpec compId={compId} specType="inform" targetType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
@@ -220,7 +220,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForBrowserRule}
                 />
               </Grid>
-              <Grid item xs={12} md={12} lg={6} xl={4} >
+              <Grid item xs={12} md={12} lg={6} xl={6} >
                 <SecurityRuleSpec compId={compId} specType="inform" targetType="GROUP"
                   hasAction={true} inherit={false}
                   selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
