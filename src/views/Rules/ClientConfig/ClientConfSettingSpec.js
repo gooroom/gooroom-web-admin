@@ -219,19 +219,19 @@ export const convertLogLevelString = (param) => {
   if(param == 'emerg') {
     return 'Emergency (긴급)';
   } else if(param == 'alert') {
-    return 'Emergency (경보)';
+    return 'Alert (경보)';
   } else if(param == 'crit') {
-    return 'Emergency (위험)';
+    return 'Critical (위험)';
   } else if(param == 'err') {
-    return 'Emergency (오류)';
+    return 'Error (오류)';
   } else if(param == 'warnning') {
-    return 'Emergency (경고)';
+    return 'Warning (경고)';
   } else if(param == 'notice') {
-    return 'Emergency (알림)';
+    return 'Notice (알림)';
   } else if(param == 'info') {
-    return 'Emergency (정보)';
+    return 'Informational (정보)';
   } else if(param == 'debug') {
-    return 'Emergency (디버깅)';
+    return 'Debug (디버깅)';
   } else {
     return param;
   }

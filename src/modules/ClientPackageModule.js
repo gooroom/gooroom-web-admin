@@ -88,6 +88,7 @@ export const readPackageListPagedInClient = (module, compId, extParam) => dispat
     return requestPostAPI('readPackageListPagedInClient', {
         keyword: newListParam.get('keyword'),
         clientId: newListParam.get('clientId'),
+        isFiltered: (newListParam.get('isFiltered')) ? newListParam.get('isFiltered') : false,
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),
         length: newListParam.get('rowsPerPage'),

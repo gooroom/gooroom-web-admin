@@ -43,11 +43,11 @@ class ClientManageCompWithPackage extends Component {
 
   columnHeaders = [
     { id: "chCheckbox", isCheckbox: true},
-    { id: 'chClientId', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'chClientNm', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'chClientGroupNm', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
-    { id: 'chPackageCount', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' },
-    { id: 'chUpdateCount', isOrder: true, numeric: false, disablePadding: true, label: '업데이트수' }
+    { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
+    { id: 'clientId', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
+    { id: 'clientGroupNm', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
+    { id: 'packageCount', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' },
+    { id: 'updateCount', isOrder: true, numeric: false, disablePadding: true, label: '업데이트수' }
   ];
 
   componentDidMount() {
@@ -225,11 +225,11 @@ class ClientManageCompWithPackage extends Component {
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                     <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('clientId'))}/>
                   </TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('clientGroupName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('totalCnt')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{Number(n.get('updateTargetCnt')) + Number(n.get('updateMainOsCnt'))}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientGroupName')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('totalCnt')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{Number(n.get('updateTargetCnt')) + Number(n.get('updateMainOsCnt'))}</TableCell>
                 </TableRow>
               );
             })}
