@@ -18,8 +18,7 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 
-import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
-
+import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -100,7 +99,7 @@ class ClientGroupManage extends Component {
 
   handleSelectRow = (event, id) => {
     const { ClientGroupProps } = this.props;
-    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -138,12 +137,8 @@ class ClientGroupManage extends Component {
     SoftwareFilterActions.getSoftwareFilterByGroupId({ 
       compId: compId, groupId: grpId 
     });
-
-
-    // '데스크톱 정보설정' : 정책 정보 변경
-    ClientDesktopConfigActions.getClientDesktopConfig({
-      compId: compId, desktopConfId: selectRowObject.get('desktopConfigId')
-    });   
+    // get desktop conf info
+    DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: grpId });   
   };
   // .................................................
 
@@ -323,8 +318,7 @@ const mapStateToProps = (state) => ({
   ClientGroupProps: state.ClientGroupModule,
   ClientConfSettingProps: state.ClientConfSettingModule,
   ClientHostNameProps: state.ClientHostNameModule,
-  ClientUpdateServerProps: state.ClientUpdateServerModule,
-  ClientDesktopConfigProps: state.ClientDesktopConfigModule
+  ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -338,9 +332,8 @@ const mapDispatchToProps = (dispatch) => ({
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
   
-  ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch),
-
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
