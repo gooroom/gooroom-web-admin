@@ -44,6 +44,7 @@ class ClientManageComp extends Component {
   columnHeaders = [
     { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
     { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
+    { id: 'clientId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
     { id: 'loginId', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
     { id: 'clientGroupName', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
     { id: 'lastLoginDate', isOrder: true, numeric: false, disablePadding: true, label: '최종접속일' },
@@ -258,6 +259,7 @@ class ClientManageComp extends Component {
                 }
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('viewStatus')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('loginId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientGroupName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YY/MM/DD HH:mm')}</TableCell>

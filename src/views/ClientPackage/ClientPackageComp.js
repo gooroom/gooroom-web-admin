@@ -28,6 +28,10 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Switch from '@material-ui/core/Switch';
+
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -140,6 +144,23 @@ class ClientPackageComp extends Component {
     });
   }
 
+  handleValueChange = name => event => {
+    const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
+    const { compId, ClientPackageActions } = this.props;
+    const promise = new Promise(function(resolve, reject) {
+      ClientPackageActions.changeListParamData({
+        name: name,
+        value: value,
+        compId: compId
+      });
+      resolve();
+    });
+    
+    promise.then(() => {
+      this.handleSelectBtnClick();
+    });
+  }
+
   render() {
     const { classes } = this.props;
     const { ClientPackageProps, compId } = this.props;
@@ -156,27 +177,38 @@ class ClientPackageComp extends Component {
 
       <div>
         {/* data option area */}
+        {listObj &&
         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
-          <Grid item xs={4} >
+          <Grid item xs={3} >
             <FormControl fullWidth={true}>
               <TextField label="단말아이디" value={(selectedClientId) ? selectedClientId : ""} disabled={true} />
             </FormControl>
           </Grid>
-          <Grid item xs={4} >
+          <Grid item xs={3} >
             <FormControl fullWidth={true}>
               <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
             </FormControl>
           </Grid>
-          <Grid item xs={4} >
+          <Grid item xs={2} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
               <Search />조회
             </Button>
           </Grid>
+          <Grid item xs={4} >
+            <FormLabel style={{marginRight:"50px"}}>리스트구분</FormLabel>
+            <FormControlLabel
+                control={
+                <Switch onChange={this.handleValueChange('isFiltered')} color="primary"
+                    checked={(listObj.getIn(['listParam', 'isFiltered'])) ? listObj.getIn(['listParam', 'isFiltered']) : false} />
+                }
+                label={(listObj.getIn(['listParam', 'isFiltered'])) ? '차이있는 패키지만 보기' : '전체 패키지 보기'}
+            />
+          </Grid>
         </Grid>
-
+        }
         {/* data area */}
         {listObj &&
-        <Table>
+          <Table>
           <GRCommonTableHead
             classes={classes}
             keyId="packageId"

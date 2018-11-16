@@ -92,7 +92,7 @@ class ClientPackageManage extends Component {
     });
     // show package list by client id
     ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {
-      clientId: selectedClientObj.get('clientId'), page:0
+      clientId: selectedClientObj.get('clientId'), page:0, isFiltered: false
     });
 
 
