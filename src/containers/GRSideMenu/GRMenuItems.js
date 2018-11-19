@@ -7,9 +7,38 @@ export default {
       level: 1
     }, {
       name: '통계',
-      url: '/statistic/GRM0902/통계',
+      url: '/statistic',
       icon: 'icon-screen-desktop',
-      level: 1
+      level: 1,
+      children: [
+        {
+          name: '일별침해통계',
+          url: '/statistic/dailybreach/GRM0931/일별침해통계',
+          icon: 'icon-wrench',
+          level: 2,
+        }, {
+          name: '일별접속통계',
+          url: '/statistic/dailyconnect/GRM0932/단말등록키',
+          icon: 'icon-notebook',
+          level: 2,
+        },
+        {
+          name: '단말등록통계',
+          url: '/statistic/dailyregist/GRM0933/업데이트서버',
+          icon: 'icon-folder',
+          level: 2,
+        }, {
+          name: '사용로그',
+          url: '/statistic/clientlog/GRM0934/사용로그',
+          icon: 'icon-layers',
+          level: 2,
+        }, {
+          name: '보안로그',
+          url: '/statistic/secretlog/GRM0935/보안로그',
+          icon: 'icon-notebook',
+          level: 2,
+        }
+      ]
     }, {
       name: '단말',
       url: '/clients',

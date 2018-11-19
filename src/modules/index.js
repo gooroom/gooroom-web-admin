@@ -35,6 +35,7 @@ import GcspManageModule from './GcspManageModule';
 import ThemeManageModule from './ThemeManageModule';
 
 import AdminModule from './AdminModule';
+import SecurityLogModule from './SecurityLogModule';
 
 
 export default combineReducers({
@@ -73,6 +74,7 @@ export default combineReducers({
     GcspManageModule,
     ThemeManageModule,
 
-    AdminModule
+    AdminModule,
+    SecurityLogModule
 
 });
