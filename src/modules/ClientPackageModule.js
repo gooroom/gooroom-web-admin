@@ -17,6 +17,7 @@ const CLOSE_CLIENTPACKAGE_DIALOG = 'clientPackage/CLOSE_CLIENTPACKAGE_DIALOG';
 const GET_CLIENTPACKAGE_LISTPAGED_SUCCESS = 'clientPackage/GET_CLIENTPACKAGE_LISTPAGED_SUCCESS';
 
 const UPDATE_PACKAGETOCLIENT_SUCCESS = 'clientPackage/UPDATE_PACKAGETOCLIENT_SUCCESS';
+const UPDATE_PACKAGELIST_SUCCESS = 'clientPackage/UPDATE_PACKAGELIST_SUCCESS';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chPackageId', 'asc', {dialogTabValue: 0});
@@ -158,22 +159,23 @@ export const updatePackageInClient = (param) => dispatch => {
     });
 };
 
-export const updateAllPackage = (param) => dispatch => {
-    // dispatch({type: COMMON_PENDING});
-    // return requestPostAPI('createPackageAllUpgrade', {'groupId': param.grpId}).then(
-    //     (response) => {
-    //         dispatch({
-    //             type: DELETE_CLIENTPACKAGE_SUCCESS,
-    //             compId: param.compId,
-    //             grpId: param.grpId
-    //         });
-    //     }
-    // ).catch(error => {
-    //     dispatch({
-    //         type: COMMON_FAILURE,
-    //         error: error
-    //     });
-    // });
+export const updatePackageList = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createPackageAllUpgrade', {}).then(
+        (response) => {
+            dispatch({
+                type: UPDATE_PACKAGELIST_SUCCESS,
+                compId: param.compId,
+                grpId: param.grpId
+            });
+            return {response: response};
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
 };
 
 
@@ -214,6 +216,11 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     },
     [UPDATE_PACKAGETOCLIENT_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false, error: false
+        });
+    },
+    [UPDATE_PACKAGELIST_SUCCESS]: (state, action) => {
         return state.merge({
             pending: false, error: false
         });

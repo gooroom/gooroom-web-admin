@@ -145,8 +145,8 @@ class ClientGroupComp extends Component {
 
   isSelected = id => {
     const { ClientGroupProps, compId } = this.props;
-    const selectId = getDataObjectVariableInComp(ClientGroupProps, compId, 'selectId');
-    return (selectId == id);
+    const selectedGroupItem = getDataObjectVariableInComp(ClientGroupProps, compId, 'viewItem');
+    return (selectedGroupItem && selectedGroupItem.get('grpId') == id);
   }
 
   // .................................................
