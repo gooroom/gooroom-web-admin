@@ -61,8 +61,8 @@ class ClientPackageManage extends Component {
     const compId = this.props.match.params.grMenuId;
 
     ClientGroupActions.changeCompVariable({
-      name: 'selectId',
-      value: selectedGroupObj.get('grpId'),
+      name: 'viewItem',
+      value: selectedGroupObj,
       compId: compId
     });
     // show client list
@@ -175,8 +175,8 @@ class ClientPackageManage extends Component {
   }
 
   isGroupSelected = () => {
-    const groupSelectId = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectId']);
-    return (groupSelectId && groupSelectId !== '') ? false : true;
+    const selectedGroupItem = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
+    return (selectedGroupItem) ? true : false;
   }
 
   // install package user selected
@@ -292,24 +292,23 @@ class ClientPackageManage extends Component {
     GRConfirmActions.showConfirm({
       confirmTitle: '전체패키지 업데이트',
       confirmMsg: '선택하신 단말의 업데이트 가능 패키지를 모두 업데이트 하겠습니까?',
-      handleConfirmResult: this.handleAllUpdateForClientConfirmResult,
+      handleConfirmResult: (confirmValue, confirmObject) => {
+        if(confirmValue) {
+          const { ClientManageProps } = this.props;
+          const compId = this.props.match.params.grMenuId;
+          
+          //const checkedGroupIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+          const checkedClientIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    
+          ClientPackageActions.updatePackageList({
+            compId: compId
+          }).then(() => {
+            ClientManageActions.readClientListPaged(ClientManageProps, compId, { page:0 });
+          });
+        }
+      },
     });
   }
-  handleAllUpdateForClientConfirmResult = (confirmValue, confirmObject) => {
-    if(confirmValue) {
-      const { ClientPackageProps, ClientPackageAction, ClientManageProps } = this.props;
-      const compId = this.props.match.params.grMenuId;
-      
-      //const checkedGroupIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-      const checkedClientIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-
-      ClientPackageActions.updateAllPackage({
-        compId: compId
-      }).then(() => {
-        ClientManageActions.readClientListPaged(ClientManageProps, compId, { page:0 });
-      });
-    }
-  };
 
   handleAddPackage = (event) => {
     const checkedClientIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
@@ -359,7 +358,7 @@ class ClientPackageManage extends Component {
 
                   <Tooltip title="그룹에 단말추가">
                   <span>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={!(this.isGroupSelected())} >
                       <AddIcon /><ClientIcon />
                     </Button>
                   </span>

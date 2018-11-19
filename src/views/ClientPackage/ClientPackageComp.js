@@ -234,9 +234,9 @@ class ClientPackageComp extends Component {
                 </TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('packageId')}</TableCell>
-                <TableCell className={classes.grSmallAndClickCell}>{n.get('packageArch')}</TableCell>
-                <TableCell className={classes.grSmallAndClickCell}>{n.get('installVer')}</TableCell>
-                <TableCell className={classes.grSmallAndClickCell}>{n.get('packageLastVer')}</TableCell>
+                <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('packageArch')}</TableCell>
+                <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('installVer')}</TableCell>
+                <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('packageLastVer')}</TableCell>
               </TableRow>
             );
           })}
