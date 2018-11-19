@@ -45,7 +45,7 @@ class ClientListForSelect extends Component {
           groupId: '',
           keyword: '',
           orderDir: 'asc',
-          orderColumn: 'clientName',
+          orderColumn: 'CLIENT_NM',
           page: 0,
           rowsPerPage: 10,
           rowsPerPageOptions: List([5, 10, 25]),

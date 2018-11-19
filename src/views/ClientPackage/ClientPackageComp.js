@@ -177,10 +177,14 @@ class ClientPackageComp extends Component {
               clientIds: this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'listParam', 'clientId']),
               packageIds: confirmObject.checkedPackageIds.join(',')
             }).then(() => {
-              console.log('111');
               // ClientManageActions.readClientListPaged(ClientManageProps, compId, {
               //   page:0
               // }, {isResetSelect:true});
+              if(response && response.status && response.status.result === 'success') {
+                console.log('SUCCESS ...........');
+              } else {
+                  console.log('FAIL ...........');
+              }
             });
           }}),
         confirmObject: {checkedPackageIds: checkedPackageIds}
@@ -200,10 +204,14 @@ class ClientPackageComp extends Component {
               clientIds: this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'listParam', 'clientId']),
               packageIds: confirmObject.checkedPackageIds.join(',')
             }).then(() => {
-              console.log('111');
               // ClientManageActions.readClientListPaged(ClientManageProps, compId, {
               //   page:0
               // }, {isResetSelect:true});
+              if(response && response.status && response.status.result === 'success') {
+                console.log('SUCCESS ...........');
+              } else {
+                  console.log('FAIL ...........');
+              }              
             });
           }}),
         confirmObject: {checkedPackageIds: checkedPackageIds}

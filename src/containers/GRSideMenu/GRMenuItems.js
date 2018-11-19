@@ -26,6 +26,22 @@ export default {
           url: '/clientconfig/regkey/GRM0104/단말등록키',
           icon: 'icon-notebook',
           level: 2,
+        },
+        {
+          name: '업데이트서버',
+          url: '/clientconfig/update/GRM0701/업데이트서버',
+          icon: 'icon-folder',
+          level: 2,
+        }, {
+          name: 'HOSTS',
+          url: '/clientconfig/host/GRM0702/HOSTS',
+          icon: 'icon-layers',
+          level: 2,
+        }, {
+          name: '단말설정',
+          url: '/clientconfig/setting/GRM0703/단말설정',
+          icon: 'icon-notebook',
+          level: 2,
         }
       ]
     }, {
@@ -54,8 +70,8 @@ export default {
       level: 1,
       children: [
         {
-          name: '사용자통합관리',
-          url: '/user/usermastermanage/GRM0301/사용자통합관리',
+          name: '사용자관리',
+          url: '/user/usermastermanage/GRM0301/사용자관리',
           icon: 'icon-wrench',
           level: 2,
         }
@@ -131,29 +147,6 @@ export default {
         {
           name: '작업정보',
           url: '/jobs/jobmanage/GRM0601/작업정보',
-          icon: 'icon-notebook',
-          level: 2,
-        }
-      ]
-    }, {
-      name: '단말정책',
-      url: '/clientconfig',
-      icon: 'icon-screen-desktop',
-      level: 1,
-      children: [
-        {
-          name: '업데이트서버',
-          url: '/clientconfig/update/GRM0701/업데이트서버',
-          icon: 'icon-folder',
-          level: 2,
-        }, {
-          name: 'HOSTS',
-          url: '/clientconfig/host/GRM0702/HOSTS',
-          icon: 'icon-layers',
-          level: 2,
-        }, {
-          name: '단말설정',
-          url: '/clientconfig/setting/GRM0703/단말설정',
           icon: 'icon-notebook',
           level: 2,
         }

@@ -41,7 +41,8 @@ class ServerUrlInfo extends Component {
         glmIp: '',
         glmDomain: '',
         grmIp: '',
-        grmDomain: ''
+        grmDomain: '',
+        pollingTime: 30
       })
     };
   }
@@ -62,6 +63,7 @@ class ServerUrlInfo extends Component {
             .set('glmDomain', data[0].lmUrl)
             .set('grmIp', data[0].rmIp)
             .set('grmDomain', data[0].rmUrl)
+            .set('pollingTime', data[0].pollingTime)
           }));
         }
     });
@@ -84,18 +86,25 @@ class ServerUrlInfo extends Component {
             lmIp: stateData.get('glmIp'),
             lmUrl: stateData.get('glmDomain'),
             rmIp: stateData.get('grmIp'),
-            rmUrl: stateData.get('grmDomain')
+            rmUrl: stateData.get('grmDomain'),
+            pollingTime: stateData.get('pollingTime')
           }).then(
             (response) => {
-              if(response.data.status.result !== 'success') {
+              if(response && response.data && response.data.status && response.data.status.result === 'success') {
                 this.props.GRAlertActions.showAlert({
-                    alertTitle: '시스템오류',
-                    alertMsg: '구름관리서버설정을 저장되지 않았습니다.'
+                  alertTitle: '수정 완료',
+                  alertMsg: '구름관리서버설정을 저장되었습니다.'
+                });
+                this.getSeverUrlInfo();
+              } else {
+                this.props.GRAlertActions.showAlert({
+                  alertTitle: '시스템오류',
+                  alertMsg: '구름관리서버설정을 저장되지 않았습니다.'
                 });
                 this.getSeverUrlInfo();
               }
-              // ????? do something
-          });
+            }
+          );
       } else {
         this.getSeverUrlInfo();
       }
@@ -189,7 +198,22 @@ class ServerUrlInfo extends Component {
             />
           </CardContent>
         </Card>
-          
+
+        <Card style={{marginTop: 16}}>
+          <CardHeader style={{paddingBottom: 0}}
+            title="구름 Agent 폴링 타임"
+            subheader="구름단말 Agent 와 GRM 서버간의 정보교환 주기"
+          />
+          <CardContent style={{paddingTop: 0}}>
+            <TextField label="Polling Seconds"
+              margin="normal"
+              variant="outlined"
+              value={stateData.get('pollingTime')}
+              onChange={this.handleValueChange("pollingTime")}
+            />
+          </CardContent>
+        </Card>
+
         </GRPane>
         <GRConfirm />
         <GRAlert />
