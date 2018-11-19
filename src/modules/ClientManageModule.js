@@ -28,7 +28,7 @@ const GET_CLIENT_INFORM = 'clientManage/GET_CLIENT_INFORM';
 
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('clientName', 'desc', {}, {
+const initialState = commonHandleActions.getCommonInitialState('CLIENT_NM', 'desc', {}, {
     clientType: 'ALL',
     groupId: '',
     keyword: ''});
