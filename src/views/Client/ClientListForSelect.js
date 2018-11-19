@@ -58,11 +58,11 @@ class ClientListForSelect extends Component {
   }
 
   columnHeaders = [
-    { id: 'chCheckbox', isCheckbox: true},
-    { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'clientId', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'clientGroupName', isOrder: true, numeric: false,disablePadding: true,label: '단말그룹'},
-    { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' }
+    { id: 'checkbox', isCheckbox: true},
+    { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
+    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
+    { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: '단말그룹'},
+    { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' }
   ];
 
   handleGetClientList = (newListParam) => {

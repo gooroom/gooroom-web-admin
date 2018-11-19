@@ -42,15 +42,15 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class ClientManageComp extends Component {
 
   columnHeaders = [
-    { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'clientId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
-    { id: 'loginId', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
-    { id: 'clientGroupName', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
-    { id: 'lastLoginDate', isOrder: true, numeric: false, disablePadding: true, label: '최종접속일' },
-    { id: 'clientIp', isOrder: true, numeric: false, disablePadding: true, label: '최종접속IP' },
-    { id: 'strgSize', isOrder: true, numeric: false, disablePadding: true, label: '용량' },
-    { id: 'totalCnt', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' }
+    { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
+    { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
+    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
+    { id: 'LOGIN_ID', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
+    { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
+    { id: 'LAST_LOGIN_TIME', isOrder: true, numeric: false, disablePadding: true, label: '최종접속일' },
+    { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: '최종접속IP' },
+    { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: '용량' },
+    { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' }
   ];
 
   componentDidMount() {

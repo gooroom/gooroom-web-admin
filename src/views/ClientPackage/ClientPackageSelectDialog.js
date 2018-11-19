@@ -71,7 +71,7 @@ class ClientPackageSelectDialog extends Component {
                 compId: compId
             }).then((response) => {
                 //
-                if(response && response.data && response.data.status && response.data.status.result === 'success') {
+                if(response && response.status && response.status.result === 'success') {
                     console.log('SUCCESS ...........');
                 } else {
                     console.log('FAIL ...........');

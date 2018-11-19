@@ -17,6 +17,7 @@ const CLOSE_CLIENTPACKAGE_DIALOG = 'clientPackage/CLOSE_CLIENTPACKAGE_DIALOG';
 const GET_CLIENTPACKAGE_LISTPAGED_SUCCESS = 'clientPackage/GET_CLIENTPACKAGE_LISTPAGED_SUCCESS';
 
 const UPDATE_PACKAGETOCLIENT_SUCCESS = 'clientPackage/UPDATE_PACKAGETOCLIENT_SUCCESS';
+const DELETE_PACKAGETOCLIENT_SUCCESS = 'clientPackage/DELETE_PACKAGETOCLIENT_SUCCESS';
 const UPDATE_PACKAGELIST_SUCCESS = 'clientPackage/UPDATE_PACKAGELIST_SUCCESS';
 
 // ...
@@ -159,6 +160,29 @@ export const updatePackageInClient = (param) => dispatch => {
     });
 };
 
+export const deletePackageInClient = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('deletePackageInClient', {
+        clientId: param.clientIds,
+        packageIds: param.packageIds
+    }).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: DELETE_PACKAGETOCLIENT_SUCCESS,
+                        response: response
+                    });
+                }
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export const updatePackageList = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('createPackageAllUpgrade', {}).then(
@@ -221,6 +245,11 @@ export default handleActions({
         });
     },
     [UPDATE_PACKAGELIST_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false, error: false
+        });
+    },
+    [DELETE_PACKAGETOCLIENT_SUCCESS]: (state, action) => {
         return state.merge({
             pending: false, error: false
         });

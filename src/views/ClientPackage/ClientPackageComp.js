@@ -23,23 +23,22 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Checkbox from "@material-ui/core/Checkbox";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 
 import Search from '@material-ui/icons/Search'; 
+
+import AddPackageIcon from '@material-ui/icons/SaveAlt';
+import DeletePackageIcon from '@material-ui/icons/RemoveCircle';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -161,6 +160,57 @@ class ClientPackageComp extends Component {
     });
   }
 
+  isPackageSelected = () => {
+    const checkedIds = this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'checkedIds']);
+    return !(checkedIds && checkedIds.size > 0);
+  }
+
+  handleUpdatePackage = () => {
+    const checkedPackageIds = this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'checkedIds']);
+    if(checkedPackageIds && checkedPackageIds.size > 0) {
+      this.props.GRConfirmActions.showConfirm({
+        confirmTitle: '패키지 업데이트',
+        confirmMsg: '패키지(' + checkedPackageIds.size + '개)를 업데이트하시겠습니까?',
+        handleConfirmResult: ((confirmValue, confirmObject) => {
+          if(confirmValue) {
+            this.props.ClientPackageActions.updatePackageInClient({
+              clientIds: this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'listParam', 'clientId']),
+              packageIds: confirmObject.checkedPackageIds.join(',')
+            }).then(() => {
+              console.log('111');
+              // ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+              //   page:0
+              // }, {isResetSelect:true});
+            });
+          }}),
+        confirmObject: {checkedPackageIds: checkedPackageIds}
+      });
+    }
+  }
+
+  handleDeletePackage = () => {
+    const checkedPackageIds = this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'checkedIds']);
+    if(checkedPackageIds && checkedPackageIds.size > 0) {
+      this.props.GRConfirmActions.showConfirm({
+        confirmTitle: '패키지 삭제',
+        confirmMsg: '패키지(' + checkedPackageIds.size + '개)를 삭제하시겠습니까?',
+        handleConfirmResult: ((confirmValue, confirmObject) => {
+          if(confirmValue) {
+            this.props.ClientPackageActions.deletePackageInClient({
+              clientIds: this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'listParam', 'clientId']),
+              packageIds: confirmObject.checkedPackageIds.join(',')
+            }).then(() => {
+              console.log('111');
+              // ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+              //   page:0
+              // }, {isResetSelect:true});
+            });
+          }}),
+        confirmObject: {checkedPackageIds: checkedPackageIds}
+      });
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const { ClientPackageProps, compId } = this.props;
@@ -179,7 +229,7 @@ class ClientPackageComp extends Component {
         {/* data option area */}
         {listObj &&
         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
-          <Grid item xs={3} >
+          <Grid item xs={2} >
             <FormControl fullWidth={true}>
               <TextField label="단말아이디" value={(selectedClientId) ? selectedClientId : ""} disabled={true} />
             </FormControl>
@@ -194,15 +244,30 @@ class ClientPackageComp extends Component {
               <Search />조회
             </Button>
           </Grid>
-          <Grid item xs={4} >
-            <FormLabel style={{marginRight:"50px"}}>리스트구분</FormLabel>
+          <Grid item xs={5} >
             <FormControlLabel
                 control={
-                <Switch onChange={this.handleValueChange('isFiltered')} color="primary"
+                <Switch onChange={this.handleValueChange('isFiltered')} color="primary" style={{height:24}}
                     checked={(listObj.getIn(['listParam', 'isFiltered'])) ? listObj.getIn(['listParam', 'isFiltered']) : false} />
                 }
                 label={(listObj.getIn(['listParam', 'isFiltered'])) ? '차이있는 패키지만 보기' : '전체 패키지 보기'}
+                labelPlacement="start"
+                style={{marginRight:10}}
             />
+            <Tooltip title="패키지 업데이트">
+              <span>
+                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleUpdatePackage} disabled={this.isPackageSelected()} style={{marginRight:10}}>
+                  <AddPackageIcon />
+                </Button>
+              </span>
+            </Tooltip>            
+            <Tooltip title="패키지 삭제">
+              <span>
+                <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeletePackage} disabled={this.isPackageSelected()} >
+                  <DeletePackageIcon />
+                </Button>
+              </span>
+            </Tooltip>            
           </Grid>
         </Grid>
         }
