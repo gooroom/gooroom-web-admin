@@ -203,7 +203,7 @@ class JobManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('errorCount')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('compCount')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD HH:ss')}</TableCell>
                     </TableRow>
                   );
                 })}
