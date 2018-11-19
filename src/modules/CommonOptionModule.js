@@ -62,7 +62,14 @@ const initialState = {
         { levelId: "Notice", levelVal: "notice", levelNm: "알림" },
         { levelId: "Informational", levelVal: "info", levelNm: "정보" },
         { levelId: "Debug", levelVal: "debug", levelNm: "디버깅" }
+    ],
+    protectionTypeData: [
+        { typeIdId: "MEDIA", typeVal: "MEDIA", typeNm: "매체보안" },
+        { typeIdId: "OS", typeVal: "OS", typeNm: "운영체제보안" },
+        { typeIdId: "EXE", typeVal: "EXE", typeNm: "실행보안" },
+        { typeIdId: "BOOT", typeVal: "BOOT", typeNm: "부팅보안" }
     ]
+
 };
 
 export const readClientGroupListAll = (param) => dispatch => {
