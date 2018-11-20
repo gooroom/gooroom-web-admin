@@ -313,6 +313,12 @@ export const GRCommonStyle = theme => ({
         paddingLeft: "0px",
         paddingRight: "0px",
     },
+    grSmallAndHeaderCellAndFix: {
+        paddingLeft: "0px",
+        paddingRight: "0px",
+        position: "sticky",
+        top: 0
+    },
     grSmallAndClickCell: {
         padding: "0px",
         cursor: "pointer"

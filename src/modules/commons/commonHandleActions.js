@@ -127,9 +127,7 @@ export const handleListPagedAction = (state, action) => {
         extend.map(e => {
             newState = newState.setIn(['viewItems', action.compId, 'listParam', e.name], e.value);
         });
-        console.log('newState.TOJS ::::: ', newState.toJS());
     }
-
 
     if(action.extOption) {
         if(action.extOption.isResetSelect) {

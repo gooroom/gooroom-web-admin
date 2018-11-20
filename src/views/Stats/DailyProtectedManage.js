@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
 
+import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
+
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -43,43 +45,21 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class DailyProtectedManage extends Component {
 
   columnHeaders = [
-    { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: '번호' },
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: '사용자' },
-    { id: 'LOG_TP', isOrder: true, numeric: false, disablePadding: true, label: '로그타입' },
-    { id: 'LOG_VALUE', isOrder: true, numeric: false, disablePadding: true, label: '로그정보' },
-    { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: '등록일' }
+    { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: '날짜' },
+    { id: 'boot', isOrder: false, numeric: false, disablePadding: true, label: '부팅보안침해' },
+    { id: 'exe', isOrder: false, numeric: false, disablePadding: true, label: '실행보안침해' },
+    { id: 'os', isOrder: false, numeric: false, disablePadding: true, label: 'OS보안침해' },
+    { id: 'media', isOrder: false, numeric: false, disablePadding: true, label: '매체보안침해' }
   ];
 
   componentDidMount() {
     this.handleSelectBtnClick();
   }
 
-  handleChangePage = (event, page) => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readDailyProtectedListPaged(DailyProtectedProps, this.props.match.params.grMenuId, {
-      page: page
-    });
-  };
-
-  handleChangeRowsPerPage = event => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readDailyProtectedListPaged(DailyProtectedProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value, page: 0
-    });
-  };
-  
-  handleChangeSort = (event, columnId, currOrderDir) => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readDailyProtectedListPaged(DailyProtectedProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
-    });
-  };
-
   // .................................................
   handleSelectBtnClick = () => {
     const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readDailyProtectedListPaged(DailyProtectedProps, this.props.match.params.grMenuId, {page: 0});
+    DailyProtectedActions.readDailyProtectedList(DailyProtectedProps, this.props.match.params.grMenuId, {page: 0});
   };
   
   handleKeywordChange = (name, value) => {
@@ -111,65 +91,6 @@ class DailyProtectedManage extends Component {
     });
   };
 
-  handleCreateButton = () => {
-    this.props.DailyProtectedActions.showDialog({
-      viewItem: Map(),
-      dialogType: DailyProtectedDialog.TYPE_ADD
-    });
-  }
-  
-  handleEditListClick = (event, id) => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    const viewItem = getRowObjectById(DailyProtectedProps, this.props.match.params.grMenuId, id, 'logSeq');
-
-    DailyProtectedActions.showDialog({
-      viewItem: generateDailyProtectedObject(viewItem, false),
-      dialogType: DailyProtectedDialog.TYPE_EDIT
-    });
-  };
-
-  // delete
-  handleDeleteClick = (event, id) => {
-    const { DailyProtectedProps, GRConfirmActions } = this.props;
-    const viewItem = getRowObjectById(DailyProtectedProps, this.props.match.params.grMenuId, id, 'logSeq');
-    GRConfirmActions.showConfirm({
-      confirmTitle: '매체제어정책정보 삭제',
-      confirmMsg: '매체제어정책정보(' + viewItem.get('logSeq') + ')를 삭제하시겠습니까?',
-      handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: viewItem
-    });
-  };
-  handleDeleteConfirmResult = (confirmValue, paramObject) => {
-    if(confirmValue) {
-      const { DailyProtectedActions, DailyProtectedProps } = this.props;
-
-      DailyProtectedActions.deleteDailyProtectedData({
-        logSeq: paramObject.get('logSeq'),
-        compId: this.props.match.params.grMenuId
-      }).then((res) => {
-        refreshDataListInComps(DailyProtectedProps, DailyProtectedActions.readDailyProtectedListPaged);
-      });
-    }
-  };
-
-  // ===================================================================
-  handleClickCopy = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.DailyProtectedProps, compId, targetType);
-    this.props.DailyProtectedActions.showDialog({
-      viewItem: viewItem,
-      dialogType: DailyProtectedDialog.TYPE_COPY
-    });
-  };
-
-  handleClickEdit = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.DailyProtectedProps, compId, targetType);
-    this.props.DailyProtectedActions.showDialog({
-      viewItem: generateDailyProtectedObject(viewItem, false),
-      dialogType: DailyProtectedDialog.TYPE_EDIT
-    });
-  };
-  // ===================================================================
-
   handleParamChange = name => event => {
     this.props.DailyProtectedActions.changeListParamData({
       name: name, 
@@ -187,9 +108,24 @@ class DailyProtectedManage extends Component {
     
     const listObj = DailyProtectedProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
-    if(listObj && listObj.get('listData')) {
-      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    let data = [];
+    if(listObj && listObj.get('listAllData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listAllData').size;
+      data = listObj.get('listAllData').toJS().map((e) => {
+        e.logDate = formatDateToSimple(e.logDate, 'MM/DD');
+        return e;
+      });
     }
+
+    const __data = [
+      {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
+      {name: 'Page B', uv: 3000, pv: 1398, amt: 2210},
+      {name: 'Page C', uv: 2000, pv: 9800, amt: 2290},
+      {name: 'Page D', uv: 2780, pv: 3908, amt: 2000},
+      {name: 'Page E', uv: 1890, pv: 4800, amt: 2181},
+      {name: 'Page F', uv: 2390, pv: 3800, amt: 2500},
+      {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
+    ];
 
     return (
       <div>
@@ -197,13 +133,13 @@ class DailyProtectedManage extends Component {
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={2} >
+            <Grid item xs={3} >
             <TextField label="조회시작일" type="date" style={{width:150}}
               value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
               onChange={this.handleParamChange('fromDate')}
               className={classes.fullWidth} />
             </Grid>
-            <Grid item xs={2} >
+            <Grid item xs={3} >
             <TextField label="조회종료일" type="date" style={{width:150}}
               value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
               onChange={this.handleParamChange('toDate')}
@@ -214,30 +150,47 @@ class DailyProtectedManage extends Component {
               <Search />조회
             </Button>
             </Grid>
-          </Grid>            
+            <Grid item xs={3} ></Grid>
+          </Grid>
+
+          <ResponsiveContainer width='100%' height={300} >
+            <LineChart data={data} margin={{top: 35, right: 10, left: 10, bottom: 35}}>
+              <XAxis dataKey="logDate" />
+              <YAxis type="number" domain={[0, 'dataMax + 5']} />
+              <CartesianGrid strokeDasharray="3 3"/>
+              <Tooltip />
+              <Legend />
+
+              <Line name="부팅보안침해" type="monotone" dataKey="bootProtectorCount" stroke="#82a6ca" />
+              <Line name="실행보안침해" type="monotone" dataKey="exeProtectorCount" stroke="#ca82c2" />
+              <Line name="OS보안침해" type="monotone" dataKey="osProtectorCount" stroke="#caa682" />
+              <Line name="매체보안침해" type="monotone" dataKey="mediaProtectorCount" stroke="#bb4c4c" />
+
+            </LineChart>
+          </ResponsiveContainer>
 
           {/* data area */}
           {(listObj) &&
-          <div>
-            <Table>
+          <div style={{height:300,overflow:'auto'}}>
+            <Table fixedHeader={true}>
               <GRCommonTableHead
                 classes={classes}
-                keyId="logSeq"
+                keyId="logDate"
+                headFix={true}
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
                 columnData={this.columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData').map(n => {
+                {listObj.get('listAllData').map(n => {
                   return (
-                    <TableRow hover key={n.get('logSeq')} >
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('logSeq')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('userId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('logTp')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell} style={{width:400}}>{n.get('logValue')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD HH:mm')}</TableCell>
+                    <TableRow hover key={n.get('logDate')} >
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('logDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('bootProtectorCount') === '0') ? '.' : n.get('bootProtectorCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('exeProtectorCount') === '0') ? '.' : n.get('exeProtectorCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('osProtectorCount') === '0') ? '.' : n.get('osProtectorCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('mediaProtectorCount') === '0') ? '.' : n.get('mediaProtectorCount')}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -252,29 +205,12 @@ class DailyProtectedManage extends Component {
                 )}))}
               </TableBody>
             </Table>
-            <TablePagination
-              component='div'
-              count={listObj.getIn(['listParam', 'rowsFiltered'])}
-              rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
-              rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
-              page={listObj.getIn(['listParam', 'page'])}
-              backIconButtonProps={{
-                'aria-label': 'Previous Page'
-              }}
-              nextIconButtonProps={{
-                'aria-label': 'Next Page'
-              }}
-              onChangePage={this.handleChangePage}
-              onChangeRowsPerPage={this.handleChangeRowsPerPage}
-            />
           </div>
         }
         {/* dialog(popup) component area */}
         <DailyProtectedSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           hasAction={true}
-          onClickCopy={this.handleClickCopy}
-          onClickEdit={this.handleClickEdit}
         />
         </GRPane>
         <DailyProtectedDialog compId={compId} />

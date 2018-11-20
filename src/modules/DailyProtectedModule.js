@@ -55,30 +55,36 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
-export const readDailyProtectedList = (module, compId, targetType) => dispatch => {
-    dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readDailyProtectedList', {
-    }).then(
-        (response) => {
-            dispatch({
-                type: GET_DAILYPROTECTED_LIST_SUCCESS,
-                compId: compId,
-                targetType: targetType,
-                response: response
-            });
-        }
-    ).catch(error => {
-        dispatch({ type: COMMON_FAILURE, error: error });
-    });
-};
-
-export const readDailyProtectedListPaged = (module, compId, extParam) => dispatch => {
+export const readDailyProtectedList = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readDailyProtectedListPaged', {
+    return requestPostAPI('readProtectedDailyCount', {
+        fromDate: newListParam.get('fromDate'),
+        toDate: newListParam.get('toDate')
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_DAILYPROTECTED_LIST_SUCCESS,
+                compId: compId,
+                response: response
+            });
+        }
+    ).catch(error => {
+        console.log('error ::::: ', error);
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+export const ____readDailyProtectedList = (module, compId, extParam) => dispatch => {
+    const newListParam = (module.getIn(['viewItems', compId])) ? 
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam');
+
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readDailyProtectedList', {
         fromDate: newListParam.get('fromDate'),
         toDate: newListParam.get('toDate'),
         logItem: newListParam.get('logItem'),
@@ -158,7 +164,16 @@ export default handleActions({
         });
     },
     [GET_DAILYPROTECTED_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action, 'objId');
+        const { data, extend } = action.response.data;
+        let newListParam = Map();
+        if(extend && extend.length > 0) {
+            extend.forEach(e => { newListParam = newListParam.set(e.name, e.value); });
+        }
+
+        let newState = state.setIn(['viewItems', action.compId, 'listAllData'], List(data.map((e) => {return Map(e)})))
+                            .setIn(['viewItems', action.compId, 'listParam'], newListParam);
+
+        return newState;
     }, 
     [GET_DAILYPROTECTED_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
