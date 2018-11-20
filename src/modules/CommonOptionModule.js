@@ -64,10 +64,10 @@ const initialState = {
         { levelId: "Debug", levelVal: "debug", levelNm: "디버깅" }
     ],
     protectionTypeData: [
-        { typeIdId: "MEDIA", typeVal: "MEDIA", typeNm: "매체보안" },
-        { typeIdId: "OS", typeVal: "OS", typeNm: "운영체제보안" },
-        { typeIdId: "EXE", typeVal: "EXE", typeNm: "실행보안" },
-        { typeIdId: "BOOT", typeVal: "BOOT", typeNm: "부팅보안" }
+        { typeId: "MEDIA", typeVal: "MEDIA", typeNm: "매체보안" },
+        { typeId: "OS", typeVal: "OS", typeNm: "운영체제보안" },
+        { typeId: "EXE", typeVal: "EXE", typeNm: "실행보안" },
+        { typeId: "BOOT", typeVal: "BOOT", typeNm: "부팅보안" }
     ]
 
 };
