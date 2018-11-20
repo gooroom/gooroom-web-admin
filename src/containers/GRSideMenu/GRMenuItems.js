@@ -13,7 +13,7 @@ export default {
       children: [
         {
           name: '일별침해통계',
-          url: '/statistic/dailybreach/GRM0931/일별침해통계',
+          url: '/statistic/dailyprotected/GRM0931/일별침해통계',
           icon: 'icon-wrench',
           level: 2,
         }, {
@@ -29,12 +29,12 @@ export default {
           level: 2,
         }, {
           name: '사용로그',
-          url: '/statistic/clientlog/GRM0934/사용로그',
+          url: '/log/generallog/GRM0934/사용로그',
           icon: 'icon-layers',
           level: 2,
         }, {
           name: '보안로그',
-          url: '/statistic/secretlog/GRM0935/보안로그',
+          url: '/log/secretlog/GRM0935/보안로그',
           icon: 'icon-notebook',
           level: 2,
         }
