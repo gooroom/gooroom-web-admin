@@ -64,10 +64,16 @@ const initialState = {
         { levelId: "Debug", levelVal: "debug", levelNm: "디버깅" }
     ],
     protectionTypeData: [
+        { typeId: "ALL", typeVal: "ALL", typeNm: "전체" },
         { typeId: "MEDIA", typeVal: "MEDIA", typeNm: "매체보안" },
         { typeId: "OS", typeVal: "OS", typeNm: "운영체제보안" },
         { typeId: "EXE", typeVal: "EXE", typeNm: "실행보안" },
         { typeId: "BOOT", typeVal: "BOOT", typeNm: "부팅보안" }
+    ],
+    generalLogTypeData: [
+        { typeId: "ALL", typeVal: "ALL", typeNm: "전체" },
+        { typeId: "BROWSER", typeVal: "BROWSER", typeNm: "브라우저" },
+        { typeId: "AGENT", typeVal: "AGENT", typeNm: "에이전트" }
     ]
 
 };

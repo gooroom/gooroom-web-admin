@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as SecurityLogActions from 'modules/SecurityLogModule';
+import * as DailyProtectedActions from 'modules/DailyProtectedModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -16,12 +16,10 @@ import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
-import KeywordOption from "views/Options/KeywordOption";
-import ProtectionTypeSelect from "views/Options/ProtectionTypeSelect";
 
-import SecurityLogDialog from './SecurityLogDialog';
-import SecurityLogSpec from './SecurityLogSpec';
-import { generateSecurityLogObject } from './SecurityLogSpec';
+import DailyProtectedDialog from './DailyProtectedDialog';
+import DailyProtectedSpec from './DailyProtectedSpec';
+import { generateDailyProtectedObject } from './DailyProtectedSpec';
 
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -29,20 +27,12 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-
-import InputLabel from '@material-ui/core/InputLabel';
-
-import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -50,7 +40,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class SecurityLogManage extends Component {
+class DailyProtectedManage extends Component {
 
   columnHeaders = [
     { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: '번호' },
@@ -66,34 +56,34 @@ class SecurityLogManage extends Component {
   }
 
   handleChangePage = (event, page) => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, {
+    const { DailyProtectedActions, DailyProtectedProps } = this.props;
+    DailyProtectedActions.readDailyProtectedListPaged(DailyProtectedProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, {
+    const { DailyProtectedActions, DailyProtectedProps } = this.props;
+    DailyProtectedActions.readDailyProtectedListPaged(DailyProtectedProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value, page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, {
+    const { DailyProtectedActions, DailyProtectedProps } = this.props;
+    DailyProtectedActions.readDailyProtectedListPaged(DailyProtectedProps, this.props.match.params.grMenuId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, {page: 0});
+    const { DailyProtectedActions, DailyProtectedProps } = this.props;
+    DailyProtectedActions.readDailyProtectedListPaged(DailyProtectedProps, this.props.match.params.grMenuId, {page: 0});
   };
   
   handleKeywordChange = (name, value) => {
-    this.props.SecurityLogActions.changeListParamData({
+    this.props.DailyProtectedActions.changeListParamData({
       name: name, 
       value: value,
       compId: this.props.match.params.grMenuId
@@ -101,47 +91,47 @@ class SecurityLogManage extends Component {
   }
 
   handleSelectRow = (event, id) => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
+    const { DailyProtectedActions, DailyProtectedProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const viewItem = getRowObjectById(SecurityLogProps, compId, id, 'logSeq');
+    const viewItem = getRowObjectById(DailyProtectedProps, compId, id, 'logSeq');
 
     // choice one from two views.
 
     // 1. popup dialog
-    // SecurityLogActions.showDialog({
+    // DailyProtectedActions.showDialog({
     //   viewItem: viewObject,
-    //   dialogType: SecurityLogDialog.TYPE_VIEW,
+    //   dialogType: DailyProtectedDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    SecurityLogActions.showInform({
+    DailyProtectedActions.showInform({
       compId: compId,
       viewItem: viewItem
     });
   };
 
   handleCreateButton = () => {
-    this.props.SecurityLogActions.showDialog({
+    this.props.DailyProtectedActions.showDialog({
       viewItem: Map(),
-      dialogType: SecurityLogDialog.TYPE_ADD
+      dialogType: DailyProtectedDialog.TYPE_ADD
     });
   }
   
   handleEditListClick = (event, id) => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    const viewItem = getRowObjectById(SecurityLogProps, this.props.match.params.grMenuId, id, 'logSeq');
+    const { DailyProtectedActions, DailyProtectedProps } = this.props;
+    const viewItem = getRowObjectById(DailyProtectedProps, this.props.match.params.grMenuId, id, 'logSeq');
 
-    SecurityLogActions.showDialog({
-      viewItem: generateSecurityLogObject(viewItem, false),
-      dialogType: SecurityLogDialog.TYPE_EDIT
+    DailyProtectedActions.showDialog({
+      viewItem: generateDailyProtectedObject(viewItem, false),
+      dialogType: DailyProtectedDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { SecurityLogProps, GRConfirmActions } = this.props;
-    const viewItem = getRowObjectById(SecurityLogProps, this.props.match.params.grMenuId, id, 'logSeq');
+    const { DailyProtectedProps, GRConfirmActions } = this.props;
+    const viewItem = getRowObjectById(DailyProtectedProps, this.props.match.params.grMenuId, id, 'logSeq');
     GRConfirmActions.showConfirm({
       confirmTitle: '매체제어정책정보 삭제',
       confirmMsg: '매체제어정책정보(' + viewItem.get('logSeq') + ')를 삭제하시겠습니까?',
@@ -151,37 +141,37 @@ class SecurityLogManage extends Component {
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
     if(confirmValue) {
-      const { SecurityLogActions, SecurityLogProps } = this.props;
+      const { DailyProtectedActions, DailyProtectedProps } = this.props;
 
-      SecurityLogActions.deleteSecurityLogData({
+      DailyProtectedActions.deleteDailyProtectedData({
         logSeq: paramObject.get('logSeq'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComps(SecurityLogProps, SecurityLogActions.readSecurityLogListPaged);
+        refreshDataListInComps(DailyProtectedProps, DailyProtectedActions.readDailyProtectedListPaged);
       });
     }
   };
 
   // ===================================================================
   handleClickCopy = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityLogProps, compId, targetType);
-    this.props.SecurityLogActions.showDialog({
+    const viewItem = getSelectedObjectInComp(this.props.DailyProtectedProps, compId, targetType);
+    this.props.DailyProtectedActions.showDialog({
       viewItem: viewItem,
-      dialogType: SecurityLogDialog.TYPE_COPY
+      dialogType: DailyProtectedDialog.TYPE_COPY
     });
   };
 
   handleClickEdit = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityLogProps, compId, targetType);
-    this.props.SecurityLogActions.showDialog({
-      viewItem: generateSecurityLogObject(viewItem, false),
-      dialogType: SecurityLogDialog.TYPE_EDIT
+    const viewItem = getSelectedObjectInComp(this.props.DailyProtectedProps, compId, targetType);
+    this.props.DailyProtectedActions.showDialog({
+      viewItem: generateDailyProtectedObject(viewItem, false),
+      dialogType: DailyProtectedDialog.TYPE_EDIT
     });
   };
   // ===================================================================
 
   handleParamChange = name => event => {
-    this.props.SecurityLogActions.changeListParamData({
+    this.props.DailyProtectedActions.changeListParamData({
       name: name, 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
@@ -192,10 +182,10 @@ class SecurityLogManage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { SecurityLogProps } = this.props;
+    const { DailyProtectedProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     
-    const listObj = SecurityLogProps.getIn(['viewItems', compId]);
+    const listObj = DailyProtectedProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
@@ -218,15 +208,6 @@ class SecurityLogManage extends Component {
               value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
               onChange={this.handleParamChange('toDate')}
               className={classes.fullWidth} />
-            </Grid>
-            <Grid item xs={2} >
-              <ProtectionTypeSelect name="protectionGubun" label="구분"
-                value={(listObj && listObj.getIn(['listParam', 'gubun'])) ? listObj.getIn(['listParam', 'gubun']) : 'ALL'}                                        
-                onChangeSelect={this.handleParamChange('gubun')}
-              />
-            </Grid>
-            <Grid item xs={2} >
-              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
             </Grid>
             <Grid item xs={3} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
@@ -289,14 +270,14 @@ class SecurityLogManage extends Component {
           </div>
         }
         {/* dialog(popup) component area */}
-        <SecurityLogSpec compId={compId} specType="inform" 
+        <DailyProtectedSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           hasAction={true}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
         </GRPane>
-        <SecurityLogDialog compId={compId} />
+        <DailyProtectedDialog compId={compId} />
         <GRConfirm />
         
       </div>
@@ -305,15 +286,15 @@ class SecurityLogManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  SecurityLogProps: state.SecurityLogModule
+  DailyProtectedProps: state.DailyProtectedModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  SecurityLogActions: bindActionCreators(SecurityLogActions, dispatch),
+  DailyProtectedActions: bindActionCreators(DailyProtectedActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityLogManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyProtectedManage));
 
 
 

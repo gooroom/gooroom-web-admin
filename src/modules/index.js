@@ -36,6 +36,8 @@ import ThemeManageModule from './ThemeManageModule';
 
 import AdminModule from './AdminModule';
 import SecurityLogModule from './SecurityLogModule';
+import GeneralLogModule from './GeneralLogModule';
+import DailyProtectedModule from './DailyProtectedModule';
 
 
 export default combineReducers({
@@ -75,6 +77,8 @@ export default combineReducers({
     ThemeManageModule,
 
     AdminModule,
-    SecurityLogModule
+    SecurityLogModule,
+    GeneralLogModule,
+    DailyProtectedModule
 
 });

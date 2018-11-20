@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as SecurityLogActions from 'modules/SecurityLogModule';
+import * as GeneralLogActions from 'modules/GeneralLogModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -17,11 +17,11 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
-import ProtectionTypeSelect from "views/Options/ProtectionTypeSelect";
+import GeneralLogTypeSelect from "views/Options/GeneralLogTypeSelect";
 
-import SecurityLogDialog from './SecurityLogDialog';
-import SecurityLogSpec from './SecurityLogSpec';
-import { generateSecurityLogObject } from './SecurityLogSpec';
+import GeneralLogDialog from './GeneralLogDialog';
+import GeneralLogSpec from './GeneralLogSpec';
+import { generateGeneralLogObject } from './GeneralLogSpec';
 
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -50,7 +50,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class SecurityLogManage extends Component {
+class GeneralLogManage extends Component {
 
   columnHeaders = [
     { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: '번호' },
@@ -66,34 +66,34 @@ class SecurityLogManage extends Component {
   }
 
   handleChangePage = (event, page) => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, {
+    const { GeneralLogActions, GeneralLogProps } = this.props;
+    GeneralLogActions.readGeneralLogListPaged(GeneralLogProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, {
+    const { GeneralLogActions, GeneralLogProps } = this.props;
+    GeneralLogActions.readGeneralLogListPaged(GeneralLogProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value, page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, {
+    const { GeneralLogActions, GeneralLogProps } = this.props;
+    GeneralLogActions.readGeneralLogListPaged(GeneralLogProps, this.props.match.params.grMenuId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, {page: 0});
+    const { GeneralLogActions, GeneralLogProps } = this.props;
+    GeneralLogActions.readGeneralLogListPaged(GeneralLogProps, this.props.match.params.grMenuId, {page: 0});
   };
   
   handleKeywordChange = (name, value) => {
-    this.props.SecurityLogActions.changeListParamData({
+    this.props.GeneralLogActions.changeListParamData({
       name: name, 
       value: value,
       compId: this.props.match.params.grMenuId
@@ -101,47 +101,47 @@ class SecurityLogManage extends Component {
   }
 
   handleSelectRow = (event, id) => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
+    const { GeneralLogActions, GeneralLogProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const viewItem = getRowObjectById(SecurityLogProps, compId, id, 'logSeq');
+    const viewItem = getRowObjectById(GeneralLogProps, compId, id, 'logSeq');
 
     // choice one from two views.
 
     // 1. popup dialog
-    // SecurityLogActions.showDialog({
+    // GeneralLogActions.showDialog({
     //   viewItem: viewObject,
-    //   dialogType: SecurityLogDialog.TYPE_VIEW,
+    //   dialogType: GeneralLogDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    SecurityLogActions.showInform({
+    GeneralLogActions.showInform({
       compId: compId,
       viewItem: viewItem
     });
   };
 
   handleCreateButton = () => {
-    this.props.SecurityLogActions.showDialog({
+    this.props.GeneralLogActions.showDialog({
       viewItem: Map(),
-      dialogType: SecurityLogDialog.TYPE_ADD
+      dialogType: GeneralLogDialog.TYPE_ADD
     });
   }
   
   handleEditListClick = (event, id) => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    const viewItem = getRowObjectById(SecurityLogProps, this.props.match.params.grMenuId, id, 'logSeq');
+    const { GeneralLogActions, GeneralLogProps } = this.props;
+    const viewItem = getRowObjectById(GeneralLogProps, this.props.match.params.grMenuId, id, 'logSeq');
 
-    SecurityLogActions.showDialog({
-      viewItem: generateSecurityLogObject(viewItem, false),
-      dialogType: SecurityLogDialog.TYPE_EDIT
+    GeneralLogActions.showDialog({
+      viewItem: generateGeneralLogObject(viewItem, false),
+      dialogType: GeneralLogDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { SecurityLogProps, GRConfirmActions } = this.props;
-    const viewItem = getRowObjectById(SecurityLogProps, this.props.match.params.grMenuId, id, 'logSeq');
+    const { GeneralLogProps, GRConfirmActions } = this.props;
+    const viewItem = getRowObjectById(GeneralLogProps, this.props.match.params.grMenuId, id, 'logSeq');
     GRConfirmActions.showConfirm({
       confirmTitle: '매체제어정책정보 삭제',
       confirmMsg: '매체제어정책정보(' + viewItem.get('logSeq') + ')를 삭제하시겠습니까?',
@@ -151,37 +151,37 @@ class SecurityLogManage extends Component {
   };
   handleDeleteConfirmResult = (confirmValue, paramObject) => {
     if(confirmValue) {
-      const { SecurityLogActions, SecurityLogProps } = this.props;
+      const { GeneralLogActions, GeneralLogProps } = this.props;
 
-      SecurityLogActions.deleteSecurityLogData({
+      GeneralLogActions.deleteGeneralLogData({
         logSeq: paramObject.get('logSeq'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComps(SecurityLogProps, SecurityLogActions.readSecurityLogListPaged);
+        refreshDataListInComps(GeneralLogProps, GeneralLogActions.readGeneralLogListPaged);
       });
     }
   };
 
   // ===================================================================
   handleClickCopy = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityLogProps, compId, targetType);
-    this.props.SecurityLogActions.showDialog({
+    const viewItem = getSelectedObjectInComp(this.props.GeneralLogProps, compId, targetType);
+    this.props.GeneralLogActions.showDialog({
       viewItem: viewItem,
-      dialogType: SecurityLogDialog.TYPE_COPY
+      dialogType: GeneralLogDialog.TYPE_COPY
     });
   };
 
   handleClickEdit = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityLogProps, compId, targetType);
-    this.props.SecurityLogActions.showDialog({
-      viewItem: generateSecurityLogObject(viewItem, false),
-      dialogType: SecurityLogDialog.TYPE_EDIT
+    const viewItem = getSelectedObjectInComp(this.props.GeneralLogProps, compId, targetType);
+    this.props.GeneralLogActions.showDialog({
+      viewItem: generateGeneralLogObject(viewItem, false),
+      dialogType: GeneralLogDialog.TYPE_EDIT
     });
   };
   // ===================================================================
 
   handleParamChange = name => event => {
-    this.props.SecurityLogActions.changeListParamData({
+    this.props.GeneralLogActions.changeListParamData({
       name: name, 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
@@ -192,10 +192,10 @@ class SecurityLogManage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { SecurityLogProps } = this.props;
+    const { GeneralLogProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     
-    const listObj = SecurityLogProps.getIn(['viewItems', compId]);
+    const listObj = GeneralLogProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
@@ -220,7 +220,7 @@ class SecurityLogManage extends Component {
               className={classes.fullWidth} />
             </Grid>
             <Grid item xs={2} >
-              <ProtectionTypeSelect name="protectionGubun" label="구분"
+              <GeneralLogTypeSelect name="generalLogGubun" label="구분"
                 value={(listObj && listObj.getIn(['listParam', 'gubun'])) ? listObj.getIn(['listParam', 'gubun']) : 'ALL'}                                        
                 onChangeSelect={this.handleParamChange('gubun')}
               />
@@ -289,14 +289,14 @@ class SecurityLogManage extends Component {
           </div>
         }
         {/* dialog(popup) component area */}
-        <SecurityLogSpec compId={compId} specType="inform" 
+        <GeneralLogSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           hasAction={true}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
         </GRPane>
-        <SecurityLogDialog compId={compId} />
+        <GeneralLogDialog compId={compId} />
         <GRConfirm />
         
       </div>
@@ -305,15 +305,15 @@ class SecurityLogManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  SecurityLogProps: state.SecurityLogModule
+  GeneralLogProps: state.GeneralLogModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  SecurityLogActions: bindActionCreators(SecurityLogActions, dispatch),
+  GeneralLogActions: bindActionCreators(GeneralLogActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityLogManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GeneralLogManage));
 
 
 

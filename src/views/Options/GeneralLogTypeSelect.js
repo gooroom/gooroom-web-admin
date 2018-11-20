@@ -14,7 +14,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ProtectionTypeSelect extends Component {
+class GeneralLogTypeSelect extends Component {
 
   render() {
     const { CommonOptionProps, name, value, label } = this.props;
@@ -26,7 +26,7 @@ class ProtectionTypeSelect extends Component {
         onChange={this.props.onChangeSelect}
         inputProps={{id: name}}
       >
-        {CommonOptionProps.protectionTypeData.map(x => (
+        {CommonOptionProps.generalLogTypeData.map(x => (
           <MenuItem value={x.typeVal} key={x.typeId}>
             {x.typeId}
           </MenuItem>
@@ -45,6 +45,6 @@ const mapDispatchToProps = (dispatch) => ({
   CommonOptionActions: bindActionCreators(CommonOptionActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProtectionTypeSelect);
+export default connect(mapStateToProps, mapDispatchToProps)(GeneralLogTypeSelect);
 
 

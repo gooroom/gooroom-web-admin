@@ -37,6 +37,8 @@ import DesktopAppManage from "views/Rules/DesktopConfig/DesktopApp/DesktopAppMan
 import DesktopConfManage from "views/Rules/DesktopConfig/DesktopConfManage";
 
 import SecurityLogManage from "views/Logs/SecurityLogManage";
+import GeneralLogManage from "views/Logs/GeneralLogManage";
+import DailyProtectedManage from "views/Stats/DailyProtectedManage";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -87,9 +89,11 @@ class GRRouters extends Component {
           <Route path="/system/cloudservicemng/:grMenuId/:grMenuName" component={GcspManage} />
           <Route path="/system/thememng/:grMenuId/:grMenuName" component={ThemeManage} />
 
-          <Route path="/statistic/secretlog/:grMenuId/:grMenuName" component={SecurityLogManage} />
-          
-          
+          <Route path="/log/secretlog/:grMenuId/:grMenuName" component={SecurityLogManage} />
+          <Route path="/log/generallog/:grMenuId/:grMenuName" component={GeneralLogManage} />
+
+          <Route path="/statistic/dailyprotected/:grMenuId/:grMenuName" component={DailyProtectedManage} />
+
           <Route path="/test/components/:grMenuId/:grMenuName" component={ComponentTests} />
         </Switch>
       </div>
