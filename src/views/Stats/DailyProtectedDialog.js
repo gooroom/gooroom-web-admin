@@ -82,7 +82,7 @@ class DailyProtectedDialog extends Component {
             const { DailyProtectedProps, DailyProtectedActions } = this.props;
             DailyProtectedActions.createDailyProtectedData(DailyProtectedProps.get('editingItem'))
                 .then((res) => {
-                    refreshDataListInComps(DailyProtectedProps, DailyProtectedActions.readDailyProtectedListPaged);
+                    refreshDataListInComps(DailyProtectedProps, DailyProtectedActions.readDailyProtectedList);
                     this.handleClose();
                 });
         }
@@ -102,7 +102,7 @@ class DailyProtectedDialog extends Component {
             const { DailyProtectedProps, DailyProtectedActions } = this.props;
             DailyProtectedActions.editDailyProtectedData(DailyProtectedProps.get('editingItem'), this.props.compId)
                 .then((res) => {
-                    refreshDataListInComps(DailyProtectedProps, DailyProtectedActions.readDailyProtectedListPaged);
+                    refreshDataListInComps(DailyProtectedProps, DailyProtectedActions.readDailyProtectedList);
                     this.handleClose();
                 });
         }
@@ -133,7 +133,7 @@ class DailyProtectedDialog extends Component {
                 alertTitle: '시스템알림',
                 alertMsg: '매체제어정책을 복사하였습니다.'
             });
-            refreshDataListInComps(DailyProtectedProps, DailyProtectedActions.readDailyProtectedListPaged);
+            refreshDataListInComps(DailyProtectedProps, DailyProtectedActions.readDailyProtectedList);
             this.handleClose();
         });
     }
