@@ -371,7 +371,7 @@ class ClientConfSettingDialog extends Component {
                                 </TableBody>
                             </Table>
 
-                            <FormLabel >{bull} 서버 경고 표시 레벨(수준)</FormLabel>
+                            <FormLabel >{bull} 서버/단말 침해 표시 레벨(수준)</FormLabel>
                             <Table style={{margin:'8 0 0 0'}}>
                                 <TableBody>
                                     <TableRow>
