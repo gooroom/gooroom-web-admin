@@ -66,8 +66,9 @@ export const GRCommonStyle = theme => ({
         transition: "left 0.25s, right 0.25s, width 0.25s",
         position: "relative",
         flexWrap: "wrap",
-        overflowX: "hidden",
+        overflowX: "auto",
         overflowY: "auto",
+        minWidth: 700,
         marginTop: 0,
         height:
             "calc(100vh - " +
@@ -124,7 +125,8 @@ export const GRCommonStyle = theme => ({
         textAlign: "right",
         padding: "0.5rem 1rem",
         height: grLayout.footerHeight,
-        borderTop: "1px solid #a4b7c1"
+        borderTop: "1px solid #a4b7c1",
+        minWidth: 700
     },
     
 

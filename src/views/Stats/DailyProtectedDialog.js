@@ -324,22 +324,6 @@ class DailyProtectedDialog extends Component {
                     }
                     </div>
                     }
-                    {(dialogType === DailyProtectedDialog.TYPE_INHERIT) &&
-                        <div>
-                        <Typography variant="body1">
-                            이 설정을 하위 조직에 적용 하시겠습니까?
-                        </Typography>
-                        <DailyProtectedSpec selectedItem={editingItem} hasAction={false} />
-                        </div>
-                    }
-                    {(dialogType === DailyProtectedDialog.TYPE_COPY) &&
-                        <div>
-                        <Typography variant="body1">
-                            이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
-                        </Typography>
-                        <DailyProtectedSpec selectedItem={editingItem} hasAction={false} />
-                        </div>
-                    }
                 </DialogContent>
 
                 <DialogActions>
