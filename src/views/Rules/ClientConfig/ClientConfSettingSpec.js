@@ -163,7 +163,7 @@ class ClientConfSettingSpec extends Component {
                     <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_agent')}</TableCell>
                   </TableRow>
                   <TableRow>
-                      <TableCell component="th" colSpan={5} scope="row">{bull} 서버 경고 표시 레벨(수준)</TableCell>
+                      <TableCell component="th" colSpan={5} scope="row">{bull} 서버/단말 침해 표시 레벨(수준)</TableCell>
                   </TableRow>
                   <TableRow >
                     <TableCell component="th" style={{textAlign:'center'}}>BOOT 침해</TableCell>
