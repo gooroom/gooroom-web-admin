@@ -122,7 +122,7 @@ export const handleListPagedAction = (state, action) => {
         }));
     }
 
-    if(extend && extend.length > 0) {
+    if(extend && extend.length > 0 && extend[0]) {
         // extend parameter value, must have 'name' and 'value'
         extend.map(e => {
             newState = newState.setIn(['viewItems', action.compId, 'listParam', e.name], e.value);
