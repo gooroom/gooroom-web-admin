@@ -26,8 +26,9 @@ class KeywordOption extends Component {
   };
 
   render() {
+    
     return (
-      <TextField label={this.state.label} onChange={this.handleKeywordChange()} onKeyDown={this.handleKeyPress()} />
+      <TextField label={this.state.label} onChange={this.handleKeywordChange()} onKeyDown={this.handleKeyPress()} value={this.props.keywordValue} />
     );
   }
 }

@@ -82,17 +82,13 @@ export const readProtectedListPaged = (module, compId, extParam) => dispatch => 
 
     let newListParam = module.getIn(['viewItems', compId, 'listParam']);
     if(newListParam) {
-        if(newListParam.get('start')) {
+        if(newListParam.get('page') !== undefined) {
             newListParam = module.getIn(['viewItems', compId, 'listParam']).merge(extParam);
         } else {
             newListParam = module.getIn(['viewItems', compId, 'listParam']).merge(module.get('defaultListParam'));
             newListParam = newListParam.merge(extParam);
         }
     }
-
-    // const newListParam = (module.getIn(['viewItems', compId, 'listParam', 'start'])) ? 
-    //     module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
-    //     module.get('defaultListParam').merge(extParam);
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readProtectedListPaged', {
