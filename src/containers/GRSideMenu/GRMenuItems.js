@@ -18,13 +18,13 @@ export default {
           level: 2,
         }, {
           name: '일별접속통계',
-          url: '/statistic/dailyconnect/GRM0932/단말등록키',
+          url: '/statistic/dailyconnect/GRM0932/일별접속통계',
           icon: 'icon-notebook',
           level: 2,
         },
         {
           name: '단말등록통계',
-          url: '/statistic/dailyregist/GRM0933/업데이트서버',
+          url: '/statistic/dailyregist/GRM0933/단말등록통계',
           icon: 'icon-folder',
           level: 2,
         }, {

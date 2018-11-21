@@ -39,6 +39,7 @@ import DesktopConfManage from "views/Rules/DesktopConfig/DesktopConfManage";
 import SecurityLogManage from "views/Logs/SecurityLogManage";
 import GeneralLogManage from "views/Logs/GeneralLogManage";
 import DailyProtectedManage from "views/Stats/DailyProtectedManage";
+import DailyLoginCountManage from "views/Stats/DailyLoginCountManage";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -93,6 +94,7 @@ class GRRouters extends Component {
           <Route path="/log/generallog/:grMenuId/:grMenuName" component={GeneralLogManage} />
 
           <Route path="/statistic/dailyprotected/:grMenuId/:grMenuName" component={DailyProtectedManage} />
+          <Route path="/statistic/dailyconnect/:grMenuId/:grMenuName" component={DailyLoginCountManage} />
 
           <Route path="/test/components/:grMenuId/:grMenuName" component={ComponentTests} />
         </Switch>
