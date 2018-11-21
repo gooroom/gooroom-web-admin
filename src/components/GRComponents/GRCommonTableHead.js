@@ -19,7 +19,7 @@ class GRCommonTableHead extends Component {
   };
 
   render() {
-    const { classes, columnData, keyId, headFix=false } = this.props;
+    const { classes, columnData, keyId } = this.props;
     const { 
       onClickAllCheck,
       orderDir,
@@ -41,7 +41,7 @@ class GRCommonTableHead extends Component {
             if(column.isCheckbox) {
               return (
                 <TableCell padding="checkbox" 
-                  className={(headFix) ? classes.grSmallAndHeaderCellAndFix  : classes.grSmallAndHeaderCell} 
+                  className={classes.grSmallAndHeaderCell} 
                   key={column.id}
                 >
                   <Checkbox color="primary"
