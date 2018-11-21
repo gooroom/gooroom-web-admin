@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Map, List } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -10,38 +9,24 @@ import * as DailyProtectedActions from 'modules/DailyProtectedModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
-
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
-import ProtectionTypeSelect from "views/Options/ProtectionTypeSelect";
-
-import DailyProtectedDialog from './DailyProtectedDialog';
-import { generateDailyProtectedObject } from './DailyProtectedSpec';
-
-import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
 import Paper from '@material-ui/core/Paper';
-
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
-
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -56,9 +41,6 @@ class DailyProtectedSpec extends Component {
     { id: 'LOG_VALUE', isOrder: true, numeric: false, disablePadding: true, label: '로그정보' },
     { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: '등록일' }
   ];
-
-  componentDidMount() {
-  }
 
   handleChangePage = (event, page) => {
     const { DailyProtectedActions, DailyProtectedProps } = this.props;
@@ -96,20 +78,8 @@ class DailyProtectedSpec extends Component {
   }
 
   handleSelectRow = (event, id) => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    const compId = this.props.compId;
-
+    const { DailyProtectedActions, DailyProtectedProps, compId } = this.props;
     const viewItem = getRowObjectById(DailyProtectedProps, compId, id, 'logSeq');
-
-    // choice one from two views.
-
-    // 1. popup dialog
-    // DailyProtectedActions.showDialog({
-    //   viewItem: viewObject,
-    //   dialogType: DailyProtectedDialog.TYPE_VIEW,
-    // });
-
-    // 2. view detail content
     DailyProtectedActions.showInform({
       compId: compId,
       viewItem: viewItem
@@ -153,13 +123,14 @@ class DailyProtectedSpec extends Component {
             </FormControl>
             </Grid>
             <Grid item xs={2} >
-              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+              <KeywordOption paramName="keyword" keywordValue={listObj.getIn(['listParam', 'keyword'])}
+                handleKeywordChange={this.handleKeywordChange} 
+                handleSubmit={() => this.handleSelectBtnClick()} />
             </Grid>
-            <Grid item xs={2} >
-
-            </Grid>
-            <Grid item xs={3} >
-
+            <Grid item xs={5} >
+              <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                <Search />조회
+              </Button>
             </Grid>
           </Grid>            
 

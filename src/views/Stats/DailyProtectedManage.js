@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Map, List } from 'immutable';
 
 import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 
@@ -12,24 +11,17 @@ import * as DailyProtectedActions from 'modules/DailyProtectedModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
-
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
-
-import DailyProtectedDialog from './DailyProtectedDialog';
 import DailyProtectedSpec from './DailyProtectedSpec';
-import { generateDailyProtectedObject } from './DailyProtectedSpec';
-
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 
@@ -73,10 +65,12 @@ class DailyProtectedManage extends Component {
   handleSelectData = (event, logDate, protectedType) => {
     const { DailyProtectedActions, DailyProtectedProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-
+    
     DailyProtectedActions.readProtectedListPaged(DailyProtectedProps, compId, {
       logDate: formatDateToSimple(logDate, 'YYYY-MM-DD'),
-      protectedType: protectedType
+      protectedType: protectedType,
+      page: 0,
+      keyword: ''
     });
   };
 
