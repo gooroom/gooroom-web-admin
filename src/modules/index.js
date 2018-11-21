@@ -38,6 +38,7 @@ import AdminModule from './AdminModule';
 import SecurityLogModule from './SecurityLogModule';
 import GeneralLogModule from './GeneralLogModule';
 import DailyProtectedModule from './DailyProtectedModule';
+import DailyLoginCountModule from './DailyLoginCountModule';
 
 
 export default combineReducers({
@@ -79,6 +80,7 @@ export default combineReducers({
     AdminModule,
     SecurityLogModule,
     GeneralLogModule,
-    DailyProtectedModule
+    DailyProtectedModule,
+    DailyLoginCountModule
 
 });
