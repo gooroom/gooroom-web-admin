@@ -70,24 +70,13 @@ class DailyProtectedManage extends Component {
     });
   }
 
-  handleSelectRow = (event, id) => {
+  handleSelectData = (event, logDate, protectedType) => {
     const { DailyProtectedActions, DailyProtectedProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const viewItem = getRowObjectById(DailyProtectedProps, compId, id, 'logSeq');
-
-    // choice one from two views.
-
-    // 1. popup dialog
-    // DailyProtectedActions.showDialog({
-    //   viewItem: viewObject,
-    //   dialogType: DailyProtectedDialog.TYPE_VIEW,
-    // });
-
-    // 2. view detail content
-    DailyProtectedActions.showInform({
-      compId: compId,
-      viewItem: viewItem
+    DailyProtectedActions.readProtectedListPaged(DailyProtectedProps, compId, {
+      logDate: formatDateToSimple(logDate, 'YYYY-MM-DD'),
+      protectedType: protectedType
     });
   };
 
@@ -117,40 +106,30 @@ class DailyProtectedManage extends Component {
       });
     }
 
-    const __data = [
-      {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
-      {name: 'Page B', uv: 3000, pv: 1398, amt: 2210},
-      {name: 'Page C', uv: 2000, pv: 9800, amt: 2290},
-      {name: 'Page D', uv: 2780, pv: 3908, amt: 2000},
-      {name: 'Page E', uv: 1890, pv: 4800, amt: 2181},
-      {name: 'Page F', uv: 2390, pv: 3800, amt: 2500},
-      {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
-    ];
-
     return (
       <div>
         <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={3} >
-            <TextField label="조회시작일" type="date" style={{width:150}}
-              value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
-              onChange={this.handleParamChange('fromDate')}
-              className={classes.fullWidth} />
+            <Grid item xs={4} sm={4} lg={2} >
+              <TextField label="조회시작일" type="date" style={{width:150}}
+                value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
+                onChange={this.handleParamChange('fromDate')}
+                className={classes.fullWidth} />
             </Grid>
-            <Grid item xs={3} >
-            <TextField label="조회종료일" type="date" style={{width:150}}
-              value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
-              onChange={this.handleParamChange('toDate')}
-              className={classes.fullWidth} />
+            <Grid item xs={4} sm={4} lg={2}>
+              <TextField label="조회종료일" type="date" style={{width:150}}
+                value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
+                onChange={this.handleParamChange('toDate')}
+                className={classes.fullWidth} />
             </Grid>
-            <Grid item xs={3} >
-            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-              <Search />조회
-            </Button>
+            <Grid item xs={4} sm={4} lg={2} >
+              <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                <Search />조회
+              </Button>
             </Grid>
-            <Grid item xs={3} ></Grid>
+            <Grid item lg={6} ></Grid>
           </Grid>
 
           <ResponsiveContainer width='100%' height={300} >
@@ -172,7 +151,7 @@ class DailyProtectedManage extends Component {
           {/* data area */}
           {(listObj) &&
           <div style={{height:300,overflow:'auto'}}>
-            <Table fixedHeader={true}>
+            <Table>
               <GRCommonTableHead
                 classes={classes}
                 keyId="logDate"
@@ -187,10 +166,22 @@ class DailyProtectedManage extends Component {
                   return (
                     <TableRow hover key={n.get('logDate')} >
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('logDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('bootProtectorCount') === '0') ? '.' : n.get('bootProtectorCount')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('exeProtectorCount') === '0') ? '.' : n.get('exeProtectorCount')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('osProtectorCount') === '0') ? '.' : n.get('osProtectorCount')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('mediaProtectorCount') === '0') ? '.' : n.get('mediaProtectorCount')}</TableCell>
+                      <TableCell 
+                        className={classes.grSmallAndClickAndCenterCell}
+                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'boot')}
+                      >{(n.get('bootProtectorCount') === '0') ? '.' : n.get('bootProtectorCount')}</TableCell>
+                      <TableCell 
+                        className={classes.grSmallAndClickAndCenterCell}
+                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'exe')}
+                      >{(n.get('exeProtectorCount') === '0') ? '.' : n.get('exeProtectorCount')}</TableCell>
+                      <TableCell 
+                        className={classes.grSmallAndClickAndCenterCell}
+                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'os')}
+                      >{(n.get('osProtectorCount') === '0') ? '.' : n.get('osProtectorCount')}</TableCell>
+                      <TableCell 
+                        className={classes.grSmallAndClickAndCenterCell}
+                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'media')}
+                      >{(n.get('mediaProtectorCount') === '0') ? '.' : n.get('mediaProtectorCount')}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -207,13 +198,10 @@ class DailyProtectedManage extends Component {
             </Table>
           </div>
         }
-        {/* dialog(popup) component area */}
-        <DailyProtectedSpec compId={compId} specType="inform" 
-          selectedItem={(listObj) ? listObj.get('viewItem') : null}
-          hasAction={true}
-        />
+        <div style={{marginTop:20}}>
+        <DailyProtectedSpec compId={compId} />
+        </div>
         </GRPane>
-        <DailyProtectedDialog compId={compId} />
         <GRConfirm />
         
       </div>
