@@ -10,7 +10,7 @@ export const GRCommonStyle = theme => ({
         flexDirection: "column"
     },
     appBody: {
-        marginTop: grLayout.pageHeaderHeight,
+        marginTop: 0,
         display: "flex",
         flexDirection: "row",
         flexGrow: 1,
@@ -19,6 +19,7 @@ export const GRCommonStyle = theme => ({
     fullMain: {
         marginRight: 0,
         marginLeft: grLayout.sideBarWidth,
+        marginTop: grLayout.headerHeight,
         flex: 1,
         zIndex: 1200,
         minWidth: 0,
@@ -28,6 +29,7 @@ export const GRCommonStyle = theme => ({
     fullWideMain: {
         marginRight: 0,
         marginLeft: 0,
+        marginTop: grLayout.headerHeight,
         flex: 1,
         zIndex: 1200,
         minWidth: 0,

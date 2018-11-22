@@ -111,10 +111,8 @@ class DailyLoginCountManage extends Component {
     const compId = this.props.match.params.grMenuId;
     
     const listObj = DailyLoginCountProps.getIn(['viewItems', compId]);
-    let emptyRows = 0; 
     let data = [];
     if(listObj && listObj.get('listAllData')) {
-      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listAllData').size;
       data = listObj.get('listAllData').toJS().map((e) => {
         e.logDate = formatDateToSimple(e.logDate, 'MM/DD');
         return e;
@@ -233,15 +231,6 @@ class DailyLoginCountManage extends Component {
                     </TableRow>
                   );
                 })}
-
-                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
-                  <TableRow key={e}>
-                    <TableCell
-                      colSpan={this.columnHeaders.length + 1}
-                      className={classes.grSmallAndClickCell}
-                    />
-                  </TableRow>
-                )}))}
               </TableBody>
             </Table>
           </div>

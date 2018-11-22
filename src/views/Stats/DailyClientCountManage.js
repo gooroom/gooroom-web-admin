@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as DailyProtectedActions from 'modules/DailyProtectedModule';
+import * as DailyClientCountActions from 'modules/DailyClientCountModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -15,7 +15,7 @@ import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
-import DailyProtectedSpec from './DailyProtectedSpec';
+import DailyClientCountSpec from './DailyClientCountSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -34,14 +34,12 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class DailyProtectedManage extends Component {
+class DailyClientCountManage extends Component {
 
   columnHeaders = [
     { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: '날짜' },
-    { id: 'boot', isOrder: false, numeric: false, disablePadding: true, label: '부팅보안침해' },
-    { id: 'exe', isOrder: false, numeric: false, disablePadding: true, label: '실행보안침해' },
-    { id: 'os', isOrder: false, numeric: false, disablePadding: true, label: 'OS보안침해' },
-    { id: 'media', isOrder: false, numeric: false, disablePadding: true, label: '매체보안침해' }
+    { id: 'regCount', isOrder: false, numeric: false, disablePadding: true, label: '등록수' },
+    { id: 'revokeCount', isOrder: false, numeric: false, disablePadding: true, label: '폐기수' }
   ];
 
   componentDidMount() {
@@ -50,32 +48,32 @@ class DailyProtectedManage extends Component {
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readDailyProtectedList(DailyProtectedProps, this.props.match.params.grMenuId, {page: 0});
+    const { DailyClientCountActions, DailyClientCountProps } = this.props;
+    DailyClientCountActions.readDailyClientCountList(DailyClientCountProps, this.props.match.params.grMenuId, {page: 0});
   };
   
   handleKeywordChange = (name, value) => {
-    this.props.DailyProtectedActions.changeListParamData({
+    this.props.DailyClientCountActions.changeListParamData({
       name: name, 
       value: value,
       compId: this.props.match.params.grMenuId
     });
   }
 
-  handleSelectData = (event, logDate, protectedType) => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
+  handleSelectData = (event, logDate, searchType) => {
+    const { DailyClientCountActions, DailyClientCountProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     
-    DailyProtectedActions.readProtectedListPaged(DailyProtectedProps, compId, {
+    DailyClientCountActions.readClientCountListPaged(DailyClientCountProps, compId, {
       logDate: formatDateToSimple(logDate, 'YYYY-MM-DD'),
-      protectedType: protectedType,
+      searchType: searchType,
       page: 0,
       keyword: ''
     });
   };
 
   handleParamChange = name => event => {
-    this.props.DailyProtectedActions.changeListParamData({
+    this.props.DailyClientCountActions.changeListParamData({
       name: name, 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
@@ -83,13 +81,12 @@ class DailyProtectedManage extends Component {
 
   };
 
-
   render() {
     const { classes } = this.props;
-    const { DailyProtectedProps } = this.props;
+    const { DailyClientCountProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     
-    const listObj = DailyProtectedProps.getIn(['viewItems', compId]);
+    const listObj = DailyClientCountProps.getIn(['viewItems', compId]);
     let data = [];
     if(listObj && listObj.get('listAllData')) {
       data = listObj.get('listAllData').toJS().map((e) => {
@@ -131,59 +128,45 @@ class DailyProtectedManage extends Component {
               <CartesianGrid strokeDasharray="3 3"/>
               <Tooltip />
               <Legend />
-
-              <Line name="부팅보안침해" type="monotone" dataKey="bootProtectorCount" stroke="#82a6ca" />
-              <Line name="실행보안침해" type="monotone" dataKey="exeProtectorCount" stroke="#ca82c2" />
-              <Line name="OS보안침해" type="monotone" dataKey="osProtectorCount" stroke="#caa682" />
-              <Line name="매체보안침해" type="monotone" dataKey="mediaProtectorCount" stroke="#bb4c4c" />
-
+              <Line name="등록단말수" type="monotone" dataKey="regCount" stroke="#62b6e2" />
+              <Line name="폐기단말수" type="monotone" dataKey="revokeCount" stroke="#efa7a7" />
             </LineChart>
           </ResponsiveContainer>
 
           {/* data area */}
           {(listObj) &&
-          <div style={{height:300,overflow:'auto'}}>
-            <Table>
-              <GRCommonTableHead
-                classes={classes}
-                keyId="logDate"
-                headFix={true}
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
-                onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
-              />
-              <TableBody>
-                {listObj.get('listAllData').map(n => {
-                  return (
-                    <TableRow hover key={n.get('logDate')} >
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('logDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell 
-                        className={classes.grSmallAndClickAndCenterCell}
-                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'boot')}
-                      >{(n.get('bootProtectorCount') === '0') ? '.' : n.get('bootProtectorCount')}</TableCell>
-                      <TableCell 
-                        className={classes.grSmallAndClickAndCenterCell}
-                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'exe')}
-                      >{(n.get('exeProtectorCount') === '0') ? '.' : n.get('exeProtectorCount')}</TableCell>
-                      <TableCell 
-                        className={classes.grSmallAndClickAndCenterCell}
-                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'os')}
-                      >{(n.get('osProtectorCount') === '0') ? '.' : n.get('osProtectorCount')}</TableCell>
-                      <TableCell 
-                        className={classes.grSmallAndClickAndCenterCell}
-                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'media')}
-                      >{(n.get('mediaProtectorCount') === '0') ? '.' : n.get('mediaProtectorCount')}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
+          <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
+            <Grid item xs={12} sm={4} lg={2} style={{border: '1px solid #efefef'}}>
+              <div style={{height:340,overflow:'auto'}}>
+                <Table>
+                  <GRCommonTableHead classes={classes} keyId="logDate"
+                    headFix={true} columnData={this.columnHeaders} />
+                  <TableBody>
+                    {listObj.get('listAllData').map(n => {
+                      return (
+                        <TableRow hover key={n.get('logDate')} style={{height:16}}>
+                          <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('logDate'), 'YYYY-MM-DD')}</TableCell>
+                          <TableCell 
+                            className={classes.grSmallAndClickAndCenterCell}
+                            onClick={event => this.handleSelectData(event, n.get('logDate'), 'create')}
+                          >{(n.get('regCount') === '0') ? '.' : n.get('regCount')}</TableCell>
+                          <TableCell 
+                            className={classes.grSmallAndClickAndCenterCell}
+                            onClick={event => this.handleSelectData(event, n.get('logDate'), 'revoke')}
+                          >{(n.get('revokeCount') === '0') ? '.' : n.get('revokeCount')}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={8} lg={10} style={{border: '1px solid #efefef'}}>
+            <DailyClientCountSpec compId={compId} />
+            </Grid>
+          </Grid>
+
         }
-        <div style={{marginTop:20}}>
-        <DailyProtectedSpec compId={compId} />
-        </div>
         </GRPane>
         <GRConfirm />
         
@@ -193,15 +176,15 @@ class DailyProtectedManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  DailyProtectedProps: state.DailyProtectedModule
+  DailyClientCountProps: state.DailyClientCountModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  DailyProtectedActions: bindActionCreators(DailyProtectedActions, dispatch),
+  DailyClientCountActions: bindActionCreators(DailyClientCountActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyProtectedManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyClientCountManage));
 
 
 
