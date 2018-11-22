@@ -86,6 +86,8 @@ class GRFull extends Component {
     const { classes } = this.props;
     const { GlobalProps } = this.props;
     const anchorEl = GlobalProps.get('popoverElement');
+    
+    console.log('GRFull...........................', this.props);
 
     return (
       <MuiThemeProvider theme={createMuiTheme(GRTheme)}>

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 
-import CardHeader from '@material-ui/core/CardHeader';
+import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -14,11 +14,10 @@ class GRPageHeader extends Component {
 
     render() {
         const { name, classes } = this.props;
-//        console.log('GRPageHeader..................................name..', name);
+        console.log('GRPageHeader..................................', this.props);
 
         return (
-            <CardHeader title={name} className={classes.menuHeaderRoot}>GRPageHeader
-            </CardHeader>
+            <Typography variant="h6" gutterBottom>{name}</Typography>
         )
     }
 }
