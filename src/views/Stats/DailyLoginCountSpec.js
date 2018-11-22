@@ -34,12 +34,11 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class DailyLoginCountSpec extends Component {
 
   columnHeaders = [
-    { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: '번호' },
+    { id: 'HIST_SEQ', isOrder: false, numeric: false, disablePadding: true, label: '번호' },
+    { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: '날짜' },
     { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: '사용자' },
-    { id: 'LOG_TP', isOrder: true, numeric: false, disablePadding: true, label: '로그타입' },
-    { id: 'LOG_VALUE', isOrder: true, numeric: false, disablePadding: true, label: '로그정보' },
-    { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: '등록일' }
+    { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: '사용자아이디' },
+    { id: 'RESPONSE_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' }
   ];
 
   handleChangePage = (event, page) => {
@@ -77,15 +76,6 @@ class DailyLoginCountSpec extends Component {
     });
   }
 
-  handleSelectRow = (event, id) => {
-    const { DailyLoginCountActions, DailyLoginCountProps, compId } = this.props;
-    const viewItem = getRowObjectById(DailyLoginCountProps, compId, id, 'logSeq');
-    DailyLoginCountActions.showInform({
-      compId: compId,
-      viewItem: viewItem
-    });
-  };
-
   handleParamChange = name => event => {
     this.props.DailyLoginCountActions.changeListParamData({
       name: name, 
@@ -118,16 +108,11 @@ class DailyLoginCountSpec extends Component {
             </FormControl>
             </Grid>
             <Grid item xs={2} >
-            <FormControl fullWidth={true}>
-              <TextField label="침해구분" value={listObj.getIn(['listParam', 'protectedType'])} disabled={true} />
-            </FormControl>
-            </Grid>
-            <Grid item xs={2} >
               <KeywordOption paramName="keyword" keywordValue={listObj.getIn(['listParam', 'keyword'])}
                 handleKeywordChange={this.handleKeywordChange} 
                 handleSubmit={() => this.handleSelectBtnClick()} />
             </Grid>
-            <Grid item xs={5} >
+            <Grid item xs={7} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                 <Search />조회
               </Button>
@@ -139,7 +124,7 @@ class DailyLoginCountSpec extends Component {
             <Table>
               <GRCommonTableHead
                 classes={classes}
-                keyId="logSeq"
+                keyId="histSeq"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
@@ -148,13 +133,12 @@ class DailyLoginCountSpec extends Component {
               <TableBody>
                 {listObj.get('listData').map(n => {
                   return (
-                    <TableRow hover key={n.get('logSeq')} >
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('logSeq')}</TableCell>
+                    <TableRow hover key={n.get('histSeq')} >
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('histSeq')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD HH:mm:ss')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('userId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('logTp')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell} style={{width:400}}>{(n.get('logValue')).substring(27)}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('logDate'), 'YYYY-MM-DD HH:mm:ss')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
                     </TableRow>
                   );
                 })}

@@ -23,7 +23,7 @@ const CHG_COMPDATA_VALUE = 'dailyLoginCount/CHG_COMPDATA_VALUE';
 
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('LOG_SEQ', 'desc', null, {logItem: 'ALL', rowsPerPage: 5});
+const initialState = commonHandleActions.getCommonInitialState('HIST_SEQ', 'desc', null, {logItem: 'ALL', rowsPerPage: 5});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -61,7 +61,7 @@ export const readDailyLoginCountList = (module, compId, extParam) => dispatch =>
         module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readLoginCountDailyCount', {
+    return requestPostAPI('readLoginDailyCount', {
         fromDate: newListParam.get('fromDate'),
         toDate: newListParam.get('toDate')
     }).then(
@@ -91,7 +91,7 @@ export const readLoginCountListPaged = (module, compId, extParam) => dispatch =>
     }
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readLoginCountListPaged', {
+    return requestPostAPI('readLoginListPaged', {
         searchType: newListParam.get('protectedType'),
         searchDate: newListParam.get('logDate'),
         keyword: newListParam.get('keyword'),

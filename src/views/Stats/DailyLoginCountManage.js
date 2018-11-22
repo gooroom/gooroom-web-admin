@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as DailyProtectedActions from 'modules/DailyProtectedModule';
+import * as DailyLoginCountActions from 'modules/DailyLoginCountModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -15,7 +15,7 @@ import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
-import DailyProtectedSpec from './DailyProtectedSpec';
+import DailyLoginCountSpec from './DailyLoginCountSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -28,6 +28,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
 
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Paper from '@material-ui/core/Paper';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
@@ -38,11 +43,21 @@ class DailyLoginCountManage extends Component {
 
   columnHeaders = [
     { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: '날짜' },
-    { id: 'boot', isOrder: false, numeric: false, disablePadding: true, label: '부팅보안침해' },
-    { id: 'exe', isOrder: false, numeric: false, disablePadding: true, label: '실행보안침해' },
-    { id: 'os', isOrder: false, numeric: false, disablePadding: true, label: 'OS보안침해' },
-    { id: 'media', isOrder: false, numeric: false, disablePadding: true, label: '매체보안침해' }
+    { id: 'loginAll', isOrder: false, numeric: false, disablePadding: true, label: '요청수' },
+    { id: 'loginSuccess', isOrder: false, numeric: false, disablePadding: true, label: '접속성공' },
+    { id: 'loginFail', isOrder: false, numeric: false, disablePadding: true, label: '접속실패' },
+    { id: 'userAll', isOrder: false, numeric: false, disablePadding: true, label: '접속시도' },
+    { id: 'userSuccess', isOrder: false, numeric: false, disablePadding: true, label: '접속성공' },
+    { id: 'clientAll', isOrder: false, numeric: false, disablePadding: true, label: '접속시도' },
+    { id: 'clientSuccess', isOrder: false, numeric: false, disablePadding: true, label: '접속성공' }
   ];
+
+  constructor(props) {
+    super(props);
+    this.state = {
+        selectedTab: 0
+    };
+  }
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -50,12 +65,12 @@ class DailyLoginCountManage extends Component {
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readDailyProtectedList(DailyProtectedProps, this.props.match.params.grMenuId, {page: 0});
+    const { DailyLoginCountActions, DailyLoginCountProps } = this.props;
+    DailyLoginCountActions.readDailyLoginCountList(DailyLoginCountProps, this.props.match.params.grMenuId, {page: 0});
   };
   
   handleKeywordChange = (name, value) => {
-    this.props.DailyProtectedActions.changeListParamData({
+    this.props.DailyLoginCountActions.changeListParamData({
       name: name, 
       value: value,
       compId: this.props.match.params.grMenuId
@@ -63,19 +78,18 @@ class DailyLoginCountManage extends Component {
   }
 
   handleSelectData = (event, logDate, protectedType) => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
+    const { DailyLoginCountActions, DailyLoginCountProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     
-    DailyProtectedActions.readProtectedListPaged(DailyProtectedProps, compId, {
+    DailyLoginCountActions.readLoginCountListPaged(DailyLoginCountProps, compId, {
       logDate: formatDateToSimple(logDate, 'YYYY-MM-DD'),
-      protectedType: protectedType,
       page: 0,
       keyword: ''
     });
   };
 
   handleParamChange = name => event => {
-    this.props.DailyProtectedActions.changeListParamData({
+    this.props.DailyLoginCountActions.changeListParamData({
       name: name, 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
@@ -83,13 +97,20 @@ class DailyLoginCountManage extends Component {
 
   };
 
+  handleChangeTabs = (event, value) => {
+    this.setState({
+        selectedTab: value
+    });
+  }
+
 
   render() {
     const { classes } = this.props;
-    const { DailyProtectedProps } = this.props;
+    const { DailyLoginCountProps } = this.props;
+    const { selectedTab } = this.state;
     const compId = this.props.match.params.grMenuId;
     
-    const listObj = DailyProtectedProps.getIn(['viewItems', compId]);
+    const listObj = DailyLoginCountProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
     let data = [];
     if(listObj && listObj.get('listAllData')) {
@@ -126,21 +147,61 @@ class DailyLoginCountManage extends Component {
             <Grid item lg={6} ></Grid>
           </Grid>
 
-          <ResponsiveContainer width='100%' height={300} >
-            <LineChart data={data} margin={{top: 35, right: 10, left: 10, bottom: 35}}>
-              <XAxis dataKey="logDate" />
-              <YAxis type="number" domain={[0, 'dataMax + 5']} />
-              <CartesianGrid strokeDasharray="3 3"/>
-              <Tooltip />
-              <Legend />
-
-              <Line name="부팅보안침해" type="monotone" dataKey="bootProtectorCount" stroke="#82a6ca" />
-              <Line name="실행보안침해" type="monotone" dataKey="exeProtectorCount" stroke="#ca82c2" />
-              <Line name="OS보안침해" type="monotone" dataKey="osProtectorCount" stroke="#caa682" />
-              <Line name="매체보안침해" type="monotone" dataKey="mediaProtectorCount" stroke="#bb4c4c" />
-
-            </LineChart>
-          </ResponsiveContainer>
+          <AppBar elevation={0} position="static" color="default">
+            <Tabs value={selectedTab} 
+                scrollable    
+                scrollButtons="on"
+                indicatorColor="primary"
+                textColor="primary"
+                onChange={this.handleChangeTabs}
+            >
+              <Tab label="접속요청 수" value={0} />
+              <Tab label="접속요청 사용자수" value={1} />
+              <Tab label="접속요청 단말수" value={2} />
+            </Tabs>
+          </AppBar>
+          <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
+          {selectedTab === 0 && 
+            <ResponsiveContainer width='100%' height={300} >
+              <LineChart data={data} margin={{top: 35, right: 10, left: 10, bottom: 35}}>
+                <XAxis dataKey="logDate" />
+                <YAxis type="number" domain={[0, 'dataMax + 5']} />
+                <CartesianGrid strokeDasharray="3 3"/>
+                <Tooltip />
+                <Legend />
+                <Line name="접속요청수" type="monotone" dataKey="loginAll" stroke="#82a6ca" />
+                <Line name="접속성공" type="monotone" dataKey="loginSuccess" stroke="#ca82c2" />
+                <Line name="접속실패" type="monotone" dataKey="loginFail" stroke="#caa682" />
+              </LineChart>
+            </ResponsiveContainer>
+          }
+          {selectedTab === 1 && 
+            <ResponsiveContainer width='100%' height={300} >
+              <LineChart data={data} margin={{top: 35, right: 10, left: 10, bottom: 35}}>
+                <XAxis dataKey="logDate" />
+                <YAxis type="number" domain={[0, 'dataMax + 5']} />
+                <CartesianGrid strokeDasharray="3 3"/>
+                <Tooltip />
+                <Legend />
+                <Line name="접속요청수" type="monotone" dataKey="userAll" stroke="#82a6ca" />
+                <Line name="접속성공" type="monotone" dataKey="userSuccess" stroke="#ca82c2" />
+              </LineChart>
+            </ResponsiveContainer>
+          }
+          {selectedTab === 2 && 
+            <ResponsiveContainer width='100%' height={300} >
+              <LineChart data={data} margin={{top: 35, right: 10, left: 10, bottom: 35}}>
+                <XAxis dataKey="logDate" />
+                <YAxis type="number" domain={[0, 'dataMax + 5']} />
+                <CartesianGrid strokeDasharray="3 3"/>
+                <Tooltip />
+                <Legend />
+                <Line name="접속요청수" type="monotone" dataKey="clientAll" stroke="#82a6ca" />
+                <Line name="접속성공" type="monotone" dataKey="clientSuccess" stroke="#ca82c2" />
+              </LineChart>
+            </ResponsiveContainer>
+          }
+          </Paper>
 
           {/* data area */}
           {(listObj) &&
@@ -158,24 +219,17 @@ class DailyLoginCountManage extends Component {
               <TableBody>
                 {listObj.get('listAllData').map(n => {
                   return (
-                    <TableRow hover key={n.get('logDate')} >
+                    <TableRow hover key={n.get('logDate')} 
+                    onClick={event => this.handleSelectData(event, n.get('logDate'), 'boot')}
+                    >
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('logDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell 
-                        className={classes.grSmallAndClickAndCenterCell}
-                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'boot')}
-                      >{(n.get('bootProtectorCount') === '0') ? '.' : n.get('bootProtectorCount')}</TableCell>
-                      <TableCell 
-                        className={classes.grSmallAndClickAndCenterCell}
-                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'exe')}
-                      >{(n.get('exeProtectorCount') === '0') ? '.' : n.get('exeProtectorCount')}</TableCell>
-                      <TableCell 
-                        className={classes.grSmallAndClickAndCenterCell}
-                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'os')}
-                      >{(n.get('osProtectorCount') === '0') ? '.' : n.get('osProtectorCount')}</TableCell>
-                      <TableCell 
-                        className={classes.grSmallAndClickAndCenterCell}
-                        onClick={event => this.handleSelectData(event, n.get('logDate'), 'media')}
-                      >{(n.get('mediaProtectorCount') === '0') ? '.' : n.get('mediaProtectorCount')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('loginAll')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('loginSuccess')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('loginFail')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('userAll')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('userSuccess')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientAll')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientSuccess')}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -193,7 +247,7 @@ class DailyLoginCountManage extends Component {
           </div>
         }
         <div style={{marginTop:20}}>
-        <DailyProtectedSpec compId={compId} />
+        <DailyLoginCountSpec compId={compId} />
         </div>
         </GRPane>
         <GRConfirm />
@@ -204,11 +258,11 @@ class DailyLoginCountManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  DailyProtectedProps: state.DailyProtectedModule
+  DailyLoginCountProps: state.DailyLoginCountModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  DailyProtectedActions: bindActionCreators(DailyProtectedActions, dispatch),
+  DailyLoginCountActions: bindActionCreators(DailyLoginCountActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
