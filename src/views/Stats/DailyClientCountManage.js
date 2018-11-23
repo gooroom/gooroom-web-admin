@@ -86,8 +86,6 @@ class DailyClientCountManage extends Component {
     const { DailyClientCountProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    console.log('this.props.match.params :::: ', this.props.match.params);
-    
     const listObj = DailyClientCountProps.getIn(['viewItems', compId]);
     let data = [];
     if(listObj && listObj.get('listAllData')) {

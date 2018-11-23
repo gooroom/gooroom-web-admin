@@ -245,7 +245,7 @@ class ClientConfSettingDialog extends Component {
                                     <TableRow>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">BOOT 침해</InputLabel>
+                                        <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
                                         <LogLevelSelect name="transmit_boot" 
                                             value={(editingItem.get('transmit_boot')) ? editingItem.get('transmit_boot') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -254,7 +254,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">OS 침해</InputLabel>
+                                        <InputLabel htmlFor="client-status">운영체제보호</InputLabel>
                                         <LogLevelSelect name="transmit_os" 
                                             value={(editingItem.get('transmit_os')) ? editingItem.get('transmit_os') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -263,7 +263,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">EXE(IMA) 침해</InputLabel>
+                                        <InputLabel htmlFor="client-status">실행파일보호</InputLabel>
                                         <LogLevelSelect name="transmit_exe" 
                                             value={(editingItem.get('transmit_exe')) ? editingItem.get('transmit_exe') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -272,7 +272,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">MEDIA 침해</InputLabel>
+                                        <InputLabel htmlFor="client-status">매체제어</InputLabel>
                                         <LogLevelSelect name="transmit_media" 
                                             value={(editingItem.get('transmit_media')) ? editingItem.get('transmit_media') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -281,7 +281,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">AGENT 로그</InputLabel>
+                                        <InputLabel htmlFor="client-status">에이전트</InputLabel>
                                         <LogLevelSelect name="transmit_agent" 
                                             value={(editingItem.get('transmit_agent')) ? editingItem.get('transmit_agent') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -324,45 +324,45 @@ class ClientConfSettingDialog extends Component {
                                     <TableRow>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">BOOT 침해</InputLabel>
-                                        <LogLevelSelect name="notify_boot" 
-                                            value={(editingItem.get('notify_boot')) ? editingItem.get('notify_boot') : ""}
+                                        <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
+                                        <LogLevelSelect name="show_boot" 
+                                            value={(editingItem.get('show_boot')) ? editingItem.get('show_boot') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
                                     </FormControl>
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">OS 침해</InputLabel>
-                                        <LogLevelSelect name="notify_os" 
-                                            value={(editingItem.get('notify_os')) ? editingItem.get('notify_os') : ""}
+                                        <InputLabel htmlFor="client-status">운영체제보호</InputLabel>
+                                        <LogLevelSelect name="show_os" 
+                                            value={(editingItem.get('show_os')) ? editingItem.get('show_os') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
                                     </FormControl>
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">EXE(IMA) 침해</InputLabel>
-                                        <LogLevelSelect name="notify_exe" 
-                                            value={(editingItem.get('notify_exe')) ? editingItem.get('notify_exe') : ""}
+                                        <InputLabel htmlFor="client-status">실행파일보호</InputLabel>
+                                        <LogLevelSelect name="show_exe" 
+                                            value={(editingItem.get('show_exe')) ? editingItem.get('show_exe') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
                                     </FormControl>
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">MEDIA 침해</InputLabel>
-                                        <LogLevelSelect name="notify_media" 
-                                            value={(editingItem.get('notify_media')) ? editingItem.get('notify_media') : ""}
+                                        <InputLabel htmlFor="client-status">매체제어</InputLabel>
+                                        <LogLevelSelect name="show_media" 
+                                            value={(editingItem.get('show_media')) ? editingItem.get('show_media') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
                                     </FormControl>
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">AGENT 로그</InputLabel>
-                                        <LogLevelSelect name="notify_agent" 
-                                            value={(editingItem.get('notify_agent')) ? editingItem.get('notify_agent') : ""}
+                                        <InputLabel htmlFor="client-status">에이전트</InputLabel>
+                                        <LogLevelSelect name="show_agent" 
+                                            value={(editingItem.get('show_agent')) ? editingItem.get('show_agent') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
                                     </FormControl>
@@ -377,45 +377,45 @@ class ClientConfSettingDialog extends Component {
                                     <TableRow>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">BOOT 침해</InputLabel>
-                                        <LogLevelSelect name="show_boot" 
-                                            value={(editingItem.get('show_boot')) ? editingItem.get('show_boot') : ""}
+                                        <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
+                                        <LogLevelSelect name="notify_boot" 
+                                            value={(editingItem.get('notify_boot')) ? editingItem.get('notify_boot') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
                                     </FormControl>
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">OS 침해</InputLabel>
-                                        <LogLevelSelect name="show_os" 
-                                            value={(editingItem.get('show_os')) ? editingItem.get('show_os') : ""}
+                                        <InputLabel htmlFor="client-status">운영체제보호</InputLabel>
+                                        <LogLevelSelect name="notify_os" 
+                                            value={(editingItem.get('notify_os')) ? editingItem.get('notify_os') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
                                     </FormControl>
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">EXE(IMA) 침해</InputLabel>
-                                        <LogLevelSelect name="show_exe" 
-                                            value={(editingItem.get('show_exe')) ? editingItem.get('show_exe') : ""}
+                                        <InputLabel htmlFor="client-status">실행파일보호</InputLabel>
+                                        <LogLevelSelect name="notify_exe" 
+                                            value={(editingItem.get('notify_exe')) ? editingItem.get('notify_exe') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
                                     </FormControl>
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">MEDIA 침해</InputLabel>
-                                        <LogLevelSelect name="show_media" 
-                                            value={(editingItem.get('show_media')) ? editingItem.get('show_media') : ""}
+                                        <InputLabel htmlFor="client-status">매체제어</InputLabel>
+                                        <LogLevelSelect name="notify_media" 
+                                            value={(editingItem.get('notify_media')) ? editingItem.get('notify_media') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
                                     </FormControl>
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">AGENT 로그</InputLabel>
-                                        <LogLevelSelect name="show_agent" 
-                                            value={(editingItem.get('show_agent')) ? editingItem.get('show_agent') : ""}
+                                        <InputLabel htmlFor="client-status">에이전트</InputLabel>
+                                        <LogLevelSelect name="notify_agent" 
+                                            value={(editingItem.get('notify_agent')) ? editingItem.get('notify_agent') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
                                     </FormControl>

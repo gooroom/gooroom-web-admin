@@ -24,7 +24,7 @@ import Divider from "@material-ui/core/Divider";
 
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
-import DashIcon from '@material-ui/icons/Remove';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 import menuItems from "./GRMenuItems";
@@ -93,7 +93,7 @@ class GRSideMenu extends React.Component {
     const menuLink = (item, key, classParam) => {
       const url = item.url ? item.url : '';
       const menuclass = item.level == 1 ? classes.menuItemClass : classes.nestedClass;
-      const menuIcon = (item.level == 1) ? <DashIcon /> : <ArrowRightIcon />
+      const menuIcon = (item.level == 1) ? <ArrowRightIcon /> : <KeyboardArrowRightIcon />
 
       return (
         <MenuItem key={key} 

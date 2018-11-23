@@ -14,12 +14,11 @@ class GRPageHeader extends Component {
 
     render() {
         const { name, classes } = this.props;
-        console.log('GRPageHeader..................................', this.props);
-
         return (
-            <Typography variant="h6" gutterBottom>{name}</Typography>
+            <Typography variant="h6" gutterBottom className={classes.menuHeaderTitle}>{name}</Typography>
         )
     }
 }
 
 export default withStyles(GRCommonStyle)(GRPageHeader);
+

@@ -88,6 +88,14 @@ export const GRCommonStyle = theme => ({
         marginBottom: 10
     },
 
+    menuHeaderTitle: {
+        margin: '8px 20px 16px 20px',
+        fontWeight: 'bold',
+        borderBottom: '#455a64',
+        borderBottomWidth: 'thin',
+        borderBottomStyle: 'dashed'
+    },
+
     // MENU Body
     menuBodyRoot: {
         marginLeft: 20,
@@ -150,7 +158,7 @@ export const GRCommonStyle = theme => ({
         color: "blue"
     },
     breadcrumbCurrentMenu: {
-        color: "red"
+        color: "#455a64"
     },
 
     // Rule Component
@@ -269,13 +277,13 @@ export const GRCommonStyle = theme => ({
     },
     bullet: {
         display: 'inline-block',
-        margin: '0 2px',
+        margin: '0px 2px',
         transform: 'scale(1.8)',
         fontSize: '16px'
     },
     cartBullet: {
         display: 'inline-block',
-        margin: '0 2px',
+        margin: '0px 2px',
         transform: 'scale(1.8)',
         fontSize: '12px'
     },
@@ -283,7 +291,7 @@ export const GRCommonStyle = theme => ({
         minWidth: '34px'
     },
     GRIconSmallButton: {
-        padding: "0 2 0 0",
+        padding: "0px 2px 0px 0px",
         minWidth: "48px",
         minHeight: "24px"
     },
@@ -328,11 +336,11 @@ export const GRCommonStyle = theme => ({
         cursor: "pointer"
     },
     grSmallAndClickAndNumericCell: {
-        padding: "0 10 0 0",
+        padding: "0px 10px 0px 0px",
         cursor: "pointer"
     },
     grSmallAndClickAndCenterCell: {
-        padding: "0 0 0 0",
+        padding: "0px 0px 0px 0px",
         cursor: "pointer",
         textAlign: "center"
     },
@@ -350,8 +358,8 @@ export const GRCommonStyle = theme => ({
         border: 0,
         color: 'white',
         height: 48,
-        padding: '0 30px',
-        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+        padding: '0px 30px',
+        boxShadow: '0px 3px 5px 2px rgba(255, 105, 135, .3)',
     },
     label: {
         textTransform: 'capitalize',

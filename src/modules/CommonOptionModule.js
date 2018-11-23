@@ -61,7 +61,8 @@ const initialState = {
         { levelId: "Warning", levelVal: "warnning", levelNm: "경고" },
         { levelId: "Notice", levelVal: "notice", levelNm: "알림" },
         { levelId: "Informational", levelVal: "info", levelNm: "정보" },
-        { levelId: "Debug", levelVal: "debug", levelNm: "디버깅" }
+        { levelId: "Debug", levelVal: "debug", levelNm: "디버깅" },
+        { levelId: "None", levelVal: "none", levelNm: "사용안함" }
     ],
     protectionTypeData: [
         { typeId: "ALL", typeVal: "ALL", typeNm: "전체" },

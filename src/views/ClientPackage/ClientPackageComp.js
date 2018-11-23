@@ -183,7 +183,7 @@ class ClientPackageComp extends Component {
               if(response && response.status && response.status.result === 'success') {
                 console.log('SUCCESS ...........');
               } else {
-                  console.log('FAIL ...........');
+                console.log('FAIL ...........');
               }
             });
           }}),
