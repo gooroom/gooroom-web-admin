@@ -107,11 +107,11 @@ class ClientConfSettingSpec extends Component {
                       <TableCell component="th" colSpan={5} scope="row">{bull} 서버 전송 로그 레벨(수준)</TableCell>
                   </TableRow>
                   <TableRow >
-                    <TableCell component="th" style={{textAlign:'center'}}>BOOT 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>OS 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>EXE(IMA) 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>MEDIA 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>AGENT 로그</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
+                    <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
                   </TableRow>
                   <TableRow >
                     <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_boot')}</TableCell>
@@ -149,12 +149,12 @@ class ClientConfSettingSpec extends Component {
                       <TableCell component="th" colSpan={5} scope="row">{bull} 단말 알림 로그 레벨(수준)</TableCell>
                   </TableRow>
                   <TableRow >
-                    <TableCell component="th" style={{textAlign:'center'}}>BOOT 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>OS 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>EXE(IMA) 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>MEDIA 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>AGENT 로그</TableCell>
-                  </TableRow>
+                  <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
+                  <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
+                  <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
+                  <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
+                  <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
+                </TableRow>
                   <TableRow >
                     <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_boot')}</TableCell>
                     <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_os')}</TableCell>
@@ -166,12 +166,12 @@ class ClientConfSettingSpec extends Component {
                       <TableCell component="th" colSpan={5} scope="row">{bull} 서버/단말 침해 표시 레벨(수준)</TableCell>
                   </TableRow>
                   <TableRow >
-                    <TableCell component="th" style={{textAlign:'center'}}>BOOT 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>OS 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>EXE(IMA) 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>MEDIA 침해</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>AGENT 로그</TableCell>
-                  </TableRow>
+                  <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
+                  <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
+                  <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
+                  <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
+                  <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
+                </TableRow>
                   <TableRow >
                     <TableCell style={{textAlign:'center'}}>{viewItem.get('show_boot')}</TableCell>
                     <TableCell style={{textAlign:'center'}}>{viewItem.get('show_os')}</TableCell>

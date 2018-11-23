@@ -87,8 +87,6 @@ class GRFull extends Component {
     const { GlobalProps } = this.props;
     const anchorEl = GlobalProps.get('popoverElement');
     
-    console.log('GRFull...........................', this.props);
-
     return (
       <MuiThemeProvider theme={createMuiTheme(GRTheme)}>
         <CssBaseline />
@@ -96,13 +94,13 @@ class GRFull extends Component {
           <GRHeader toggleDrawer={this.toggleDrawer} onAdminClick={this.handleClickAdmin} onSystemClick={this.handleClickSystem} />
           <div className={classes.appBody}>
             <GRSideMenu sideOpen={this.state.sideOpen} />
-            <main className={classNames({[classes.fullMain]: !this.state.isMainWide}, {[classes.fullWideMain]: this.state.isMainWide})}>
+            <div className={classNames({[classes.fullMain]: !this.state.isMainWide}, {[classes.fullWideMain]: this.state.isMainWide})}>
               <div>
-                <GRBreadcrumb />
+                <GRBreadcrumb pathname={(this.props.location.pathname) ? this.props.location.pathname : ''}/>
                 <GRRouters />
               </div>
               <GRFooter />
-            </main>
+            </div>
           </div>
         </div>
 
