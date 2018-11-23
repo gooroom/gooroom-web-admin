@@ -39,7 +39,7 @@ class GRBreadcrumb extends Component {
       <div>
         <ol className={classes.breadcrumbRoot}>
         {pathTitle && pathTitle.split(':').map((m) => (
-          <li className={classes.breadcrumbCurrentMenu}>
+          <li key={m} className={classes.breadcrumbCurrentMenu}>
           {(m == 'home') && m}
           {(m != 'home') && <span style={{padding:'0px 4px'}}>> {m}</span>}
           </li>

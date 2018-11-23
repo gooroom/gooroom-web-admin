@@ -66,7 +66,7 @@ class DailyLoginCountManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { DailyLoginCountActions, DailyLoginCountProps } = this.props;
-    DailyLoginCountActions.readDailyLoginCountList(DailyLoginCountProps, this.props.match.params.grMenuId, {page: 0});
+    DailyLoginCountActions.readDailyLoginCountList(DailyLoginCountProps, this.props.match.params.grMenuId);
   };
   
   handleKeywordChange = (name, value) => {

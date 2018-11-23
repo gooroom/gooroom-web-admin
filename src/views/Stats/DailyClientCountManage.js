@@ -49,7 +49,7 @@ class DailyClientCountManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { DailyClientCountActions, DailyClientCountProps } = this.props;
-    DailyClientCountActions.readDailyClientCountList(DailyClientCountProps, this.props.match.params.grMenuId, {page: 0});
+    DailyClientCountActions.readDailyClientCountList(DailyClientCountProps, this.props.match.params.grMenuId);
   };
   
   handleKeywordChange = (name, value) => {
