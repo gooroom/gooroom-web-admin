@@ -51,7 +51,7 @@ class DailyProtectedManage extends Component {
   // .................................................
   handleSelectBtnClick = () => {
     const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readDailyProtectedList(DailyProtectedProps, this.props.match.params.grMenuId, {page: 0});
+    DailyProtectedActions.readDailyProtectedList(DailyProtectedProps, this.props.match.params.grMenuId);
   };
   
   handleKeywordChange = (name, value) => {
@@ -82,7 +82,6 @@ class DailyProtectedManage extends Component {
     });
 
   };
-
 
   render() {
     const { classes } = this.props;
@@ -125,7 +124,10 @@ class DailyProtectedManage extends Component {
           </Grid>
 
           <ResponsiveContainer width='100%' height={300} >
-            <LineChart data={data} margin={{top: 35, right: 10, left: 10, bottom: 35}}>
+            <LineChart 
+              data={data} 
+              margin={{top: 35, right: 10, left: 10, bottom: 35}}
+            >
               <XAxis dataKey="logDate" />
               <YAxis type="number" domain={[0, 'dataMax + 5']} />
               <CartesianGrid strokeDasharray="3 3"/>
