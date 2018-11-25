@@ -5,6 +5,8 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
+import  { Redirect } from 'react-router-dom';
 
 import * as AdminActions from 'modules/AdminModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -19,6 +21,9 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+
+import Button from '@material-ui/core/Button';
+import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -38,6 +43,26 @@ class AdminInform extends Component {
   }
 
   // .................................................
+  handleClickLogout = () => {
+    // const { AdminActions } = this.props;
+    // AdminActions.logout();
+    requestPostAPI('logout', {
+      temp: 'dump'
+    }).then(
+      (response) => {
+        console.log('11111 ::: ', this.props );
+        this.props.history.push('/');
+        return <Redirect to='/' />
+      }
+    ).catch(error => {
+      console.log('22222');
+      return <Redirect to='/' />
+    });
+
+  };
+  
+
+  // .................................................
   render() {
     const { classes } = this.props;
     const { AdminProps } = this.props;
@@ -54,6 +79,16 @@ class AdminInform extends Component {
             <br />
             <Table>
               <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 로그아웃</TableCell>
+                  <TableCell>
+
+              <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleClickLogout()} >
+                <Search />logout
+              </Button>
+                  
+                  </TableCell>
+                </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 이름</TableCell>
                   <TableCell numeric>{AdminProps.get('adminName')}</TableCell>

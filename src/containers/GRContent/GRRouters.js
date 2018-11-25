@@ -59,6 +59,7 @@ class GRRouters extends Component {
     return (
       <div className={classes.menuRoot}>
         <Switch>
+          
           <Route exact path="/" name="Home" component={Dashboard} />
           <Route path="/dashboard" name="Dashboard" component={Dashboard} />
           

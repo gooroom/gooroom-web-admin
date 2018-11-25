@@ -161,7 +161,7 @@ class DailyLoginCountManage extends Component {
           <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
           {selectedTab === 0 && 
             <ResponsiveContainer width='100%' height={300} >
-              <LineChart data={data} margin={{top: 35, right: 10, left: 10, bottom: 35}}>
+              <LineChart data={data} margin={{top: 30, right: 20, left: 0, bottom: 30}}>
                 <XAxis dataKey="logDate" />
                 <YAxis type="number" domain={[0, 'dataMax + 5']} />
                 <CartesianGrid strokeDasharray="3 3"/>
@@ -175,7 +175,7 @@ class DailyLoginCountManage extends Component {
           }
           {selectedTab === 1 && 
             <ResponsiveContainer width='100%' height={300} >
-              <LineChart data={data} margin={{top: 35, right: 10, left: 10, bottom: 35}}>
+              <LineChart data={data} margin={{top: 30, right: 20, left: 0, bottom: 30}}>
                 <XAxis dataKey="logDate" />
                 <YAxis type="number" domain={[0, 'dataMax + 5']} />
                 <CartesianGrid strokeDasharray="3 3"/>
@@ -188,7 +188,7 @@ class DailyLoginCountManage extends Component {
           }
           {selectedTab === 2 && 
             <ResponsiveContainer width='100%' height={300} >
-              <LineChart data={data} margin={{top: 35, right: 10, left: 10, bottom: 35}}>
+              <LineChart data={data} margin={{top: 30, right: 20, left: 0, bottom: 30}}>
                 <XAxis dataKey="logDate" />
                 <YAxis type="number" domain={[0, 'dataMax + 5']} />
                 <CartesianGrid strokeDasharray="3 3"/>
