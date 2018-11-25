@@ -109,6 +109,7 @@ class GRFull extends Component {
             role="button"
             onClick={this.toggleRightDrawer('rightDrawer', false)}
             onKeyDown={this.toggleRightDrawer('rightDrawer', false)}
+            {...this.props}
           />
         </Drawer>
 
