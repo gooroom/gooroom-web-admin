@@ -4,8 +4,8 @@ import { Map, List, fromJS } from 'immutable';
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
-const COMMON_PENDING = 'clientHostName/COMMON_PENDING';
-const COMMON_FAILURE = 'clientHostName/COMMON_FAILURE';
+const COMMON_PENDING = 'clientUpdateServer/COMMON_PENDING';
+const COMMON_FAILURE = 'clientUpdateServer/COMMON_FAILURE';
 
 const GET_UPDATESERVER_LIST_SUCCESS = 'clientUpdateServer/GET_UPDATESERVER_LIST_SUCCESS';
 const GET_UPDATESERVER_LISTPAGED_SUCCESS = 'clientUpdateServer/GET_UPDATESERVER_LISTPAGED_SUCCESS';
