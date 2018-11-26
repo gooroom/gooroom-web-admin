@@ -51,12 +51,11 @@ class AdminInform extends Component {
     }).then(
       (response) => {
         console.log('11111 ::: ', this.props );
-        this.props.history.push('/');
-        return <Redirect to='/' />
+        document.location.href="/gpms";
       }
     ).catch(error => {
       console.log('22222');
-      return <Redirect to='/' />
+      document.location.href="/gpms";
     });
 
   };

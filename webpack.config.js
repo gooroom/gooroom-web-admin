@@ -31,8 +31,7 @@ module.exports = (env = {}) => {
       hot: true,
       open: true,
       inline: true,
-      port: 9191,
-      historyApiFallback: true
+      port: 9191
     },
   
     module: {
