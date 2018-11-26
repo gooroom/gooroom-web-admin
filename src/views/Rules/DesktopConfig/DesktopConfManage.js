@@ -302,7 +302,6 @@ class DesktopConfManage extends Component {
             />
           </div>
         }
-        </GRPane>
         {/* dialog(popup) component area */}
         <DesktopConfSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
@@ -310,10 +309,10 @@ class DesktopConfManage extends Component {
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
+        </GRPane>
         <DesktopConfDialog compId={compId} />
         <DesktopAppDialog compId={compId} />
         <GRConfirm />
-        
       </div>
     );
   }
