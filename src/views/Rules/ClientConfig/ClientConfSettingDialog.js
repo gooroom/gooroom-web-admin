@@ -29,6 +29,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
@@ -82,6 +83,13 @@ class ClientConfSettingDialog extends Component {
 
     handleNtpValueChange = index => event => {
         this.props.ClientConfSettingActions.setNtpValue({
+            index: index,
+            value: event.target.value
+        });
+    }
+
+    handleWhiteIpValueChange = index => event => {
+        this.props.ClientConfSettingActions.setWhiteIpValue({
             index: index,
             value: event.target.value
         });
@@ -157,7 +165,6 @@ class ClientConfSettingDialog extends Component {
         });
     };
 
-
     handleAddNtp = () => {
         const { ClientConfSettingActions } = this.props;
         ClientConfSettingActions.addNtpAddress();
@@ -166,6 +173,16 @@ class ClientConfSettingDialog extends Component {
     handleDeleteNtp = index => event => {
         const { ClientConfSettingActions } = this.props;
         ClientConfSettingActions.deleteNtpAddress(index);
+    }
+
+    handleAddWhiteIp = () => {
+        const { ClientConfSettingActions } = this.props;
+        ClientConfSettingActions.addWhiteIp();
+    }
+
+    handleDeleteWhiteIp = index => event => {
+        const { ClientConfSettingActions } = this.props;
+        ClientConfSettingActions.deleteWhiteIp(index);
     }
 
     render() {
@@ -190,7 +207,7 @@ class ClientConfSettingDialog extends Component {
 
         return (
             <div>
-            {(ClientConfSettingProps.get('dialogOpen') && editingItem) &&
+            {((ClientConfSettingProps.get('dialogOpen') && editingItem)) &&
             <Dialog open={ClientConfSettingProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
@@ -236,7 +253,7 @@ class ClientConfSettingDialog extends Component {
                                 </div>
                             </Grid>
                         </Grid>
-
+                        <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <Typography variant="body1">{cartBull} 단말 로그 전송 설정</Typography>
                         <div style={{margin:'8 0 0 0'}}>
                             <FormLabel>{bull} 서버 전송 로그 레벨(수준)</FormLabel>
@@ -314,7 +331,8 @@ class ClientConfSettingDialog extends Component {
                                 </Grid>
                             </Grid>
                         </div>
-
+                        </Paper>
+                        <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <Typography variant="body1">{cartBull} 단말 알림 및 단말 서버 경고 설정</Typography>
                         <div style={{margin:'8 0 32 0'}}>
 
@@ -425,7 +443,8 @@ class ClientConfSettingDialog extends Component {
                             </Table>
 
                         </div>
-
+                        </Paper>
+                        <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <Typography variant="body1">{cartBull} 단말 로그 (JournalD Log) 설정</Typography>
                         <div style={{margin:'8 0 0 0'}}>
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
@@ -455,15 +474,34 @@ class ClientConfSettingDialog extends Component {
                                 </Grid>
                             </Grid>
                         </div>
+                        </Paper>
+                        <Grid container spacing={0} alignItems="flex-start" direction="row" justify="space-between" style={{marginTop:'20px'}}>
+                        <Grid item xs={6}>
 
+                            <FormLabel style={{marginRight:"20px"}}>{bull} 접속 가능 아이피 설정</FormLabel>
+                            <Button onClick={this.handleAddWhiteIp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
+                            <div style={{maxHeight:140,overflow:'auto'}}>
+                            <Grid container spacing={0} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
+                            {editingItem.get('whiteIp') && editingItem.get('whiteIp').size > 0 && editingItem.get('whiteIp').map((value, index) => (
+                                <Grid item xs={12} key={index}>
+                                    <Input value={value} onChange={this.handleWhiteIpValueChange(index)} style={{width:'80%'}} />
+                                    <IconButton onClick={this.handleDeleteWhiteIp(index)} aria-label="WhiteIpDelete">
+                                        <DeleteForeverIcon />
+                                    </IconButton>
+                                </Grid>
+                            ))}
+                            </Grid>
+                            </div>
 
-                        <div style={{marginTop:"10px"}}>
+                        </Grid>
+                        <Grid item xs={6}>
+
                             <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
                             <Button onClick={this.handleAddNtp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
-                            <div style={{maxHeight:200,overflow:'auto'}}>
+                            <div style={{maxHeight:140,overflow:'auto'}}>
                             <Grid container spacing={0} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
                             {editingItem.get('ntpAddress') && editingItem.get('ntpAddress').size > 0 && editingItem.get('ntpAddress').map((value, index) => (
-                                <Grid item xs={12} sm={6} md={6} key={index}>
+                                <Grid item xs={12} key={index}>
                                     <Radio value={index.toString()} name="radio-button-demo" 
                                         checked={editingItem.get('selectedNtpIndex') != -1 && editingItem.get('selectedNtpIndex') === index}
                                         onChange={this.handleChangeSelectedNtp('selectedNtpIndex', index)}
@@ -476,7 +514,9 @@ class ClientConfSettingDialog extends Component {
                             ))}
                             </Grid>
                             </div>
-                        </div>
+
+                        </Grid>
+                        </Grid>
                     </div>
                     }
                     {(dialogType === ClientConfSettingDialog.TYPE_COPY) &&

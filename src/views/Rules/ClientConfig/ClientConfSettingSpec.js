@@ -83,12 +83,18 @@ class ClientConfSettingSpec extends Component {
                   <TableCell numeric>{(viewItem.get('useHomeReset')) ? '실행' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
-                  <TableCell numeric>{viewItem.get('selectedNtpAddress')}</TableCell>
+                  <TableCell rowspan={2} component="th" scope="row">{bull} 접속 가능 아이피</TableCell>
+                  <TableCell rowspan={2} numeric>{viewItem.get('whiteIp').map(function(prop, index) {
+                      return <span key={index}>{prop}<br/></span>;
+                  })}</TableCell>
                   <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
                   <TableCell numeric>{viewItem.get('ntpAddress').map(function(prop, index) {
                       return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
+                  <TableCell numeric>{viewItem.get('selectedNtpAddress')}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -245,6 +251,7 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
     let selectedNtpIndex = -1;
     let ntpAddrSelected = '';
     let ntpAddress = [];
+    let whiteIps = [];
 
     let isDeleteLog = '';
     let logMaxSize = '';
@@ -282,6 +289,8 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
         ntpAddrSelected = evalue;
       } else if(ename == 'NTPADDRESSES') {
         ntpAddress.push(evalue);
+      } else if(ename == 'WHITEIPS') {
+        whiteIps.push(evalue);
 
       } else if(ename == 'isDeleteLog') {
         isDeleteLog = (evalue == "true");
@@ -346,6 +355,7 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
       selectedNtpAddress: ntpAddrSelected,
       selectedNtpIndex: selectedNtpIndex,
       ntpAddress: List(ntpAddress),
+      whiteIp: List(whiteIps),
 
       isDeleteLog: isDeleteLog,
       logMaxSize: logMaxSize,
