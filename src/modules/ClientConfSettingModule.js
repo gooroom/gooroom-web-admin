@@ -30,6 +30,10 @@ const SET_NTP_VALUE = 'clientConfSetting/SET_NTP_VALUE';
 const ADD_NTPADDRESS_ITEM = 'clientConfSetting/ADD_NTPADDRESS_ITEM';
 const DELETE_NTPADDRESS_ITEM = 'clientConfSetting/DELETE_NTPADDRESS_ITEM';
 
+const SET_WHITEIP_VALUE = 'clientConfSetting/SET_WHITEIP_VALUE';
+const ADD_WHITEIP_ITEM = 'clientConfSetting/ADD_WHITEIP_ITEM';
+const DELETE_WHITEIP_ITEM = 'clientConfSetting/DELETE_WHITEIP_ITEM';
+
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId');
 
@@ -213,7 +217,8 @@ const makeParameter = (param) => {
         USEHYPERVISOR: param.get('useHypervisor'),
         USEHOMERESET: param.get('useHomeReset'),
         NTPSELECTADDRESS: (param.get('selectedNtpIndex') > -1) ? param.getIn(['ntpAddress', param.get('selectedNtpIndex')]) : '',
-        NTPADDRESSES: (param.get('ntpAddress')) ? param.get('ntpAddress').toArray() : []
+        NTPADDRESSES: (param.get('ntpAddress')) ? param.get('ntpAddress').toArray() : [],
+        WHITEIPS: (param.get('whiteIp')) ? param.get('whiteIp').toArray() : []
     };
 }
 
@@ -335,6 +340,27 @@ export const setNtpValue = (param) => dispatch => {
     });
 };
 
+export const addWhiteIp = () => dispatch => {
+    return dispatch({
+        type: ADD_WHITEIP_ITEM
+    });
+}
+
+export const deleteWhiteIp = (index) => dispatch => {
+    return dispatch({
+        type: DELETE_WHITEIP_ITEM,
+        index: index
+    });
+}
+
+export const setWhiteIpValue = (param) => dispatch => {
+    return dispatch({
+        type: SET_WHITEIP_VALUE,
+        index: param.index,
+        value: param.value
+    });
+};
+
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
@@ -407,6 +433,18 @@ export default handleActions({
     [DELETE_NTPADDRESS_ITEM]: (state, action) => {
         const newNtpAddress = state.getIn(['editingItem', 'ntpAddress']).delete(action.index);
         return state.setIn(['editingItem', 'ntpAddress'], newNtpAddress);
+    },
+    [SET_WHITEIP_VALUE]: (state, action) => {
+        const newWhiteIp = state.getIn(['editingItem', 'whiteIp']).set(action.index, action.value);
+        return state.setIn(['editingItem', 'whiteIp'], newWhiteIp);
+    },
+    [ADD_WHITEIP_ITEM]: (state, action) => {
+        const newWhiteIp = (state.getIn(['editingItem', 'whiteIp'])) ? state.getIn(['editingItem', 'whiteIp']).push('') : List(['']);
+        return state.setIn(['editingItem', 'whiteIp'], newWhiteIp);
+    },
+    [DELETE_WHITEIP_ITEM]: (state, action) => {
+        const newWhiteIp = state.getIn(['editingItem', 'whiteIp']).delete(action.index);
+        return state.setIn(['editingItem', 'whiteIp'], newWhiteIp);
     },
 
 }, initialState);

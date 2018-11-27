@@ -282,13 +282,13 @@ class ClientUpdateServerManage extends Component {
             />
             </div>
           }
-        </GRPane>
         {/* dialog(popup) component area */}
         <ClientUpdateServerSpec compId={compId} specType="inform" hasAction={true}
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
+        </GRPane>
         <ClientUpdateServerDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>

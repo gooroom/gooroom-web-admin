@@ -302,13 +302,13 @@ class ClientConfSettingManage extends Component {
             />
             </div>
           }
-        </GRPane>
         {/* dialog(popup) component area */}
         <ClientConfSettingSpec compId={compId} specType="inform" hasAction={true}
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
+        </GRPane>
         <ClientConfSettingDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>

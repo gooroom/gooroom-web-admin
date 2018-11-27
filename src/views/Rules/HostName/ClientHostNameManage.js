@@ -280,13 +280,13 @@ class ClientHostNameManage extends Component {
             />
             </div>
           }
-        </GRPane>
         {/* dialog(popup) component area */}
         <ClientHostNameSpec compId={compId} specType="inform" hasAction={true}
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
+        </GRPane>
         <ClientHostNameDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>
