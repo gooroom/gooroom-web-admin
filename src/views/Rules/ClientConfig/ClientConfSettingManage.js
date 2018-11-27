@@ -138,6 +138,7 @@ class ClientConfSettingManage extends Component {
         transmit_agent: 'crit',
         notify_agent: 'crit',
         show_agent: 'info',
+        whiteIpAll: true
       }),
       dialogType: ClientConfSettingDialog.TYPE_ADD
     });
