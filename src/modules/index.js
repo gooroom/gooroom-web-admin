@@ -41,6 +41,8 @@ import DailyProtectedModule from './DailyProtectedModule';
 import DailyLoginCountModule from './DailyLoginCountModule';
 import DailyClientCountModule from './DailyClientCountModule';
 
+import DashboardModule from './DashboardModule';
+
 
 export default combineReducers({
 
@@ -83,6 +85,8 @@ export default combineReducers({
     GeneralLogModule,
     DailyProtectedModule,
     DailyLoginCountModule,
-    DailyClientCountModule
+    DailyClientCountModule,
+
+    DashboardModule
 
 });
