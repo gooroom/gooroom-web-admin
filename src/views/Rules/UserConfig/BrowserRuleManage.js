@@ -3,8 +3,6 @@ import { Map, List } from 'immutable';
 
 import axios, { post } from 'axios';
 
-
-
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 

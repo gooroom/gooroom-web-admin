@@ -5,7 +5,8 @@ import Typography from '@material-ui/core/Typography';
 class ClientOnOff extends Component {
     
     render() {
-        const data = [{name: 'On', value: 400}, {name: 'Off', value: 300}, {name: 'Revoke', value: 80}];
+        const {clientOn, clientOff, clientRevoke} = this.props;
+        const data = [{name: 'On', value: Number(clientOn)}, {name: 'Off', value: Number(clientOff)}, {name: 'Revoke', value: Number(clientRevoke)}];
         const colors = ['#0088FE', '#00C49F', '#FFBB28'];
 
         return (
