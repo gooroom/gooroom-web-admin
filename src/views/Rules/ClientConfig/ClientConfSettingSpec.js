@@ -83,18 +83,12 @@ class ClientConfSettingSpec extends Component {
                   <TableCell numeric>{(viewItem.get('useHomeReset')) ? '실행' : '중단'}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell rowspan={2} component="th" scope="row">{bull} 접속 가능 아이피</TableCell>
-                  <TableCell rowspan={2} numeric>{viewItem.get('whiteIp').map(function(prop, index) {
+                  <TableCell component="th" scope="row">{bull} 접속 가능 아이피</TableCell>
+                  <TableCell numeric>{viewItem.get('whiteIp').map(function(prop, index) {
                       return <span key={index}>{prop}<br/></span>;
                   })}</TableCell>
-                  <TableCell component="th" scope="row">{bull} NTP 서버로 사용할 주소정보</TableCell>
-                  <TableCell numeric>{viewItem.get('ntpAddress').map(function(prop, index) {
-                      return <span key={index}>{prop}<br/></span>;
-                  })}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 선택된 NTP 서버 주소</TableCell>
-                  <TableCell numeric>{viewItem.get('selectedNtpAddress')}</TableCell>
+                  <TableCell component="th" scope="row">{bull} 전체 아이피 허용</TableCell>
+                  <TableCell numeric>{(viewItem.get('whiteIpAll')) ? '허용함' : '허용안함'}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -248,9 +242,7 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
   if(param) {
     let useHypervisor = false;
     let useHomeReset = false;
-    let selectedNtpIndex = -1;
-    let ntpAddrSelected = '';
-    let ntpAddress = [];
+    let whiteIpAll = false;
     let whiteIps = [];
 
     let isDeleteLog = '';
@@ -285,10 +277,8 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
         useHypervisor = (evalue == "true");
       } else if(ename == 'USEHOMERESET') {
         useHomeReset = (evalue == "true");
-      } else if(ename == 'NTPSELECTADDRESS') {
-        ntpAddrSelected = evalue;
-      } else if(ename == 'NTPADDRESSES') {
-        ntpAddress.push(evalue);
+      } else if(ename == 'WHITEIPALL') {
+        whiteIpAll = (evalue == "true");
       } else if(ename == 'WHITEIPS') {
         whiteIps.push(evalue);
 
@@ -338,12 +328,6 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
       }
 
     });
-
-    ntpAddress.forEach(function(e, i) {
-      if(ntpAddrSelected == e) {
-        selectedNtpIndex = i;
-      }
-    });
   
     return Map({
       objId: param.get('objId'),
@@ -352,9 +336,7 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
       modDate: param.get('modDate'),
       useHypervisor: useHypervisor,
       useHomeReset: useHomeReset,
-      selectedNtpAddress: ntpAddrSelected,
-      selectedNtpIndex: selectedNtpIndex,
-      ntpAddress: List(ntpAddress),
+      whiteIpAll: whiteIpAll,
       whiteIp: List(whiteIps),
 
       isDeleteLog: isDeleteLog,

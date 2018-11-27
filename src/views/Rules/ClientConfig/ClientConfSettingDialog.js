@@ -81,24 +81,10 @@ class ClientConfSettingDialog extends Component {
         // }
     }
 
-    handleNtpValueChange = index => event => {
-        this.props.ClientConfSettingActions.setNtpValue({
-            index: index,
-            value: event.target.value
-        });
-    }
-
     handleWhiteIpValueChange = index => event => {
         this.props.ClientConfSettingActions.setWhiteIpValue({
             index: index,
             value: event.target.value
-        });
-    }
-
-    handleChangeSelectedNtp = (name, index) => event => {
-        this.props.ClientConfSettingActions.setEditingItemValue({
-            name: name,
-            value: index
         });
     }
 
@@ -164,16 +150,6 @@ class ClientConfSettingDialog extends Component {
             value: value
         });
     };
-
-    handleAddNtp = () => {
-        const { ClientConfSettingActions } = this.props;
-        ClientConfSettingActions.addNtpAddress();
-    }
-
-    handleDeleteNtp = index => event => {
-        const { ClientConfSettingActions } = this.props;
-        ClientConfSettingActions.deleteNtpAddress(index);
-    }
 
     handleAddWhiteIp = () => {
         const { ClientConfSettingActions } = this.props;
@@ -475,48 +451,36 @@ class ClientConfSettingDialog extends Component {
                             </Grid>
                         </div>
                         </Paper>
-                        <Grid container spacing={0} alignItems="flex-start" direction="row" justify="space-between" style={{marginTop:'20px'}}>
-                        <Grid item xs={6}>
 
-                            <FormLabel style={{marginRight:"20px"}}>{bull} 접속 가능 아이피 설정</FormLabel>
-                            <Button onClick={this.handleAddWhiteIp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
-                            <div style={{maxHeight:140,overflow:'auto'}}>
-                            <Grid container spacing={0} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
-                            {editingItem.get('whiteIp') && editingItem.get('whiteIp').size > 0 && editingItem.get('whiteIp').map((value, index) => (
-                                <Grid item xs={12} key={index}>
-                                    <Input value={value} onChange={this.handleWhiteIpValueChange(index)} style={{width:'80%'}} />
-                                    <IconButton onClick={this.handleDeleteWhiteIp(index)} aria-label="WhiteIpDelete">
-                                        <DeleteForeverIcon />
-                                    </IconButton>
-                                </Grid>
-                            ))}
+                        <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'0 0 8 0'}}>
+                            <Grid item xs={6}>
+                                <FormLabel style={{marginRight:"20px"}}>{bull} 접속 가능 아이피 설정</FormLabel>
+                                <Button onClick={this.handleAddWhiteIp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
                             </Grid>
+                            <Grid item xs={6}>
+                                <FormLabel style={{marginRight:"50px"}}>{bull} 전체 아이피 허용</FormLabel>
+                                <FormControlLabel style={{height:27}}
+                                    control={
+                                    <Switch onChange={this.handleValueChange('whiteIpAll')} color="primary"
+                                        checked={(editingItem.get('whiteIpAll')) ? editingItem.get('whiteIpAll') : false} />
+                                    }
+                                    label={(editingItem.get('whiteIpAll')) ? '허용함' : '허용안함'}
+                                />
+                            </Grid>
+                        </Grid>
+                            <div style={{maxHeight:140,overflow:'auto'}}>
+                                <Grid container spacing={0} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
+                                {editingItem.get('whiteIp') && editingItem.get('whiteIp').size > 0 && editingItem.get('whiteIp').map((value, index) => (
+                                    <Grid item xs={6} key={index}>
+                                        <Input value={value} onChange={this.handleWhiteIpValueChange(index)} style={{width:'80%'}} />
+                                        <IconButton onClick={this.handleDeleteWhiteIp(index)} aria-label="WhiteIpDelete">
+                                            <DeleteForeverIcon />
+                                        </IconButton>
+                                    </Grid>
+                                ))}
+                                </Grid>
                             </div>
 
-                        </Grid>
-                        <Grid item xs={6}>
-
-                            <FormLabel style={{marginRight:"20px"}}>{bull} NTP 서버로 사용할 주소정보</FormLabel>
-                            <Button onClick={this.handleAddNtp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
-                            <div style={{maxHeight:140,overflow:'auto'}}>
-                            <Grid container spacing={0} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
-                            {editingItem.get('ntpAddress') && editingItem.get('ntpAddress').size > 0 && editingItem.get('ntpAddress').map((value, index) => (
-                                <Grid item xs={12} key={index}>
-                                    <Radio value={index.toString()} name="radio-button-demo" 
-                                        checked={editingItem.get('selectedNtpIndex') != -1 && editingItem.get('selectedNtpIndex') === index}
-                                        onChange={this.handleChangeSelectedNtp('selectedNtpIndex', index)}
-                                    />
-                                    <Input value={value} onChange={this.handleNtpValueChange(index)} style={{width:'70%'}} />
-                                    <IconButton onClick={this.handleDeleteNtp(index)} aria-label="NtpDelete">
-                                        <DeleteForeverIcon />
-                                    </IconButton>
-                                </Grid>
-                            ))}
-                            </Grid>
-                            </div>
-
-                        </Grid>
-                        </Grid>
                     </div>
                     }
                     {(dialogType === ClientConfSettingDialog.TYPE_COPY) &&

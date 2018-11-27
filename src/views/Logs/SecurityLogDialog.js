@@ -71,8 +71,8 @@ class SecurityLogDialog extends Component {
     handleCreateData = (event) => {
         const { SecurityLogProps, GRConfirmActions } = this.props;
         const re = GRConfirmActions.showConfirm({
-            confirmTitle: '매체제어정책정보 등록',
-            confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
+            confirmTitle: 'temp 등록',
+            confirmMsg: 'temp를 등록하시겠습니까?',
             handleConfirmResult: this.handleCreateConfirmResult,
             confirmObject: SecurityLogProps.get('editingItem')
         });
@@ -91,8 +91,8 @@ class SecurityLogDialog extends Component {
     handleEditData = (event, id) => {
         const { SecurityLogProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: '매체제어정책정보 수정',
-            confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
+            confirmTitle: 'temp 수정',
+            confirmMsg: 'temp를 수정하시겠습니까?',
             handleConfirmResult: this.handleEditConfirmResult,
             confirmObject: SecurityLogProps.get('editingItem')
         });
@@ -162,15 +162,15 @@ class SecurityLogDialog extends Component {
 
         let title = "";
         if(dialogType === SecurityLogDialog.TYPE_ADD) {
-            title = "매체제어정책설정 등록";
+            title = "temp 등록";
         } else if(dialogType === SecurityLogDialog.TYPE_VIEW) {
-            title = "매체제어정책설정 정보";
+            title = "temp 정보";
         } else if(dialogType === SecurityLogDialog.TYPE_EDIT) {
-            title = "매체제어정책설정 수정";
+            title = "temp 수정";
         } else if(dialogType === SecurityLogDialog.TYPE_INHERIT) {
-            title = "매체제어정책설정 상속";
+            title = "temp 상속";
         } else if(dialogType === SecurityLogDialog.TYPE_COPY) {
-            title = "매체제어정책설정 복사";
+            title = "temp 복사";
         }
 
         return (

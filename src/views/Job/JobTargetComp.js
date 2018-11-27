@@ -152,7 +152,7 @@ class JobTargetComp extends Component {
           />
           <TableBody>
           {listObj.get('listData_target').map(n => {
-            const clientStatus = ((n.get('jobStat') == 'R') ? '작업전' : ((n.get('jobStat') == 'C') ? '작업완료' : '작업오류')) + '(' + n.get('jobStat') + ')';
+            const clientStatus = ((n.get('jobStat') == 'R') ? '작업전' : ((n.get('jobStat') == 'C') ? '작업완료' : ((n.get('jobStat') == 'D') ? '작업중' : '작업오류'))) + '(' + n.get('jobStat') + ')';
             return (
               <TableRow
                 hover

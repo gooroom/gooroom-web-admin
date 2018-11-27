@@ -30,6 +30,10 @@ const SET_BLUETOOTHMAC_ITEM = 'mediaRule/SET_BLUETOOTHMAC_ITEM';
 const ADD_BLUETOOTHMAC_ITEM = 'mediaRule/ADD_BLUETOOTHMAC_ITEM';
 const DELETE_BLUETOOTHMAC_ITEM = 'mediaRule/DELETE_BLUETOOTHMAC_ITEM';
 
+const SET_SERIALNO_ITEM = 'mediaRule/SET_SERIALNO_ITEM';
+const ADD_SERIALNO_ITEM = 'mediaRule/ADD_SERIALNO_ITEM';
+const DELETE_SERIALNO_ITEM = 'mediaRule/DELETE_SERIALNO_ITEM';
+
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId');
@@ -245,7 +249,8 @@ const makeParameter = (param) => {
         mouse: (param.get('mouse') == 'allow') ? 'allow' : 'disallow',
         wireless: (param.get('wireless') == 'allow') ? 'allow' : 'disallow',
         bluetooth_state: (param.get('bluetoothState') == 'allow') ? 'allow' : 'disallow',
-        macAddressList: (param.get('macAddress')) ? param.get('macAddress').toArray() : []
+        macAddressList: (param.get('macAddress')) ? param.get('macAddress').toArray() : [],
+        usbSerialNoList: (param.get('usbSerialNo')) ? param.get('usbSerialNo').toArray() : []
     };
 }
 
@@ -386,6 +391,27 @@ export const setBluetoothMac = (param) => dispatch => {
     });
 };
 
+export const addSerialNo = () => dispatch => {
+    return dispatch({
+        type: ADD_SERIALNO_ITEM
+    });
+}
+
+export const deleteSerialNo = (index) => dispatch => {
+    return dispatch({
+        type: DELETE_SERIALNO_ITEM,
+        index: index
+    });
+}
+
+export const setSerialNo = (param) => dispatch => {
+    return dispatch({
+        type: SET_SERIALNO_ITEM,
+        index: param.index,
+        value: param.value
+    });
+};
+
 
 export default handleActions({
 
@@ -459,6 +485,18 @@ export default handleActions({
     [DELETE_BLUETOOTHMAC_ITEM]: (state, action) => {
         const newBluetoothMac = state.getIn(['editingItem', 'macAddress']).delete(action.index);
         return state.setIn(['editingItem', 'macAddress'], newBluetoothMac);
+    },
+    [SET_SERIALNO_ITEM]: (state, action) => {
+        const newSerialNo = state.getIn(['editingItem', 'usbSerialNo']).set(action.index, action.value);
+        return state.setIn(['editingItem', 'usbSerialNo'], newSerialNo);
+    },
+    [ADD_SERIALNO_ITEM]: (state, action) => {
+        const newSerialNo = (state.getIn(['editingItem', 'usbSerialNo'])) ? state.getIn(['editingItem', 'usbSerialNo']).push('') : List(['']);
+        return state.setIn(['editingItem', 'usbSerialNo'], newSerialNo);
+    },
+    [DELETE_SERIALNO_ITEM]: (state, action) => {
+        const newSerialNo = state.getIn(['editingItem', 'usbSerialNo']).delete(action.index);
+        return state.setIn(['editingItem', 'usbSerialNo'], newSerialNo);
     }
 
 }, initialState);

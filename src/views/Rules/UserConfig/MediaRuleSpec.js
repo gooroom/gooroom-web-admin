@@ -74,8 +74,8 @@ class MediaRuleSpec extends Component {
                   </TableRow>
                 }
                   <TableRow>
-                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} USB메모리</TableCell>
-                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('usbMemory')}</TableCell>
+                    <TableCell component="th" scope="row">{bull} 무선랜</TableCell>
+                    <TableCell numeric>{viewItem.get('wireless')}</TableCell>
                     <TableCell style={{width:'25%'}} component="th" scope="row">{bull} CD/DVD</TableCell>
                     <TableCell style={{width:'25%'}} numeric>{viewItem.get('cdAndDvd')}</TableCell>
                   </TableRow>
@@ -102,14 +102,16 @@ class MediaRuleSpec extends Component {
                   </TableRow>
 
                   <TableRow>
-                    <TableCell component="th" scope="row">{bull} 무선랜</TableCell>
-                    <TableCell numeric>{viewItem.get('wireless')}</TableCell>
+                    <TableCell component="th" scope="row">{bull} USB메모리</TableCell>
+                    <TableCell numeric>{viewItem.get('usbMemory')}</TableCell>
                     <TableCell component="th" scope="row">{bull} 블루투스</TableCell>
                     <TableCell numeric>{viewItem.get('bluetoothState')}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell component="th" scope="row"></TableCell>
-                    <TableCell numeric></TableCell>
+                    <TableCell component="th" scope="row">{bull} USB시리얼정보</TableCell>
+                    <TableCell numeric>{viewItem.get('usbSerialNo').map(function(prop, index) {
+                      return <span key={index}>{prop}<br/></span>;
+                    })}</TableCell>
                     <TableCell component="th" scope="row">{bull} 맥주소(블루투스)</TableCell>
                     <TableCell numeric>{viewItem.get('macAddress').map(function(prop, index) {
                       return <span key={index}>{prop}<br/></span>;
@@ -132,6 +134,7 @@ export const generateMediaRuleObject = (param, isForViewer) => {
 
   if(param) {
     let usbMemory = '';
+    let usbSerialNo = [];
     let usbReadonly = '';
     let wireless = '';
     let bluetoothState = '';
@@ -174,6 +177,8 @@ export const generateMediaRuleObject = (param, isForViewer) => {
         bluetoothState = evalue;
       } else if(ename == 'mac_address') {
         macAddress.push(evalue);
+      } else if(ename == 'usb_serialno') {
+        usbSerialNo.push(evalue);
       }
     });
   
@@ -195,7 +200,8 @@ export const generateMediaRuleObject = (param, isForViewer) => {
 
       wireless: wireless,
       bluetoothState: bluetoothState,
-      macAddress: List(macAddress)  
+      macAddress: List(macAddress),
+      usbSerialNo: List(usbSerialNo)
     });
   
   } else {
