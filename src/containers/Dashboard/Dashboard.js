@@ -7,6 +7,9 @@ import ClientOnOff from './ClientOnOff';
 import ClientProtected from './ClientProtected';
 import UserLogin from './UserLogin';
 
+import NivoPieTest from './NivoPieTest';
+
+
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 
@@ -32,7 +35,7 @@ class Dashboard extends Component {
                     </Grid>
                     <Grid item xs={6} sm={4}>
                         <Paper className={classes.paper}>
-                            <ClientProtected />
+                        <NivoPieTest />
                         </Paper>
                     </Grid>
                     <Grid item xs={6} sm={4}>
@@ -44,7 +47,9 @@ class Dashboard extends Component {
               </Grid>
 
               <Grid item xs={12}>
-                <Paper className={classes.paper}>xs=12</Paper>
+                
+                <NivoPieTest />
+                
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Paper className={classes.paper}>xs=12 sm=6</Paper>
