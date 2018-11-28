@@ -272,7 +272,7 @@ class BrowserRuleDialog extends Component {
                         </AppBar>
                         <Paper elevation={0} style={{ maxHeight: 420 }} >
                         {selectedTab === 0 && 
-                            <div style={{border:'1px solid lightGray',padding:20}}>
+                            <div style={{border:'1px solid lightGray',padding:'0px 20px 20px 20px'}}>
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:0}}>
                                 <Grid item xs={6}>
                                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
@@ -433,22 +433,21 @@ class BrowserRuleDialog extends Component {
                             <Button size="small" variant="contained" color="primary" style={{marginLeft:20}}
                                 className={classes.smallIconButton} onClick={this.handleAddWhiteList}
                             ><AddIcon /></Button>
-                            <Divider />
-                            <div style={{maxHeight:180,overflow:'auto'}}>
-                                <List>
+                            <div style={{maxHeight:140,overflow:'auto',marginBottom:10}}>
+                                <Grid container spacing={0} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
                                 {editingItem.get('trustUrlList') && editingItem.get('trustUrlList').size > 0 && editingItem.get('trustUrlList').map((value, index) => (
-                                    <ListItem key={index} style={{padding:'0 40 0 0'}}>
-                                        <Input value={value} style={{width:"100%"}} onChange={this.handleWhiteListValueChange(index)}/>
-                                        <ListItemSecondaryAction>
-                                            <IconButton onClick={this.handleDeleteWhiteList(index)}>
-                                                <DeleteForeverIcon />
-                                            </IconButton>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
+                                    <Grid item xs={6} key={index}>
+                                        <Input value={value} style={{width:"80%"}} onChange={this.handleWhiteListValueChange(index)}/>
+                                        <IconButton onClick={this.handleDeleteWhiteList(index)}>
+                                            <DeleteForeverIcon />
+                                        </IconButton>
+                                    </Grid>
                                 ))}
-                                </List>
+                                </Grid>
                             </div>
+                            <Divider />
                         </div>
+
                     </div>
                     }
                     {(dialogType === BrowserRuleDialog.TYPE_INHERIT) &&
