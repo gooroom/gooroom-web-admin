@@ -65,9 +65,10 @@ class UserListComp extends Component {
     { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
     { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: "조직" },
     { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
+    { id: "chLastLoginDt", isOrder: false, numeric: false, disablePadding: true, label: "최근로그인날짜" },
+    { id: "chLastClientId", isOrder: false, numeric: false, disablePadding: true, label: "최종접속단말정보" },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
   ];
-
   componentDidMount() {
     this.props.UserActions.readUserListPaged(this.props.UserProps, this.props.compId);
   }
@@ -299,8 +300,10 @@ class UserListComp extends Component {
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YY/MM/DD HH:ss')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>
                     <Button color="secondary" size="small" 
                       className={classes.buttonInTableRow}
                       onClick={event => this.handleEditClick(event, n.get('userId'))}>

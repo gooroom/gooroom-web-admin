@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions';
+import { Map, List } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -82,9 +83,16 @@ export const changeCompVariable = (param) => dispatch => {
 // ...
 
 export const readPackageListPagedInClient = (module, compId, extParam) => dispatch => {
-    const newListParam = (module.getIn(['viewItems', compId])) ? 
-        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
-        module.get('defaultListParam');
+    let newListParam = Map({});
+    
+    if(module.getIn(['viewItems', compId])) {
+        newListParam = module.getIn(['viewItems', compId, 'listParam']).merge(extParam)
+    } else {
+        newListParam = module.get('defaultListParam');
+        if(extParam) {
+            newListParam = newListParam.merge(extParam);
+        }
+    }
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readPackageListPagedInClient', {

@@ -17,6 +17,8 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import ClientProfileSetDialog from './ClientProfileSetDialog';
+import ClientPackageShowDialog from "views/ClientPackage/ClientPackageShowDialog";
+
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -35,6 +37,7 @@ import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import ArchiveIcon from '@material-ui/icons/Archive';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -50,7 +53,17 @@ class ClientProfileSet extends Component {
     { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
     { id: 'chProfile', isOrder: false, numeric: false, disablePadding: true, label: '프로파일' },
+    { id: 'chPackages', isOrder: false, numeric: false, disablePadding: true, label: '패키지정보' }
   ];
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      selectedClientId: '',
+      isOpenClientPackageSelect: false
+    };
+  }
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -127,6 +140,21 @@ class ClientProfileSet extends Component {
       dialogType: ClientProfileSetDialog.TYPE_PROFILE
     });
   };
+
+  handleClickPackageShow = (event, id) => {
+    event.stopPropagation();
+    const viewItem = getRowObjectById(this.props.ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
+    this.setState({
+      selectedClientId: viewItem.get('clientId'),
+      isOpenClientPackageSelect: true
+    });
+  };
+
+  handleClickPackageShowClose = () => {
+    this.setState({
+      isOpenClientPackageSelect: false
+    })
+  }
 
   // delete
   handleDeleteClick = (event, id) => {
@@ -221,12 +249,12 @@ class ClientProfileSet extends Component {
                       onClick={event => this.handleSelectRow(event, n.get('profileNo'))}
                       key={n.get('profileNo')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('profileNo')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('profileNo')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('profileNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('profileNo'))}>
@@ -239,10 +267,17 @@ class ClientProfileSet extends Component {
                           <DeleteIcon />
                         </Button>                        
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleProfileClick(event, n.get('profileNo'))}>
+                          <ArchiveIcon />
+                        </Button>                        
+                      </TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleClickPackageShow(event, n.get('profileNo'))}>
                           <AssignmentIcon />
                         </Button>                        
                       </TableCell>
@@ -280,6 +315,11 @@ class ClientProfileSet extends Component {
         </GRPane>
         {/* dialog(popup) component area */}
         <ClientProfileSetDialog compId={compId} />
+        <ClientPackageShowDialog compId={compId}
+          isOpen={this.state.isOpenClientPackageSelect} 
+          selectedId={this.state.selectedClientId} 
+          onClose={this.handleClickPackageShowClose} />
+        
         <GRConfirm />
       </React.Fragment>
     );

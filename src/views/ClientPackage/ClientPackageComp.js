@@ -239,7 +239,7 @@ class ClientPackageComp extends Component {
         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={2} >
             <FormControl fullWidth={true}>
-              <TextField label="단말아이디" value={(selectedClientId) ? selectedClientId : ""} disabled={true} />
+              <TextField label="단말아이디" value={(selectedClientId) ? selectedClientId : ""} />
             </FormControl>
           </Grid>
           <Grid item xs={3} >
