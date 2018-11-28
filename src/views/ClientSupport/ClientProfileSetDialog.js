@@ -112,7 +112,7 @@ class ClientProfileSetDialog extends Component {
                 profileNo: paramObject.get('profileNo'),
                 targetClientIds: (checkedClientIds) ? checkedClientIds.join() : '',
                 targetClientGroupIds: (selectedClientGroupIds) ? selectedClientGroupIds.join() : '',
-                isRemoval: paramObject.get('isRemoval')
+                isRemoval: (paramObject.get('isRemoval') && paramObject.get('isRemoval') == 'true') ? 'true' : 'false'
             }).then((res) => {
                 ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, compId);
                 this.handleClose();

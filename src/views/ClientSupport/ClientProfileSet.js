@@ -123,7 +123,7 @@ class ClientProfileSet extends Component {
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
     const viewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     ClientProfileSetActions.showDialog({
-      viewItem: viewItem,
+      viewItem: viewItem.merge({isRemoval: 'false'}),
       dialogType: ClientProfileSetDialog.TYPE_PROFILE
     });
   };
