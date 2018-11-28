@@ -79,8 +79,12 @@ export const getDataPropertyInCompByParam = (propObj, compId, idName, checked) =
 
 export const getSelectedObjectInComp = (propObj, compId, targetType) => {
     const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
-    
     return propObj.getIn(List(targetNames).push('viewItem'));
+}
+
+export const getValueInSelectedObjectInComp = (propObj, compId, targetType, name) => {
+    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
+    return propObj.getIn(List(targetNames).push('viewItem', name));
 }
 
 export const getSelectedObjectInCompAndId = (propObj, compId, idName, targetType) => {
