@@ -15,6 +15,16 @@ import InputLabel from "@material-ui/core/InputLabel";
 //
 class ClientStatusSelect extends Component {
 
+  componentDidMount() {
+    this.props.CommonOptionActions.changeSelectValue({
+      name: 'selectedClientStatus',
+      value: {
+        statusId: '',
+        statusNm: ''
+      }
+    });
+  }
+
   // Events...
   handleChangeSelect = event => {
     const { CommonOptionActions } = this.props;
