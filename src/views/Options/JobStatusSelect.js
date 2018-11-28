@@ -7,6 +7,8 @@ import * as CommonOptionActions from 'modules/CommonOptionModule';
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import Checkbox from '@material-ui/core/Checkbox';
+import ListItemText from '@material-ui/core/ListItemText';
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -19,24 +21,36 @@ class JobStatusSelect extends Component {
     CommonOptionActions.changeSelectValue({
       name: 'selectedJobStatus',
       value: {
-        statusId: event.target.value,
-        statusNm: event.target.name
+        statusIds: event.target.value
       }
     });
     this.props.onChangeSelect(event, event.target.value);
   };
 
+  makeRenderValue = (param) => {
+    const { CommonOptionProps } = this.props;
+    const newParam = param.map(x => {
+      const statusObj = CommonOptionProps.jobStatusData.find(e => (e.statusId == x));
+      return statusObj.statusNm;
+    })
+  
+    return newParam.join(', ');
+  }
+
   render() {
     const { CommonOptionProps } = this.props;
     return (
-      <Select
-        value={CommonOptionProps.selectedJobStatus.statusId}
+      <Select multiple  
+        value={CommonOptionProps.selectedJobStatus.statusIds}
         onChange={this.handleChangeSelect}
-        inputProps={{name: 'jobStatus'}}
+        renderValue={selected => {
+          return this.makeRenderValue(selected);
+        }}
       >
         {CommonOptionProps.jobStatusData.map(x => (
           <MenuItem value={x.statusId} key={x.statusId}>
-            {x.statusNm}
+            <Checkbox checked={CommonOptionProps.selectedJobStatus.statusIds.indexOf(x.statusId) > -1} color="primary" />
+            <ListItemText primary={x.statusNm} />
           </MenuItem>
         ))}
       </Select>
