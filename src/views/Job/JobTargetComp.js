@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import * as JobManageActions from 'modules/JobManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { getRowObjectByIdInCustomList} from 'components/GRUtils/GRTableListUtils';
+import { refreshDataListInComps, getRowObjectByIdInCustomList, getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
@@ -32,6 +32,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import Search from '@material-ui/icons/Search'; 
+import ClearIcon from '@material-ui/icons/Clear'; 
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -83,6 +84,25 @@ class JobTargetComp extends Component {
     });
   };
 
+  handleClickJobCancel = (event) => {
+    const { GRConfirmActions, JobManageProps, compId } = this.props;
+
+    GRConfirmActions.showConfirm({
+      confirmTitle: '작업 취소',
+      confirmMsg: '작업대상 단말중 "작업전" 상태 단말의 작업을 취소하시겠습니까?',
+      handleConfirmResult: (confirmValue, paramObject) => {
+        if(confirmValue) {
+          const { JobManageProps, JobManageActions } = this.props;
+          JobManageActions.cancelJobRunning(paramObject)
+            .then((res) => {
+            refreshDataListInComps(JobManageProps, JobManageActions.readClientListInJobPaged);
+          });
+        }
+      },
+      confirmObject: getDataObjectVariableInComp(JobManageProps, compId, 'selectId')
+    });
+  };
+
   handleSelectRow = (event, id) => {
     const { JobManageProps, compId } = this.props;
     const { JobManageActions } = this.props;
@@ -122,19 +142,24 @@ class JobTargetComp extends Component {
       <div>
         {/* data option area */}
         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
-          <Grid item xs={4} >
+          <Grid item xs={2} >
             <FormControl fullWidth={true}>
               <TextField label="작업번호" value={(selectedJobNo) ? selectedJobNo : ""} disabled={true} />
             </FormControl>
           </Grid>
-          <Grid item xs={4} >
+          <Grid item xs={3} >
             <FormControl fullWidth={true}>
               <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
             </FormControl>
           </Grid>
-          <Grid item xs={4} >
+          <Grid item xs={3} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
               <Search />조회
+            </Button>
+          </Grid>
+          <Grid item xs={4} >
+            <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => this.handleClickJobCancel()} >
+              <ClearIcon />작업취소
             </Button>
           </Grid>
         </Grid>
@@ -152,7 +177,19 @@ class JobTargetComp extends Component {
           />
           <TableBody>
           {listObj.get('listData_target').map(n => {
-            const clientStatus = ((n.get('jobStat') == 'R') ? '작업전' : ((n.get('jobStat') == 'C') ? '작업완료' : ((n.get('jobStat') == 'D') ? '작업중' : '작업오류'))) + '(' + n.get('jobStat') + ')';
+            let clientStatus = '';
+            if(n.get('jobStat') == 'R') {
+              clientStatus = '작업전';
+            } else if(n.get('jobStat') == 'C') {
+              clientStatus = '작업완료';
+            } else if(n.get('jobStat') == 'D') {
+              clientStatus = '작업중';
+            } else if(n.get('jobStat') == 'E') {
+              clientStatus = '작업오류';
+            } else if(n.get('jobStat') == 'Q') {
+              clientStatus = '작업취소';
+            }
+
             return (
               <TableRow
                 hover
