@@ -208,11 +208,11 @@ const makeParameter = (param) => {
         optYn: (param.optYn && param.optYn != '') ? param.optYn : 'Y',
         sortOrder: (param.sortOrder && param.sortOrder != '') ? param.sortOrder : '1',
 
-        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
-        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
-        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
-        filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
-        desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId,
+        browserRuleId: (param.browserRuleId == '-') ? 'BCRUDEFAULT' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? 'MCRUDEFAULT' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? 'GSRUDEFAULT' : param.securityRuleId,
+        filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? 'GSFIDEFAULT' : param.filteredSoftwareRuleId,
+        desktopConfId: (param.desktopConfId == '-') ? 'DECODEFAULT' : param.desktopConfId,
 
         paramIsInherit: (param.paramIsInherit) ? param.paramIsInherit : false
     };
@@ -415,7 +415,22 @@ export default handleActions({
         });
     },
     [EDIT_DEPT_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleEditSuccessAction(state, action);
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                newState = newState
+                        .deleteIn(['viewItems', i, 'viewItem'])
+                        .setIn(['viewItems', i, 'informOpen'], false)
+                        .delete('editingItem')
+                        .merge({
+                            pending: false,
+                            error: false,
+                            dialogOpen: false,
+                            dialogType: ''
+                        });
+            });
+        }
+        return newState;
     },
     [DELETE_DEPT_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action, 'deptCd');

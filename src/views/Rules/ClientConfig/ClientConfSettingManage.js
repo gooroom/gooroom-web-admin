@@ -120,8 +120,8 @@ class ClientConfSettingManage extends Component {
       viewItem: Map({
         isDeleteLog: false,
         logRemainDate: '0',
-        logMaxSize: 100,
-        logMaxCount: 5,
+        logMaxSize: 10000,
+        logMaxCount: 3,
         systemKeepFree: 10,
         transmit_os: 'err',
         notify_os: 'err',

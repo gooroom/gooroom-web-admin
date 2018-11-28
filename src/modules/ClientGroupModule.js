@@ -117,14 +117,14 @@ const makeParameter = (param) => {
         groupName: param.groupName,
         groupComment: param.groupComment,
         
-        clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
-        hostNameConfigId: (param.hostNameConfigId == '-') ? '' : param.hostNameConfigId,
-        updateServerConfigId: (param.updateServerConfigId == '-') ? '' : param.updateServerConfigId,
-        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
-        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
-        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
-        filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
-        desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId
+        clientConfigId: (param.clientConfigId == '-') ? 'CLCFDEFAULT' : param.clientConfigId,
+        hostNameConfigId: (param.hostNameConfigId == '-') ? 'HOCFDEFAULT' : param.hostNameConfigId,
+        updateServerConfigId: (param.updateServerConfigId == '-') ? 'USCFDEFAULT' : param.updateServerConfigId,
+        browserRuleId: (param.browserRuleId == '-') ? 'BCRUDEFAULT' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? 'MCRUDEFAULT' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? 'GSRUDEFAULT' : param.securityRuleId,
+        filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? 'GSFIDEFAULT' : param.filteredSoftwareRuleId,
+        desktopConfId: (param.desktopConfId == '-') ? 'DECODEFAULT' : param.desktopConfId
     };
 }
 
@@ -294,7 +294,23 @@ export default handleActions({
         });
     },
     [EDIT_CLIENTGROUP_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleEditSuccessAction(state, action);
+        let newState = state;
+        if(newState.get('viewItems')) {
+            newState.get('viewItems').forEach((e, i) => {
+                newState = newState
+                        .deleteIn(['viewItems', i, 'viewItem'])
+                        .setIn(['viewItems', i, 'informOpen'], false)
+                        .delete('editingItem')
+                        .merge({
+                            pending: false,
+                            error: false,
+                            dialogOpen: false,
+                            dialogType: ''
+                        });
+            });
+        }
+
+        return newState;
     },
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action, 'grpId');
