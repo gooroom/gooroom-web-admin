@@ -11,6 +11,7 @@ import * as JobManageActions from 'modules/JobManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { refreshDataListInComps, getRowObjectByIdInCustomList, getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
+import { getMergedObject, getJobStatusToString } from 'components/GRUtils/GRCommonUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
@@ -177,19 +178,6 @@ class JobTargetComp extends Component {
           />
           <TableBody>
           {listObj.get('listData_target').map(n => {
-            let clientStatus = '';
-            if(n.get('jobStat') == 'R') {
-              clientStatus = '작업전';
-            } else if(n.get('jobStat') == 'C') {
-              clientStatus = '작업완료';
-            } else if(n.get('jobStat') == 'D') {
-              clientStatus = '작업중';
-            } else if(n.get('jobStat') == 'E') {
-              clientStatus = '작업오류';
-            } else if(n.get('jobStat') == 'Q') {
-              clientStatus = '작업취소';
-            }
-
             return (
               <TableRow
                 hover
@@ -198,7 +186,7 @@ class JobTargetComp extends Component {
               >
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
-                <TableCell className={classes.grSmallAndClickAndCenterCell}>{clientStatus}</TableCell>
+                <TableCell className={classes.grSmallAndClickAndCenterCell}>{getJobStatusToString(n.get('jobStat'))}</TableCell>
               </TableRow>
             );
           })}

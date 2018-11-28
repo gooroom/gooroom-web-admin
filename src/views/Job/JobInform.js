@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getMergedObject } from 'components/GRUtils/GRCommonUtils';
+import { getMergedObject, getJobStatusToString } from 'components/GRUtils/GRCommonUtils';
 
 import * as JobManageActions from 'modules/JobManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -133,7 +133,7 @@ class JobInform extends Component {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" >{bull} 작업상태(결과)</TableCell>
-                  <TableCell numeric>{selectTargetObj.get('jobStat')}</TableCell>
+                  <TableCell numeric>{getJobStatusToString(selectTargetObj.get('jobStat'))}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 작업모듈 정보 ]</TableCell>

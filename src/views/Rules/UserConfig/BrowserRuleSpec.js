@@ -178,9 +178,7 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
         webWorker = evalue;
       } else if(ename == 'devToolRule__trust') {
         if(isForViewer) {
-          if(evalue == '0') {
-            devToolRule__trust = "익스텐션내 개발자도구 사용불가"
-          } else if(evalue == '1') {
+          if(evalue == '1') {
             devToolRule__trust = "개발자도구 사용가능"
           } else if(evalue == '2') {
             devToolRule__trust = "개발자도구 사용불가"
@@ -192,10 +190,6 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
         if(isForViewer) {
           if(evalue == '0') {
             downloadRule__trust = "다운로드 제한 없음"
-          } else if(evalue == '1') {
-            downloadRule__trust = "위험 다운로드 제한"
-          } else if(evalue == '2') {
-            downloadRule__trust = "잠재적인 위험 다운로드 제한"
           } else if(evalue == '3') {
             downloadRule__trust = "모든 다운로드 제한"
           }
@@ -224,9 +218,7 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
         }        
       } else if(ename == 'devToolRule__untrust') {
         if(isForViewer) {
-          if(evalue == '0') {
-            devToolRule__untrust = "익스텐션내 개발자도구 사용불가"
-          } else if(evalue == '1') {
+          if(evalue == '1') {
             devToolRule__untrust = "개발자도구 사용가능"
           } else if(evalue == '2') {
             devToolRule__untrust = "개발자도구 사용불가"
@@ -238,10 +230,6 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
         if(isForViewer) {
           if(evalue == '0') {
             downloadRule__untrust = "다운로드 제한 없음"
-          } else if(evalue == '1') {
-            downloadRule__untrust = "위험 다운로드 제한"
-          } else if(evalue == '2') {
-            downloadRule__untrust = "잠재적인 위험 다운로드 제한"
           } else if(evalue == '3') {
             downloadRule__untrust = "모든 다운로드 제한"
           }

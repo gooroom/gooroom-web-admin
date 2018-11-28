@@ -264,60 +264,47 @@ class BrowserRuleDialog extends Component {
                                 </Grid>
                             </Grid>
                         </Grid>
-
-
                         <AppBar elevation={0} position="static" color="default" style={{marginTop:20}} >
                             <Tabs value={selectedTab} indicatorColor="primary" textColor="primary" onChange={this.handleChangeTabs} >
                                 <Tab label="신뢰사이트 설정" value={0} />
                                 <Tab label="비신뢰사이트 설정" value={1} />
                             </Tabs>
                         </AppBar>
-                        <Paper elevation={0} style={{ maxHeight: 460 }} >
+                        <Paper elevation={0} style={{ maxHeight: 420 }} >
                         {selectedTab === 0 && 
                             <div style={{border:'1px solid lightGray',padding:20}}>
-                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                <Grid item xs={12}><FormLabel component="legend">개발자도구(웹 인스펙터) 사용통제</FormLabel></Grid>
-                                <Grid item >
-                                    <FormControlLabel value="0" control={
-                                        <Radio color="primary" value="0" onChange={this.handleValueChange("devToolRule__trust")} checked={editingItem.get('devToolRule__trust') === '0'} />
-                                    } label="익스텐션내 개발자도구 사용불가" labelPlacement="end" />
+                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:0}}>
+                                <Grid item xs={6}>
+                                    <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                        <Grid item xs={12}><FormLabel component="legend">개발자도구(웹 인스펙터) 사용통제</FormLabel></Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="1" control={
+                                                <Radio color="primary" value="1" onChange={this.handleValueChange("devToolRule__trust")} checked={editingItem.get('devToolRule__trust') === '1'} />
+                                            } label="개발자도구 사용가능" labelPlacement="end" />
+                                        </Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="2" control={
+                                                <Radio color="primary" value="2" onChange={this.handleValueChange("devToolRule__trust")} checked={editingItem.get('devToolRule__trust') === '2'} />
+                                            } label="개발자도구 사용불가" labelPlacement="end" />
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="1" control={
-                                        <Radio color="primary" value="1" onChange={this.handleValueChange("devToolRule__trust")} checked={editingItem.get('devToolRule__trust') === '1'} />
-                                    } label="개발자도구 사용가능" labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="2" control={
-                                        <Radio color="primary" value="2" onChange={this.handleValueChange("devToolRule__trust")} checked={editingItem.get('devToolRule__trust') === '2'} />
-                                    } label="개발자도구 사용불가" labelPlacement="end" />
-                                </Grid>
-                            </Grid>
-
-                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{marginTop:10}}>
-                                <Grid item xs={12}><FormLabel component="legend">다운로드 통제</FormLabel></Grid>
-                                <Grid item >
-                                    <FormControlLabel value="0" control={
-                                        <Radio color="primary" value="0" onChange={this.handleValueChange("downloadRule__trust")} checked={editingItem.get('downloadRule__trust') === '0'} />
-                                    } label="다운로드 제한 없음" labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="1" control={
-                                        <Radio color="primary" value="1" onChange={this.handleValueChange("downloadRule__trust")} checked={editingItem.get('downloadRule__trust') === '1'} />
-                                    } label="위험 다운로드 제한" labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="2" control={
-                                        <Radio color="primary" value="2" onChange={this.handleValueChange("downloadRule__trust")} checked={editingItem.get('downloadRule__trust') === '2'} />
-                                    } label="잠재적인 위험 다운로드 제한" labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="3" control={
-                                        <Radio color="primary" value="3" onChange={this.handleValueChange("downloadRule__trust")} checked={editingItem.get('downloadRule__trust') === '3'} />
-                                    } label="모든 다운로드 제한" labelPlacement="end" />
+                                <Grid item xs={6}>
+                                    <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{marginTop:10}}>
+                                        <Grid item xs={12}><FormLabel component="legend">다운로드 통제</FormLabel></Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="0" control={
+                                                <Radio color="primary" value="0" onChange={this.handleValueChange("downloadRule__trust")} checked={editingItem.get('downloadRule__trust') === '0'} />
+                                            } label="다운로드 제한 없음" labelPlacement="end" />
+                                        </Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="3" control={
+                                                <Radio color="primary" value="3" onChange={this.handleValueChange("downloadRule__trust")} checked={editingItem.get('downloadRule__trust') === '3'} />
+                                            } label="모든 다운로드 제한" labelPlacement="end" />
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
                             </Grid>
-
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
                                 <Grid item xs={6}>
                                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
@@ -369,11 +356,6 @@ class BrowserRuleDialog extends Component {
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
                                 <Grid item xs={12}><FormLabel component="legend">개발자도구(웹 인스펙터) 사용통제</FormLabel></Grid>
                                 <Grid item >
-                                    <FormControlLabel value="0" control={
-                                        <Radio color="primary" value="0" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '0'} />
-                                    } label="익스텐션내 개발자도구 사용불가" labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
                                     <FormControlLabel value="1" control={
                                         <Radio color="primary" value="1" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '1'} />
                                     } label="개발자도구 사용가능" labelPlacement="end" />
@@ -391,16 +373,6 @@ class BrowserRuleDialog extends Component {
                                     <FormControlLabel value="0" control={
                                         <Radio color="primary" value="0" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '0'} />
                                     } label="다운로드 제한 없음" labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="1" control={
-                                        <Radio color="primary" value="1" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '1'} />
-                                    } label="위험 다운로드 제한" labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="2" control={
-                                        <Radio color="primary" value="2" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '2'} />
-                                    } label="잠재적인 위험 다운로드 제한" labelPlacement="end" />
                                 </Grid>
                                 <Grid item >
                                     <FormControlLabel value="3" control={
