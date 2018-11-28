@@ -12,6 +12,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { getJobStatusToString } from 'components/GRUtils/GRCommonUtils';
 
 import GRPageHeader from "containers/GRContent/GRPageHeader";
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -181,15 +182,6 @@ class JobManage extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
-                  let jobStatus = '';
-                  if(n.runCount != 0) {
-                    jobStatus = '작업중';
-                  } else if(n.readyCount != 0) {
-                    jobStatus = '진행중';
-                  } else {
-                    jobStatus = '완료';
-                  }
-
                   return (
                     <TableRow
                       hover
@@ -198,7 +190,7 @@ class JobManage extends Component {
                     >
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('jobNo')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('jobName')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{jobStatus}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{getJobStatusToString(n.get('jobStatus'))}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientCount')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('errorCount')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('compCount')}</TableCell>

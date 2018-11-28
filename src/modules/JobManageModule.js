@@ -54,9 +54,11 @@ export const readJobManageListPaged = (module, compId, extParam) => dispatch => 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
 
+    const jobStatusParam = (newListParam.get('jobStatus') && List(newListParam.get('jobStatus')).size > 0) ? List(newListParam.get('jobStatus')).join() : '';
+
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readJobListPaged', {
-        jobStatus: newListParam.get('jobStatus'),
+        jobStatus: jobStatusParam,
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),

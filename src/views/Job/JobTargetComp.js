@@ -137,6 +137,7 @@ class JobTargetComp extends Component {
     }
 
     const selectedJobNo = JobManageProps.getIn(['viewItems', compId, 'listParam_target', 'jobNo']);
+    const jobStatus = JobManageProps.getIn(['viewItems', compId, 'viewItem', 'jobStatus']);
 
     return (
 
@@ -159,9 +160,11 @@ class JobTargetComp extends Component {
             </Button>
           </Grid>
           <Grid item xs={4} >
+          { (jobStatus != 'C') && 
             <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => this.handleClickJobCancel()} >
               <ClearIcon />작업취소
             </Button>
+          }
           </Grid>
         </Grid>
 

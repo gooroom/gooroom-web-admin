@@ -301,7 +301,7 @@ class UserListComp extends Component {
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YY/MM/DD HH:ss')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>
                     <Button color="secondary" size="small" 
