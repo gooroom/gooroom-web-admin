@@ -64,7 +64,7 @@ class SoftwareFilterSpec extends Component {
             />
             }
             <CardContent>
-              <InputLabel>Red 색상의 소프트웨어는 설치불가(설치금지) 소프트웨어입니다.</InputLabel>
+              <InputLabel>Red 색상의 소프트웨어는 실행을 금지합니다.</InputLabel>
               <Grid container spacing={8} alignItems="flex-start" direction="row" justify="flex-start" style={{marginTop:10}}>
               {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
                 const selected = (viewItem.getIn(['SWITEM', n.tag])) ? true : false;

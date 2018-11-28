@@ -224,7 +224,7 @@ class SoftwareFilterDialog extends Component {
                     }
                     {(dialogType === SoftwareFilterDialog.TYPE_EDIT || dialogType === SoftwareFilterDialog.TYPE_ADD) &&
                         <div style={{marginTop:20}}>
-                        <InputLabel>설치불가(설치금지)로 지정할 소프트웨어를 선택하세요.</InputLabel>
+                        <InputLabel>실행금지로 지정할 소프트웨어를 선택하세요.</InputLabel>
                         <Grid container alignItems="center" direction="row" justify="space-between" style={{marginTop:10}}>
                         {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
                                 return (
