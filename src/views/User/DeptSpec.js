@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
 import * as DeptActions from 'modules/DeptModule';
@@ -53,7 +53,24 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class DeptSpec extends Component {
 
   // edit
-  handleClickEdit = (paramObj) => {
+  handleClickEdit = (paramObj, compId) => {
+
+    this.props.MediaRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
+      value: getValueInSelectedObjectInComp(this.props.MediaRuleProps, compId, 'DEPT', 'objId')      
+    });
+    this.props.BrowserRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
+      value: getValueInSelectedObjectInComp(this.props.BrowserRuleProps, compId, 'DEPT', 'objId')      
+    });
+    this.props.SecurityRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
+      value: getValueInSelectedObjectInComp(this.props.SecurityRuleProps, compId, 'DEPT', 'objId')      
+    });
+    this.props.SoftwareFilterActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
+      value: getValueInSelectedObjectInComp(this.props.SoftwareFilterProps, compId, 'DEPT', 'objId')      
+    });
+    this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
+      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'DEPT', 'objId')      
+    });
+
     this.props.DeptActions.showDialog({
       viewItem: {
         deptCd: paramObj.get('selectedDeptCd'),
@@ -161,7 +178,7 @@ class DeptSpec extends Component {
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.handleClickEdit(viewItem)}
+                  onClick={() => this.handleClickEdit(viewItem, compId)}
                 ><SettingsApplicationsIcon /></Button>
               </div>
             }

@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
 
@@ -53,7 +53,24 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class UserSpec extends Component {
 
    // edit
-   handleClickEdit = (viewItem) => {
+   handleClickEdit = (viewItem, compId) => {
+
+    this.props.MediaRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
+      value: getValueInSelectedObjectInComp(this.props.MediaRuleProps, compId, 'USER', 'objId')      
+    });
+    this.props.BrowserRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
+      value: getValueInSelectedObjectInComp(this.props.BrowserRuleProps, compId, 'USER', 'objId')      
+    });
+    this.props.SecurityRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
+      value: getValueInSelectedObjectInComp(this.props.SecurityRuleProps, compId, 'USER', 'objId')      
+    });
+    this.props.SoftwareFilterActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
+      value: getValueInSelectedObjectInComp(this.props.SoftwareFilterProps, compId, 'USER', 'objId')      
+    });
+    this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
+      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'USER', 'objId')      
+    });
+
     this.props.UserActions.showDialog({
       ruleSelectedViewItem: {
         userId: viewItem.get('userId'),
@@ -127,7 +144,7 @@ class UserSpec extends Component {
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.handleClickEdit(viewItem)}
+                  onClick={() => this.handleClickEdit(viewItem, compId)}
                 ><SettingsApplicationsIcon /></Button>
               </div>
             }

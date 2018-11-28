@@ -21,7 +21,7 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
-import { getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById, getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import ClientConfSettingSpec, { generateClientConfSettingObject } from 'views/Rules/ClientConfig/ClientConfSettingSpec';
 import ClientHostNameSpec, { generateClientHostNameObject } from 'views/Rules/HostName/ClientHostNameSpec';
@@ -65,10 +65,33 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class ClientGroupSpec extends Component {
 
   // edit
-  handleClickEdit = (id) => {
-    const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-    const viewItem = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
-    ClientGroupActions.showDialog({
+  handleClickEdit = (viewItem) => {
+    const { compId } = this.props;
+
+    this.props.ClientConfSettingActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
+      value: getValueInSelectedObjectInComp(this.props.ClientConfSettingProps, compId, 'GROUP', 'objId')      
+    });
+    this.props.ClientHostNameActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
+      value: getValueInSelectedObjectInComp(this.props.ClientHostNameProps, compId, 'GROUP', 'objId')      
+    });
+    this.props.ClientUpdateServerActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
+      value: getValueInSelectedObjectInComp(this.props.ClientUpdateServerProps, compId, 'GROUP', 'objId')      
+    });
+
+    this.props.MediaRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
+      value: getValueInSelectedObjectInComp(this.props.MediaRuleProps, compId, 'GROUP', 'objId')      
+    });
+    this.props.BrowserRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
+      value: getValueInSelectedObjectInComp(this.props.BrowserRuleProps, compId, 'GROUP', 'objId')      
+    });
+    this.props.SecurityRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
+      value: getValueInSelectedObjectInComp(this.props.SecurityRuleProps, compId, 'GROUP', 'objId')      
+    });
+    this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
+      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'GROUP', 'objId')      
+    });
+
+    this.props.ClientGroupActions.showDialog({
       viewItem: viewItem,
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
@@ -172,7 +195,7 @@ class ClientGroupSpec extends Component {
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.handleClickEdit(viewItem.get('grpId'))}
+                  onClick={() => this.handleClickEdit(viewItem)}
                 ><SettingsApplicationsIcon /></Button>
               </div>
             }
