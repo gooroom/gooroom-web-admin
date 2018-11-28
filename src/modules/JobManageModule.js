@@ -18,6 +18,7 @@ const GET_JOBTARGET_LISTPAGED_SUCCESS = 'jobManage/GET_JOBTARGET_LISTPAGED_SUCCE
 const SHOW_JOB_INFORM = 'jobManage/SHOW_JOB_INFORM';
 const CLOSE_JOB_INFORM = 'jobManage/CLOSE_JOB_INFORM';
 
+const SET_JOB_CANCEL = 'jobManage/SET_JOB_CANCEL';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chJobNo', 'desc');
@@ -120,6 +121,23 @@ export const changeTargetListParamData = (param) => dispatch => {
         compId: param.compId,
         name: param.name,
         value: param.value
+    });
+};
+
+export const cancelJobRunning = (jobNo) => dispatch => {
+
+    return requestPostAPI('updateJobToCancel', {
+        jobNo: jobNo
+    }).then(
+        (response) => {
+            dispatch({
+                type: SET_JOB_CANCEL,
+                jobNo: jobNo,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
