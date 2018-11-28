@@ -306,11 +306,23 @@ export const handleEditSuccessAction = (state, action) => {
     let newState = state;
     if(newState.get('viewItems')) {
         newState.get('viewItems').forEach((e, i) => {
+            console.log('i ::::::::: ', i);
             // if(e.get('viewItem')) {
             //     if(e.getIn(['viewItem', 'objId']) == action.objId) {
                     // replace
-                    newState = newState
-                        .setIn(['viewItems', i, 'viewItem'], fromJS(action.response.data.data[0]))
+                    newState = newState.setIn(['viewItems', i, 'viewItem'], fromJS(action.response.data.data[0]));
+                    // DEPT
+                    if(newState.getIn(['viewItems', i, 'DEPT', 'viewItem'])) {
+                        newState = newState.setIn(['viewItems', i, 'DEPT', 'viewItem'], fromJS(action.response.data.data[0]));
+                    }
+                    // USER
+                    if(newState.getIn(['viewItems', i, 'USER', 'viewItem'])) {
+                        newState = newState.setIn(['viewItems', i, 'USER', 'viewItem'], fromJS(action.response.data.data[0]));
+                    }
+                    // GROUP
+                    if(newState.getIn(['viewItems', i, 'GROUP', 'viewItem'])) {
+                        newState = newState.setIn(['viewItems', i, 'GROUP', 'viewItem'], fromJS(action.response.data.data[0]));
+                    }
 //                        .setIn(['viewItems', i, 'informOpen'], false);
             //     }
             // }
