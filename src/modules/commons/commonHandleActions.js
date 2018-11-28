@@ -306,7 +306,6 @@ export const handleEditSuccessAction = (state, action) => {
     let newState = state;
     if(newState.get('viewItems')) {
         newState.get('viewItems').forEach((e, i) => {
-            console.log('i ::::::::: ', i);
             // if(e.get('viewItem')) {
             //     if(e.getIn(['viewItem', 'objId']) == action.objId) {
                     // replace
