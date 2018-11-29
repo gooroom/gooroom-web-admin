@@ -160,10 +160,6 @@ export default handleActions({
     },
     [GET_PROTECTED_COUNT_SUCCESS]: (state, action) => {
         const protectedCount = (action.response.data && action.response.data.data && action.response.data.data.length > 0) ? action.response.data.data[0] : null;
-
-        console.log('protectedCount ::::::::: ', protectedCount);
-
-        
         return state.merge({'protectedCount': protectedCount});
     },
 
