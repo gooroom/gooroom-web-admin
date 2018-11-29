@@ -63,7 +63,7 @@ class AdminDialog extends Component {
     render() {
         const { classes } = this.props;
         const { isShowEdit, AdminProps } = this.props;
-        const pollingCycle = AdminProps.get('pollingCycle');
+        const editPollingCycle = AdminProps.get('editPollingCycle');
 
         return (
             <div>
@@ -72,8 +72,8 @@ class AdminDialog extends Component {
                 <DialogTitle>관리자설정 수정</DialogTitle>
                 <DialogContent>
                     <TextField label="갱신주기" className={classes.fullWidth}
-                        value={pollingCycle}
-                        onChange={this.handleValueChange("pollingCycle")} />
+                        value={editPollingCycle}
+                        onChange={this.handleValueChange("editPollingCycle")} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>

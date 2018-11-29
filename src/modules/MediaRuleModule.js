@@ -277,7 +277,7 @@ export const createMediaRuleData = (itemObj) => dispatch => {
 // edit
 export const editMediaRuleData = (itemObj, compId) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateMediaRule', makeParameter(itemObj)).then(
+    return requestPostAPI('updateMediaRuleConf', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 // alarm ... success

@@ -66,7 +66,7 @@ class SecurityRuleDialog extends Component {
     }
 
     handleValueChange = name => event => {
-        const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'allow' : 'disallow') : event.target.value;
+        const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
         this.props.SecurityRuleActions.setEditingItemValue({
             name: name,
             value: value
@@ -152,10 +152,6 @@ class SecurityRuleDialog extends Component {
         });
     }
 
-    checkAllow = value => {
-        return (value == 'allow');
-    }
-
     render() {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
@@ -223,11 +219,10 @@ class SecurityRuleDialog extends Component {
                                 <Grid item xs={12} sm={4} md={4}>
                                     <FormControlLabel
                                         control={
-                                        <Switch onChange={this.handleValueChange('packageHandle')} 
-                                            checked={this.checkAllow(editingItem.get('packageHandle'))}
-                                            color="primary" />
+                                        <Switch onChange={this.handleValueChange('packageHandle')} color="primary"
+                                            checked={(editingItem.get('packageHandle')) ? editingItem.get('packageHandle') : false} />
                                         }
-                                        label={(editingItem.get('packageHandle') == 'allow') ? '패키지추가/삭제 기능차단' : '패키지추가/삭제 기능사용'}
+                                        label={(editingItem.get('packageHandle')) ? '패키지추가/삭제 차단기능 켜짐' : '패키지추가/삭제 차단기능 꺼짐'}
                                     />
                                 </Grid>
                             </Grid>

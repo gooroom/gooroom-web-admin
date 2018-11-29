@@ -43,7 +43,8 @@ class AdminInform extends Component {
     super(props);
 
     this.state = {
-      isShowEdit: false
+      isShowEdit: false,
+      editValue: 0
     };
   }
 
@@ -69,6 +70,10 @@ class AdminInform extends Component {
   };
 
   handleShowAdminEdit = (event) => {
+    this.props.AdminActions.setEditingItemValue({
+      name: 'editPollingCycle',
+      value: this.props.AdminProps.get('pollingCycle')
+    });
     this.setState({isShowEdit: true});
   };
 

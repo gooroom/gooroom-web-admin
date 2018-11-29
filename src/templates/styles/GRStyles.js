@@ -267,6 +267,13 @@ export const GRCommonStyle = theme => ({
     deptCd: {
         marginBottom: "12px"
     },
+
+    // alarm badge
+    alarmBadge: {
+        top: 0,
+        right: 0,
+        width: 30
+    },
     
 
 

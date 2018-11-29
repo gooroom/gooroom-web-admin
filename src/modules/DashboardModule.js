@@ -42,14 +42,28 @@ export default handleActions({
                 clientOnCount: statusInfo.onCount,
                 clientOffCount: statusInfo.offCount,
                 clientRevokeCount: statusInfo.revokeCount,
-                clientTotalCount: statusInfo.totalCount
+                clientTotalCount: statusInfo.totalCount,
+
+                loginCount: statusInfo.loginCount,
+                userCount: statusInfo.userCount,
+
+                mainUpdateCount: statusInfo.mainUpdateCount,
+                noUpdateCount: statusInfo.noUpdateCount,
+                updateCount: statusInfo.updateCount
             });
         } else {
             return state.merge({
                 clientOnCount: 0,
                 clientOffCount: 0,
                 clientRevokeCount: 0,
-                clientTotalCount: 0
+                clientTotalCount: 0,
+
+                loginCount: 0,
+                userCount: 0,
+
+                mainUpdateCount: 0,
+                noUpdateCount: 0,
+                updateCount: 0
             });
         }
     }

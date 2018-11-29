@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import { Link } from 'react-router-dom';
 
+import GRAlarmInform from 'views/Admin/GRAlarmInform';
+
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -60,6 +62,7 @@ class GRHeader extends Component {
               <MenuIcon />
             </IconButton>
             <div style={{flex: "1 1 auto"}}></div>
+            <GRAlarmInform />
             <Button onClick={this.props.onAdminClick}>
               <AccountCircle />Admin
             </Button>
