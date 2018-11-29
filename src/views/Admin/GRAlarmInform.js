@@ -88,7 +88,7 @@ class GRAlarmInform extends Component {
     const { classes } = this.props;
     const { AdminProps } = this.props;
 
-    const protectedCount = AdminProps.get('protectedCount');
+    const protectedCount = (AdminProps.get('protectedCount')) ? AdminProps.get('protectedCount') : 0;
     let bellIcon = null;
     let invisible = true;
     if(protectedCount && protectedCount > 0) {
