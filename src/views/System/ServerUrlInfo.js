@@ -36,11 +36,8 @@ class ServerUrlInfo extends Component {
     super(props);
     this.state = {
       stateData: Map({
-        gpmsIp: '',
         gpmsDomain: '',
-        glmIp: '',
         glmDomain: '',
-        grmIp: '',
         grmDomain: '',
         pollingTime: 30
       })
@@ -57,11 +54,8 @@ class ServerUrlInfo extends Component {
         const { data } = response.data;
         if(data && data.length > 0) {
           this.setState(({stateData}) => ({
-            stateData: stateData.set('gpmsIp', data[0].pmIp)
-            .set('gpmsDomain', data[0].pmUrl)
-            .set('glmIp', data[0].lmIp)
+            stateData: stateData.set('gpmsDomain', data[0].pmUrl)
             .set('glmDomain', data[0].lmUrl)
-            .set('grmIp', data[0].rmIp)
             .set('grmDomain', data[0].rmUrl)
             .set('pollingTime', data[0].pollingTime)
           }));
@@ -81,11 +75,8 @@ class ServerUrlInfo extends Component {
       if(confirmValue) {
           const { stateData } = this.state;
           requestPostAPI('createMgServerConf', {
-            pmIp: stateData.get('gpmsIp'),
             pmUrl: stateData.get('gpmsDomain'),
-            lmIp: stateData.get('glmIp'),
             lmUrl: stateData.get('glmDomain'),
-            rmIp: stateData.get('grmIp'),
             rmUrl: stateData.get('grmDomain'),
             pollingTime: stateData.get('pollingTime')
           }).then(
@@ -135,61 +126,25 @@ class ServerUrlInfo extends Component {
 
         <Card style={{marginTop: 16}}>
           <CardHeader style={{paddingBottom: 0}}
-            title="GPMS 서버 정보"
-            subheader="ip and domain"
+            title="서버 정보"
+            subheader="domain"
           />
           <CardContent style={{paddingTop: 0}}>
-            <TextField label="IP 정보"
-              margin="normal"
-              variant="outlined"
-              value={stateData.get('gpmsIp')}
-              onChange={this.handleValueChange("gpmsIp")}
-            />
-            <TextField label="Domain 정보"
+            <TextField label="GPMS 정보"
               style={{ marginLeft: 8 }}
               margin="normal"
               variant="outlined"
               value={stateData.get('gpmsDomain')}
               onChange={this.handleValueChange("gpmsDomain")}
             />
-          </CardContent>
-        </Card>
-
-        <Card style={{marginTop: 16}}>
-          <CardHeader style={{paddingBottom: 0}}
-            title="GLM 서버 정보"
-            subheader="ip and domain"
-          />
-          <CardContent style={{paddingTop: 0}}>
-            <TextField label="IP 정보"
-              margin="normal"
-              variant="outlined"
-              value={stateData.get('glmIp')}
-              onChange={this.handleValueChange("glmIp")}
-            />
-            <TextField label="Domain 정보"
+            <TextField label="GLM 정보"
               style={{ marginLeft: 8 }}
               margin="normal"
               variant="outlined"
               value={stateData.get('glmDomain')}
               onChange={this.handleValueChange("glmDomain")}
             />
-          </CardContent>
-        </Card>
-
-        <Card style={{marginTop: 16}}>
-          <CardHeader style={{paddingBottom: 0}}
-            title="GRM 서버 정보"
-            subheader="ip and domain"
-          />
-          <CardContent style={{paddingTop: 0}}>
-            <TextField label="IP 정보"
-              margin="normal"
-              variant="outlined"
-              value={stateData.get('grmIp')}
-              onChange={this.handleValueChange("grmIp")}
-            />
-            <TextField label="Domain 정보"
+            <TextField label="GRM 정보"
               style={{ marginLeft: 8 }}
               margin="normal"
               variant="outlined"
