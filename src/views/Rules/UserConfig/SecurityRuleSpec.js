@@ -91,8 +91,8 @@ class SecurityRuleSpec extends Component {
                   </TableRow>
 
                   <TableRow>
-                    <TableCell component="th" scope="row">{bull} 패키지추가/삭제 기능</TableCell>
-                    <TableCell numeric>{viewItem.get('packageHandle')}</TableCell>
+                    <TableCell component="th" scope="row">{bull} 패키지추가/삭제 차단기능</TableCell>
+                    <TableCell numeric>{(viewItem.get('packageHandle')) ? '켜짐' : '꺼짐'}</TableCell>
                     <TableCell component="th" scope="row"></TableCell>
                     <TableCell numeric></TableCell>
                   </TableRow>
@@ -165,7 +165,7 @@ export const generateSecurityRuleObject = (param, isForViewer) => {
       } else if(ename == 'password_time') {
         passwordTime = evalue;
       } else if(ename == 'package_handle') {
-        packageHandle = evalue;
+        packageHandle = (evalue == "true");
       } else if(ename == 'state') {
         netState = evalue;
       } else if(ename == 'firewall_network') {

@@ -131,7 +131,7 @@ class SecurityRuleManage extends Component {
         comment: '',
         screenTime: '10',
         passwordTime: '60',
-        packageHandle: 'allow'
+        packageHandle: 'true'
       }),
       dialogType: SecurityRuleDialog.TYPE_ADD
     });

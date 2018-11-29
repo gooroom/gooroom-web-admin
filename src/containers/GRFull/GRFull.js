@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as GlobalActions from 'modules/GlobalModule';
+import * as AdminActions from 'modules/AdminModule';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -50,6 +51,11 @@ class GRFull extends Component {
     this.toggleDrawer = this.toggleDrawer.bind(this);
   }
 
+  componentDidMount() {
+    const { AdminActions } = this.props;
+    AdminActions.getAdminInfo();
+  }  
+
   toggleDrawer() {
     this.setState({
       sideOpen: !this.state.sideOpen,
@@ -58,8 +64,8 @@ class GRFull extends Component {
   }
 
   toggleRightDrawer = (side, open) => () => {
-    console.log('side : ', side);
-    console.log('open : ', open);
+    // console.log('side : ', side);
+    // console.log('open : ', open);
     this.setState({
       [side]: open
     });
@@ -132,7 +138,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  GlobalActions: bindActionCreators(GlobalActions, dispatch)
+  GlobalActions: bindActionCreators(GlobalActions, dispatch),
+  AdminActions: bindActionCreators(AdminActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GRFull));

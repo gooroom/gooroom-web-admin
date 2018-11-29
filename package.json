@@ -32,7 +32,7 @@
     "webpack-dev-server": "2.11.1"
   },
   "dependencies": {
-    "@material-ui/core": "latest",
+    "@material-ui/core": "^3.6.0",
     "@material-ui/icons": "latest",
     "@nivo/pie": "^0.51.0",
     "axios": "^0.18.0",
