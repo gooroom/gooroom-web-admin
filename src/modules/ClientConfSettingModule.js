@@ -298,7 +298,7 @@ export const deleteClientConfSettingData = (param) => dispatch => {
 // clone rule
 export const cloneClientConfSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClonedClientConf', {
+    return requestPostAPI('cloneClientConf', {
             'objId': param.objId
         }).then(
         (response) => {

@@ -355,7 +355,7 @@ export const inheritBrowserRuleData = (param) => dispatch => {
 // clone rule
 export const cloneBrowserRuleData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClonedBrowserRule', {
+    return requestPostAPI('cloneBrowserRule', {
             'objId': param.objId
         }).then(
         (response) => {

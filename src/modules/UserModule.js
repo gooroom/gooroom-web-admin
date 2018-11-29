@@ -164,11 +164,11 @@ const makeParameter = (param) => {
         deptCd: param.deptCd,
         isChangePasswd: isChangePasswd,
 
-        browserRuleId: (param.browserRuleId == '-') ? 'BCRUDEFAULT' : param.browserRuleId,
-        mediaRuleId: (param.mediaRuleId == '-') ? 'MCRUDEFAULT' : param.mediaRuleId,
-        securityRuleId: (param.securityRuleId == '-') ? 'GSRUDEFAULT' : param.securityRuleId,
-        filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? 'GSFIDEFAULT' : param.filteredSoftwareRuleId,
-        desktopConfId: (param.desktopConfId == '-') ? 'DECODEFAULT' : param.desktopConfId
+        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
+        filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
+        desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId
 
     };
 }

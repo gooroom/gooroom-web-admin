@@ -270,7 +270,7 @@ export const deleteClientHostNameData = (param) => dispatch => {
 // clone rule
 export const cloneClientHostNameData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClonedHostNameConf', {
+    return requestPostAPI('cloneHostNameConf', {
             'objId': param.objId
         }).then(
         (response) => {
