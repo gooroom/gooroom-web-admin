@@ -68,7 +68,7 @@ class GRAlarmInform extends Component {
 
   getProtectedData() {
     const { AdminActions } = this.props;
-    AdminActions.readProtectedClientList();
+    AdminActions.readProtectedClientCount();
   }
 
   handleClickAlarm = (e) => {
@@ -88,8 +88,7 @@ class GRAlarmInform extends Component {
     const { classes } = this.props;
     const { AdminProps } = this.props;
 
-    const listObj = AdminProps.getIn(['viewItems', 'ROOT']);
-    const protectedCount = (listObj && listObj.get('listAllData')) ? listObj.get('listAllData').size : 0;
+    const protectedCount = AdminProps.get('protectedCount');
     let bellIcon = null;
     let invisible = true;
     if(protectedCount && protectedCount > 0) {

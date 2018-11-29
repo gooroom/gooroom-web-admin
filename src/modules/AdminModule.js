@@ -8,6 +8,7 @@ const COMMON_PENDING = 'admin/COMMON_PENDING';
 const COMMON_FAILURE = 'admin/COMMON_FAILURE';
 
 const GET_PROTECTED_LIST_SUCCESS = 'admin/GET_PROTECTED_LIST_SUCCESS';
+const GET_PROTECTED_COUNT_SUCCESS = 'admin/GET_PROTECTED_COUNT_SUCCESS';
 
 const GET_ADMIN_INFO = 'admin/GET_ADMIN_INFO';
 const SET_LOGOUT = 'admin/SET_LOGOUT';
@@ -30,6 +31,22 @@ export const setEditingItemValue = (param) => dispatch => {
         type: SET_EDITING_ITEM_VALUE,
         name: param.name,
         value: param.value
+    });
+};
+
+export const readProtectedClientCount = (module, compId, targetType) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readProtectedClientCount', {
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_PROTECTED_COUNT_SUCCESS,
+                compId: 'ROOT',
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -140,6 +157,14 @@ export default handleActions({
     },
     [GET_PROTECTED_LIST_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListAction(state, action, 'objId');
+    },
+    [GET_PROTECTED_COUNT_SUCCESS]: (state, action) => {
+        const protectedCount = (action.response.data && action.response.data.data && action.response.data.data.length > 0) ? action.response.data.data[0] : null;
+
+        console.log('protectedCount ::::::::: ', protectedCount);
+
+        
+        return state.merge({'protectedCount': protectedCount});
     },
 
 }, initialState);
