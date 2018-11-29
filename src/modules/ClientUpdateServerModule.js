@@ -271,7 +271,7 @@ export const deleteClientUpdateServerData = (param) => dispatch => {
 // clone rule
 export const cloneClientUpdateServerData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClonedUpdateServerConf', {
+    return requestPostAPI('cloneUpdateServerConf', {
             'objId': param.objId
         }).then(
         (response) => {

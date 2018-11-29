@@ -257,7 +257,7 @@ const makeParameter = (param) => {
 // create (add)
 export const createMediaRuleData = (itemObj) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createMediaRule', makeParameter(itemObj)).then(
+    return requestPostAPI('createMediaRuleConf', makeParameter(itemObj)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
@@ -319,7 +319,7 @@ export const editMediaRuleData = (itemObj, compId) => dispatch => {
 // delete
 export const deleteMediaRuleData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('deleteMediaRule', {'objId': param.objId}).then(
+    return requestPostAPI('deleteMediaRuleConf', {'objId': param.objId}).then(
         (response) => {
             dispatch({
                 type: DELETE_MEDIACONTROL_SUCCESS,
@@ -355,7 +355,7 @@ export const inheritMediaRuleData = (param) => dispatch => {
 // clone rule
 export const cloneMediaRuleData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClonedMediaRule', {
+    return requestPostAPI('cloneMediaRule', {
             'objId': param.objId
         }).then(
         (response) => {

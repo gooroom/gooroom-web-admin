@@ -355,7 +355,7 @@ export const inheritSoftwareFilterData = (param) => dispatch => {
 // clone rule
 export const cloneSoftwareFilterData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClonedSoftwareFilter', {
+    return requestPostAPI('cloneSoftwareFilter', {
             'objId': param.objId
         }).then(
         (response) => {

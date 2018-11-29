@@ -366,7 +366,7 @@ export const inheritSecurityRuleData = (param) => dispatch => {
 // clone rule
 export const cloneSecurityRuleData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClonedSecurityRule', {
+    return requestPostAPI('cloneSecurityRule', {
             'objId': param.objId
         }).then(
         (response) => {
