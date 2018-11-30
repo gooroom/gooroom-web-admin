@@ -19,10 +19,6 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 import GeneralLogTypeSelect from "views/Options/GeneralLogTypeSelect";
 
-import GeneralLogDialog from './GeneralLogDialog';
-import GeneralLogSpec from './GeneralLogSpec';
-import { generateGeneralLogObject } from './GeneralLogSpec';
-
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -100,95 +96,13 @@ class GeneralLogManage extends Component {
     });
   }
 
-  handleSelectRow = (event, id) => {
-    const { GeneralLogActions, GeneralLogProps } = this.props;
-    const compId = this.props.match.params.grMenuId;
-
-    const viewItem = getRowObjectById(GeneralLogProps, compId, id, 'logSeq');
-
-    // choice one from two views.
-
-    // 1. popup dialog
-    // GeneralLogActions.showDialog({
-    //   viewItem: viewObject,
-    //   dialogType: GeneralLogDialog.TYPE_VIEW,
-    // });
-
-    // 2. view detail content
-    GeneralLogActions.showInform({
-      compId: compId,
-      viewItem: viewItem
-    });
-  };
-
-  handleCreateButton = () => {
-    this.props.GeneralLogActions.showDialog({
-      viewItem: Map(),
-      dialogType: GeneralLogDialog.TYPE_ADD
-    });
-  }
-  
-  handleEditListClick = (event, id) => {
-    const { GeneralLogActions, GeneralLogProps } = this.props;
-    const viewItem = getRowObjectById(GeneralLogProps, this.props.match.params.grMenuId, id, 'logSeq');
-
-    GeneralLogActions.showDialog({
-      viewItem: generateGeneralLogObject(viewItem, false),
-      dialogType: GeneralLogDialog.TYPE_EDIT
-    });
-  };
-
-  // delete
-  handleDeleteClick = (event, id) => {
-    const { GeneralLogProps, GRConfirmActions } = this.props;
-    const viewItem = getRowObjectById(GeneralLogProps, this.props.match.params.grMenuId, id, 'logSeq');
-    GRConfirmActions.showConfirm({
-      confirmTitle: '매체제어정책정보 삭제',
-      confirmMsg: '매체제어정책정보(' + viewItem.get('logSeq') + ')를 삭제하시겠습니까?',
-      handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: viewItem
-    });
-  };
-  handleDeleteConfirmResult = (confirmValue, paramObject) => {
-    if(confirmValue) {
-      const { GeneralLogActions, GeneralLogProps } = this.props;
-
-      GeneralLogActions.deleteGeneralLogData({
-        logSeq: paramObject.get('logSeq'),
-        compId: this.props.match.params.grMenuId
-      }).then((res) => {
-        refreshDataListInComps(GeneralLogProps, GeneralLogActions.readGeneralLogListPaged);
-      });
-    }
-  };
-
-  // ===================================================================
-  handleClickCopy = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.GeneralLogProps, compId, targetType);
-    this.props.GeneralLogActions.showDialog({
-      viewItem: viewItem,
-      dialogType: GeneralLogDialog.TYPE_COPY
-    });
-  };
-
-  handleClickEdit = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.GeneralLogProps, compId, targetType);
-    this.props.GeneralLogActions.showDialog({
-      viewItem: generateGeneralLogObject(viewItem, false),
-      dialogType: GeneralLogDialog.TYPE_EDIT
-    });
-  };
-  // ===================================================================
-
   handleParamChange = name => event => {
     this.props.GeneralLogActions.changeListParamData({
       name: name, 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
     });
-
   };
-
 
   render() {
     const { classes } = this.props;
@@ -288,15 +202,7 @@ class GeneralLogManage extends Component {
             />
           </div>
         }
-        {/* dialog(popup) component area */}
-        <GeneralLogSpec compId={compId} specType="inform" 
-          selectedItem={(listObj) ? listObj.get('viewItem') : null}
-          hasAction={true}
-          onClickCopy={this.handleClickCopy}
-          onClickEdit={this.handleClickEdit}
-        />
         </GRPane>
-        <GeneralLogDialog compId={compId} />
         <GRConfirm />
         
       </div>

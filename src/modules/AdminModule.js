@@ -15,6 +15,12 @@ const SET_LOGOUT = 'admin/SET_LOGOUT';
 const SHOW_CONFIRM = 'admin/SHOW_CONFIRM';
 const CLOSE_CONFIRM = 'admin/CLOSE_CONFIRM';
 const SET_EDITING_ITEM_VALUE = 'admin/SET_EDITING_ITEM_VALUE';
+
+const SHOW_PROTECTLIST_DIALOG = 'admin/SHOW_PROTECTLIST_DIALOG';
+const CLOSE_PROTECTLIST_DIALOG = 'admin/CLOSE_PROTECTLIST_DIALOG';
+
+const SET_REDIRECT_PAGE_VALUE = 'admin/SET_REDIRECT_PAGE_VALUE';
+
 // ...
 
 // ...
@@ -25,6 +31,18 @@ const initialState = commonHandleActions.getCommonInitialState('', '', {
     isEnableAlarm: '',
     pollingCycle: 0
 });
+
+export const showProtectedListDialog = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_PROTECTLIST_DIALOG
+    });
+};
+
+export const closeProtectedListDialog = () => dispatch => {
+    return dispatch({
+        type: CLOSE_PROTECTLIST_DIALOG
+    });
+};
 
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
@@ -121,6 +139,12 @@ export const editAdminInfoData = (itemObj) => dispatch => {
     });
 };
 
+export const redirectPage = (param) => dispatch => {
+    return dispatch({
+        type: SET_REDIRECT_PAGE_VALUE,
+        address: param.address
+    });
+};
 
 export default handleActions({
 
@@ -160,11 +184,27 @@ export default handleActions({
     },
     [GET_PROTECTED_COUNT_SUCCESS]: (state, action) => {
         const protectedCount = (action.response.data && action.response.data.data && action.response.data.data.length > 0) ? action.response.data.data[0] : null;
-
-        console.log('protectedCount ::::::::: ', protectedCount);
-
-        
         return state.merge({'protectedCount': protectedCount});
+    },
+    [SHOW_PROTECTLIST_DIALOG]: (state, action) => {
+        return state.merge({
+            dialogOpen: true,
+            dialogType: action.dialogType
+        });
+    },
+    [CLOSE_PROTECTLIST_DIALOG]: (state, action) => {
+        return state.merge({
+            dialogOpen: false,
+            dialogType: ''
+        });
+    },
+    [SET_REDIRECT_PAGE_VALUE]: (state, action) => {
+        return state.merge({
+            redirectAddress: action.address,
+            isNeedRedirect: true,
+            dialogOpen: false,
+            dialogType: ''
+        });
     },
 
 }, initialState);

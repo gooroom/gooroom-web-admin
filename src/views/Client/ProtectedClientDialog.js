@@ -1,12 +1,19 @@
 import React, { Component } from "react";
+import { Redirect, Switch, Router } from 'react-router';
 import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
-import GRConfirm from 'components/GRComponents/GRConfirm';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import ClientListForSelect from 'views/Client/ClientListForSelect';
+import * as AdminActions from 'modules/AdminModule';
+import * as SecurityLogActions from 'modules/SecurityLogModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
+
+import GRConfirm from 'components/GRComponents/GRConfirm';
+import ClientListForProtected from 'views/Client/ClientListForProtected';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -29,50 +36,40 @@ class ProtectedClientDialog extends Component {
 
     constructor(props) {
         super(props);
-    
-        this.state = {
-            stateData: Map({
-                selectedGroupId: '',
-                selectedGroupNm: '',
-                selectedClient: List([])
-            })
-        };
     }
 
-    handleSelectDept = (node) => {
-        this.setState(({stateData}) => ({
-            stateData: stateData.set('selectedGroupId', node.key).set('selectedGroupNm', node.title)
-        }));
-    }
-
-    handleSelectClient = (newSelectedIds) => {
-        this.setState(({stateData}) => ({
-            stateData: stateData.set('selectedClient', List(newSelectedIds))
-        }));
-    }
-
-    handleAddButton = (event) => {
-        if(this.props.onSaveHandle) {
-            this.props.onSaveHandle(this.state.stateData.get('selectedClient'));
+    componentDidUpdate() {
+        const { AdminProps, AdminActions } = this.props;
+        if (AdminProps.get('isNeedRedirect')) {
+            AdminActions.setEditingItemValue({name:'isNeedRedirect',value:false});
         }
+    }
+
+    handleClickLink = (type, clientId) => {
+        const { AdminProps, AdminActions, SecurityLogActions, SecurityLogProps } = this.props;
+        if(SecurityLogProps.getIn(['viewItems', 'GRM0935'])) {
+            SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, 'GRM0935', {logItem:type,keyword:clientId,page:0});
+        }
+        AdminActions.redirectPage({address:'/log/secretlog/GRM0935/보안로그?logItem=' + type + '&keyword=' + clientId});
     }
     
     render() {
+        const { AdminProps } = this.props;
+        if (AdminProps.get('isNeedRedirect')) {
+            return <Redirect push to = {AdminProps.get('redirectAddress')} />;
+        }
         const { classes } = this.props;
-        const { isOpen, UserProps, selectedGroupItem } = this.props;
+        const isOpen = AdminProps.get('dialogOpen');
 
         return (
             <div>
             {(isOpen) &&
-                <Dialog open={isOpen} fullWidth={true} >
-                    <DialogTitle>단말단말단말단말</DialogTitle>
+                <Dialog open={isOpen} fullWidth={true} maxWidth="md">
+                    <DialogTitle>침해 단말 목록</DialogTitle>
                     <DialogContent>
                         <Card className={classes.deptUserCard}>
-                            <CardContent>
-                                <ClientListForSelect name='ClientListForSelect' 
-                                    groupId={this.state.stateData.get('selectedGroupId')} 
-                                    onSelectClient={this.handleSelectClient}
-                                />
+                            <CardContent style={{paddingTop:0,paddingBottom:0}}>
+                                <ClientListForProtected onClickItem={this.handleClickLink} />
                             </CardContent>
                         </Card>
                     </DialogContent>
@@ -87,4 +84,15 @@ class ProtectedClientDialog extends Component {
     }
 }
 
-export default withStyles(GRCommonStyle)(ProtectedClientDialog);
+const mapStateToProps = (state) => ({
+    AdminProps: state.AdminModule,
+    SecurityLogProps: state.SecurityLogModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    AdminActions: bindActionCreators(AdminActions, dispatch),
+    SecurityLogActions: bindActionCreators(SecurityLogActions, dispatch),
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ProtectedClientDialog));

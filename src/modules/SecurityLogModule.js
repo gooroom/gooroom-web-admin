@@ -16,7 +16,7 @@ const CLOSE_SECURITYLOG_INFORM = 'securityLog/CLOSE_SECURITYLOG_INFORM';
 const SHOW_SECURITYLOG_DIALOG = 'securityLog/SHOW_SECURITYLOG_DIALOG';
 const CLOSE_SECURITYLOG_DIALOG = 'securityLog/CLOSE_SECURITYLOG_DIALOG';
 
-const SET_EDITING_ITEM_VALUE = 'securityLog/SET_EDITING_ITEM_VALUE';
+const SET_PARAMITEM_VALUE = 'securityLog/SET_PARAMITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'securityLog/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'securityLog/CHG_COMPDATA_VALUE';
@@ -55,6 +55,14 @@ export const closeInform = (param) => dispatch => {
     });
 };
 
+export const setParamItemValue = (param) => dispatch => {
+    return dispatch({
+        type: SET_PARAMITEM_VALUE,
+        name: param.name,
+        value: param.value
+    });
+};
+
 export const readSecurityLogList = (module, compId, targetType) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readSecurityLogList', {
@@ -75,7 +83,7 @@ export const readSecurityLogList = (module, compId, targetType) => dispatch => {
 export const readSecurityLogListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
-        module.get('defaultListParam');
+        module.get('defaultListParam').merge(extParam);
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readSecurityLogListPaged', {
@@ -178,10 +186,8 @@ export default handleActions({
     [CLOSE_SECURITYLOG_INFORM]: (state, action) => {
         return commonHandleActions.handleCloseInformAction(state, action);
     },
-    [SET_EDITING_ITEM_VALUE]: (state, action) => {
-        return state.merge({
-            editingItem: state.get('editingItem').merge({[action.name]: action.value})
-        });
+    [SET_PARAMITEM_VALUE]: (state, action) => {
+        return state.set({[action.name]: action.value});
     },
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);

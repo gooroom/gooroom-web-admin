@@ -10,7 +10,6 @@ import * as SecurityLogActions from 'modules/SecurityLogModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -19,30 +18,19 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 import ProtectionTypeSelect from "views/Options/ProtectionTypeSelect";
 
-import SecurityLogDialog from './SecurityLogDialog';
-import SecurityLogSpec from './SecurityLogSpec';
-import { generateSecurityLogObject } from './SecurityLogSpec';
-
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
-import InputLabel from '@material-ui/core/InputLabel';
-
-import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -62,7 +50,21 @@ class SecurityLogManage extends Component {
   ];
 
   componentDidMount() {
-    this.handleSelectBtnClick();
+    const { SecurityLogActions, SecurityLogProps } = this.props;
+    let search = this.props.location.search;
+
+    if(search && search != '') {
+      const compId =  this.props.match.params.grMenuId;
+      search = (search.startsWith("?")) ? search.substring(1) : search;
+      var result = {};
+      search.split("&").forEach(function(part) {
+        var item = part.split("=");
+        result[item[0]] = decodeURIComponent(item[1]);
+      });
+      this.handleSelectBtnClick(result);
+    } else {
+      this.handleSelectBtnClick();
+    }
   }
 
   handleChangePage = (event, page) => {
@@ -87,9 +89,14 @@ class SecurityLogManage extends Component {
   };
 
   // .................................................
-  handleSelectBtnClick = () => {
+  handleSelectBtnClick = (initParam) => {
     const { SecurityLogActions, SecurityLogProps } = this.props;
-    SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, {page: 0});
+    if(initParam) {
+      initParam.page = 0;
+      SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, initParam);
+    } else {
+      SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, this.props.match.params.grMenuId, {page: 0});
+    }
   };
   
   handleKeywordChange = (name, value) => {
@@ -100,95 +107,13 @@ class SecurityLogManage extends Component {
     });
   }
 
-  handleSelectRow = (event, id) => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    const compId = this.props.match.params.grMenuId;
-
-    const viewItem = getRowObjectById(SecurityLogProps, compId, id, 'logSeq');
-
-    // choice one from two views.
-
-    // 1. popup dialog
-    // SecurityLogActions.showDialog({
-    //   viewItem: viewObject,
-    //   dialogType: SecurityLogDialog.TYPE_VIEW,
-    // });
-
-    // 2. view detail content
-    SecurityLogActions.showInform({
-      compId: compId,
-      viewItem: viewItem
-    });
-  };
-
-  handleCreateButton = () => {
-    this.props.SecurityLogActions.showDialog({
-      viewItem: Map(),
-      dialogType: SecurityLogDialog.TYPE_ADD
-    });
-  }
-  
-  handleEditListClick = (event, id) => {
-    const { SecurityLogActions, SecurityLogProps } = this.props;
-    const viewItem = getRowObjectById(SecurityLogProps, this.props.match.params.grMenuId, id, 'logSeq');
-
-    SecurityLogActions.showDialog({
-      viewItem: generateSecurityLogObject(viewItem, false),
-      dialogType: SecurityLogDialog.TYPE_EDIT
-    });
-  };
-
-  // delete
-  handleDeleteClick = (event, id) => {
-    const { SecurityLogProps, GRConfirmActions } = this.props;
-    const viewItem = getRowObjectById(SecurityLogProps, this.props.match.params.grMenuId, id, 'logSeq');
-    GRConfirmActions.showConfirm({
-      confirmTitle: '매체제어정책정보 삭제',
-      confirmMsg: '매체제어정책정보(' + viewItem.get('logSeq') + ')를 삭제하시겠습니까?',
-      handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmObject: viewItem
-    });
-  };
-  handleDeleteConfirmResult = (confirmValue, paramObject) => {
-    if(confirmValue) {
-      const { SecurityLogActions, SecurityLogProps } = this.props;
-
-      SecurityLogActions.deleteSecurityLogData({
-        logSeq: paramObject.get('logSeq'),
-        compId: this.props.match.params.grMenuId
-      }).then((res) => {
-        refreshDataListInComps(SecurityLogProps, SecurityLogActions.readSecurityLogListPaged);
-      });
-    }
-  };
-
-  // ===================================================================
-  handleClickCopy = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityLogProps, compId, targetType);
-    this.props.SecurityLogActions.showDialog({
-      viewItem: viewItem,
-      dialogType: SecurityLogDialog.TYPE_COPY
-    });
-  };
-
-  handleClickEdit = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.SecurityLogProps, compId, targetType);
-    this.props.SecurityLogActions.showDialog({
-      viewItem: generateSecurityLogObject(viewItem, false),
-      dialogType: SecurityLogDialog.TYPE_EDIT
-    });
-  };
-  // ===================================================================
-
   handleParamChange = name => event => {
     this.props.SecurityLogActions.changeListParamData({
       name: name, 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
     });
-
   };
-
 
   render() {
     const { classes } = this.props;
@@ -196,7 +121,8 @@ class SecurityLogManage extends Component {
     const compId = this.props.match.params.grMenuId;
     
     const listObj = SecurityLogProps.getIn(['viewItems', compId]);
-    let emptyRows = 0; 
+    let emptyRows = 0;
+
     if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
@@ -221,12 +147,14 @@ class SecurityLogManage extends Component {
             </Grid>
             <Grid item xs={2} >
               <ProtectionTypeSelect name="protectionGubun" label="구분"
-                value={(listObj && listObj.getIn(['listParam', 'gubun'])) ? listObj.getIn(['listParam', 'gubun']) : 'ALL'}                                        
-                onChangeSelect={this.handleParamChange('gubun')}
+                value={(listObj && listObj.getIn(['listParam', 'logItem'])) ? listObj.getIn(['listParam', 'logItem']) : 'ALL'}
+                onChangeSelect={this.handleParamChange('logItem')}
               />
             </Grid>
             <Grid item xs={2} >
-              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+              <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                handleKeywordChange={this.handleKeywordChange} 
+                handleSubmit={() => this.handleSelectBtnClick()} />
             </Grid>
             <Grid item xs={3} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
@@ -236,7 +164,7 @@ class SecurityLogManage extends Component {
           </Grid>            
 
           {/* data area */}
-          {(listObj) &&
+          {(listObj && listObj.get('listData')) &&
           <div>
             <Table>
               <GRCommonTableHead
@@ -289,14 +217,7 @@ class SecurityLogManage extends Component {
           </div>
         }
         {/* dialog(popup) component area */}
-        <SecurityLogSpec compId={compId} specType="inform" 
-          selectedItem={(listObj) ? listObj.get('viewItem') : null}
-          hasAction={true}
-          onClickCopy={this.handleClickCopy}
-          onClickEdit={this.handleClickEdit}
-        />
         </GRPane>
-        <SecurityLogDialog compId={compId} />
         <GRConfirm />
         
       </div>
