@@ -97,7 +97,7 @@ class ClientHostNameSelector extends Component {
           <Select value={selectedOptionItemId}
             onChange={this.handleChange}
           >
-          <MenuItem key={'-'} value={'-'}>없음</MenuItem>
+          <MenuItem key={'-'} value={'-'}>지정안함</MenuItem>
           {listAllData.map(item => (
             <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
           ))}

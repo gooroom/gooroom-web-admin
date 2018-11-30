@@ -94,7 +94,7 @@ class DesktopConfSelector extends Component {
           <Select value={selectedOptionItemId}
             onChange={this.handleChange}
           >
-          <MenuItem key={'-'} value={'-'}>없음</MenuItem>
+          <MenuItem key={'-'} value={'-'}>지정안함</MenuItem>
           {listAllData.map(item => (
             <MenuItem key={item.get('confId')} value={item.get('confId')}>{item.get('confNm')}</MenuItem>
           ))}

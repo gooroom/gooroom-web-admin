@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
 
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import EditIcon from '@material-ui/icons/Edit';
 import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 import CopyIcon from '@material-ui/icons/FileCopy';
 
@@ -48,7 +48,7 @@ class SoftwareFilterSpec extends Component {
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, targetType)}
-                  ><SettingsApplicationsIcon /></Button>
+                  ><EditIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, targetType)}

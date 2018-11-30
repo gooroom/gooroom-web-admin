@@ -231,14 +231,6 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('printer') == 'allow') ? '프린터 허가' : '프린터 금지'}
                                 />
                             </Grid>
-                            <Grid item xs={3}>
-                                <FormControlLabel style={{heigth:32}}
-                                    control={<Switch onChange={this.handleValueChange('screenCapture')} 
-                                        checked={this.checkAllow(editingItem.get('screenCapture'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('screenCapture') == 'allow') ? '화면캡쳐 허가' : '화면캡쳐 금지'}
-                                />
-                            </Grid>
                             <Grid item xs={3} >
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('camera')} 

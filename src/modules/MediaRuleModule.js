@@ -242,7 +242,6 @@ const makeParameter = (param) => {
         usb_memory: (param.get('usbMemory') == 'allow') ? ((usbReadonly == 'allow') ? 'read_only' : 'allow') : 'disallow',
         cd_dvd: (param.get('cdAndDvd') == 'allow') ? 'allow' : 'disallow',
         printer: (param.get('printer') == 'allow') ? 'allow' : 'disallow',
-        screen_capture: (param.get('screenCapture') == 'allow') ? 'allow' : 'disallow',
         camera: (param.get('camera') == 'allow') ? 'allow' : 'disallow',
         sound: (param.get('sound') == 'allow') ? 'allow' : 'disallow',
         keyboard: (param.get('keyboard') == 'allow') ? 'allow' : 'disallow',

@@ -84,7 +84,11 @@ export const getSelectedObjectInComp = (propObj, compId, targetType) => {
 
 export const getValueInSelectedObjectInComp = (propObj, compId, targetType, name) => {
     const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
-    return propObj.getIn(List(targetNames).push('viewItem', name));
+    if(targetType != propObj.getIn(List(targetNames).push('ruleGrade'))) {
+        return '';
+    } else {
+        return propObj.getIn(List(targetNames).push('viewItem', name));    
+    }
 }
 
 export const getSelectedObjectInCompAndId = (propObj, compId, idName, targetType) => {

@@ -13,7 +13,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import EditIcon from '@material-ui/icons/Edit';
 import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 import CopyIcon from '@material-ui/icons/FileCopy';
 
@@ -47,7 +47,7 @@ class MediaRuleSpec extends Component {
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, targetType)}
-                  ><SettingsApplicationsIcon /></Button>
+                  ><EditIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, targetType)}
@@ -67,24 +67,23 @@ class MediaRuleSpec extends Component {
                 <TableBody>
                 { !hasAction &&
                   <TableRow>
-                    <TableCell component="th" scope="row">{bull} 이름</TableCell>
-                    <TableCell numeric>{viewItem.get('objNm')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 설명</TableCell>
-                    <TableCell numeric>{viewItem.get('comment')}</TableCell>
+                    <TableCell style={{width:'25%'}}component="th" scope="row">{bull} 이름</TableCell>
+                    <TableCell style={{width:'25%'}}numeric>{viewItem.get('objNm')}</TableCell>
+                    <TableCell style={{width:'25%'}}component="th" scope="row">{bull} 설명</TableCell>
+                    <TableCell style={{width:'25%'}}numeric>{viewItem.get('comment')}</TableCell>
                   </TableRow>
                 }
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} 무선랜</TableCell>
                     <TableCell numeric>{viewItem.get('wireless')}</TableCell>
-                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} CD/DVD</TableCell>
-                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('cdAndDvd')}</TableCell>
+                    <TableCell component="th" scope="row">{bull} CD/DVD</TableCell>
+                    <TableCell numeric>{viewItem.get('cdAndDvd')}</TableCell>
                   </TableRow>
 
                   <TableRow>
                     <TableCell component="th" scope="row">{bull} 프린터</TableCell>
                     <TableCell numeric>{viewItem.get('printer')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 화면캡쳐</TableCell>
-                    <TableCell numeric>{viewItem.get('screenCapture')}</TableCell>
+                    <TableCell numeric colSpan={2}></TableCell>
                   </TableRow>
 
                   <TableRow>
@@ -140,7 +139,6 @@ export const generateMediaRuleObject = (param, isForViewer) => {
     let bluetoothState = '';
     let cdAndDvd = '';
     let printer = '';
-    let screenCapture = '';
     let camera = '';
     let sound = '';
     let keyboard = '';
@@ -161,8 +159,6 @@ export const generateMediaRuleObject = (param, isForViewer) => {
         cdAndDvd = evalue;
       } else if(ename == 'printer') {
         printer = evalue;
-      } else if(ename == 'screen_capture') {
-        screenCapture = evalue;
       } else if(ename == 'sound') {
         sound = evalue;
       } else if(ename == 'camera') {
@@ -192,7 +188,6 @@ export const generateMediaRuleObject = (param, isForViewer) => {
       usbReadonly: usbReadonly,
       cdAndDvd: cdAndDvd,
       printer: printer,
-      screenCapture: screenCapture,
       sound: sound,
       camera: camera,
       keyboard: keyboard,
