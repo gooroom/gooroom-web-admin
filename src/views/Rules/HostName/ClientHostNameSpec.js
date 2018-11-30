@@ -16,7 +16,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import EditIcon from '@material-ui/icons/Edit';
 import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -55,7 +55,7 @@ class ClientHostNameSpec extends Component {
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, targetType)}
-                  ><SettingsApplicationsIcon /></Button>
+                  ><EditIcon /></Button>
                   {(this.props.onClickCopy) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}

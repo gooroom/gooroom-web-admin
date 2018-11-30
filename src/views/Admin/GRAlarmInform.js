@@ -38,9 +38,6 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import NotificationsOffIcon from '@material-ui/icons/NotificationsOff';
 
-
-
-
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
@@ -53,12 +50,14 @@ class GRAlarmInform extends Component {
     super(props);
 
     this.state = {
-      isOpenProtectedData: false
+      isOpenProtectedData: false,
     };
   }
 
   componentDidMount() {
-    this.protectedTimer = setInterval(()=> this.getProtectedData(), 10000);
+    clearInterval(this.protectedTimer)
+    this.protectedTimer = null;
+    this.protectedTimer = setInterval(()=> this.getProtectedData(), 20000);
   }
   
   componentWillUnmount() {
@@ -72,15 +71,11 @@ class GRAlarmInform extends Component {
   }
 
   handleClickAlarm = (e) => {
-    this.setState({
-      isOpenProtectedData: true
-    });
+    this.props.AdminActions.showProtectedListDialog();
   }
 
-  handleClickCloseDialog() {
-    this.setState({
-      isOpenProtectedData: false
-    });
+  handleClickCloseDialog = (e) => {
+    this.props.AdminActions.closeProtectedListDialog();
   }
 
   // .................................................
@@ -88,7 +83,7 @@ class GRAlarmInform extends Component {
     const { classes } = this.props;
     const { AdminProps } = this.props;
 
-    const protectedCount = AdminProps.get('protectedCount');
+    const protectedCount = (AdminProps.get('protectedCount')) ? (AdminProps.get('protectedCount')) : 0;
     let bellIcon = null;
     let invisible = true;
     if(protectedCount && protectedCount > 0) {
@@ -107,6 +102,7 @@ class GRAlarmInform extends Component {
       </IconButton>
       <ProtectedClientDialog 
         isOpen={this.state.isOpenProtectedData} 
+        onClickItem={this.handleClickLink}
         onClose={this.handleClickCloseDialog} 
       />
       </React.Fragment>
