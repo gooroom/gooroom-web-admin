@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { formatBytes } from 'components/GRUtils/GRCommonUtils';
+import { formatBytes, getClientStatusIcon } from 'components/GRUtils/GRCommonUtils';
 
 import ClientStatusSelect from "views/Options/ClientStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
@@ -189,7 +189,7 @@ class ClientListForDashboard extends Component {
                   role="checkbox"
                   key={n.get('clientId')}
                 >
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('viewStatus')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
