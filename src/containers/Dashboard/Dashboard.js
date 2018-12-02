@@ -111,12 +111,7 @@ class Dashboard extends Component {
 
         return (
             <GRPane>
-                {(this.state.isRunningTimer) &&
-                    <img src="http://localhost:8080/gpms/images/loading-icon-animated-gif.jpg" width="30" />
-                }
-                <Typography >{this.state.currentCount}</Typography>
             <Grid container spacing={24} style={{marginTop:20}}>
-
               <Grid item xs={12}>
                   <Grid container spacing={24}>
                     <Grid item xs={6} sm={4}>
@@ -153,11 +148,18 @@ class Dashboard extends Component {
               </Grid> */}
 
             </Grid>
-
+            <div style={{marginTop:20,display:'inline-flex',flex:'1 1 0'}} >
+              <span>
+              {(this.state.isRunningTimer) &&
+                    <img src="http://localhost:8080/gpms/images/loading-icon-animated-gif.jpg" width="30" />
+                }
+              </span>
+              <span>
+              <Typography >{this.state.currentCount}</Typography>
+              </span>
+            </div>
             </GRPane>
-      
         );
-        
     }
 }
 
