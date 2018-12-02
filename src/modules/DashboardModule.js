@@ -83,8 +83,6 @@ export default handleActions({
         }
     },
     [GET_VIOLATED_STATUS_INFO]: (state, action) => {
-
-        console.log(' GET_VIOLATED_STATUS_INFO :::: ', action);
         const statusInfo = (action.response.data && action.response.data.data) ? action.response.data.data : null;
         if(statusInfo) {
             return state.merge({
