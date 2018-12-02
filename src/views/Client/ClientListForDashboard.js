@@ -158,7 +158,10 @@ class ClientListForDashboard extends Component {
     const { classes } = this.props;
     const listObj = this.state.stateData;
     return (
-      <div>
+      <div style={{paddingTop:10}}>
+        <Typography style={{margin:'2px 8px',fontWeight:'bold'}}>
+          Online Client List
+        </Typography>
       {(listObj) &&
         <Table>
           <GRCommonTableHead

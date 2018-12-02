@@ -137,17 +137,18 @@ class Dashboard extends Component {
                     </Grid>
                   </Grid>
               </Grid>
+              <Grid item xs={12} sm={12}>
+                <Paper className={classes.paper}>
+                    <ViolatedStatus statusInfo={violatedStatusInfo} onChangeType={this.handleClickChangePeriod} periodType={DashboardProps.get('periodType')} />
+                </Paper>
+              </Grid>
 
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                     <ClientListForDashboard />
                 </Paper>
               </Grid>
-              <Grid item xs={12} sm={12}>
-                <Paper className={classes.paper}>
-                    <ViolatedStatus statusInfo={violatedStatusInfo} onChangeType={this.handleClickChangePeriod} periodType={DashboardProps.get('periodType')} />
-                </Paper>
-              </Grid>
+
               {/* <Grid item xs={12} sm={4}>
                 <Paper className={classes.paper}>-</Paper>
               </Grid> */}
