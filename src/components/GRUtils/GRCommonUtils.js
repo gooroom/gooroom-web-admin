@@ -1,3 +1,7 @@
+import React, { Component } from "react";
+import NOR from "@material-ui/icons/PlayCircleFilledWhiteTwoTone";
+import OFF from "@material-ui/icons/PauseCircleFilledTwoTone";
+import SSS from "@material-ui/icons/Warning";
 
 export const getMergedObject = (source, param) => {
     let tempSource = source;
@@ -92,3 +96,15 @@ export const formatBytes = (bytes, decimals) => {
         i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + sizes[i];
 };
+
+export const getClientStatusIcon = (status) => {
+
+    if(status == 'OFF') {
+        return <OFF style={{color:'gray'}} />;
+    } else if(status == 'NOR') {
+        return <NOR style={{color:'green'}} />;
+    } else if(status == 'SSS') {
+        return <SSS style={{color:'red'}} />;
+    }
+};
+

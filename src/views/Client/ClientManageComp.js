@@ -11,7 +11,7 @@ import * as ClientManageActions from 'modules/ClientManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { formatBytes } from 'components/GRUtils/GRCommonUtils';
+import { formatBytes, getClientStatusIcon } from 'components/GRUtils/GRCommonUtils';
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
@@ -255,7 +255,7 @@ class ClientManageComp extends Component {
                     <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('clientId'))}/>
                   </TableCell>
                 }
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('viewStatus')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('loginId')}</TableCell>
