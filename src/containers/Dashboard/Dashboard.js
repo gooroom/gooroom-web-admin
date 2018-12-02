@@ -40,7 +40,7 @@ class Dashboard extends Component {
         const { DashboardActions, DashboardProps } = this.props;
         DashboardActions.readClientStatusForDashboard();
         this.handleClickChangePeriod('day');
-        this.dashboardTimer = setInterval(()=> this.refreshDashboard(), 30000);
+        this.dashboardTimer = setInterval(()=> this.refreshDashboard(), 1000);
     }
 
     componentWillUnmount() {
@@ -67,7 +67,6 @@ class Dashboard extends Component {
                 });
             }
         }
-        //this.props.DashboardActions.readClientStatusForDashboard();
     }
 
     handleClickLink = (linkType) => {
