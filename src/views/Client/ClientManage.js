@@ -66,7 +66,7 @@ class ClientManage extends Component {
     { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
     { id: 'LAST_LOGIN_TIME', isOrder: true, numeric: false, disablePadding: true, label: '최종접속일' },
     { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: '최종접속IP' },
-    { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: '용량' },
+    { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: '사용률' },
     { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' }
   ];
   

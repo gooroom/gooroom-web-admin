@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { formatBytes } from 'components/GRUtils/GRCommonUtils';
 
 import * as ClientManageActions from 'modules/ClientManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -43,6 +44,13 @@ class ClientManageSpec extends Component {
     const informOpen = ClientManageProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = ClientManageProps.getIn(['viewItems', compId, 'viewItem']);
 
+    let storageRate = '';
+    let storageInfo = '';
+    if(viewItem && viewItem.get('strgSize') && viewItem.get('strgSize') > 0 && viewItem.get('strgUse') && viewItem.get('strgUse') > 0) {
+      storageRate = ((viewItem.get('strgUse') * 100) / viewItem.get('strgSize')).toFixed(2) + '%';
+      storageInfo = formatBytes(viewItem.get('strgUse'), 1) + '/' + formatBytes(viewItem.get('strgSize'), 1);
+    }
+
     return (
       <div>
       {(informOpen && viewItem) &&
@@ -77,8 +85,8 @@ class ClientManageSpec extends Component {
                       <TableCell numeric>{(viewItem.get('isOn') == '0') ? '오프라인' : '온라인'}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} 용량(홈폴더)</TableCell>
-                      <TableCell numeric>{viewItem.get('strgSize')}</TableCell>
+                      <TableCell component="th" scope="row">{bull} 홈폴더 사용률</TableCell>
+                      <TableCell numeric>{(storageRate != '') ? (storageRate + ' (' + storageInfo + ')') : ''}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 설치패키지수</TableCell>

@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { formatBytes } from 'components/GRUtils/GRCommonUtils';
 
 import ClientStatusSelect from "views/Options/ClientStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
@@ -19,12 +20,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
-import FormControl from '@material-ui/core/FormControl';
-
-import Checkbox from "@material-ui/core/Checkbox";
-
-import Button from "@material-ui/core/Button";
-import Search from "@material-ui/icons/Search";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -66,6 +63,8 @@ class ClientListForDashboard extends Component {
     { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: '단말그룹'},
     { id: 'temp1', isOrder: false, numeric: false,disablePadding: true,label: '접속자'},
     { id: 'temp2', isOrder: false, numeric: false,disablePadding: true,label: '최종접속시간'},
+    { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: '최종접속IP' },
+    { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: '용량' },
     { id: 'temp3', isOrder: false, numeric: false,disablePadding: true,label: '패키지업데이트'}
   ];
 
@@ -172,6 +171,14 @@ class ClientListForDashboard extends Component {
           />
           <TableBody>
             {listObj.get('listData').map(n => {
+
+              let storageRate = '';
+              let storageInfo = '';
+              if(n.get('strgSize') && n.get('strgSize') > 0 && n.get('strgUse') && n.get('strgUse') > 0) {
+                storageRate = ((n.get('strgUse') * 100) / n.get('strgSize')).toFixed(2) + '%';
+                storageInfo = formatBytes(n.get('strgUse'), 1) + '/' + formatBytes(n.get('strgSize'), 1);
+              }
+
               return (
                 <TableRow
                   hover
@@ -185,6 +192,12 @@ class ClientListForDashboard extends Component {
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('loginId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{formatDateToSimple(n.get('lastLoginTime'), 'YY-MM-DD HH:mm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell} >
+                  <Tooltip title={storageInfo}>
+                    <Typography>{storageRate}</Typography>
+                  </Tooltip>
+                  </TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('updateCnt')}</TableCell>
                 </TableRow>
               );
@@ -199,7 +212,6 @@ class ClientListForDashboard extends Component {
           rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
           rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
           page={listObj.getIn(['listParam', 'page'])}
-          labelDisplayedRows={() => {return ''}}
           backIconButtonProps={{
             'aria-label': 'Previous Page'
           }}

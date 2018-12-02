@@ -83,3 +83,12 @@ export const getJobStatusToString = (status) => {
 
     return clientStatus;
 };
+
+export const formatBytes = (bytes, decimals) => {
+    if(bytes == 0) return '0 Bytes';
+    const k = 1024,
+        dm = decimals <= 0 ? 0 : decimals || 2,
+        sizes = ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'],
+        i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + sizes[i];
+};

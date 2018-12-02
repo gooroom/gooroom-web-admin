@@ -11,6 +11,7 @@ import * as ClientManageActions from 'modules/ClientManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { formatBytes } from 'components/GRUtils/GRCommonUtils';
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
@@ -29,6 +30,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Checkbox from "@material-ui/core/Checkbox";
 import InputLabel from "@material-ui/core/InputLabel";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
 
 import Search from '@material-ui/icons/Search'; 
 
@@ -168,15 +171,6 @@ class ClientManageComp extends Component {
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {page: 0});
   };
 
-  formatBytes = (bytes, decimals) => {
-    if(bytes == 0) return '0 Bytes';
-    const k = 1024,
-        dm = decimals <= 0 ? 0 : decimals || 2,
-        sizes = ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'],
-        i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + sizes[i];
-  };
-
   render() {
     const { classes } = this.props;
     const { ClientManageProps, compId } = this.props;
@@ -241,8 +235,12 @@ class ClientManageComp extends Component {
               const isChecked = this.isChecked(n.get('clientId'));
               const isSelected = this.isSelected(n.get('clientId'));
 
-              const storageNumber = (n.get('strgSize') && n.get('strgSize') > 0) ? 
-                this.formatBytes(n.get('strgUse'), 1) + '/' + this.formatBytes(n.get('strgSize'), 1) : '-';
+              let storageRate = '';
+              let storageInfo = '';
+              if(n.get('strgSize') && n.get('strgSize') > 0 && n.get('strgUse') && n.get('strgUse') > 0) {
+                storageRate = ((n.get('strgUse') * 100) / n.get('strgSize')).toFixed(2) + '%';
+                storageInfo = formatBytes(n.get('strgUse'), 1) + '/' + formatBytes(n.get('strgSize'), 1);
+              }
 
               return (
                 <TableRow
@@ -264,12 +262,15 @@ class ClientManageComp extends Component {
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientGroupName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell} >{storageNumber}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell} >
+                  <Tooltip title={storageInfo}>
+                    <Typography>{storageRate}</Typography>
+                  </Tooltip>
+                  </TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('totalCnt')}</TableCell>
                 </TableRow>
               );
             })}
-
             {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
               <TableRow key={e}>
                 <TableCell
