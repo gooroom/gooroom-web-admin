@@ -7,8 +7,8 @@ import * as commonHandleActions from 'modules/commons/commonHandleActions';
 const COMMON_PENDING = 'admin/COMMON_PENDING';
 const COMMON_FAILURE = 'admin/COMMON_FAILURE';
 
-const GET_PROTECTED_LIST_SUCCESS = 'admin/GET_PROTECTED_LIST_SUCCESS';
-const GET_PROTECTED_COUNT_SUCCESS = 'admin/GET_PROTECTED_COUNT_SUCCESS';
+const GET_VIOLATED_LIST_SUCCESS = 'admin/GET_VIOLATED_LIST_SUCCESS';
+const GET_VIOLATED_COUNT_SUCCESS = 'admin/GET_VIOLATED_COUNT_SUCCESS';
 
 const GET_ADMIN_INFO = 'admin/GET_ADMIN_INFO';
 const SET_LOGOUT = 'admin/SET_LOGOUT';
@@ -32,13 +32,13 @@ const initialState = commonHandleActions.getCommonInitialState('', '', {
     pollingCycle: 0
 });
 
-export const showProtectedListDialog = (param) => dispatch => {
+export const showViolatedListDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_PROTECTLIST_DIALOG
     });
 };
 
-export const closeProtectedListDialog = () => dispatch => {
+export const closeViolatedListDialog = () => dispatch => {
     return dispatch({
         type: CLOSE_PROTECTLIST_DIALOG
     });
@@ -52,13 +52,13 @@ export const setEditingItemValue = (param) => dispatch => {
     });
 };
 
-export const readProtectedClientCount = (module, compId, targetType) => dispatch => {
+export const readViolatedClientCount = (module, compId, targetType) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readProtectedClientCount', {
+    return requestPostAPI('readViolatedClientCount', {
     }).then(
         (response) => {
             dispatch({
-                type: GET_PROTECTED_COUNT_SUCCESS,
+                type: GET_VIOLATED_COUNT_SUCCESS,
                 compId: 'ROOT',
                 response: response
             });
@@ -68,13 +68,13 @@ export const readProtectedClientCount = (module, compId, targetType) => dispatch
     });
 };
 
-export const readProtectedClientList = (module, compId, targetType) => dispatch => {
+export const readViolatedClientList = (module, compId, targetType) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readProtectedClientList', {
+    return requestPostAPI('readViolatedClientList', {
     }).then(
         (response) => {
             dispatch({
-                type: GET_PROTECTED_LIST_SUCCESS,
+                type: GET_VIOLATED_LIST_SUCCESS,
                 compId: 'ROOT',
                 response: response
             });
@@ -179,12 +179,12 @@ export default handleActions({
     [SET_LOGOUT]: (state, action) => {
         return state;
     },
-    [GET_PROTECTED_LIST_SUCCESS]: (state, action) => {
+    [GET_VIOLATED_LIST_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListAction(state, action, 'objId');
     },
-    [GET_PROTECTED_COUNT_SUCCESS]: (state, action) => {
-        const protectedCount = (action.response.data && action.response.data.data && action.response.data.data.length > 0) ? action.response.data.data[0] : null;
-        return state.merge({'protectedCount': protectedCount});
+    [GET_VIOLATED_COUNT_SUCCESS]: (state, action) => {
+        const violatedCount = (action.response.data && action.response.data.data && action.response.data.data.length > 0) ? action.response.data.data[0] : null;
+        return state.merge({'violatedCount': violatedCount});
     },
     [SHOW_PROTECTLIST_DIALOG]: (state, action) => {
         return state.merge({

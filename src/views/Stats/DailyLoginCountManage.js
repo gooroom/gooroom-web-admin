@@ -77,7 +77,7 @@ class DailyLoginCountManage extends Component {
     });
   }
 
-  handleSelectData = (event, logDate, protectedType) => {
+  handleSelectData = (event, logDate, violatedType) => {
     const { DailyLoginCountActions, DailyLoginCountProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     

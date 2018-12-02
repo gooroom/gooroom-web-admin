@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as DailyProtectedActions from 'modules/DailyProtectedModule';
+import * as DailyViolatedActions from 'modules/DailyViolatedModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -31,7 +31,7 @@ import Search from '@material-ui/icons/Search';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-class DailyProtectedSpec extends Component {
+class DailyViolatedSpec extends Component {
 
   columnHeaders = [
     { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: '번호' },
@@ -43,34 +43,34 @@ class DailyProtectedSpec extends Component {
   ];
 
   handleChangePage = (event, page) => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readProtectedListPaged(DailyProtectedProps, this.props.compId, {
+    const { DailyViolatedActions, DailyViolatedProps } = this.props;
+    DailyViolatedActions.readViolatedListPaged(DailyViolatedProps, this.props.compId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readProtectedListPaged(DailyProtectedProps, this.props.compId, {
+    const { DailyViolatedActions, DailyViolatedProps } = this.props;
+    DailyViolatedActions.readViolatedListPaged(DailyViolatedProps, this.props.compId, {
       rowsPerPage: event.target.value, page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readProtectedListPaged(DailyProtectedProps, this.props.compId, {
+    const { DailyViolatedActions, DailyViolatedProps } = this.props;
+    DailyViolatedActions.readViolatedListPaged(DailyViolatedProps, this.props.compId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readProtectedListPaged(DailyProtectedProps, this.props.compId, {page: 0});
+    const { DailyViolatedActions, DailyViolatedProps } = this.props;
+    DailyViolatedActions.readViolatedListPaged(DailyViolatedProps, this.props.compId, {page: 0});
   };
   
   handleKeywordChange = (name, value) => {
-    this.props.DailyProtectedActions.changeListParamData({
+    this.props.DailyViolatedActions.changeListParamData({
       name: name, 
       value: value,
       compId: this.props.compId
@@ -78,16 +78,16 @@ class DailyProtectedSpec extends Component {
   }
 
   handleSelectRow = (event, id) => {
-    const { DailyProtectedActions, DailyProtectedProps, compId } = this.props;
-    const viewItem = getRowObjectById(DailyProtectedProps, compId, id, 'logSeq');
-    DailyProtectedActions.showInform({
+    const { DailyViolatedActions, DailyViolatedProps, compId } = this.props;
+    const viewItem = getRowObjectById(DailyViolatedProps, compId, id, 'logSeq');
+    DailyViolatedActions.showInform({
       compId: compId,
       viewItem: viewItem
     });
   };
 
   handleParamChange = name => event => {
-    this.props.DailyProtectedActions.changeListParamData({
+    this.props.DailyViolatedActions.changeListParamData({
       name: name, 
       value: event.target.value,
       compId: this.props.compId
@@ -97,10 +97,10 @@ class DailyProtectedSpec extends Component {
 
   render() {
     const { classes } = this.props;
-    const { DailyProtectedProps } = this.props;
+    const { DailyViolatedProps } = this.props;
     const compId = this.props.compId;
     
-    const listObj = DailyProtectedProps.getIn(['viewItems', compId]);
+    const listObj = DailyViolatedProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
@@ -119,7 +119,7 @@ class DailyProtectedSpec extends Component {
             </Grid>
             <Grid item xs={2} >
             <FormControl fullWidth={true}>
-              <TextField label="침해구분" value={listObj.getIn(['listParam', 'protectedType'])} disabled={true} />
+              <TextField label="침해구분" value={listObj.getIn(['listParam', 'violatedType'])} disabled={true} />
             </FormControl>
             </Grid>
             <Grid item xs={2} >
@@ -194,13 +194,13 @@ class DailyProtectedSpec extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  DailyProtectedProps: state.DailyProtectedModule
+  DailyViolatedProps: state.DailyViolatedModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  DailyProtectedActions: bindActionCreators(DailyProtectedActions, dispatch),
+  DailyViolatedActions: bindActionCreators(DailyViolatedActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyProtectedSpec));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyViolatedSpec));
 
