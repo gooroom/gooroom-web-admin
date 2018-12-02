@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as DailyProtectedActions from 'modules/DailyProtectedModule';
+import * as DailyViolatedActions from 'modules/DailyViolatedModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -15,7 +15,7 @@ import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
-import DailyProtectedSpec from './DailyProtectedSpec';
+import DailyViolatedSpec from './DailyViolatedSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
 import Grid from '@material-ui/core/Grid';
@@ -34,7 +34,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class DailyProtectedManage extends Component {
+class DailyViolatedManage extends Component {
 
   columnHeaders = [
     { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: '날짜' },
@@ -50,32 +50,32 @@ class DailyProtectedManage extends Component {
 
   // .................................................
   handleSelectBtnClick = () => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
-    DailyProtectedActions.readDailyProtectedList(DailyProtectedProps, this.props.match.params.grMenuId);
+    const { DailyViolatedActions, DailyViolatedProps } = this.props;
+    DailyViolatedActions.readDailyViolatedList(DailyViolatedProps, this.props.match.params.grMenuId);
   };
   
   handleKeywordChange = (name, value) => {
-    this.props.DailyProtectedActions.changeListParamData({
+    this.props.DailyViolatedActions.changeListParamData({
       name: name, 
       value: value,
       compId: this.props.match.params.grMenuId
     });
   }
 
-  handleSelectData = (event, logDate, protectedType) => {
-    const { DailyProtectedActions, DailyProtectedProps } = this.props;
+  handleSelectData = (event, logDate, violatedType) => {
+    const { DailyViolatedActions, DailyViolatedProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     
-    DailyProtectedActions.readProtectedListPaged(DailyProtectedProps, compId, {
+    DailyViolatedActions.readViolatedListPaged(DailyViolatedProps, compId, {
       logDate: formatDateToSimple(logDate, 'YYYY-MM-DD'),
-      protectedType: protectedType,
+      violatedType: violatedType,
       page: 0,
       keyword: ''
     });
   };
 
   handleParamChange = name => event => {
-    this.props.DailyProtectedActions.changeListParamData({
+    this.props.DailyViolatedActions.changeListParamData({
       name: name, 
       value: event.target.value,
       compId: this.props.match.params.grMenuId
@@ -85,10 +85,10 @@ class DailyProtectedManage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { DailyProtectedProps } = this.props;
+    const { DailyViolatedProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     
-    const listObj = DailyProtectedProps.getIn(['viewItems', compId]);
+    const listObj = DailyViolatedProps.getIn(['viewItems', compId]);
     let data = [];
     if(listObj && listObj.get('listAllData')) {
       data = listObj.get('listAllData').toJS().map((e) => {
@@ -184,7 +184,7 @@ class DailyProtectedManage extends Component {
           </div>
         }
         <div style={{marginTop:20}}>
-        <DailyProtectedSpec compId={compId} />
+        <DailyViolatedSpec compId={compId} />
         </div>
         </GRPane>
         <GRConfirm />
@@ -195,15 +195,15 @@ class DailyProtectedManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  DailyProtectedProps: state.DailyProtectedModule
+  DailyViolatedProps: state.DailyViolatedModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  DailyProtectedActions: bindActionCreators(DailyProtectedActions, dispatch),
+  DailyViolatedActions: bindActionCreators(DailyViolatedActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyProtectedManage));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyViolatedManage));
 
 
 

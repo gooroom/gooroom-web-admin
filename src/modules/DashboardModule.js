@@ -8,6 +8,7 @@ const COMMON_PENDING = 'dashboard/COMMON_PENDING';
 const COMMON_FAILURE = 'dashboard/COMMON_FAILURE';
 
 const GET_CLIENT_STATUS_INFO = 'dashboard/GET_CLIENT_STATUS_INFO';
+const GET_VIOLATED_STATUS_INFO = 'dashboard/GET_VIOLATED_STATUS_INFO';
 
 const initialState = commonHandleActions.getCommonInitialState();
 
@@ -16,6 +17,20 @@ export const readClientStatusForDashboard = (param) => dispatch => {
         (response) => {
             dispatch({
                 type: GET_CLIENT_STATUS_INFO,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+}
+
+export const readViolatedClientStatus = (param) => dispatch => {
+    return requestPostAPI('readViolatedClientStatus', param).then(
+        (response) => {
+            dispatch({
+                type: GET_VIOLATED_STATUS_INFO,
+                periodType: param.countType,
                 response: response
             });
         }
@@ -64,6 +79,22 @@ export default handleActions({
                 mainUpdateCount: 0,
                 noUpdateCount: 0,
                 updateCount: 0
+            });
+        }
+    },
+    [GET_VIOLATED_STATUS_INFO]: (state, action) => {
+
+        console.log(' GET_VIOLATED_STATUS_INFO :::: ', action);
+        const statusInfo = (action.response.data && action.response.data.data) ? action.response.data.data : null;
+        if(statusInfo) {
+            return state.merge({
+                violatedStatusInfo: statusInfo,
+                periodType: action.periodType
+            });
+        } else {
+            return state.merge({
+                violatedStatusInfo: [],
+                periodType: action.periodType
             });
         }
     }

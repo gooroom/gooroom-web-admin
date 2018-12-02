@@ -8,9 +8,10 @@ import * as DashboardActions from 'modules/DashboardModule';
 import GRPane from 'containers/GRContent/GRPane';
 
 import ClientOnOff from './ClientOnOff';
-import ClientProtected from './ClientProtected';
 import UserLogin from './UserLogin';
 import PackageUpdate from './PackageUpdate';
+
+import ViolatedStatus from './ViolatedStatus';
 
 import ClientListForDashboard from 'views/Client/ClientListForDashboard';
 
@@ -38,7 +39,8 @@ class Dashboard extends Component {
     componentDidMount() {
         const { DashboardActions, DashboardProps } = this.props;
         DashboardActions.readClientStatusForDashboard();
-        this.dashboardTimer = setInterval(()=> this.refreshDashboard(), 1000);
+        this.handleClickChangePeriod('day');
+        this.dashboardTimer = setInterval(()=> this.refreshDashboard(), 30000);
     }
 
     componentWillUnmount() {
@@ -75,6 +77,12 @@ class Dashboard extends Component {
         });
     };
 
+    handleClickChangePeriod = (type) => {
+        this.props.DashboardActions.readViolatedClientStatus({
+            countType: type
+        });
+    }
+
     render() {
         if (this.state.redirect) {
             if(this.state.linkType == 'package') {
@@ -99,6 +107,8 @@ class Dashboard extends Component {
         const noUpdateCount = (DashboardProps.get('noUpdateCount')) ?  DashboardProps.get('noUpdateCount') : 0;
         const updateCount = (DashboardProps.get('updateCount')) ?  DashboardProps.get('updateCount') : 0;
         const mainUpdateCount = (DashboardProps.get('mainUpdateCount')) ?  DashboardProps.get('mainUpdateCount') : 0;
+
+        const violatedStatusInfo = (DashboardProps.get('violatedStatusInfo')) ?  DashboardProps.get('violatedStatusInfo') : 0;
 
         return (
             <GRPane>
@@ -133,12 +143,14 @@ class Dashboard extends Component {
                     <ClientListForDashboard />
                 </Paper>
               </Grid>
-              <Grid item xs={12} sm={6}>
-                <Paper className={classes.paper}>-</Paper>
+              <Grid item xs={12} sm={12}>
+                <Paper className={classes.paper}>
+                    <ViolatedStatus statusInfo={violatedStatusInfo} onChangeType={this.handleClickChangePeriod} periodType={DashboardProps.get('periodType')} />
+                </Paper>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              {/* <Grid item xs={12} sm={4}>
                 <Paper className={classes.paper}>-</Paper>
-              </Grid>
+              </Grid> */}
 
             </Grid>
 

@@ -38,7 +38,7 @@ import DesktopConfManage from "views/Rules/DesktopConfig/DesktopConfManage";
 
 import SecurityLogManage from "views/Logs/SecurityLogManage";
 import GeneralLogManage from "views/Logs/GeneralLogManage";
-import DailyProtectedManage from "views/Stats/DailyProtectedManage";
+import DailyViolatedManage from "views/Stats/DailyViolatedManage";
 import DailyLoginCountManage from "views/Stats/DailyLoginCountManage";
 import DailyClientCountManage from "views/Stats/DailyClientCountManage";
 
@@ -95,7 +95,7 @@ class GRRouters extends Component {
           <Route path="/log/secretlog/:grMenuId/:grMenuName" component={SecurityLogManage} />
           <Route path="/log/generallog/:grMenuId/:grMenuName" component={GeneralLogManage} />
 
-          <Route path="/statistic/dailyprotected/:grMenuId/:grMenuName" component={DailyProtectedManage} />
+          <Route path="/statistic/dailyviolated/:grMenuId/:grMenuName" component={DailyViolatedManage} />
           <Route path="/statistic/dailyconnect/:grMenuId/:grMenuName" component={DailyLoginCountManage} />
           <Route path="/statistic/dailyregist/:grMenuId/:grMenuName" component={DailyClientCountManage} />
 

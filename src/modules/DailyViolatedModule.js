@@ -4,22 +4,22 @@ import { Map, List } from 'immutable';
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
-const COMMON_PENDING = 'dailyProtected/COMMON_PENDING';
-const COMMON_FAILURE = 'dailyProtected/COMMON_FAILURE';
+const COMMON_PENDING = 'dailyViolated/COMMON_PENDING';
+const COMMON_FAILURE = 'dailyViolated/COMMON_FAILURE';
 
-const GET_DAILYPROTECTED_LIST_SUCCESS = 'dailyProtected/GET_DAILYPROTECTED_LIST_SUCCESS';
-const GET_PROTECTED_LISTPAGED_SUCCESS = 'dailyProtected/GET_PROTECTED_LISTPAGED_SUCCESS';
-const GET_DAILYPROTECTED_SUCCESS = 'dailyProtected/GET_DAILYPROTECTED_SUCCESS';
+const GET_DAILYVIOLATED_LIST_SUCCESS = 'dailyViolated/GET_DAILYVIOLATED_LIST_SUCCESS';
+const GET_VIOLATED_LISTPAGED_SUCCESS = 'dailyViolated/GET_VIOLATED_LISTPAGED_SUCCESS';
+const GET_DAILYVIOLATED_SUCCESS = 'dailyViolated/GET_DAILYVIOLATED_SUCCESS';
 
-const SHOW_DAILYPROTECTED_INFORM = 'dailyProtected/SHOW_DAILYPROTECTED_INFORM';
-const CLOSE_DAILYPROTECTED_INFORM = 'dailyProtected/CLOSE_DAILYPROTECTED_INFORM';
-const SHOW_DAILYPROTECTED_DIALOG = 'dailyProtected/SHOW_DAILYPROTECTED_DIALOG';
-const CLOSE_DAILYPROTECTED_DIALOG = 'dailyProtected/CLOSE_DAILYPROTECTED_DIALOG';
+const SHOW_DAILYVIOLATED_INFORM = 'dailyViolated/SHOW_DAILYVIOLATED_INFORM';
+const CLOSE_DAILYVIOLATED_INFORM = 'dailyViolated/CLOSE_DAILYVIOLATED_INFORM';
+const SHOW_DAILYVIOLATED_DIALOG = 'dailyViolated/SHOW_DAILYVIOLATED_DIALOG';
+const CLOSE_DAILYVIOLATED_DIALOG = 'dailyViolated/CLOSE_DAILYVIOLATED_DIALOG';
 
-const SET_EDITING_ITEM_VALUE = 'dailyProtected/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_ITEM_VALUE = 'dailyViolated/SET_EDITING_ITEM_VALUE';
 
-const CHG_LISTPARAM_DATA = 'dailyProtected/CHG_LISTPARAM_DATA';
-const CHG_COMPDATA_VALUE = 'dailyProtected/CHG_COMPDATA_VALUE';
+const CHG_LISTPARAM_DATA = 'dailyViolated/CHG_LISTPARAM_DATA';
+const CHG_COMPDATA_VALUE = 'dailyViolated/CHG_COMPDATA_VALUE';
 
 
 // ...
@@ -27,7 +27,7 @@ const initialState = commonHandleActions.getCommonInitialState('LOG_SEQ', 'desc'
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
-        type: SHOW_DAILYPROTECTED_DIALOG,
+        type: SHOW_DAILYVIOLATED_DIALOG,
         viewItem: param.viewItem,
         dialogType: param.dialogType
     });
@@ -35,13 +35,13 @@ export const showDialog = (param) => dispatch => {
 
 export const closeDialog = () => dispatch => {
     return dispatch({
-        type: CLOSE_DAILYPROTECTED_DIALOG
+        type: CLOSE_DAILYVIOLATED_DIALOG
     });
 };
 
 export const showInform = (param) => dispatch => {
     return dispatch({
-        type: SHOW_DAILYPROTECTED_INFORM,
+        type: SHOW_DAILYVIOLATED_INFORM,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('objId') : '',
         viewItem: param.viewItem
@@ -50,24 +50,24 @@ export const showInform = (param) => dispatch => {
 
 export const closeInform = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_DAILYPROTECTED_INFORM,
+        type: CLOSE_DAILYVIOLATED_INFORM,
         compId: param.compId
     });
 };
 
-export const readDailyProtectedList = (module, compId, extParam) => dispatch => {
+export const readDailyViolatedList = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readProtectedDailyCount', {
+    return requestPostAPI('readViolatedDailyCount', {
         fromDate: newListParam.get('fromDate'),
         toDate: newListParam.get('toDate')
     }).then(
         (response) => {
             dispatch({
-                type: GET_DAILYPROTECTED_LIST_SUCCESS,
+                type: GET_DAILYVIOLATED_LIST_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
                 response: response
@@ -78,7 +78,7 @@ export const readDailyProtectedList = (module, compId, extParam) => dispatch => 
     });
 };
 
-export const readProtectedListPaged = (module, compId, extParam) => dispatch => {
+export const readViolatedListPaged = (module, compId, extParam) => dispatch => {
 
     let newListParam = module.getIn(['viewItems', compId, 'listParam']);
     if(newListParam) {
@@ -91,8 +91,8 @@ export const readProtectedListPaged = (module, compId, extParam) => dispatch => 
     }
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readProtectedListPaged', {
-        searchType: newListParam.get('protectedType'),
+    return requestPostAPI('readViolatedListPaged', {
+        searchType: newListParam.get('violatedType'),
         searchDate: newListParam.get('logDate'),
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
@@ -103,7 +103,7 @@ export const readProtectedListPaged = (module, compId, extParam) => dispatch => 
     }).then(
         (response) => {
             dispatch({
-                type: GET_PROTECTED_LISTPAGED_SUCCESS,
+                type: GET_VIOLATED_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
                 response: response
@@ -112,31 +112,6 @@ export const readProtectedListPaged = (module, compId, extParam) => dispatch => 
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
     });
-};
-
-export const getDailyProtected = (param) => dispatch => {
-    const compId = param.compId;
-    if(param.objId && param.objId !== '') {
-        dispatch({type: COMMON_PENDING});
-        return requestPostAPI('readDailyProtected', {'objId': param.objId}).then(
-            (response) => {
-                dispatch({
-                    type: GET_DAILYPROTECTED_SUCCESS,
-                    compId: compId,
-                    response: response
-                });
-            }
-        ).catch(error => {
-            dispatch({ type: COMMON_FAILURE, error: error });
-        });
-    } else {
-        return dispatch({
-            type: COMMON_FAILURE,
-            compId: compId,
-            name: 'viewItem'
-        });      
-    }
-
 };
 
 export const changeListParamData = (param) => dispatch => {
@@ -169,7 +144,7 @@ export default handleActions({
             errorObj: (action.error) ? action.error : ''
         });
     },
-    [GET_DAILYPROTECTED_LIST_SUCCESS]: (state, action) => {
+    [GET_DAILYVIOLATED_LIST_SUCCESS]: (state, action) => {
         const { data, extend } = action.response.data;
         let newListParam = Map();
         if(extend && extend.length > 0) {
@@ -185,22 +160,22 @@ export default handleActions({
         }
         return newState;
     }, 
-    [GET_PROTECTED_LISTPAGED_SUCCESS]: (state, action) => {
+    [GET_VIOLATED_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
-    [GET_DAILYPROTECTED_SUCCESS]: (state, action) => {
+    [GET_DAILYVIOLATED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'objId');
     },
-    [SHOW_DAILYPROTECTED_DIALOG]: (state, action) => {
+    [SHOW_DAILYVIOLATED_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
     },
-    [CLOSE_DAILYPROTECTED_DIALOG]: (state, action) => {
+    [CLOSE_DAILYVIOLATED_DIALOG]: (state, action) => {
         return commonHandleActions.handleCloseDialogAction(state, action);
     },
-    [SHOW_DAILYPROTECTED_INFORM]: (state, action) => {
+    [SHOW_DAILYVIOLATED_INFORM]: (state, action) => {
         return commonHandleActions.handleShowInformAction(state, action);
     },
-    [CLOSE_DAILYPROTECTED_INFORM]: (state, action) => {
+    [CLOSE_DAILYVIOLATED_INFORM]: (state, action) => {
         return commonHandleActions.handleCloseInformAction(state, action);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {

@@ -92,7 +92,7 @@ export const readLoginCountListPaged = (module, compId, extParam) => dispatch =>
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readLoginListPaged', {
-        searchType: newListParam.get('protectedType'),
+        searchType: newListParam.get('violatedType'),
         searchDate: newListParam.get('logDate'),
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),

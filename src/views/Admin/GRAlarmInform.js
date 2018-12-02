@@ -11,7 +11,7 @@ import  { Redirect } from 'react-router-dom';
 import * as AdminActions from 'modules/AdminModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import ProtectedClientDialog from "views/Client/ProtectedClientDialog";
+import ViolatedClientDialog from "views/Client/ViolatedClientDialog";
 
 import Badge from '@material-ui/core/Badge';
 
@@ -50,32 +50,32 @@ class GRAlarmInform extends Component {
     super(props);
 
     this.state = {
-      isOpenProtectedData: false,
+      isOpenViolatedData: false,
     };
   }
 
   componentDidMount() {
-    clearInterval(this.protectedTimer)
-    this.protectedTimer = null;
-    this.protectedTimer = setInterval(()=> this.getProtectedData(), 20000);
+    clearInterval(this.violatedTimer)
+    this.violatedTimer = null;
+    this.violatedTimer = setInterval(()=> this.getViolatedData(), 20000);
   }
   
   componentWillUnmount() {
-    clearInterval(this.protectedTimer)
-    this.protectedTimer = null; // here...
+    clearInterval(this.violatedTimer)
+    this.violatedTimer = null; // here...
   }
 
-  getProtectedData() {
+  getViolatedData() {
     const { AdminActions } = this.props;
-    AdminActions.readProtectedClientCount();
+    AdminActions.readViolatedClientCount();
   }
 
   handleClickAlarm = (e) => {
-    this.props.AdminActions.showProtectedListDialog();
+    this.props.AdminActions.showViolatedListDialog();
   }
 
   handleClickCloseDialog = (e) => {
-    this.props.AdminActions.closeProtectedListDialog();
+    this.props.AdminActions.closeViolatedListDialog();
   }
 
   // .................................................
@@ -83,10 +83,10 @@ class GRAlarmInform extends Component {
     const { classes } = this.props;
     const { AdminProps } = this.props;
 
-    const protectedCount = (AdminProps.get('protectedCount')) ? (AdminProps.get('protectedCount')) : 0;
+    const violatedCount = (AdminProps.get('violatedCount')) ? (AdminProps.get('violatedCount')) : 0;
     let bellIcon = null;
     let invisible = true;
-    if(protectedCount && protectedCount > 0) {
+    if(violatedCount && violatedCount > 0) {
       bellIcon = <NotificationsActiveIcon />;
       invisible = false;
     } else {
@@ -96,12 +96,12 @@ class GRAlarmInform extends Component {
     return (
       <React.Fragment>
       <IconButton onClick={this.handleClickAlarm}>
-        <Badge badgeContent={protectedCount} color="secondary" invisible={invisible} >
+        <Badge badgeContent={violatedCount} color="secondary" invisible={invisible} >
           {bellIcon}
         </Badge>
       </IconButton>
-      <ProtectedClientDialog 
-        isOpen={this.state.isOpenProtectedData} 
+      <ViolatedClientDialog 
+        isOpen={this.state.isOpenViolatedData} 
         onClickItem={this.handleClickLink}
         onClose={this.handleClickCloseDialog} 
       />

@@ -13,7 +13,7 @@ import * as SecurityLogActions from 'modules/SecurityLogModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
-import ClientListForProtected from 'views/Client/ClientListForProtected';
+import ClientListForViolated from 'views/Client/ClientListForViolated';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -32,7 +32,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class ProtectedClientDialog extends Component {
+class ViolatedClientDialog extends Component {
 
     constructor(props) {
         super(props);
@@ -69,7 +69,7 @@ class ProtectedClientDialog extends Component {
                     <DialogContent>
                         <Card className={classes.deptUserCard}>
                             <CardContent style={{paddingTop:0,paddingBottom:0}}>
-                                <ClientListForProtected onClickItem={this.handleClickLink} />
+                                <ClientListForViolated onClickItem={this.handleClickLink} />
                             </CardContent>
                         </Card>
                     </DialogContent>
@@ -95,4 +95,4 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ProtectedClientDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ViolatedClientDialog));

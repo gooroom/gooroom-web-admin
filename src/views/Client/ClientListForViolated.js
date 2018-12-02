@@ -37,7 +37,7 @@ import Search from "@material-ui/icons/Search";
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
-import ProtectedIcon from '@material-ui/icons/Error';
+import ViolatedIcon from '@material-ui/icons/Error';
 import ServiceStoppedIcon from '@material-ui/icons/PauseCircleOutline';
 import ServiceRunningIcon from '@material-ui/icons/PlayCircleFilled';
 
@@ -50,7 +50,7 @@ import { requestPostAPI } from 'components/GRUtils/GRRequester';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientListForProtected extends Component {
+class ClientListForViolated extends Component {
 
   constructor(props) {
     super(props);
@@ -89,7 +89,7 @@ class ClientListForProtected extends Component {
   ];
 
   handleGetClientList = (newListParam) => {
-    requestPostAPI('readProtectedClientList', {
+    requestPostAPI('readViolatedClientList', {
       keyword: newListParam.get('keyword'),
       page: newListParam.get('page'),
       start: newListParam.get('page') * newListParam.get('rowsPerPage'),
@@ -198,7 +198,7 @@ class ClientListForProtected extends Component {
         confirmMsg: '침해가 발생한 단말(' + clientId + ')을 조치 하시겠습니까?',
         handleConfirmResult: ((confirmValue, confirmObject) => {
           if(confirmValue) {
-            requestPostAPI('createResetProtectedClient', confirmObject).then(
+            requestPostAPI('createResetViolatedClient', confirmObject).then(
               (response) => {
                 if(response && response.data && response.data.status && response.data.status.result == 'success') {
                   this.props.GRAlertActions.showAlert({
@@ -280,18 +280,18 @@ class ClientListForProtected extends Component {
           </TableHead>
           <TableBody>
             {listObj.get('listData').map(n => {
-              const protectIcon = (n.get('isBootProtector') == 1) ? <ProtectedIcon /> : '';
-              const serviceIcon = (n.get('isBootProtector') == 1) ? <ProtectedIcon /> : '';
+              const protectIcon = (n.get('isBootProtector') == 1) ? <ViolatedIcon /> : '';
+              const serviceIcon = (n.get('isBootProtector') == 1) ? <ViolatedIcon /> : '';
               
               return (
                 <TableRow hover key={n.get('clientId')} >
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
 
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isBootProtector') == 1) ? <ProtectedIcon color="primary" /> : ''}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isExeProtector') == 1) ? <ProtectedIcon color="primary" /> : ''}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isOsProtector') == 1) ? <ProtectedIcon color="primary" /> : ''}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isMediaProtector') == 1) ? <ProtectedIcon color="primary" onClick={() => this.handleClickItem('MEDIA', n.get('clientId'))} /> : ''}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isBootProtector') == 1) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('BOOT', n.get('clientId'))} /> : ''}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isExeProtector') == 1) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('EXE', n.get('clientId'))} /> : ''}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isOsProtector') == 1) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('OS', n.get('clientId'))} /> : ''}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isMediaProtector') == 1) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('MEDIA', n.get('clientId'))} /> : ''}</TableCell>
 
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isStopBootProtector') == 1) ? <ServiceRunningIcon color="primary" /> : <ServiceStoppedIcon color="primary" />}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isStopExeProtector') == 1) ? <ServiceRunningIcon color="primary" /> : <ServiceStoppedIcon color="primary" />}</TableCell>
@@ -352,5 +352,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientListForProtected));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientListForViolated));
 

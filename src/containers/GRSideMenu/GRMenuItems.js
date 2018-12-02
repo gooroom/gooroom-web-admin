@@ -13,7 +13,7 @@ export default {
       children: [
         {
           name: '일별침해통계',
-          url: '/statistic/dailyprotected/GRM0931/일별침해통계',
+          url: '/statistic/dailyviolated/GRM0931/일별침해통계',
           icon: 'icon-wrench',
           level: 2,
         }, {
