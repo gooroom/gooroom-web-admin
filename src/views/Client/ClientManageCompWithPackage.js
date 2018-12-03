@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import * as ClientManageActions from 'modules/ClientManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getClientStatusIcon } from 'components/GRUtils/GRCommonUtils';
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
@@ -43,8 +43,9 @@ class ClientManageCompWithPackage extends Component {
 
   columnHeaders = [
     { id: "checkbox", isOrder: false, isCheckbox: true},
-    { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
+    { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
     { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
+    { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
     { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
     { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' },
     { id: 'UPDATE_CNT', isOrder: true, numeric: false, disablePadding: true, label: '업데이트수' }
@@ -78,7 +79,7 @@ class ClientManageCompWithPackage extends Component {
 
   handleClickAllCheck = (event, checked) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    const newCheckedIds = getDataPropertyInCompByParam(ClientManageProps, compId, 'clientId', checked);
+    const newCheckedIds = getDataPropertyInCompByParam(ClientManageProps, compId, 'clientId', checked, true);
 
     ClientManageActions.changeCompVariable({
       name: 'checkedIds',
@@ -223,10 +224,13 @@ class ClientManageCompWithPackage extends Component {
                   key={n.get('clientId')}
                 >
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                    <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('clientId'))}/>
+                    {(n.get('viewStatus') != 'RVK') &&
+                      <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('clientId'))}/>
+                    }
                   </TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAnd}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientGroupName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('totalCnt')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('updateCnt')}</TableCell>

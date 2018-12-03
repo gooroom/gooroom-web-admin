@@ -59,13 +59,11 @@ class ClientManageSpec extends Component {
             title={(viewItem) ? viewItem.get('clientName') : ''}
             subheader={viewItem.get('clientId') + ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}
           />
-          <CardContent>
+          <CardContent style={{paddingTop:0}}>
             <Typography component="pre">
-              {viewItem.get('clientStatus')}
+              {(viewItem.get('clientStatus') == 'STAT021') ? '폐기된 단말입니다.' : ''}
             </Typography>
-
             <Divider />
-
             <Grid container spacing={8}>
               <Grid item xs={12} sm={6} >
                 <Table>

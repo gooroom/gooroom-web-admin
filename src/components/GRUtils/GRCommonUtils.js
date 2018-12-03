@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import NOR from "@material-ui/icons/PlayCircleFilledWhiteTwoTone";
 import OFF from "@material-ui/icons/PauseCircleFilledTwoTone";
-import SSS from "@material-ui/icons/Warning";
+import VLT from "@material-ui/icons/Warning";
+import RVK from "@material-ui/icons/DeleteForever";
 
 export const getMergedObject = (source, param) => {
     let tempSource = source;
@@ -103,8 +104,10 @@ export const getClientStatusIcon = (status) => {
         return <OFF style={{color:'gray'}} />;
     } else if(status == 'NOR') {
         return <NOR style={{color:'green'}} />;
-    } else if(status == 'SSS') {
-        return <SSS style={{color:'red'}} />;
+    } else if(status == 'VLT') {
+        return <VLT style={{color:'red'}} />;
+    } else if(status == 'RVK') {
+        return <RVK style={{color:'gray'}} />;
     }
 };
 

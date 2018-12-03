@@ -20,6 +20,7 @@ const GET_CLIENTPACKAGE_LISTPAGED_SUCCESS = 'clientPackage/GET_CLIENTPACKAGE_LIS
 const UPDATE_PACKAGETOCLIENT_SUCCESS = 'clientPackage/UPDATE_PACKAGETOCLIENT_SUCCESS';
 const DELETE_PACKAGETOCLIENT_SUCCESS = 'clientPackage/DELETE_PACKAGETOCLIENT_SUCCESS';
 const UPDATE_PACKAGELIST_SUCCESS = 'clientPackage/UPDATE_PACKAGELIST_SUCCESS';
+const UPDATE_PACKAGEALLLIST_SUCCESS = 'clientPackage/UPDATE_PACKAGEALLLIST_SUCCESS';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chPackageId', 'asc', {dialogTabValue: 0});
@@ -147,10 +148,7 @@ export const readClientPackageListPaged = (module, compId, extParam) => dispatch
 
 export const updatePackageInClient = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updatePackageInClient', {
-        clientId: param.clientIds,
-        packageIds: param.packageIds
-    }).then(
+    return requestPostAPI('updatePackageInClient', param).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
@@ -191,9 +189,30 @@ export const deletePackageInClient = (param) => dispatch => {
     });
 };
 
-export const updatePackageList = (param) => dispatch => {
+
+// 선택한 단말 또는 그룹에 전체 패키지 업데이트
+export const createPackageAllUpgrade = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createPackageAllUpgrade', {}).then(
+    return requestPostAPI('createPackageAllUpgrade', param).then(
+        (response) => {
+            dispatch({
+                type: UPDATE_PACKAGEALLLIST_SUCCESS,
+                compId: param.compId
+            });
+            return {response: response};
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+
+export const _____updatePackageList = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('____createPackageAllUpgrade', {}).then(
         (response) => {
             dispatch({
                 type: UPDATE_PACKAGELIST_SUCCESS,
@@ -253,6 +272,11 @@ export default handleActions({
         });
     },
     [UPDATE_PACKAGELIST_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false, error: false
+        });
+    },
+    [UPDATE_PACKAGEALLLIST_SUCCESS]: (state, action) => {
         return state.merge({
             pending: false, error: false
         });

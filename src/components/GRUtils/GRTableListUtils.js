@@ -68,10 +68,17 @@ export const setCheckedIdsInComp = (propObj, compId, id) => {
     }
 }
 
-export const getDataPropertyInCompByParam = (propObj, compId, idName, checked) => {
+export const getDataPropertyInCompByParam = (propObj, compId, idName, checked, exceptRevoke=false) => {
     if(checked) {
         const listData = propObj.getIn(['viewItems', compId, 'listData']);
-        return (listData) ? listData.map((e) => (e.get(idName))) : List([]);
+        if(exceptRevoke) {
+            let temp = listData.filter((data) => {
+                return data.get('clientStatus') !== "STAT021";
+            });
+            return (temp) ? temp.map((e) => (e.get(idName))) : List([]);
+        } else {
+            return (listData) ? listData.map((e) => (e.get(idName))) : List([]);
+        }
     } else {
         return List([]);
     }

@@ -342,7 +342,6 @@ class ClientPackageComp extends Component {
           />
         }
         <ClientPackageDialog compId={compId} />
-        <GRConfirm />
       </div>
     );
   }

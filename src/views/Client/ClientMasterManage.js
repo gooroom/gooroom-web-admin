@@ -380,7 +380,6 @@ class ClientMasterManage extends Component {
                 selectorType='multiple'
                 hasEdit={true}
                 hasShowRule={true}
-                onCheckAll={this.handleClientGroupSelectAll}
                 onCheck={this.handleClientGroupCheck}
                 onSelect={this.handleClientGroupSelect}
               />
