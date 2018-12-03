@@ -63,8 +63,9 @@ class ClientListForDashboard extends Component {
     { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: '단말그룹'},
     { id: 'temp1', isOrder: false, numeric: false,disablePadding: true,label: '접속자'},
     { id: 'temp2', isOrder: false, numeric: false,disablePadding: true,label: '최종접속시간'},
+    { id: 'CNT_VIOLATED', isOrder: true, numeric: false, disablePadding: true, label: '침해수' },
     { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: '최종접속IP' },
-    { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: '용량' },
+    { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: '사용률', tooltip: '홈폴더 사용률'},
     { id: 'temp3', isOrder: false, numeric: false,disablePadding: true,label: '패키지업데이트'}
   ];
 
@@ -154,6 +155,10 @@ class ClientListForDashboard extends Component {
     this.handleGetClientList(newListParam);
   };
 
+  handleClickViolatedItem = (type, clientId) => {
+    this.props.onClickViolatedItem(type, clientId);
+  }
+  
   render() {
     const { classes } = this.props;
     const listObj = this.state.stateData;
@@ -195,11 +200,21 @@ class ClientListForDashboard extends Component {
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('loginId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{formatDateToSimple(n.get('lastLoginTime'), 'YY-MM-DD HH:mm')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell} >
-                  <Tooltip title={storageInfo}>
-                    <Typography>{storageRate}</Typography>
-                  </Tooltip>
+                  {(n.get('isProtector') == '1') && 
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} 
+                    style={{color:'red',fontWeight:'bold',textDecoration:'underline'}}
+                    onClick={() => this.handleClickViolatedItem('ALL', n.get('clientId'))}>
+                    {Number(n.get('countBootProtector')) + Number(n.get('countExeProtector')) + Number(n.get('countOsProtector')) + Number(n.get('countMediaProtector'))}
+                  </TableCell>
+                  }
+                  {(n.get('isProtector') == '0') && 
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >0</TableCell>
+                  }
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('clientIp')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndRightCell} >
+                    <Tooltip title={storageInfo}>
+                      <Typography>{storageRate}</Typography>
+                    </Tooltip>
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('updateCnt')}</TableCell>
                 </TableRow>

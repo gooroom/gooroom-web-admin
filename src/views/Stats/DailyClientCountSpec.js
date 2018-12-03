@@ -8,8 +8,7 @@ import { connect } from 'react-redux';
 import * as DailyClientCountActions from 'modules/DailyClientCountModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { getClientStatusIcon } from 'components/GRUtils/GRCommonUtils';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
@@ -136,7 +135,7 @@ class DailyClientCountSpec extends Component {
                       <TableCell className={classes.grSmallAndClick}>{n.get('clientId')}</TableCell>
                       <TableCell className={classes.grSmallAndClick}>{n.get('clientName')}</TableCell>
                       <TableCell className={classes.grSmallAndClick}>{n.get('clientGroupName')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientStatus')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
                     </TableRow>
                   );
                 })}

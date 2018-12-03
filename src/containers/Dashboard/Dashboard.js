@@ -3,7 +3,10 @@ import { Redirect } from 'react-router';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
 import * as DashboardActions from 'modules/DashboardModule';
+import * as AdminActions from 'modules/AdminModule';
+import * as SecurityLogActions from 'modules/SecurityLogModule';
 
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -82,6 +85,14 @@ class Dashboard extends Component {
         });
     }
 
+    handleClickViolatedLink = (type, clientId) => {
+        const { AdminActions, SecurityLogActions, SecurityLogProps } = this.props;
+        if(SecurityLogProps.getIn(['viewItems', 'GRM0935'])) {
+            SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, 'GRM0935', {logItem:type,keyword:clientId,page:0});
+        }
+        AdminActions.redirectPage({address:'/log/secretlog/GRM0935/보안로그?logItem=' + type + '&keyword=' + clientId});
+    }
+
     render() {
         if (this.state.redirect) {
             if(this.state.linkType == 'package') {
@@ -139,7 +150,7 @@ class Dashboard extends Component {
 
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
-                    <ClientListForDashboard />
+                    <ClientListForDashboard onClickViolatedItem={this.handleClickViolatedLink} />
                 </Paper>
               </Grid>
 
@@ -165,11 +176,14 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => ({
     DashboardProps: state.DashboardModule,
-    AdminProps: state.AdminModule
+    AdminProps: state.AdminModule,
+    SecurityLogProps: state.SecurityLogModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    DashboardActions: bindActionCreators(DashboardActions, dispatch)
+    DashboardActions: bindActionCreators(DashboardActions, dispatch),
+    AdminActions: bindActionCreators(AdminActions, dispatch),
+    SecurityLogActions: bindActionCreators(SecurityLogActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(Dashboard));

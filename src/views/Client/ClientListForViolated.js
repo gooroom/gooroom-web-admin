@@ -280,18 +280,15 @@ class ClientListForViolated extends Component {
           </TableHead>
           <TableBody>
             {listObj.get('listData').map(n => {
-              const protectIcon = (n.get('isBootProtector') == 1) ? <ViolatedIcon /> : '';
-              const serviceIcon = (n.get('isBootProtector') == 1) ? <ViolatedIcon /> : '';
-              
               return (
                 <TableRow hover key={n.get('clientId')} >
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
 
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isBootProtector') == 1) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('BOOT', n.get('clientId'))} /> : ''}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isExeProtector') == 1) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('EXE', n.get('clientId'))} /> : ''}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isOsProtector') == 1) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('OS', n.get('clientId'))} /> : ''}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isMediaProtector') == 1) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('MEDIA', n.get('clientId'))} /> : ''}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('countBootProtector') > 0) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('BOOT', n.get('clientId'))} /> : ''}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('countExeProtector') > 0) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('EXE', n.get('clientId'))} /> : ''}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('countOsProtector') > 0) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('OS', n.get('clientId'))} /> : ''}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('countMediaProtector') > 0) ? <ViolatedIcon color="primary" onClick={() => this.handleClickItem('MEDIA', n.get('clientId'))} /> : ''}</TableCell>
 
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isStopBootProtector') == 1) ? <ServiceRunningIcon color="primary" /> : <ServiceStoppedIcon color="primary" />}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{(n.get('isStopExeProtector') == 1) ? <ServiceRunningIcon color="primary" /> : <ServiceStoppedIcon color="primary" />}</TableCell>

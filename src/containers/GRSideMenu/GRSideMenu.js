@@ -145,7 +145,7 @@ class GRSideMenu extends React.Component {
           <AppBar position="static" style={{height:grLayout.sideMenuHeaderHeight, backgroundColor:"gray"}}>
             <Toolbar style={{minHeight:"100%"}}>
               <Typography variant="body2" color="inherit" style={{width:'100%',textAlign:'center'}} >
-              on.271 / job.12 / df.17
+              {/** on.271 / job.12 / df.17 */}
               </Typography>
             </Toolbar>
           </AppBar>
@@ -156,7 +156,7 @@ class GRSideMenu extends React.Component {
         <AppBar position="static" style={{backgroundColor:"gray"}}>
           <Toolbar>
             <Typography variant="overline" gutterBottom style={{width:'100%',textAlign:'center'}} >
-            SIDE FOOTER
+              {/** SIDE FOOTER */}            
             </Typography>
           </Toolbar>
         </AppBar>

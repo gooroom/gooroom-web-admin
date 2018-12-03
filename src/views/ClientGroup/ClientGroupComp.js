@@ -24,7 +24,6 @@ import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, get
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
-import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientGroupDialog from './ClientGroupDialog';
 
 import Grid from '@material-ui/core/Grid';
@@ -276,7 +275,6 @@ class ClientGroupComp extends Component {
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
         }
-        <GRConfirm />
       </div>
     );
   }
