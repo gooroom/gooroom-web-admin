@@ -46,7 +46,7 @@ class ViolatedClientDialog extends Component {
     }
 
     handleClickLink = (type, clientId) => {
-        const { AdminProps, AdminActions, SecurityLogActions, SecurityLogProps } = this.props;
+        const { AdminActions, SecurityLogActions, SecurityLogProps } = this.props;
         if(SecurityLogProps.getIn(['viewItems', 'GRM0935'])) {
             SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, 'GRM0935', {logItem:type,keyword:clientId,page:0});
         }

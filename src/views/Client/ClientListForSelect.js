@@ -7,6 +7,8 @@ import classNames from "classnames";
 import ClientStatusSelect from "views/Options/ClientStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
+import { getClientStatusIcon } from 'components/GRUtils/GRCommonUtils';
+
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
@@ -252,7 +254,7 @@ class ClientListForSelect extends Component {
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell} >{n.get('clientStatus')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
                 </TableRow>
               );
             })}

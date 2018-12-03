@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from "classnames";
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,6 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import Checkbox from "@material-ui/core/Checkbox";
+import Tooltip from "@material-ui/core/Tooltip";
 
 import { arrayContainsArray } from 'components/GRUtils/GRCommonUtils';
 
@@ -17,6 +19,14 @@ class GRCommonTableHead extends Component {
   createSortHandler = (columnId, orderDir) => event => {
     this.props.onRequestSort(event, columnId, orderDir);
   };
+
+  decorateTooltip(value, tooltip) {
+    if(tooltip && tooltip != '') {
+      return <Tooltip title={tooltip}><span>{value}</span></Tooltip>;
+    } else {
+      return value;
+    }
+  }
 
   render() {
     const { classes, columnData, keyId } = this.props;
@@ -44,11 +54,13 @@ class GRCommonTableHead extends Component {
                   className={classes.grSmallAndHeaderCell} 
                   key={column.id}
                 >
+                {this.decorateTooltip(
                   <Checkbox color="primary"
                     indeterminate={checkSelection === 50}
                     checked={checkSelection === 100}
                     onChange={onClickAllCheck}
-                  />
+                  />, column.tooltip
+                )}
                 </TableCell>
               );
             } else {
@@ -63,9 +75,9 @@ class GRCommonTableHead extends Component {
                     return <TableSortLabel active={orderColumn === column.id}
                               direction={orderDir}
                               onClick={this.createSortHandler(column.id, orderDir)}
-                            >{column.label}</TableSortLabel>
+                            >{this.decorateTooltip(column.label, column.tooltip)}</TableSortLabel>
                   } else {
-                    return <p>{column.label}</p>
+                    return <p>{this.decorateTooltip(column.label, column.tooltip)}</p>
                   }
                 })()}
                 </TableCell>
