@@ -269,6 +269,7 @@ class SecurityRuleDialog extends Component {
                 <GRConfirm />
             </Dialog>
             }
+            <GRAlert />
             </div>
         );
     }

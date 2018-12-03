@@ -16,8 +16,6 @@ import { getMergedObject, getJobStatusToString } from 'components/GRUtils/GRComm
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
-import GRConfirm from 'components/GRComponents/GRConfirm';
-
 import Grid from '@material-ui/core/Grid';
 
 import Table from '@material-ui/core/Table';
@@ -221,7 +219,6 @@ class JobTargetComp extends Component {
             onChangeRowsPerPage={this.handleChangeRowsPerPage}
           />
         }
-        <GRConfirm />
       </div>
     );
   }
