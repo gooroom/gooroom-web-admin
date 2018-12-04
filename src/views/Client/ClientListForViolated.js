@@ -203,12 +203,12 @@ class ClientListForViolated extends Component {
                 if(response && response.data && response.data.status && response.data.status.result == 'success') {
                   this.props.GRAlertActions.showAlert({
                     alertTitle: '조치작업',
-                    alertMsg: '침해단말 조치작업이 실행 되었습니다.'
+                    alertMsg: '침해단말 조치작업이 생성 되었습니다.'
                   });
                 } else {
                   this.props.GRAlertActions.showAlert({
                     alertTitle: '시스템오류',
-                    alertMsg: '침해단말 조치작업이 수행되지 못하였습니다.'
+                    alertMsg: '침해단말 조치작업이 생성되지 못하였습니다.'
                   });
                 }
               }
