@@ -152,21 +152,21 @@ class UserSpec extends Component {
           <Divider />
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
-              <Grid item xs={12} md={12} lg={6} xl={4} >
+              <Grid item xs={12} md={12} lg={12} xl={6} >
                 <BrowserRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForBrowserRule} inherit={false}
                 />
               </Grid>
-              <Grid item xs={12} md={12} lg={6} xl={4} >
+              <Grid item xs={12} md={12} lg={12} xl={6} >
                 <MediaRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForMediaRule}
                 />
               </Grid>
-              <Grid item xs={12} md={12} lg={6} xl={4} >
+              <Grid item xs={12} md={12} lg={12} xl={6} >
                 <SecurityRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('ruleGrade') : null}

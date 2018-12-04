@@ -1,22 +1,14 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-
 import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
-import ClientUpdateServerDialog from './ClientUpdateServerDialog';
 
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import Grid from '@material-ui/core/Grid';
 
 import EditIcon from '@material-ui/icons/Edit';
 import CopyIcon from '@material-ui/icons/FileCopy';
@@ -68,35 +60,23 @@ class ClientUpdateServerSpec extends Component {
               }
             />
             }
-            <CardContent>
-            { !hasAction &&
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 이름(아이디)</TableCell>
-                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('objNm')} ({viewItem.get('objId')})</TableCell>
-                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 설명</TableCell>
-                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('comment')}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            }
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th" scope="row" >{bull} 주 OS 정보</TableCell>
-                    <TableCell><pre>{viewItem.get('mainos')}</pre></TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row" >{bull} 기반 OS 정보</TableCell>
-                    <TableCell><pre>{viewItem.get('extos')}</pre></TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row" >{bull} gooroom.pref</TableCell>
-                    <TableCell><pre>{viewItem.get('priorities')}</pre></TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+            <CardContent style={{padding: 10}}>
+              { !hasAction &&
+              <Grid container spacing={0}>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 이름(아이디)</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('objNm')} ({viewItem.get('objId')})</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 설명</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('comment')}</Grid>
+              </Grid>
+              }
+              <Grid container spacing={0}>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 주 OS 정보</Grid>
+                <Grid item xs={9} className={classes.specContent} style={{fontSize:'12px',textAlign:'left'}}><pre>{viewItem.get('mainos')}</pre></Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 기반 OS 정보</Grid>
+                <Grid item xs={9} className={classes.specContent} style={{fontSize:'12px',textAlign:'left',overflow:'auto'}}><pre>{viewItem.get('extos')}</pre></Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} gooroom.pref</Grid>
+                <Grid item xs={9} className={classes.specContent} style={{fontSize:'12px',textAlign:'left'}}><pre>{viewItem.get('priorities')}</pre></Grid>
+              </Grid>
             </CardContent>
           </Card>
         }
