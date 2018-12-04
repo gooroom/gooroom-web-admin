@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 import * as ClientPackageActions from 'modules/ClientPackageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
@@ -17,6 +18,7 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientPackageDialog from './ClientPackageDialog';
+import GRAlert from 'components/GRComponents/GRAlert';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -177,13 +179,16 @@ class ClientPackageComp extends Component {
               clientIds: this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'listParam', 'clientId']),
               packageIds: confirmObject.checkedPackageIds.join(',')
             }).then(() => {
-              // ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-              //   page:0
-              // }, {isResetSelect:true});
               if(response && response.status && response.status.result === 'success') {
-                console.log('SUCCESS ...........');
+                this.props.GRAlertActions.showAlert({
+                  alertTitle: '패키지 업데이트',
+                  alertMsg: '패키지 업데이트 작업이 생성되었습니다.'
+                });
               } else {
-                console.log('FAIL ...........');
+                this.props.GRAlertActions.showAlert({
+                  alertTitle: '시스템오류',
+                  alertMsg: '패키지 업데이트 작업이 생성되지 못하였습니다.'
+                });
               }
             });
           }}),
@@ -204,13 +209,16 @@ class ClientPackageComp extends Component {
               clientIds: this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'listParam', 'clientId']),
               packageIds: confirmObject.checkedPackageIds.join(',')
             }).then(() => {
-              // ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-              //   page:0
-              // }, {isResetSelect:true});
               if(response && response.status && response.status.result === 'success') {
-                console.log('SUCCESS ...........');
+                this.props.GRAlertActions.showAlert({
+                  alertTitle: '패키지 삭제',
+                  alertMsg: '패키지 삭제 작업이 생성되었습니다.'
+                });
               } else {
-                  console.log('FAIL ...........');
+                this.props.GRAlertActions.showAlert({
+                  alertTitle: '시스템오류',
+                  alertMsg: '패키지 삭제 작업이 생성되지 못하였습니다.'
+                });
               }              
             });
           }}),
@@ -342,6 +350,7 @@ class ClientPackageComp extends Component {
           />
         }
         <ClientPackageDialog compId={compId} />
+        <GRAlert />
       </div>
     );
   }
@@ -355,7 +364,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientPackageActions: bindActionCreators(ClientPackageActions, dispatch),
-  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+  GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageComp));

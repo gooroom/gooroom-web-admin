@@ -200,40 +200,30 @@ class ClientPackageManage extends Component {
   handleClientPackageInstall = (selectedPackage) => {
     const { ClientGroupProps, ClientManageProps, GRConfirmActions } = this.props;
 
-    const checkedGroupIds = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-    const checkedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-    
-    GRConfirmActions.showConfirm({
-        confirmTitle: '선택한 패키지 설치',
-        confirmMsg: '선택한 패키지를 설치하시겠습니까?',
-        handleConfirmResult: (confirmValue, paramObject) => {
-          if(confirmValue) {
-            this.props.ClientPackageActions.updatePackageInClient({
-              groupId: paramObject.checkedGroupIds.join(','),
-              clientId: paramObject.checkedClientIds.join(','),
-              packageIds: paramObject.selectedPackageIds.join(',')
-            }).then((res) => {
-              // close dialog
-              this.setState({ isOpenClientPackageSelect: false });
-            });
+    if(selectedPackage && selectedPackage.size > 0) {
+      const checkedGroupIds = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+      const checkedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+      
+      GRConfirmActions.showConfirm({
+          confirmTitle: '선택한 패키지 설치',
+          confirmMsg: '선택한 패키지를 설치하시겠습니까?',
+          handleConfirmResult: (confirmValue, paramObject) => {
+            if(confirmValue) {
+              this.props.ClientPackageActions.updatePackageInClient({
+                groupId: paramObject.checkedGroupIds,
+                clientId: paramObject.checkedClientIds,
+                packageIds: paramObject.selectedPackageIds
+              }).then((res) => {
+                // close dialog
+                this.setState({ isOpenClientPackageSelect: false });
+              });
+            }
+          },
+          confirmObject: {
+            checkedGroupIds: (checkedGroupIds) ? checkedGroupIds.toJS().join(',') : '',
+            checkedClientIds: (checkedClientIds) ? checkedClientIds.toJS().join(',') : '',
+            selectedPackageIds: (selectedPackage) ? selectedPackage.toJS().join(',') : ''
           }
-        },
-        confirmObject: {
-          checkedGroupIds: checkedGroupIds.toJS(),
-          checkedClientIds: checkedClientIds.toJS(),
-          selectedPackageIds: selectedPackage.toJS()
-        }
-    });
-  }
-  handleClientPackageInstallConfirmResult = (confirmValue, paramObject) => {
-    if(confirmValue) {
-      const { ClientPackageProps, ClientPackageActions } = this.props;
-      ClientPackageActions.updatePackageInClient({
-        clientIds: paramObject.checkedClientIds.join(','),
-        packageIds: paramObject.selectedPackageIds.join(',')
-      }).then((res) => {
-        // close dialog
-        this.setState({ isOpenClientPackageSelect: false });
       });
     }
   }
@@ -334,8 +324,8 @@ class ClientPackageManage extends Component {
 
           ClientPackageActions.createPackageAllUpgrade({
             compId: compId,
-            clientId: checkedClientIds.toJS().join(','),
-            groupId: checkedGroupIds.toJS().join(',')
+            clientId: (checkedClientIds) ? checkedClientIds.toJS().join(',') : '',
+            groupId: (checkedGroupIds) ? checkedGroupIds.toJS().join(',') : ''
           }).then(() => {
             ClientManageActions.readClientListPaged(ClientManageProps, compId, { page:0 });
           });
