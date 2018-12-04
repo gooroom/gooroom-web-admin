@@ -7,6 +7,7 @@ import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -25,7 +26,6 @@ class ClientConfSettingSpec extends Component {
   render() {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const cartBull = <span className={classes.cartBullet}>#</span>;
     const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
 
     let viewItem = null;
@@ -61,150 +61,107 @@ class ClientConfSettingSpec extends Component {
             }
           />
           }
-          <CardContent>
-          { !hasAction &&
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 이름(아이디)</TableCell>
-                  <TableCell style={{width:'25%'}} numeric>{viewItem.get('objNm')} ({viewItem.get('objId')})</TableCell>
-                  <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 설명</TableCell>
-                  <TableCell style={{width:'25%'}} numeric>{viewItem.get('comment')}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          }
-            <Table>
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 운영체제 보호</TableCell>
-                  <TableCell numeric>{(viewItem.get('useHypervisor')) ? '구동' : '중단'}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 홈폴더 초기화</TableCell>
-                  <TableCell numeric>{(viewItem.get('useHomeReset')) ? '실행' : '중단'}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 접속 가능 아이피</TableCell>
-                  <TableCell numeric>{viewItem.get('whiteIp').map(function(prop, index) {
-                      return <span key={index}>{prop}<br/></span>;
-                  })}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 전체 아이피 허용</TableCell>
-                  <TableCell numeric>{(viewItem.get('whiteIpAll')) ? '허용함' : '허용안함'}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+          <CardContent style={{padding: 10}}>
+            { !hasAction &&
+            <Grid container spacing={0}>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 이름(아이디)</Grid>
+              <Grid item xs={3} className={classes.specContent}>{viewItem.get('objNm')} ({viewItem.get('objId')})</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 설명</Grid>
+              <Grid item xs={3} className={classes.specContent}>{viewItem.get('comment')}</Grid>
+            </Grid>
+            }
+            <Grid container spacing={0}>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 운영체제 보호</Grid>
+              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHypervisor')) ? '구동' : '중단'}</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 홈폴더 초기화</Grid>
+              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHomeReset')) ? '실행' : '중단'}</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 접속 가능 아이피</Grid>
+              <Grid item xs={3} className={classes.specContent}>
+              {viewItem.get('whiteIp').map(function(prop, index) {
+                return <span key={index}>{prop}<br/></span>;
+              })}
+              </Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 전체 아이피 허용</Grid>
+              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('whiteIpAll')) ? '허용함' : '허용안함'}</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 단말로그 전송설정 ]</Grid>
+              <Grid item xs={12} className={classes.specTitle}>{bull} 전송 로그레벨</Grid>
+              <Grid item xs={12} className={classes.specContent}>
+                <Table>
+                  <TableBody>
+                    <TableRow >
+                      <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
+                    </TableRow>
+                    <TableRow >
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_boot')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_os')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_exe')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_media')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_agent')}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 삭제기능 사용여부</Grid>
+              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('isDeleteLog')) ? '삭제함' : '삭제안함'}</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 서버전송후 로그보관일수</Grid>
+              <Grid item xs={3} className={classes.specContent}>{viewItem.get('logRemainDate')}</Grid>
 
-            <Table>
-              <TableBody>
-                <TableRow>
-                    <TableCell component="th" colSpan={5} scope="row">{cartBull} 단말 로그 전송 설정</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <div style={{marginLeft:16}}>
-              <Table>
-                <TableBody>
-                  <TableRow>
-                      <TableCell component="th" colSpan={5} scope="row">{bull} 서버 전송 로그 레벨(수준)</TableCell>
-                  </TableRow>
-                  <TableRow >
-                    <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
-                    <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
-                  </TableRow>
-                  <TableRow >
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_boot')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_os')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_exe')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_media')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_agent')}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th" scope="row" >{bull} 삭제기능 사용여부</TableCell>
-                    <TableCell >{(viewItem.get('isDeleteLog')) ? '삭제함' : '삭제안함'}</TableCell>
-                    <TableCell component="th" scope="row" >{bull} 서버전송후 로그보관일수</TableCell>
-                    <TableCell >{(viewItem.get('isDeleteLog')) ? viewItem.get('logRemainDate') : <s>{viewItem.get('logRemainDate')}</s>}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
-            
-            <Table>
-              <TableBody>
-                <TableRow>
-                    <TableCell component="th" colSpan={5} scope="row">{cartBull} 단말 알림 및 단말 서버 경고 설정</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-
-            <div style={{marginLeft:16}}>
-              <Table>
-                <TableBody>
-                  <TableRow>
-                      <TableCell component="th" colSpan={5} scope="row">{bull} 단말 알림 로그 레벨(수준)</TableCell>
-                  </TableRow>
-                  <TableRow >
-                  <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
-                </TableRow>
-                  <TableRow >
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_boot')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_os')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_exe')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_media')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_agent')}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                      <TableCell component="th" colSpan={5} scope="row">{bull} 서버/단말 침해 표시 레벨(수준)</TableCell>
-                  </TableRow>
-                  <TableRow >
-                  <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
-                  <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
-                </TableRow>
-                  <TableRow >
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('show_boot')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('show_os')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('show_exe')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('show_media')}</TableCell>
-                    <TableCell style={{textAlign:'center'}}>{viewItem.get('show_agent')}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
-            
-            <Table>
-              <TableBody>
-                <TableRow>
-                    <TableCell component="th" colSpan={5} scope="row">{cartBull} 단말 로그 (JournalD Log) 설정</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <div style={{marginLeft:16}}>
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} 로그파일 최대크기(MB)</TableCell>
-                    <TableCell numeric>{viewItem.get('logMaxSize')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 보관할 로그파일 갯수</TableCell>
-                    <TableCell numeric>{viewItem.get('logMaxCount')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 최소 확보 디스크 공간(%)</TableCell>
-                    <TableCell numeric>{viewItem.get('systemKeepFree')}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
-
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 단말알림 및 서버경고 설정 ]</Grid>
+              <Grid item xs={12} className={classes.specTitle}>{bull} 알림 로그레벨</Grid>
+              <Grid item xs={12} className={classes.specContent}>
+                <Table>
+                  <TableBody>
+                    <TableRow >
+                      <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
+                    </TableRow>
+                    <TableRow >
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_boot')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_os')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_exe')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_media')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_agent')}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Grid>
+              <Grid item xs={12} className={classes.specTitle}>{bull} 서버/단말 침해 표시레벨</Grid>
+              <Grid item xs={12} className={classes.specContent}>
+                <Table>
+                  <TableBody>
+                    <TableRow >
+                      <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
+                      <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
+                    </TableRow>
+                    <TableRow >
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_boot')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_os')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_exe')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_media')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_agent')}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 단말 로그 (JournalD Log) 설정 ]</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 로그파일 최대크기(MB)</Grid>
+              <Grid item xs={3} className={classes.specContent}>{viewItem.get('logMaxSize')}</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 보관할 로그파일 갯수</Grid>
+              <Grid item xs={3} className={classes.specContent}>{viewItem.get('logMaxCount')}</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 최소 확보 디스크 공간(%)</Grid>
+              <Grid item xs={3} className={classes.specContent}>{viewItem.get('systemKeepFree')}</Grid>
+              <Grid item xs={6} className={classes.specContent}></Grid>
+            </Grid>
           </CardContent>
         </Card>
         }

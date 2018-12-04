@@ -64,7 +64,7 @@ class SoftwareFilterSpec extends Component {
             />
             }
             <CardContent>
-              <InputLabel>Red 색상의 소프트웨어는 실행을 금지합니다.</InputLabel>
+              <InputLabel className={classes.specTitle} style={{color:'black'}}>Red 색상의 소프트웨어는 실행을 금지합니다.</InputLabel>
               <Grid container spacing={8} alignItems="flex-start" direction="row" justify="flex-start" style={{marginTop:10}}>
               {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
                 const selected = (viewItem.getIn(['SWITEM', n.tag])) ? true : false;
@@ -73,13 +73,9 @@ class SoftwareFilterSpec extends Component {
                   <Grid item xs={12} sm={12} md={6} lg={4} xl={3} key={n.no}>
                     <Card>
                     <GRSoftwareCardHeader category={n.tag} />
-                      <CardContent style={{padding:'0 0 0 10'}}>
-                        <Typography variant="body1" style={swStyle}>
-                          {n.name}
-                        </Typography>
-                        <Typography variant="caption" color="textSecondary">
-                          {n.name_kr}
-                        </Typography>
+                      <CardContent style={{padding:6}}>
+                        <Typography variant="body1" style={swStyle}>{n.name}</Typography>
+                        <Typography variant="caption" color="textSecondary">{n.name_kr}</Typography>
                       </CardContent>
                     </Card>
                   </Grid>

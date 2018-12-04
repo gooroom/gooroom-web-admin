@@ -7,11 +7,7 @@ import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import Grid from '@material-ui/core/Grid';
 
 import EditIcon from '@material-ui/icons/Edit';
 import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
@@ -63,62 +59,47 @@ class MediaRuleSpec extends Component {
             />
             }
             <CardContent style={{padding: 10}}>
-              <Table>
-                <TableBody>
-                { !hasAction &&
-                  <TableRow>
-                    <TableCell style={{width:'25%'}}component="th" scope="row">{bull} 이름</TableCell>
-                    <TableCell style={{width:'25%'}}numeric>{viewItem.get('objNm')}</TableCell>
-                    <TableCell style={{width:'25%'}}component="th" scope="row">{bull} 설명</TableCell>
-                    <TableCell style={{width:'25%'}}numeric>{viewItem.get('comment')}</TableCell>
-                  </TableRow>
-                }
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} 무선랜</TableCell>
-                    <TableCell numeric>{viewItem.get('wireless')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} CD/DVD</TableCell>
-                    <TableCell numeric>{viewItem.get('cdAndDvd')}</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} 프린터</TableCell>
-                    <TableCell numeric>{viewItem.get('printer')}</TableCell>
-                    <TableCell numeric colSpan={2}></TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} 사운드(소리,마이크)</TableCell>
-                    <TableCell numeric>{viewItem.get('sound')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 카메라</TableCell>
-                    <TableCell numeric>{viewItem.get('camera')}</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} USB키보드</TableCell>
-                    <TableCell numeric>{viewItem.get('keyboard')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} USB마우스</TableCell>
-                    <TableCell numeric>{viewItem.get('mouse')}</TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} USB메모리</TableCell>
-                    <TableCell numeric>{viewItem.get('usbMemory')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 블루투스</TableCell>
-                    <TableCell numeric>{viewItem.get('bluetoothState')}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} USB시리얼정보</TableCell>
-                    <TableCell numeric>{viewItem.get('usbSerialNo').map(function(prop, index) {
-                      return <span key={index}>{prop}<br/></span>;
-                    })}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 맥주소(블루투스)</TableCell>
-                    <TableCell numeric>{viewItem.get('macAddress').map(function(prop, index) {
-                      return <span key={index}>{prop}<br/></span>;
-                    })}</TableCell>
-                  </TableRow>
-
-                </TableBody>
-              </Table>
+              { !hasAction &&
+              <Grid container spacing={0}>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 이름(아이디)</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('objNm')} ({viewItem.get('objId')})</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 설명</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('comment')}</Grid>
+              </Grid>
+              }
+              <Grid container spacing={0}>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 무선랜</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('wireless')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} CD/DVD</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('cdAndDvd')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 프린터</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('printer')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 사운드(소리,마이크)</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('sound')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 카메라</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('camera')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} USB키보드</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('keyboard')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} USB마우스</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('mouse')}</Grid>
+                <Grid item xs={6} className={classes.specContent}></Grid>
+                <Grid item xs={2} className={classes.specTitle}>{bull} USB메모리</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('usbMemory')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} USB시리얼정보</Grid>
+                <Grid item xs={5} className={classes.specContent}>
+                {viewItem.get('usbSerialNo').map(function(prop, index) {
+                  return <span key={index}>{prop}<br/></span>;
+                })}
+                </Grid>
+                <Grid item xs={2} className={classes.specTitle}>{bull} 블루투스</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('bluetoothState')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 블루투스 맥주소</Grid>
+                <Grid item xs={5} className={classes.specContent}>
+                {viewItem.get('macAddress').map(function(prop, index) {
+                  return <span key={index}>{prop}<br/></span>;
+                })}
+                </Grid>
+              </Grid>
             </CardContent>
           </Card>
         }

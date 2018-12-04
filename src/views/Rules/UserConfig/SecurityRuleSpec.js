@@ -1,21 +1,14 @@
 import React, { Component } from "react";
 import { Map, List } from 'immutable';
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-
-import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
-
-import * as SecurityRuleActions from 'modules/SecurityRuleModule';
-import SecurityRuleDialog from './SecurityRuleDialog';
+import { getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
 
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
-
-import FormLabel from '@material-ui/core/FormLabel';
 
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import Grid from '@material-ui/core/Grid';
 
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -73,41 +66,29 @@ class SecurityRuleSpec extends Component {
             />
           }
             <CardContent style={{padding: 10}}>
-              <Table>
-                <TableBody>
-                { !hasAction &&
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} 이름</TableCell>
-                    <TableCell numeric>{viewItem.get('objNm')}</TableCell>
-                    <TableCell component="th" scope="row">{bull} 설명</TableCell>
-                    <TableCell numeric>{viewItem.get('comment')}</TableCell>
-                  </TableRow>
-                }
-                  <TableRow>
-                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 화면보호기 설정시간(분)</TableCell>
-                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('screenTime')}</TableCell>
-                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 패스워드 변경주기(일)</TableCell>
-                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('passwordTime')}</TableCell>
-                  </TableRow>
+            { !hasAction &&
+              <Grid container spacing={0}>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 이름(아이디)</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('objNm')} ({viewItem.get('objId')})</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} 설명</Grid>
+                <Grid item xs={3} className={classes.specContent}>{viewItem.get('comment')}</Grid>
+              </Grid>
+              }
+              <Grid container spacing={0}>
+                <Grid item xs={4} className={classes.specTitle}>{bull} 화면보호기 설정시간(분)</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('screenTime')}</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} 패스워드 변경주기(일)</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('passwordTime')}</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} 패키지추가/삭제 차단기능</Grid>
+                <Grid item xs={2} className={classes.specContent}>{(viewItem.get('packageHandle')) ? '켜짐' : '꺼짐'}</Grid>
+                <Grid item xs={6} className={classes.specContent}></Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} 기본네트워크허용여부</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('globalNetwork')}</Grid>
+                <Grid item xs={6} className={classes.specContent}></Grid>
+                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 방화벽 설정 ]</Grid>
+                <Grid item xs={12} className={classes.specContent}>
 
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} 패키지추가/삭제 차단기능</TableCell>
-                    <TableCell numeric>{(viewItem.get('packageHandle')) ? '켜짐' : '꺼짐'}</TableCell>
-                    <TableCell component="th" scope="row"></TableCell>
-                    <TableCell numeric></TableCell>
-                  </TableRow>
-
-                  <TableRow>
-                    <TableCell component="th" scope="row">{bull} 기본네트워크허용여부</TableCell>
-                    <TableCell numeric>{viewItem.get('globalNetwork')}</TableCell>
-                    <TableCell component="th" scope="row"></TableCell>
-                    <TableCell numeric></TableCell>
-                  </TableRow>
-
-                </TableBody>
-              </Table>
-              <FormLabel style={{color:'rgba(0, 0, 0, 0.87)',fontSize:'0.8125rem',fontWeight:400}}>{bull} 방화벽 설정</FormLabel>
-              <Table>
+                <Table>
                 <TableHead>
                   <TableRow>
                     <TableCell component="th" scope="row">DIRECTION</TableCell>
@@ -136,7 +117,8 @@ class SecurityRuleSpec extends Component {
               </TableBody>
               }
               </Table>
-
+                </Grid>
+              </Grid>
             </CardContent>
           </Card>
         }

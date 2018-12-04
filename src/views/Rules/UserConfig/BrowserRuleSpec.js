@@ -7,11 +7,7 @@ import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import Grid from '@material-ui/core/Grid';
 
 import EditIcon from '@material-ui/icons/Edit';
 import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
@@ -63,84 +59,55 @@ class BrowserRuleSpec extends Component {
             />
           }
           <CardContent style={{padding: 10}}>
-            <Table>
-              <TableBody>
-              { !hasAction &&
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 이름(아이디)</TableCell>
-                  <TableCell numeric>{viewItem.get('objNm')} ({viewItem.get('objId')})</TableCell>
-                  <TableCell component="th" scope="row">{bull} 설명</TableCell>
-                  <TableCell numeric>{viewItem.get('comment')}</TableCell>
-                </TableRow>
-              }
-                <TableRow>
-                  <TableCell style={{width:'25%'}} component="th" scope="row">{bull} Web Socket 사용</TableCell>
-                  <TableCell style={{width:'25%'}} numeric>{viewItem.get('webSocket')}</TableCell>
-                  <TableCell style={{width:'25%'}} component="th" scope="row">{bull} Web Worker 사용</TableCell>
-                  <TableCell style={{width:'25%'}} numeric>{viewItem.get('webWorker')}</TableCell>
-                </TableRow>
-
-                <TableRow>
-                  <TableCell colSpan={4} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 신뢰사이트 설정 ]</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row" style={{width:240}}>{bull} 개발자도구(웹 인스펙터) 사용통제</TableCell>
-                  <TableCell numeric>{viewItem.get('devToolRule__trust')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 다운로드 통제</TableCell>
-                  <TableCell numeric>{viewItem.get('downloadRule__trust')}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 프린팅 통제</TableCell>
-                  <TableCell numeric>{viewItem.get('printRule__trust')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 페이지 소스보기 통제</TableCell>
-                  <TableCell numeric>{viewItem.get('viewSourceRule__trust')}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:17}}>
-                    <div style={{maxHeight:120,overflowY:'auto'}}>
-                      <pre>{viewItem.get('trustSetup')}</pre>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                
-                <TableRow>
-                  <TableCell colSpan={4} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 비신뢰사이트 설정 ]</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row" style={{width:240}}>{bull} 개발자도구(웹 인스펙터) 사용통제</TableCell>
-                  <TableCell numeric>{viewItem.get('devToolRule__untrust')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 다운로드 통제</TableCell>
-                  <TableCell numeric>{viewItem.get('downloadRule__untrust')}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 프린팅 통제</TableCell>
-                  <TableCell numeric>{viewItem.get('printRule__untrust')}</TableCell>
-                  <TableCell component="th" scope="row">{bull} 페이지 소스보기 통제</TableCell>
-                  <TableCell numeric>{viewItem.get('viewSourceRule__untrust')}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} 비신뢰사이트 설정정보</TableCell>
-                  <TableCell colSpan={3} style={{fontSize:17}}>
-                    <div style={{maxHeight:120,overflowY:'auto'}}>
-                      <pre>{viewItem.get('untrustSetup')}</pre>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell colSpan={4} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 접속가능 주소설정 ]</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">{bull} White List</TableCell>
-                  <TableCell colSpan={3} numeric>{viewItem.get('trustUrlList').map(function(prop, index) {
-                    return <span key={index}>{prop}<br/></span>;
-                  })}</TableCell>
-                </TableRow>
-              </TableBody>
-
-            </Table>
-            </CardContent>
-          </Card>
+            { !hasAction &&
+            <Grid container spacing={0}>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 이름(아이디)</Grid>
+              <Grid item xs={3} className={classes.specContent}>{viewItem.get('objNm')} ({viewItem.get('objId')})</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} 설명</Grid>
+              <Grid item xs={3} className={classes.specContent}>{viewItem.get('comment')}</Grid>
+            </Grid>
+            }
+            <Grid container spacing={0}>
+              <Grid item xs={3} className={classes.specTitle}>{bull} Web Socket 사용</Grid>
+              <Grid item xs={3} className={classes.specContent}>{viewItem.get('webSocket')}</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} Web Worker 사용</Grid>
+              <Grid item xs={3} className={classes.specContent}>{viewItem.get('webWorker')}</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 신뢰사이트 설정 ]</Grid>
+              <Grid item xs={6} className={classes.specTitle}>{bull} 개발자도구(웹인스펙터) 사용통제</Grid>
+              <Grid item xs={6} className={classes.specContent}>{viewItem.get('devToolRule__trust')}</Grid>
+              <Grid item xs={6} className={classes.specTitle}>{bull} 다운로드 통제</Grid>
+              <Grid item xs={6} className={classes.specContent}>{viewItem.get('downloadRule__trust')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} 프린팅 통제</Grid>
+              <Grid item xs={2} className={classes.specContent}>{viewItem.get('printRule__trust')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} 페이지 소스보기 통제</Grid>
+              <Grid item xs={2} className={classes.specContent}>{viewItem.get('viewSourceRule__trust')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} 신뢰사이트 설정정보</Grid>
+              <Grid item xs={8} className={classes.specContent}>
+                <div style={{maxHeight:120,overflowY:'auto'}}>{viewItem.get('trustSetup')}</div>
+              </Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 비신뢰사이트 설정 ]</Grid>
+              <Grid item xs={6} className={classes.specTitle}>{bull} 개발자도구(웹인스펙터) 사용통제</Grid>
+              <Grid item xs={6} className={classes.specContent}>{viewItem.get('devToolRule__untrust')}</Grid>
+              <Grid item xs={6} className={classes.specTitle}>{bull} 다운로드 통제</Grid>
+              <Grid item xs={6} className={classes.specContent}>{viewItem.get('downloadRule__untrust')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} 프린팅 통제</Grid>
+              <Grid item xs={2} className={classes.specContent}>{viewItem.get('printRule__untrust')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} 페이지 소스보기 통제</Grid>
+              <Grid item xs={2} className={classes.specContent}>{viewItem.get('viewSourceRule__untrust')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} 비신뢰사이트 설정정보</Grid>
+              <Grid item xs={8} className={classes.specContent}>
+                <div style={{maxHeight:120,overflowY:'auto'}}>{viewItem.get('untrustSetup')}</div>
+              </Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 접속가능 주소설정 ]</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} White List</Grid>
+              <Grid item xs={9} className={classes.specContent}>
+              {viewItem.get('trustUrlList').map(function(prop, index) {
+                return <span key={index}>{prop}<br/></span>;
+              })}
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
         }
       </React.Fragment>
     );

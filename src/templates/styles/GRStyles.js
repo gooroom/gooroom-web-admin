@@ -364,18 +364,41 @@ export const GRCommonStyle = theme => ({
         backgroundColor: theme.palette.secondary.light + " !important"
     },
 
-    root: {
-        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
-        borderRadius: 3,
-        border: 0,
-        color: 'white',
-        height: 48,
-        padding: '0px 30px',
-        boxShadow: '0px 3px 5px 2px rgba(255, 105, 135, .3)',
+    // root: {
+    //     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+    //     borderRadius: 3,
+    //     border: 0,
+    //     color: 'white',
+    //     height: 48,
+    //     padding: '0px 30px',
+    //     boxShadow: '0px 3px 5px 2px rgba(255, 105, 135, .3)',
+    // },
+    // label: {
+    //     textTransform: 'capitalize',
+    // },
+
+    specCategory: {
+        fontWeight: 'bold',
+        fontSize: '0.85rem',
+        padding: '0px 2px 0px 2px',
+        borderBottom: '1px solid rgba(224, 224, 224, 1)',
+        verticalAlign: 'inherit',
+        color: 'orangered'
     },
-    label: {
-        textTransform: 'capitalize',
-      },
+    specTitle: {
+        fontWeight: 'bold',
+        fontSize: '0.75rem',
+        padding: '0px 2px 0px 2px',
+        borderBottom: '1px solid rgba(224, 224, 224, 1)',
+        verticalAlign: 'inherit'
+    },
+    specContent: {
+        fontSize: '0.75rem',
+        padding: '2px 2px 0px 2px',
+        textAlign: 'right',
+        borderBottom: '1px solid rgba(224, 224, 224, 1)',
+        verticalAlign: 'inherit'
+    }
 
 
 });

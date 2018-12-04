@@ -99,27 +99,27 @@ class ClientManageSpec extends Component {
                     
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 부팅보안침해</TableCell>
-                      <TableCell numeric>{(viewItem.get('countBootProtector') > 0) ? '미침해' : '침해'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('countBootProtector') > 0) ? '침해' : '미침해'}</TableCell>
                     </TableRow>
 
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 실행보안침해</TableCell>
-                      <TableCell numeric>{(viewItem.get('countExeProtector') > 0) ? '미침해' : '침해'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('countExeProtector') > 0) ? '침해' : '미침해'}</TableCell>
                     </TableRow>
 
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} 매체보안침해</TableCell>
-                      <TableCell numeric>{(viewItem.get('countMediaProtector') > 0) ? '미침해' : '침해'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('countMediaProtector') > 0) ? '침해' : '미침해'}</TableCell>
                     </TableRow>
 
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} OS보안침해</TableCell>
-                      <TableCell numeric>{(viewItem.get('countOsProtector') > 0) ? '미침해' : '침해'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('countOsProtector') > 0) ? '침해' : '미침해'}</TableCell>
                     </TableRow>
                     {/**
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} isProtector</TableCell>
-                      <TableCell numeric>{(viewItem.get('isProtector') == '0') ? '미침해' : '침해'}</TableCell>
+                      <TableCell numeric>{(viewItem.get('isProtector') == '0') ? '침해' : '미침해'}</TableCell>
                     </TableRow>
                     */}
                   </TableBody>
