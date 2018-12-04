@@ -18,6 +18,8 @@ const DELETE_ADMINUSER_SUCCESS = 'adminUser/DELETE_ADMINUSER_SUCCESS';
 
 const SHOW_ADMINUSER_DIALOG = 'adminUser/SHOW_ADMINUSER_DIALOG';
 const CLOSE_ADMINUSER_DIALOG = 'adminUser/CLOSE_ADMINUSER_DIALOG';
+const SHOW_ADMINCONN_DIALOG = 'adminUser/SHOW_ADMINCONN_DIALOG';
+const CLOSE_ADMINCONN_DIALOG = 'adminUser/CLOSE_ADMINCONN_DIALOG';
 
 
 // ...
@@ -34,6 +36,18 @@ export const showDialog = (param) => dispatch => {
 export const closeDialog = () => dispatch => {
     return dispatch({
         type: CLOSE_ADMINUSER_DIALOG
+    });
+};
+
+export const showConnDialog = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_ADMINCONN_DIALOG
+    });
+};
+
+export const closeConnDialog = () => dispatch => {
+    return dispatch({
+        type: CLOSE_ADMINCONN_DIALOG
     });
 };
 
@@ -156,6 +170,18 @@ export default handleActions({
     [CLOSE_ADMINUSER_DIALOG]: (state, action) => {
         return commonHandleActions.handleCloseDialogAction(state.set('dialogTabValue', 0), action);
     },
+
+    [SHOW_ADMINCONN_DIALOG]: (state, action) => {
+        return state.merge({
+            connDialogOpen: true
+        });
+    },
+    [CLOSE_ADMINCONN_DIALOG]: (state, action) => {
+        return state.merge({
+            connDialogOpen: false
+        });
+    },
+
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
             editingItem: state.get('editingItem').merge({[action.name]: action.value})

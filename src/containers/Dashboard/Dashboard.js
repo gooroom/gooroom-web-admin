@@ -162,7 +162,7 @@ class Dashboard extends Component {
             <div style={{marginTop:20,display:'inline-flex',flex:'1 1 0'}} >
               <span>
               {(this.state.isRunningTimer) &&
-                    <img src="http://localhost:8080/gpms/images/loading-icon-animated-gif.jpg" width="30" />
+                    <img src="/gpms/images/loading-icon-animated-gif.jpg" width="30" />
                 }
               </span>
               <span>

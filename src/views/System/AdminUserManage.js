@@ -18,6 +18,7 @@ import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
 import AdminUserDialog from './AdminUserDialog';
+import AdminUserConnDialog from './AdminUserConnDialog';
 import AdminRecordDialog from './AdminRecordDialog';
 
 import GRPane from 'containers/GRContent/GRPane';
@@ -119,6 +120,16 @@ class AdminUserManage extends Component {
   };
       
   // create dialog
+  handleClickAdminConnIpButton = () => {
+    this.props.AdminUserActions.showConnDialog({
+      viewItem: {
+        adminId: ''
+      },
+      dialogType: AdminUserDialog.TYPE_ADD
+    });
+  }
+  
+  // create dialog
   handleCreateButton = () => {
     this.props.AdminUserActions.showDialog({
       viewItem: {
@@ -199,13 +210,15 @@ class AdminUserManage extends Component {
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} >
+            <Grid item xs={6} >
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+              {/**
                 <Grid item xs={4} >
                   <FormControl fullWidth={true}>
                     <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
                   </FormControl>
                 </Grid>
+              */}
                 <Grid item xs={4} >
                   <FormControl fullWidth={true}>
                     <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
@@ -218,7 +231,11 @@ class AdminUserManage extends Component {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={2} style={{textAlign:'right'}}>
+            <Grid item xs={6} style={{textAlign:'right'}}>
+              <Button className={classes.GRIconSmallButton} style={{marginRight:20}}
+                variant="contained" color="primary" onClick={() => { this.handleClickAdminConnIpButton(); }} >
+                접속아이피관리
+              </Button>
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />등록
               </Button>
@@ -302,6 +319,7 @@ class AdminUserManage extends Component {
         </GRPane>
         {/* dialog(popup) component area */}
         <AdminUserDialog compId={compId} />
+        <AdminUserConnDialog compId={compId} />
         <AdminRecordDialog compId={compId} 
           isOpen={this.state.openRecordDialog} 
           adminId={this.state.recordAdminId} 
