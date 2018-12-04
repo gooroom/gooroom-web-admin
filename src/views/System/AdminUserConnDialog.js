@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Map, List, fromJS } from 'immutable';
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -10,6 +12,7 @@ import * as AdminUserActions from 'modules/AdminUserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -21,11 +24,8 @@ import TextField from "@material-ui/core/TextField";
 
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import FormLabel from '@material-ui/core/FormLabel';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -36,95 +36,48 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 class AdminUserConnDialog extends Component {
 
-    static TYPE_VIEW = 'VIEW';
-    static TYPE_ADD = 'ADD';
-    static TYPE_EDIT = 'EDIT';
-
-    handleClose = (event) => {
-        this.props.AdminUserActions.closeDialog(this.props.compId);
-    }
-
-    handleValueChange = name => event => {
-        this.props.AdminUserActions.setEditingItemValue({
-            name: name,
-            value: event.target.value
-        });
-    }
-
-    handleValuePasswordChange = name => event => {
-        this.props.AdminUserActions.setEditingItemValue({
-            name: name,
-            value: event.target.value
-        });
-    }
-
-    // 생성
-    handleCreateData = (event) => {
-        const { AdminUserProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '관리자계정 등록',
-            confirmMsg: '관리자계정을 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: AdminUserProps.get('editingItem')
-        });
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { AdminUserProps, AdminUserActions, compId } = this.props;
-            AdminUserActions.createAdminUserData({
-                adminId: paramObject.get('adminId'),
-                adminPw: (paramObject.get('adminPw') !== '') ? sha256(paramObject.get('adminId') + sha256(paramObject.get('adminPw'))) : '',
-                adminNm: paramObject.get('adminNm')
-            }).then((res) => {
-                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
-                this.handleClose();
-            });
-        }
+    handleClickClose = (event) => {
+        this.props.AdminUserActions.closeConnDialog();
     }
 
     // 수정
-    handleEditData = (event) => {
+    handleClickSaveData = (event) => {
         const { AdminUserProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: '관리자계정 수정',
-            confirmMsg: '관리자계정을 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditDataConfirmResult,
-            confirmObject: AdminUserProps.get('editingItem')
+            confirmTitle: '접속가능 아이피 저장',
+            confirmMsg: '접속가능 아이피 정보를 저장하시겠습니까?',
+            handleConfirmResult: (confirmValue, paramObject) => {
+                if(confirmValue) {
+                    this.props.AdminUserActions.updateAdminAddress({
+                        adminAddresses: (paramObject) ? paramObject.toArray() : []
+                    }).then((res) => {
+                        this.handleClickClose();
+                    });
+                }
+            },
+            confirmObject: AdminUserProps.get('gpmsAllowIps')
         });
     }
-    handleEditDataConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { AdminUserProps, AdminUserActions, compId } = this.props;
-            AdminUserActions.editAdminUserData({
-                adminId: paramObject.get('adminId'),
-                adminPw: (paramObject.get('adminPw') !== '') ? sha256(paramObject.get('adminId') + sha256(paramObject.get('adminPw'))) : '',
-                adminNm: paramObject.get('adminNm')
-            }).then((res) => {
-                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
-                this.handleClose();
-            });
-        }
-    }
 
-    handleMouseDownPassword = event => {
-        event.preventDefault();
-    };
-
-    handleClickShowPassword = () => {
-        const { AdminUserProps, AdminUserActions } = this.props;
-        const editingItem = AdminUserProps.get('editingItem');
-        AdminUserActions.setEditingItemValue({
-            name: 'showPasswd',
-            value: !editingItem.get('showPasswd')
+    handleIpValueChange = index => event => {
+        this.props.AdminUserActions.setAdminConnIpValue({
+            index: index,
+            value: event.target.value
         });
-    };
+    }
+    handleDeleteIp = index => event => {
+        this.props.AdminUserActions.deleteAdminConnIp(index);
+    }
+    handleAddIp = () => {
+        this.props.AdminUserActions.addAdminConnIp();
+    }
 
     render() {
         const { classes } = this.props;
+        const bull = <span className={classes.bullet}>•</span>;
         const { AdminUserProps, compId } = this.props;
 
-        const dialogType = AdminUserProps.get('dialogType');
-        const editingItem = (AdminUserProps.get('editingItem')) ? AdminUserProps.get('editingItem') : null;
+        const gpmsAllowIps = AdminUserProps.get('gpmsAllowIps');
 
         return (
             <div>
@@ -132,43 +85,22 @@ class AdminUserConnDialog extends Component {
             <Dialog open={AdminUserProps.get('connDialogOpen')}>
                 <DialogTitle>관리자 접속 가능 아이피</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        label="관리자아이디"
-                        value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
-                        onChange={this.handleValueChange("adminId")}
-                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType == AdminUserConnDialog.TYPE_EDIT) ? true : false}
-                    />
-                    <TextField
-                        label="관리자이름"
-                        value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
-                        onChange={this.handleValueChange("adminNm")}
-                        className={classes.fullWidth}
-                    />
-                    <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
-                        <InputLabel htmlFor="adornment-password">Password</InputLabel>
-                        <Input
-                            type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
-                            value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
-                            onChange={this.handleValuePasswordChange('adminPw')}
-                            endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                aria-label="Toggle password visibility"
-                                onClick={this.handleClickShowPassword}
-                                onMouseDown={this.handleMouseDownPassword}
-                                >
-                                {(editingItem && editingItem.get('showPasswd')) ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                            }
-                        />
-                    </FormControl>
-
+                    <FormLabel style={{marginRight:"20px"}}>{bull} 아이피 목록</FormLabel>
+                    <Button onClick={this.handleAddIp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
+                    <div style={{maxHeight:140,overflow:'auto',marginTop:20}}>
+                        {gpmsAllowIps && gpmsAllowIps.map((value, index) => (
+                        <div key={index}>
+                            <Input value={value} onChange={this.handleIpValueChange(index)} style={{width:'80%'}} />
+                            <IconButton onClick={this.handleDeleteIp(index)} aria-label="WhiteIpDelete">
+                                <DeleteForeverIcon />
+                            </IconButton>
+                        </div>
+                        ))}
+                    </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
-                    <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
+                    <Button onClick={this.handleClickSaveData} variant='contained' color="secondary">저장</Button>
+                    <Button onClick={this.handleClickClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
             </Dialog>
             }

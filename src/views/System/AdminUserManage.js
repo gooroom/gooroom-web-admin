@@ -121,12 +121,8 @@ class AdminUserManage extends Component {
       
   // create dialog
   handleClickAdminConnIpButton = () => {
-    this.props.AdminUserActions.showConnDialog({
-      viewItem: {
-        adminId: ''
-      },
-      dialogType: AdminUserDialog.TYPE_ADD
-    });
+    this.props.AdminUserActions.readGpmsAvailableNetwork();
+    this.props.AdminUserActions.showConnDialog({});
   }
   
   // create dialog
@@ -232,7 +228,7 @@ class AdminUserManage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={6} style={{textAlign:'right'}}>
-              <Button className={classes.GRIconSmallButton} style={{marginRight:20}}
+              <Button className={classes.GRIconSmallButton} style={{marginRight:20,paddingLeft:5,paddingRight:5}}
                 variant="contained" color="primary" onClick={() => { this.handleClickAdminConnIpButton(); }} >
                 접속아이피관리
               </Button>
