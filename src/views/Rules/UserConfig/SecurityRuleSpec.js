@@ -29,7 +29,7 @@ class SecurityRuleSpec extends Component {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -63,6 +63,12 @@ class SecurityRuleSpec extends Component {
                   }
                 </div>
               }
+            />
+          }
+          { simpleTitle &&
+            <GRRuleCardHeader
+              category='단말보안 정책' title={viewItem.get('objNm')} 
+              subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             />
           }
             <CardContent style={{padding: 10}}>

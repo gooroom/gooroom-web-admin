@@ -16,9 +16,18 @@ const GET_VIOLATED_STATUS_INFO = 'dashboard/GET_VIOLATED_STATUS_INFO';
 const initialState = commonHandleActions.getCommonInitialState('', '', {userInfoDialog: false});
 
 export const showUserInfo = (param) => dispatch => {
-    return dispatch({
-        type: SHOW_USER_INFORM,
-        param: param
+
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readTotalRule', param).then(
+        (response) => {
+            dispatch({
+                type: SHOW_USER_INFORM,
+                param: param,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -67,7 +76,10 @@ export default handleActions({
         });
     },
     [SHOW_USER_INFORM]: (state, action) => {
-        return state.set('userInfoDialog', true);
+        return state
+            .set('userInfoDialog', true)
+            .set('selectedUserInfo', fromJS(action.param))
+            .set('ruleData', fromJS(action.response.data));
     },
     [CLOSE_USER_INFORM]: (state, action) => {
         return state.set('userInfoDialog', false);

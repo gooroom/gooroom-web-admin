@@ -50,7 +50,7 @@ class DesktopConfSpec extends Component {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -68,7 +68,7 @@ class DesktopConfSpec extends Component {
       <React.Fragment>
         {viewItem && 
           <Card elevation={4} className={classes.ruleViewerCard}>
-          { hasAction &&
+            { hasAction &&
             <GRRuleCardHeader avatar={RuleAvartar}
               category='데스크톱 설정' title={viewItem.get('confNm')}
               subheader={viewItem.get('confId')}
@@ -91,8 +91,14 @@ class DesktopConfSpec extends Component {
               }
             />
             }
+            { simpleTitle &&
+            <GRRuleCardHeader
+              category='데스크톱 설정' title={viewItem.get('confNm')}
+              subheader={viewItem.get('confId')}
+            />
+            }
             <CardContent style={{paddingTop: 10}}>
-            { !hasAction &&
+            { (!hasAction && !simpleTitle) &&
               <Table>
                 <TableBody>
                   <TableRow>
