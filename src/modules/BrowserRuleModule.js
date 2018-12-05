@@ -131,7 +131,6 @@ export const getBrowserRule = (param) => dispatch => {
             name: 'viewItem'
         });      
     }
-
 };
 
 export const getBrowserRuleByUserId = (param) => dispatch => {

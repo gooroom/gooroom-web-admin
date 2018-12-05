@@ -22,7 +22,7 @@ class BrowserRuleSpec extends Component {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -56,6 +56,12 @@ class BrowserRuleSpec extends Component {
                   }
                 </div>
               }
+            />
+          }
+          { simpleTitle &&
+            <GRRuleCardHeader
+              category='브라우저제어 정책' title={viewItem.get('objNm')} 
+              subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             />
           }
           <CardContent style={{padding: 10}}>

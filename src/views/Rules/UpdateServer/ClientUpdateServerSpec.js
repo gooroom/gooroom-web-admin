@@ -25,7 +25,7 @@ class ClientUpdateServerSpec extends Component {
   render() {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, targetType, selectedItem, ruleGrade, hasAction } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -58,6 +58,13 @@ class ClientUpdateServerSpec extends Component {
                   }
                 </div>
               }
+            />
+            }
+            { simpleTitle &&
+            <GRRuleCardHeader
+              category='업데이트서버 정보'
+              title={viewItem.get('objNm')} 
+              subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             />
             }
             <CardContent style={{padding: 10}}>

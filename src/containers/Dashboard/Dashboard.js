@@ -96,7 +96,7 @@ class Dashboard extends Component {
 
     handleClickShowUserInfo = (loginId, clientId) => {
         this.props.DashboardActions.showUserInfo({
-            loginId: loginId,
+            userId: loginId,
             clientId: clientId
         });
     }
