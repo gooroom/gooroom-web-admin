@@ -105,10 +105,10 @@ class ClientConfSettingSpec extends Component {
                   </TableBody>
                 </Table>
               </Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 삭제기능 사용여부</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('isDeleteLog')) ? '삭제함' : '삭제안함'}</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 서버전송후 로그보관일수</Grid>
-              <Grid item xs={3} className={classes.specContent}>{viewItem.get('logRemainDate')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} 삭제기능 사용여부</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('isDeleteLog')) ? '삭제함' : '삭제안함'}</Grid>
+              <Grid item xs={5} className={classes.specTitle}>{bull} 서버전송후 로그보관일수</Grid>
+              <Grid item xs={1} className={classes.specContent}>{viewItem.get('logRemainDate')}</Grid>
 
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 단말알림 및 서버경고 설정 ]</Grid>
               <Grid item xs={12} className={classes.specTitle}>{bull} 알림 로그레벨</Grid>
@@ -154,12 +154,12 @@ class ClientConfSettingSpec extends Component {
                 </Table>
               </Grid>
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 단말 로그 (JournalD Log) 설정 ]</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 로그파일 최대크기(MB)</Grid>
-              <Grid item xs={3} className={classes.specContent}>{viewItem.get('logMaxSize')}</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 보관할 로그파일 갯수</Grid>
-              <Grid item xs={3} className={classes.specContent}>{viewItem.get('logMaxCount')}</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 최소 확보 디스크 공간(%)</Grid>
-              <Grid item xs={3} className={classes.specContent}>{viewItem.get('systemKeepFree')}</Grid>
+              <Grid item xs={5} className={classes.specTitle}>{bull} 로그파일 최대크기(MB)</Grid>
+              <Grid item xs={1} className={classes.specContent}>{viewItem.get('logMaxSize')}</Grid>
+              <Grid item xs={5} className={classes.specTitle}>{bull} 보관할 로그파일 갯수</Grid>
+              <Grid item xs={1} className={classes.specContent}>{viewItem.get('logMaxCount')}</Grid>
+              <Grid item xs={5} className={classes.specTitle}>{bull} 최소 확보 디스크 공간(%)</Grid>
+              <Grid item xs={1} className={classes.specContent}>{viewItem.get('systemKeepFree')}</Grid>
               <Grid item xs={6} className={classes.specContent}></Grid>
             </Grid>
           </CardContent>

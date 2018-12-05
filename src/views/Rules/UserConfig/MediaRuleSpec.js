@@ -68,23 +68,23 @@ class MediaRuleSpec extends Component {
               </Grid>
               }
               <Grid container spacing={0}>
-                <Grid item xs={3} className={classes.specTitle}>{bull} 무선랜</Grid>
-                <Grid item xs={3} className={classes.specContent}>{viewItem.get('wireless')}</Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} CD/DVD</Grid>
-                <Grid item xs={3} className={classes.specContent}>{viewItem.get('cdAndDvd')}</Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} 프린터</Grid>
-                <Grid item xs={3} className={classes.specContent}>{viewItem.get('printer')}</Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} 사운드(소리,마이크)</Grid>
-                <Grid item xs={3} className={classes.specContent}>{viewItem.get('sound')}</Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} 카메라</Grid>
-                <Grid item xs={3} className={classes.specContent}>{viewItem.get('camera')}</Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} USB키보드</Grid>
-                <Grid item xs={3} className={classes.specContent}>{viewItem.get('keyboard')}</Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} USB마우스</Grid>
-                <Grid item xs={3} className={classes.specContent}>{viewItem.get('mouse')}</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} 무선랜</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('wireless')}</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} CD/DVD</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('cdAndDvd')}</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} 프린터</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('printer')}</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} 사운드(소리,마이크)</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('sound')}</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} 카메라</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('camera')}</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} USB키보드</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('keyboard')}</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} USB마우스</Grid>
+                <Grid item xs={2} className={classes.specContent}>{viewItem.get('mouse')}</Grid>
                 <Grid item xs={6} className={classes.specContent}></Grid>
-                <Grid item xs={2} className={classes.specTitle}>{bull} USB메모리</Grid>
-                <Grid item xs={2} className={classes.specContent}>{viewItem.get('usbMemory')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} USB메모리</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('usbMemory')}</Grid>
                 <Grid item xs={3} className={classes.specTitle}>{bull} USB시리얼정보</Grid>
                 <Grid item xs={5} className={classes.specContent}>
                 {viewItem.get('usbSerialNo').map(function(prop, index) {
