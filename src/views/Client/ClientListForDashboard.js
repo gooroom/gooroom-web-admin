@@ -158,6 +158,10 @@ class ClientListForDashboard extends Component {
   handleClickViolatedItem = (type, clientId) => {
     this.props.onClickViolatedItem(type, clientId);
   }
+
+  handleClickShowUserInfo = (userId, clientId) => {
+    this.props.onClickShowUserInfo(userId, clientId);
+  }
   
   render() {
     const { classes } = this.props;
@@ -198,7 +202,18 @@ class ClientListForDashboard extends Component {
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell} >{n.get('loginId')}</TableCell>
+                  {(n.get('loginId') !== '-') && 
+                    <TableCell className={classes.grSmallAndClickAndCenterCell} 
+                      style={{fontWeight:'bold',textDecoration:'underline'}}
+                      onClick={() => this.handleClickShowUserInfo(n.get('loginId'), n.get('clientId'))}>
+                      {n.get('loginId')}
+                    </TableCell>
+                  }
+                  {(n.get('loginId') === '-' || n.get('loginId') === '') && 
+                    <TableCell className={classes.grSmallAndClickAndCenterCell} >
+                    {n.get('loginId')}
+                    </TableCell>
+                  }
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{formatDateToSimple(n.get('lastLoginTime'), 'YY-MM-DD HH:mm')}</TableCell>
                   {(n.get('isProtector') == '1') && 
                   <TableCell className={classes.grSmallAndClickAndCenterCell} 

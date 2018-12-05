@@ -68,10 +68,10 @@ class BrowserRuleSpec extends Component {
             </Grid>
             }
             <Grid container spacing={0}>
-              <Grid item xs={3} className={classes.specTitle}>{bull} Web Socket 사용</Grid>
-              <Grid item xs={3} className={classes.specContent}>{viewItem.get('webSocket')}</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} Web Worker 사용</Grid>
-              <Grid item xs={3} className={classes.specContent}>{viewItem.get('webWorker')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} Web Socket 사용</Grid>
+              <Grid item xs={2} className={classes.specContent}>{viewItem.get('webSocket')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} Web Worker 사용</Grid>
+              <Grid item xs={2} className={classes.specContent}>{viewItem.get('webWorker')}</Grid>
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 신뢰사이트 설정 ]</Grid>
               <Grid item xs={6} className={classes.specTitle}>{bull} 개발자도구(웹인스펙터) 사용통제</Grid>
               <Grid item xs={6} className={classes.specContent}>{viewItem.get('devToolRule__trust')}</Grid>

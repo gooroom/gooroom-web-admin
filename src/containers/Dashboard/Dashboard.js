@@ -8,6 +8,7 @@ import * as DashboardActions from 'modules/DashboardModule';
 import * as AdminActions from 'modules/AdminModule';
 import * as SecurityLogActions from 'modules/SecurityLogModule';
 
+import UserInfoDialog from './UserInfoDialog';
 import GRPane from 'containers/GRContent/GRPane';
 
 import ClientOnOff from './ClientOnOff';
@@ -93,6 +94,16 @@ class Dashboard extends Component {
         AdminActions.redirectPage({address:'/log/secretlog/GRM0935/보안로그?logItem=' + type + '&keyword=' + clientId});
     }
 
+    handleClickShowUserInfo = (loginId, clientId) => {
+        this.props.DashboardActions.showUserInfo({
+            loginId: loginId,
+            clientId: clientId
+        });
+    }
+    handleClickCloseUserInfo = () => {
+        this.props.DashboardActions.closeUserInfo();
+    }
+
     render() {
         if (this.state.redirect) {
             if(this.state.linkType == 'package') {
@@ -107,16 +118,16 @@ class Dashboard extends Component {
         const { classes } = this.props;
         const { DashboardProps } = this.props;
 
-        const clientOn = (DashboardProps.get('clientOnCount')) ?  DashboardProps.get('clientOnCount') : 0;
-        const clientOff = (DashboardProps.get('clientOffCount')) ?  DashboardProps.get('clientOffCount') : 0;
-        const clientRevoke = (DashboardProps.get('clientRevokeCount')) ?  DashboardProps.get('clientRevokeCount') : 0;
+        const clientOn = (DashboardProps.getIn(['clientStatus', 'clientOnCount'])) ?  DashboardProps.getIn(['clientStatus', 'clientOnCount']) : 0;
+        const clientOff = (DashboardProps.getIn(['clientStatus', 'clientOffCount'])) ?  DashboardProps.getIn(['clientStatus', 'clientOffCount']) : 0;
+        const clientRevoke = (DashboardProps.getIn(['clientStatus', 'clientRevokeCount'])) ?  DashboardProps.getIn(['clientStatus', 'clientRevokeCount']) : 0;
 
-        const loginCount = (DashboardProps.get('loginCount')) ?  DashboardProps.get('loginCount') : 0;
-        const userCount = (DashboardProps.get('userCount')) ?  DashboardProps.get('userCount') : 0;
+        const loginCount = (DashboardProps.getIn(['loginStatus', 'loginCount'])) ?  DashboardProps.getIn(['loginStatus', 'loginCount']) : 0;
+        const userCount = (DashboardProps.getIn(['loginStatus', 'userCount'])) ?  DashboardProps.getIn(['loginStatus', 'userCount']) : 0;
 
-        const noUpdateCount = (DashboardProps.get('noUpdateCount')) ?  DashboardProps.get('noUpdateCount') : 0;
-        const updateCount = (DashboardProps.get('updateCount')) ?  DashboardProps.get('updateCount') : 0;
-        const mainUpdateCount = (DashboardProps.get('mainUpdateCount')) ?  DashboardProps.get('mainUpdateCount') : 0;
+        const noUpdateCount = (DashboardProps.getIn(['updateStatus', 'noUpdateCount'])) ?  DashboardProps.getIn(['updateStatus', 'noUpdateCount']) : 0;
+        const updateCount = (DashboardProps.getIn(['updateStatus', 'updateCount'])) ?  DashboardProps.getIn(['updateStatus', 'updateCount']) : 0;
+        const mainUpdateCount = (DashboardProps.getIn(['updateStatus', 'mainUpdateCount'])) ?  DashboardProps.getIn(['updateStatus', 'mainUpdateCount']) : 0;
 
         const violatedStatusInfo = (DashboardProps.get('violatedStatusInfo')) ?  DashboardProps.get('violatedStatusInfo') : 0;
 
@@ -150,7 +161,7 @@ class Dashboard extends Component {
 
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
-                    <ClientListForDashboard onClickViolatedItem={this.handleClickViolatedLink} />
+                    <ClientListForDashboard onClickViolatedItem={this.handleClickViolatedLink} onClickShowUserInfo={this.handleClickShowUserInfo}/>
                 </Paper>
               </Grid>
 
@@ -169,6 +180,7 @@ class Dashboard extends Component {
               <Typography >{this.state.currentCount}</Typography>
               </span>
             </div>
+            <UserInfoDialog onClose={this.handleClickCloseUserInfo} />
             </GRPane>
         );
     }
