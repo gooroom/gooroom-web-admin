@@ -90,17 +90,59 @@ class ClientConfSettingSpec extends Component {
               </Grid>
               <Grid item xs={3} className={classes.specTitle}>{bull} 전체 아이피 허용</Grid>
               <Grid item xs={3} className={classes.specContent}>{(viewItem.get('whiteIpAll')) ? '허용함' : '허용안함'}</Grid>
-              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 단말로그 전송설정 ]</Grid>
-              <Grid item xs={12} className={classes.specTitle}>{bull} 전송 로그레벨</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 로그레벨 설정 ]</Grid>
+              <Grid item xs={12} className={classes.specTitle}>{bull} 침해 로그레벨(수준)</Grid>
               <Grid item xs={12} className={classes.specContent}>
                 <Table>
                   <TableBody>
                     <TableRow >
-                      <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[신뢰부팅]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[운영체제보호]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[실행파일보호]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[매체제어]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[에이전트]</TableCell>
+                    </TableRow>
+                    <TableRow >
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_boot')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_os')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_exe')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_media')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_agent')}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Grid>
+              <Grid item xs={12} className={classes.specTitle}>{bull} 단말 로그보기에 표시되는 로그레벨(수준)</Grid>
+              <Grid item xs={12} className={classes.specContent}>
+                <Table>
+                  <TableBody>
+                    <TableRow >
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[신뢰부팅]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[운영체제보호]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[실행파일보호]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[매체제어]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[에이전트]</TableCell>
+                    </TableRow>
+                    <TableRow >
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_boot')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_os')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_exe')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_media')}</TableCell>
+                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_agent')}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </Grid>
+              <Grid item xs={12} className={classes.specTitle}>{bull} 서버로 전송하는 로그레벨(수준)</Grid>
+              <Grid item xs={12} className={classes.specContent}>
+                <Table>
+                  <TableBody>
+                    <TableRow >
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[신뢰부팅]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[운영체제보호]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[실행파일보호]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[매체제어]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[에이전트]</TableCell>
                     </TableRow>
                     <TableRow >
                       <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_boot')}</TableCell>
@@ -117,49 +159,6 @@ class ClientConfSettingSpec extends Component {
               <Grid item xs={5} className={classes.specTitle}>{bull} 서버전송후 로그보관일수</Grid>
               <Grid item xs={1} className={classes.specContent}>{viewItem.get('logRemainDate')}</Grid>
 
-              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 단말알림 및 서버경고 설정 ]</Grid>
-              <Grid item xs={12} className={classes.specTitle}>{bull} 알림 로그레벨</Grid>
-              <Grid item xs={12} className={classes.specContent}>
-                <Table>
-                  <TableBody>
-                    <TableRow >
-                      <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
-                    </TableRow>
-                    <TableRow >
-                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_boot')}</TableCell>
-                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_os')}</TableCell>
-                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_exe')}</TableCell>
-                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_media')}</TableCell>
-                      <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_agent')}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </Grid>
-              <Grid item xs={12} className={classes.specTitle}>{bull} 서버/단말 침해 표시레벨</Grid>
-              <Grid item xs={12} className={classes.specContent}>
-                <Table>
-                  <TableBody>
-                    <TableRow >
-                      <TableCell component="th" style={{textAlign:'center'}}>신뢰부팅</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>운영체제보호</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>실행파일보호</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>매체제어</TableCell>
-                      <TableCell component="th" style={{textAlign:'center'}}>에이전트</TableCell>
-                    </TableRow>
-                    <TableRow >
-                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_boot')}</TableCell>
-                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_os')}</TableCell>
-                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_exe')}</TableCell>
-                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_media')}</TableCell>
-                      <TableCell style={{textAlign:'center'}}>{viewItem.get('show_agent')}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </Grid>
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 단말 로그 (JournalD Log) 설정 ]</Grid>
               <Grid item xs={5} className={classes.specTitle}>{bull} 로그파일 최대크기(MB)</Grid>
               <Grid item xs={1} className={classes.specContent}>{viewItem.get('logMaxSize')}</Grid>
@@ -201,6 +200,28 @@ export const convertLogLevelString = (param) => {
   }
 }
 
+export const convertLogLevelNo = (param) => {
+  if(param == 'emerg') {
+    return 1;
+  } else if(param == 'alert') {
+    return 2;
+  } else if(param == 'crit') {
+    return 3;
+  } else if(param == 'err') {
+    return 4;
+  } else if(param == 'warnning') {
+    return 5;
+  } else if(param == 'notice') {
+    return 6;
+  } else if(param == 'info') {
+    return 7;
+  } else if(param == 'debug') {
+    return 8;
+  } else {
+    return 9;
+  }
+}
+
 export const generateClientConfSettingObject = (param, isForViewer) => {
 
   if(param) {
@@ -214,6 +235,12 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
     let logMaxCount = '';
     let logRemainDate = '';
     let systemKeepFree = '';
+
+    let boot_minno = '';
+    let os_minno = '';
+    let exe_minno = '';
+    let media_minno = '';
+    let agent_minno = '';
 
     let transmit_boot = '';
     let transmit_exe = '';
@@ -270,14 +297,19 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
 
       } else if(ename == 'notify_boot') {
         notify_boot = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        boot_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_exe') {
         notify_exe = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        exe_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_os') {
         notify_os = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        os_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_media') {
         notify_media = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        media_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_agent') {
         notify_agent = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        agent_minno = convertLogLevelNo(evalue);
 
       } else if(ename == 'show_boot') {
         show_boot = (isForViewer) ? convertLogLevelString(evalue) : evalue;
@@ -308,6 +340,12 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
       logMaxCount: logMaxCount,
       logRemainDate: logRemainDate,
       systemKeepFree: systemKeepFree,
+
+      boot_minno: boot_minno,
+      os_minno: os_minno,
+      exe_minno: exe_minno,
+      media_minno: media_minno,
+      agent_minno: agent_minno,
 
       transmit_boot: transmit_boot,
       transmit_exe: transmit_exe,

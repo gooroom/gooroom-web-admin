@@ -123,21 +123,33 @@ class ClientConfSettingManage extends Component {
         logMaxSize: 10000,
         logMaxCount: 3,
         systemKeepFree: 10,
+
+        boot_minno: 4,
+        os_minno: 4,
+        exe_minno: 4,
+        media_minno: 3,
+        agent_minno: 3,
+
         transmit_os: 'err',
         notify_os: 'err',
         show_os: 'info',
+        
         transmit_exe: 'err',
         notify_exe: 'err',
         show_exe: 'info',
+        
         transmit_boot: 'err',
         notify_boot: 'err',
         show_boot: 'info',
+        
         transmit_media: 'crit',
         notify_media: 'crit',
         show_media: 'info',
+        
         transmit_agent: 'crit',
         notify_agent: 'crit',
         show_agent: 'info',
+        
         whiteIpAll: true
       }),
       dialogType: ClientConfSettingDialog.TYPE_ADD
@@ -206,9 +218,7 @@ class ClientConfSettingManage extends Component {
     if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
-
-    
-
+ 
     return (
       <React.Fragment>
         <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />

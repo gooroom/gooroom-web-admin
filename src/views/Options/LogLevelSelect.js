@@ -16,7 +16,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 class LogLevelSelect extends Component {
 
   render() {
-    const { CommonOptionProps, name, value } = this.props;
+    const { CommonOptionProps, name, value, minNo=1 } = this.props;
     return (
       <React.Fragment>
       <Select
@@ -24,8 +24,8 @@ class LogLevelSelect extends Component {
         onChange={this.props.onChangeSelect}
         inputProps={{name: name}}
       >
-        {CommonOptionProps.logLevelData.map(x => (
-          <MenuItem value={x.levelVal} key={x.levelId}>
+        {CommonOptionProps.logLevelData.filter(x => (x.levelNo >= minNo)).map(x => (
+          <MenuItem value={x.levelVal} levelno={x.levelNo} key={x.levelId}>
             {x.levelId} ({x.levelNm})
           </MenuItem>
         ))}

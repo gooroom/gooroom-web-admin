@@ -55,12 +55,8 @@ class GRConfirm extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleCancel} color="primary" autoFocus>
-              아니오
-            </Button>
-            <Button onClick={this.handleOk} color="primary">
-              예
-            </Button>
+            <Button onClick={this.handleCancel} color="primary" autoFocus>아니오</Button>
+            <Button onClick={this.handleOk} color="primary">예</Button>
           </DialogActions>
         </Dialog>
     );
