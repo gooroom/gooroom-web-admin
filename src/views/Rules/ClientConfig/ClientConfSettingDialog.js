@@ -113,19 +113,18 @@ class ClientConfSettingDialog extends Component {
         GRConfirmActions.showConfirm({
             confirmTitle: '단말정책정보 수정',
             confirmMsg: '단말정책정보를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
+            handleConfirmResult: (confirmValue, paramObject) => {
+                if(confirmValue) {
+                    const { ClientConfSettingProps, ClientConfSettingActions, compId } = this.props;
+                    ClientConfSettingActions.editClientConfSettingData(paramObject, compId)
+                        .then((res) => {
+                            refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
+                            this.handleClose();
+                        });
+                }
+            },
             confirmObject: ClientConfSettingProps.get('editingItem')
         });
-    }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-            ClientConfSettingActions.editClientConfSettingData(ClientConfSettingProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
-                    this.handleClose();
-                });
-        }
     }
 
     handleCopyCreateData = (event, id) => {
@@ -142,10 +141,26 @@ class ClientConfSettingDialog extends Component {
         });
     }
 
-    handleChangeLogLevelSelect = (event) => {
+    handleChangeLogLevelSelect = (event, child) => {
+        const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+
         const name = event.target.name;
         const value = event.target.value;
-        this.props.ClientConfSettingActions.setEditingItemValue({
+        const logType = name.split('_')[0];
+        const logGubun = name.split('_')[1];
+        const levelNo = child.props.levelno;
+
+        if(logType == 'notify') {
+            ClientConfSettingActions.setEditingItemValue({
+                name: logGubun + '_minno',
+                value: levelNo
+            });
+            if(levelNo > ClientConfSettingProps.getIn(['editingItem', logGubun+'_minno'])) {
+                ClientConfSettingActions.setEditingItemValue({ name: 'transmit_'+logGubun , value: value });
+                ClientConfSettingActions.setEditingItemValue({ name: 'show_'+logGubun , value: value });
+            }
+        }
+        ClientConfSettingActions.setEditingItemValue({
             name: name,
             value: value
         });
@@ -230,149 +245,15 @@ class ClientConfSettingDialog extends Component {
                             </Grid>
                         </Grid>
                         <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
-                        <Typography variant="body1">{cartBull} 단말 로그 전송 설정</Typography>
-                        <div style={{margin:'8 0 0 0'}}>
-                            <FormLabel>{bull} 서버 전송 로그 레벨(수준)</FormLabel>
-                            <Table style={{margin:'8 0 0 0'}}>
-                                <TableBody>
-                                    <TableRow>
-                                    <TableCell style={{width:'20%'}} component="th" scope="row">
-                                    <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
-                                        <LogLevelSelect name="transmit_boot" 
-                                            value={(editingItem.get('transmit_boot')) ? editingItem.get('transmit_boot') : ""}
-                                            onChangeSelect={this.handleChangeLogLevelSelect}
-                                        />
-                                    </FormControl>
-                                    </TableCell>
-                                    <TableCell style={{width:'20%'}} component="th" scope="row">
-                                    <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">운영체제보호</InputLabel>
-                                        <LogLevelSelect name="transmit_os" 
-                                            value={(editingItem.get('transmit_os')) ? editingItem.get('transmit_os') : ""}
-                                            onChangeSelect={this.handleChangeLogLevelSelect}
-                                        />
-                                    </FormControl>
-                                    </TableCell>
-                                    <TableCell style={{width:'20%'}} component="th" scope="row">
-                                    <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">실행파일보호</InputLabel>
-                                        <LogLevelSelect name="transmit_exe" 
-                                            value={(editingItem.get('transmit_exe')) ? editingItem.get('transmit_exe') : ""}
-                                            onChangeSelect={this.handleChangeLogLevelSelect}
-                                        />
-                                    </FormControl>
-                                    </TableCell>
-                                    <TableCell style={{width:'20%'}} component="th" scope="row">
-                                    <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">매체제어</InputLabel>
-                                        <LogLevelSelect name="transmit_media" 
-                                            value={(editingItem.get('transmit_media')) ? editingItem.get('transmit_media') : ""}
-                                            onChangeSelect={this.handleChangeLogLevelSelect}
-                                        />
-                                    </FormControl>
-                                    </TableCell>
-                                    <TableCell style={{width:'20%'}} component="th" scope="row">
-                                    <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">에이전트</InputLabel>
-                                        <LogLevelSelect name="transmit_agent" 
-                                            value={(editingItem.get('transmit_agent')) ? editingItem.get('transmit_agent') : ""}
-                                            onChangeSelect={this.handleChangeLogLevelSelect}
-                                        />
-                                    </FormControl>
-                                    </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-                            <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'8 0 16 0'}}>
-                                <Grid item xs={12} sm={6} md={6}>
-                                    <div style={{marginTop:"10px"}}>
-                                        <FormLabel style={{marginRight:"50px"}}>{bull} 삭제기능 사용여부</FormLabel>
-                                        <FormControlLabel
-                                            control={
-                                            <Switch onChange={this.handleValueChange('isDeleteLog')} color="primary"
-                                                checked={(editingItem.get('isDeleteLog')) ? editingItem.get('isDeleteLog') : false} />
-                                            }
-                                            label={(editingItem.get('isDeleteLog')) ? '삭제함' : '삭제안함'}
-                                        />
-                                    </div>
-                                </Grid>
-                                <Grid item xs={12} sm={6} md={6}>
-                                <TextField label={"서버전송후 로그보관일수"} value={(editingItem.get('logRemainDate')) ? editingItem.get('logRemainDate') : ''}
-                                    onChange={this.handleValueChange("logRemainDate")}
-                                    className={classes.fullWidth}
-                                    disabled={!(editingItem.get('isDeleteLog'))}
-                                />
-                                <Typography variant="caption">'0' 으로 설정시 삭제하지 않음</Typography>
-                                </Grid>
-                            </Grid>
-                        </div>
-                        </Paper>
-                        <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
-                        <Typography variant="body1">{cartBull} 단말 알림 및 단말 서버 경고 설정</Typography>
                         <div style={{margin:'8 0 32 0'}}>
-
-                            <FormLabel >{bull} 단말 알림 로그 레벨(수준)</FormLabel>
-                            <Table style={{margin:'8 0 16 0'}}>
-                                <TableBody>
-                                    <TableRow>
-                                    <TableCell style={{width:'20%'}} component="th" scope="row">
-                                    <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
-                                        <LogLevelSelect name="show_boot" 
-                                            value={(editingItem.get('show_boot')) ? editingItem.get('show_boot') : ""}
-                                            onChangeSelect={this.handleChangeLogLevelSelect}
-                                        />
-                                    </FormControl>
-                                    </TableCell>
-                                    <TableCell style={{width:'20%'}} component="th" scope="row">
-                                    <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">운영체제보호</InputLabel>
-                                        <LogLevelSelect name="show_os" 
-                                            value={(editingItem.get('show_os')) ? editingItem.get('show_os') : ""}
-                                            onChangeSelect={this.handleChangeLogLevelSelect}
-                                        />
-                                    </FormControl>
-                                    </TableCell>
-                                    <TableCell style={{width:'20%'}} component="th" scope="row">
-                                    <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">실행파일보호</InputLabel>
-                                        <LogLevelSelect name="show_exe" 
-                                            value={(editingItem.get('show_exe')) ? editingItem.get('show_exe') : ""}
-                                            onChangeSelect={this.handleChangeLogLevelSelect}
-                                        />
-                                    </FormControl>
-                                    </TableCell>
-                                    <TableCell style={{width:'20%'}} component="th" scope="row">
-                                    <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">매체제어</InputLabel>
-                                        <LogLevelSelect name="show_media" 
-                                            value={(editingItem.get('show_media')) ? editingItem.get('show_media') : ""}
-                                            onChangeSelect={this.handleChangeLogLevelSelect}
-                                        />
-                                    </FormControl>
-                                    </TableCell>
-                                    <TableCell style={{width:'20%'}} component="th" scope="row">
-                                    <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">에이전트</InputLabel>
-                                        <LogLevelSelect name="show_agent" 
-                                            value={(editingItem.get('show_agent')) ? editingItem.get('show_agent') : ""}
-                                            onChangeSelect={this.handleChangeLogLevelSelect}
-                                        />
-                                    </FormControl>
-                                    </TableCell>
-                                    </TableRow>
-                                </TableBody>
-                            </Table>
-
-                            <FormLabel >{bull} 서버/단말 침해 표시 레벨(수준)</FormLabel>
+                            <FormLabel >{bull} 침해 로그레벨(수준)</FormLabel>
                             <Table style={{margin:'8 0 0 0'}}>
                                 <TableBody>
                                     <TableRow>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
-                                        <LogLevelSelect name="notify_boot" 
+                                        <LogLevelSelect name="notify_boot" no
                                             value={(editingItem.get('notify_boot')) ? editingItem.get('notify_boot') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -417,12 +298,144 @@ class ClientConfSettingDialog extends Component {
                                     </TableRow>
                                 </TableBody>
                             </Table>
-
                         </div>
                         </Paper>
                         <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
-                        <Typography variant="body1">{cartBull} 단말 로그 (JournalD Log) 설정</Typography>
+                        <div style={{margin:'8 0 32 0'}}>
+
+                            <FormLabel >{bull} 단말 로그보기에 표시되는 로그레벨(수준)</FormLabel>
+                            <Table style={{margin:'8 0 16 0'}}>
+                                <TableBody>
+                                    <TableRow>
+                                    <TableCell style={{width:'20%'}} component="th" scope="row">
+                                    <FormControl fullWidth={true}>
+                                        <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
+                                        <LogLevelSelect name="show_boot" minNo={editingItem.get('boot_minno')}
+                                            value={(editingItem.get('show_boot')) ? editingItem.get('show_boot') : ""}
+                                            onChangeSelect={this.handleChangeLogLevelSelect}
+                                        />
+                                    </FormControl>
+                                    </TableCell>
+                                    <TableCell style={{width:'20%'}} component="th" scope="row">
+                                    <FormControl fullWidth={true}>
+                                        <InputLabel htmlFor="client-status">운영체제보호</InputLabel>
+                                        <LogLevelSelect name="show_os" minNo={editingItem.get('os_minno')}
+                                            value={(editingItem.get('show_os')) ? editingItem.get('show_os') : ""}
+                                            onChangeSelect={this.handleChangeLogLevelSelect}
+                                        />
+                                    </FormControl>
+                                    </TableCell>
+                                    <TableCell style={{width:'20%'}} component="th" scope="row">
+                                    <FormControl fullWidth={true}>
+                                        <InputLabel htmlFor="client-status">실행파일보호</InputLabel>
+                                        <LogLevelSelect name="show_exe" minNo={editingItem.get('exe_minno')}
+                                            value={(editingItem.get('show_exe')) ? editingItem.get('show_exe') : ""}
+                                            onChangeSelect={this.handleChangeLogLevelSelect}
+                                        />
+                                    </FormControl>
+                                    </TableCell>
+                                    <TableCell style={{width:'20%'}} component="th" scope="row">
+                                    <FormControl fullWidth={true}>
+                                        <InputLabel htmlFor="client-status">매체제어</InputLabel>
+                                        <LogLevelSelect name="show_media" minNo={editingItem.get('media_minno')}
+                                            value={(editingItem.get('show_media')) ? editingItem.get('show_media') : ""}
+                                            onChangeSelect={this.handleChangeLogLevelSelect}
+                                        />
+                                    </FormControl>
+                                    </TableCell>
+                                    <TableCell style={{width:'20%'}} component="th" scope="row">
+                                    <FormControl fullWidth={true}>
+                                        <InputLabel htmlFor="client-status">에이전트</InputLabel>
+                                        <LogLevelSelect name="show_agent" minNo={editingItem.get('agent_minno')}
+                                            value={(editingItem.get('show_agent')) ? editingItem.get('show_agent') : ""}
+                                            onChangeSelect={this.handleChangeLogLevelSelect}
+                                        />
+                                    </FormControl>
+                                    </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </div>
+                        </Paper>
+                        <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <div style={{margin:'8 0 0 0'}}>
+                            <FormLabel>{bull} 서버로 전송하는 로그레벨(수준)</FormLabel>
+                            <Table style={{margin:'8 0 0 0'}}>
+                                <TableBody>
+                                    <TableRow>
+                                    <TableCell style={{width:'20%'}} component="th" scope="row">
+                                    <FormControl fullWidth={true}>
+                                        <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
+                                        <LogLevelSelect name="transmit_boot" minNo={editingItem.get('boot_minno')}
+                                            value={(editingItem.get('transmit_boot')) ? editingItem.get('transmit_boot') : ""}
+                                            onChangeSelect={this.handleChangeLogLevelSelect}
+                                        />
+                                    </FormControl>
+                                    </TableCell>
+                                    <TableCell style={{width:'20%'}} component="th" scope="row">
+                                    <FormControl fullWidth={true}>
+                                        <InputLabel htmlFor="client-status">운영체제보호</InputLabel>
+                                        <LogLevelSelect name="transmit_os" minNo={editingItem.get('os_minno')}
+                                            value={(editingItem.get('transmit_os')) ? editingItem.get('transmit_os') : ""}
+                                            onChangeSelect={this.handleChangeLogLevelSelect}
+                                        />
+                                    </FormControl>
+                                    </TableCell>
+                                    <TableCell style={{width:'20%'}} component="th" scope="row">
+                                    <FormControl fullWidth={true}>
+                                        <InputLabel htmlFor="client-status">실행파일보호</InputLabel>
+                                        <LogLevelSelect name="transmit_exe" minNo={editingItem.get('exe_minno')}
+                                            value={(editingItem.get('transmit_exe')) ? editingItem.get('transmit_exe') : ""}
+                                            onChangeSelect={this.handleChangeLogLevelSelect}
+                                        />
+                                    </FormControl>
+                                    </TableCell>
+                                    <TableCell style={{width:'20%'}} component="th" scope="row">
+                                    <FormControl fullWidth={true}>
+                                        <InputLabel htmlFor="client-status">매체제어</InputLabel>
+                                        <LogLevelSelect name="transmit_media" minNo={editingItem.get('media_minno')}
+                                            value={(editingItem.get('transmit_media')) ? editingItem.get('transmit_media') : ""}
+                                            onChangeSelect={this.handleChangeLogLevelSelect}
+                                        />
+                                    </FormControl>
+                                    </TableCell>
+                                    <TableCell style={{width:'20%'}} component="th" scope="row">
+                                    <FormControl fullWidth={true}>
+                                        <InputLabel htmlFor="client-status">에이전트</InputLabel>
+                                        <LogLevelSelect name="transmit_agent" minNo={editingItem.get('agent_minno')}
+                                            value={(editingItem.get('transmit_agent')) ? editingItem.get('transmit_agent') : ""}
+                                            onChangeSelect={this.handleChangeLogLevelSelect}
+                                        />
+                                    </FormControl>
+                                    </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                            <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'8 0 16 0'}}>
+                                <Grid item xs={12} sm={6} md={6}>
+                                    <div style={{marginTop:"10px"}}>
+                                        <FormLabel style={{marginRight:"50px"}}>{bull} 전송후 삭제여부</FormLabel>
+                                        <FormControlLabel
+                                            control={
+                                            <Switch onChange={this.handleValueChange('isDeleteLog')} color="primary"
+                                                checked={(editingItem.get('isDeleteLog')) ? editingItem.get('isDeleteLog') : false} />
+                                            }
+                                            label={(editingItem.get('isDeleteLog')) ? '삭제함' : '삭제안함'}
+                                        />
+                                    </div>
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={6}>
+                                <TextField label={"서버전송후 로그보관일수"} value={(editingItem.get('logRemainDate')) ? editingItem.get('logRemainDate') : ''}
+                                    onChange={this.handleValueChange("logRemainDate")}
+                                    className={classes.fullWidth}
+                                    disabled={!(editingItem.get('isDeleteLog'))}
+                                />
+                                <Typography variant="caption">'0' 으로 설정시 삭제하지 않음</Typography>
+                                </Grid>
+                            </Grid>
+                        </div>
+                        </Paper>
+                        <Typography variant="body1">{bull} 단말 로그 (JournalD Log) 설정</Typography>
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
                                 <Grid item xs={12} sm={4} md={4}>
                                 <TextField label="로그파일 최대크기(MB)" value={(editingItem.get('logMaxSize')) ? editingItem.get('logMaxSize') : ''}
@@ -449,10 +462,8 @@ class ClientConfSettingDialog extends Component {
                                 <Typography variant="caption">저널디의 'SystemKeepFree' 설정값</Typography>
                                 </Grid>
                             </Grid>
-                        </div>
-                        </Paper>
 
-                        <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'0 0 8 0'}}>
+                        <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'20px 0px 8px 0px'}}>
                             <Grid item xs={6}>
                                 <FormLabel style={{marginRight:"20px"}}>{bull} 접속 가능 아이피 설정</FormLabel>
                                 <Button onClick={this.handleAddWhiteIp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
