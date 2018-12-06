@@ -8,24 +8,27 @@ import { grLayout } from "templates/default/GRLayout";
 
 import Drawer from "@material-ui/core/Drawer";
 
+import ListSubheader from '@material-ui/core/ListSubheader';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Collapse from '@material-ui/core/Collapse';
-
-import MenuList from '@material-ui/core/MenuList';
-import MenuItem from '@material-ui/core/MenuItem';
-
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 
+import DashboardIcon from '@material-ui/icons/Poll';
+import MenuIcon from '@material-ui/icons/Menu';
+
 import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 
 import menuItems from "./GRMenuItems";
 
@@ -37,8 +40,7 @@ class GRSideMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      menu1Open: false,
-      menu2Open: true,
+      statistic: false
     };
   }
 
@@ -52,6 +54,7 @@ class GRSideMenu extends React.Component {
   };
 
   handleClick = (id, e) => {
+    this.setState(state => ({ [id]: !state[id] }));
     switch(id) {
       case 'menu1': this.setState({ menu1Open: !this.state.menu1Open }); break;
       case 'menu2': this.setState({ menu2Open: !this.state.menu2Open }); break;
@@ -64,12 +67,12 @@ class GRSideMenu extends React.Component {
 
     const titleMenu = (item, key) => {
       return (
-        <MenuItem key={key} className={menuItem} >
+        <ListItem key={key} className={menuItem} >
           <ListItemIcon>
             <DraftsIcon />
           </ListItemIcon>
           <ListItemText primary={item.name} />
-        </MenuItem>
+        </ListItem>
       );
     }
 
@@ -78,33 +81,18 @@ class GRSideMenu extends React.Component {
     }
 
     // nav item with nav link
-    const menuItem = (item, key) => {
-      const classes = {
-        item: classNames(item.class) ,
-        link: classNames('nav-link', item.variant ? `nav-link-${item.variant}` : ''),
-        icon: classNames(item.icon)
-      };
-      return (
-        menuLink(item, key, classes)
-      )
-    };
-
-    // <MenuItem key={key} className={classes.menuItem} onClick={event => this.handleMenuItemClick(event, item)}>
-    const menuLink = (item, key, classParam) => {
-      const url = item.url ? item.url : '';
+    const menuItem = (item, key, isDrop) => {
       const menuclass = item.level == 1 ? classes.menuItemClass : classes.nestedClass;
-      const menuIcon = (item.level == 1) ? <ArrowRightIcon /> : <KeyboardArrowRightIcon />
-
+      const icon = (item.id == 'dashboard') ? <DashboardIcon /> : (isDrop) ? <MenuIcon /> : <KeyboardArrowRightIcon />;
       return (
-        <MenuItem key={key} 
-          className={menuclass} 
-          component={Link}
-          to={item.url}>
-          <ListItemIcon style={{padding:0,margin:0}} >{menuIcon}</ListItemIcon>
-          <Typography variant="button" color="textSecondary">
-            {item.name}
-          </Typography>
-        </MenuItem>
+        <ListItem key={key} button className={menuclass} onClick={() => this.handleClick(item.id)}
+          component={Link} to={item.url}>
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText inset primary={item.name} style={{paddingLeft:0}} />
+          {(isDrop) &&
+            <span>{this.state[item.id] ? <ExpandLess /> : <ExpandMore />}</span>            
+          }
+        </ListItem>
       )
     };
 
@@ -112,11 +100,11 @@ class GRSideMenu extends React.Component {
     const menuDropdown = (item, key) => {
       return (
         <div key={key}>
-        {menuItem(item, key)}
-        <Collapse in={this.state.menu2Open} timeout="auto" unmountOnExit>
-          <MenuList component="div" disablePadding>
+        {menuItem(item, key, true)}
+        <Collapse in={this.state[item.id]} timeout="auto" unmountOnExit>
+          <List key={key} component="div" disablePadding>
             {menuList(item.children)}
-          </MenuList>
+          </List>
         </Collapse>
         </div>
       );
@@ -126,7 +114,7 @@ class GRSideMenu extends React.Component {
     const menuType = (item, idx) => {
       return (item.title ? titleMenu(item, idx) :
         item.divider ? menuDivider(item, idx) :
-        item.children ? menuDropdown(item, idx) : menuItem(item, idx));
+        item.children ? menuDropdown(item, idx) : menuItem(item, idx, false));
     }
 
     // menu list
@@ -149,9 +137,9 @@ class GRSideMenu extends React.Component {
               </Typography>
             </Toolbar>
           </AppBar>
-          <MenuList>
+          <List component="nav" className={classes.root}>
           {menuList(menuItems.items, 0)}
-          </MenuList>
+          </List>
         </div>
         <AppBar position="static" style={{backgroundColor:"gray"}}>
           <Toolbar>
