@@ -60,7 +60,8 @@ class SoftwareFilterDialog extends Component {
         {no:15, tag:'synaptic.desktop', name:'Synaptic Package Manager', name_kr:'시냅틱 패키지 관리자'},
         {no:16, tag:'xfce4-screenshooter.desktop', name:'Screenshot', name_kr:'스크린샷'},
         {no:17, tag:'xfce4-terminal.desktop', name:'Xfce Terminal', name_kr:'터미널'},
-        {no:18, tag:'veyon-master.desktop', name:'Veyon Master', name_kr:'Veyon Master'}
+        {no:18, tag:'veyon-master.desktop', name:'Veyon Master', name_kr:'Veyon Master'},
+        {no:19, tag:'eog.desktop', name:'Image Viewer', name_kr:'이미지 보기'}
     ];
 
     handleClose = (event) => {
