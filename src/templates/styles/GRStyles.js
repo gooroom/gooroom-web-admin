@@ -129,6 +129,9 @@ export const GRCommonStyle = theme => ({
     nestedClass: {
         padding: "3px 5px 0px 30px !important"
     },
+    nestedMoreClass: {
+        padding: "3px 5px 0px 40px !important"
+    },
     
     // MENU Footer
     menuFooterRoot: {

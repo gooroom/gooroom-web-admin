@@ -52,20 +52,28 @@ export default {
           level: 2,
         },
         {
-          name: '업데이트서버',
-          id: 'GRM0701',
-          url: '/clientconfig/update/GRM0701/업데이트서버',
+          name: '단말정책',
+          id: 'clientconfig',
+          url: '/clientconfig',
           level: 2,
-        }, {
-          name: 'HOSTS',
-          id: 'GRM0702',
-          url: '/clientconfig/host/GRM0702/HOSTS',
-          level: 2,
-        }, {
-          name: '단말설정',
-          id: 'GRM0703',
-          url: '/clientconfig/setting/GRM0703/단말설정',
-          level: 2,
+          children: [
+            {
+              name: '단말설정',
+              id: 'GRM0703',
+              url: '/clientconfig/setting/GRM0703/단말설정',
+              level: 3,
+            }, {
+              name: 'HOSTS',
+              id: 'GRM0702',
+              url: '/clientconfig/host/GRM0702/HOSTS',
+              level: 3,
+            }, {
+              name: '업데이트서버',
+              id: 'GRM0701',
+              url: '/clientconfig/update/GRM0701/업데이트서버',
+              level: 3,
+            }
+          ]
         }
       ]
     }, {
