@@ -22,8 +22,13 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 
 import DashboardIcon from '@material-ui/icons/Poll';
-import MenuIcon from '@material-ui/icons/Menu';
+import ClientIcon from '@material-ui/icons/Computer';
+import UserIcon from '@material-ui/icons/SupervisedUserCircle';
+import JobIcon from '@material-ui/icons/PlayForWork';
+import StatisticIcon from '@material-ui/icons/ShowChart';
 
+
+import MenuIcon from '@material-ui/icons/Menu';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 
@@ -82,15 +87,19 @@ class GRSideMenu extends React.Component {
 
     // nav item with nav link
     const menuItem = (item, key, isDrop) => {
-      const menuclass = item.level == 1 ? classes.menuItemClass : classes.nestedClass;
-      const icon = (item.id == 'dashboard') ? <DashboardIcon /> : (isDrop) ? <MenuIcon /> : <KeyboardArrowRightIcon />;
+      const menuclass = item.level == 1 ? classes.menuItemClass : (item.level == 2 ? classes.nestedClass : classes.nestedMoreClass);
+      const icon = (item.id == 'dashboard') ? <DashboardIcon /> : (item.id == 'statistic') ? <StatisticIcon /> : 
+              (item.id == 'jobs') ? <JobIcon /> : 
+              (item.id == 'user') ? <UserIcon /> : 
+              (item.id == 'clients') ? <ClientIcon /> : 
+              (isDrop) ? <MenuIcon /> : <KeyboardArrowRightIcon />;
       return (
         <ListItem key={key} button className={menuclass} onClick={() => this.handleClick(item.id)}
-          component={Link} to={item.url}>
-          <ListItemIcon>{icon}</ListItemIcon>
+          component={(isDrop) ? '' : Link} to={(isDrop) ? '' : item.url}>
+          <ListItemIcon >{icon}</ListItemIcon>
           <ListItemText inset primary={item.name} style={{paddingLeft:0}} />
           {(isDrop) &&
-            <span>{this.state[item.id] ? <ExpandLess /> : <ExpandMore />}</span>            
+            <span>{this.state[item.id] ? <ExpandLess /> : <ExpandMore />}</span>
           }
         </ListItem>
       )
