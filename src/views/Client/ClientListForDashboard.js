@@ -160,7 +160,7 @@ class ClientListForDashboard extends Component {
   }
 
   handleClickShowUserInfo = (userId, clientId) => {
-    this.props.onClickShowUserInfo(userId, clientId);
+    this.props.onClickShowUserInfo((userId.startsWith('+')) ? '' : userId, clientId);
   }
   
   render() {
@@ -206,7 +206,7 @@ class ClientListForDashboard extends Component {
                     <TableCell className={classes.grSmallAndClickAndCenterCell} 
                       style={{fontWeight:'bold',textDecoration:'underline'}}
                       onClick={() => this.handleClickShowUserInfo(n.get('loginId'), n.get('clientId'))}>
-                      {n.get('loginId')}
+                      {(n.get('loginId').startsWith('+')) ? n.get('loginId').substring(1) + " [LU]" : n.get('loginId')}
                     </TableCell>
                   }
                   {(n.get('loginId') === '-' || n.get('loginId') === '') && 

@@ -47,7 +47,9 @@ class UserInfoDialog extends Component {
                     <Grid container spacing={16}>
                         <Grid item xs={6} md={6}>정책 통합 조회</Grid>
                         <Grid item xs={6} md={6} style={{textAlign:'right',fontSize:'12px'}}>
-                        사용자아이디: <font style={{fontWeight:'bold',fontSize:'15px'}}>{DashboardProps.getIn(['selectedUserInfo', 'userId'])}</font><br/>
+                        {(DashboardProps.getIn(['selectedUserInfo', 'userId']) != '') &&
+                        <div>사용자아이디: <font style={{fontWeight:'bold',fontSize:'15px'}}>{DashboardProps.getIn(['selectedUserInfo', 'userId'])}</font><br/></div>
+                        }
                         단말아이디: <font style={{fontWeight:'bold',fontSize:'15px'}}>{DashboardProps.getIn(['selectedUserInfo', 'clientId'])}</font>
                         </Grid>
                     </Grid>
