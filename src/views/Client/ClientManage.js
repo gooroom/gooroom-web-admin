@@ -273,7 +273,7 @@ class ClientManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('viewStatus')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell} >{n.get('loginId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{(n.get('isOn') == '1') ? ((n.get('loginId') && n.get('loginId').startsWith('+')) ? n.get('loginId').substring(1) + " [LU]" : n.get('loginId')) : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
