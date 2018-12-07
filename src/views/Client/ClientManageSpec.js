@@ -116,12 +116,10 @@ class ClientManageSpec extends Component {
                       <TableCell component="th" scope="row">{bull} OS보안침해</TableCell>
                       <TableCell numeric>{(viewItem.get('countOsProtector') > 0) ? '침해' : '미침해'}</TableCell>
                     </TableRow>
-                    {/**
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} isProtector</TableCell>
-                      <TableCell numeric>{(viewItem.get('isProtector') == '0') ? '침해' : '미침해'}</TableCell>
+                      <TableCell component="th" scope="row">{bull} 단말 등록일</TableCell>
+                      <TableCell numeric>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD HH:mm:ss')}</TableCell>
                     </TableRow>
-                    */}
                   </TableBody>
 
                 </Table>
