@@ -68,9 +68,7 @@ class JobManage extends Component {
 
   // .................................................
   handleChangePage = (event, page) => {
-    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.match.params.grMenuId, {
-      page: page
-    });
+    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, this.props.match.params.grMenuId, { page: page });
   };
 
   handleChangeRowsPerPage = event => {
@@ -109,7 +107,7 @@ class JobManage extends Component {
 
   // .................................................
   handleKeywordChange = (name, value) => {
-    this.props.JobManageActions.changeListParamData({
+    this.props.JobManageActions.changeListParamData(this.props.JobManageProps, {
       name: name, 
       value: value,
       compId: this.props.match.params.grMenuId
@@ -117,10 +115,11 @@ class JobManage extends Component {
   }
 
   handleChangeJobStatusSelect = (event, property) => {
-    this.props.JobManageActions.changeListParamData({
+    this.props.JobManageActions.changeListParamData(this.props.JobManageProps, {
       name: 'jobStatus', 
       value: property,
-      compId: this.props.match.params.grMenuId
+      compId: this.props.match.params.grMenuId,
+      isGetList: true
     });
   };
 

@@ -47,7 +47,7 @@ const initialState = {
         { statusId: "C", statusVal: "C", statusNm: "작업완료" }
     ],
     selectedJobStatus: {
-        statusIds: []
+        statusIds: ["R", "D"]
     },
 
     logLevelData: [

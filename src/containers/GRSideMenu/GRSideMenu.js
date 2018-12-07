@@ -21,11 +21,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 
-import DashboardIcon from '@material-ui/icons/Poll';
-import ClientIcon from '@material-ui/icons/Computer';
-import UserIcon from '@material-ui/icons/SupervisedUserCircle';
-import JobIcon from '@material-ui/icons/PlayForWork';
-import StatisticIcon from '@material-ui/icons/ShowChart';
+import DashboardIcon from '@material-ui/icons/PollTwoTone';
+import ClientIcon from '@material-ui/icons/ComputerTwoTone';
+import UserIcon from '@material-ui/icons/SupervisedUserCircleTwoTone';
+import JobIcon from '@material-ui/icons/PlayForWorkTwoTone';
+import StatisticIcon from '@material-ui/icons/ShowChartTwoTone';
+import RuleIcon from '@material-ui/icons/BallotTwoTone';
+import SoftwareIcon from '@material-ui/icons/SettingsSystemDaydreamTwoTone';
+import DesktopIcon from '@material-ui/icons/CallToActionTwoTone';
 
 
 import MenuIcon from '@material-ui/icons/Menu';
@@ -89,6 +92,9 @@ class GRSideMenu extends React.Component {
     const menuItem = (item, key, isDrop) => {
       const menuclass = item.level == 1 ? classes.menuItemClass : (item.level == 2 ? classes.nestedClass : classes.nestedMoreClass);
       const icon = (item.id == 'dashboard') ? <DashboardIcon /> : (item.id == 'statistic') ? <StatisticIcon /> : 
+              (item.id == 'clientconfig' || item.id == 'userconfig') ? <RuleIcon /> :
+              (item.id == 'desktopconfig') ? <DesktopIcon /> : 
+              (item.id == 'package') ? <SoftwareIcon /> : 
               (item.id == 'jobs') ? <JobIcon /> : 
               (item.id == 'user') ? <UserIcon /> : 
               (item.id == 'clients') ? <ClientIcon /> : 

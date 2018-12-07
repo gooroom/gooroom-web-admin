@@ -21,7 +21,7 @@ const CLOSE_JOB_INFORM = 'jobManage/CLOSE_JOB_INFORM';
 const SET_JOB_CANCEL = 'jobManage/SET_JOB_CANCEL';
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chJobNo', 'desc');
+const initialState = commonHandleActions.getCommonInitialState('chJobNo', 'desc', {}, {jobStatus: ['R', 'D']});
 
 export const showJobInform = (param) => dispatch => {
     return dispatch({
@@ -108,13 +108,38 @@ export const readClientListInJobPaged = (module, compId, extParam) => dispatch =
     });
 };
 
-export const changeListParamData = (param) => dispatch => {
-    return dispatch({
-        type: CHG_LISTPARAM_DATA,
-        compId: param.compId,
-        name: param.name,
-        value: param.value
-    });
+export const changeListParamData = (module, param) => dispatch => {
+    if(param && param.isGetList) {
+        dispatch({ type: CHG_LISTPARAM_DATA, compId: param.compId, name: param.name, value: param.value });
+
+        const newListParam = (module.getIn(['viewItems', param.compId])) ? 
+        module.getIn(['viewItems', param.compId, 'listParam']).merge({jobStatus: param.value}) : 
+        module.get('defaultListParam');
+
+        return requestPostAPI('readJobListPaged', {
+            jobStatus: (param.value && param.value != '') ? param.value.join() : '',
+            keyword: newListParam.get('keyword'),
+            page: newListParam.get('page'),
+            start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+            length: newListParam.get('rowsPerPage'),
+            orderColumn: newListParam.get('orderColumn'),
+            orderDir: newListParam.get('orderDir')
+        }).then(
+            (response) => {
+                dispatch({
+                    type: GET_JOB_LISTPAGED_SUCCESS,
+                    compId: param.compId,
+                    listParam: newListParam,
+                    response: response
+                });
+            }
+        ).catch(error => {
+            dispatch({ type: COMMON_FAILURE, error: error });
+        });
+
+    } else {
+        return dispatch({ type: CHG_LISTPARAM_DATA, compId: param.compId, name: param.name, value: param.value });    
+    }
 };
 
 export const changeTargetListParamData = (param) => dispatch => {
