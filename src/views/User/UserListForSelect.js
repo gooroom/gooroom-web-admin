@@ -118,6 +118,8 @@ class UserListForSelect extends Component {
     const newListParam = (stateData.get('listParam')).merge({
       page: page
     });
+    this.setState({ stateData: stateData.set('checkedIds', List([])) });
+    this.props.onSelectUser(List([]));
     this.handleGetUserList(newListParam);
   };
 
@@ -126,6 +128,8 @@ class UserListForSelect extends Component {
     const newListParam = (stateData.get('listParam')).merge({
       rowsPerPage: event.target.value, page: 0
     });
+    this.setState({ stateData: stateData.set('checkedIds', List([])) });
+    this.props.onSelectUser(List([]));
     this.handleGetUserList(newListParam);
   };
 
@@ -134,6 +138,8 @@ class UserListForSelect extends Component {
     const newListParam = (stateData.get('listParam')).merge({
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
+    this.setState({ stateData: stateData.set('checkedIds', List([])) });
+    this.props.onSelectUser(List([]));
     this.handleGetUserList(newListParam);
   };
   // .................................................
@@ -152,6 +158,20 @@ class UserListForSelect extends Component {
     } else {
       newCheckedIds = List([id]);
     }
+    this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
+    this.props.onSelectUser(newCheckedIds);
+  };
+
+  handleClickAllCheck = (event, checked) => {
+    const { stateData } = this.state;
+    let newCheckedIds = List([]);
+
+    if(checked) {
+      stateData.get('listData').map(n => {
+        newCheckedIds = newCheckedIds.push(n.get('userId'));
+      });
+    }
+
     this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
     this.props.onSelectUser(newCheckedIds);
   };
