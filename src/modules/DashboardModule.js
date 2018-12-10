@@ -10,13 +10,16 @@ const COMMON_FAILURE = 'dashboard/COMMON_FAILURE';
 const SHOW_USER_INFORM = 'dashboard/SHOW_USER_INFORM';
 const CLOSE_USER_INFORM = 'dashboard/CLOSE_USER_INFORM';
 
+const SHOW_PACKAGE_LIST = 'dashboard/SHOW_PACKAGE_LIST';
+const CLOSE_PACKAGE_LIST = 'dashboard/CLOSE_PACKAGE_LIST';
+
 const GET_CLIENT_STATUS_INFO = 'dashboard/GET_CLIENT_STATUS_INFO';
 const GET_VIOLATED_STATUS_INFO = 'dashboard/GET_VIOLATED_STATUS_INFO';
 
 const initialState = commonHandleActions.getCommonInitialState('', '', {userInfoDialog: false});
 
 export const showUserInfo = (param) => dispatch => {
-
+    
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readTotalRule', param).then(
         (response) => {
@@ -34,6 +37,27 @@ export const showUserInfo = (param) => dispatch => {
 export const closeUserInfo = (param) => dispatch => {
     return dispatch({
         type: CLOSE_USER_INFORM
+    });
+};
+
+export const showPackgeListInfo = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readTotalRule', param).then(
+        (response) => {
+            dispatch({
+                type: SHOW_PACKAGE_LIST,
+                param: param,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+export const closePackgeListInfo = (param) => dispatch => {
+    return dispatch({
+        type: CLOSE_PACKAGE_LIST
     });
 };
 
@@ -83,6 +107,13 @@ export default handleActions({
     },
     [CLOSE_USER_INFORM]: (state, action) => {
         return state.set('userInfoDialog', false);
+    },
+    [SHOW_PACKAGE_LIST]: (state, action) => {
+        return state
+            .set('packageListDialog', true);
+    },
+    [CLOSE_PACKAGE_LIST]: (state, action) => {
+        return state.set('packageListDialog', false);
     },
     [GET_CLIENT_STATUS_INFO]: (state, action) => {
         const statusInfo = (action.response.data && action.response.data.data && action.response.data.data.length > 0) ? action.response.data.data[0] : null;

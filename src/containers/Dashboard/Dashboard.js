@@ -94,6 +94,14 @@ class Dashboard extends Component {
         AdminActions.redirectPage({address:'/log/secretlog/GRM0935/보안로그?logItem=' + type + '&keyword=' + clientId});
     }
 
+    handleClickPackageLink = (type, clientId) => {
+        //const { AdminActions, SecurityLogActions, SecurityLogProps } = this.props;
+        // if(SecurityLogProps.getIn(['viewItems', 'GRM0935'])) {
+        //     SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, 'GRM0935', {logItem:type,keyword:clientId,page:0});
+        // }
+        //AdminActions.redirectPage({address:'/package/packagemanage/GRM0201/패키지관리?logItem=' + type + '&keyword=' + clientId});
+    }
+
     handleClickShowUserInfo = (loginId, clientId) => {
         this.props.DashboardActions.showUserInfo({
             userId: loginId,
@@ -161,7 +169,11 @@ class Dashboard extends Component {
 
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
-                    <ClientListForDashboard onClickViolatedItem={this.handleClickViolatedLink} onClickShowUserInfo={this.handleClickShowUserInfo}/>
+                    <ClientListForDashboard 
+                        onClickViolatedItem={this.handleClickViolatedLink} 
+                        onClickShowUserInfo={this.handleClickShowUserInfo}
+                        onClickShowPackageInfo={this.handleClickPackageLink}
+                    />
                 </Paper>
               </Grid>
 

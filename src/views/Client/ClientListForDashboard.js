@@ -162,6 +162,12 @@ class ClientListForDashboard extends Component {
   handleClickShowUserInfo = (userId, clientId) => {
     this.props.onClickShowUserInfo((userId.startsWith('+')) ? '' : userId, clientId);
   }
+
+  handleClickPackageInfo = (type, clientId) => {
+    this.props.onClickShowPackageInfo(type, clientId);
+  }
+
+  
   
   render() {
     const { classes } = this.props;
@@ -231,7 +237,17 @@ class ClientListForDashboard extends Component {
                       <Typography>{storageRate}</Typography>
                     </Tooltip>
                   </TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('updateCnt')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('updateTargetCnt')}</TableCell>
+                  {(n.get('updateTargetCnt') < -999) && 
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} 
+                    style={{color:'red',fontWeight:'bold',textDecoration:'underline'}}
+                    onClick={() => this.handleClickPackageInfo('ALL', n.get('clientId'))}>
+                    {n.get('updateTargetCnt')}
+                  </TableCell>
+                  }
+                  {(n.get('updateTargetCnt') < -999) && 
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >0</TableCell>
+                  }
                 </TableRow>
               );
             })}

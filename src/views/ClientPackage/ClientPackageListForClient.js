@@ -48,32 +48,44 @@ class ClientPackageListForClient extends Component {
   ];
 
   componentDidMount() {
-    this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {clientId: this.props.clientId});
+    this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
+      clientId: this.props.clientId,
+      isFiltered: (this.props.isFiltered) ? this.props.isFiltered : 'false'
+    });
   }
 
   handleChangePage = (event, page) => {
     this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
       page: page,
-      clientId: this.props.clientId
+      clientId: this.props.clientId,
+      isFiltered: (this.props.isFiltered) ? this.props.isFiltered : 'false'
     });
   };
 
   handleChangeRowsPerPage = event => {
     this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
-      rowsPerPage: event.target.value, page: 0, clientId: this.props.clientId
+      rowsPerPage: event.target.value, 
+      page: 0, 
+      clientId: this.props.clientId,
+      isFiltered: (this.props.isFiltered) ? this.props.isFiltered : 'false'
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
     this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc',
-      clientId: this.props.clientId
+      clientId: this.props.clientId,
+      isFiltered: (this.props.isFiltered) ? this.props.isFiltered : 'false'
     });
   };
   
   handleSelectBtnClick = () => {
     const { ClientPackageActions, ClientPackageProps, compId } = this.props;
-    ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {page: 0, clientId: this.props.clientId});
+    ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {
+      page: 0, 
+      clientId: this.props.clientId,
+      isFiltered: (this.props.isFiltered) ? this.props.isFiltered : 'false'
+    });
   };
 
   // .................................................
