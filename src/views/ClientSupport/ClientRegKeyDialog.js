@@ -6,8 +6,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientRegKeyActions from 'modules/ClientRegKeyModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import GRAlert from 'components/GRComponents/GRAlert';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -20,6 +22,8 @@ import TextField from "@material-ui/core/TextField";
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import Add from "@material-ui/icons/Add";
+
+import {CopyToClipboard} from 'react-copy-to-clipboard'
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -99,6 +103,13 @@ class ClientRegKeyDialog extends Component {
         this.props.ClientRegKeyActions.generateClientRegkey();
     }
 
+    handleClickCopyKey = () => {
+        this.props.GRAlertActions.showAlert({
+            alertTitle: '복사',
+            alertMsg: '단말등록키가 클립보드에 복사되었습니다. 붙여넣기 하실 수 있습니다.'
+        });
+    }
+
     render() {
         const { classes } = this.props;
         const { ClientRegKeyProps, compId } = this.props;
@@ -133,9 +144,18 @@ class ClientRegKeyDialog extends Component {
                         <Grid item xs={4} className={classes.createButton}>
                         {(dialogType === ClientRegKeyDialog.TYPE_ADD) && 
                           <Button className={classes.GRIconSmallButton} variant="contained" color="secondary"
+                            style={{marginTop:20}}
                             onClick={() => { this.handleKeyGenerate(); }}
                             ><Add />키생성
                           </Button>
+                        }
+                        {(dialogType === ClientRegKeyDialog.TYPE_VIEW) &&
+                        <CopyToClipboard text={(editingItem.get('regKeyNo')) ? editingItem.get('regKeyNo'): ''}
+                            onCopy={this.handleClickCopyKey}
+                        >
+                            <Button className={classes.GRIconSmallButton} style={{padding:'0px 5px 0px 5px'}}
+                                variant='contained' color="secondary">복사하기</Button>
+                        </CopyToClipboard>
                         }
                         </Grid>
                     </Grid>
@@ -196,6 +216,7 @@ class ClientRegKeyDialog extends Component {
                 </DialogActions>
             </Dialog>
             }
+            <GRAlert />
             </div>
         );
     }
@@ -207,7 +228,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     ClientRegKeyActions: bindActionCreators(ClientRegKeyActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientRegKeyDialog));
