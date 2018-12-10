@@ -18,6 +18,7 @@ import Divider from '@material-ui/core/Divider';
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -139,14 +140,20 @@ class ClientGroupDialog extends Component {
             <Dialog open={ClientGroupProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <DialogTitle >{title}</DialogTitle>
                 <DialogContent style={{minHeight:567}}>
-                    <TextField label="단말그룹이름" className={classes.fullWidth}
-                        value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
-                        onChange={this.handleValueChange('grpNm')}
-                    />
-                    <TextField label="단말그룹설명" className={classes.fullWidth}
-                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                        onChange={this.handleValueChange('comment')}
-                    />
+                    <Grid container spacing={24}>
+                        <Grid item xs={3}>
+                            <TextField label="단말그룹이름" className={classes.fullWidth}
+                                value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
+                                onChange={this.handleValueChange('grpNm')}
+                            />
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField label="단말그룹설명" className={classes.fullWidth}
+                                value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                                onChange={this.handleValueChange('comment')}
+                            />
+                        </Grid>
+                    </Grid>
                     <Divider style={{marginBottom: 10}} />
                     <ClientRuleSelector compId={compId} module={ClientGroupProps.get('editingItem').toJS()} targetType="GROUP" />
                 </DialogContent>

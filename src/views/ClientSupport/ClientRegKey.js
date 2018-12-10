@@ -208,10 +208,10 @@ class ClientRegKey extends Component {
                       key={n.get('regKeyNo')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regKeyNo')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('validDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('expireDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('validDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('expireDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('regKeyNo'))}>
