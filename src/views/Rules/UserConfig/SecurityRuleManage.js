@@ -129,9 +129,10 @@ class SecurityRuleManage extends Component {
       viewItem: Map({
         objNm: '',
         comment: '',
-        screenTime: '10',
+        screenTime: '30',
         passwordTime: '60',
-        packageHandle: true
+        packageHandle: true,
+        globalNetwork: 'accept'
       }),
       dialogType: SecurityRuleDialog.TYPE_ADD
     });

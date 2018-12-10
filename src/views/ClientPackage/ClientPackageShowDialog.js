@@ -44,7 +44,7 @@ class ClientPackageShowDialog extends Component {
     }
 
     render() {
-        const { compId, isOpen, selectedId } = this.props;
+        const { compId, isOpen, selectedId, isFiltered } = this.props;
 
         return (
             <React.Fragment>
@@ -52,7 +52,7 @@ class ClientPackageShowDialog extends Component {
                 <Dialog open={isOpen} maxWidth="xs" >
                     <DialogTitle>패키지 정보</DialogTitle>
                     <DialogContent>
-                        <ClientPackageListForClient compId={compId} clientId={selectedId} />
+                        <ClientPackageListForClient compId={compId} clientId={selectedId} isFiltered={isFiltered} />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.props.onClose} variant='contained' color="primary" style={{marginLeft:10}}>닫기</Button>

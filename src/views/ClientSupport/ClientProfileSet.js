@@ -318,8 +318,8 @@ class ClientProfileSet extends Component {
         <ClientPackageShowDialog compId={compId}
           isOpen={this.state.isOpenClientPackageSelect} 
           selectedId={this.state.selectedClientId} 
+          isFiltered={false}
           onClose={this.handleClickPackageShowClose} />
-        
         <GRConfirm />
       </React.Fragment>
     );

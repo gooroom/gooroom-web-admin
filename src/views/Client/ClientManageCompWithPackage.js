@@ -169,7 +169,7 @@ class ClientManageCompWithPackage extends Component {
 
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
-    if(listObj) {
+    if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
 
@@ -186,7 +186,9 @@ class ClientManageCompWithPackage extends Component {
           </Grid>
           <Grid item xs={4} >
             <FormControl fullWidth={true}>
-              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+              <KeywordOption paramName="keyword" keywordValue={(listObj && listObj.get('listParam')) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                handleKeywordChange={this.handleKeywordChange} 
+                handleSubmit={() => this.handleSelectBtnClick()} />
             </FormControl>
           </Grid>
           <Grid item xs={4} >
@@ -197,7 +199,7 @@ class ClientManageCompWithPackage extends Component {
         </Grid>
 
         {/* data area */}
-        {listObj &&
+        {(listObj && listObj.get('listData')) &&
         <Table>
           <GRCommonTableHead
             classes={classes}
@@ -233,7 +235,7 @@ class ClientManageCompWithPackage extends Component {
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientGroupName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('totalCnt')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('updateCnt')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('updateTargetCnt')}</TableCell>
                 </TableRow>
               );
             })}

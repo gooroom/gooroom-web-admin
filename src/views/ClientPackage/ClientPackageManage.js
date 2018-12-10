@@ -54,6 +54,31 @@ class ClientPackageManage extends Component {
     };
   }
 
+  componentDidMount() {
+    // const { SecurityLogActions, SecurityLogProps } = this.props;
+    // let search = this.props.location.search;
+
+    // if(search && search != '') {
+    //   search = (search.startsWith("?")) ? search.substring(1) : search;
+    //   var result = {};
+    //   search.split("&").forEach(function(part) {
+    //     var item = part.split("=");
+    //     result[item[0]] = decodeURIComponent(item[1]);
+    //   });
+
+    //   const { ClientManageProps, ClientManageActions, ClientPackageProps, ClientPackageActions } = this.props;
+    //   const compId = this.props.match.params.grMenuId;
+
+    //   ClientManageActions.changeCompVariable({ name: 'selectId', value: result.keyword, compId: compId });
+    //   ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, { clientId: result.keyword, page:0, isFiltered: true });
+
+    //   ClientManageActions.changeListParamData({ name: 'keyword', value: result.keyword, compId: compId});
+    //   ClientManageActions.readClientListPaged(ClientManageProps, compId, {page: 0, keyword: result.keyword});
+    // } else {
+    //   // this.handleSelectBtnClick();
+    // }
+  }
+
   // Select Group Item
   handleClientGroupSelect = (selectedGroupObj) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
