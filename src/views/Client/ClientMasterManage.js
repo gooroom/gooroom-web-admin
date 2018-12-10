@@ -223,9 +223,10 @@ class ClientMasterManage extends Component {
   handleClientSelectSave = (checkedClientIds) => {
     const { ClientGroupProps, GRConfirmActions } = this.props;
     const selectedGroupItem = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
+
     GRConfirmActions.showConfirm({
         confirmTitle: '그룹에 단말 추가',
-        confirmMsg: '단말을 그룹 추가하시겠습니까?',
+        confirmMsg: '선택한 단말(' + checkedClientIds.size + '개)을 단말그룹(' + selectedGroupItem.get('grpNm') + ')으로 변경하시겠습니까?',
         handleConfirmResult: this.handleClientSelectSaveConfirmResult,
         confirmObject: {
           selectedGroupId: selectedGroupItem.get('grpId'),
@@ -365,14 +366,6 @@ class ClientMasterManage extends Component {
                   </span>
                   </Tooltip>
 
-                  <Tooltip title="그룹에 단말삭제">
-                  <span>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
-                      <RemoveIcon /><ClientIcon />
-                    </Button>
-                  </span>
-                  </Tooltip>
-
                 </Grid>
               </Grid>
               </Toolbar>
@@ -389,6 +382,15 @@ class ClientMasterManage extends Component {
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
+
+                    <Tooltip title="그룹에 단말삭제">
+                    <span>
+                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
+                        <RemoveIcon /><ClientIcon />
+                      </Button>
+                    </span>
+                    </Tooltip>
+
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
                     <Tooltip title="단말 폐기">

@@ -242,7 +242,9 @@ class ClientListForViolated extends Component {
               <KeywordOption handleKeywordChange={this.handleKeywordChange} />
             </FormControl>
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={1}>
+          </Grid>
+          <Grid item xs={7}>
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
               <Search />조회
             </Button>
