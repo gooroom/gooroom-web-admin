@@ -92,18 +92,17 @@ class ClientHostNameSelector extends Component {
       <Card className={classes.card}>
         <CardContent style={{padding: 0}}>
         {listAllData && 
-        <FormControl className={classes.formControl} style={{width: '100%', marginBottom: 24, marginTop: 8, border: 'dotted 1px lightGray'}}>
-          <InputLabel htmlFor="cfg-helper"></InputLabel>
-          <Select value={selectedOptionItemId}
-            onChange={this.handleChange}
-          >
-          <MenuItem key={'-'} value={'-'}>지정안함</MenuItem>
-          {listAllData.map(item => (
-            <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
-          ))}
-          </Select>
-          <FormHelperText>Hosts 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
-        </FormControl>
+          <div style={{width:'100%',textAlign:'center'}}>
+            <FormControl className={classes.formControl} style={{marginBottom: 10, marginTop: 26, padding: '0px 20px 0px 20px'}}>
+              <Select value={selectedOptionItemId} style={{backgroundColor:'#f9eaea'}} onChange={this.handleChange} >
+                <MenuItem key={'-'} value={'-'}>지정안함</MenuItem>
+                {listAllData.map(item => (
+                  <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>Hosts 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
+            </FormControl>
+          </div>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
           <ClientHostNameSpec compId={compId} specType="inform" hasAction={false}

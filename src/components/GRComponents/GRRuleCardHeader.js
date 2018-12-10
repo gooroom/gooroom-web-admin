@@ -24,7 +24,7 @@ export const styles = theme => ({
     fontWeight:'bold',
     background: 'linear-gradient(45deg, #A3A3A2 30%, #45464a 90%)',
     color: 'white',
-    padding: '0 5'
+    padding: '0px 5px 0px 5px'
   },
   /* Styles applied to the avatar element. */
   avatar: {
