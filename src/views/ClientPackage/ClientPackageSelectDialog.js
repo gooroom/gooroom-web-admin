@@ -69,21 +69,19 @@ class ClientPackageSelectDialog extends Component {
         handleConfirmResult: (confirmValue, confirmObject) => {
             if(confirmValue) {
             const { ClientManageProps, ClientPackageActions, compId } = this.props;
-            ClientPackageActions.updatePackageList({
+            ClientPackageActions.updateTotalPackage({
                 compId: compId
             }).then((response) => {
-                if(response && response.data && response.data.status && response.data.status.result === 'success') {
+                if(response && response.response.data && response.response.data.status && response.response.data.status.result == 'success') {
                     this.props.GRAlertActions.showAlert({
                       alertTitle: '업데이트 완료',
                       alertMsg: '패키지 리스트를 업데이트 하기 위하여 작업이 생성되었습니다. 1~3분 정도 기다린후 확인하시기 바랍니다.'
                     });
-                    this.getSeverUrlInfo();
                   } else {
                     this.props.GRAlertActions.showAlert({
                       alertTitle: '시스템오류',
                       alertMsg: '패키지 리스트 업데이트 작업이 생성되지 못하였습니다.'
                   });
-                  this.getSeverUrlInfo();
                 }
             });
             }

@@ -15,7 +15,7 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 
-import ClientPackageListForClient from 'views/ClientPackage/ClientPackageListForClient';
+import ClientProfilePackageList from 'views/ClientSupport/ClientProfilePackageList';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -31,7 +31,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Dialog ########## ########## ########## ########## ##########
 //
-class ClientPackageShowDialog extends Component {
+class ClientProfilePackageShowDialog extends Component {
 
     constructor(props) {
         super(props);
@@ -44,15 +44,19 @@ class ClientPackageShowDialog extends Component {
     }
 
     render() {
-        const { compId, isOpen, selectedId, isFiltered } = this.props;
-
+        const { compId, isOpen, selectedClientId, selectedProfileNo, keyword, onChangeKeyword } = this.props;
         return (
             <React.Fragment>
             {(isOpen) &&
                 <Dialog open={isOpen} maxWidth="xs" >
                     <DialogTitle>패키지 정보</DialogTitle>
                     <DialogContent>
-                        <ClientPackageListForClient compId={compId} clientId={selectedId} isFiltered={isFiltered} />
+                        <ClientProfilePackageList compId={compId} 
+                            clientId={selectedClientId} 
+                            profileNo={selectedProfileNo} 
+                            onChangeKeyword={onChangeKeyword}
+                            keyword={keyword}
+                        />
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={this.props.onClose} variant='contained' color="primary" style={{marginLeft:10}}>닫기</Button>
@@ -76,4 +80,4 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageShowDialog));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfilePackageShowDialog));

@@ -17,7 +17,7 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import ClientProfileSetDialog from './ClientProfileSetDialog';
-import ClientPackageShowDialog from "views/ClientPackage/ClientPackageShowDialog";
+import ClientProfilePackageShowDialog from "views/ClientSupport/ClientProfilePackageShowDialog";
 
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -60,7 +60,9 @@ class ClientProfileSet extends Component {
     super(props);
 
     this.state = {
+      selectedProfileNo: '',
       selectedClientId: '',
+      keyword: '',
       isOpenClientPackageSelect: false
     };
   }
@@ -145,6 +147,7 @@ class ClientProfileSet extends Component {
     event.stopPropagation();
     const viewItem = getRowObjectById(this.props.ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     this.setState({
+      selectedProfileNo: viewItem.get('profileNo'),
       selectedClientId: viewItem.get('clientId'),
       isOpenClientPackageSelect: true
     });
@@ -152,8 +155,9 @@ class ClientProfileSet extends Component {
 
   handleClickPackageShowClose = () => {
     this.setState({
+      keyword: '',
       isOpenClientPackageSelect: false
-    })
+    });
   }
 
   // delete
@@ -187,6 +191,12 @@ class ClientProfileSet extends Component {
       name: name, 
       value: value,
       compId: this.props.match.params.grMenuId
+    });
+  }
+
+  handleLocalKeywordChange = (name, value) => {
+    this.setState({
+      keyword: value
     });
   }
 
@@ -315,9 +325,12 @@ class ClientProfileSet extends Component {
         </GRPane>
         {/* dialog(popup) component area */}
         <ClientProfileSetDialog compId={compId} />
-        <ClientPackageShowDialog compId={compId}
+        <ClientProfilePackageShowDialog compId={compId}
           isOpen={this.state.isOpenClientPackageSelect} 
-          selectedId={this.state.selectedClientId} 
+          selectedClientId={this.state.selectedClientId} 
+          selectedProfileNo={this.state.selectedProfileNo} 
+          onChangeKeyword={this.handleLocalKeywordChange}
+          keyword={this.state.keyword}
           isFiltered={false}
           onClose={this.handleClickPackageShowClose} />
         <GRConfirm />

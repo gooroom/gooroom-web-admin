@@ -51,6 +51,7 @@ const initialState = {
     },
 
     logLevelData: [
+        { levelNo: "0", levelId: "None", levelVal: "none", levelNm: "사용안함" },
         { levelNo: "1", levelId: "Emergency", levelVal: "emerg", levelNm: "긴급" },
         { levelNo: "2", levelId: "Alert", levelVal: "alert", levelNm: "경보" },
         { levelNo: "3", levelId: "Critical", levelVal: "crit", levelNm: "위험" },
@@ -58,8 +59,7 @@ const initialState = {
         { levelNo: "5", levelId: "Warning", levelVal: "warnning", levelNm: "경고" },
         { levelNo: "6", levelId: "Notice", levelVal: "notice", levelNm: "알림" },
         { levelNo: "7", levelId: "Informational", levelVal: "info", levelNm: "정보" },
-        { levelNo: "8", levelId: "Debug", levelVal: "debug", levelNm: "디버깅" },
-        { levelNo: "9", levelId: "None", levelVal: "none", levelNm: "사용안함" }
+        { levelNo: "8", levelId: "Debug", levelVal: "debug", levelNm: "디버깅" }
     ],
     protectionTypeData: [
         { typeId: "ALL", typeVal: "ALL", typeNm: "전체" },
