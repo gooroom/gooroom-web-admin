@@ -22,6 +22,8 @@ const DELETE_PACKAGETOCLIENT_SUCCESS = 'clientPackage/DELETE_PACKAGETOCLIENT_SUC
 const UPDATE_PACKAGELIST_SUCCESS = 'clientPackage/UPDATE_PACKAGELIST_SUCCESS';
 const UPDATE_PACKAGEALLLIST_SUCCESS = 'clientPackage/UPDATE_PACKAGEALLLIST_SUCCESS';
 
+const UPDATE_TOTLAPACKAGELIST_SUCCESS = 'clientPackage/UPDATE_TOTLAPACKAGELIST_SUCCESS';
+
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chPackageId', 'asc', {dialogTabValue: 0});
 
@@ -82,6 +84,42 @@ export const changeCompVariable = (param) => dispatch => {
     });
 };
 // ...
+
+export const readProfilePackageListPaged = (module, compId, extParam) => dispatch => {
+    let newListParam = Map({});
+    if(module.getIn(['viewItems', compId])) {
+        newListParam = module.getIn(['viewItems', compId, 'listParam']).merge(extParam)
+    } else {
+        newListParam = module.get('defaultListParam');
+        if(extParam) {
+            newListParam = newListParam.merge(extParam);
+        }
+    }
+
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readProfilePackageListPaged', {
+        keyword: newListParam.get('keyword'),
+        profileNo: newListParam.get('profileNo'),
+        clientId: newListParam.get('clientId'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_CLIENTPACKAGE_LISTPAGED_SUCCESS,
+                compId: compId,
+                listParam: newListParam,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 
 export const readPackageListPagedInClient = (module, compId, extParam) => dispatch => {
     let newListParam = Map({});
@@ -210,12 +248,12 @@ export const createPackageAllUpgrade = (param) => dispatch => {
 };
 
 
-export const _____updatePackageList = (param) => dispatch => {
+export const updateTotalPackage = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('____createPackageAllUpgrade', {}).then(
+    return requestPostAPI('updateTotalPackage', {}).then(
         (response) => {
             dispatch({
-                type: UPDATE_PACKAGELIST_SUCCESS,
+                type: UPDATE_TOTLAPACKAGELIST_SUCCESS,
                 compId: param.compId,
                 grpId: param.grpId
             });
@@ -285,7 +323,12 @@ export default handleActions({
         return state.merge({
             pending: false, error: false
         });
-    }
+    },
+    [UPDATE_TOTLAPACKAGELIST_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false, error: false
+        });
+    },
 
 }, initialState);
 

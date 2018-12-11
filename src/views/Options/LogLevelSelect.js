@@ -16,7 +16,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 class LogLevelSelect extends Component {
 
   render() {
-    const { CommonOptionProps, name, value, minNo=1 } = this.props;
+    const { CommonOptionProps, name, value, minNo=0 } = this.props;
     return (
       <React.Fragment>
       <Select

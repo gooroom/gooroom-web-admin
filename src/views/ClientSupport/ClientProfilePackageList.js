@@ -16,7 +16,7 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
-import ClientPackageDialog from './ClientPackageDialog';
+import ClientPackageDialog from 'views/ClientPackage/ClientPackageDialog';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -41,60 +41,61 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
-class ClientPackageListForClient extends Component {
+class ClientProfilePackageList extends Component {
 
   columnHeaders = [
     { id: "chPackageId", isOrder: true, numeric: false, disablePadding: true, label: "패키지이름" }
   ];
 
   componentDidMount() {
-    this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
+    this.props.ClientPackageActions.readProfilePackageListPaged(this.props.ClientPackageProps, this.props.compId, {
       clientId: this.props.clientId,
-      isFiltered: (this.props.isFiltered) ? this.props.isFiltered : 'false'
+      profileNo: this.props.profileNo,
+      keyword: this.props.keyword
     });
   }
 
   handleChangePage = (event, page) => {
-    this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
+    this.props.ClientPackageActions.readProfilePackageListPaged(this.props.ClientPackageProps, this.props.compId, {
       page: page,
       clientId: this.props.clientId,
-      isFiltered: (this.props.isFiltered) ? this.props.isFiltered : 'false'
+      profileNo: this.props.profileNo,
+      keyword: this.props.keyword
     });
   };
 
   handleChangeRowsPerPage = event => {
-    this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
+    this.props.ClientPackageActions.readProfilePackageListPaged(this.props.ClientPackageProps, this.props.compId, {
       rowsPerPage: event.target.value, 
       page: 0, 
       clientId: this.props.clientId,
-      isFiltered: (this.props.isFiltered) ? this.props.isFiltered : 'false'
+      profileNo: this.props.profileNo,
+      keyword: this.props.keyword
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
-    this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId, {
+    this.props.ClientPackageActions.readProfilePackageListPaged(this.props.ClientPackageProps, this.props.compId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc',
       clientId: this.props.clientId,
-      isFiltered: (this.props.isFiltered) ? this.props.isFiltered : 'false'
+      profileNo: this.props.profileNo,
+      keyword: this.props.keyword
     });
   };
   
   handleSelectBtnClick = () => {
     const { ClientPackageActions, ClientPackageProps, compId } = this.props;
-    ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {
+    ClientPackageActions.readProfilePackageListPaged(ClientPackageProps, compId, {
       page: 0, 
       clientId: this.props.clientId,
-      isFiltered: (this.props.isFiltered) ? this.props.isFiltered : 'false'
+      profileNo: this.props.profileNo,
+      keyword: this.props.keyword
     });
   };
 
   // .................................................
   handleKeywordChange = (name, value) => {
-    this.props.ClientPackageActions.changeListParamData({
-      name: name, 
-      value: value,
-      compId: this.props.compId
-    });
+    this.props.onChangeKeyword(name, value);
   }
 
   render() {
@@ -198,6 +199,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageListForClient));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfilePackageList));
 
 
