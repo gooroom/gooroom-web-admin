@@ -291,7 +291,6 @@ export const editSecurityRule = (itemObj, compId) => dispatch => {
     return requestPostAPI('updateSecurityRule', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
                 // change selected object
                 requestPostAPI('readSecurityRule', {'objId': itemObj.get('objId')}).then(
                     (response) => {

@@ -332,7 +332,6 @@ export const editDesktopConfData = (itemObj, compId) => dispatch => {
     return requestPostAPI('updateDesktopConf', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
                 // change selected object
                 requestPostAPI('readDesktopConf', {'desktopConfId': itemObj.get('confId')}).then(
                     (response) => {
@@ -426,7 +425,6 @@ export const readThemeInfoList = () => dispatch => {
 //     return requestPostAPI('updateDesktopApp', makeParameter(itemObj)).then(
 //         (response) => {
 //             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-//                 // alarm ... success
 //                 // change selected object
 //                 requestPostAPI('readDesktopConfData', {'desktopAppId': itemObj.get('appId')}).then(
 //                     (response) => {

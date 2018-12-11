@@ -293,7 +293,6 @@ export const editDesktopAppData = (itemObj, compId) => dispatch => {
     return requestPostAPI('updateDesktopApp', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
                 // change selected object
                 requestPostAPI('readDesktopAppData', {'desktopAppId': itemObj.get('appId')}).then(
                     (response) => {

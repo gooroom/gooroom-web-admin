@@ -280,7 +280,6 @@ export const editSoftwareFilterData = (itemObj, compId) => dispatch => {
     return requestPostAPI('updateSoftwareFilter', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
                 // change selected object
                 requestPostAPI('readSoftwareFilter', {'objId': itemObj.get('objId')}).then(
                     (response) => {
