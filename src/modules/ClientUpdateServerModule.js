@@ -215,7 +215,6 @@ export const editClientUpdateServerData = (itemObj, compId) => dispatch => {
     return requestPostAPI('updateUpdateServerConf', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
                 // change selected object
                 requestPostAPI('readUpdateServerConf', {'objId': itemObj.get('objId')}).then(
                     (response) => {

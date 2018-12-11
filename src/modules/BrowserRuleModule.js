@@ -279,7 +279,6 @@ export const editBrowserRuleData = (itemObj, compId) => dispatch => {
     return requestPostAPI('updateBrowserRuleConf', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
                 // change selected object
                 requestPostAPI('readBrowserRule', {'objId': itemObj.get('objId')}).then(
                     (response) => {

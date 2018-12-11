@@ -155,7 +155,7 @@ export const editClientGroupData = (param) => dispatch => {
     return requestPostAPI('updateClientGroup', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
+
                 requestPostAPI('readClientGroupData', {'groupId': param.groupId}).then(
                     (response) => {
                         dispatch({

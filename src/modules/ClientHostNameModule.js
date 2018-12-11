@@ -214,7 +214,6 @@ export const editClientHostNameData = (itemObj, compId) => dispatch => {
     return requestPostAPI('updateHostNameConf', makeParameter(itemObj)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
                 // change selected object
                 requestPostAPI('readHostNameConf', {'objId': itemObj.get('objId')}).then(
                     (response) => {

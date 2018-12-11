@@ -118,7 +118,6 @@ export const editAdminInfoData = (itemObj) => dispatch => {
     return requestPostAPI('updateCurrentAdminUserData', { pollingCycle: itemObj.editPollingCycle }).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
                 // change selected object
                 requestPostAPI('readCurrentAdminUserData').then(
                     (response) => {
