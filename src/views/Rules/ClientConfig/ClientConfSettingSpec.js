@@ -218,7 +218,7 @@ export const convertLogLevelNo = (param) => {
   } else if(param == 'debug') {
     return 8;
   } else {
-    return 9;
+    return 0;
   }
 }
 

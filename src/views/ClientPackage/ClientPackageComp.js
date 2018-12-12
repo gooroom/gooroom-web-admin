@@ -176,7 +176,7 @@ class ClientPackageComp extends Component {
         handleConfirmResult: ((confirmValue, confirmObject) => {
           if(confirmValue) {
             this.props.ClientPackageActions.updatePackageInClient({
-              clientIds: this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'listParam', 'clientId']),
+              clientId: this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'listParam', 'clientId']),
               packageIds: confirmObject.checkedPackageIds.join(',')
             }).then(() => {
               if(response && response.status && response.status.result === 'success') {

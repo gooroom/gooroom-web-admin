@@ -61,7 +61,10 @@ class SoftwareFilterDialog extends Component {
         {no:16, tag:'xfce4-screenshooter.desktop', name:'Screenshot', name_kr:'스크린샷'},
         {no:17, tag:'xfce4-terminal.desktop', name:'Xfce Terminal', name_kr:'터미널'},
         {no:18, tag:'veyon-master.desktop', name:'Veyon Master', name_kr:'Veyon Master'},
-        {no:19, tag:'eog.desktop', name:'Image Viewer', name_kr:'이미지 보기'}
+        {no:19, tag:'eog.desktop', name:'Image Viewer', name_kr:'이미지 보기'},
+        {no:20, tag:'blueman-manager.desktop', name:'Bluetooth Manager', name_kr:'블루투스 관리자'},
+        {no:21, tag:'mousepad.desktop', name:'Mousepad', name_kr:'메모'},
+        {no:22, tag:'gooroom-guide.desktop', name:'Gooroom Guide', name_kr:'구름 도움말'}
     ];
 
     handleClose = (event) => {
