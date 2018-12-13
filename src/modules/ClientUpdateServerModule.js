@@ -178,6 +178,15 @@ export const deleteCompData = (param) => dispatch => {
     });
 };
 
+export const deleteCompDataItem = (param) => dispatch => {
+    return dispatch({
+        type: DELETE_COMPDATA_ITEM,
+        compId: param.compId,
+        name: param.name,
+        targetType: param.targetType
+    });
+};
+
 const makeParameter = (itemObj) => {
     return {
         objId: itemObj.get('objId'),
@@ -332,7 +341,7 @@ export default handleActions({
         return state.deleteIn(['viewItems', action.compId]);
     },
     [DELETE_COMPDATA_ITEM]: (state, action) => {
-        return state.deleteIn(['viewItems', action.compId, action.itemName]);
+        return commonHandleActions.handleDeleteCompItem(state, action);
     },
     [CREATE_UPDATESERVER_SUCCESS]: (state, action) => {
         return state.merge({
