@@ -69,26 +69,26 @@ class ClientGroupSpec extends Component {
     const { compId } = this.props;
 
     this.props.ClientConfSettingActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
-      value: getValueInSelectedObjectInComp(this.props.ClientConfSettingProps, compId, 'GROUP', 'objId')      
+      value: getValueInSelectedObjectInComp(this.props.ClientConfSettingProps, compId, 'GROUP', 'objId')
     });
     this.props.ClientHostNameActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
-      value: getValueInSelectedObjectInComp(this.props.ClientHostNameProps, compId, 'GROUP', 'objId')      
+      value: getValueInSelectedObjectInComp(this.props.ClientHostNameProps, compId, 'GROUP', 'objId')
     });
     this.props.ClientUpdateServerActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
-      value: getValueInSelectedObjectInComp(this.props.ClientUpdateServerProps, compId, 'GROUP', 'objId')      
+      value: getValueInSelectedObjectInComp(this.props.ClientUpdateServerProps, compId, 'GROUP', 'objId')
     });
 
     this.props.MediaRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
-      value: getValueInSelectedObjectInComp(this.props.MediaRuleProps, compId, 'GROUP', 'objId')      
+      value: getValueInSelectedObjectInComp(this.props.MediaRuleProps, compId, 'GROUP', 'objId')
     });
     this.props.BrowserRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
-      value: getValueInSelectedObjectInComp(this.props.BrowserRuleProps, compId, 'GROUP', 'objId')      
+      value: getValueInSelectedObjectInComp(this.props.BrowserRuleProps, compId, 'GROUP', 'objId')
     });
     this.props.SecurityRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
-      value: getValueInSelectedObjectInComp(this.props.SecurityRuleProps, compId, 'GROUP', 'objId')      
+      value: getValueInSelectedObjectInComp(this.props.SecurityRuleProps, compId, 'GROUP', 'objId')
     });
     this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
-      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'GROUP', 'objId')      
+      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'GROUP', 'objId')
     });
 
     this.props.ClientGroupActions.showDialog({
