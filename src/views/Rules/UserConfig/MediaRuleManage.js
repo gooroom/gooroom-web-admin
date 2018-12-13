@@ -121,7 +121,17 @@ class MediaRuleManage extends Component {
 
   handleCreateButton = () => {
     this.props.MediaRuleActions.showDialog({
-      viewItem: Map(),
+      viewItem: Map({
+        cdAndDvd: 'allow',
+        bluetoothState: 'allow',
+        mouse: 'allow',
+        camera: 'allow',
+        usbMemory: 'allow',
+        keyboard: 'allow',
+        sound: 'allow',
+        printer: 'allow',
+        wireless: 'allow'
+      }),
       dialogType: MediaRuleDialog.TYPE_ADD
     });
   }

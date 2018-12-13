@@ -71,18 +71,18 @@ class ThemeSpec extends Component {
             <CardContent>
               <Grid container >
                 {viewItem.get('themeIcons').map(n => {
+                  const iconUrl = n.get('imgUrl') + n.get('fileName');
                   return (
                 <Grid item xs={12} md={6} lg={4} xl={3}>
-
-                <Card>
-                <CardHeader
-                  avatar={
-                    <Avatar src="images/uxceo-128.jpg" style={{ borderRadius: 0 }} />
-                  }
-                  title={n.get('fileEtcInfo')}
-                  subheader={n.get('fileName')}
-                />
-                </Card>
+                  <Card>
+                  <CardHeader
+                    avatar={
+                      <Avatar src={iconUrl} style={{ borderRadius: 0 }} />
+                    }
+                    title={n.get('fileEtcInfo')}
+                    subheader={n.get('fileName')}
+                  />
+                  </Card>
                 </Grid>
                   )})
                 }
