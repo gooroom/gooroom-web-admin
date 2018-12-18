@@ -52,6 +52,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class DesktopConfManage extends Component {
 
   columnHeaders = [
+    { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
     { id: 'chConfId', isOrder: false, numeric: false, disablePadding: true, label: '데스크톱환경아이디' },
     { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '데스크톱환경이름' },
     { id: 'chThemeName', isOrder: false, numeric: false, disablePadding: true, label: '테마이름' },
@@ -249,12 +250,13 @@ class DesktopConfManage extends Component {
                       tabIndex={-1}
                       key={n.get('confId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('confId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('confId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('confId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('confNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('themeNm')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
 
