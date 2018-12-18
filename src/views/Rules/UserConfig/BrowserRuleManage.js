@@ -247,10 +247,10 @@ class BrowserRuleManage extends Component {
                       tabIndex={-1}
                       key={n.get('objId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
 
@@ -260,11 +260,13 @@ class BrowserRuleManage extends Component {
                           <SettingsApplicationsIcon />
                         </Button>
 
+                        { !n.get('objId').endsWith('DEFAULT') && 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleClickDeleteInRow(event, n.get('objId'))}>
                           <DeleteIcon />
-                        </Button>                        
+                        </Button>
+                        }
 
                       </TableCell>
                     </TableRow>
