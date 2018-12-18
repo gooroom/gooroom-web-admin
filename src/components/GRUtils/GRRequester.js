@@ -1,8 +1,8 @@
 import axios, { post }  from "axios";
 import qs from "qs";
 
-export const GPMS_URL = 'http://ain.gooroom.kr:8080/gpms/';
-//export const GPMS_URL = '/gpms/';
+//export const GPMS_URL = 'http://ain.gooroom.kr:8080/gpms/';
+export const GPMS_URL = '/gpms/';
 
 function collection() {
     let data = {};
@@ -65,10 +65,10 @@ export function grRequestPromise(url, param) {
       } else {
           reject(response);
       }
-      })
-      .catch(function(error) {
 
-      });
+    }).catch(function(error) {
+
+    });
   });
 };
 
@@ -76,17 +76,17 @@ export function grRequestPromise(url, param) {
 export function requestPostAPI(url, param, headers) {
 
   return axios({
-      method: "post",
-      url: GPMS_URL + url,
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      transformRequest: [
-        function(data, headers) {
-          return qs.stringify(data, {arrayFormat:'brackets'});
-        }
-      ],
-      data: param,
-      withCredentials: false
-    });
+    method: "post",
+    url: GPMS_URL + url,
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    transformRequest: [
+      function(data, headers) {
+        return qs.stringify(data, {arrayFormat:'brackets'});
+      }
+    ],
+    data: param,
+    withCredentials: false
+  });
 };
 
 // multipartform
