@@ -376,14 +376,12 @@ export const handleDeleteSuccessActionForDesktopConf = (state, action) => {
 }
 
 export const handleChangeCompValue = (state, action) => {
-    const targetType = action.targetType;
-    const targetNames = (targetType && targetType != '') ? ['viewItems', action.compId, targetType] : ['viewItems', action.compId];
+    const targetNames = (action.targetType && action.targetType != '') ? ['viewItems', action.compId, action.targetType] : ['viewItems', action.compId];
     return state.setIn(List(targetNames).push(action.name), action.value);
 }
 
 export const handleDeleteCompItem = (state, action) => {
-    const targetType = action.targetType;
-    const targetNames = (targetType && targetType != '') ? ['viewItems', action.compId, targetType] : ['viewItems', action.compId];
+    const targetNames = (action.targetType && action.targetType != '') ? ['viewItems', action.compId, action.targetType] : ['viewItems', action.compId];
     return state.deleteIn(List(targetNames).push(action.name));
 }
 

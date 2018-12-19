@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios, { post }  from "axios";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -11,12 +12,6 @@ import * as AdminActions from 'modules/AdminModule';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
-import Grow from '@material-ui/core/Grow';
-import Paper from '@material-ui/core/Paper';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
@@ -49,6 +44,14 @@ class GRFull extends Component {
     };
 
     this.toggleDrawer = this.toggleDrawer.bind(this);
+
+    let that = this;
+    axios.interceptors.response.use(function (response) {
+        return response;
+      }, function (error) {
+        if(error.response.status === 944) { window.location.reload(); }
+        return Promise.reject(error);
+    });
   }
 
   componentDidMount() {

@@ -89,7 +89,7 @@ class AdminInform extends Component {
 
     return (
       <div>
-        <Card>
+        <Card style={{width:242}}>
           <CardHeader
             title="관리자"
             action={

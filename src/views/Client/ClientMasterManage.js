@@ -156,6 +156,18 @@ class ClientMasterManage extends Component {
 
   // create group
   handleCreateButtonForClientGroup = () => {
+    const compId = this.props.match.params.grMenuId;
+
+    this.props.ClientConfSettingActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
+    this.props.ClientHostNameActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
+    this.props.ClientUpdateServerActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
+
+    this.props.BrowserRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.MediaRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.SecurityRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.SoftwareFilterActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.DesktopConfActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP', value: ''});
+    
     this.props.ClientGroupActions.showDialog({
       viewItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD

@@ -14,6 +14,7 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 
+import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -22,6 +23,8 @@ import TableRow from '@material-ui/core/TableRow';
 
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
+
+import RefreshIcon from '@material-ui/icons/Refresh';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -130,6 +133,10 @@ class ClientListForDashboard extends Component {
   };
   // .................................................
 
+  handleClickRefresh = () => {
+    this.handleSelectBtnClick();
+  }
+
   handleSelectRow = (event, id) => {
 
     // const { stateData } = this.state;
@@ -151,7 +158,9 @@ class ClientListForDashboard extends Component {
 
   handleSelectBtnClick = () => {
     const { stateData } = this.state;
-    const newListParam = stateData.get('listParam');
+    const newListParam = (stateData.get('listParam')).merge({
+      page: 0
+    });
     this.handleGetClientList(newListParam);
   };
 
@@ -166,17 +175,24 @@ class ClientListForDashboard extends Component {
   handleClickPackageInfo = (type, clientId) => {
     this.props.onClickShowPackageInfo(type, clientId);
   }
-
-  
   
   render() {
     const { classes } = this.props;
     const listObj = this.state.stateData;
     return (
       <div style={{paddingTop:10}}>
+      <Grid container spacing={0} >
+        <Grid item>
         <Typography style={{margin:'2px 8px',fontWeight:'bold'}}>
           Online Client List
         </Typography>
+        </Grid>
+        <Grid item>
+        <Button className={classes.GRIconSmallButton} style={{minWidth:25,marginRight:10}}
+          variant="contained" color={"primary"} 
+          onClick={this.handleClickRefresh} ><RefreshIcon /></Button>
+        </Grid>
+      </Grid>
       {(listObj) &&
         <Table>
           <GRCommonTableHead
