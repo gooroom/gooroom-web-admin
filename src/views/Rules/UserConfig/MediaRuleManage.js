@@ -121,7 +121,17 @@ class MediaRuleManage extends Component {
 
   handleCreateButton = () => {
     this.props.MediaRuleActions.showDialog({
-      viewItem: Map(),
+      viewItem: Map({
+        cdAndDvd: 'allow',
+        bluetoothState: 'allow',
+        mouse: 'allow',
+        camera: 'allow',
+        usbMemory: 'allow',
+        keyboard: 'allow',
+        sound: 'allow',
+        printer: 'allow',
+        wireless: 'allow'
+      }),
       dialogType: MediaRuleDialog.TYPE_ADD
     });
   }
@@ -237,10 +247,10 @@ class MediaRuleManage extends Component {
                       tabIndex={-1}
                       key={n.get('objId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('objId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
 
@@ -250,11 +260,13 @@ class MediaRuleManage extends Component {
                           <SettingsApplicationsIcon />
                         </Button>
 
+                        { !n.get('objId').endsWith('DEFAULT') &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>                        
+                        }
 
                       </TableCell>
                     </TableRow>

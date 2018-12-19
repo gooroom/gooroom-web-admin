@@ -151,10 +151,12 @@ class UserMasterManage extends Component {
   handleCreateButtonForDept = (event) => {
     // 이전에 선택되어진 내용 삭제
     const compId = this.props.match.params.grMenuId;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
-    BrowserRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
-    MediaRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
-    SecurityRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
+
+    this.props.BrowserRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.MediaRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.SecurityRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.SoftwareFilterActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.DesktopConfActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
 
     const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
     if(selectedDeptCd && selectedDeptCd !== '') {
