@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import * as GcspManageActions from 'modules/GcspManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -55,12 +55,20 @@ class GcspDialog extends Component {
     // 생성
     handleCreateData = (event) => {
         const { GcspManageProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '클라우드서비스 등록',
-            confirmMsg: '클라우드서비스를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: GcspManageProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '클라우드서비스 등록',
+                confirmMsg: '클라우드서비스를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: GcspManageProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }        
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -83,12 +91,20 @@ class GcspDialog extends Component {
     // 수정
     handleEditData = (event) => {
         const { GcspManageProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '클라우드서비스 수정',
-            confirmMsg: '클라우드서비스를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditDataConfirmResult,
-            confirmObject: GcspManageProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '클라우드서비스 수정',
+                confirmMsg: '클라우드서비스를 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditDataConfirmResult,
+                confirmObject: GcspManageProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }        
     }
     handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -139,13 +155,16 @@ class GcspDialog extends Component {
             <div>
             {(GcspManageProps.get('dialogOpen') && editingItem) &&
             <Dialog open={GcspManageProps.get('dialogOpen')}>
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     <Grid container spacing={24}>
                         <Grid item xs={6}>
-                            <TextField
+                            <TextValidator
                                 label="서비스아이디"
                                 value={(editingItem.get('gcspId')) ? editingItem.get('gcspId') : ''}
+                                name="gcspId" validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']} 
+                                errorMessages={['서비스아이디를 입력하세요.', '알파벳,숫자,"-","_","." 문자만 입력하세요.']}
                                 onChange={
                                     (dialogType == GcspDialog.TYPE_VIEW || dialogType == GcspDialog.TYPE_EDIT) ? null : this.handleValueChange("gcspId")
                                 }
@@ -153,9 +172,10 @@ class GcspDialog extends Component {
                             />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField
+                            <TextValidator
                                 label="서비스이름"
                                 value={(editingItem.get('gcspNm')) ? editingItem.get('gcspNm') : ''}
+                                name="gcspNm" validators={['required']} errorMessages={['서비스이름을 입력하세요.']}
                                 onChange={
                                     (dialogType == GcspDialog.TYPE_VIEW) ? null : this.handleValueChange("gcspNm")
                                 }
@@ -253,6 +273,7 @@ class GcspDialog extends Component {
                     }
                     <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
             </Dialog>
             }
             </div>

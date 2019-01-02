@@ -9,6 +9,8 @@ import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils'; 
@@ -52,12 +54,20 @@ class ClientUpdateServerDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientUpdateServerProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '업데이트서버 정보 등록',
-            confirmMsg: '업데이트서버 정보를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: ClientUpdateServerProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '업데이트서버 정보 등록',
+                confirmMsg: '업데이트서버 정보를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: ClientUpdateServerProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -72,12 +82,20 @@ class ClientUpdateServerDialog extends Component {
 
     handleEditData = (event) => {
         const { ClientUpdateServerProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '업데이트서버 정보 수정',
-            confirmMsg: '업데이트서버 정보를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
-            confirmObject: ClientUpdateServerProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '업데이트서버 정보 수정',
+                confirmMsg: '업데이트서버 정보를 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult,
+                confirmObject: ClientUpdateServerProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -126,24 +144,29 @@ class ClientUpdateServerDialog extends Component {
             <div>
             {(ClientUpdateServerProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientUpdateServerProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === ClientUpdateServerDialog.TYPE_EDIT || dialogType === ClientUpdateServerDialog.TYPE_ADD) &&
                     <div>
-                        <TextField label="이름" className={classes.fullWidth}
+                        <TextValidator label="이름" className={classes.fullWidth}
                             value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            name="objNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
                             onChange={this.handleValueChange("objNm")} />
                         <TextField label="설명" className={classes.fullWidth}
                             value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                             onChange={this.handleValueChange("comment")} />
-                        <TextField label="주 OS 정보" multiline className={classes.fullWidth}
+                        <TextValidator label="주 OS 정보" multiline className={classes.fullWidth}
                             value={(editingItem.get('mainos')) ? editingItem.get('mainos') : ''}
+                            name="mainos" validators={['required']} errorMessages={['주 OS 정보를 입력하세요.']}
                             onChange={this.handleValueChange("mainos")} />
-                        <TextField label="기반 OS 정보" multiline className={classes.fullWidth}
+                        <TextValidator label="기반 OS 정보" multiline className={classes.fullWidth}
                             value={(editingItem.get('extos')) ? editingItem.get('extos') : ''}
+                            name="extos" validators={['required']} errorMessages={['기반 OS 정보를 입력하세요.']}
                             onChange={this.handleValueChange("extos")} />
-                        <TextField label="gooroom.pref" multiline className={classes.fullWidth}
+                        <TextValidator label="gooroom.pref" multiline className={classes.fullWidth}
                             value={(editingItem.get('priorities')) ? editingItem.get('priorities') : ''}
+                            name="priorities" validators={['required']} errorMessages={['gooroom.pref 정보를 입력하세요.']}
                             onChange={this.handleValueChange("priorities")} />
                     </div>
                     }
@@ -168,6 +191,7 @@ class ClientUpdateServerDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
                 <GRConfirm />
             </Dialog>
             }

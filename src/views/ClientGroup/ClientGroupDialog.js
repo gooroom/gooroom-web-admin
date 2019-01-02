@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -46,12 +48,20 @@ class ClientGroupDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientGroupProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '단말그룹 등록',
-            confirmMsg: '단말그룹을 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateDataConfirmResult,
-            confirmObject: ClientGroupProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '단말그룹 등록',
+                confirmMsg: '단말그룹을 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateDataConfirmResult,
+                confirmObject: ClientGroupProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -83,11 +93,19 @@ class ClientGroupDialog extends Component {
     
     handleEditData = (event) => {
         const { GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '단말그룹 수정',
-            confirmMsg: '단말그룹을 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '단말그룹 수정',
+                confirmMsg: '단말그룹을 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
@@ -138,11 +156,15 @@ class ClientGroupDialog extends Component {
             <div>
             {(ClientGroupProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientGroupProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
+                <ValidatorForm ref="form">
                 <DialogTitle >{title}</DialogTitle>
                 <DialogContent style={{minHeight:567}}>
                     <Grid container spacing={24}>
                         <Grid item xs={3}>
-                            <TextField label="단말그룹이름" className={classes.fullWidth}
+                            <TextValidator label="단말그룹이름" className={classes.fullWidth}
+                                name="grpNm"
+                                validators={['required']}
+                                errorMessages={['단말그룹이름을 입력하세요.']}
                                 value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
                                 onChange={this.handleValueChange('grpNm')}
                             />
@@ -166,6 +188,7 @@ class ClientGroupDialog extends Component {
                     }
                     <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
             </Dialog>
             }
             </div>

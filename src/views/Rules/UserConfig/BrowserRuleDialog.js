@@ -8,6 +8,8 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
@@ -89,12 +91,20 @@ class BrowserRuleDialog extends Component {
     handleCreateData = (event) => {
         event.preventDefault();
         const { BrowserRuleProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '브라우저제어정책 등록',
-            confirmMsg: '브라우저제어정책을 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: BrowserRuleProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '브라우저제어정책 등록',
+                confirmMsg: '브라우저제어정책을 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: BrowserRuleProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }        
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -109,12 +119,20 @@ class BrowserRuleDialog extends Component {
 
     handleEditData = (event, id) => {
         const { BrowserRuleProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '브라우저제어정책 수정',
-            confirmMsg: '브라우저제어정책을 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
-            confirmObject: BrowserRuleProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '브라우저제어정책 수정',
+                confirmMsg: '브라우저제어정책을 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult,
+                confirmObject: BrowserRuleProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }        
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -214,13 +232,15 @@ class BrowserRuleDialog extends Component {
             <div>
             {(BrowserRuleProps.get('dialogOpen') && editingItem) &&
             <Dialog open={BrowserRuleProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === BrowserRuleDialog.TYPE_EDIT || dialogType === BrowserRuleDialog.TYPE_ADD) &&
                     <div>
                         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                             <Grid item xs={12} sm={4} md={4}>
-                            <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            <TextValidator label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                                name="objNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
                                 onChange={this.handleValueChange("objNm")}
                                 className={classes.fullWidth}
                             />
@@ -482,6 +502,7 @@ class BrowserRuleDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
                 <GRConfirm />
             </Dialog>
             }

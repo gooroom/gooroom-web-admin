@@ -9,6 +9,8 @@ import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import SoftwareFilterSpec from './SoftwareFilterSpec';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
@@ -96,12 +98,20 @@ class SoftwareFilterDialog extends Component {
 
     handleCreateData = (event) => {
         const { SoftwareFilterProps, GRConfirmActions } = this.props;
-        const re = GRConfirmActions.showConfirm({
-            confirmTitle: 'Software제한정책정보 등록',
-            confirmMsg: 'Software제한정책정보를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: SoftwareFilterProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: 'Software제한정책정보 등록',
+                confirmMsg: 'Software제한정책정보를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: SoftwareFilterProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -116,12 +126,20 @@ class SoftwareFilterDialog extends Component {
 
     handleEditData = (event, id) => {
         const { SoftwareFilterProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: 'Software제한정책정보 수정',
-            confirmMsg: 'Software제한정책정보를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
-            confirmObject: SoftwareFilterProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: 'Software제한정책정보 수정',
+                confirmMsg: 'Software제한정책정보를 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult,
+                confirmObject: SoftwareFilterProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -203,29 +221,26 @@ class SoftwareFilterDialog extends Component {
             <div>
             {(SoftwareFilterProps.get('dialogOpen') && editingItem) &&
             <Dialog open={SoftwareFilterProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === SoftwareFilterDialog.TYPE_EDIT || dialogType === SoftwareFilterDialog.TYPE_ADD) &&
                     <div>
-
-                    <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                        onChange={this.handleValueChange("objNm")}
-                        className={classes.fullWidth}
-                        disabled={(dialogType === SoftwareFilterDialog.TYPE_VIEW)}
-                    />
-                    <TextField label="설명" value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                        onChange={this.handleValueChange("comment")}
-                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType === SoftwareFilterDialog.TYPE_VIEW)}
-                    />
-                    {(dialogType === SoftwareFilterDialog.TYPE_VIEW) &&
-                        <div>
-                            <Grid container spacing={24} >
-                                <Grid item xs={12}>
-                                </Grid> 
-                            </Grid>
-                        </div>                        
-                    }
+                    <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+                        <Grid item xs={12} sm={4} md={4}>
+                        <TextValidator label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            name="objNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
+                            onChange={this.handleValueChange("objNm")}
+                            className={classes.fullWidth}
+                        />
+                        </Grid>
+                        <Grid item xs={12} sm={8} md={8}>
+                        <TextField label="설명" value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                            onChange={this.handleValueChange("comment")}
+                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                        />
+                        </Grid>
+                    </Grid>
                     {(dialogType === SoftwareFilterDialog.TYPE_EDIT || dialogType === SoftwareFilterDialog.TYPE_ADD) &&
                         <div style={{marginTop:20}}>
                         <InputLabel>실행금지로 지정할 소프트웨어를 선택하세요.</InputLabel>
@@ -280,6 +295,7 @@ class SoftwareFilterDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
                 <GRConfirm />
             </Dialog>
             }

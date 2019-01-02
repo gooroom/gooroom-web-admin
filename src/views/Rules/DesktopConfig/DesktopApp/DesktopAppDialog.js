@@ -10,6 +10,8 @@ import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
@@ -33,16 +35,6 @@ import Typography from "@material-ui/core/Typography";
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
-import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -78,12 +70,20 @@ class DesktopAppDialog extends Component {
 
     handleCreateData = (event) => {
         const { DesktopAppProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '데스크톱앱 등록',
-            confirmMsg: '데스크톱앱을 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: DesktopAppProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '데스크톱앱 등록',
+                confirmMsg: '데스크톱앱을 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: DesktopAppProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }        
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -98,12 +98,20 @@ class DesktopAppDialog extends Component {
 
     handleEditData = (event, id) => {
         const { DesktopAppProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '데스크톱앱 수정',
-            confirmMsg: '데스크톱앱을 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
-            confirmObject: DesktopAppProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '데스크톱앱 수정',
+                confirmMsg: '데스크톱앱을 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult,
+                confirmObject: DesktopAppProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }        
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -178,12 +186,14 @@ class DesktopAppDialog extends Component {
             <div>
             {(DesktopAppProps.get('dialogOpen') && editingItem) &&
             <Dialog open={DesktopAppProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === DesktopAppDialog.TYPE_EDIT_INAPP || dialogType === DesktopAppDialog.TYPE_EDIT_INCONF || dialogType === DesktopAppDialog.TYPE_ADD) &&
                     <div>
-                    <TextField label="이름" className={classes.fullWidth}
+                    <TextValidator label="이름" className={classes.fullWidth}
                         value={editingItem.get('appNm')}
+                        name="appNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
                         onChange={this.handleValueChange('appNm')} />
                     <TextField label="설명" className={classes.fullWidth}
                         value={editingItem.get('appInfo')}
@@ -316,6 +326,7 @@ class DesktopAppDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
                 <GRConfirm />
             </Dialog>
             }

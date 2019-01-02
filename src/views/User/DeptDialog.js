@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import * as DeptActions from 'modules/DeptModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRCheckConfirm from 'components/GRComponents/GRCheckConfirm';
 import UserRuleSelector from 'components/GROptions/UserRuleSelector';
@@ -47,12 +49,20 @@ class DeptDialog extends Component {
 
     handleCreateData = (event) => {
         const { DeptProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '조직정보 등록',
-            confirmMsg: '조직정보를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: DeptProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '조직정보 등록',
+                confirmMsg: '조직정보를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: DeptProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -80,12 +90,20 @@ class DeptDialog extends Component {
 
     handleEditData = (event) => {
         const { DeptProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showCheckConfirm({
-            confirmTitle: '조직정보 수정',
-            confirmMsg: '조직정보를 수정하시겠습니까?',
-            confirmCheckMsg: '하위조직 적용여부',
-            handleConfirmResult: this.handleEditConfirmResult,
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showCheckConfirm({
+                confirmTitle: '조직정보 수정',
+                confirmMsg: '조직정보를 수정하시겠습니까?',
+                confirmCheckMsg: '하위조직 적용여부',
+                handleConfirmResult: this.handleEditConfirmResult,
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditConfirmResult = (confirmValue, confirmObject, isChecked) => {
 
@@ -141,6 +159,7 @@ class DeptDialog extends Component {
             <div>
             {(DeptProps.get('dialogOpen') && editingItem) &&
                 <Dialog open={DeptProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
+                <ValidatorForm ref="form">
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent style={{minHeight:567}}>
                         {(dialogType === DeptDialog.TYPE_ADD) &&
@@ -152,7 +171,10 @@ class DeptDialog extends Component {
                         }
                         <Grid container spacing={24}>
                             <Grid item xs={6}>
-                                <TextField label="조직아이디"
+                                <TextValidator label="조직아이디"
+                                    name="deptCd"
+                                    validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
+                                    errorMessages={['조직아이디를 입력하세요.', '알파벳,숫자,"-","_","." 문자만 입력하세요.']}
                                     value={(editingItem.get('deptCd')) ? editingItem.get('deptCd') : ''}
                                     onChange={this.handleValueChange("deptCd")}
                                     className={classes.fullWidth}
@@ -160,7 +182,10 @@ class DeptDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField label="조직이름"
+                                <TextValidator label="조직이름"
+                                    name="deptNm"
+                                    validators={['required']}
+                                    errorMessages={['조직이름을 입력하세요.']}
                                     value={(editingItem.get('deptNm')) ? editingItem.get('deptNm') : ''}
                                     onChange={this.handleValueChange("deptNm")}
                                     className={classes.fullWidth}
@@ -179,8 +204,9 @@ class DeptDialog extends Component {
                         }
                         <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                     </DialogActions>
-                    <GRConfirm />
-                    <GRCheckConfirm />
+                </ValidatorForm>
+                <GRConfirm />
+                <GRCheckConfirm />
                 </Dialog>
             }
             </div>

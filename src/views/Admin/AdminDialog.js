@@ -9,9 +9,10 @@ import * as AdminActions from 'modules/AdminModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
-import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils'; 
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -20,7 +21,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -43,21 +43,29 @@ class AdminDialog extends Component {
 
     handleEditData = (event) => {
         const { AdminProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '관리자설정 수정',
-            confirmMsg: '관리자설정을 수정하시겠습니까?',
-            handleConfirmResult: (confirmValue, paramObject) => {
-                if(confirmValue) {
-                    const { AdminProps, AdminActions } = this.props;
-                    AdminActions.editAdminInfoData(paramObject)
-                        .then((res) => {
-                            // refreshDataListInComps(AdminProps, AdminActions.readClientUpdateServerListPaged);
-                            this.handleClose();
-                        });
-                }
-            },
-            confirmObject: AdminProps.toJS()
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '관리자설정 수정',
+                confirmMsg: '관리자설정을 수정하시겠습니까?',
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { AdminProps, AdminActions } = this.props;
+                        AdminActions.editAdminInfoData(paramObject)
+                            .then((res) => {
+                                // refreshDataListInComps(AdminProps, AdminActions.readClientUpdateServerListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
+                confirmObject: AdminProps.toJS()
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }        
     }
 
     render() {
@@ -69,10 +77,14 @@ class AdminDialog extends Component {
             <div>
             {(isShowEdit) &&
             <Dialog open={isShowEdit} scroll="paper" fullWidth={true} maxWidth="xs">
+                <ValidatorForm ref="form">
                 <DialogTitle>관리자설정 수정</DialogTitle>
                 <DialogContent>
-                    <TextField label="갱신주기" className={classes.fullWidth}
+                    <TextValidator label="갱신주기" className={classes.fullWidth}
                         value={editPollingCycle}
+                        name="editPollingCycle"
+                        validators={['required', 'matchRegexp:^[0-9]*$', 'minNumber:5']}
+                        errorMessages={['갱신주기를 입력하세요.', '숫자만 입력하세요.', '5보다 작을수 없습니다.']}
                         onChange={this.handleValueChange("editPollingCycle")} />
                 </DialogContent>
                 <DialogActions>
@@ -80,6 +92,7 @@ class AdminDialog extends Component {
                     <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
                 <GRConfirm />
+                </ValidatorForm>
             </Dialog>
             }
             <GRAlert />

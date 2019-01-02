@@ -10,6 +10,8 @@ import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import DesktopConfSpec from './DesktopConfSpec';
 import DesktopAppSelector from './DesktopAppSelector';
 
@@ -25,26 +27,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-
 import Typography from "@material-ui/core/Typography";
 
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-
-
-import Checkbox from '@material-ui/core/Checkbox';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
-import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -82,12 +70,20 @@ class DesktopConfDialog extends Component {
 
     handleCreateData = (event) => {
         const { DesktopConfProps, GRConfirmActions } = this.props;
-        const re = GRConfirmActions.showConfirm({
-            confirmTitle: '데스크톱정보 등록',
-            confirmMsg: '데스크톱정보를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: DesktopConfProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '데스크톱정보 등록',
+                confirmMsg: '데스크톱정보를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: DesktopConfProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -102,12 +98,20 @@ class DesktopConfDialog extends Component {
 
     handleEditData = (event, id) => {
         const { DesktopConfProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '데스크톱정보 수정',
-            confirmMsg: '데스크톱정보를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
-            confirmObject: DesktopConfProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '데스크톱정보 수정',
+                confirmMsg: '데스크톱정보를 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult,
+                confirmObject: DesktopConfProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }        
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -183,13 +187,15 @@ class DesktopConfDialog extends Component {
             <div>
             {(DesktopConfProps.get('dialogOpen') && editingItem) &&
             <Dialog open={DesktopConfProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === DesktopConfDialog.TYPE_EDIT || dialogType === DesktopConfDialog.TYPE_ADD) &&
                         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                             <Grid item xs={8} >
-                                <TextField label="이름" value={(editingItem.get('confNm')) ? editingItem.get('confNm') : ''}
+                                <TextValidator label="이름" value={(editingItem.get('confNm')) ? editingItem.get('confNm') : ''}
                                     onChange={this.handleValueChange("confNm")}
+                                    name="confNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
                                     className={classes.fullWidth}
                                     disabled={(dialogType === DesktopConfDialog.TYPE_VIEW)}
                                 />
@@ -249,6 +255,7 @@ class DesktopConfDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
                 <GRConfirm />
             </Dialog>
             }
