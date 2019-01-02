@@ -9,6 +9,8 @@ import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
@@ -52,12 +54,20 @@ class ClientHostNameDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientHostNameProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: 'Hosts 정보 등록',
-            confirmMsg: 'Hosts 정보를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: ClientHostNameProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: 'Hosts 정보 등록',
+                confirmMsg: 'Hosts 정보를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: ClientHostNameProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -72,12 +82,20 @@ class ClientHostNameDialog extends Component {
 
     handleEditData = (event, id) => {
         const { ClientHostNameProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: 'Hosts 정보 수정',
-            confirmMsg: 'Hosts 정보를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
-            confirmObject: ClientHostNameProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: 'Hosts 정보 수정',
+                confirmMsg: 'Hosts 정보를 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult,
+                confirmObject: ClientHostNameProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -126,18 +144,23 @@ class ClientHostNameDialog extends Component {
             <div>
             {(ClientHostNameProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientHostNameProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="sm">
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === ClientHostNameDialog.TYPE_EDIT || dialogType === ClientHostNameDialog.TYPE_ADD) &&
                     <div>
-                        <TextField label="이름" className={classes.fullWidth}
+                        <TextValidator label="이름" className={classes.fullWidth}
                             value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            name="objNm" validators={['required']}
+                            errorMessages={['이름을 입력하세요.']}
                             onChange={this.handleValueChange("objNm")} />
                         <TextField label="설명" className={classes.fullWidth}
                             value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                             onChange={this.handleValueChange("comment")} />
-                        <TextField label="Hosts 정보" multiline className={classes.fullWidth}
+                        <TextValidator label="Hosts 정보" multiline className={classes.fullWidth}
                             value={(editingItem.get('hosts')) ? editingItem.get('hosts') : ''}
+                            name="hosts" validators={['required']}
+                            errorMessages={['호스트정보를 입력하세요.']}
                             onChange={this.handleValueChange("hosts")} />
                     </div>
                     }
@@ -163,6 +186,7 @@ class ClientHostNameDialog extends Component {
 
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
                 <GRConfirm />
             </Dialog>
             }

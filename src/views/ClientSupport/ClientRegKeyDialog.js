@@ -4,12 +4,15 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
 import * as ClientRegKeyActions from 'modules/ClientRegKeyModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import GRAlert from 'components/GRComponents/GRAlert';
+
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -51,12 +54,20 @@ class ClientRegKeyDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientRegKeyProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '단말등록키 등록',
-            confirmMsg: '단말등록키를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateDataConfirmResult,
-            confirmObject: ClientRegKeyProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '단말등록키 등록',
+                confirmMsg: '단말등록키를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateDataConfirmResult,
+                confirmObject: ClientRegKeyProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -76,12 +87,20 @@ class ClientRegKeyDialog extends Component {
 
     handleEditData = (event) => {
         const { ClientRegKeyProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '단말등록키 수정',
-            confirmMsg: '단말등록키를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditDataConfirmResult,
-            confirmObject: ClientRegKeyProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '단말등록키 수정',
+                confirmMsg: '단말등록키를 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditDataConfirmResult,
+                confirmObject: ClientRegKeyProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -129,15 +148,16 @@ class ClientRegKeyDialog extends Component {
             <div>
             {(ClientRegKeyProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientRegKeyProps.get('dialogOpen')}>
+            <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
-                
-                    <form noValidate autoComplete="off" className={classes.dialogContainer}>
                     <Grid container spacing={16}>
                         <Grid item xs={8}>
-                            <TextField label="등록키"
+                            <TextValidator label="등록키" name="regKeyNo"
                                 value={(editingItem.get('regKeyNo')) ? editingItem.get('regKeyNo'): ''}
                                 onChange={this.handleValueChange("regKeyNo")}
+                                validators={['required']}
+                                errorMessages={['단말 등록키를 생성하세요.']}
                                 className={classes.fullWidth} disabled
                             />
                         </Grid>
@@ -181,10 +201,11 @@ class ClientRegKeyDialog extends Component {
                         </Grid>
                     </Grid>
 
-                    <TextField
-                        label="유효 IP 범위"
+                    <TextValidator
+                        label="유효 IP 범위" name="ipRange"
                         value={(editingItem.get('ipRange')) ? editingItem.get('ipRange') : ''}
                         onChange={this.handleValueChange("ipRange")}
+                        validators={['required']} errorMessages={['유효 아이피를 입력하세요.']}
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                     />
@@ -201,7 +222,6 @@ class ClientRegKeyDialog extends Component {
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                     />
-                </form>
                 </DialogContent>
                 <DialogActions>
                     
@@ -214,6 +234,7 @@ class ClientRegKeyDialog extends Component {
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
 
                 </DialogActions>
+                </ValidatorForm>
             </Dialog>
             }
             <GRAlert />

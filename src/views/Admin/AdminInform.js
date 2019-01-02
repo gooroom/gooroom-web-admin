@@ -104,15 +104,15 @@ class AdminInform extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 이름</TableCell>
-                  <TableCell numeric>{AdminProps.get('adminName')}</TableCell>
+                  <TableCell >{AdminProps.get('adminName')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 아이디</TableCell>
-                  <TableCell numeric>{AdminProps.get('adminId')}</TableCell>
+                  <TableCell >{AdminProps.get('adminId')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 갱신주기</TableCell>
-                  <TableCell numeric>{AdminProps.get('pollingCycle')}</TableCell>
+                  <TableCell >{AdminProps.get('pollingCycle')}</TableCell>
                 </TableRow>
 
                 <TableRow>

@@ -43,6 +43,7 @@
     "react": "^16.2.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.2.0",
+    "react-material-ui-form-validator": "^2.0.3",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-table": "^6.8.0",

@@ -8,6 +8,8 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
@@ -90,12 +92,20 @@ class ClientConfSettingDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientConfSettingProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '단말정책정보 등록',
-            confirmMsg: '단말정책정보를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: ClientConfSettingProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '단말정책정보 등록',
+                confirmMsg: '단말정책정보를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: ClientConfSettingProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -110,21 +120,29 @@ class ClientConfSettingDialog extends Component {
 
     handleEditData = (event, id) => {
         const { ClientConfSettingProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '단말정책정보 수정',
-            confirmMsg: '단말정책정보를 수정하시겠습니까?',
-            handleConfirmResult: (confirmValue, paramObject) => {
-                if(confirmValue) {
-                    const { ClientConfSettingProps, ClientConfSettingActions, compId } = this.props;
-                    ClientConfSettingActions.editClientConfSettingData(paramObject, compId)
-                        .then((res) => {
-                            refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
-                            this.handleClose();
-                        });
-                }
-            },
-            confirmObject: ClientConfSettingProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '단말정책정보 수정',
+                confirmMsg: '단말정책정보를 수정하시겠습니까?',
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { ClientConfSettingProps, ClientConfSettingActions, compId } = this.props;
+                        ClientConfSettingActions.editClientConfSettingData(paramObject, compId)
+                            .then((res) => {
+                                refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
+                confirmObject: ClientConfSettingProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
 
     handleCopyCreateData = (event, id) => {
@@ -200,13 +218,15 @@ class ClientConfSettingDialog extends Component {
             <div>
             {((ClientConfSettingProps.get('dialogOpen') && editingItem)) &&
             <Dialog open={ClientConfSettingProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === ClientConfSettingDialog.TYPE_EDIT || dialogType === ClientConfSettingDialog.TYPE_ADD) &&
                     <div>
                         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                             <Grid item xs={12} sm={4} md={4}>
-                            <TextField label={"이름"} value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            <TextValidator label={"이름"} value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                                name="objNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
                                 onChange={this.handleValueChange("objNm")}
                                 className={classes.fullWidth}
                             />
@@ -516,6 +536,7 @@ class ClientConfSettingDialog extends Component {
 
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
                 <GRConfirm />
             </Dialog>
             }

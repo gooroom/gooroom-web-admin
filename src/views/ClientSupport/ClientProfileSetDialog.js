@@ -7,9 +7,10 @@ import { connect } from 'react-redux';
 import * as ClientProfileSetActions from 'modules/ClientProfileSetModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import GRClientSelector from 'components/GRComponents/GRClientSelector';
-import { getMergedObject } from 'components/GRUtils/GRCommonUtils';
-import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
+import { getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
@@ -47,12 +48,21 @@ class ClientProfileSetDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientProfileSetProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '단말 프로파일 등록',
-            confirmMsg: '단말 프로파일을 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateDataConfirmResult,
-            confirmObject: ClientProfileSetProps.get('editingItem')
-        });
+
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '단말 프로파일 등록',
+                confirmMsg: '단말 프로파일을 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateDataConfirmResult,
+                confirmObject: ClientProfileSetProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -70,12 +80,20 @@ class ClientProfileSetDialog extends Component {
 
     handleEditData = (event) => {
         const { ClientProfileSetProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '단말 프로파일 수정',
-            confirmMsg: '단말 프로파일을 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
-            confirmObject: ClientProfileSetProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '단말 프로파일 수정',
+                confirmMsg: '단말 프로파일을 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult,
+                confirmObject: ClientProfileSetProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -184,10 +202,12 @@ class ClientProfileSetDialog extends Component {
             <div>
             {(ClientProfileSetProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientProfileSetProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
+                <ValidatorForm ref="form">
                 <DialogTitle >{title}</DialogTitle>
                 <DialogContent>
-                    <TextField label="프로파일 이름" className={classes.fullWidth}
+                    <TextValidator label="프로파일 이름" className={classes.fullWidth}
                         value={(editingItem.get('profileNm')) ? editingItem.get('profileNm') : ''}
+                        name="profileNm" validators={['required']} errorMessages={['프로파일 이름을 입력하세요.']}
                         onChange={([ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)) ? null : this.handleValueChange("profileNm")}
                     />
                     <TextField label="프로파일 설명" className={classes.fullWidth}
@@ -207,7 +227,8 @@ class ClientProfileSetDialog extends Component {
                             </div>
                         }
                         {(dialogType === ClientProfileSetDialog.TYPE_VIEW) &&
-                            <TextField label="레퍼런스 단말" className={classes.fullWidth}
+                            <TextValidator label="레퍼런스 단말" className={classes.fullWidth}
+                                name="clientNm" validators={['required']} errorMessages={['레퍼런스 단말을 선택하세요.']}
                                 value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
                             />
                         }
@@ -223,7 +244,8 @@ class ClientProfileSetDialog extends Component {
                     </Grid>
                     {(dialogType === ClientProfileSetDialog.TYPE_ADD || dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
                         <div>
-                            <TextField label="레퍼런스 단말" className={classes.fullWidth}
+                            <TextValidator label="레퍼런스 단말" className={classes.fullWidth}
+                                name="clientId" validators={['required']} errorMessages={['레퍼런스 단말을 선택하세요.']}
                                 value={(editingItem.get('clientId') && editingItem.get('clientId') != '') ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
                                 placeholder="아래 목록에서 단말을 선택하세요."
                             />
@@ -261,6 +283,7 @@ class ClientProfileSetDialog extends Component {
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
 
                 </DialogActions>
+                </ValidatorForm>
             </Dialog>
             }
             </div>

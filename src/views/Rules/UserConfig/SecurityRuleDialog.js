@@ -8,6 +8,8 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import SecurityRuleNetwork from './SecurityRuleNetwork';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
@@ -83,12 +85,20 @@ class SecurityRuleDialog extends Component {
 
     handleCreateData = (event) => {
         const { SecurityRuleProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '단말보안정책정보 등록',
-            confirmMsg: '단말보안정책정보를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: SecurityRuleProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '단말보안정책정보 등록',
+                confirmMsg: '단말보안정책정보를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: SecurityRuleProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -104,12 +114,20 @@ class SecurityRuleDialog extends Component {
 
     handleEditData = (event, id) => {
         const { SecurityRuleProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '단말보안정책정보 수정',
-            confirmMsg: '단말보안정책정보를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
-            confirmObject: SecurityRuleProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '단말보안정책정보 수정',
+                confirmMsg: '단말보안정책정보를 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult,
+                confirmObject: SecurityRuleProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -177,13 +195,15 @@ class SecurityRuleDialog extends Component {
             <div>
             {(SecurityRuleProps.get('dialogOpen') && editingItem) &&
             <Dialog open={SecurityRuleProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === SecurityRuleDialog.TYPE_EDIT || dialogType === SecurityRuleDialog.TYPE_ADD) &&
                     <div>
                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                         <Grid item xs={12} sm={4} md={4}>
-                        <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                        <TextValidator label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            name="objNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
                             onChange={this.handleValueChange("objNm")}
                             className={classes.fullWidth}
                         />
@@ -266,6 +286,7 @@ class SecurityRuleDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
                 <GRConfirm />
             </Dialog>
             }

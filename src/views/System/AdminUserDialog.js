@@ -9,7 +9,7 @@ import sha256 from 'sha-256-js';
 import * as AdminUserActions from 'modules/AdminUserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -61,12 +61,20 @@ class AdminUserDialog extends Component {
     // 생성
     handleCreateData = (event) => {
         const { AdminUserProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '관리자계정 등록',
-            confirmMsg: '관리자계정을 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: AdminUserProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '관리자계정 등록',
+                confirmMsg: '관리자계정을 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: AdminUserProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -85,12 +93,20 @@ class AdminUserDialog extends Component {
     // 수정
     handleEditData = (event) => {
         const { AdminUserProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '관리자계정 수정',
-            confirmMsg: '관리자계정을 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditDataConfirmResult,
-            confirmObject: AdminUserProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '관리자계정 수정',
+                confirmMsg: '관리자계정을 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditDataConfirmResult,
+                confirmObject: AdminUserProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -139,38 +155,43 @@ class AdminUserDialog extends Component {
             <div>
             {(AdminUserProps.get('dialogOpen') && editingItem) &&
             <Dialog open={AdminUserProps.get('dialogOpen')}>
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        label="관리자아이디"
-                        value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
+                    <TextValidator
+                        label="관리자아이디" value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
+                        name="adminId" validators={['required', 'matchRegexp:^[a-zA-Z0-9]*$']}
+                        errorMessages={['관리자아이디를 입력하세요.', '알파벳 또는 숫자만 입력하세요.']}
                         onChange={this.handleValueChange("adminId")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType == AdminUserDialog.TYPE_EDIT) ? true : false}
                     />
-                    <TextField
-                        label="관리자이름"
-                        value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
+                    <TextValidator
+                        label="관리자이름" value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
+                        name="adminNm" validators={['required']} errorMessages={['관리자이름을 입력하세요.']}
                         onChange={this.handleValueChange("adminNm")}
                         className={classes.fullWidth}
                     />
                     <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
-                        <InputLabel htmlFor="adornment-password">Password</InputLabel>
-                        <Input
+                        <TextValidator
+                            label="Password"
                             type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
                             value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
+                            name="userPasswd" validators={['required']} errorMessages={['password를 입력하세요.']}
                             onChange={this.handleValuePasswordChange('adminPw')}
-                            endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                aria-label="Toggle password visibility"
-                                onClick={this.handleClickShowPassword}
-                                onMouseDown={this.handleMouseDownPassword}
-                                >
-                                {(editingItem && editingItem.get('showPasswd')) ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                            }
+                            InputProps={{
+                                endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                    aria-label="Toggle password visibility"
+                                    onClick={this.handleClickShowPassword}
+                                    onMouseDown={this.handleMouseDownPassword}
+                                    >
+                                    {(editingItem && editingItem.get('showPasswd')) ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                            }}
                         />
                     </FormControl>
 
@@ -186,6 +207,7 @@ class AdminUserDialog extends Component {
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
 
                 </DialogActions>
+                </ValidatorForm>
             </Dialog>
             }
             </div>

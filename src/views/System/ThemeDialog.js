@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import * as ThemeManageActions from 'modules/ThemeManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -99,12 +99,20 @@ class ThemeDialog extends Component {
     // 생성
     handleCreateData = (event) => {
         const { ThemeManageProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '테마 등록',
-            confirmMsg: '테마를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: ThemeManageProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '테마 등록',
+                confirmMsg: '테마를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: ThemeManageProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -119,12 +127,20 @@ class ThemeDialog extends Component {
     // 수정
     handleEditData = (event) => {
         const { ThemeManageProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '테마 수정',
-            confirmMsg: '테마를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditDataConfirmResult,
-            confirmObject: ThemeManageProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '테마 수정',
+                confirmMsg: '테마를 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditDataConfirmResult,
+                confirmObject: ThemeManageProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -192,6 +208,7 @@ class ThemeDialog extends Component {
             <div>
             {(ThemeManageProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ThemeManageProps.get('dialogOpen')} fullWidth={true} maxWidth="sm">
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                 {(dialogType === ThemeDialog.TYPE_EDIT) &&
@@ -199,8 +216,9 @@ class ThemeDialog extends Component {
                         value={(editingItem.get('themeId')) ? editingItem.get('themeId') : ''}
                     />
                 }
-                    <TextField label="테마 이름" className={classes.fullWidth}
+                    <TextValidator label="테마 이름" className={classes.fullWidth}
                         value={(editingItem.get('themeNm')) ? editingItem.get('themeNm') : ''}
+                        name="themeNm" validators={['required']} errorMessages={['테마 이름을 입력하세요.']}
                         onChange={this.handleValueChange("themeNm")}
                     />
                     <TextField label="테마 설명" className={classes.fullWidth}
@@ -257,6 +275,7 @@ class ThemeDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
             </Dialog>
             }
             </div>

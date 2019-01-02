@@ -9,6 +9,8 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import MediaRuleSpec from './MediaRuleSpec';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
@@ -77,12 +79,20 @@ class MediaRuleDialog extends Component {
 
     handleCreateData = (event) => {
         const { MediaRuleProps, GRConfirmActions } = this.props;
-        const re = GRConfirmActions.showConfirm({
-            confirmTitle: '매체제어정책정보 등록',
-            confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmObject: MediaRuleProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '매체제어정책정보 등록',
+                confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
+                handleConfirmResult: this.handleCreateConfirmResult,
+                confirmObject: MediaRuleProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleCreateConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -97,12 +107,20 @@ class MediaRuleDialog extends Component {
 
     handleEditData = (event, id) => {
         const { MediaRuleProps, GRConfirmActions } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: '매체제어정책정보 수정',
-            confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
-            handleConfirmResult: this.handleEditConfirmResult,
-            confirmObject: MediaRuleProps.get('editingItem')
-        });
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: '매체제어정책정보 수정',
+                confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
+                handleConfirmResult: this.handleEditConfirmResult,
+                confirmObject: MediaRuleProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
@@ -194,13 +212,15 @@ class MediaRuleDialog extends Component {
             <div>
             {(MediaRuleProps.get('dialogOpen') && editingItem) &&
             <Dialog open={MediaRuleProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
+                <ValidatorForm ref="form">
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     {(dialogType === MediaRuleDialog.TYPE_EDIT || dialogType === MediaRuleDialog.TYPE_ADD) &&
                     <div>
                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                         <Grid item xs={12} sm={4} md={4}>
-                        <TextField label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                        <TextValidator label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            name="objNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
                             onChange={this.handleValueChange("objNm")}
                             className={classes.fullWidth}
                         />
@@ -372,6 +392,7 @@ class MediaRuleDialog extends Component {
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
                 </DialogActions>
+                </ValidatorForm>
                 <GRConfirm />
             </Dialog>
             }

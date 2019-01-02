@@ -45,6 +45,7 @@ import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import MoveIcon from '@material-ui/icons/Redo';
+import EditIcon from '@material-ui/icons/Edit';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AccountIcon from '@material-ui/icons/AccountBox';
@@ -307,7 +308,7 @@ class UserListComp extends Component {
                     <Button color="secondary" size="small" 
                       className={classes.buttonInTableRow}
                       onClick={event => this.handleEditClick(event, n.get('userId'))}>
-                      <SettingsApplicationsIcon />
+                      <EditIcon />
                     </Button>
                     <Button color="secondary" size="small" 
                       className={classes.buttonInTableRow}
