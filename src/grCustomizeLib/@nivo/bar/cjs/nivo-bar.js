@@ -127,6 +127,7 @@ var generateVerticalGroupedBars = function generateVerticalGroupedBars(_ref) {
                 var x = xScale(getIndex(data[index])) + barWidth * i + innerPadding * i;
                 var y = getY(data[index][key]);
                 var barHeight = getHeight(data[index][key], y);
+
                 if (barWidth >= 0 && barHeight >= 0) {
                     var barData = {
                         id: key,
@@ -1084,6 +1085,7 @@ var Bar = function Bar(props) {
                     }
 
                     if (legendData === undefined) return null;
+                    
                     return React__default.createElement(legends.BoxLegendSvg, _extends({
                         key: i
                     }, legend, {
