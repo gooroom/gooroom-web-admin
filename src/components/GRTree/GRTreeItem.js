@@ -1,22 +1,25 @@
 import React, {Component, PropTypes} from "react"
 
-import List from '@material-ui/core/List';
+import IconButton from '@material-ui/core/IconButton';
+import OpenIcon from "@material-ui/icons/ExpandMore";
+import CloseIcon from "@material-ui/icons/ExpandLess";
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Checkbox from "@material-ui/core/Checkbox"
 
 class GRTreeItem extends Component {
 
-    onClickNode = event => {
+    onClickCheckbox = event => {
         // for don't collapse folder.
         event.stopPropagation();
     };
 
     render() {
         const {nodeKey, primaryText, style, checked, imperfect, isShowCheck, isEnableEdit} = this.props
-        const {onClickNode, leftIcon, editIcon, rightIcon, onCheckNode} = this.props
+        const {onClickNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend} = this.props
 
         const styles = {
             root: {
@@ -29,13 +32,12 @@ class GRTreeItem extends Component {
         }
 
         return (
-            
             <ListItem button
                 style={Object.assign({}, styles.root, style)}
-                onClick={onClickNode}>
+                >
                 {(isShowCheck) && 
                 <Checkbox color="primary"
-                    onClick={this.onClickNode}
+                    onClick={this.onClickCheckbox}
                     onChange={onCheckNode(nodeKey)}
                     checked={checked.indexOf(nodeKey) !== -1}
                     disableRipple
@@ -43,9 +45,16 @@ class GRTreeItem extends Component {
                 />
                 }
                 {leftIcon}
-                <ListItemText inset primary={primaryText} />
-                {isEnableEdit && editIcon}
-                {rightIcon}
+                <ListItemText inset primary={primaryText} onClick={onClickNode} />
+                {isEnableEdit && 
+                <IconButton style={{padding:0}} onClick={onEditNode}><SettingsApplicationsIcon style={{color:'darkgray', fontSize:18}} /></IconButton>
+                }
+                {(isExtend == 'Y') && 
+                <IconButton style={{padding:0}} onClick={onClickNode}><OpenIcon /></IconButton>
+                }
+                {(isExtend == 'N') && 
+                <IconButton style={{padding:0}} onClick={onFoldingNode}><CloseIcon /></IconButton>
+                }
             </ListItem>
 
         )
