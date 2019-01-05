@@ -5,12 +5,9 @@ import { grRequestPromise } from "components/GRUtils/GRRequester";
 import GRTreeItem from "./GRTreeItem";
 
 import List from '@material-ui/core/List';
-import OpenIcon from "@material-ui/icons/ExpandMore";
-import CloseIcon from "@material-ui/icons/ExpandLess";
 import FolderIcon from "@material-ui/icons/Folder";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import FileIcon from "@material-ui/icons/InsertDriveFile";
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -40,6 +37,7 @@ class GRTreeList extends Component {
       imperfect: []
     };
 
+    this.handleClickNode = this.handleClickNode.bind(this);
     this.handleClickNode = this.handleClickNode.bind(this);
     this.fetchTreeData = this.fetchTreeData.bind(this);
   }
@@ -163,7 +161,6 @@ class GRTreeList extends Component {
   }
 
   handleClickNode(listItem, index) {
-
     if (listItem.children) {
       // fetch children data
       // request to server if children array is empty.
@@ -186,12 +183,12 @@ class GRTreeList extends Component {
           expandedListItems: this.state.expandedListItems.concat([index])
         });
       } else {
-        listItem['hasChildren'] = true;
-        let newArray = [].concat(this.state.expandedListItems);
-        newArray.splice(indexOfListItemInArray, 1);
-        this.setState({
-          expandedListItems: newArray
-        });
+        // listItem['hasChildren'] = true;
+        // let newArray = [].concat(this.state.expandedListItems);
+        // newArray.splice(indexOfListItemInArray, 1);
+        // this.setState({
+        //   expandedListItems: newArray
+        // });
       }
     } else {
       listItem['hasChildren'] = false;
@@ -203,6 +200,7 @@ class GRTreeList extends Component {
       activeListItem: index
     });
   }
+
 
   resetTreeNode(keyValue) {
     const index = this.state.treeData.findIndex((e) => {
@@ -360,6 +358,17 @@ class GRTreeList extends Component {
     if (this.props.onCheckedNode) this.props.onCheckedNode(newStatus.newChecked, newStatus.newImperfect);
   };
 
+  handleClickFoldingNode(listItem, index) {
+
+    const indexOfListItemInArray = this.state.expandedListItems.indexOf(index);
+    listItem['hasChildren'] = true;
+    let newArray = [].concat(this.state.expandedListItems);
+    newArray.splice(indexOfListItemInArray, 1);
+    this.setState({
+      expandedListItems: newArray
+    });
+  }
+
   handleEditClickNode = (listItem, i) => {
     if(this.props.onEditNode) {
       this.props.onEditNode(listItem, i);
@@ -417,14 +426,8 @@ class GRTreeList extends Component {
             checked={this.state.checked}
             imperfect={this.state.imperfect}
             leftIcon={getLeftIcon(listItem, this.props)}
-            editIcon={<SettingsApplicationsIcon style={{color: 'darkgray', fontSize: 18}} onClick={() => this.handleEditClickNode(listItem, i)} />}
-            rightIcon={
-              !listItem.children ? null : expandedListItems.indexOf(i) ===
-              -1 ? (
-                <OpenIcon />
-              ) : (
-                <CloseIcon />
-              )
+            isExtend={
+              !listItem.children ? null : expandedListItems.indexOf(i) === -1 ? ('Y') : ('N')
             }
             onClickNode={() => {
               if (listItem.disabled) {
@@ -433,6 +436,8 @@ class GRTreeList extends Component {
               this.handleClickNode(listItem, i);
             }}
             onCheckNode={this.handleCheckNode}
+            onEditNode={() => this.handleEditClickNode(listItem, i)}
+            onFoldingNode={() => this.handleClickFoldingNode(listItem, i)}
           />
         );
       } else {
