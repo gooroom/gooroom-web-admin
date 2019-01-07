@@ -55,6 +55,10 @@ class GRHeader extends Component {
     const { classes } = this.props;
     const { t, i18n } = this.props;
 
+    const changeLanguage = lng => {
+      i18n.changeLanguage(lng);
+    };
+
     return (
       <AppBar className={classes.headerRoot}>
         <Toolbar className={classes.headerToolbar}>
@@ -64,10 +68,15 @@ class GRHeader extends Component {
             <IconButton onClick={this.props.toggleDrawer}>
               <MenuIcon />
             </IconButton>
-            <div style={{flex: "1 1 auto"}}></div>
+            <div style={{flex: "1 1 auto"}}>
+          <Button onClick={() => changeLanguage("kr")}>kr</Button>
+          <Button onClick={() => changeLanguage("en")}>en</Button>
+            
+            
+            </div>
             <GRAlarmInform />
             <Button onClick={this.props.onAdminClick}>
-              <AccountCircle />Admin
+              <AccountCircle />{t("adminMenu")}
             </Button>
             <Button 
               buttonRef={node => {
@@ -101,4 +110,4 @@ class GRHeader extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(translate("translations")(GRHeader));
+export default translate("translations")(withStyles(GRCommonStyle)(GRHeader));

@@ -6,15 +6,15 @@ export default {
       url: '/dashboard/GRM0901/Dashboard',
       level: 1
     }, {
-      name: '통계',
+      name: 'menuStatistic',
       id: 'statistic',
       url: '/statistic',
       level: 1,
       children: [
         {
-          name: '일별침해통계',
+          name: 'menuDailyViolated',
           id: 'GRM0931',
-          url: '/statistic/dailyviolated/GRM0931/일별침해통계',
+          url: '/statistic/dailyviolated/GRM0931/menuDailyViolated',
           level: 2,
         }, {
           name: '일별접속통계',
