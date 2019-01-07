@@ -25,6 +25,8 @@ import SettingsApplications from '@material-ui/icons/SettingsApplications';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
+import { translate, Trans } from "react-i18next";
+
 class GRHeader extends Component {
   constructor(props) {
     super(props);
@@ -51,12 +53,13 @@ class GRHeader extends Component {
 
   render() {
     const { classes } = this.props;
+    const { t, i18n } = this.props;
 
     return (
       <AppBar className={classes.headerRoot}>
         <Toolbar className={classes.headerToolbar}>
             <Typography type="title" className={classes.headerBrandLogo}>
-              GPMS v1.2
+              GPMS v1.2 {t("gpmsTest")}
             </Typography>
             <IconButton onClick={this.props.toggleDrawer}>
               <MenuIcon />
@@ -98,4 +101,4 @@ class GRHeader extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(GRHeader);
+export default withStyles(GRCommonStyle)(translate("translations")(GRHeader));
