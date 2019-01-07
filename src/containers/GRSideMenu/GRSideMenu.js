@@ -42,6 +42,7 @@ import menuItems from "./GRMenuItems";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
 class GRSideMenu extends React.Component {
@@ -72,6 +73,7 @@ class GRSideMenu extends React.Component {
   render() {
 
     const { classes } = this.props;
+    const { t, i18n } = this.props;
 
     const titleMenu = (item, key) => {
       return (
@@ -103,7 +105,7 @@ class GRSideMenu extends React.Component {
         <ListItem key={key} button className={menuclass} onClick={() => this.handleClick(item.id)}
           component={(isDrop) ? '' : Link} to={(isDrop) ? '' : item.url}>
           <ListItemIcon >{icon}</ListItemIcon>
-          <ListItemText inset primary={item.name} style={{paddingLeft:0}} />
+          <ListItemText inset primary={t(item.name)} style={{paddingLeft:0}} />
           {(isDrop) &&
             <span>{this.state[item.id] ? <ExpandLess /> : <ExpandMore />}</span>
           }
@@ -168,4 +170,4 @@ class GRSideMenu extends React.Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(GRSideMenu);
+export default translate("translations")(withStyles(GRCommonStyle)(GRSideMenu));

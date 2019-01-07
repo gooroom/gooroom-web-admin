@@ -6,6 +6,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import menuItems from "containers/GRSideMenu/GRMenuItems";
 import { ListItemSecondaryAction } from "@material-ui/core";
+import { translate, Trans } from "react-i18next";
 
 class GRBreadcrumb extends Component {
 
@@ -34,14 +35,15 @@ class GRBreadcrumb extends Component {
 
   render() {
     const { classes, pathname } = this.props;
+    const { t, i18n } = this.props;
     const pathTitle = this.getPathTitle(menuItems.items, pathname, 'home');
     return (
       <div>
         <ol className={classes.breadcrumbRoot}>
         {pathTitle && pathTitle.split(':').map((m) => (
           <li key={m} className={classes.breadcrumbCurrentMenu}>
-          {(m == 'home') && m}
-          {(m != 'home') && <span style={{padding:'0px 4px'}}>> {m}</span>}
+          {(m == 'home') && t(m)}
+          {(m != 'home') && <span style={{padding:'0px 4px'}}>> {t(m)}</span>}
           </li>
         ))}
         </ol>
@@ -50,4 +52,4 @@ class GRBreadcrumb extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(GRBreadcrumb);
+export default translate("translations")(withStyles(GRCommonStyle)(GRBreadcrumb));

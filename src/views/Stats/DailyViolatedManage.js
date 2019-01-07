@@ -30,19 +30,12 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class DailyViolatedManage extends Component {
-
-  columnHeaders = [
-    { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: '날짜' },
-    { id: 'boot', isOrder: false, numeric: false, disablePadding: true, label: '부팅보안침해' },
-    { id: 'exe', isOrder: false, numeric: false, disablePadding: true, label: '실행보안침해' },
-    { id: 'os', isOrder: false, numeric: false, disablePadding: true, label: 'OS보안침해' },
-    { id: 'media', isOrder: false, numeric: false, disablePadding: true, label: '매체보안침해' }
-  ];
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -86,8 +79,17 @@ class DailyViolatedManage extends Component {
   render() {
     const { classes } = this.props;
     const { DailyViolatedProps } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: t("columnDate") },
+      { id: 'boot', isOrder: false, numeric: false, disablePadding: true, label: t("columnBootViolated") },
+      { id: 'exe', isOrder: false, numeric: false, disablePadding: true, label: t("columnExeViolated") },
+      { id: 'os', isOrder: false, numeric: false, disablePadding: true, label: t("columnOSViolated") },
+      { id: 'media', isOrder: false, numeric: false, disablePadding: true, label: t("columnMediaViolated") }
+    ];
+
     const compId = this.props.match.params.grMenuId;
-    
     const listObj = DailyViolatedProps.getIn(['viewItems', compId]);
     let data = [];
     if(listObj && listObj.get('listAllData')) {
@@ -99,25 +101,25 @@ class DailyViolatedManage extends Component {
 
     return (
       <div>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={4} sm={4} lg={2} >
-              <TextField label="조회시작일" type="date" style={{width:150}}
+              <TextField label={t('searchStartDate')} type="date" style={{width:150}}
                 value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
                 onChange={this.handleParamChange('fromDate')}
                 className={classes.fullWidth} />
             </Grid>
             <Grid item xs={4} sm={4} lg={2}>
-              <TextField label="조회종료일" type="date" style={{width:150}}
+              <TextField label={t('searchEndDate')} type="date" style={{width:150}}
                 value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
                 onChange={this.handleParamChange('toDate')}
                 className={classes.fullWidth} />
             </Grid>
             <Grid item xs={4} sm={4} lg={2} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                <Search />조회
+                <Search />{t('buttonSearch')}
               </Button>
             </Grid>
             <Grid item lg={6} ></Grid>
@@ -153,7 +155,7 @@ class DailyViolatedManage extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listAllData').map(n => {
@@ -203,7 +205,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyViolatedManage));
-
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyViolatedManage)));
 
 

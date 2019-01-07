@@ -8,18 +8,47 @@ i18n.use(LanguageDetector).init({
       translations: {
         "To get started, edit <1>src/App.js</1> and save to reload.":
           "To get started, edit <1>src/App.js</1> and save to reload.",
-        "gpmsTest": "Community"
+        "gpmsTest": "Community",
+        "adminMenu": "ADMIN",
+        "columnDate": "DATE",
+
+        "columnBootViolated": "BootViolated",
+        "columnExeViolated": "ExeViolated",
+        "columnOSViolated": "OSViolated",
+        "columnMediaViolated": "MediaViolated",
+
+        "searchStartDate": "From-Date",
+        "searchEndDate": "To-Date",
+
+        "buttonSearch": "Search",
+
+        "menuStatistic": "Statistic",
+        "menuDailyViolated": "DailyViolatedStatics"
       }
     },
     kr: {
       translations: {
         "To get started, edit <1>src/App.js</1> and save to reload.":
           "Starte in dem du, <1>src/App.js</1> editierst und speicherst.",
-          "gpmsTest": "커뮤니티"
+          "gpmsTest": "커뮤니티",
+          "adminMenu": "어드민",
+          "columnDate": "날짜",
+
+          "columnBootViolated": "부팅보안침해",
+          "columnExeViolated": "실행보안침해",
+          "columnOSViolated": "OS보안침해",
+          "columnMediaViolated": "매체보안침해",
+          "searchStartDate": "조회시작일",
+          "searchEndDate": "조회종료일",
+
+          "buttonSearch": "조회",
+
+          "menuStatistic": "통계",
+          "menuDailyViolated": "일별침해통계"
       }
     }
   },
-  fallbackLng: "kr",
+  fallbackLng: "en",
   debug: true,
 
   // have a common namespace used around the full app
@@ -37,7 +66,5 @@ i18n.use(LanguageDetector).init({
     wait: true
   }
 });
-
-console.log('------------------------------', LanguageDetector);
 
 export default i18n;
