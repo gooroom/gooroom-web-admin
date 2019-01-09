@@ -1,9 +1,9 @@
 export default {
   items: [
     {
-      name: 'Dashboard',
+      name: 'menuDashboard',
       id: 'dashboard',
-      url: '/dashboard/GRM0901/Dashboard',
+      url: '/dashboard/GRM0901/menuDashboard',
       level: 1
     }, {
       name: 'menuStatistic',
@@ -17,169 +17,169 @@ export default {
           url: '/statistic/dailyviolated/GRM0931/menuDailyViolated',
           level: 2,
         }, {
-          name: '일별접속통계',
+          name: 'menuDailyConnected',
           id: 'GRM0932',
-          url: '/statistic/dailyconnect/GRM0932/일별접속통계',
+          url: '/statistic/dailyconnect/GRM0932/menuDailyConnected',
           level: 2,
         },
         {
-          name: '단말등록통계',
+          name: 'menuDailyRegistered',
           id: 'GRM0933',
-          url: '/statistic/dailyregist/GRM0933/단말등록통계',
+          url: '/statistic/dailyregist/GRM0933/menuDailyRegistered',
           level: 2,
         }, {
-          name: '보안로그',
+          name: 'menuSecurityLog',
           id: 'GRM0935',
-          url: '/log/secretlog/GRM0935/보안로그',
+          url: '/log/secretlog/GRM0935/menuSecurityLog',
           level: 2,
         }
       ]
     }, {
-      name: '단말',
+      name: 'menuClient',
       id: 'clients',
       url: '/clients',
       level: 1,
       children: [
         {
-          name: '단말관리',
+          name: 'menuClientManage',
           id: 'GRM0101',
-          url: '/clients/clientmastermanage/GRM0101/단말관리',
+          url: '/clients/clientmastermanage/GRM0101/menuClientManage',
           level: 2,
         }, {
-          name: '단말등록키',
+          name: 'menuClientRegKey',
           id: 'GRM0104',
-          url: '/clientconfig/regkey/GRM0104/단말등록키',
+          url: '/clientconfig/regkey/GRM0104/menuClientRegKey',
           level: 2,
         },
         {
-          name: '단말정책',
+          name: 'menuClientRule',
           id: 'clientconfig',
           url: '/clientconfig',
           level: 2,
           children: [
             {
-              name: '단말설정',
+              name: 'menuClientSetup',
               id: 'GRM0703',
-              url: '/clientconfig/setting/GRM0703/단말설정',
+              url: '/clientconfig/setting/GRM0703/menuClientSetup',
               level: 3,
             }, {
-              name: 'HOSTS',
+              name: 'menuClientHosts',
               id: 'GRM0702',
-              url: '/clientconfig/host/GRM0702/HOSTS',
+              url: '/clientconfig/host/GRM0702/menuClientHosts',
               level: 3,
             }, {
-              name: '업데이트서버',
+              name: 'menuClientUpdateServer',
               id: 'GRM0701',
-              url: '/clientconfig/update/GRM0701/업데이트서버',
+              url: '/clientconfig/update/GRM0701/menuClientUpdateServer',
               level: 3,
             }
           ]
         }
       ]
     }, {
-      name: '소프트웨어',
+      name: 'menuSoftware',
       id: 'package',
       url: '/package',
       level: 1,
       children: [
         {
-          name: '패키지관리',
+          name: 'menuPackageManage',
           id: 'GRM0201',
-          url: '/package/packagemanage/GRM0201/패키지관리',
+          url: '/package/packagemanage/GRM0201/menuPackageManage',
           level: 2,
         },
         {
-          name: '프로파일정보',
+          name: 'menuProfileManage',
           id: 'GRM0202',
-          url: '/clientconfig/profileset/GRM0202/프로파일정보',
+          url: '/clientconfig/profileset/GRM0202/menuProfileManage',
           level: 2,
         }
       ]
     }, {
-      name: '사용자',
+      name: 'menuUser',
       id: 'user',
       url: '/user',
       level: 1,
       children: [
         {
-          name: '사용자관리',
+          name: 'menuUserManage',
           id: 'GRM0301',
-          url: '/user/usermastermanage/GRM0301/사용자관리',
+          url: '/user/usermastermanage/GRM0301/menuUserManage',
           level: 2,
         }
       ]
     }, {
-      name: '단말사용정책',
+      name: 'menuUseRule',
       id: 'userconfig',
       url: '/userconfig',
       level: 1,
       children: [
         {
-          name: '매체제어정책',
+          name: 'menuMediaRuleManage',
           id: 'GRM0401',
-          url: '/userconfig/media/GRM0401/매체제어정책',
+          url: '/userconfig/media/GRM0401/menuMediaRuleManage',
           level: 2,
         },
         {
-          name: '브라우저제어정책',
+          name: 'menuBrowserRuleManage',
           id: 'GRM0402',
-          url: '/userconfig/browser/GRM0402/브라우저제어정책',
+          url: '/userconfig/browser/GRM0402/menuBrowserRuleManage',
           level: 2,
         },
         {
-          name: '단말보안정책',
+          name: 'menuSecurityRuleManage',
           id: 'GRM0403',
-          url: '/userconfig/security/GRM0403/단말보안정책',
+          url: '/userconfig/security/GRM0403/menuSecurityRuleManage',
           level: 2,
         },
         {
-          name: '소프트웨어제한정책',
+          name: 'menuSoftwareRuleManage',
           id: 'GRM0404',
-          url: '/userconfig/swfilter/GRM0404/소프트웨어제한정책',
+          url: '/userconfig/swfilter/GRM0404/menuSoftwareRuleManage',
           level: 2,
         },
       ]
     }, {
-      name: '데스크톱',
+      name: 'menuDesktop',
       id: 'desktopconfig',
       url: '/desktopconfig',
       level: 1,
       children: [
         {
-          name: '데스크톱정보',
+          name: 'menuDesktopManage',
           id: 'GRM0501',
-          url: '/desktopconfig/desktopconf/GRM0501/데스크톱정보',
+          url: '/desktopconfig/desktopconf/GRM0501/menuDesktopManage',
           level: 2,
         },
         {
-          name: '데스크톱앱관리',
+          name: 'menuDesktopAppManage',
           id: 'GRM0502',
-          url: '/desktopconfig/desktopapp/GRM0502/데스크톱앱관리',
+          url: '/desktopconfig/desktopapp/GRM0502/menuDesktopAppManage',
           level: 2,
         },
         {
-          name: '클라우드서비스연동',
+          name: 'menuCloudServiceManage',
           id: 'GRM0503',
-          url: '/system/cloudservicemng/GRM0503/클라우드서비스연동',
+          url: '/system/cloudservicemng/GRM0503/menuCloudServiceManage',
           level: 2,
         },
         {
-          name: '테마관리',
+          name: 'menuThemeManage',
           id: 'GRM0504',
-          url: '/system/thememng/GRM0504/테마관리',
+          url: '/system/thememng/GRM0504/menuThemeManage',
           level: 2,
         },
       ]
     }, {
-      name: '작업',
+      name: 'menuJob',
       id: 'jobs',
       url: '/jobs',
       level: 1,
       children: [
         {
-          name: '작업정보',
+          name: 'menuJobManage',
           id: 'GRM0601',
-          url: '/jobs/jobmanage/GRM0601/작업정보',
+          url: '/jobs/jobmanage/GRM0601/menuJobManage',
           level: 2,
         }
       ]

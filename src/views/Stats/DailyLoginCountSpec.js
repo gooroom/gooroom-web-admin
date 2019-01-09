@@ -30,16 +30,9 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 class DailyLoginCountSpec extends Component {
-
-  columnHeaders = [
-    { id: 'HIST_SEQ', isOrder: false, numeric: false, disablePadding: true, label: '번호' },
-    { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: '날짜' },
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: '사용자아이디' },
-    { id: 'RESPONSE_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' }
-  ];
 
   handleChangePage = (event, page) => {
     const { DailyLoginCountActions, DailyLoginCountProps } = this.props;
@@ -88,6 +81,16 @@ class DailyLoginCountSpec extends Component {
   render() {
     const { classes } = this.props;
     const { DailyLoginCountProps } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'HIST_SEQ', isOrder: false, numeric: false, disablePadding: true, label: t("colNumber") },
+      { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: t("colDate") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colUserId") },
+      { id: 'RESPONSE_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") }
+    ];
+
     const compId = this.props.compId;
     
     const listObj = DailyLoginCountProps.getIn(['viewItems', compId]);
@@ -104,7 +107,7 @@ class DailyLoginCountSpec extends Component {
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={2} >
             <FormControl fullWidth={true}>
-              <TextField label="날짜" value={listObj.getIn(['listParam', 'logDate'])} disabled={true} />
+              <TextField label={t("optDate")} value={listObj.getIn(['listParam', 'logDate'])} disabled={true} />
             </FormControl>
             </Grid>
             <Grid item xs={2} >
@@ -114,7 +117,7 @@ class DailyLoginCountSpec extends Component {
             </Grid>
             <Grid item xs={7} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                <Search />조회
+                <Search />{t('buttonSearch')}
               </Button>
             </Grid>
           </Grid>            
@@ -128,7 +131,7 @@ class DailyLoginCountSpec extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -146,7 +149,7 @@ class DailyLoginCountSpec extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -186,5 +189,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyLoginCountSpec));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyLoginCountSpec)));
 

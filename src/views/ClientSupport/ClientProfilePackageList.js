@@ -127,7 +127,7 @@ class ClientProfilePackageList extends Component {
 
           <Grid item xs={3} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-              <Search />조회
+              <Search />{t('buttonSearch')}
             </Button>
           </Grid>
         </Grid>

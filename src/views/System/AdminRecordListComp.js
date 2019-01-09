@@ -184,13 +184,13 @@ class AdminRecordListComp extends Component {
         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
 
           <Grid item xs={3}>
-            <TextField label="조회시작일" type="date"
+            <TextField label={t('searchStartDate')} type="date"
               value={(stateData.getIn(['listParam', 'fromDate'])) ? stateData.getIn(['listParam', 'fromDate']) : '1999-01-01'}
               onChange={this.handleFromDateChange()}
               className={classes.fullWidth} />
           </Grid>
           <Grid item xs={3}>
-            <TextField label="조회종료일" type="date"
+            <TextField label={t('searchEndDate')} type="date"
               value={(stateData.getIn(['listParam', 'toDate'])) ? stateData.getIn(['listParam', 'toDate']) : '1999-01-01'}
               onChange={this.handleToDateChange()}
               className={classes.fullWidth} />

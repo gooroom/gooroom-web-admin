@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Map, List } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -34,20 +33,12 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class SecurityLogManage extends Component {
-
-  columnHeaders = [
-    { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: '번호' },
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: '사용자' },
-    { id: 'LOG_TP', isOrder: true, numeric: false, disablePadding: true, label: '로그타입' },
-    { id: 'LOG_VALUE', isOrder: true, numeric: false, disablePadding: true, label: '로그정보' },
-    { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: '등록일' }
-  ];
 
   componentDidMount() {
     const { SecurityLogActions, SecurityLogProps } = this.props;
@@ -118,6 +109,17 @@ class SecurityLogManage extends Component {
   render() {
     const { classes } = this.props;
     const { SecurityLogProps } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: t("colNumber") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colUser") },
+      { id: 'LOG_TP', isOrder: true, numeric: false, disablePadding: true, label: t("colLogType") },
+      { id: 'LOG_VALUE', isOrder: true, numeric: false, disablePadding: true, label: t("colLogInfo") },
+      { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: t("colRegDate") }
+    ];
+
     const compId = this.props.match.params.grMenuId;
     
     const listObj = SecurityLogProps.getIn(['viewItems', compId]);
@@ -129,24 +131,24 @@ class SecurityLogManage extends Component {
 
     return (
       <div>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={2} >
-            <TextField label="조회시작일" type="date" style={{width:150}}
+            <TextField label={t('searchStartDate')} type="date" style={{width:150}}
               value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
               onChange={this.handleParamChange('fromDate')}
               className={classes.fullWidth} />
             </Grid>
             <Grid item xs={2} >
-            <TextField label="조회종료일" type="date" style={{width:150}}
+            <TextField label={t('searchEndDate')} type="date" style={{width:150}}
               value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
               onChange={this.handleParamChange('toDate')}
               className={classes.fullWidth} />
             </Grid>
             <Grid item xs={2} >
-              <ProtectionTypeSelect name="protectionGubun" label="구분"
+              <ProtectionTypeSelect name="protectionGubun" label={t("optDivision")}
                 value={(listObj && listObj.getIn(['listParam', 'logItem'])) ? listObj.getIn(['listParam', 'logItem']) : 'ALL'}
                 onChangeSelect={this.handleParamChange('logItem')}
               />
@@ -158,7 +160,7 @@ class SecurityLogManage extends Component {
             </Grid>
             <Grid item xs={3} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-              <Search />조회
+              <Search />{t('buttonSearch')}
             </Button>
             </Grid>
           </Grid>            
@@ -173,7 +175,7 @@ class SecurityLogManage extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -192,7 +194,7 @@ class SecurityLogManage extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -234,7 +236,7 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityLogManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityLogManage)));
 
 
 
