@@ -28,7 +28,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -39,6 +39,7 @@ class ClientManageSpec extends Component {
   render() {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
+    const { t, i18n } = this.props;
 
     const { compId, ClientManageProps } = this.props;
     const informOpen = ClientManageProps.getIn(['viewItems', compId, 'informOpen']);
@@ -61,7 +62,7 @@ class ClientManageSpec extends Component {
           />
           <CardContent style={{paddingTop:0}}>
             <Typography component="pre">
-              {(viewItem.get('clientStatus') == 'STAT021') ? '폐기된 단말입니다.' : ''}
+              {(viewItem.get('clientStatus') == 'STAT021') ? t("msgRevokedClient") : ''}
             </Typography>
             <Divider />
             <Grid container spacing={8}>
@@ -69,26 +70,26 @@ class ClientManageSpec extends Component {
                 <Table>
                   <TableBody>
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} 단말그룹</TableCell>
-                      <TableCell numeric>
+                      <TableCell component="th" scope="row">{bull} {t("spClientGroup")}</TableCell>
+                      <TableCell >
                         {viewItem.get('clientGroupName')} ({viewItem.get('clientGroupId')})
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} 단말설명</TableCell>
-                      <TableCell numeric>{viewItem.get('comment')}</TableCell>
+                      <TableCell component="th" scope="row">{bull} {t("spClientDesc")}</TableCell>
+                      <TableCell >{viewItem.get('comment')}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} 온라인여부</TableCell>
-                      <TableCell numeric>{(viewItem.get('isOn') == '0') ? '오프라인' : '온라인'}</TableCell>
+                      <TableCell component="th" scope="row">{bull} {t("spIsOnline")}</TableCell>
+                      <TableCell >{(viewItem.get('isOn') == '0') ? t("selOffline") : t("selOnline")}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} 홈폴더 사용률</TableCell>
-                      <TableCell numeric>{(storageRate != '') ? (storageRate + ' (' + storageInfo + ')') : ''}</TableCell>
+                      <TableCell component="th" scope="row">{bull} {t("spHomeSizeRate")}</TableCell>
+                      <TableCell >{(storageRate != '') ? (storageRate + ' (' + storageInfo + ')') : ''}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} 설치패키지수</TableCell>
-                      <TableCell numeric>{viewItem.get('totalCnt')}</TableCell>
+                      <TableCell component="th" scope="row">{bull} {t("spInstalledPkgCnt")}</TableCell>
+                      <TableCell >{viewItem.get('totalCnt')}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -98,27 +99,27 @@ class ClientManageSpec extends Component {
                   <TableBody>
                     
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} 부팅보안침해</TableCell>
-                      <TableCell numeric>{(viewItem.get('countBootProtector') > 0) ? '침해' : '미침해'}</TableCell>
+                      <TableCell component="th" scope="row">{bull} {t("spBootViolated")}</TableCell>
+                      <TableCell >{(viewItem.get('countBootProtector') > 0) ? t("selViolated") : t("selUnviolated")}</TableCell>
                     </TableRow>
 
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} 실행보안침해</TableCell>
-                      <TableCell numeric>{(viewItem.get('countExeProtector') > 0) ? '침해' : '미침해'}</TableCell>
+                      <TableCell component="th" scope="row">{bull} {t("spExeViolated")}</TableCell>
+                      <TableCell >{(viewItem.get('countExeProtector') > 0) ? t("selViolated") : t("selUnviolated")}</TableCell>
                     </TableRow>
 
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} 매체보안침해</TableCell>
-                      <TableCell numeric>{(viewItem.get('countMediaProtector') > 0) ? '침해' : '미침해'}</TableCell>
+                      <TableCell component="th" scope="row">{bull} {t("spMediaViolated")}</TableCell>
+                      <TableCell >{(viewItem.get('countMediaProtector') > 0) ? t("selViolated") : t("selUnviolated")}</TableCell>
                     </TableRow>
 
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} OS보안침해</TableCell>
-                      <TableCell numeric>{(viewItem.get('countOsProtector') > 0) ? '침해' : '미침해'}</TableCell>
+                      <TableCell component="th" scope="row">{bull} {t("spOSViolated")}</TableCell>
+                      <TableCell >{(viewItem.get('countOsProtector') > 0) ? t("selViolated") : t("selUnviolated")}</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell component="th" scope="row">{bull} 단말 등록일</TableCell>
-                      <TableCell numeric>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD HH:mm:ss')}</TableCell>
+                      <TableCell component="th" scope="row">{bull} {t("spClientRegDate")}</TableCell>
+                      <TableCell >{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD HH:mm:ss')}</TableCell>
                     </TableRow>
                   </TableBody>
 
@@ -145,5 +146,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageSpec));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageSpec)));
 

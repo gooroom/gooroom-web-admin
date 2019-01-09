@@ -44,19 +44,11 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 class ClientGroupComp extends Component {
 
-  columnHeaders = [
-    { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: "그룹이름" },
-    { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "단말수" },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정' },
-  ];
-
   componentDidMount() {
-    if(this.props.selectorType && this.props.selectorType == 'multiple') {
-      this.columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
-    }
     this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId);
   }
 
@@ -165,6 +157,16 @@ class ClientGroupComp extends Component {
   render() {
     const { classes } = this.props;
     const { ClientGroupProps, compId } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: t("colGroupName") },
+      { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: t("colClientCount") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEdit") },
+    ];
+    if(this.props.selectorType && this.props.selectorType == 'multiple') {
+      columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
+    }
 
     const listObj = ClientGroupProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -184,7 +186,7 @@ class ClientGroupComp extends Component {
           </Grid>
           <Grid item xs={6} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-              <Search />{t('buttonSearch')}
+              <Search />{t("btnSearch")}
             </Button>
           </Grid>
         </Grid>
@@ -201,7 +203,7 @@ class ClientGroupComp extends Component {
             onClickAllCheck={this.handleCheckAllClick}
             checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           }
           {(!this.props.selectorType || this.props.selectorType == 'single') && 
@@ -211,7 +213,7 @@ class ClientGroupComp extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           }
           <TableBody>
@@ -248,7 +250,7 @@ class ClientGroupComp extends Component {
           {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
             <TableRow key={e}>
               <TableCell
-                colSpan={this.columnHeaders.length + 1}
+                colSpan={columnHeaders.length + 1}
                 className={classes.grSmallAndClickCell}
               />
             </TableRow>
@@ -301,6 +303,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupComp));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupComp)));
 
 

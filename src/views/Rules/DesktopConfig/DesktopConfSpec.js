@@ -103,9 +103,9 @@ class DesktopConfSpec extends Component {
                 <TableBody>
                   <TableRow>
                     <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 이름</TableCell>
-                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('confNm')}</TableCell>
+                    <TableCell style={{width:'25%'}} >{viewItem.get('confNm')}</TableCell>
                     <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 아이디</TableCell>
-                    <TableCell style={{width:'25%'}} numeric>{viewItem.get('confId')}</TableCell>
+                    <TableCell style={{width:'25%'}} >{viewItem.get('confId')}</TableCell>
                   </TableRow>
                 </TableBody>
               </Table>

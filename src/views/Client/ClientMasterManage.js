@@ -62,7 +62,7 @@ import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -181,10 +181,11 @@ class ClientMasterManage extends Component {
 
   // delete group
   handleDeleteButtonForClientGroup = () => {
+    const { t, i18n } = this.props;
     const checkedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     if(checkedIds && checkedIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
-        confirmTitle: '단말그룹 삭제',
+        confirmTitle: t("dtDeleteGroup"),
         confirmMsg: '단말그룹(' + checkedIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
         confirmObject: null
@@ -210,13 +211,14 @@ class ClientMasterManage extends Component {
 
   // add client in group
   handleAddClientInGroup = (event) => {
+    const { t, i18n } = this.props;
     const selectedGroupItem = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
     if(selectedGroupItem) {
       this.setState({
         isOpenClientSelect: true
       });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '단말을 추가할 그룹을 선택하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgCfmSelectGroupForInsertClient"));
     }
   }
 
@@ -234,10 +236,11 @@ class ClientMasterManage extends Component {
   // add client in group - save
   handleClientSelectSave = (checkedClientIds) => {
     const { ClientGroupProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
     const selectedGroupItem = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
 
     GRConfirmActions.showConfirm({
-        confirmTitle: '그룹에 단말 추가',
+        confirmTitle: t("dtAddClientInGroup"),
         confirmMsg: '선택한 단말(' + checkedClientIds.size + '개)을 단말그룹(' + selectedGroupItem.get('grpNm') + ')으로 변경하시겠습니까?',
         handleConfirmResult: this.handleClientSelectSaveConfirmResult,
         confirmObject: {
@@ -269,18 +272,20 @@ class ClientMasterManage extends Component {
   // remove client in group - save
   handleRemoveClientInGroup = (event) => {
     const { ClientManageProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+
     const checkedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     if(checkedClientIds && checkedClientIds !== '') {
       GRConfirmActions.showConfirm({
-        confirmTitle: '그룹에서 단말 삭제',
-        confirmMsg: '선택하신 단말을 그룹에서 삭제하시겠습니까?',
+        confirmTitle: t("dtDeleteClientFromGroup"),
+        confirmMsg: t("msgCfmDeleteClientFromGroup"),
         handleConfirmResult: this.handleRemoveClientInGroupConfirmResult,
         confirmObject: {
           checkedClientIds: checkedClientIds
         }
       });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '단말을 선택하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectClient"));
     }
   }
   handleRemoveClientInGroupConfirmResult = (confirmValue, paramObject) => {
@@ -303,10 +308,12 @@ class ClientMasterManage extends Component {
   // delete client
   handleDeleteClient = () => {
     const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
+    const { t, i18n } = this.props;
+
     const checkedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     if(checkedClientIds && checkedClientIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
-        confirmTitle: '단말 삭제',
+        confirmTitle: t("dtDeleteClient"),
         confirmMsg: '단말(' + checkedClientIds.size + '개)을 삭제하시겠습니까?',
         handleConfirmResult: this.handleDeleteClientConfirmResult,
         confirmObject: {checkedClientIds: checkedClientIds}
@@ -336,13 +343,14 @@ class ClientMasterManage extends Component {
   render() {
     const { classes } = this.props;
     const { ClientMasterManageProps, ClientGroupProps, ClientManageProps } = this.props;
+    const { t, i18n } = this.props;
 
     const compId = this.props.match.params.grMenuId;
     const { isGroupInformOpen, isClientInformOpen } = ClientMasterManageProps;
 
     return (
       <React.Fragment>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
@@ -351,15 +359,14 @@ class ClientMasterManage extends Component {
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
               <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
                 <Grid item>
-
-                  <Tooltip title="신규 단말그룹 등록">
+                  <Tooltip title={t("ttAddNewGroup")}>
                   <span>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
                       <AddIcon /><GroupIcon />
                     </Button>
                   </span>
                   </Tooltip>
-                  <Tooltip title="단말그룹 삭제">
+                  <Tooltip title={t("ttDeleteGroup")}>
                   <span>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
                       <RemoveIcon /><GroupIcon />
@@ -370,7 +377,7 @@ class ClientMasterManage extends Component {
                 </Grid>
                 <Grid item>
 
-                  <Tooltip title="그룹에 단말추가">
+                  <Tooltip title={t("ttAddClientInGroup")}>
                   <span>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
                       <AddIcon /><ClientIcon />
@@ -395,7 +402,7 @@ class ClientMasterManage extends Component {
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
 
-                    <Tooltip title="그룹에 단말삭제">
+                    <Tooltip title={t("ttDeleteClientFromGroup")} >
                     <span>
                       <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
                         <RemoveIcon /><ClientIcon />
@@ -405,7 +412,7 @@ class ClientMasterManage extends Component {
 
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
-                    <Tooltip title="단말 폐기">
+                    <Tooltip title={t("ttRevokeClient")} >
                     <span>
                       <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientSelected()} style={{marginLeft: "10px"}}>
                         <DeleteIcon /><ClientIcon />
@@ -480,5 +487,5 @@ const mapDispatchToProps = (dispatch) => ({
 
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientMasterManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientMasterManage)));
 
