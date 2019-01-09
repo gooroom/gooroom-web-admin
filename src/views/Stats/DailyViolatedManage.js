@@ -82,11 +82,11 @@ class DailyViolatedManage extends Component {
     const { t, i18n } = this.props;
 
     const columnHeaders = [
-      { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: t("columnDate") },
-      { id: 'boot', isOrder: false, numeric: false, disablePadding: true, label: t("columnBootViolated") },
-      { id: 'exe', isOrder: false, numeric: false, disablePadding: true, label: t("columnExeViolated") },
-      { id: 'os', isOrder: false, numeric: false, disablePadding: true, label: t("columnOSViolated") },
-      { id: 'media', isOrder: false, numeric: false, disablePadding: true, label: t("columnMediaViolated") }
+      { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: t("colDate") },
+      { id: 'boot', isOrder: false, numeric: false, disablePadding: true, label: t("colBootViolated") },
+      { id: 'exe', isOrder: false, numeric: false, disablePadding: true, label: t("colExeViolated") },
+      { id: 'os', isOrder: false, numeric: false, disablePadding: true, label: t("colOSViolated") },
+      { id: 'media', isOrder: false, numeric: false, disablePadding: true, label: t("colMediaViolated") }
     ];
 
     const compId = this.props.match.params.grMenuId;
@@ -136,10 +136,10 @@ class DailyViolatedManage extends Component {
               <Tooltip />
               <Legend />
 
-              <Line name="부팅보안침해" type="monotone" dataKey="bootProtectorCount" stroke="#82a6ca" />
-              <Line name="실행보안침해" type="monotone" dataKey="exeProtectorCount" stroke="#ca82c2" />
-              <Line name="OS보안침해" type="monotone" dataKey="osProtectorCount" stroke="#caa682" />
-              <Line name="매체보안침해" type="monotone" dataKey="mediaProtectorCount" stroke="#bb4c4c" />
+              <Line name={t("colBootViolated")} type="monotone" dataKey="bootProtectorCount" stroke="#82a6ca" />
+              <Line name={t("colExeViolated")} type="monotone" dataKey="exeProtectorCount" stroke="#ca82c2" />
+              <Line name={t("colOSViolated")} type="monotone" dataKey="osProtectorCount" stroke="#caa682" />
+              <Line name={t("colMediaViolated")} type="monotone" dataKey="mediaProtectorCount" stroke="#bb4c4c" />
 
             </LineChart>
           </ResponsiveContainer>

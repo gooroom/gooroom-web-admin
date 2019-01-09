@@ -122,13 +122,13 @@ class GeneralLogManage extends Component {
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={2} >
-            <TextField label="조회시작일" type="date" style={{width:150}}
+            <TextField label={t('searchStartDate')} type="date" style={{width:150}}
               value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
               onChange={this.handleParamChange('fromDate')}
               className={classes.fullWidth} />
             </Grid>
             <Grid item xs={2} >
-            <TextField label="조회종료일" type="date" style={{width:150}}
+            <TextField label={t('searchEndDate')} type="date" style={{width:150}}
               value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
               onChange={this.handleParamChange('toDate')}
               className={classes.fullWidth} />
@@ -144,7 +144,7 @@ class GeneralLogManage extends Component {
             </Grid>
             <Grid item xs={3} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-              <Search />조회
+              <Search />{t('buttonSearch')}
             </Button>
             </Grid>
           </Grid>            

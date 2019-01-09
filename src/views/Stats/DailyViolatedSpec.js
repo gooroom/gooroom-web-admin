@@ -30,17 +30,9 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 class DailyViolatedSpec extends Component {
-
-  columnHeaders = [
-    { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: '번호' },
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: '사용자' },
-    { id: 'LOG_TP', isOrder: true, numeric: false, disablePadding: true, label: '로그타입' },
-    { id: 'LOG_VALUE', isOrder: true, numeric: false, disablePadding: true, label: '로그정보' },
-    { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: '등록일' }
-  ];
 
   handleChangePage = (event, page) => {
     const { DailyViolatedActions, DailyViolatedProps } = this.props;
@@ -98,6 +90,17 @@ class DailyViolatedSpec extends Component {
   render() {
     const { classes } = this.props;
     const { DailyViolatedProps } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: t("colNumber") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colUser") },
+      { id: 'LOG_TP', isOrder: true, numeric: false, disablePadding: true, label: t("colLogType") },
+      { id: 'LOG_VALUE', isOrder: true, numeric: false, disablePadding: true, label: t("colLogInfo") },
+      { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: t("colRegDate") }
+    ];
+
     const compId = this.props.compId;
     
     const listObj = DailyViolatedProps.getIn(['viewItems', compId]);
@@ -114,12 +117,12 @@ class DailyViolatedSpec extends Component {
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={2} >
             <FormControl fullWidth={true}>
-              <TextField label="날짜" value={listObj.getIn(['listParam', 'logDate'])} disabled={true} />
+              <TextField label={t("optDate")} value={listObj.getIn(['listParam', 'logDate'])} disabled={true} />
             </FormControl>
             </Grid>
             <Grid item xs={2} >
             <FormControl fullWidth={true}>
-              <TextField label="침해구분" value={listObj.getIn(['listParam', 'violatedType'])} disabled={true} />
+              <TextField label={t("optViolatedDivision")} value={listObj.getIn(['listParam', 'violatedType'])} disabled={true} />
             </FormControl>
             </Grid>
             <Grid item xs={2} >
@@ -129,7 +132,7 @@ class DailyViolatedSpec extends Component {
             </Grid>
             <Grid item xs={5} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                <Search />조회
+                <Search />{t('buttonSearch')}
               </Button>
             </Grid>
           </Grid>            
@@ -143,7 +146,7 @@ class DailyViolatedSpec extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -162,7 +165,7 @@ class DailyViolatedSpec extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -202,5 +205,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyViolatedSpec));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyViolatedSpec)));
 

@@ -30,17 +30,12 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class DailyClientCountManage extends Component {
-
-  columnHeaders = [
-    { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: '날짜' },
-    { id: 'regCount', isOrder: false, numeric: false, disablePadding: true, label: '등록수' },
-    { id: 'revokeCount', isOrder: false, numeric: false, disablePadding: true, label: '폐기수' }
-  ];
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -84,6 +79,14 @@ class DailyClientCountManage extends Component {
   render() {
     const { classes } = this.props;
     const { DailyClientCountProps } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: t("colDate") },
+      { id: 'regCount', isOrder: false, numeric: false, disablePadding: true, label: t("colRegCount") },
+      { id: 'revokeCount', isOrder: false, numeric: false, disablePadding: true, label: t("colRevokeCount") }
+    ];
+
     const compId = this.props.match.params.grMenuId;
 
     const listObj = DailyClientCountProps.getIn(['viewItems', compId]);
@@ -97,25 +100,25 @@ class DailyClientCountManage extends Component {
 
     return (
       <div>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={4} sm={4} lg={2} >
-              <TextField label="조회시작일" type="date" style={{width:150}}
+              <TextField label={t('searchStartDate')} type="date" style={{width:150}}
                 value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
                 onChange={this.handleParamChange('fromDate')}
                 className={classes.fullWidth} />
             </Grid>
             <Grid item xs={4} sm={4} lg={2}>
-              <TextField label="조회종료일" type="date" style={{width:150}}
+              <TextField label={t('searchEndDate')} type="date" style={{width:150}}
                 value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
                 onChange={this.handleParamChange('toDate')}
                 className={classes.fullWidth} />
             </Grid>
             <Grid item xs={4} sm={4} lg={2} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                <Search />조회
+                <Search />{t('buttonSearch')}
               </Button>
             </Grid>
             <Grid item lg={6} ></Grid>
@@ -128,8 +131,8 @@ class DailyClientCountManage extends Component {
               <CartesianGrid strokeDasharray="3 3"/>
               <Tooltip />
               <Legend />
-              <Line name="등록단말수" type="monotone" dataKey="regCount" stroke="#62b6e2" />
-              <Line name="폐기단말수" type="monotone" dataKey="revokeCount" stroke="#efa7a7" />
+              <Line name={t('regClientCount')} type="monotone" dataKey="regCount" stroke="#62b6e2" />
+              <Line name={t('revokeClientCount')} type="monotone" dataKey="revokeCount" stroke="#efa7a7" />
             </LineChart>
           </ResponsiveContainer>
 
@@ -140,7 +143,7 @@ class DailyClientCountManage extends Component {
               <div style={{height:340,overflow:'auto'}}>
                 <Table>
                   <GRCommonTableHead classes={classes} keyId="logDate"
-                    headFix={true} columnData={this.columnHeaders} />
+                    headFix={true} columnData={columnHeaders} />
                   <TableBody>
                     {listObj.get('listAllData').map(n => {
                       return (
@@ -184,7 +187,7 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyClientCountManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyClientCountManage)));
 
 
 

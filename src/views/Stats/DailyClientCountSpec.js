@@ -29,15 +29,9 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 class DailyClientCountSpec extends Component {
-
-  columnHeaders = [
-    { id: 'CLIENT_ID', isOrder: false, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'CLIENT_NM', isOrder: false, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'GRP_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
-    { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' }
-  ];
 
   handleChangePage = (event, page) => {
     const { DailyClientCountActions, DailyClientCountProps } = this.props;
@@ -86,6 +80,15 @@ class DailyClientCountSpec extends Component {
   render() {
     const { classes } = this.props;
     const { DailyClientCountProps } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'CLIENT_ID', isOrder: false, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: 'CLIENT_NM', isOrder: false, numeric: false, disablePadding: true, label: t("colClientName") },
+      { id: 'GRP_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
+      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") }
+    ];
+
     const compId = this.props.compId;
     
     const listObj = DailyClientCountProps.getIn(['viewItems', compId]);
@@ -102,7 +105,7 @@ class DailyClientCountSpec extends Component {
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={2} >
             <FormControl fullWidth={true}>
-              <TextField label="날짜" value={listObj.getIn(['listParam', 'logDate'])} disabled={true} />
+              <TextField label={t("optDate")} value={listObj.getIn(['listParam', 'logDate'])} disabled={true} />
             </FormControl>
             </Grid>
             <Grid item xs={2} >
@@ -112,7 +115,7 @@ class DailyClientCountSpec extends Component {
             </Grid>
             <Grid item xs={7} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                <Search />조회
+                <Search />{t('buttonSearch')}
               </Button>
             </Grid>
           </Grid>            
@@ -126,7 +129,7 @@ class DailyClientCountSpec extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -143,7 +146,7 @@ class DailyClientCountSpec extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -183,5 +186,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyClientCountSpec));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyClientCountSpec)));
 

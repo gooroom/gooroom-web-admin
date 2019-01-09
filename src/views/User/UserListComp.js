@@ -250,7 +250,7 @@ class UserListComp extends Component {
           </Grid>
           <Grid item xs={2}>
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-              <Search />조회
+              <Search />{t('buttonSearch')}
             </Button>
           </Grid>
           <Grid item xs={4} style={{textAlign:'right'}}>

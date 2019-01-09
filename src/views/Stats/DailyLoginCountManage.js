@@ -35,22 +35,12 @@ import Paper from '@material-ui/core/Paper';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class DailyLoginCountManage extends Component {
-
-  columnHeaders = [
-    { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: '날짜' },
-    { id: 'loginAll', isOrder: false, numeric: false, disablePadding: true, label: '요청수' },
-    { id: 'loginSuccess', isOrder: false, numeric: false, disablePadding: true, label: '접속성공' },
-    { id: 'loginFail', isOrder: false, numeric: false, disablePadding: true, label: '접속실패' },
-    { id: 'userAll', isOrder: false, numeric: false, disablePadding: true, label: '접속시도' },
-    { id: 'userSuccess', isOrder: false, numeric: false, disablePadding: true, label: '접속성공' },
-    { id: 'clientAll', isOrder: false, numeric: false, disablePadding: true, label: '접속시도' },
-    { id: 'clientSuccess', isOrder: false, numeric: false, disablePadding: true, label: '접속성공' }
-  ];
 
   constructor(props) {
     super(props);
@@ -107,7 +97,20 @@ class DailyLoginCountManage extends Component {
   render() {
     const { classes } = this.props;
     const { DailyLoginCountProps } = this.props;
+    const { t, i18n } = this.props;
     const { selectedTab } = this.state;
+
+    const columnHeaders = [
+      { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: t("colDate") },
+      { id: 'loginAll', isOrder: false, numeric: false, disablePadding: true, label: t("colConnReqCount") },
+      { id: 'loginSuccess', isOrder: false, numeric: false, disablePadding: true, label: t("colConnSuccess") },
+      { id: 'loginFail', isOrder: false, numeric: false, disablePadding: true, label: t("colConnFail") },
+      { id: 'userAll', isOrder: false, numeric: false, disablePadding: true, label: t("colConnRequest") },
+      { id: 'userSuccess', isOrder: false, numeric: false, disablePadding: true, label: t("colConnSuccess") },
+      { id: 'clientAll', isOrder: false, numeric: false, disablePadding: true, label: t("colConnRequest") },
+      { id: 'clientSuccess', isOrder: false, numeric: false, disablePadding: true, label: t("colConnSuccess") }
+    ];
+
     const compId = this.props.match.params.grMenuId;
     
     const listObj = DailyLoginCountProps.getIn(['viewItems', compId]);
@@ -121,25 +124,25 @@ class DailyLoginCountManage extends Component {
 
     return (
       <div>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={4} sm={4} lg={2} >
-              <TextField label="조회시작일" type="date" style={{width:150}}
+              <TextField label={t('searchStartDate')} type="date" style={{width:150}}
                 value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
                 onChange={this.handleParamChange('fromDate')}
                 className={classes.fullWidth} />
             </Grid>
             <Grid item xs={4} sm={4} lg={2}>
-              <TextField label="조회종료일" type="date" style={{width:150}}
+              <TextField label={t('searchEndDate')} type="date" style={{width:150}}
                 value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
                 onChange={this.handleParamChange('toDate')}
                 className={classes.fullWidth} />
             </Grid>
             <Grid item xs={4} sm={4} lg={2} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                <Search />조회
+                <Search />{t('buttonSearch')}
               </Button>
             </Grid>
             <Grid item lg={6} ></Grid>
@@ -153,9 +156,9 @@ class DailyLoginCountManage extends Component {
                 textColor="primary"
                 onChange={this.handleChangeTabs}
             >
-              <Tab label="접속요청 수" value={0} />
-              <Tab label="접속요청 사용자수" value={1} />
-              <Tab label="접속요청 단말수" value={2} />
+              <Tab label={t("connectRequestCount")} value={0} />
+              <Tab label={t("connReqUserCount")} value={1} />
+              <Tab label={t("connReqClientCount")} value={2} />
             </Tabs>
           </AppBar>
           <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
@@ -167,9 +170,9 @@ class DailyLoginCountManage extends Component {
                 <CartesianGrid strokeDasharray="3 3"/>
                 <Tooltip />
                 <Legend />
-                <Line name="접속요청수" type="monotone" dataKey="loginAll" stroke="#82a6ca" />
-                <Line name="접속성공" type="monotone" dataKey="loginSuccess" stroke="#ca82c2" />
-                <Line name="접속실패" type="monotone" dataKey="loginFail" stroke="#caa682" />
+                <Line name={t("connectRequestCount")} type="monotone" dataKey="loginAll" stroke="#82a6ca" />
+                <Line name={t("connSuccessCount")} type="monotone" dataKey="loginSuccess" stroke="#ca82c2" />
+                <Line name={t("connFailCount")} type="monotone" dataKey="loginFail" stroke="#caa682" />
               </LineChart>
             </ResponsiveContainer>
           }
@@ -181,8 +184,8 @@ class DailyLoginCountManage extends Component {
                 <CartesianGrid strokeDasharray="3 3"/>
                 <Tooltip />
                 <Legend />
-                <Line name="접속요청수" type="monotone" dataKey="userAll" stroke="#82a6ca" />
-                <Line name="접속성공" type="monotone" dataKey="userSuccess" stroke="#ca82c2" />
+                <Line name={t("connectRequestCount")} type="monotone" dataKey="userAll" stroke="#82a6ca" />
+                <Line name={t("connSuccessCount")} type="monotone" dataKey="userSuccess" stroke="#ca82c2" />
               </LineChart>
             </ResponsiveContainer>
           }
@@ -194,8 +197,8 @@ class DailyLoginCountManage extends Component {
                 <CartesianGrid strokeDasharray="3 3"/>
                 <Tooltip />
                 <Legend />
-                <Line name="접속요청수" type="monotone" dataKey="clientAll" stroke="#82a6ca" />
-                <Line name="접속성공" type="monotone" dataKey="clientSuccess" stroke="#ca82c2" />
+                <Line name={t("connectRequestCount")} type="monotone" dataKey="clientAll" stroke="#82a6ca" />
+                <Line name={t("connSuccessCount")} type="monotone" dataKey="clientSuccess" stroke="#ca82c2" />
               </LineChart>
             </ResponsiveContainer>
           }
@@ -212,7 +215,7 @@ class DailyLoginCountManage extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listAllData').map(n => {
@@ -255,7 +258,7 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyLoginCountManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DailyLoginCountManage)));
 
 
 
