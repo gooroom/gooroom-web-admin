@@ -8,7 +8,7 @@ import * as CommonOptionActions from 'modules/CommonOptionModule';
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
-
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -40,9 +40,11 @@ class ClientStatusSelect extends Component {
 
   render() {
     const { CommonOptionProps } = this.props;
+    const { t, i18n } = this.props;
+
     return (
       <React.Fragment>
-      <InputLabel htmlFor="client-status">단말상태</InputLabel>
+      <InputLabel htmlFor="client-status">{t("optClientStatus")}</InputLabel>
       <Select
         value={CommonOptionProps.selectedClientStatus.statusId}
         onChange={this.handleChangeSelect}
@@ -67,6 +69,6 @@ const mapDispatchToProps = (dispatch) => ({
   CommonOptionActions: bindActionCreators(CommonOptionActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientStatusSelect);
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(ClientStatusSelect));
 
 

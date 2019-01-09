@@ -21,12 +21,21 @@ export default {
   "colClientId": "단말아이디",
   "colClientName": "단말이름",
   "colClientGroup": "단말그룹",
+  "colGroupName": "그룹이름",
+  "colClientCount": "단말수",
   "colUser": "사용자",
   "colUserId": "사용자아이디",
   "colLogType": "로그타입",
   "colLogInfo": "로그정보",
   "colRegDate": "등록일",
   "colStatus": "상태",
+  "colEdit": "수정",
+
+  "colId": "아이디",
+  "colLastLoginDate": "최종접속일",
+  "colLastLoginIp": "최종접속IP",
+  "colLoginId": "접속자",
+  "colUseRate": "사용률",
 
   // options
   "optDate": "날짜",
@@ -35,7 +44,14 @@ export default {
   "optDivision": "구분",
   "optViolatedDivision": "침해구분",
 
-  "buttonSearch": "조회",
+  "optClientStatus": "단말상태",
+  "optKeyword": "검색어",
+
+  // Buttons
+  "btnSearch": "조회",
+  "btnRegist": "등록",
+  "btnSave": "저장",
+  "btnClose": "닫기",
 
   // Menus
   "menuDashboard": "Dashboard",
@@ -75,6 +91,12 @@ export default {
   "menuJob": "작업",
   "menuJobManage": "작업정보",
 
+  // 공통
+  "selOffline": "오프라인",
+  "selOnline": "온라인",
+  "selViolated": "침해",
+  "selUnviolated": "미침해",
+
   // 일별접속통계
   "connectRequestCount": "접속요청수",
   "connReqUserCount": "접속요청 사용자수",
@@ -85,6 +107,42 @@ export default {
   // 단말등록통계
   "regClientCount": "등록단말수",
   "revokeClientCount": "폐기단말수",
-    
 
+  // 단말관리
+  "ttAddNewGroup": "신규 단말그룹 등록",
+  "ttDeleteGroup": "단말그룹 삭제",
+  "ttAddClientInGroup": "그룹에 단말추가",
+  "ttDeleteClientFromGroup": "그룹에 단말삭제",
+  "ttRevokeClient": "단말 폐기",
+
+  "spClientGroup": "단말그룹",
+  "spClientDesc": "단말설명",
+  "spClientGroupName": "단말그룹이름",
+  "spClientGroupDesc": "단말그룹설명",
+  "spIsOnline": "온라인여부",
+  "spHomeSizeRate": "홈폴더 사용률",
+  "spInstalledPkgCnt": "설치패키지수",
+  "spBootViolated": "부팅보안침해",
+  "spExeViolated": "실행보안침해",
+  "spMediaViolated": "매체보안침해",
+  "spOSViolated": "OS보안침해",
+  "spClientRegDate": "단말 등록일",
+  "msgRevokedClient": "폐기된 단말입니다.",
+
+  "dtDeleteClient": "단말 삭제",
+
+  "dtAddGroup": "단말그룹 등록",
+  "dtEditGroup": "단말그룹 수정",
+  "dtDeleteGroup": "단말그룹 삭제",
+  "dtViewGroup": "단말그룹 정보",
+  "dtAddClientInGroup": "그룹에 단말 추가",
+  "dtDeleteClientFromGroup": "그룹에서 단말 삭제",
+
+  "msgAddGroup": "단말그룹을 등록하시겠습니까?",
+  "msgEditGroup": "단말그룹을 수정하시겠습니까?",
+  "msgDeleteGroup": "단말그룹을 삭제하시겠습니까?",
+  "msgInputGroupName": "단말그룹이름을 입력하세요.",
+  "msgSelectClient": "단말을 선택하세요.",
+  "msgCfmDeleteClientFromGroup": "선택하신 단말을 그룹에서 삭제하시겠습니까?",
+  "msgCfmSelectGroupForInsertClient": "단말을 추가할 그룹을 선택하세요.",
 };

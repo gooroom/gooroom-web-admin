@@ -24,6 +24,7 @@ import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 import ClientRuleSelector from 'components/GROptions/ClientRuleSelector';
 
@@ -48,10 +49,11 @@ class ClientGroupDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientGroupProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '단말그룹 등록',
-                confirmMsg: '단말그룹을 등록하시겠습니까?',
+                confirmTitle: t("dtAddGroup"),
+                confirmMsg: t("msgAddGroup"),
                 handleConfirmResult: this.handleCreateDataConfirmResult,
                 confirmObject: ClientGroupProps.get('editingItem')
             });
@@ -93,10 +95,11 @@ class ClientGroupDialog extends Component {
     
     handleEditData = (event) => {
         const { GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '단말그룹 수정',
-                confirmMsg: '단말그룹을 수정하시겠습니까?',
+                confirmTitle: t("dtEditGroup"),
+                confirmMsg: t("msgEditGroup"),
                 handleConfirmResult: this.handleEditConfirmResult
             });
         } else {
@@ -139,17 +142,18 @@ class ClientGroupDialog extends Component {
     render() {
         const { classes } = this.props;
         const { ClientGroupProps, compId } = this.props;
-        
+        const { t, i18n } = this.props;
+
         const dialogType = ClientGroupProps.get('dialogType');
         const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
-            title = "단말 그룹 등록";
+            title = t("dtAddGroup");
         } else if(dialogType === ClientGroupDialog.TYPE_VIEW) {
-            title = "단말 그룹 정보";
+            title = t("dtViewGroup");
         } else if(dialogType === ClientGroupDialog.TYPE_EDIT) {
-            title = "단말 그룹 수정";
+            title = t("dtEditGroup");
         } 
 
         return (
@@ -161,16 +165,16 @@ class ClientGroupDialog extends Component {
                 <DialogContent style={{minHeight:567}}>
                     <Grid container spacing={24}>
                         <Grid item xs={3}>
-                            <TextValidator label="단말그룹이름" className={classes.fullWidth}
+                            <TextValidator label={t("spClientGroupName")} className={classes.fullWidth}
                                 name="grpNm"
                                 validators={['required']}
-                                errorMessages={['단말그룹이름을 입력하세요.']}
+                                errorMessages={[t("msgInputGroupName")]}
                                 value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
                                 onChange={this.handleValueChange('grpNm')}
                             />
                         </Grid>
                         <Grid item xs={9}>
-                            <TextField label="단말그룹설명" className={classes.fullWidth}
+                            <TextField label={t("spClientGroupDesc")} className={classes.fullWidth}
                                 value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                                 onChange={this.handleValueChange('comment')}
                             />
@@ -181,12 +185,12 @@ class ClientGroupDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                     {(dialogType === ClientGroupDialog.TYPE_ADD) &&
-                        <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
+                        <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
                     }
                     {(dialogType === ClientGroupDialog.TYPE_EDIT) &&
-                        <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                        <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                     }
-                    <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
+                    <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
             </Dialog>
@@ -216,6 +220,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupDialog)));
 
 

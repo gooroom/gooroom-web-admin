@@ -99,7 +99,7 @@ class DesktopApp extends Component {
               {/* 
             </TableRow>
             <TableRow>
-              <TableCell colSpan={2} numeric>{appObj.get('appId')}</TableCell>
+              <TableCell colSpan={2} >{appObj.get('appId')}</TableCell>
               */}
             </TableRow>
 

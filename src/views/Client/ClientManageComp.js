@@ -37,29 +37,14 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientManageComp extends Component {
 
-  columnHeaders = [
-    { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
-    { id: 'LOGIN_ID', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
-    { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
-    { id: 'LAST_LOGIN_TIME', isOrder: true, numeric: false, disablePadding: true, label: '최종접속일' },
-    { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: '최종접속IP' },
-    { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: '사용률' },
-    { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' }
-  ];
-
   componentDidMount() {
-    if(this.props.selectorType && this.props.selectorType == 'multiple') {
-      this.columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
-    }
     this.props.ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {}, {isResetSelect:false, isInitParam:true});
   }
 
@@ -174,6 +159,22 @@ class ClientManageComp extends Component {
   render() {
     const { classes } = this.props;
     const { ClientManageProps, compId } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'LOGIN_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colLoginId") },
+      { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
+      { id: 'LAST_LOGIN_TIME', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginDate") },
+      { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginIp") },
+      { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: t("colUseRate") },
+      { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") }
+    ];
+    if(this.props.selectorType && this.props.selectorType == 'multiple') {
+      columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
+    }
 
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -188,7 +189,6 @@ class ClientManageComp extends Component {
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4} >
             <FormControl fullWidth={true}>
-              <InputLabel htmlFor="client-status">단말상태</InputLabel>
               <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
             </FormControl>
           </Grid>
@@ -199,7 +199,7 @@ class ClientManageComp extends Component {
           </Grid>
           <Grid item xs={4} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-              <Search />{t('buttonSearch')}
+              <Search />{t("btnSearch")}
             </Button>
           </Grid>
         </Grid>
@@ -217,7 +217,7 @@ class ClientManageComp extends Component {
             onClickAllCheck={this.handleClickAllCheck}
             checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           }
           {(!this.props.selectorType || this.props.selectorType == 'single') && 
@@ -227,7 +227,7 @@ class ClientManageComp extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           }
           <TableBody>
@@ -274,7 +274,7 @@ class ClientManageComp extends Component {
             {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
               <TableRow key={e}>
                 <TableCell
-                  colSpan={this.columnHeaders.length + 1}
+                  colSpan={columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
@@ -313,5 +313,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageComp));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageComp)));
 

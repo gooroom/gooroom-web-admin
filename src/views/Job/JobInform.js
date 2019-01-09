@@ -114,26 +114,26 @@ class JobInform extends Component {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" >{bull} 작업번호</TableCell>
-                  <TableCell numeric>{viewItem.get('jobNo')}</TableCell>
+                  <TableCell >{viewItem.get('jobNo')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" >{bull} 작업이름</TableCell>
-                  <TableCell numeric>{viewItem.get('jobName')}</TableCell>
+                  <TableCell >{viewItem.get('jobName')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" >{bull} 작업생성일</TableCell>
-                  <TableCell numeric>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                  <TableCell >{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 작업대상 결과정보 ]</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" >{bull} 단말아이디</TableCell>
-                  <TableCell numeric>{selectTargetObj.get('clientId')}</TableCell>
+                  <TableCell >{selectTargetObj.get('clientId')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" >{bull} 작업상태(결과)</TableCell>
-                  <TableCell numeric>{getJobStatusToString(selectTargetObj.get('jobStat'))}</TableCell>
+                  <TableCell >{getJobStatusToString(selectTargetObj.get('jobStat'))}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 작업모듈 정보 ]</TableCell>

@@ -225,7 +225,7 @@ class ClientManage extends Component {
 
                 <Grid item xs={3} >
                   <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                    <Search />{t('buttonSearch')}
+                    <Search />{t("btnSearch")}
                   </Button>
                 </Grid>
 

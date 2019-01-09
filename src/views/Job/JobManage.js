@@ -158,7 +158,7 @@ class JobManage extends Component {
                 </Grid>
                 <Grid item xs={4} >
                   <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                    <Search />{t('buttonSearch')}
+                    <Search />{t("btnSearch")}
                   </Button>
                 </Grid>
               </Grid>

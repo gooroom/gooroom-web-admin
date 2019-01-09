@@ -51,30 +51,30 @@ class DesktopAppViewer extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 데스크톱앱 종류</TableCell>
-                  <TableCell numeric>{viewItem.get('appGubun')}</TableCell>
+                  <TableCell >{viewItem.get('appGubun')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 실행 명령어</TableCell>
-                  <TableCell numeric style={{wordBreak: 'break-word', maxWidth:200}}>{viewItem.get('appExec')}</TableCell>
+                  <TableCell  style={{wordBreak: 'break-word', maxWidth:200}}>{viewItem.get('appExec')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 마운트 URL</TableCell>
-                  <TableCell numeric>{viewItem.get('appMountUrl')}</TableCell>
+                  <TableCell >{viewItem.get('appMountUrl')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 마운트 포인트</TableCell>
-                  <TableCell numeric>{viewItem.get('appMountPoint')}</TableCell>
+                  <TableCell >{viewItem.get('appMountPoint')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} 서비스 상태</TableCell>
-                  <TableCell numeric>{viewItem.get('statusCd')}</TableCell>
+                  <TableCell >{viewItem.get('statusCd')}</TableCell>
                   <TableCell component="th" scope="row">{bull} 수정일</TableCell>
-                  <TableCell numeric>{formatDateToSimple(viewItem.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                  <TableCell >{formatDateToSimple(viewItem.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                 </TableRow>
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} Icon 구분</TableCell>
-                  <TableCell numeric>{viewItem.get('iconGubun')}</TableCell>
+                  <TableCell >{viewItem.get('iconGubun')}</TableCell>
                   <TableCell component="th" scope="row">{bull} Icon 정보</TableCell>
-                  <TableCell numeric>{(viewItem.get('iconGubun') == 'favicon') ? viewItem.get('iconUrl') : viewItem.get('iconNm')}</TableCell>
+                  <TableCell >{(viewItem.get('iconGubun') == 'favicon') ? viewItem.get('iconUrl') : viewItem.get('iconNm')}</TableCell>
                 </TableRow>
 
               </TableBody>

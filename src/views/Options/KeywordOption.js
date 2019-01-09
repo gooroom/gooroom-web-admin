@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 import TextField from "@material-ui/core/TextField";
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -8,10 +9,9 @@ import TextField from "@material-ui/core/TextField";
 class KeywordOption extends Component {
   constructor(props) {
     super(props);
-
+    
     this.state = {
-      paramName: (props.paramName) ? props.paramName : "keyword",
-      label: (props.label) ? props.label : "검색어"
+      paramName: (props.paramName) ? props.paramName : "keyword"
     };
   }
   
@@ -26,13 +26,14 @@ class KeywordOption extends Component {
   };
 
   render() {
-    
+    const { label } = this.props;
+    const { t, i18n } = this.props;
     return (
-      <TextField label={this.state.label} onChange={this.handleKeywordChange()} onKeyDown={this.handleKeyPress()} value={this.props.keywordValue} />
+      <TextField label={(label) ? label : t("optKeyword")} onChange={this.handleKeywordChange()} onKeyDown={this.handleKeyPress()} value={this.props.keywordValue} />
     );
   }
 }
 
-export default KeywordOption;
+export default translate("translations")(KeywordOption);
 
 
