@@ -228,8 +228,8 @@ class SoftwareFilterDialog extends Component {
                     <div>
                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                         <Grid item xs={12} sm={4} md={4}>
-                        <TextValidator label="이름" value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                            name="objNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
+                        <TextValidator label={t("lbName")} value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                            name="objNm" validators={['required']} errorMessages={[t("msgInputName")]}
                             onChange={this.handleValueChange("objNm")}
                             className={classes.fullWidth}
                         />
@@ -265,7 +265,7 @@ class SoftwareFilterDialog extends Component {
                     {(dialogType === SoftwareFilterDialog.TYPE_INHERIT) &&
                         <div>
                         <Typography variant="body1">
-                            이 설정을 하위 조직에 적용 하시겠습니까?
+                            {t("msgApplyRuleToChild")}
                         </Typography>
                         <SoftwareFilterSpec selectedItem={editingItem} hasAction={false} />
                         </div>
@@ -273,7 +273,7 @@ class SoftwareFilterDialog extends Component {
                     {(dialogType === SoftwareFilterDialog.TYPE_COPY) &&
                         <div>
                         <Typography variant="body1">
-                            이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
+                            {t("msgCopyRule")}
                         </Typography>
                         <SoftwareFilterSpec selectedItem={editingItem} hasAction={false} />
                         </div>
@@ -288,10 +288,10 @@ class SoftwareFilterDialog extends Component {
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
                 {(dialogType === SoftwareFilterDialog.TYPE_INHERIT) &&
-                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">적용</Button>
+                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === SoftwareFilterDialog.TYPE_COPY) &&
-                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
+                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>

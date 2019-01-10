@@ -28,6 +28,8 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class JobInform extends Component {
 
@@ -49,6 +51,8 @@ class JobInform extends Component {
 
   render() {
     const { classes, compId, JobManageProps } = this.props;
+    const { t, i18n } = this.props;
+
     const bull = <span className={classes.bullet}>•</span>;
     
     const informOpen = JobManageProps.getIn(['viewItems', compId, 'informOpen']);
@@ -56,7 +60,7 @@ class JobInform extends Component {
     const selectTargetObj = JobManageProps.getIn(['viewItems', compId, 'selectTargetObj']);
     
     // json parse.
-    let targetModuleList = <Typography variant="button" gutterBottom>결과가 없습니다.</Typography>;
+    let targetModuleList = <Typography variant="button" gutterBottom>{t("msgNoResult")}</Typography>;
     if(selectTargetObj && selectTargetObj.get('resultData')) {
       const result = JSON.parse(selectTargetObj.get('resultData'));
       if(result && result.length > 0) {
@@ -64,9 +68,9 @@ class JobInform extends Component {
           <Table>
           <TableHead>
             <TableRow>
-              <TableCell>모듈</TableCell>
-              <TableCell>타스크</TableCell>
-              <TableCell>메세지</TableCell>
+              <TableCell>{t("dtJobModule")}</TableCell>
+              <TableCell>{t("dtJobTask")}</TableCell>
+              <TableCell>{t("dtJobMessage")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -102,33 +106,33 @@ class JobInform extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 작업정보 ]</TableCell>
+                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ {t("dtJobInfo")} ]</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row" >{bull} 작업번호</TableCell>
+                  <TableCell component="th" scope="row" >{bull} {t("dtJobNo")}</TableCell>
                   <TableCell >{viewItem.get('jobNo')}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row" >{bull} 작업이름</TableCell>
+                  <TableCell component="th" scope="row" >{bull} {t("dtJobName")}</TableCell>
                   <TableCell >{viewItem.get('jobName')}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row" >{bull} 작업생성일</TableCell>
+                  <TableCell component="th" scope="row" >{bull} {t("dtJobRegDate")}</TableCell>
                   <TableCell >{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 작업대상 결과정보 ]</TableCell>
+                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ {t("dtJobTargetResult")} ]</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row" >{bull} 단말아이디</TableCell>
+                  <TableCell component="th" scope="row" >{bull} {t("lbClientId")}</TableCell>
                   <TableCell >{selectTargetObj.get('clientId')}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row" >{bull} 작업상태(결과)</TableCell>
+                  <TableCell component="th" scope="row" >{bull} {t("dtJobResultStatus")}</TableCell>
                   <TableCell >{getJobStatusToString(selectTargetObj.get('jobStat'))}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ 작업모듈 정보 ]</TableCell>
+                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ {t("dtJobModuleInfo")} ]</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell colSpan={2} >{targetModuleList}</TableCell>
@@ -155,5 +159,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(JobInform));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(JobInform)));
 

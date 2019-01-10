@@ -95,7 +95,7 @@ class ClientHostNameSelector extends Component {
           <div style={{width:'100%',textAlign:'center'}}>
             <FormControl className={classes.formControl} style={{marginBottom: 10, marginTop: 26, padding: '0px 20px 0px 20px'}}>
               <Select value={selectedOptionItemId} style={{backgroundColor:'#f9eaea'}} onChange={this.handleChange} >
-                <MenuItem key={'-'} value={'-'}>지정안함</MenuItem>
+                <MenuItem key={'-'} value={'-'}>{t("selNoSelected")}</MenuItem>
                 {listAllData.map(item => (
                   <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
                 ))}

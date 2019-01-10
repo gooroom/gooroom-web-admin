@@ -19,6 +19,8 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class ClientConfSettingSpec extends Component {
 
@@ -27,6 +29,7 @@ class ClientConfSettingSpec extends Component {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
+    const { t, i18n } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -42,7 +45,7 @@ class ClientConfSettingSpec extends Component {
           { (hasAction) &&
           <GRRuleCardHeader
             avatar={RuleAvartar}
-            category='단말 설정'
+            category={t("lbSetupClient")}
             title={viewItem.get('objNm')} 
             subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             action={
@@ -63,7 +66,7 @@ class ClientConfSettingSpec extends Component {
           }
           { (simpleTitle) &&
           <GRRuleCardHeader
-            category='단말 설정'
+            category={t("lbSetupClient")}
             title={viewItem.get('objNm')} 
             subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
           />
@@ -71,36 +74,36 @@ class ClientConfSettingSpec extends Component {
           <CardContent style={{padding: 10}}>
             { !hasAction &&
             <Grid container spacing={0}>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 이름(아이디)</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtNameAndId")}</Grid>
               <Grid item xs={3} className={classes.specContent}>{viewItem.get('objNm')} ({viewItem.get('objId')})</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 설명</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} {t("lbDesc")}</Grid>
               <Grid item xs={3} className={classes.specContent}>{viewItem.get('comment')}</Grid>
             </Grid>
             }
             <Grid container spacing={0}>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 운영체제 보호</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHypervisor')) ? '구동' : '중단'}</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 홈폴더 초기화</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHomeReset')) ? '실행' : '중단'}</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 접속 가능 아이피</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtOSProtect")}</Grid>
+              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHypervisor')) ? t("selRun") : t("selStop")}</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtInitHomeFolder")}</Grid>
+              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHomeReset')) ? t("selExecute") : t("selStop")}</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtSetupConnectableIp")}</Grid>
               <Grid item xs={3} className={classes.specContent}>
               {viewItem.get('whiteIp').map(function(prop, index) {
                 return <span key={index}>{prop}<br/></span>;
               })}
               </Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} 전체 아이피 허용</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('whiteIpAll')) ? '허용함' : '허용안함'}</Grid>
-              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 로그레벨 설정 ]</Grid>
-              <Grid item xs={12} className={classes.specTitle}>{bull} 침해 로그레벨(수준)</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtPermitAllIp")}</Grid>
+              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('whiteIpAll')) ? t("selPermit") : t("selNoPermit")}</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("dtSetupLogLevel")} ]</Grid>
+              <Grid item xs={12} className={classes.specTitle}>{bull} {t("lbViolatedLogLebel")}</Grid>
               <Grid item xs={12} className={classes.specContent}>
                 <Table>
                   <TableBody>
                     <TableRow >
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[신뢰부팅]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[운영체제보호]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[실행파일보호]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[매체제어]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[에이전트]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtTrustedBoot")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtOSProtect")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtExeProtect")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtMediaProtect")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtAgent")}]</TableCell>
                     </TableRow>
                     <TableRow >
                       <TableCell style={{textAlign:'center'}}>{viewItem.get('notify_boot')}</TableCell>
@@ -112,16 +115,16 @@ class ClientConfSettingSpec extends Component {
                   </TableBody>
                 </Table>
               </Grid>
-              <Grid item xs={12} className={classes.specTitle}>{bull} 단말 로그보기에 표시되는 로그레벨(수준)</Grid>
+              <Grid item xs={12} className={classes.specTitle}>{bull} {t("lbClientLogLevel")}</Grid>
               <Grid item xs={12} className={classes.specContent}>
                 <Table>
                   <TableBody>
                     <TableRow >
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[신뢰부팅]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[운영체제보호]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[실행파일보호]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[매체제어]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[에이전트]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtTrustedBoot")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtOSProtect")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtExeProtect")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtMediaProtect")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtAgent")}]</TableCell>
                     </TableRow>
                     <TableRow >
                       <TableCell style={{textAlign:'center'}}>{viewItem.get('show_boot')}</TableCell>
@@ -133,16 +136,16 @@ class ClientConfSettingSpec extends Component {
                   </TableBody>
                 </Table>
               </Grid>
-              <Grid item xs={12} className={classes.specTitle}>{bull} 서버로 전송하는 로그레벨(수준)</Grid>
+              <Grid item xs={12} className={classes.specTitle}>{bull} {t("lbServerLogLevel")}</Grid>
               <Grid item xs={12} className={classes.specContent}>
                 <Table>
                   <TableBody>
                     <TableRow >
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[신뢰부팅]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[운영체제보호]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[실행파일보호]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[매체제어]</TableCell>
-                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[에이전트]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtTrustedBoot")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtOSProtect")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtExeProtect")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtMediaProtect")}]</TableCell>
+                      <TableCell component="th" className={classes.specTitle} style={{textAlign:'center'}}>[{t("dtAgent")}]</TableCell>
                     </TableRow>
                     <TableRow >
                       <TableCell style={{textAlign:'center'}}>{viewItem.get('transmit_boot')}</TableCell>
@@ -154,17 +157,17 @@ class ClientConfSettingSpec extends Component {
                   </TableBody>
                 </Table>
               </Grid>
-              <Grid item xs={4} className={classes.specTitle}>{bull} 삭제기능 사용여부</Grid>
-              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('isDeleteLog')) ? '삭제함' : '삭제안함'}</Grid>
-              <Grid item xs={5} className={classes.specTitle}>{bull} 서버전송후 로그보관일수</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtIsUseDeleteFunc")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('isDeleteLog')) ? t("selDelete") : t("selNoDelete")}</Grid>
+              <Grid item xs={5} className={classes.specTitle}>{bull} {t("lbSaveDateAfterSend")}</Grid>
               <Grid item xs={1} className={classes.specContent}>{viewItem.get('logRemainDate')}</Grid>
 
-              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 단말 로그 (JournalD Log) 설정 ]</Grid>
-              <Grid item xs={5} className={classes.specTitle}>{bull} 로그파일 최대크기(MB)</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("dtClientLogSetup")} ]</Grid>
+              <Grid item xs={5} className={classes.specTitle}>{bull} {t("lbLogFileMax")}</Grid>
               <Grid item xs={1} className={classes.specContent}>{viewItem.get('logMaxSize')}</Grid>
-              <Grid item xs={5} className={classes.specTitle}>{bull} 보관할 로그파일 갯수</Grid>
+              <Grid item xs={5} className={classes.specTitle}>{bull} {t("lbSavedLogFileCount")}</Grid>
               <Grid item xs={1} className={classes.specContent}>{viewItem.get('logMaxCount')}</Grid>
-              <Grid item xs={5} className={classes.specTitle}>{bull} 최소 확보 디스크 공간(%)</Grid>
+              <Grid item xs={5} className={classes.specTitle}>{bull} {t("lbMinimumDiskSizeRate")}</Grid>
               <Grid item xs={1} className={classes.specContent}>{viewItem.get('systemKeepFree')}</Grid>
               <Grid item xs={6} className={classes.specContent}></Grid>
             </Grid>
@@ -176,7 +179,7 @@ class ClientConfSettingSpec extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(ClientConfSettingSpec);
+export default translate("translations")(withStyles(GRCommonStyle)(ClientConfSettingSpec));
 
 export const convertLogLevelString = (param) => {
   if(param == 'emerg') {

@@ -51,10 +51,9 @@ import Radio from '@material-ui/core/Radio';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
+
 class ClientConfSettingDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -92,10 +91,11 @@ class ClientConfSettingDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientConfSettingProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '단말정책정보 등록',
-                confirmMsg: '단말정책정보를 등록하시겠습니까?',
+                confirmTitle: t("dtAddClientConf"),
+                confirmMsg: t("msgAddClientConf"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: ClientConfSettingProps.get('editingItem')
             });
@@ -120,10 +120,11 @@ class ClientConfSettingDialog extends Component {
 
     handleEditData = (event, id) => {
         const { ClientConfSettingProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '단말정책정보 수정',
-                confirmMsg: '단말정책정보를 수정하시겠습니까?',
+                confirmTitle: t("dtEditClientConf"),
+                confirmMsg: t("msgEditClientConf"),
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         const { ClientConfSettingProps, ClientConfSettingActions, compId } = this.props;
@@ -147,12 +148,13 @@ class ClientConfSettingDialog extends Component {
 
     handleCopyCreateData = (event, id) => {
         const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+        const { t, i18n } = this.props;
         ClientConfSettingActions.cloneClientConfSettingData({
             'objId': ClientConfSettingProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
-                alertMsg: '단말정책정보를 복사하였습니다.'
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgCopyClientConf")
             });
             refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
             this.handleClose();
@@ -196,6 +198,8 @@ class ClientConfSettingDialog extends Component {
 
     render() {
         const { classes } = this.props;
+        const { t, i18n } = this.props;
+
         const bull = <span className={classes.bullet}>•</span>;
         const cartBull = <span className={classes.cartBullet}>#</span>;
 
@@ -205,13 +209,13 @@ class ClientConfSettingDialog extends Component {
 
         let title = "";
         if(dialogType === ClientConfSettingDialog.TYPE_ADD) {
-            title = "단말정책설정 등록";
+            title = t("dtAddClientConf");
         } else if(dialogType === ClientConfSettingDialog.TYPE_VIEW) {
-            title = "단말정책설정 정보";
+            title = t("dtViewClientConf");
         } else if(dialogType === ClientConfSettingDialog.TYPE_EDIT) {
-            title = "단말정책설정 수정";
+            title = t("dtEditClientConf");
         } else if(dialogType === ClientConfSettingDialog.TYPE_COPY) {
-            title = "단말정책설정 복사";
+            title = t("dtCopyClientConf");
         }
 
         return (
@@ -225,8 +229,8 @@ class ClientConfSettingDialog extends Component {
                     <div>
                         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                             <Grid item xs={12} sm={4} md={4}>
-                            <TextValidator label={"이름"} value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                                name="objNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
+                            <TextValidator label={t("lbName")} value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                                name="objNm" validators={['required']} errorMessages={[t("msgInputName")]}
                                 onChange={this.handleValueChange("objNm")}
                                 className={classes.fullWidth}
                             />
@@ -241,38 +245,38 @@ class ClientConfSettingDialog extends Component {
                         <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'0 0 8 0'}}>
                             <Grid item xs={6}>
                                 <div style={{marginTop:"10px"}}>
-                                    <FormLabel style={{marginRight:"50px"}}>{bull} 운영체제 보호</FormLabel>
+                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtOSProtect")}</FormLabel>
                                     <FormControlLabel
                                         control={
                                         <Switch onChange={this.handleValueChange('useHypervisor')} color="primary"
                                             checked={(editingItem.get('useHypervisor')) ? editingItem.get('useHypervisor') : false} />
                                         }
-                                        label={(editingItem.get('useHypervisor')) ? '구동' : '중단'}
+                                        label={(editingItem.get('useHypervisor')) ? t("selRun") : t("selStop")}
                                     />
                                 </div>
                             </Grid>
                             <Grid item xs={6}>
                                 <div style={{marginTop:"10px"}}>
-                                    <FormLabel style={{marginRight:"50px"}}>{bull} 홈폴더 초기화</FormLabel>
+                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtInitHomeFolder")}</FormLabel>
                                     <FormControlLabel
                                         control={
                                         <Switch onChange={this.handleValueChange('useHomeReset')} color="primary"
                                             checked={(editingItem.get('useHomeReset')) ? editingItem.get('useHomeReset') : false} />
                                         }
-                                        label={(editingItem.get('useHomeReset')) ? '실행' : '중단'}
+                                        label={(editingItem.get('useHomeReset')) ? t("selExecute") : t("selStop")}
                                     />
                                 </div>
                             </Grid>
                         </Grid>
                         <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <div style={{margin:'8 0 32 0'}}>
-                            <FormLabel >{bull} 침해 로그레벨(수준)</FormLabel>
+                            <FormLabel >{bull} {t("lbViolatedLogLebel")}</FormLabel>
                             <Table style={{margin:'8 0 0 0'}}>
                                 <TableBody>
                                     <TableRow>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtTrustedBoot")}</InputLabel>
                                         <LogLevelSelect name="notify_boot" no
                                             value={(editingItem.get('notify_boot')) ? editingItem.get('notify_boot') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -281,7 +285,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">운영체제보호</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtOSProtect")}</InputLabel>
                                         <LogLevelSelect name="notify_os" 
                                             value={(editingItem.get('notify_os')) ? editingItem.get('notify_os') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -290,7 +294,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">실행파일보호</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtExeProtect")}</InputLabel>
                                         <LogLevelSelect name="notify_exe" 
                                             value={(editingItem.get('notify_exe')) ? editingItem.get('notify_exe') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -299,7 +303,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">매체제어</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtMediaProtect")}</InputLabel>
                                         <LogLevelSelect name="notify_media" 
                                             value={(editingItem.get('notify_media')) ? editingItem.get('notify_media') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -308,7 +312,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">에이전트</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtAgent")}</InputLabel>
                                         <LogLevelSelect name="notify_agent" 
                                             value={(editingItem.get('notify_agent')) ? editingItem.get('notify_agent') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -323,13 +327,13 @@ class ClientConfSettingDialog extends Component {
                         <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <div style={{margin:'8 0 32 0'}}>
 
-                            <FormLabel >{bull} 단말 로그보기에 표시되는 로그레벨(수준)</FormLabel>
+                            <FormLabel >{bull} {t("lbClientLogLevel")}</FormLabel>
                             <Table style={{margin:'8 0 16 0'}}>
                                 <TableBody>
                                     <TableRow>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtTrustedBoot")}</InputLabel>
                                         <LogLevelSelect name="show_boot" minNo={editingItem.get('boot_minno')}
                                             value={(editingItem.get('show_boot')) ? editingItem.get('show_boot') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -338,7 +342,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">운영체제보호</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtOSProtect")}</InputLabel>
                                         <LogLevelSelect name="show_os" minNo={editingItem.get('os_minno')}
                                             value={(editingItem.get('show_os')) ? editingItem.get('show_os') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -347,7 +351,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">실행파일보호</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtExeProtect")}</InputLabel>
                                         <LogLevelSelect name="show_exe" minNo={editingItem.get('exe_minno')}
                                             value={(editingItem.get('show_exe')) ? editingItem.get('show_exe') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -356,7 +360,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">매체제어</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtMediaProtect")}</InputLabel>
                                         <LogLevelSelect name="show_media" minNo={editingItem.get('media_minno')}
                                             value={(editingItem.get('show_media')) ? editingItem.get('show_media') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -365,7 +369,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">에이전트</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtAgent")}</InputLabel>
                                         <LogLevelSelect name="show_agent" minNo={editingItem.get('agent_minno')}
                                             value={(editingItem.get('show_agent')) ? editingItem.get('show_agent') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -379,13 +383,13 @@ class ClientConfSettingDialog extends Component {
                         </Paper>
                         <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <div style={{margin:'8 0 0 0'}}>
-                            <FormLabel>{bull} 서버로 전송하는 로그레벨(수준)</FormLabel>
+                            <FormLabel>{bull} {t("lbServerLogLevel")}</FormLabel>
                             <Table style={{margin:'8 0 0 0'}}>
                                 <TableBody>
                                     <TableRow>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">신뢰부팅</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtTrustedBoot")}</InputLabel>
                                         <LogLevelSelect name="transmit_boot" minNo={editingItem.get('boot_minno')}
                                             value={(editingItem.get('transmit_boot')) ? editingItem.get('transmit_boot') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -394,7 +398,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">운영체제보호</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtOSProtect")}</InputLabel>
                                         <LogLevelSelect name="transmit_os" minNo={editingItem.get('os_minno')}
                                             value={(editingItem.get('transmit_os')) ? editingItem.get('transmit_os') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -403,7 +407,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">실행파일보호</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtExeProtect")}</InputLabel>
                                         <LogLevelSelect name="transmit_exe" minNo={editingItem.get('exe_minno')}
                                             value={(editingItem.get('transmit_exe')) ? editingItem.get('transmit_exe') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -412,7 +416,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">매체제어</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtMediaProtect")}</InputLabel>
                                         <LogLevelSelect name="transmit_media" minNo={editingItem.get('media_minno')}
                                             value={(editingItem.get('transmit_media')) ? editingItem.get('transmit_media') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -421,7 +425,7 @@ class ClientConfSettingDialog extends Component {
                                     </TableCell>
                                     <TableCell style={{width:'20%'}} component="th" scope="row">
                                     <FormControl fullWidth={true}>
-                                        <InputLabel htmlFor="client-status">에이전트</InputLabel>
+                                        <InputLabel htmlFor="client-status">{t("dtAgent")}</InputLabel>
                                         <LogLevelSelect name="transmit_agent" minNo={editingItem.get('agent_minno')}
                                             value={(editingItem.get('transmit_agent')) ? editingItem.get('transmit_agent') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
@@ -434,68 +438,68 @@ class ClientConfSettingDialog extends Component {
                             <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'8 0 16 0'}}>
                                 <Grid item xs={12} sm={6} md={6}>
                                     <div style={{marginTop:"10px"}}>
-                                        <FormLabel style={{marginRight:"50px"}}>{bull} 전송후 삭제여부</FormLabel>
+                                        <FormLabel style={{marginRight:"50px"}}>{bull} {t("lbDeleteAfterSend")}</FormLabel>
                                         <FormControlLabel
                                             control={
                                             <Switch onChange={this.handleValueChange('isDeleteLog')} color="primary"
                                                 checked={(editingItem.get('isDeleteLog')) ? editingItem.get('isDeleteLog') : false} />
                                             }
-                                            label={(editingItem.get('isDeleteLog')) ? '삭제함' : '삭제안함'}
+                                            label={(editingItem.get('isDeleteLog')) ? t("selDelete") : t("selNoDelete")}
                                         />
                                     </div>
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={6}>
-                                <TextField label={"서버전송후 로그보관일수"} value={(editingItem.get('logRemainDate')) ? editingItem.get('logRemainDate') : ''}
+                                <TextField label={t("lbSaveDateAfterSend")} value={(editingItem.get('logRemainDate')) ? editingItem.get('logRemainDate') : ''}
                                     onChange={this.handleValueChange("logRemainDate")}
                                     className={classes.fullWidth}
                                     disabled={!(editingItem.get('isDeleteLog'))}
                                 />
-                                <Typography variant="caption">'0' 으로 설정시 삭제하지 않음</Typography>
+                                <Typography variant="caption">{t("msgHelpNoDeleteIfZero")}</Typography>
                                 </Grid>
                             </Grid>
                         </div>
                         </Paper>
-                        <Typography variant="body1">{bull} 단말 로그 (JournalD Log) 설정</Typography>
+                        <Typography variant="body1">{bull} {t("dtClientLogSetup")}</Typography>
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
                                 <Grid item xs={12} sm={4} md={4}>
-                                <TextField label="로그파일 최대크기(MB)" value={(editingItem.get('logMaxSize')) ? editingItem.get('logMaxSize') : ''}
+                                <TextField label={t("lbLogFileMax")} value={(editingItem.get('logMaxSize')) ? editingItem.get('logMaxSize') : ''}
                                     onChange={this.handleValueChange("logMaxSize")}
                                     className={classNames(classes.fullWidth)}
                                 />
-                                <Typography variant="caption">최대크기에 도달하면 새로운 파일을 생성</Typography>
-                                <Typography variant="caption">단위는 Mega-Byte</Typography>
+                                <Typography variant="caption">{t("msgCreateNewFileIfMax")}</Typography>
+                                <Typography variant="caption">{t("msgMegabateUnit")}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={4} md={4}>
-                                <TextField label="보관할 로그파일 갯수" value={(editingItem.get('logMaxCount')) ? editingItem.get('logMaxCount') : ''}
+                                <TextField label={t("lbSavedLogFileCount")} value={(editingItem.get('logMaxCount')) ? editingItem.get('logMaxCount') : ''}
                                     onChange={this.handleValueChange("logMaxCount")}
                                     className={classNames(classes.fullWidth)}
                                 />
-                                <Typography variant="caption">갯수가 초과되면 오래된 파일을 삭제</Typography>
-                                <Typography variant="caption">'0' 으로 설정시 삭제하지 않음</Typography>
+                                <Typography variant="caption">{t("msgDeleteFileIfOverCount")}</Typography>
+                                <Typography variant="caption">{t("msgHelpNoDeleteIfZero")}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={4} md={4}>
-                                <TextField label="최소 확보 디스크 공간(%)" value={(editingItem.get('systemKeepFree')) ? editingItem.get('systemKeepFree') : ''}
+                                <TextField label={t("lbMinimumDiskSizeRate")} value={(editingItem.get('systemKeepFree')) ? editingItem.get('systemKeepFree') : ''}
                                     onChange={this.handleValueChange("systemKeepFree")}
                                     className={classNames(classes.fullWidth)}
                                 />
-                                <Typography variant="caption">단위는 '%'이며 디폴트는 '10%'</Typography>
-                                <Typography variant="caption">저널디의 'SystemKeepFree' 설정값</Typography>
+                                <Typography variant="caption">{t("msgHelpMinimumDiskSizeRate")}</Typography>
+                                <Typography variant="caption">{t("msgHelpDiskSizeData")}</Typography>
                                 </Grid>
                             </Grid>
 
                         <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'20px 0px 8px 0px'}}>
                             <Grid item xs={6}>
-                                <FormLabel style={{marginRight:"20px"}}>{bull} 접속 가능 아이피 설정</FormLabel>
-                                <Button onClick={this.handleAddWhiteIp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
+                                <FormLabel style={{marginRight:"20px"}}>{bull} {t("dtSetupConnectableIp")}</FormLabel>
+                                <Button onClick={this.handleAddWhiteIp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">{t("btnAdd")}</Button>
                             </Grid>
                             <Grid item xs={6}>
-                                <FormLabel style={{marginRight:"50px"}}>{bull} 전체 아이피 허용</FormLabel>
+                                <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtPermitAllIp")}</FormLabel>
                                 <FormControlLabel style={{height:27}}
                                     control={
                                     <Switch onChange={this.handleValueChange('whiteIpAll')} color="primary"
                                         checked={(editingItem.get('whiteIpAll')) ? editingItem.get('whiteIpAll') : false} />
                                     }
-                                    label={(editingItem.get('whiteIpAll')) ? '허용함' : '허용안함'}
+                                    label={(editingItem.get('whiteIpAll')) ? t("selPermit") : t("selNoPermit")}
                                 />
                             </Grid>
                         </Grid>
@@ -517,7 +521,7 @@ class ClientConfSettingDialog extends Component {
                     {(dialogType === ClientConfSettingDialog.TYPE_COPY) &&
                         <div>
                         <Typography variant="body1">
-                            이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
+                            {t("msgCopyRule")}
                         </Typography>
                         <ClientConfSettingSpec selectedItem={editingItem} hasAction={false} />
                         </div>
@@ -531,7 +535,7 @@ class ClientConfSettingDialog extends Component {
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
                 {(dialogType === ClientConfSettingDialog.TYPE_COPY) &&
-                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
+                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
                 }
 
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
@@ -557,5 +561,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingDialog)));
 

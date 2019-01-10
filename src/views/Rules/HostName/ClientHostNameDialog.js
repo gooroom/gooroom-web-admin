@@ -149,10 +149,10 @@ class ClientHostNameDialog extends Component {
                 <DialogContent>
                     {(dialogType === ClientHostNameDialog.TYPE_EDIT || dialogType === ClientHostNameDialog.TYPE_ADD) &&
                     <div>
-                        <TextValidator label="이름" className={classes.fullWidth}
+                        <TextValidator label={t("lbName")} className={classes.fullWidth}
                             value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
                             name="objNm" validators={['required']}
-                            errorMessages={['이름을 입력하세요.']}
+                            errorMessages={[t("msgInputName")]}
                             onChange={this.handleValueChange("objNm")} />
                         <TextField label={t("lbDesc")} className={classes.fullWidth}
                             value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
@@ -167,7 +167,7 @@ class ClientHostNameDialog extends Component {
                     {(dialogType === ClientHostNameDialog.TYPE_COPY) &&
                         <div>
                         <Typography variant="body1">
-                            이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
+                            {t("msgCopyRule")}
                         </Typography>
                         <ClientHostNameSpec selectedItem={editingItem} hasAction={false} />
                         </div>
@@ -181,7 +181,7 @@ class ClientHostNameDialog extends Component {
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
                 {(dialogType === ClientHostNameDialog.TYPE_COPY) &&
-                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
+                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
                 }
 
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>

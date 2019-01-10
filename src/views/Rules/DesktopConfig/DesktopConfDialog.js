@@ -193,9 +193,9 @@ class DesktopConfDialog extends Component {
                     {(dialogType === DesktopConfDialog.TYPE_EDIT || dialogType === DesktopConfDialog.TYPE_ADD) &&
                         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                             <Grid item xs={8} >
-                                <TextValidator label="이름" value={(editingItem.get('confNm')) ? editingItem.get('confNm') : ''}
+                                <TextValidator label={t("lbName")} value={(editingItem.get('confNm')) ? editingItem.get('confNm') : ''}
                                     onChange={this.handleValueChange("confNm")}
-                                    name="confNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
+                                    name="confNm" validators={['required']} errorMessages={[t("msgInputName")]}
                                     className={classes.fullWidth}
                                     disabled={(dialogType === DesktopConfDialog.TYPE_VIEW)}
                                 />
@@ -225,7 +225,7 @@ class DesktopConfDialog extends Component {
                     {(dialogType === DesktopConfDialog.TYPE_INHERIT) &&
                         <div>
                         <Typography variant="body1">
-                            이 정책을 하위 조직에 적용 하시겠습니까?
+                            {t("msgApplyRuleToChild")}
                         </Typography>
                         <DesktopConfSpec selectedItem={editingItem} hasAction={false} />
                         </div>
@@ -233,7 +233,7 @@ class DesktopConfDialog extends Component {
                     {(dialogType === DesktopConfDialog.TYPE_COPY) &&
                         <div>
                         <Typography variant="body1">
-                            이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
+                            {t("msgCopyRule")}
                         </Typography>
                         <DesktopConfSpec selectedItem={editingItem} hasAction={false} />
                         </div>
@@ -248,10 +248,10 @@ class DesktopConfDialog extends Component {
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
                 {(dialogType === DesktopConfDialog.TYPE_INHERIT) &&
-                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">적용</Button>
+                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === DesktopConfDialog.TYPE_COPY) &&
-                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
+                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>

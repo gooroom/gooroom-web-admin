@@ -42,20 +42,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class GeneralLogManage extends Component {
-
-  columnHeaders = [
-    { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: '번호' },
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: '사용자' },
-    { id: 'LOG_TP', isOrder: true, numeric: false, disablePadding: true, label: '로그타입' },
-    { id: 'LOG_VALUE', isOrder: true, numeric: false, disablePadding: true, label: '로그정보' },
-    { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: '등록일' }
-  ];
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -107,7 +97,17 @@ class GeneralLogManage extends Component {
   render() {
     const { classes } = this.props;
     const { GeneralLogProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    const columnHeaders = [
+      { id: 'LOG_SEQ', isOrder: false, numeric: false, disablePadding: true, label: t("colNumber") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colUser") },
+      { id: 'LOG_TP', isOrder: true, numeric: false, disablePadding: true, label: t("colLogType") },
+      { id: 'LOG_VALUE', isOrder: true, numeric: false, disablePadding: true, label: t("colLogInfo") },
+      { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: t("colRegDate") }
+    ];
     
     const listObj = GeneralLogProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -134,7 +134,7 @@ class GeneralLogManage extends Component {
               className={classes.fullWidth} />
             </Grid>
             <Grid item xs={2} >
-              <GeneralLogTypeSelect name="generalLogGubun" label="구분"
+              <GeneralLogTypeSelect name="generalLogGubun" label={t("optDivision")}
                 value={(listObj && listObj.getIn(['listParam', 'gubun'])) ? listObj.getIn(['listParam', 'gubun']) : 'ALL'}                                        
                 onChangeSelect={this.handleParamChange('gubun')}
               />
@@ -219,7 +219,7 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GeneralLogManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GeneralLogManage)));
 
 
 

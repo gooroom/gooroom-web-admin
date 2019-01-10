@@ -70,9 +70,9 @@ class ClientUpdateServerSpec extends Component {
             <CardContent style={{padding: 10}}>
               { !hasAction &&
               <Grid container spacing={0}>
-                <Grid item xs={3} className={classes.specTitle}>{bull} 이름(아이디)</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtNameAndId")}</Grid>
                 <Grid item xs={3} className={classes.specContent}>{viewItem.get('objNm')} ({viewItem.get('objId')})</Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} 설명</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("lbDesc")}</Grid>
                 <Grid item xs={3} className={classes.specContent}>{viewItem.get('comment')}</Grid>
               </Grid>
               }

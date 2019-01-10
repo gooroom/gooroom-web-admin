@@ -92,7 +92,7 @@ class AdminUserConnDialog extends Component {
                 <DialogTitle>관리자 접속 가능 아이피</DialogTitle>
                 <DialogContent>
                     <FormLabel style={{marginRight:"20px"}}>{bull} 아이피 목록</FormLabel>
-                    <Button onClick={this.handleAddIp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">추가</Button>
+                    <Button onClick={this.handleAddIp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">{t("btnAdd")}</Button>
                     <div style={{maxHeight:140,overflow:'auto',marginTop:20,padding:'10px 0px 10px 0px'}}>
                         {gpmsAllowIps && gpmsAllowIps.map((value, index) => (
                         <div key={index}>

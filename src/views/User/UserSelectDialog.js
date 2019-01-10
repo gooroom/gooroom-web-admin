@@ -72,7 +72,7 @@ class UserSelectDialog extends Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleAddButton} variant='contained' color="secondary">추가</Button>
+                        <Button onClick={this.handleAddButton} variant='contained' color="secondary">{t("btnAdd")}</Button>
                         <Button onClick={this.props.onClose} variant='contained' color="primary">{t("btnClose")}</Button>
                     </DialogActions>
                     <GRConfirm />
