@@ -26,16 +26,12 @@ import Grid from "@material-ui/core/Grid";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class ClientProfilePackageShowDialog extends Component {
 
     constructor(props) {
         super(props);
-    
         this.state = {
             stateData: Map({
                 selectedPackage: List([])
@@ -45,11 +41,12 @@ class ClientProfilePackageShowDialog extends Component {
 
     render() {
         const { compId, isOpen, selectedClientId, selectedProfileNo, keyword, onChangeKeyword } = this.props;
+        const { t, i18n } = this.props;
         return (
             <React.Fragment>
             {(isOpen) &&
                 <Dialog open={isOpen} maxWidth="xs" >
-                    <DialogTitle>패키지 정보</DialogTitle>
+                    <DialogTitle>{t("lbPackageInfo")}</DialogTitle>
                     <DialogContent>
                         <ClientProfilePackageList compId={compId} 
                             clientId={selectedClientId} 
@@ -59,7 +56,7 @@ class ClientProfilePackageShowDialog extends Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.props.onClose} variant='contained' color="primary" style={{marginLeft:10}}>닫기</Button>
+                        <Button onClick={this.props.onClose} variant='contained' color="primary" style={{marginLeft:10}}>{t("btnClose")}</Button>
                     </DialogActions>
                     <GRConfirm />
                 </Dialog>
@@ -80,4 +77,4 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfilePackageShowDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfilePackageShowDialog)));

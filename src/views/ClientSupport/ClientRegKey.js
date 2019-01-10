@@ -39,17 +39,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 class ClientRegKey extends Component {
-
-  columnHeaders = [
-    { id: 'chRegKey', isOrder: true, numeric: false, disablePadding: true, label: '단말등록키' },
-    { id: 'chValidDate', isOrder: true, numeric: false, disablePadding: true, label: '유효날짜' },
-    { id: 'chExpireDate', isOrder: true, numeric: false, disablePadding: true, label: '인증서만료날짜' },
-    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
-  ];
-
+  
   componentDidMount() {
     this.handleSelectBtnClick();
   }
@@ -119,10 +112,11 @@ class ClientRegKey extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientRegKeyProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
     const viewItem = getRowObjectById(ClientRegKeyProps, this.props.match.params.grMenuId, id, 'regKeyNo');
     GRConfirmActions.showConfirm({
-      confirmTitle: '단말등록키 삭제',
-      confirmMsg: '단말등록키(' + viewItem.get('regKeyNo') + ')을 삭제하시겠습니까?',
+      confirmTitle: t("dtDeleteClientKey"),
+      confirmMsg: t("msgDeleteClientKey", {regKeyNo: viewItem.get('regKeyNo')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmObject: viewItem
     });
@@ -152,6 +146,17 @@ class ClientRegKey extends Component {
   render() {
     const { classes } = this.props;
     const { ClientRegKeyProps } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'chRegKey', isOrder: true, numeric: false, disablePadding: true, label: t("colClientRegKey") },
+      { id: 'chValidDate', isOrder: true, numeric: false, disablePadding: true, label: t("colKeyValidDate") },
+      { id: 'chExpireDate', isOrder: true, numeric: false, disablePadding: true, label: t("colCertExpireDate") },
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
+    ];
+  
+
     const compId = this.props.match.params.grMenuId;
 
     const listObj = ClientRegKeyProps.getIn(['viewItems', compId]);
@@ -162,7 +167,7 @@ class ClientRegKey extends Component {
 
     return (
       <React.Fragment>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
@@ -182,7 +187,7 @@ class ClientRegKey extends Component {
             </Grid>
             <Grid item xs={6} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-                <AddIcon />등록
+                <AddIcon />{t("btnRegist")}
               </Button>
             </Grid>
           </Grid>
@@ -197,7 +202,7 @@ class ClientRegKey extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -230,7 +235,7 @@ class ClientRegKey extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -272,4 +277,4 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientRegKey));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientRegKey)));

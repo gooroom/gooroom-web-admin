@@ -224,7 +224,7 @@ class DesktopConfManage extends Component {
             <Grid item xs={6} style={{textAlign:'right'}}>
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" 
                 onClick={() => { this.handleCreateButton(); } } >
-                <AddIcon />등록
+                <AddIcon />{t("btnRegist")}
               </Button>
             </Grid>
           </Grid>            

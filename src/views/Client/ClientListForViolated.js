@@ -207,7 +207,7 @@ class ClientListForViolated extends Component {
                   });
                 } else {
                   this.props.GRAlertActions.showAlert({
-                    alertTitle: '시스템오류',
+                    alertTitle: t("dtSystemError"),
                     alertMsg: '침해단말 조치작업이 생성되지 못하였습니다.'
                   });
                 }

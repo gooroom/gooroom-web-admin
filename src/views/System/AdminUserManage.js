@@ -233,7 +233,7 @@ class AdminUserManage extends Component {
                 접속아이피관리
               </Button>
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-                <AddIcon />등록
+                <AddIcon />{t("btnRegist")}
               </Button>
             </Grid>
           </Grid>

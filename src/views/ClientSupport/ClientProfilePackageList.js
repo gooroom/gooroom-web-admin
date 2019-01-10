@@ -37,15 +37,10 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientProfilePackageList extends Component {
-
-  columnHeaders = [
-    { id: "chPackageId", isOrder: true, numeric: false, disablePadding: true, label: "패키지이름" }
-  ];
 
   componentDidMount() {
     this.props.ClientPackageActions.readProfilePackageListPaged(this.props.ClientPackageProps, this.props.compId, {
@@ -101,7 +96,12 @@ class ClientProfilePackageList extends Component {
   render() {
     const { classes } = this.props;
     const { ClientPackageProps, compId } = this.props;
-    
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: "chPackageId", isOrder: true, numeric: false, disablePadding: true, label: t("colPackageName") }
+    ];
+
     const listObj = ClientPackageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
@@ -115,7 +115,7 @@ class ClientProfilePackageList extends Component {
         <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
           <Grid item xs={5} >
             <FormControl fullWidth={true}>
-              <TextField label="단말아이디" value={this.props.clientId} />
+              <TextField label={t("lbClientId")} value={this.props.clientId} />
             </FormControl>
           </Grid>
 
@@ -141,7 +141,7 @@ class ClientProfilePackageList extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           <TableBody>
           {listObj.get('listData').map(n => {
@@ -155,7 +155,7 @@ class ClientProfilePackageList extends Component {
           {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
             <TableRow key={e}>
               <TableCell
-                colSpan={this.columnHeaders.length + 1}
+                colSpan={columnHeaders.length + 1}
                 className={classes.grSmallAndClickCell}
               />
             </TableRow>
@@ -199,6 +199,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfilePackageList));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfilePackageList)));
 
 

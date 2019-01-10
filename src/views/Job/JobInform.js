@@ -29,14 +29,6 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-
-  // static columnData = [
-  //   { id: "chClientId", isOrder: true, numeric: false, disablePadding: true, label: "단말아이디" },
-  //   { id: "chJobStatus", isOrder: true, numeric: false, disablePadding: true, label: "작업상태" },
-  //   { id: "chGroupNm", isOrder: true, numeric: false, disablePadding: true, label: "단말그룹" },
-  //   { id: "chClientStatus", isOrder: true, numeric: false, disablePadding: true, label: "단말상태" }
-  // ];
-
 class JobInform extends Component {
 
   handleClickTargetSelect = (selectedTargetObj) => {

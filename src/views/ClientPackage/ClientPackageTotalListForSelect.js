@@ -26,6 +26,7 @@ import Search from "@material-ui/icons/Search";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
@@ -54,13 +55,6 @@ class ClientPackageTotalListForSelect extends Component {
       })
     };
   }
-
-  columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
-    { id: "chPackageId", isOrder: true, numeric: false, disablePadding: true, label: "패키지이름" },
-    { id: "chPackageArch", isOrder: true, numeric: false, disablePadding: true, label: "아키텍쳐" },
-    { id: "chPackageLastVer", isOrder: true, numeric: false, disablePadding: true, label: "버전" }
-  ];
 
   handleGetPackageTotalList = (newListParam) => {
 
@@ -168,6 +162,14 @@ class ClientPackageTotalListForSelect extends Component {
 
   render() {
     const { classes } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: "chCheckbox", isCheckbox: true},
+      { id: "chPackageId", isOrder: true, numeric: false, disablePadding: true, label: t("colPackageName") },
+      { id: "chPackageArch", isOrder: true, numeric: false, disablePadding: true, label: t("colArchitecture") },
+      { id: "chPackageLastVer", isOrder: true, numeric: false, disablePadding: true, label: t("colVersion") }
+    ];
     
     const listObj = this.state.stateData;
     let emptyRows = 0; 
@@ -186,8 +188,7 @@ class ClientPackageTotalListForSelect extends Component {
           </Grid>
           <Grid item xs={6}>
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-              <Search />
-              조회
+              <Search />{t("btnSearch")}
             </Button>
           </Grid>
         </Grid>
@@ -202,7 +203,7 @@ class ClientPackageTotalListForSelect extends Component {
             onClickAllCheck={this.handleClickAllCheck}
             checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           <TableBody>
             {listObj.get('listData').map(n => {
@@ -229,7 +230,7 @@ class ClientPackageTotalListForSelect extends Component {
             {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
               <TableRow key={e}>
                 <TableCell
-                  colSpan={this.columnHeaders.length + 1}
+                  colSpan={columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
@@ -260,5 +261,5 @@ class ClientPackageTotalListForSelect extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(ClientPackageTotalListForSelect);
+export default translate("translations")(withStyles(GRCommonStyle)(ClientPackageTotalListForSelect));
 

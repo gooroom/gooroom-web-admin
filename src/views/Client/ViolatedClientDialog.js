@@ -74,7 +74,7 @@ class ViolatedClientDialog extends Component {
                         </Card>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.props.onClose} variant='contained' color="primary">닫기</Button>
+                        <Button onClick={this.props.onClose} variant='contained' color="primary">{t("btnClose")}</Button>
                     </DialogActions>
                     <GRConfirm />
                 </Dialog>

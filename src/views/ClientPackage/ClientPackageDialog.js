@@ -21,6 +21,8 @@ import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 function TabContainer(props) {
     return (
@@ -54,9 +56,10 @@ class ClientPackageDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientPackageProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: '단말패키지지 등록',
-            confirmMsg: '단말패키지지을 등록하시겠습니까?',
+            confirmTitle: t("dtAddClientPackage"),
+            confirmMsg: t("msgAddClientPackage"),
             handleConfirmResult: this.handleCreateDataConfirmResult,
             confirmObject: ClientPackageProps.get('editingItem')
         });
@@ -77,9 +80,10 @@ class ClientPackageDialog extends Component {
     
     handleEditData = (event) => {
         const { GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: '단말패키지지 수정',
-            confirmMsg: '단말패키지지을 수정하시겠습니까?',
+            confirmTitle: t("dtEditClientPackage"),
+            confirmMsg: t("msgEditClientPackage"),
             handleConfirmResult: this.handleEditConfirmResult
         });
     }
@@ -101,17 +105,18 @@ class ClientPackageDialog extends Component {
     render() {
         const { classes } = this.props;
         const { ClientPackageProps, compId } = this.props;
+        const { t, i18n } = this.props;
         
         const dialogType = ClientPackageProps.get('dialogType');
         const editingItem = (ClientPackageProps.get('editingItem')) ? ClientPackageProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === ClientPackageDialog.TYPE_ADD) {
-            title = "단말 패키지지 등록";
+            title = t("dtAddClientPackage");
         } else if(dialogType === ClientPackageDialog.TYPE_VIEW) {
-            title = "단말 패키지지 정보";
+            title = t("dtViewClientPackage");
         } else if(dialogType === ClientPackageDialog.TYPE_EDIT) {
-            title = "단말 패키지지 수정";
+            title = t("dtEditClientPackage");
         } 
 
         return (
@@ -124,14 +129,14 @@ class ClientPackageDialog extends Component {
                     <form noValidate autoComplete="off" className={classes.dialogContainer}>
                         <TextField
                             id="grpNm"
-                            label="단말패키지지이름"
+                            label={t("lbPackageName")}
                             value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
                             onChange={this.handleValueChange('grpNm')}
                             className={classes.fullWidth}
                         />
                         <TextField
                             id="comment"
-                            label="단말패키지지설명"
+                            label={t("lbPackageDesc")}
                             value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                             onChange={this.handleValueChange('comment')}
                             className={classes.fullWidth}
@@ -142,12 +147,12 @@ class ClientPackageDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                     {(dialogType === ClientPackageDialog.TYPE_ADD) &&
-                        <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
+                        <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
                     }
                     {(dialogType === ClientPackageDialog.TYPE_EDIT) &&
-                        <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                        <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                     }
-                    <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
+                    <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
             </Dialog>
             }
@@ -166,6 +171,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageDialog)));
 
 

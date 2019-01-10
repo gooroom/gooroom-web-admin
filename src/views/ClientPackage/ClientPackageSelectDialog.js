@@ -79,7 +79,7 @@ class ClientPackageSelectDialog extends Component {
                     });
                   } else {
                     this.props.GRAlertActions.showAlert({
-                      alertTitle: '시스템오류',
+                      alertTitle: t("dtSystemError"),
                       alertMsg: '패키지 리스트 업데이트 작업이 생성되지 못하였습니다.'
                   });
                 }
@@ -109,7 +109,7 @@ class ClientPackageSelectDialog extends Component {
                             </Grid>
                             <Grid item xs={6} style={{flex:'1 0',display:'flex',justifyContent:'flex-end'}}>
                             <Button onClick={this.handleInstallButton} variant='contained' color="secondary">설치</Button>
-                            <Button onClick={this.props.onClose} variant='contained' color="primary" style={{marginLeft:10}}>닫기</Button>
+                            <Button onClick={this.props.onClose} variant='contained' color="primary" style={{marginLeft:10}}>{t("btnClose")}</Button>
                             </Grid>
                         </Grid>
                     </DialogActions>

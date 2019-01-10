@@ -195,7 +195,7 @@ class DesktopAppDialog extends Component {
                         value={editingItem.get('appNm')}
                         name="appNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
                         onChange={this.handleValueChange('appNm')} />
-                    <TextField label="설명" className={classes.fullWidth}
+                    <TextField label={t("lbDesc")} className={classes.fullWidth}
                         value={editingItem.get('appInfo')}
                         onChange={this.handleValueChange('appInfo')} />
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{marginTop:12}}>
@@ -313,18 +313,18 @@ class DesktopAppDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                 {(dialogType === DesktopAppDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
+                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
                 }
                 {(dialogType === DesktopAppDialog.TYPE_EDIT_INAPP) &&
-                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
                 {(dialogType === DesktopAppDialog.TYPE_EDIT_INCONF) &&
-                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
                 {(dialogType === DesktopAppDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
                 }
-                <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
+                <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
                 <GRConfirm />

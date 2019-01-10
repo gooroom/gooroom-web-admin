@@ -22,7 +22,7 @@ class AdminRecordDialog extends Component {
                 <Dialog open={isOpen} fullWidth={true} maxWidth="md">
                     <DialogTitle>관리자({adminId}) 작업 이력</DialogTitle>
                     <DialogContent><AdminRecordListComp adminId={adminId} /></DialogContent>
-                    <DialogActions><Button onClick={this.props.onClose} variant='contained' color="primary">닫기</Button></DialogActions>
+                    <DialogActions><Button onClick={this.props.onClose} variant='contained' color="primary">{t("btnClose")}</Button></DialogActions>
                     <GRConfirm />
                 </Dialog>
         );
