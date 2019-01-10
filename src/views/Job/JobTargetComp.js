@@ -35,18 +35,11 @@ import ClearIcon from '@material-ui/icons/Clear';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class JobTargetComp extends Component {
-
-  columnHeaders = [
-    { id: "chClientId", isOrder: true, numeric: false, disablePadding: true, label: "단말아이디" },
-    { id: "chGroupName", isOrder: true, numeric: false, disablePadding: true, label: "단말그룹이름" },
-    { id: "chJobStatus", isOrder: true, numeric: false, disablePadding: true, label: "작업상태" }
-  ];
-
+  
   componentDidMount() {
     this.props.JobManageActions.readClientListInJobPaged(this.props.JobManageProps, this.props.compId, {
       jobNo: this.props.JobManageProps.getIn(['viewItems', this.props.compId, 'selectId'])
@@ -87,8 +80,8 @@ class JobTargetComp extends Component {
     const { GRConfirmActions, JobManageProps, compId } = this.props;
 
     GRConfirmActions.showConfirm({
-      confirmTitle: '작업 취소',
-      confirmMsg: '작업대상 단말중 "작업전" 상태 단말의 작업을 취소하시겠습니까?',
+      confirmTitle: t("dtCancelJob"),
+      confirmMsg: t("msgCancelJob"),
       handleConfirmResult: (confirmValue, paramObject) => {
         if(confirmValue) {
           const { JobManageProps, JobManageActions } = this.props;
@@ -126,8 +119,15 @@ class JobTargetComp extends Component {
   render() {
     const { classes } = this.props;
     const { JobManageProps, compId } = this.props;
+    const { t, i18n } = this.props;
 
     const listObj = JobManageProps.getIn(['viewItems', compId]);
+
+    const columnHeaders = [
+      { id: "chClientId", isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: "chGroupName", isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
+      { id: "chJobStatus", isOrder: true, numeric: false, disablePadding: true, label: t("colJobStatus") }
+    ];
 
     let emptyRows = 0; 
     if(listObj && listObj.get('listData_target')) {
@@ -144,7 +144,7 @@ class JobTargetComp extends Component {
         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={2} >
             <FormControl fullWidth={true}>
-              <TextField label="작업번호" value={(selectedJobNo) ? selectedJobNo : ""} disabled={true} />
+              <TextField label={t("dtJobNo")} value={(selectedJobNo) ? selectedJobNo : ""} disabled={true} />
             </FormControl>
           </Grid>
           <Grid item xs={3} >
@@ -160,7 +160,7 @@ class JobTargetComp extends Component {
           <Grid item xs={4} >
           { (jobStatus != 'C') && 
             <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => this.handleClickJobCancel()} >
-              <ClearIcon />작업취소
+              <ClearIcon />{t("btnJobCancel")}
             </Button>
           }
           </Grid>
@@ -234,6 +234,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(JobTargetComp));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(JobTargetComp)));
 
 

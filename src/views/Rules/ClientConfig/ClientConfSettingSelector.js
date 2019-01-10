@@ -26,10 +26,9 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientConfSettingSelector extends Component {
 
   componentDidMount() {
@@ -72,7 +71,8 @@ class ClientConfSettingSelector extends Component {
   render() {
     const { classes } = this.props;
     const { ClientConfSettingProps, compId, targetType } = this.props;
-
+    const { t, i18n } = this.props;
+    
     const selectedObj = (targetType && targetType != '') ? ClientConfSettingProps.getIn(['viewItems', compId, targetType]) : ClientConfSettingProps.getIn(['viewItems', compId]);
 
     const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
@@ -96,12 +96,12 @@ class ClientConfSettingSelector extends Component {
           <div style={{width:'100%',textAlign:'center'}}>
             <FormControl className={classes.formControl} style={{marginBottom: 10, marginTop: 26, padding: '0px 20px 0px 20px'}}>
               <Select value={selectedOptionItemId} style={{backgroundColor:'#f9eaea'}} onChange={this.handleChange} >
-                <MenuItem key={'-'} value={'-'}>지정안함</MenuItem>
+                <MenuItem key={'-'} value={'-'}>{t("selNoSelected")}</MenuItem>
                 {listAllData.map(item => (
                   <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
                 ))}
               </Select>
-              <FormHelperText>정책 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
+              <FormHelperText>{t("msgShowSpecAsSelectRule")}</FormHelperText>
             </FormControl>
           </div>
         }
@@ -125,6 +125,6 @@ const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingSelector));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingSelector)));
 
 

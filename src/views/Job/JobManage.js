@@ -47,20 +47,10 @@ import JobInform from './JobInform';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
 class JobManage extends Component {
-
-  columnHeaders = [
-    { id: "chJobNo", isOrder: true, numeric: false, disablePadding: true, label: "작업번호" },
-    { id: "chJobName", isOrder: true, numeric: false, disablePadding: true, label: "작업이름" },
-    { id: "chReadyCount", isOrder: true, numeric: false, disablePadding: true, label: "진행상태" },
-    { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: "대상단말수" },
-    { id: "chErrorCount", isOrder: true, numeric: false, disablePadding: true, label: "작업오류수" },
-    { id: "chCompCount", isOrder: true, numeric: false, disablePadding: true, label: "작업완료수" },
-    { id: "chRegUserId", isOrder: true, numeric: false, disablePadding: true, label: "등록자" },
-    { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
-  ];
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -127,7 +117,20 @@ class JobManage extends Component {
   render() {
     const { classes } = this.props;
     const { JobManageProps } = this.props;
+    const { t, i18n } = this.props;
+
     const compId = this.props.match.params.grMenuId;
+
+    const columnHeaders = [
+      { id: "chJobNo", isOrder: true, numeric: false, disablePadding: true, label: t("colJobNo") },
+      { id: "chJobName", isOrder: true, numeric: false, disablePadding: true, label: t("colJobName") },
+      { id: "chReadyCount", isOrder: true, numeric: false, disablePadding: true, label: t("colJobProgressStatus") },
+      { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: t("colTargetCnt") },
+      { id: "chErrorCount", isOrder: true, numeric: false, disablePadding: true, label: t("colJobErrorCnt") },
+      { id: "chCompCount", isOrder: true, numeric: false, disablePadding: true, label: t("colJobCompCnt") },
+      { id: "chRegUserId", isOrder: true, numeric: false, disablePadding: true, label: t("colRegUser") },
+      { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
+    ];
     
     const listObj = JobManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -138,7 +141,7 @@ class JobManage extends Component {
     return (
 
       <React.Fragment>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
 
           {/* data option area */}
@@ -147,7 +150,7 @@ class JobManage extends Component {
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={4} >
                   <FormControl fullWidth={true}>
-                    <InputLabel htmlFor="job-status">작업상태</InputLabel>
+                    <InputLabel htmlFor="job-status">{t("dtJobStatus")}</InputLabel>
                     <JobStatusSelect onChangeSelect={this.handleChangeJobStatusSelect} />
                   </FormControl>
                 </Grid>
@@ -177,7 +180,7 @@ class JobManage extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -202,7 +205,7 @@ class JobManage extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -244,5 +247,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(JobManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(JobManage)));
 

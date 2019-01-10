@@ -54,6 +54,20 @@ export default {
   "colInstalledVersion": "설치버전",
   "colAvailVersion": "업데이트가능버전",
 
+  "colJobNo": "작업번호",
+  "colJobName": "작업이름",
+  "colJobStatus": "작업상태",
+  "colJobProgressStatus": "진행상태",
+  "colTargetCnt": "대상단말수",
+  "colJobErrorCnt": "작업오류수",
+  "colJobCompCnt": "작업완료수",
+  "colRegUser": "등록자",
+  "colModUser": "수정자",
+
+  "colDivision": "구분",
+  "colRuleName": "정책이름",
+  "colRuleId": "정책아이디",
+
   // options
   "optDate": "날짜",
   "searchStartDate": "조회시작일",
@@ -70,6 +84,7 @@ export default {
   "btnSave": "저장",
   "btnClose": "닫기",
   "btnCreate": "생성",
+  "btnAdd": "추가",
 
   // Menus
   "menuDashboard": "Dashboard",
@@ -115,8 +130,23 @@ export default {
   "selViolated": "침해",
   "selUnviolated": "미침해",
   "lbDesc": "설명",
+  "lbName": "이름",
   "lbClientId": "단말아이디",
   "dtSystemError": "시스템오류",
+  "dtSystemNotice": "시스템알림",
+  "selBasic": "기본",
+  "selOrdinary": "일반",
+  "msgInputName": "이름을 입력하세요."
+  "selDelete": "삭제함",
+  "selNoDelete": "삭제안함",
+  "msgCopyRule": "이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?",
+  "dtCopy": "복사",
+  "dtApply": "적용",
+  "msgApplyRuleToChild": "이 정책을 하위 조직에 적용 하시겠습니까?",
+  "dtNameAndId": "이름(아이디)",
+  "selNoSelected": "지정안함",
+  "msgShowSpecAsSelectRule": "정책 정보를 선택하면 상세 내용이 표시됩니다.",
+
 
   // 일별접속통계
   "connectRequestCount": "접속요청수",
@@ -178,7 +208,6 @@ export default {
   "dtDeleteClientKey": "단말 등록키 삭제",
   "msgDeleteClientKey": "단말등록키 ('{{regKeyNo}}')을 삭제하시겠습니까?",
   "dtViewClientKey": "단말 등록키 정보",
-  "dtCopy": "복사",
   "msgCopyedIntoClipboard": "단말등록키가 클립보드에 복사되었습니다. 붙여넣기 하실 수 있습니다.",
   "spClientRegKey": "등록키",
   "msgCreateClientRegKey": "단말 등록키를 생성하세요.",
@@ -207,8 +236,6 @@ export default {
   "msgInputProfileName": "프로파일 이름을 입력하세요.",
   "lbProfileDesc": "프로파일 설명",
   "lbProfileEtcHandle": "기타 패키지 처리방식",
-  "selDelete": "삭제함",
-  "selNoDelete": "삭제안함",
   "lbReferenceClient": "레퍼런스 단말",
   "msgSelectRefClient": "레퍼런스 단말을 선택하세요.",
   "msgSelectClientInBelow": "아래 목록에서 단말을 선택하세요.",
@@ -243,4 +270,76 @@ export default {
   "lbPackageName": "단말패키지 이름",
   "lbPackageDesc": "단말패키지 설명",
 
+  // 작업관리
+  "dtJobStatus": "작업상태",
+  "msgNoResult": "결과가 없습니다.",
+  "dtJobModule": "모듈",
+  "dtJobTask": "타스크",
+  "dtJobMessage": "메세지",
+  "dtJobInfo": "작업정보",
+  "dtJobNo": "작업번호",
+  "dtJobName": "작업이름",
+  "dtJobRegDate": "작업생성일",
+  "dtJobTargetResult": "작업대상 결과정보",
+  "dtJobResultStatus": "작업상태(결과)",
+  "dtJobModuleInfo": "작업모듈 정보",
+  "btnCancelJob": "작업취소",
+  "dtCancelJob": "작업 취소",
+  "msgCancelJob": "작업대상 단말중 '작업전' 상태 단말의 작업을 취소하시겠습니까?",
+
+  // 단말정책설정
+  "dtAddClientConf": "단말정책설정 등록",
+  "msgAddClientConf": "단말정책설정를 등록하시겠습니까?",
+  "dtEditClientConf": "단말정책설정 수정",
+  "msgEditClientConf": "단말정책설정를 수정하시겠습니까?",
+  "dtCopyClientConf": "단말정책설정 복사",
+  "msgCopyClientConf": "단말정책설정를 복사하였습니다.",
+  "dtViewClientConf": "단말정책설정 정보",
+  "dtOSProtect": "운영체제보호",
+  "dtInitHomeFolder": "홈폴더 초기화",
+  "dtTrustedBoot": "신뢰부팅",
+  "dtExeProtect": "실행파일보호",
+  "dtMediaProtect": "매체제어",
+  "dtAgent": "에이전트",
+  "selStop": "중단",
+  "selRun": "구동",
+  "selExecute": "실행",
+  "lbViolatedLogLebel": "침해 로그레벨(수준)",
+  "lbClientLogLevel": "단말 로그보기에 표시되는 로그레벨(수준)",
+  "lbServerLogLevel": "서버로 전송하는 로그레벨(수준)",
+  "lbDeleteAfterSend": "전송후 삭제여부",
+  "lbSaveDateAfterSend": "서버전송후 로그보관일수",
+  "msgHelpNoDeleteIfZero": "'0' 으로 설정시 삭제하지 않음",
+  "dtClientLogSetup": "단말 로그 (JournalD Log) 설정",
+  "lbLogFileMax": "로그파일 최대크기(MB)",
+  "msgCreateNewFileIfMax": "최대크기에 도달하면 새로운 파일을 생성",
+  "msgMegabateUnit": "단위는 Mega-Byte",
+  "lbSavedLogFileCount": "보관할 로그파일 갯수",
+  "msgDeleteFileIfOverCount": "갯수가 초과되면 오래된 파일을 삭제",
+  "lbMinimumDiskSizeRate": "최소 확보 디스크 공간(%)",
+  "msgHelpMinimumDiskSizeRate": "단위는 '%'이며 디폴트는 '10%'",
+  "msgHelpDiskSizeData": "저널디의 'SystemKeepFree' 설정값",
+  "dtSetupConnectableIp": "접속 가능 아이피 설정",
+  "dtPermitAllIp": "전체 아이피 허용",
+  "selPermit": "허용함",
+  "selNoPermit": "허용안함",
+  "dtSetupLogLevel": "로그레벨 설정",
+  "dtIsUseDeleteFunc": "삭제기능 사용여부",
+  "lbSetupClient": "단말 설정",
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
 };

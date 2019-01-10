@@ -191,9 +191,9 @@ class DesktopAppDialog extends Component {
                 <DialogContent>
                     {(dialogType === DesktopAppDialog.TYPE_EDIT_INAPP || dialogType === DesktopAppDialog.TYPE_EDIT_INCONF || dialogType === DesktopAppDialog.TYPE_ADD) &&
                     <div>
-                    <TextValidator label="이름" className={classes.fullWidth}
+                    <TextValidator label={t("lbName")} className={classes.fullWidth}
                         value={editingItem.get('appNm')}
-                        name="appNm" validators={['required']} errorMessages={['이름을 입력하세요.']}
+                        name="appNm" validators={['required']} errorMessages={[t("msgInputName")]}
                         onChange={this.handleValueChange('appNm')} />
                     <TextField label={t("lbDesc")} className={classes.fullWidth}
                         value={editingItem.get('appInfo')}
@@ -305,7 +305,7 @@ class DesktopAppDialog extends Component {
                 {(dialogType === DesktopAppDialog.TYPE_COPY) &&
                     <div>
                     <Typography variant="body1">
-                        이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?
+                        {t("msgCopyRule")}
                     </Typography>
                     <DesktopAppViewer viewItem={editingItem} />
                     </div>
