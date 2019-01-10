@@ -232,7 +232,7 @@ class ClientConfSettingDialog extends Component {
                             />
                             </Grid>
                             <Grid item xs={12} sm={8} md={8}>
-                            <TextField label="설명" value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                            <TextField label={t("lbDesc")} value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                                 onChange={this.handleValueChange("comment")}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
@@ -525,16 +525,16 @@ class ClientConfSettingDialog extends Component {
                 </DialogContent>
                 <DialogActions>
                 {(dialogType === ClientConfSettingDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
+                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
                 }
                 {(dialogType === ClientConfSettingDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
                 {(dialogType === ClientConfSettingDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
                 }
 
-                <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
+                <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
                 <GRConfirm />

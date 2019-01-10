@@ -42,19 +42,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 class ClientProfileSet extends Component {
-  
-  columnHeaders = [
-    { id: 'chProfileSetNo', isOrder: true, numeric: false, disablePadding: true, label: '번호' },
-    { id: 'chProfileSetName', isOrder: true, numeric: false, disablePadding: true, label: '이름' },
-    { id: 'chClientId', isOrder: true, numeric: false, disablePadding: true, label: 'Ref단말아이디' },
-    { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
-    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
-    { id: 'chProfile', isOrder: false, numeric: false, disablePadding: true, label: '프로파일' },
-    { id: 'chPackages', isOrder: false, numeric: false, disablePadding: true, label: '패키지정보' }
-  ];
 
   constructor(props) {
     super(props);
@@ -164,10 +154,11 @@ class ClientProfileSet extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ClientProfileSetProps, ClientProfileSetActions, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
     const viewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     GRConfirmActions.showConfirm({
-      confirmTitle: '단말프로파일 삭제',
-      confirmMsg: '단말프로파일(' + viewItem.get('profileNo') + ')를 삭제하시겠습니까?',
+      confirmTitle: t("dtDeleteClientProfile"),
+      confirmMsg: t("msgDeleteClientProfile", {profileNo: viewItem.get('profileNo')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmObject: viewItem
     });
@@ -203,6 +194,19 @@ class ClientProfileSet extends Component {
   render() {
     const { classes } = this.props;
     const { ClientProfileSetProps } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'chProfileSetNo', isOrder: true, numeric: false, disablePadding: true, label: t("colNumber") },
+      { id: 'chProfileSetName', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
+      { id: 'chClientId', isOrder: true, numeric: false, disablePadding: true, label: t("colRefClientId") },
+      { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
+      { id: 'chProfile', isOrder: false, numeric: false, disablePadding: true, label: t("colProfile") },
+      { id: 'chPackages', isOrder: false, numeric: false, disablePadding: true, label: t("colPackageInfo") }
+    ];
+
     const compId = this.props.match.params.grMenuId;
     
     const listObj = ClientProfileSetProps.getIn(['viewItems', compId]);
@@ -213,7 +217,7 @@ class ClientProfileSet extends Component {
 
     return (
       <React.Fragment>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           {/* data option area */}
 
@@ -234,7 +238,7 @@ class ClientProfileSet extends Component {
             </Grid>
             <Grid item xs={6} style={{textAlign:'right'}}>
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-                <AddIcon />등록
+                <AddIcon />{t("btnRegist")}
               </Button>
             </Grid>
           </Grid>
@@ -249,7 +253,7 @@ class ClientProfileSet extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -298,7 +302,7 @@ class ClientProfileSet extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -349,4 +353,4 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfileSet));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfileSet)));

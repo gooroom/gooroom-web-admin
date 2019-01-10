@@ -89,7 +89,7 @@ class AdminIpConfig extends Component {
                 this.getSeverUrlInfo();
               } else {
                 this.props.GRAlertActions.showAlert({
-                  alertTitle: '시스템오류',
+                  alertTitle: t("dtSystemError"),
                   alertMsg: '구름관리서버설정을 저장되지 않았습니다.'
                 });
                 this.getSeverUrlInfo();
@@ -120,7 +120,7 @@ class AdminIpConfig extends Component {
         <AppBar position="static" elevation={0} color="default">
           <Toolbar variant="dense">
             <div style={{flexGrow: 1}} />
-            <Button onClick={this.handleSaveData} size="small" variant='contained' color="primary">저장</Button>
+            <Button onClick={this.handleSaveData} size="small" variant='contained' color="primary">{t("btnSave")}</Button>
           </Toolbar>
         </AppBar>
 

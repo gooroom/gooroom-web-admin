@@ -64,9 +64,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientMasterManage extends Component {
   constructor(props) {
     super(props);
@@ -186,7 +184,7 @@ class ClientMasterManage extends Component {
     if(checkedIds && checkedIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
         confirmTitle: t("dtDeleteGroup"),
-        confirmMsg: '단말그룹(' + checkedIds.size + '개)을 삭제하시겠습니까?',
+        confirmMsg: t("msgDeleteGroup", {groupCnt: checkedIds.size}),
         handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
         confirmObject: null
       });
@@ -241,7 +239,7 @@ class ClientMasterManage extends Component {
 
     GRConfirmActions.showConfirm({
         confirmTitle: t("dtAddClientInGroup"),
-        confirmMsg: '선택한 단말(' + checkedClientIds.size + '개)을 단말그룹(' + selectedGroupItem.get('grpNm') + ')으로 변경하시겠습니까?',
+        confirmMsg: t("msgAddClientInGroup", {clientCnt: checkedClientIds.size, groupName: selectedGroupItem.get('grpNm')}),
         handleConfirmResult: this.handleClientSelectSaveConfirmResult,
         confirmObject: {
           selectedGroupId: selectedGroupItem.get('grpId'),
@@ -307,14 +305,14 @@ class ClientMasterManage extends Component {
 
   // delete client
   handleDeleteClient = () => {
-    const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
+    const { ClientManageProps } = this.props;
     const { t, i18n } = this.props;
 
     const checkedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     if(checkedClientIds && checkedClientIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
         confirmTitle: t("dtDeleteClient"),
-        confirmMsg: '단말(' + checkedClientIds.size + '개)을 삭제하시겠습니까?',
+        confirmMsg: t("msgDeleteClient", {clientCnt: checkedClientIds.size}),
         handleConfirmResult: this.handleDeleteClientConfirmResult,
         confirmObject: {checkedClientIds: checkedClientIds}
       });
@@ -342,11 +340,10 @@ class ClientMasterManage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { ClientMasterManageProps, ClientGroupProps, ClientManageProps } = this.props;
+    const { ClientMasterManageProps, ClientGroupProps } = this.props;
     const { t, i18n } = this.props;
 
     const compId = this.props.match.params.grMenuId;
-    const { isGroupInformOpen, isClientInformOpen } = ClientMasterManageProps;
 
     return (
       <React.Fragment>

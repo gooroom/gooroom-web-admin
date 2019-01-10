@@ -88,8 +88,8 @@ class AdminDialog extends Component {
                         onChange={this.handleValueChange("editPollingCycle")} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
-                    <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
+                    <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 <GRConfirm />
                 </ValidatorForm>

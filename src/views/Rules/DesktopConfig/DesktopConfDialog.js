@@ -242,10 +242,10 @@ class DesktopConfDialog extends Component {
 
                 <DialogActions>
                 {(dialogType === DesktopConfDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
+                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
                 }
                 {(dialogType === DesktopConfDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
                 {(dialogType === DesktopConfDialog.TYPE_INHERIT) &&
                     <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">적용</Button>
@@ -253,7 +253,7 @@ class DesktopConfDialog extends Component {
                 {(dialogType === DesktopConfDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
                 }
-                <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
+                <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
                 <GRConfirm />

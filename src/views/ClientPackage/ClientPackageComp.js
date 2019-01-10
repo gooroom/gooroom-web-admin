@@ -44,20 +44,9 @@ import DeletePackageIcon from '@material-ui/icons/RemoveCircle';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class ClientPackageComp extends Component {
-
-  columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
-    { id: "chClientId", isOrder: true, numeric: false, disablePadding: true, label: "단말아이디" },
-    { id: "chPackageId", isOrder: true, numeric: false, disablePadding: true, label: "패키지이름" },
-    { id: "chPackageArch", isOrder: true, numeric: false, disablePadding: true, label: "아키텍쳐" },
-    { id: "chInstallVer", isOrder: true, numeric: false, disablePadding: true, label: "설치버전" },
-    { id: "chPackageLastVer", isOrder: true, numeric: false, disablePadding: true, label: "업데이트가능버전" }
-  ];
 
   componentDidMount() {
     this.props.ClientPackageActions.readPackageListPagedInClient(this.props.ClientPackageProps, this.props.compId);
@@ -169,10 +158,11 @@ class ClientPackageComp extends Component {
 
   handleUpdatePackage = () => {
     const checkedPackageIds = this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'checkedIds']);
+    const { t, i18n } = this.props;
     if(checkedPackageIds && checkedPackageIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
-        confirmTitle: '패키지 업데이트',
-        confirmMsg: '패키지(' + checkedPackageIds.size + '개)를 업데이트하시겠습니까?',
+        confirmTitle: t("dtPackageUpdate"),
+        confirmMsg: t("msgPackageUpdate", {packageCnt: checkedPackageIds.size}),
         handleConfirmResult: ((confirmValue, confirmObject) => {
           if(confirmValue) {
             this.props.ClientPackageActions.updatePackageInClient({
@@ -181,13 +171,13 @@ class ClientPackageComp extends Component {
             }).then(() => {
               if(response && response.status && response.status.result === 'success') {
                 this.props.GRAlertActions.showAlert({
-                  alertTitle: '패키지 업데이트',
-                  alertMsg: '패키지 업데이트 작업이 생성되었습니다.'
+                  alertTitle: t("dtPackageUpdate"),
+                  alertMsg: t("msgCreatePkgUpdateJob")
                 });
               } else {
                 this.props.GRAlertActions.showAlert({
-                  alertTitle: '시스템오류',
-                  alertMsg: '패키지 업데이트 작업이 생성되지 못하였습니다.'
+                  alertTitle: t("dtSystemError"),
+                  alertMsg: t("msgNoCreatePkgUpdateJob")
                 });
               }
             });
@@ -199,10 +189,11 @@ class ClientPackageComp extends Component {
 
   handleDeletePackage = () => {
     const checkedPackageIds = this.props.ClientPackageProps.getIn(['viewItems', this.props.compId, 'checkedIds']);
+    const { t, i18n } = this.props;
     if(checkedPackageIds && checkedPackageIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
-        confirmTitle: '패키지 삭제',
-        confirmMsg: '패키지(' + checkedPackageIds.size + '개)를 삭제하시겠습니까?',
+        confirmTitle: t("dtPackageDelete"),
+        confirmMsg: t("msgPackageDelete", {packageCnt: checkedPackageIds.size}),
         handleConfirmResult: ((confirmValue, confirmObject) => {
           if(confirmValue) {
             this.props.ClientPackageActions.deletePackageInClient({
@@ -211,13 +202,13 @@ class ClientPackageComp extends Component {
             }).then(() => {
               if(response && response.status && response.status.result === 'success') {
                 this.props.GRAlertActions.showAlert({
-                  alertTitle: '패키지 삭제',
-                  alertMsg: '패키지 삭제 작업이 생성되었습니다.'
+                  alertTitle: t("dtPackageDelete"),
+                  alertMsg: t("msgCreatePkgDeleteJob")
                 });
               } else {
                 this.props.GRAlertActions.showAlert({
-                  alertTitle: '시스템오류',
-                  alertMsg: '패키지 삭제 작업이 생성되지 못하였습니다.'
+                  alertTitle: t("dtSystemError"),
+                  alertMsg: t("msgNoCreatePkgDeleteJob")
                 });
               }              
             });
@@ -230,6 +221,16 @@ class ClientPackageComp extends Component {
   render() {
     const { classes } = this.props;
     const { ClientPackageProps, compId } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: "chCheckbox", isCheckbox: true},
+      { id: "chClientId", isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: "chPackageId", isOrder: true, numeric: false, disablePadding: true, label: t("colPackageName") },
+      { id: "chPackageArch", isOrder: true, numeric: false, disablePadding: true, label: t("colArchitecture") },
+      { id: "chInstallVer", isOrder: true, numeric: false, disablePadding: true, label: t("colInstalledVersion") },
+      { id: "chPackageLastVer", isOrder: true, numeric: false, disablePadding: true, label: t("colAvailVersion") }
+    ];
 
     const listObj = ClientPackageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -247,7 +248,7 @@ class ClientPackageComp extends Component {
         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={2} >
             <FormControl fullWidth={true}>
-              <TextField label="단말아이디" value={(selectedClientId) ? selectedClientId : ""} />
+              <TextField label={t("lbClientId")} value={(selectedClientId) ? selectedClientId : ""} />
             </FormControl>
           </Grid>
           <Grid item xs={3} >
@@ -266,18 +267,18 @@ class ClientPackageComp extends Component {
                 <Switch onChange={this.handleValueChange('isFiltered')} color="primary" style={{height:24}}
                     checked={(listObj.getIn(['listParam', 'isFiltered'])) ? listObj.getIn(['listParam', 'isFiltered']) : false} />
                 }
-                label={(listObj.getIn(['listParam', 'isFiltered'])) ? '차이있는 패키지만 보기' : '전체 패키지 보기'}
+                label={(listObj.getIn(['listParam', 'isFiltered'])) ? t("selShowDiffPackage") : t("selShowAllPackage")}
                 labelPlacement="start"
                 style={{marginRight:10}}
             />
-            <Tooltip title="패키지 업데이트">
+            <Tooltip title={t("ttPackageUpdate")}>
               <span>
                 <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleUpdatePackage} disabled={this.isPackageSelected()} style={{marginRight:10}}>
                   <AddPackageIcon />
                 </Button>
               </span>
             </Tooltip>            
-            <Tooltip title="패키지 삭제">
+            <Tooltip title={t("ttPackageDelete")}>
               <span>
                 <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeletePackage} disabled={this.isPackageSelected()} >
                   <DeletePackageIcon />
@@ -299,7 +300,7 @@ class ClientPackageComp extends Component {
             onClickAllCheck={this.handleClickAllCheck}
             checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           <TableBody>
           {listObj.get('listData').map(n => {
@@ -324,7 +325,7 @@ class ClientPackageComp extends Component {
           {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
             <TableRow key={e}>
               <TableCell
-                colSpan={this.columnHeaders.length + 1}
+                colSpan={columnHeaders.length + 1}
                 className={classes.grSmallAndClickCell}
               />
             </TableRow>
@@ -368,6 +369,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageComp));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageComp)));
 
 

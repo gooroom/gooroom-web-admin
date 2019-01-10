@@ -109,8 +109,8 @@ class AdminUserConnDialog extends Component {
                     </div>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={this.handleClickSaveData} variant='contained' color="secondary">저장</Button>
-                    <Button onClick={this.handleClickClose} variant='contained' color="primary">닫기</Button>
+                    <Button onClick={this.handleClickSaveData} variant='contained' color="secondary">{t("btnSave")}</Button>
+                    <Button onClick={this.handleClickClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
             </Dialog>

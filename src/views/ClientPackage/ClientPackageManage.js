@@ -42,7 +42,7 @@ import ClientPackageComp from 'views/ClientPackage/ClientPackageComp';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
+import { translate, Trans } from "react-i18next";
 
 class ClientPackageManage extends Component {
   constructor(props) {
@@ -52,31 +52,6 @@ class ClientPackageManage extends Component {
       isOpenClientSelect: false,
       isOpenClientPackageSelect: false,
     };
-  }
-
-  componentDidMount() {
-    // const { SecurityLogActions, SecurityLogProps } = this.props;
-    // let search = this.props.location.search;
-
-    // if(search && search != '') {
-    //   search = (search.startsWith("?")) ? search.substring(1) : search;
-    //   var result = {};
-    //   search.split("&").forEach(function(part) {
-    //     var item = part.split("=");
-    //     result[item[0]] = decodeURIComponent(item[1]);
-    //   });
-
-    //   const { ClientManageProps, ClientManageActions, ClientPackageProps, ClientPackageActions } = this.props;
-    //   const compId = this.props.match.params.grMenuId;
-
-    //   ClientManageActions.changeCompVariable({ name: 'selectId', value: result.keyword, compId: compId });
-    //   ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, { clientId: result.keyword, page:0, isFiltered: true });
-
-    //   ClientManageActions.changeListParamData({ name: 'keyword', value: result.keyword, compId: compId});
-    //   ClientManageActions.readClientListPaged(ClientManageProps, compId, {page: 0, keyword: result.keyword});
-    // } else {
-    //   // this.handleSelectBtnClick();
-    // }
   }
 
   // Select Group Item
@@ -94,14 +69,6 @@ class ClientPackageManage extends Component {
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       groupId: [selectedGroupObj.get('grpId')], page:0
     }, {isResetSelect:true});
-
-    // show client group info.
-    // if(selectedGroupObj) {
-    //   ClientManageActions.closeClientManageInform({compId: compId});
-    //   ClientGroupActions.showClientGroupInform({
-    //     compId: compId, viewItem: selectedGroupObj,
-    //   });
-    // }
   };
 
   // Check Group Item
@@ -109,11 +76,6 @@ class ClientPackageManage extends Component {
     const { ClientGroupProps, ClientGroupActions } = this.props;
     const { ClientManageProps, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
-
-    // show client list
-    // ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-    //   groupId: selectedGroupIdArray.toJS(), page:0
-    // }, {isResetSelect:true});
 
   };
 
@@ -133,21 +95,6 @@ class ClientPackageManage extends Component {
       clientId: selectedClientObj.get('clientId'), page:0, isFiltered: false
     });
 
-
-    // ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-    //   groupId: selectedGroupIdArray.join(','), page:0
-    // });
-
-    // // show client info.
-    // if(selectedClientObj) {
-    //   ClientGroupActions.closeClientGroupInform({
-    //     compId: compId
-    //   });
-    //   ClientManageActions.showClientManageInform({
-    //     compId: compId,
-    //     viewItem: selectedClientObj,
-    //   });
-    // }
   };
 
   // GROUP COMPONENT --------------------------------
@@ -167,11 +114,12 @@ class ClientPackageManage extends Component {
 
   // delete group
   handleDeleteButtonForClientGroup = () => {
+    const { t, i18n } = this.props;
     const checkedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     if(checkedIds && checkedIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
-        confirmTitle: '단말그룹 삭제',
-        confirmMsg: '단말그룹(' + checkedIds.size + '개)을 삭제하시겠습니까?',
+        confirmTitle: t("dtDeleteGroup"),
+        confirmMsg: t("msgDeleteGroup", {groupCnt: checkedIds.size}),
         handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
         confirmObject: null
       });
@@ -196,13 +144,14 @@ class ClientPackageManage extends Component {
 
   // add client in group
   handleAddClientInGroup = (event) => {
+    const { t, i18n } = this.props;
     const selectedGroupItem = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
     if(selectedGroupItem) {
       this.setState({
         isOpenClientSelect: true
       });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '단말을 추가할 그룹을 선택하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgCfmSelectGroupForInsertClient"));
     }
   }
 
@@ -224,14 +173,15 @@ class ClientPackageManage extends Component {
   // install package user selected
   handleClientPackageInstall = (selectedPackage) => {
     const { ClientGroupProps, ClientManageProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
 
     if(selectedPackage && selectedPackage.size > 0) {
       const checkedGroupIds = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
       const checkedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
       
       GRConfirmActions.showConfirm({
-          confirmTitle: '선택한 패키지 설치',
-          confirmMsg: '선택한 패키지를 설치하시겠습니까?',
+          confirmTitle: t("dtInstallSelectedPackage"),
+          confirmMsg: t("msgInstallSelectedPackage"),
           handleConfirmResult: (confirmValue, paramObject) => {
             if(confirmValue) {
               this.props.ClientPackageActions.updatePackageInClient({
@@ -254,16 +204,18 @@ class ClientPackageManage extends Component {
   }
 
   // add client in group - save
-  handleClientSelectSave = (selectedClients) => {
+  handleClientSelectSave = (checkedClientIds) => {
     const { ClientGroupProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+
     const selectedGroupItem = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
     GRConfirmActions.showConfirm({
-        confirmTitle: '그룹에 단말 추가',
-        confirmMsg: '단말을 그룹 추가하시겠습니까?',
+        confirmTitle: t("dtAddClientInGroup"),
+        confirmMsg: t("msgAddClientInGroup", {clientCnt: checkedClientIds.size, groupName: selectedGroupItem.get('grpNm')}),
         handleConfirmResult: this.handleClientSelectSaveConfirmResult,
         confirmObject: {
           selectedGroupId: selectedGroupItem.get('grpId'),
-          selectedClients: selectedClients
+          checkedClientIds: checkedClientIds
         }
     });
   }
@@ -274,7 +226,7 @@ class ClientPackageManage extends Component {
       const compId = this.props.match.params.grMenuId;
       ClientGroupActions.addClientsInGroup({
           groupId: paramObject.selectedGroupId,
-          clients: paramObject.selectedClients.join(',')
+          clients: paramObject.checkedClientIds.join(',')
       }).then((res) => {
         // show clients list in group
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
@@ -290,18 +242,20 @@ class ClientPackageManage extends Component {
   // remove client in group - save
   handleRemoveClientInGroup = (event) => {
     const { ClientManageProps, GRConfirmActions } = this.props;
-    const selectedClients = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-    if(selectedClients && selectedClients !== '') {
+    const { t, i18n } = this.props;
+
+    const checkedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    if(checkedClientIds && checkedClientIds !== '') {
       GRConfirmActions.showConfirm({
-        confirmTitle: '그룹에서 단말 삭제',
-        confirmMsg: '선택하신 단말을 그룹에서 삭제하시겠습니까?',
+        confirmTitle: t("dtDeleteClientFromGroup"),
+        confirmMsg: t("msgCfmDeleteClientFromGroup"),
         handleConfirmResult: this.handleRemoveClientInGroupConfirmResult,
         confirmObject: {
-          selectedClients: selectedClients
+          checkedClientIds: checkedClientIds
         }
       });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 선택하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectClient"));
     }
   }
   handleRemoveClientInGroupConfirmResult = (confirmValue, paramObject) => {
@@ -309,7 +263,7 @@ class ClientPackageManage extends Component {
       const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
       const compId = this.props.match.params.grMenuId;
       ClientGroupActions.removeClientsInGroup({
-        clients: paramObject.selectedClients.join(',')
+        clients: paramObject.checkedClientIds.join(',')
       }).then(() => {
         // show user list in dept.
         ClientManageActions.readClientListPaged(ClientManageProps, compId, {
@@ -336,9 +290,11 @@ class ClientPackageManage extends Component {
   handleAllUpdateForClient = (event) => {
     event.stopPropagation();
     const { GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+
     GRConfirmActions.showConfirm({
-      confirmTitle: '전체패키지 업데이트',
-      confirmMsg: '선택하신 단말 또는 그룹에 업데이트 가능 패키지를 모두 업데이트 하겠습니까?',
+      confirmTitle: t("dtAllPackageUpadte"),
+      confirmMsg: t("msgAllPackageUpadte"),
       handleConfirmResult: (confirmValue, confirmObject) => {
         if(confirmValue) {
           const { ClientGroupProps, ClientManageProps, ClientPackageActions } = this.props;
@@ -363,6 +319,7 @@ class ClientPackageManage extends Component {
   handleAddPackage = (event) => {
     event.stopPropagation();
     const { ClientGroupProps, ClientManageProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     const checkedGroupIds = ClientGroupProps.getIn(['viewItems', compId, 'checkedIds']);
@@ -373,19 +330,21 @@ class ClientPackageManage extends Component {
         isOpenClientPackageSelect: true
       });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '패키지를 설치할 단말을 선택하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectClientForUpdate"));
     }
   }
 
   render() {
     const { classes } = this.props;
     const { ClientPackageProps, ClientGroupProps } = this.props;
+    const { t, i18n } = this.props;
+
     const compId = this.props.match.params.grMenuId;
 
     return (
 
       <React.Fragment>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             
@@ -394,14 +353,14 @@ class ClientPackageManage extends Component {
               <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
                 <Grid item>
 
-                  <Tooltip title="신규 단말그룹 등록">
+                  <Tooltip title={t("ttAddNewGroup")}>
                   <span>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
                       <AddIcon /><GroupIcon />
                     </Button>
                   </span>
                   </Tooltip>
-                  <Tooltip title="단말그룹 삭제">
+                  <Tooltip title={t("ttDeleteGroup")}>
                   <span>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
                       <RemoveIcon /><GroupIcon />
@@ -412,7 +371,7 @@ class ClientPackageManage extends Component {
                 </Grid>
                 <Grid item>
 
-                  <Tooltip title="그룹에 단말추가">
+                  <Tooltip title={t("ttAddClientInGroup")}>
                   <span>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={!(this.isGroupSelected())} >
                       <AddIcon /><ClientIcon />
@@ -420,7 +379,7 @@ class ClientPackageManage extends Component {
                   </span>
                   </Tooltip>
 
-                  <Tooltip title="그룹에 단말삭제">
+                  <Tooltip title={t("ttDeleteClientFromGroup")}>
                   <span>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientChecked()} style={{marginLeft: "10px"}} >
                       <RemoveIcon /><ClientIcon />
@@ -445,10 +404,10 @@ class ClientPackageManage extends Component {
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleAllUpdateForClient} disabled={!(this.isClientChecked() || this.isGroupChecked())} style={{marginLeft: "10px"}}>
-                      <AddIcon />전체업데이트
+                      <AddIcon />{t("btnAllUpdate")}
                     </Button>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleAddPackage} disabled={!(this.isClientChecked() || this.isGroupChecked())} style={{marginLeft: "10px"}}>
-                      <AddIcon />패키지추가
+                      <AddIcon />{t("btnAddPackage")}
                     </Button>
                   </Grid>
                 </Grid>
@@ -492,6 +451,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageManage)));
 
 

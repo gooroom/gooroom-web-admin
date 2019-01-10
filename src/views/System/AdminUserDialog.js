@@ -199,12 +199,12 @@ class AdminUserDialog extends Component {
                 <DialogActions>
                     
                 {(dialogType === AdminUserDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">등록</Button>
+                    <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
                 }
                 {(dialogType === AdminUserDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='contained' color="secondary">저장</Button>
+                    <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
-                <Button onClick={this.handleClose} variant='contained' color="primary">닫기</Button>
+                <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
 
                 </DialogActions>
                 </ValidatorForm>
