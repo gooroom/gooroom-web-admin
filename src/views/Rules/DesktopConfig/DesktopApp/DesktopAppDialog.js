@@ -38,10 +38,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
+
 class DesktopAppDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -70,10 +69,11 @@ class DesktopAppDialog extends Component {
 
     handleCreateData = (event) => {
         const { DesktopAppProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '데스크톱앱 등록',
-                confirmMsg: '데스크톱앱을 등록하시겠습니까?',
+                confirmTitle: t("dtAddDesktopApp"),
+                confirmMsg: t("msgAddDesktopApp"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: DesktopAppProps.get('editingItem')
             });
@@ -100,8 +100,8 @@ class DesktopAppDialog extends Component {
         const { DesktopAppProps, GRConfirmActions } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '데스크톱앱 수정',
-                confirmMsg: '데스크톱앱을 수정하시겠습니까?',
+                confirmTitle: t("dtEditDesktopApp"),
+                confirmMsg: t("msgEditDesktopApp"),
                 handleConfirmResult: this.handleEditConfirmResult,
                 confirmObject: DesktopAppProps.get('editingItem')
             });
@@ -149,12 +149,13 @@ class DesktopAppDialog extends Component {
 
     handleCopyCreateData = (event, id) => {
         const { DesktopAppProps, DesktopAppActions } = this.props;
+        const { t, i18n } = this.props;
         DesktopAppActions.cloneDesktopAppData({
             'appId': DesktopAppProps.getIn(['editingItem', 'appId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
-                alertMsg: '데스크톱앱을 복사하였습니다.'
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgCopyDesktopApp")
             });
             refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
             this.handleClose();
@@ -171,15 +172,15 @@ class DesktopAppDialog extends Component {
 
         let title = "";
         if(dialogType === DesktopAppDialog.TYPE_ADD) {
-            title = "데스크톱앱 등록";
+            title = t("dtAddDesktopApp");
         } else if(dialogType === DesktopAppDialog.TYPE_VIEW) {
-            title = "데스크톱앱 정보";
+            title = t("dtViewDesktopApp");
         } else if(dialogType === DesktopAppDialog.TYPE_EDIT_INAPP) {
-            title = "데스크톱앱 수정";
+            title = t("dtEditDesktopApp");
         } else if(dialogType === DesktopAppDialog.TYPE_EDIT_INCONF) {
-            title = "데스크톱앱 수정";
+            title = t("dtEditDesktopApp");
         } else if(dialogType === DesktopAppDialog.TYPE_COPY) {
-            title = "데스크톱앱 복사";
+            title = t("dtCopyDesktopApp");
         }
 
         return (
@@ -200,7 +201,7 @@ class DesktopAppDialog extends Component {
                         onChange={this.handleValueChange('appInfo')} />
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{marginTop:12}}>
                         <Grid xs={4} item>
-                            <FormLabel component="legend">데스크톱앱 종류</FormLabel>
+                            <FormLabel component="legend">{t("lbDesktopAppType")}</FormLabel>
                         </Grid>
                         <Grid item>
                             <FormControlLabel value="application" control={
@@ -210,21 +211,21 @@ class DesktopAppDialog extends Component {
                         <Grid item>
                             <FormControlLabel value="mount" control={
                                 <Radio color="primary" value="mount" onChange={this.handleValueChange('appGubun')} checked={editingItem.get('appGubun') === 'mount'} />
-                            } label="마운트앱" labelPlacement="end" />
+                            } label={t("lbMountApp")} labelPlacement="end" />
                         </Grid>
                     </Grid>
                     
                     {(editingItem.get('appGubun') === 'application') && 
-                    <TextField label="실행 명령어" className={classes.fullWidth} multiple
+                    <TextField label={t("lbExecuteCmd")} className={classes.fullWidth} multiple
                         value={editingItem.get('appExec')}
                         onChange={this.handleValueChange('appExec')} />
                     }
                     {(editingItem.get('appGubun') === 'mount') && 
                     <div>
-                    <TextField label="마운트 URL" className={classes.fullWidth}
+                    <TextField label={t("lbMountUrl")} className={classes.fullWidth}
                         value={editingItem.get('appMountUrl')}
                         onChange={this.handleValueChange('appMountUrl')} />
-                    <TextField label="마운트 포인트" className={classes.fullWidth}
+                    <TextField label={t("lbMountPoint")} className={classes.fullWidth}
                         value={editingItem.get('appMountPoint')}
                         onChange={this.handleValueChange('appMountPoint')} />
                     </div>
@@ -232,43 +233,43 @@ class DesktopAppDialog extends Component {
 
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{marginTop:12}}>
                         <Grid xs={4} item>
-                            <FormLabel component="legend">서비스 상태</FormLabel>
+                            <FormLabel component="legend">{t("lbServiceStatus")}</FormLabel>
                         </Grid>
                         <Grid item>
                             <FormControlLabel value="STAT010" control={
                                 <Radio color="primary" value="STAT010" onChange={this.handleValueChange("statusCd")} checked={editingItem.get('statusCd') === 'STAT010'} />
-                            } label="사용" labelPlacement="end" />
+                            } label={t("selSeviceOn")} labelPlacement="end" />
                         </Grid>
                         <Grid item>
                             <FormControlLabel value="STAT020" control={
                                 <Radio color="primary" value="STAT020" onChange={this.handleValueChange("statusCd")} checked={editingItem.get('statusCd') === 'STAT020'} />
-                            } label="중지" labelPlacement="end" />
+                            } label={t("selSeviceOff")} labelPlacement="end" />
                         </Grid>
                     </Grid>
 
                     <Grid container direction="row" justify="flex-start" alignItems="center" style={{marginTop:12,marginBottom:12}}>
                         <Grid xs={4} item>
-                            <FormLabel component="legend">ICON 구분</FormLabel>
+                            <FormLabel component="legend">{t("lbIconDivision")}</FormLabel>
                         </Grid>
                         <Grid item>
                             <FormControlLabel value="favicon" control={
                                 <Radio color="primary" value="favicon" onChange={this.handleValueChange("iconGubun")} checked={editingItem.get('iconGubun') === 'favicon'} />
-                            } label="Favicon 사용" labelPlacement="end" />
+                            } label={t("lbUseFavicon")} labelPlacement="end" />
                         </Grid>
                         <Grid item>
                             <FormControlLabel value="library" control={
                                 <Radio color="primary" value="library" onChange={this.handleValueChange("iconGubun")} checked={editingItem.get('iconGubun') === 'library'} />
-                            } label="라이브러리 사용" labelPlacement="end" />
+                            } label={t("lbUseIconLib")} labelPlacement="end" />
                         </Grid>
                     </Grid>
                     {(editingItem.get('iconGubun') === 'favicon') && 
-                    <TextField label="Favicon URL" className={classes.fullWidth}
+                    <TextField label={t("lbFaviconUrl")} className={classes.fullWidth}
                         value={(editingItem.get('iconUrl')) ? editingItem.get('iconUrl') : ''}
                         onChange={this.handleValueChange("iconUrl")} />
                     }
                     {(editingItem.get('iconGubun') === 'library') && 
                     <FormControl className={classes.fullWidth}>
-                        <InputLabel htmlFor="iconId">ICON 타입</InputLabel>
+                        <InputLabel htmlFor="iconId">{t("lbIconType")}</InputLabel>
                         <Select value={(editingItem.get('iconId')) ? editingItem.get('iconId') : ''}
                             onChange={this.handleValueChange('iconId')}
                             name="iconId" style={{marginTop: 'theme.spacing.unit * 2'}}
@@ -322,7 +323,7 @@ class DesktopAppDialog extends Component {
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
                 {(dialogType === DesktopAppDialog.TYPE_COPY) &&
-                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">복사</Button>
+                    <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("btnCopy")}</Button>
                 }
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
@@ -349,5 +350,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopAppDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopAppDialog)));
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Map, List, fromJS } from 'immutable';
+import { Map, List } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -14,7 +14,6 @@ import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
@@ -23,10 +22,9 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class DesktopConfSelector extends Component {
 
   componentDidMount() {
@@ -69,6 +67,7 @@ class DesktopConfSelector extends Component {
   render() {
     const { classes } = this.props;
     const { DesktopConfProps, compId, targetType } = this.props;
+    const { t, i18n } = this.props;
 
     const selectedObj = (targetType && targetType != '') ? DesktopConfProps.getIn(['viewItems', compId, targetType]) : DesktopConfProps.getIn(['viewItems', compId]);
 
@@ -121,6 +120,6 @@ const mapDispatchToProps = (dispatch) => ({
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopConfSelector));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopConfSelector)));
 
 
