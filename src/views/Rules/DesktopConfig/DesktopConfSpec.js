@@ -32,10 +32,9 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class DesktopConfSpec extends Component {
 
   handleEditAppClick = (viewItem) => {
@@ -51,6 +50,7 @@ class DesktopConfSpec extends Component {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
+    const { t, i18n } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -70,7 +70,7 @@ class DesktopConfSpec extends Component {
           <Card elevation={4} className={classes.ruleViewerCard}>
             { hasAction &&
             <GRRuleCardHeader avatar={RuleAvartar}
-              category='데스크톱 설정' title={viewItem.get('confNm')}
+              category={t("lbDesktopConf")} title={viewItem.get('confNm')}
               subheader={viewItem.get('confId')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
@@ -93,7 +93,7 @@ class DesktopConfSpec extends Component {
             }
             { simpleTitle &&
             <GRRuleCardHeader
-              category='데스크톱 설정' title={viewItem.get('confNm')}
+              category={t("lbDesktopConf")} title={viewItem.get('confNm')}
               subheader={viewItem.get('confId')}
             />
             }
@@ -102,9 +102,9 @@ class DesktopConfSpec extends Component {
               <Table>
                 <TableBody>
                   <TableRow>
-                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 이름</TableCell>
+                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} {t("lbName")}</TableCell>
                     <TableCell style={{width:'25%'}} >{viewItem.get('confNm')}</TableCell>
-                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} 아이디</TableCell>
+                    <TableCell style={{width:'25%'}} component="th" scope="row">{bull} {t("lbId")}</TableCell>
                     <TableCell style={{width:'25%'}} >{viewItem.get('confId')}</TableCell>
                   </TableRow>
                 </TableBody>
@@ -142,4 +142,4 @@ const mapDispatchToProps = (dispatch) => ({
   DesktopAppActions: bindActionCreators(DesktopAppActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopConfSpec));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopConfSpec)));

@@ -41,21 +41,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class DesktopAppManage extends Component {
-
-  columnHeaders = [
-    { id: 'chAppId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
-    { id: 'chAppNm', isOrder: true, numeric: false, disablePadding: true, label: '이름' },
-    { id: 'chAppInfo', isOrder: false, numeric: false, disablePadding: true, label: '설명' },
-    { id: 'chStatus', isOrder: false, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'chModUser', isOrder: false, numeric: false, disablePadding: true, label: '수정자' },
-    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
-  ];
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -138,10 +127,11 @@ class DesktopAppManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { DesktopAppProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
     const viewItem = getRowObjectById(DesktopAppProps, this.props.match.params.grMenuId, id, 'appId');
     GRConfirmActions.showConfirm({
-      confirmTitle: '데스크톱앱 삭제',
-      confirmMsg: '데스크톱앱(' + viewItem.get('appId') + ') 을 삭제하시겠습니까?',
+      confirmTitle: t("dtDeleteDesktopApp"),
+      confirmMsg: t("msgDeleteDesktopApp", {appId: viewItem.get('appId')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmObject: viewItem
     });
@@ -187,7 +177,18 @@ class DesktopAppManage extends Component {
   render() {
     const { classes } = this.props;
     const { DesktopAppProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    const columnHeaders = [
+      { id: 'chAppId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'chAppNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
+      { id: 'chAppInfo', isOrder: false, numeric: false, disablePadding: true, label: t("colDesc") },
+      { id: 'chStatus', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'chModUser', isOrder: false, numeric: false, disablePadding: true, label: t("colModUser") },
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
+    ];
 
     const listObj = DesktopAppProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -197,7 +198,7 @@ class DesktopAppManage extends Component {
 
     return (
       <div>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
@@ -232,7 +233,7 @@ class DesktopAppManage extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -271,7 +272,7 @@ class DesktopAppManage extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -319,7 +320,7 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopAppManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopAppManage)));
 
 
 

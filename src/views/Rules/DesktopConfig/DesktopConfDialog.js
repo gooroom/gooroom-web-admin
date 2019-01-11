@@ -25,7 +25,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 
 import Grid from '@material-ui/core/Grid';
 import Typography from "@material-ui/core/Typography";
@@ -36,6 +35,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class DesktopConfDialog extends Component {
 
@@ -70,10 +71,11 @@ class DesktopConfDialog extends Component {
 
     handleCreateData = (event) => {
         const { DesktopConfProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '데스크톱정보 등록',
-                confirmMsg: '데스크톱정보를 등록하시겠습니까?',
+                confirmTitle: t("dtAddDesktopConf"),
+                confirmMsg: t("msgAddDesktopConf"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: DesktopConfProps.get('editingItem')
             });
@@ -98,10 +100,11 @@ class DesktopConfDialog extends Component {
 
     handleEditData = (event, id) => {
         const { DesktopConfProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '데스크톱정보 수정',
-                confirmMsg: '데스크톱정보를 수정하시겠습니까?',
+                confirmTitle: t("dtEditDesktopConf"),
+                confirmMsg: t("msgEditDesktopConf"),
                 handleConfirmResult: this.handleEditConfirmResult,
                 confirmObject: DesktopConfProps.get('editingItem')
             });
@@ -126,6 +129,7 @@ class DesktopConfDialog extends Component {
 
     handleInheritSaveData = (event, id) => {
         const { DesktopConfProps, DeptProps, DesktopConfActions, compId } = this.props;
+        const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
         DesktopConfActions.inheritDesktopConfData({
@@ -133,8 +137,8 @@ class DesktopConfDialog extends Component {
             'deptCd': selectedDeptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
-                alertMsg: '데스크톱정보가 하위 조직에 적용되었습니다.'
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplyDesktopConfToChild")
             });
             this.handleClose();
         });
@@ -142,12 +146,13 @@ class DesktopConfDialog extends Component {
 
     handleCopyCreateData = (event, id) => {
         const { DesktopConfProps, DesktopConfActions } = this.props;
+        const { t, i18n } = this.props;
         DesktopConfActions.cloneDesktopConfData({
             'confId': DesktopConfProps.getIn(['editingItem', 'confId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
-                alertMsg: '데스크톱정보를 복사하였습니다.'
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgCopyDesktopConf")
             });
             refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
             this.handleClose();
@@ -156,31 +161,25 @@ class DesktopConfDialog extends Component {
 
     render() {
         const { classes } = this.props;
-
         const { DesktopConfProps, DesktopAppProps, compId } = this.props;
+        const { t, i18n } = this.props;
+
         const dialogType = DesktopConfProps.get('dialogType');
         const editingItem = (DesktopConfProps.get('editingItem')) ? DesktopConfProps.get('editingItem') : null;
         const selectedThemeId = (editingItem && editingItem.get('themeId')) ? editingItem.get('themeId') : '';
         const themeListData = DesktopConfProps.get('themeListData');
 
-        // const appListAllData = DesktopAppProps.getIn(['viewItems', compId, 'listAllData']);
-        // const appListAllData = DesktopAppProps.get('listAllData');
-        // let allAppPaneWidth = 0;
-        // if(appListAllData && appListAllData.size > 0) {
-        //     allAppPaneWidth = appListAllData.size * (120 + 16) + 40;
-        // }
-
         let title = "";
         if(dialogType === DesktopConfDialog.TYPE_ADD) {
-            title = "데스크톱정보 등록";
+            title = t("dtAddDesktopConf");
         } else if(dialogType === DesktopConfDialog.TYPE_VIEW) {
-            title = "데스크톱정보 정보";
+            title = t("dtViewDesktopConf");
         } else if(dialogType === DesktopConfDialog.TYPE_EDIT) {
-            title = "데스크톱정보 수정";
+            title = t("dtEditDesktopConf");
         } else if(dialogType === DesktopConfDialog.TYPE_INHERIT) {
-            title = "데스크톱정보 상속";
+            title = t("dtInheritDesktopConf");
         } else if(dialogType === DesktopConfDialog.TYPE_COPY) {
-            title = "데스크톱정보 복사";
+            title = t("dtCopyDesktopConf");
         }
 
         return (
@@ -201,7 +200,7 @@ class DesktopConfDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={4} >
-                                <InputLabel>테마</InputLabel>
+                                <InputLabel>{t("lbTheme")}</InputLabel>
                                 <Select
                                     value={selectedThemeId} style={{width:'100%'}}
                                     onChange={this.handleValueChange('themeId')}
@@ -216,7 +215,6 @@ class DesktopConfDialog extends Component {
 
                             <Grid item xs={12} >
                                 <DesktopAppSelector 
-                                    selectedApp__Ids={List(['DEAP000005', 'DEAP000007'])} 
                                     selectedApps={editingItem.get('apps') ? editingItem.get('apps') : List([])} />
                             </Grid>
                             
@@ -278,5 +276,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopConfDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DesktopConfDialog)));
 

@@ -67,6 +67,8 @@ export default {
   "colDivision": "구분",
   "colRuleName": "정책이름",
   "colRuleId": "정책아이디",
+  "colDesc": "설명",
+  "colThemeName": "테마이름",
 
   // options
   "optDate": "날짜",
@@ -85,6 +87,7 @@ export default {
   "btnClose": "닫기",
   "btnCreate": "생성",
   "btnAdd": "추가",
+  "btnCopy": "복사",
 
   // Menus
   "menuDashboard": "Dashboard",
@@ -131,12 +134,13 @@ export default {
   "selUnviolated": "미침해",
   "lbDesc": "설명",
   "lbName": "이름",
+  "lbId": "아이디",
   "lbClientId": "단말아이디",
   "dtSystemError": "시스템오류",
   "dtSystemNotice": "시스템알림",
   "selBasic": "기본",
   "selOrdinary": "일반",
-  "msgInputName": "이름을 입력하세요."
+  "msgInputName": "이름을 입력하세요.",
   "selDelete": "삭제함",
   "selNoDelete": "삭제안함",
   "msgCopyRule": "이 정책을 복사하여 새로운 정책을 생성 하시겠습니까?",
@@ -189,7 +193,7 @@ export default {
   "msgDeleteGroup": "단말그룹({{groupCnt}}개)을 삭제하시겠습니까?",
   "dtViewGroup": "단말그룹 정보",
   "dtAddClientInGroup": "그룹에 단말 추가",
-  "msgAddClientInGroup": "선택한 단말({{clientCnt}}개)을 단말그룹('{{groupName}}')으로 변경하시겠습니까?"
+  "msgAddClientInGroup": "선택한 단말({{clientCnt}}개)을 단말그룹('{{groupName}}')으로 변경하시겠습니까?",
   "dtDeleteClientFromGroup": "그룹에서 단말 삭제",
 
   "msgAddGroup": "단말그룹을 등록하시겠습니까?",
@@ -199,7 +203,7 @@ export default {
   "msgSelectClient": "단말을 선택하세요.",
   "msgCfmDeleteClientFromGroup": "선택하신 단말을 그룹에서 삭제하시겠습니까?",
   "msgCfmSelectGroupForInsertClient": "단말을 추가할 그룹을 선택하세요.",
-
+  
   // 단말 등록키 관리
   "dtAddClientKey": "단말 등록키 등록",
   "msgAddClientKey": "단말등록키를 등록하시겠습니까?",
@@ -327,8 +331,50 @@ export default {
   "dtIsUseDeleteFunc": "삭제기능 사용여부",
   "lbSetupClient": "단말 설정",
 
+  // 데스크톱앱관리
+  "dtDeleteDesktopApp": "데스크톱앱 삭제",
+  "msgDeleteDesktopApp": "데스크톱앱('{{appId}}') 을 삭제하시겠습니까?",
+  "dtAddDesktopApp": "데스크톱앱 등록",
+  "msgAddDesktopApp": "데스크톱앱을 등록하시겠습니까?",
+  "dtEditDesktopApp": "데스크톱앱 수정",
+  "msgEditDesktopApp": "데스크톱앱을 수정하시겠습니까?",
+  "msgCopyDesktopApp": "데스크톱앱을 복사하였습니다.",
+  "dtViewDesktopApp": "데스크톱앱 정보",
+  "dtCopyDesktopApp": "데스크톱앱 복사",
+  "lbDesktopAppType": "데스크톱앱 종류",
+  "lbMountApp": "마운트앱",
+  "lbExecuteCmd": "실행 명령어",
+  "lbMountUrl": "마운트 URL",
+  "lbMountPoint": "마운트 포인트",
+  "lbServiceStatus": "서비스 상태",
+  "selSeviceOn": "사용",
+  "selSeviceOff": "중지",
+  "lbIconDivision": "ICON 구분",
+  "lbIconInfo": "ICON 정보",
+  "lbUseFavicon": "Favicon 사용",
+  "lbUseIconLib": "라이브러리 사용",
+  "lbFaviconUrl": "Favicon URL",
+  "lbIconType": "ICON 타입",
+  "lbIconEditDate": "수정일",
+  "msgHelpDeleteApp": "현재 데스크톱 앱 삭제는 '데스크톱앱관리' 메뉴에서만 실행 되도록 설정되어 있습니다.",
+  "msgAppList": "앱리스트 (아래 전체앱리스트에서 앱을 추가할 수 있습니다.)",
+  "lbAppAllList": "전체 앱 리스트",
 
-
+  // 데스크톱정보 관리
+  "dtDeleteDesktopConf": "데스크톱정보 삭제",
+  "msgDeleteDesktopConf": "데스크톱정보('{{confId}}')를 삭제하시겠습니까?",
+  "dtAddDesktopConf": "데스크톱정보 등록",
+  "msgAddDesktopConf": "데스크톱정보를 등록하시겠습니까?",
+  "dtEditDesktopConf": "데스크톱정보 수정",
+  "msgEditDesktopConf": "데스크톱정보를 수정하시겠습니까?",
+  "msgApplyDesktopConfToChild": "데스크톱정보가 하위 조직에 적용되었습니다.",
+  "dtCopyDesktopConf": "데스크톱정보 복사",
+  "msgCopyDesktopConf": "데스크톱정보를 복사하였습니다.",
+  "dtViewDesktopConf": "데스크톱정보 정보",
+  "dtInheritDesktopConf": "데스크톱정보 상속",
+  "lbTheme": "테마",
+  "lbDesktopConf": "데스크톱정보",
+  
 
   
 

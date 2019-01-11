@@ -96,11 +96,6 @@ class DesktopApp extends Component {
             </TableRow>
             <TableRow style={{height:62}}>
               <TableCell colSpan={2} style={{padding:'6 0 6 0',textAlign:'center'}}>{appObj.get('appNm')}</TableCell>
-              {/* 
-            </TableRow>
-            <TableRow>
-              <TableCell colSpan={2} >{appObj.get('appId')}</TableCell>
-              */}
             </TableRow>
 
             <TableRow style={{height:24,backgroundColor:'#dedede'}}>
