@@ -142,7 +142,7 @@ class MediaRuleDialog extends Component {
             'deptCd': selectedDeptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
+                alertTitle: t("dtSystemNotice"),
                 alertMsg: '매체제어정책이 하위 조직에 적용되었습니다.'
             });
             this.handleClose();
@@ -155,7 +155,7 @@ class MediaRuleDialog extends Component {
             'objId': MediaRuleProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
+                alertTitle: t("dtSystemNotice"),
                 alertMsg: '매체제어정책을 복사하였습니다.'
             });
             refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);

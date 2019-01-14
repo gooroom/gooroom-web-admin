@@ -17,10 +17,9 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientHostNameSpec extends Component {
 
   // .................................................
@@ -28,6 +27,7 @@ class ClientHostNameSpec extends Component {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
+    const { t, i18n } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -43,7 +43,7 @@ class ClientHostNameSpec extends Component {
           { hasAction &&
             <GRRuleCardHeader
               avatar={RuleAvartar}
-              category='HOSTS 정보'
+              category={t("lbHostsCategoty")}
               title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
@@ -63,7 +63,7 @@ class ClientHostNameSpec extends Component {
             }
             { simpleTitle &&
             <GRRuleCardHeader
-              category='HOSTS 정보'
+              category={t("lbHostsCategoty")}
               title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             />
@@ -78,7 +78,7 @@ class ClientHostNameSpec extends Component {
             </Grid>
             }
             <Grid container spacing={0}>
-              <Grid item xs={3} className={classes.specTitle}>{bull} Host 정보</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} {t("lbHostsInfo")}</Grid>
               <Grid item xs={9} className={classes.specContent} style={{fontSize:'12px',textAlign:'left'}}><pre>{viewItem.get('hosts')}</pre></Grid>
             </Grid>
           </CardContent>
@@ -89,7 +89,7 @@ class ClientHostNameSpec extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(ClientHostNameSpec);
+export default translate("translations")(withStyles(GRCommonStyle)(ClientHostNameSpec));
 
 export const generateClientHostNameObject = (param, isForViewer) => {
 

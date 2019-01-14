@@ -247,7 +247,7 @@ class MediaRuleManage extends Component {
                       tabIndex={-1}
                       key={n.get('objId')}
                     >
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? t("selBasic") : t("selOrdinary")}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('modUserId')}</TableCell>

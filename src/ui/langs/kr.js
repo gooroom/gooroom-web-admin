@@ -520,8 +520,43 @@ export default {
   "msgSaveAdminConnIp": "접속가능 아이피 정보를 저장하시겠습니까?",
   "dtAdminJobHist": "관리자({{adminId}}) 작업 이력",
 
-  
+  // 호스트정보 관리
+  "lbAddHosts": "Hosts 정보 등록",
+  "msgAddHosts": "Hosts 정보를 등록하시겠습니까?",
+  "lbEditHosts": "Hosts 정보 수정",
+  "msgEditHosts": "Hosts 정보를 수정하시겠습니까?",
+  "msgCopyHosts": "Hosts 정보를 복사하였습니다.",
+  "dtAddHosts": "Hosts정책 등록",
+  "dtViewHosts": "Hosts정책 정보",
+  "dtEditHosts": "Hosts정책 수정",
+  "dtCopyHosts": "Hosts정책 복사",
+  "lbHostsInfo": "Hosts 정보",
+  "lbHostsCategoty": "HOSTS 정보",
+  "msgHostsInfo": "호스트정보를 입력하세요.",
+  "lbDeleteHosts": "Hosts 정보 삭제",
+  "msgDeleteHosts": "Hosts 정보({{objId}})를 삭제하시겠습니까?",
+  "msgShowDetailHosts": "Hosts 정보를 선택하면 상세 내용이 표시됩니다.",
 
+  // 업데이트서버정보 관리
+  "lbAddUpdateServer": "업데이트서버정보 등록",
+  "msgAddUpdateServer": "업데이트서버정보를 등록하시겠습니까?",
+  "lbEditUpdateServer": "업데이트서버정보 수정",
+  "msgEditUpdateServer": "업데이트서버정보를 수정하시겠습니까?",
+  "lbDeleteUpdateServer": "업데이트서버정보 삭제",
+  "msgDeleteUpdateServer": "업데이트서버정보({{objId}})를 삭제하시겠습니까?",
+  "msgCopyUpdateServer": "업데이트서버정보를 복사하였습니다.",
+  "dtAddUpdateServer": "업데이트서버정보 등록",
+  "dtViewUpdateServer": "업데이트서버정보 정보",
+  "dtEditUpdateServer": "업데이트서버정보 수정",
+  "dtCopyUpdateServer": "업데이트서버정보 복사",
+  "lbUpdateServerCategoty": "업데이트서버 정보",
+  "lbMainOSInfo": "주 OS 정보",
+  "msgMainOSInfo": "주 OS 정보를 입력하세요.",
+  "lbBasicOSInfo": "기반 OS 정보",
+  "msgBasicOSInfo": "기반 OS 정보를 입력하세요.",
+  "lbGooroomPrefInfo": "gooroom.pref",
+  "msgGooroomPrefInfo": "gooroom.pref 정보를 입력하세요.",
+  "msgShowDetailUpdateServer": "업데이트서버 정보를 선택하면 상세 내용이 표시됩니다.",
 
 
 

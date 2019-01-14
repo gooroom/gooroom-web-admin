@@ -26,10 +26,9 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientUpdateServerSelector extends Component {
 
   componentDidMount() {
@@ -72,7 +71,8 @@ class ClientUpdateServerSelector extends Component {
   render() {
     const { classes } = this.props;
     const { ClientUpdateServerProps, compId, targetType } = this.props;
-
+    const { t, i18n } = this.props;
+    
     const selectedObj = (targetType && targetType != '') ? ClientUpdateServerProps.getIn(['viewItems', compId, targetType]) : ClientUpdateServerProps.getIn(['viewItems', compId]);
 
     const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
@@ -100,7 +100,7 @@ class ClientUpdateServerSelector extends Component {
                   <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
                 ))}
               </Select>
-              <FormHelperText>업데이트서버 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
+              <FormHelperText>{t("msgShowDetailUpdateServer")}</FormHelperText>
             </FormControl>
           </div>
         }
@@ -126,6 +126,6 @@ const mapDispatchToProps = (dispatch) => ({
   ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientUpdateServerSelector));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientUpdateServerSelector)));
 
 

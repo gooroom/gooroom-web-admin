@@ -28,11 +28,9 @@ import Typography from "@material-ui/core/Typography";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class ClientHostNameDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -54,10 +52,12 @@ class ClientHostNameDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientHostNameProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: 'Hosts 정보 등록',
-                confirmMsg: 'Hosts 정보를 등록하시겠습니까?',
+                confirmTitle: t("lbAddHosts"),
+                confirmMsg: t("msgAddHosts"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: ClientHostNameProps.get('editingItem')
             });
@@ -82,10 +82,12 @@ class ClientHostNameDialog extends Component {
 
     handleEditData = (event, id) => {
         const { ClientHostNameProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+        
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: 'Hosts 정보 수정',
-                confirmMsg: 'Hosts 정보를 수정하시겠습니까?',
+                confirmTitle: t("lbEditHosts"),
+                confirmMsg: t("msgEditHosts"),
                 handleConfirmResult: this.handleEditConfirmResult,
                 confirmObject: ClientHostNameProps.get('editingItem')
             });
@@ -110,12 +112,14 @@ class ClientHostNameDialog extends Component {
 
     handleCopyCreateData = (event, id) => {
         const { ClientHostNameProps, ClientHostNameActions } = this.props;
+        const { t, i18n } = this.props;
+
         ClientHostNameActions.cloneClientHostNameData({
             'objId': ClientHostNameProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
-                alertMsg: 'Hosts 정보를 복사하였습니다.'
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgCopyHosts")
             });
             refreshDataListInComps(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
             this.handleClose();
@@ -126,18 +130,20 @@ class ClientHostNameDialog extends Component {
     render() {
         const { classes } = this.props;
         const { ClientHostNameProps } = this.props;
+        const { t, i18n } = this.props;
+
         const dialogType = ClientHostNameProps.get('dialogType');
         const editingItem = (ClientHostNameProps.get('editingItem')) ? ClientHostNameProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === ClientHostNameDialog.TYPE_ADD) {
-            title = "Hosts정책 등록";
+            title = t("dtAddHosts");
         } else if(dialogType === ClientHostNameDialog.TYPE_VIEW) {
-            title = "Hosts정책 정보";
+            title = t("dtViewHosts");
         } else if(dialogType === ClientHostNameDialog.TYPE_EDIT) {
-            title = "Hosts정책 수정";
+            title = t("dtEditHosts");
         } else if(dialogType === ClientHostNameDialog.TYPE_COPY) {
-            title = "Hosts정책 복사";
+            title = t("dtCopyHosts");
         }
 
         return (
@@ -157,10 +163,10 @@ class ClientHostNameDialog extends Component {
                         <TextField label={t("lbDesc")} className={classes.fullWidth}
                             value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                             onChange={this.handleValueChange("comment")} />
-                        <TextValidator label="Hosts 정보" multiline className={classes.fullWidth}
+                        <TextValidator label={t("lbHostsInfo")} multiline className={classes.fullWidth}
                             value={(editingItem.get('hosts')) ? editingItem.get('hosts') : ''}
                             name="hosts" validators={['required']}
-                            errorMessages={['호스트정보를 입력하세요.']}
+                            errorMessages={[t("msgHostsInfo")]}
                             onChange={this.handleValueChange("hosts")} />
                     </div>
                     }
@@ -207,5 +213,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameDialog)));
 

@@ -161,7 +161,7 @@ class SoftwareFilterDialog extends Component {
             'deptCd': selectedDeptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
+                alertTitle: t("dtSystemNotice"),
                 alertMsg: 'Software제한정책이 하위 조직에 적용되었습니다.'
             });
             this.handleClose();
@@ -174,7 +174,7 @@ class SoftwareFilterDialog extends Component {
             'objId': SoftwareFilterProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
+                alertTitle: t("dtSystemNotice"),
                 alertMsg: 'Software제한정책을 복사하였습니다.'
             });
             refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);

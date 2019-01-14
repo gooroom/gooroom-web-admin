@@ -28,12 +28,9 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
@@ -44,20 +41,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientHostNameManage extends Component {
-
-  columnHeaders = [
-    { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
-    { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '정책이름' },
-    { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: '정책아이디' },
-    { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: '수정자' },
-    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
-  ];
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -138,10 +125,12 @@ class ClientHostNameManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { ClientHostNameProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+
     const viewItem = getRowObjectById(ClientHostNameProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
-      confirmTitle: 'Hosts 정보 삭제',
-      confirmMsg: 'Hosts 정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmTitle: t("lbDeleteHosts"),
+      confirmMsg: t("msgDeleteHosts", {objId: viewItem.get('objId')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmObject: viewItem
     });
@@ -181,7 +170,17 @@ class ClientHostNameManage extends Component {
   render() {
     const { classes } = this.props;
     const { ClientHostNameProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    const columnHeaders = [
+      { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: t("colDivision") },
+      { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: t("colRuleName") },
+      { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colRuleId") },
+      { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: t("colModUser") },
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
+    ];
 
     const listObj = ClientHostNameProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -226,7 +225,7 @@ class ClientHostNameManage extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData') && listObj.get('listData').map(n => {
@@ -236,7 +235,7 @@ class ClientHostNameManage extends Component {
                       onClick={event => this.handleSelectRow(event, n.get('objId'))}
                       key={n.get('objId')}
                     >
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? '기본' : '일반'}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? t("selBasic") : t("selOrdinary")}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('modUserId')}</TableCell>
@@ -258,7 +257,7 @@ class ClientHostNameManage extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -305,4 +304,4 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameManage)));
