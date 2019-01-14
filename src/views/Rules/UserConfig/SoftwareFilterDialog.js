@@ -24,17 +24,17 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-import FormLabel from '@material-ui/core/FormLabel';
 import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 
 import Typography from "@material-ui/core/Typography";
 import Checkbox from '@material-ui/core/Checkbox';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class SoftwareFilterDialog extends Component {
 
@@ -98,10 +98,12 @@ class SoftwareFilterDialog extends Component {
 
     handleCreateData = (event) => {
         const { SoftwareFilterProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: 'Software제한정책정보 등록',
-                confirmMsg: 'Software제한정책정보를 등록하시겠습니까?',
+                confirmTitle: t("lbAddSWRule"),
+                confirmMsg: t("msgAddSWRule"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: SoftwareFilterProps.get('editingItem')
             });
@@ -126,10 +128,12 @@ class SoftwareFilterDialog extends Component {
 
     handleEditData = (event, id) => {
         const { SoftwareFilterProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: 'Software제한정책정보 수정',
-                confirmMsg: 'Software제한정책정보를 수정하시겠습니까?',
+                confirmTitle: t("lbEditSWRule"),
+                confirmMsg: t("msgEditSWRule"),
                 handleConfirmResult: this.handleEditConfirmResult,
                 confirmObject: SoftwareFilterProps.get('editingItem')
             });
@@ -154,6 +158,7 @@ class SoftwareFilterDialog extends Component {
 
     handleInheritSaveData = (event, id) => {
         const { SoftwareFilterProps, DeptProps, SoftwareFilterActions, compId } = this.props;
+        const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
         SoftwareFilterActions.inheritSoftwareFilterData({
@@ -162,7 +167,7 @@ class SoftwareFilterDialog extends Component {
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
-                alertMsg: 'Software제한정책이 하위 조직에 적용되었습니다.'
+                alertMsg: t("msgApplySWRuleChild")
             });
             this.handleClose();
         });
@@ -170,12 +175,14 @@ class SoftwareFilterDialog extends Component {
 
     handleCopyCreateData = (event, id) => {
         const { SoftwareFilterProps, SoftwareFilterActions } = this.props;
+        const { t, i18n } = this.props;
+
         SoftwareFilterActions.cloneSoftwareFilterData({
             'objId': SoftwareFilterProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
-                alertMsg: 'Software제한정책을 복사하였습니다.'
+                alertMsg: t("msgCopySWRule")
             });
             refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
             this.handleClose();
@@ -198,7 +205,7 @@ class SoftwareFilterDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const bull = <span className={classes.bullet}>•</span>;
+        const { t, i18n } = this.props;
 
         const { SoftwareFilterProps } = this.props;
         const dialogType = SoftwareFilterProps.get('dialogType');
@@ -206,15 +213,15 @@ class SoftwareFilterDialog extends Component {
 
         let title = "";
         if(dialogType === SoftwareFilterDialog.TYPE_ADD) {
-            title = "Software제한정책설정 등록";
+            title = t("dtAddSWRule");
         } else if(dialogType === SoftwareFilterDialog.TYPE_VIEW) {
-            title = "Software제한정책설정 정보";
+            title = t("dtViewSWRule");
         } else if(dialogType === SoftwareFilterDialog.TYPE_EDIT) {
-            title = "Software제한정책설정 수정";
+            title = t("dtEditSWRule");
         } else if(dialogType === SoftwareFilterDialog.TYPE_INHERIT) {
-            title = "Software제한정책설정 상속";
+            title = t("dtInheritSWRule");
         } else if(dialogType === SoftwareFilterDialog.TYPE_COPY) {
-            title = "Software제한정책설정 복사";
+            title = t("dtCopySWRule");
         }
 
         return (
@@ -243,7 +250,7 @@ class SoftwareFilterDialog extends Component {
                     </Grid>
                     {(dialogType === SoftwareFilterDialog.TYPE_EDIT || dialogType === SoftwareFilterDialog.TYPE_ADD) &&
                         <div style={{marginTop:20}}>
-                        <InputLabel>실행금지로 지정할 소프트웨어를 선택하세요.</InputLabel>
+                        <InputLabel>{t("msgSelectSWItem")}</InputLabel>
                         <Grid container alignItems="center" direction="row" justify="space-between" style={{marginTop:10}}>
                         {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
                                 return (
@@ -317,5 +324,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SoftwareFilterDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SoftwareFilterDialog)));
 

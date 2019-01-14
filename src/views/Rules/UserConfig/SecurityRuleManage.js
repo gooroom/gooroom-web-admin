@@ -40,20 +40,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class SecurityRuleManage extends Component {
-
-  columnHeaders = [
-    { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
-    { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '정책이름' },
-    { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: '정책아이디' },
-    { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: '수정자' },
-    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
-  ];
 
   constructor(props) {
     super(props);
@@ -153,8 +143,8 @@ class SecurityRuleManage extends Component {
     const { SecurityRuleProps, GRConfirmActions } = this.props;
     const viewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
-      confirmTitle: '단말보안정책정보 삭제',
-      confirmMsg: '단말보안정책정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmTitle: t("lbDeleteSecuRule"),
+      confirmMsg: t("msgDeleteSecuRule", {objId: viewItem.get('objId')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmObject: viewItem
     });
@@ -194,7 +184,17 @@ class SecurityRuleManage extends Component {
   render() {
     const { classes } = this.props;
     const { SecurityRuleProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    const columnHeaders = [
+      { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: t("colDivision") },
+      { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: t("colRuleName") },
+      { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colRuleId") },
+      { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: t("colModUser") },
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
+    ];
     
     const listObj = SecurityRuleProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -239,7 +239,7 @@ class SecurityRuleManage extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -279,7 +279,7 @@ class SecurityRuleManage extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -328,7 +328,7 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityRuleManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityRuleManage)));
 
 
 

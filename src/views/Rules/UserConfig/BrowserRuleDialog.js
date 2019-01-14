@@ -30,9 +30,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 
 import Typography from "@material-ui/core/Typography";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Divider from "@material-ui/core/Divider";
 
 import AppBar from '@material-ui/core/AppBar';
@@ -47,6 +44,8 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class BrowserRuleDialog extends Component {
 
@@ -91,10 +90,12 @@ class BrowserRuleDialog extends Component {
     handleCreateData = (event) => {
         event.preventDefault();
         const { BrowserRuleProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '브라우저제어정책 등록',
-                confirmMsg: '브라우저제어정책을 등록하시겠습니까?',
+                confirmTitle: t("lbAddBrowserRule"),
+                confirmMsg: t("msgAddBrowserRule"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: BrowserRuleProps.get('editingItem')
             });
@@ -119,10 +120,12 @@ class BrowserRuleDialog extends Component {
 
     handleEditData = (event, id) => {
         const { BrowserRuleProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '브라우저제어정책 수정',
-                confirmMsg: '브라우저제어정책을 수정하시겠습니까?',
+                confirmTitle: t("lbEditBrowserRule"),
+                confirmMsg: t("msgEditBrowserRule"),
                 handleConfirmResult: this.handleEditConfirmResult,
                 confirmObject: BrowserRuleProps.get('editingItem')
             });
@@ -147,6 +150,7 @@ class BrowserRuleDialog extends Component {
 
     handleInheritSaveData = (event, id) => {
         const { BrowserRuleProps, DeptProps, BrowserRuleActions, compId } = this.props;
+        const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
         BrowserRuleActions.inheritBrowserRuleData({
@@ -155,7 +159,7 @@ class BrowserRuleDialog extends Component {
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
-                alertMsg: '브라우저제어정책이 하위 조직에 적용되었습니다.'
+                alertMsg: t("msgApplyBrowserRuleChild")
             });
             this.handleClose();
         });
@@ -163,12 +167,14 @@ class BrowserRuleDialog extends Component {
 
     handleCopyCreateData = (event, id) => {
         const { BrowserRuleProps, BrowserRuleActions } = this.props;
+        const { t, i18n } = this.props;
+
         BrowserRuleActions.cloneBrowserRuleData({
             'objId': BrowserRuleProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
-                alertMsg: '브라우저제어정책을 복사하였습니다.'
+                alertMsg: t("msgCopyBrowserRule")
             });
             refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
             this.handleClose();
@@ -207,9 +213,8 @@ class BrowserRuleDialog extends Component {
 
     render() {
         const { selectedTab } = this.state;
-
         const { classes } = this.props;
-        const bull = <span className={classes.bullet}>•</span>;
+        const { t, i18n } = this.props;
 
         const { BrowserRuleProps } = this.props;
         const dialogType = BrowserRuleProps.get('dialogType');
@@ -217,15 +222,15 @@ class BrowserRuleDialog extends Component {
 
         let title = "";
         if(dialogType === BrowserRuleDialog.TYPE_ADD) {
-            title = "브라우저제어정책 등록";
+            title = t("dtAddBrowserRule");
         } else if(dialogType === BrowserRuleDialog.TYPE_VIEW) {
-            title = "브라우저제어정책 정보";
+            title = t("dtViewBrowserRule");
         } else if(dialogType === BrowserRuleDialog.TYPE_EDIT) {
-            title = "브라우저제어정책 수정";
+            title = t("dtEditBrowserRule");
         } else if(dialogType === BrowserRuleDialog.TYPE_INHERIT) {
-            title = "브라우저제어정책 상속";
+            title = t("dtInheritBrowserRule");
         } else if(dialogType === BrowserRuleDialog.TYPE_COPY) {
-            title = "브라우저제어정책 복사";
+            title = t("dtCopyBrowserRule");
         }
 
         return (
@@ -255,39 +260,39 @@ class BrowserRuleDialog extends Component {
                         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
                             <Grid item xs={6}>
                                 <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
-                                    <Grid item xs={6}><FormLabel component="legend">Web Socket 사용여부</FormLabel></Grid>
+                                    <Grid item xs={6}><FormLabel component="legend">{t("lbUseWebSocket")}</FormLabel></Grid>
                                     <Grid item >
                                         <FormControlLabel value="allow" control={
                                             <Radio color="primary" value="allow" onChange={this.handleValueChange("webSocket")} checked={editingItem.get('webSocket') === 'allow'} />
-                                        } label="허용" labelPlacement="end" />
+                                        } label={t("selPermitRule")} labelPlacement="end" />
                                     </Grid>
                                     <Grid item >
                                         <FormControlLabel value="disallow" control={
                                             <Radio color="primary" value="disallow" onChange={this.handleValueChange("webSocket")} checked={editingItem.get('webSocket') === 'disallow'} />
-                                        } label="비허용" labelPlacement="end" />
+                                        } label={t("selNoPermitRule")} labelPlacement="end" />
                                     </Grid>
                                 </Grid>
                             </Grid>
                             <Grid item xs={6}>
                                 <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
-                                    <Grid item xs={6}><FormLabel component="legend">Web Worker 사용여부</FormLabel></Grid>
+                                    <Grid item xs={6}><FormLabel component="legend">{t("lbUseWebWorker")}</FormLabel></Grid>
                                     <Grid item >
                                         <FormControlLabel value="allow" control={
                                             <Radio color="primary" value="allow" onChange={this.handleValueChange("webWorker")} checked={editingItem.get('webWorker') === 'allow'} />
-                                        } label="허용" labelPlacement="end" />
+                                        } label={t("selPermitRule")} labelPlacement="end" />
                                     </Grid>
                                     <Grid item >
                                         <FormControlLabel value="disallow" control={
                                             <Radio color="primary" value="disallow" onChange={this.handleValueChange("webWorker")} checked={editingItem.get('webWorker') === 'disallow'} />
-                                        } label="비허용" labelPlacement="end" />
+                                        } label={t("selNoPermitRule")} labelPlacement="end" />
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
                         <AppBar elevation={0} position="static" color="default" style={{marginTop:20}} >
                             <Tabs value={selectedTab} indicatorColor="primary" textColor="primary" onChange={this.handleChangeTabs} >
-                                <Tab label="신뢰사이트 설정" value={0} />
-                                <Tab label="비신뢰사이트 설정" value={1} />
+                                <Tab label={t("lbSetupTrustSite")} value={0} />
+                                <Tab label={t("lbSetupUntrustSite")} value={1} />
                             </Tabs>
                         </AppBar>
                         <Paper elevation={0} style={{ maxHeight: 420 }} >
@@ -296,31 +301,31 @@ class BrowserRuleDialog extends Component {
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:0}}>
                                 <Grid item xs={6}>
                                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                        <Grid item xs={12}><FormLabel component="legend">개발자도구(웹 인스펙터) 사용통제</FormLabel></Grid>
+                                        <Grid item xs={12}><FormLabel component="legend">{t("lbDevToolUseStop")}</FormLabel></Grid>
                                         <Grid item >
                                             <FormControlLabel value="1" control={
                                                 <Radio color="primary" value="1" onChange={this.handleValueChange("devToolRule__trust")} checked={editingItem.get('devToolRule__trust') === '1'} />
-                                            } label="개발자도구 사용가능" labelPlacement="end" />
+                                            } label={t("selEnableDevTool")} labelPlacement="end" />
                                         </Grid>
                                         <Grid item >
                                             <FormControlLabel value="2" control={
                                                 <Radio color="primary" value="2" onChange={this.handleValueChange("devToolRule__trust")} checked={editingItem.get('devToolRule__trust') === '2'} />
-                                            } label="개발자도구 사용불가" labelPlacement="end" />
+                                            } label={t("selDisableDevTool")} labelPlacement="end" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{marginTop:10}}>
-                                        <Grid item xs={12}><FormLabel component="legend">다운로드 통제</FormLabel></Grid>
+                                        <Grid item xs={12}><FormLabel component="legend">{t("lbLimitDownload")}</FormLabel></Grid>
                                         <Grid item >
                                             <FormControlLabel value="0" control={
                                                 <Radio color="primary" value="0" onChange={this.handleValueChange("downloadRule__trust")} checked={editingItem.get('downloadRule__trust') === '0'} />
-                                            } label="다운로드 제한 없음" labelPlacement="end" />
+                                            } label={t("selNolimitDownload")} labelPlacement="end" />
                                         </Grid>
                                         <Grid item >
                                             <FormControlLabel value="3" control={
                                                 <Radio color="primary" value="3" onChange={this.handleValueChange("downloadRule__trust")} checked={editingItem.get('downloadRule__trust') === '3'} />
-                                            } label="모든 다운로드 제한" labelPlacement="end" />
+                                            } label={t("selLimitAllDownload")} labelPlacement="end" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -328,44 +333,44 @@ class BrowserRuleDialog extends Component {
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
                                 <Grid item xs={6}>
                                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                        <Grid item xs={12}><FormLabel component="legend">프린팅 통제</FormLabel></Grid>
+                                        <Grid item xs={12}><FormLabel component="legend">{t("lbControlPrint")}</FormLabel></Grid>
                                         <Grid item >
                                             <FormControlLabel value="true" control={
                                                 <Radio color="primary" value="true" onChange={this.handleValueChange("printRule__trust")} checked={editingItem.get('printRule__trust') === 'true'} />
-                                            } label="허용" labelPlacement="end" />
+                                            } label={t("selPermitRule")} labelPlacement="end" />
                                         </Grid>
                                         <Grid item >
                                             <FormControlLabel value="false" control={
                                                 <Radio color="primary" value="false" onChange={this.handleValueChange("printRule__trust")} checked={editingItem.get('printRule__trust') === 'false'} />
-                                            } label="비허용" labelPlacement="end" />
+                                            } label={t("selNoPermitRule")} labelPlacement="end" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                        <Grid item xs={12}><FormLabel component="legend">페이지 소스보기 통제</FormLabel></Grid>
+                                        <Grid item xs={12}><FormLabel component="legend">{t("lbControlShowSource")}</FormLabel></Grid>
                                         <Grid item >
                                             <FormControlLabel value="true" control={
                                                 <Radio color="primary" value="true" onChange={this.handleValueChange("viewSourceRule__trust")} checked={editingItem.get('viewSourceRule__trust') === 'true'} />
-                                            } label="허용" labelPlacement="end" />
+                                            } label={t("selPermitRule")} labelPlacement="end" />
                                         </Grid>
                                         <Grid item >
                                             <FormControlLabel value="false" control={
                                                 <Radio color="primary" value="false" onChange={this.handleValueChange("viewSourceRule__trust")} checked={editingItem.get('viewSourceRule__trust') === 'false'} />
-                                            } label="비허용" labelPlacement="end" />
+                                            } label={t("selNoPermitRule")} labelPlacement="end" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
 
-                            <TextField label="신뢰사이트 설정" className={classes.fullWidth} multiline rowsMax={6}
+                            <TextField label={t("lbSetupTrustSite")} className={classes.fullWidth} multiline rowsMax={6}
                                 style={{marginTop:10}}
                                 value={(editingItem.get('trustSetup')) ? editingItem.get('trustSetup') : ''}
                                 onChange={this.handleValueChange("trustSetup")} />
                             <div style={{marginTop:5,textAlign:'right'}}>
                                 <input style={{display:'none'}} id="trust-btn-file" type="file" onChange={event => this.handleChangeSetupFileInput(event, 'trustSetup')} />
                                 <label htmlFor="trust-btn-file">
-                                    <Button variant="contained" size='small' component="span" style={{width:270}}>파일을 이용하여 신뢰사이트 내용 등록</Button>
+                                    <Button variant="contained" size='small' component="span" style={{width:270}}>{t("btUploadTrustSetup")}</Button>
                                 </label>
                             </div>
                             </div>
@@ -374,67 +379,67 @@ class BrowserRuleDialog extends Component {
                             <div style={{border:'1px solid lightGray',padding:20}}>
                             
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                <Grid item xs={12}><FormLabel component="legend">개발자도구(웹 인스펙터) 사용통제</FormLabel></Grid>
+                                <Grid item xs={12}><FormLabel component="legend">{t("lbDevToolUseStop")}</FormLabel></Grid>
                                 <Grid item >
                                     <FormControlLabel value="1" control={
                                         <Radio color="primary" value="1" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '1'} />
-                                    } label="개발자도구 사용가능" labelPlacement="end" />
+                                    } label={t("selEnableDevTool")} labelPlacement="end" />
                                 </Grid>
                                 <Grid item >
                                     <FormControlLabel value="2" control={
                                         <Radio color="primary" value="2" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '2'} />
-                                    } label="개발자도구 사용불가" labelPlacement="end" />
+                                    } label={t("selDisableDevTool")} labelPlacement="end" />
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{marginTop:10}}>
-                                <Grid item xs={12}><FormLabel component="legend">다운로드 통제</FormLabel></Grid>
+                                <Grid item xs={12}><FormLabel component="legend">{t("lbLimitDownload")}</FormLabel></Grid>
                                 <Grid item >
                                     <FormControlLabel value="0" control={
                                         <Radio color="primary" value="0" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '0'} />
-                                    } label="다운로드 제한 없음" labelPlacement="end" />
+                                    } label={t("selNolimitDownload")} labelPlacement="end" />
                                 </Grid>
                                 <Grid item >
                                     <FormControlLabel value="3" control={
                                         <Radio color="primary" value="3" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '3'} />
-                                    } label="모든 다운로드 제한" labelPlacement="end" />
+                                    } label={t("selLimitAllDownload")} labelPlacement="end" />
                                 </Grid>
                             </Grid>
 
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
                                 <Grid item xs={6}>
                                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                        <Grid item xs={12}><FormLabel component="legend">프린팅 통제</FormLabel></Grid>
+                                        <Grid item xs={12}><FormLabel component="legend">{t("lbControlPrint")}</FormLabel></Grid>
                                         <Grid item >
                                             <FormControlLabel value="true" control={
                                                 <Radio color="primary" value="true" onChange={this.handleValueChange("printRule__untrust")} checked={editingItem.get('printRule__untrust') === 'true'} />
-                                            } label="허용" labelPlacement="end" />
+                                            } label={t("selPermitRule")} labelPlacement="end" />
                                         </Grid>
                                         <Grid item >
                                             <FormControlLabel value="false" control={
                                                 <Radio color="primary" value="false" onChange={this.handleValueChange("printRule__untrust")} checked={editingItem.get('printRule__untrust') === 'false'} />
-                                            } label="비허용" labelPlacement="end" />
+                                            } label={t("selNoPermitRule")} labelPlacement="end" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                        <Grid item xs={12}><FormLabel component="legend">페이지 소스보기 통제</FormLabel></Grid>
+                                        <Grid item xs={12}><FormLabel component="legend">{t("lbControlShowSource")}</FormLabel></Grid>
                                         <Grid item >
                                             <FormControlLabel value="true" control={
                                                 <Radio color="primary" value="true" onChange={this.handleValueChange("viewSourceRule__untrust")} checked={editingItem.get('viewSourceRule__untrust') === 'true'} />
-                                            } label="허용" labelPlacement="end" />
+                                            } label={t("selPermitRule")} labelPlacement="end" />
                                         </Grid>
                                         <Grid item >
                                             <FormControlLabel value="false" control={
                                                 <Radio color="primary" value="false" onChange={this.handleValueChange("viewSourceRule__untrust")} checked={editingItem.get('viewSourceRule__untrust') === 'false'} />
-                                            } label="비허용" labelPlacement="end" />
+                                            } label={t("selNoPermitRule")} labelPlacement="end" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
 
-                            <TextField label="비신뢰사이트 설정" className={classes.fullWidth} multiline rowsMax={6}
+                            <TextField label={t("lbSetupUntrustSite")} className={classes.fullWidth} multiline rowsMax={6}
                                 style={{marginTop:10}}
                                 value={(editingItem.get('untrustSetup')) ? editingItem.get('untrustSetup') : ''}
                                 onChange={this.handleValueChange("untrustSetup")} />
@@ -442,14 +447,14 @@ class BrowserRuleDialog extends Component {
                             <div style={{marginTop:5,textAlign:'right'}}>
                                 <input style={{display:'none'}} id="untrust-btn-file" type="file" onChange={event => this.handleChangeSetupFileInput(event, 'untrustSetup')} />
                                 <label htmlFor="untrust-btn-file">
-                                    <Button variant="contained" size='small' component="span" style={{width:270}}>파일을 이용하여 비신뢰사이트 내용 등록</Button>
+                                    <Button variant="contained" size='small' component="span" style={{width:270}}>{t("btUploadUntrustSetup")}</Button>
                                 </label>
                             </div>
                             </div>}
                         </Paper>
     
                         <div style={{marginTop:20}}>
-                            <FormLabel style={{paddingTop:5,marginTop:10}}>White Address List</FormLabel>
+                            <FormLabel style={{paddingTop:5,marginTop:10}}>{t("lbWhiteAddressList")}</FormLabel>
                             <Button size="small" variant="contained" color="primary" style={{marginLeft:20}}
                                 className={classes.smallIconButton} onClick={this.handleAddWhiteList}
                             ><AddIcon /></Button>
@@ -524,5 +529,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleDialog)));
 

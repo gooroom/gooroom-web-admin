@@ -15,19 +15,22 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class BrowserRuleSpec extends Component {
 
   render() {
 
     const { classes } = this.props;
+    const { t, i18n } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateBrowserRuleObject(selectedItem, true);
+      viewItem = generateBrowserRuleObject(selectedItem, true, t);
       RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
     
@@ -37,7 +40,7 @@ class BrowserRuleSpec extends Component {
           <Card elevation={4} className={classes.ruleViewerCard}>
           { hasAction &&
             <GRRuleCardHeader avatar={RuleAvartar}
-              category='브라우저제어 정책' title={viewItem.get('objNm')} 
+              category={t("dtCategoryBrowserRule")} title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
@@ -60,7 +63,7 @@ class BrowserRuleSpec extends Component {
           }
           { simpleTitle &&
             <GRRuleCardHeader
-              category='브라우저제어 정책' title={viewItem.get('objNm')} 
+              category={t("dtCategoryBrowserRule")} title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             />
           }
@@ -74,38 +77,38 @@ class BrowserRuleSpec extends Component {
             </Grid>
             }
             <Grid container spacing={0}>
-              <Grid item xs={4} className={classes.specTitle}>{bull} Web Socket 사용</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbUseWebSocket")}</Grid>
               <Grid item xs={2} className={classes.specContent}>{viewItem.get('webSocket')}</Grid>
-              <Grid item xs={4} className={classes.specTitle}>{bull} Web Worker 사용</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbUseWebWorker")}</Grid>
               <Grid item xs={2} className={classes.specContent}>{viewItem.get('webWorker')}</Grid>
-              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 신뢰사이트 설정 ]</Grid>
-              <Grid item xs={6} className={classes.specTitle}>{bull} 개발자도구(웹인스펙터) 사용통제</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("lbSetupTrustSite")} ]</Grid>
+              <Grid item xs={6} className={classes.specTitle}>{bull} {t("lbDevToolUseStop")}</Grid>
               <Grid item xs={6} className={classes.specContent}>{viewItem.get('devToolRule__trust')}</Grid>
-              <Grid item xs={6} className={classes.specTitle}>{bull} 다운로드 통제</Grid>
+              <Grid item xs={6} className={classes.specTitle}>{bull} {t("lbLimitDownload")}</Grid>
               <Grid item xs={6} className={classes.specContent}>{viewItem.get('downloadRule__trust')}</Grid>
-              <Grid item xs={4} className={classes.specTitle}>{bull} 프린팅 통제</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbControlPrint")}</Grid>
               <Grid item xs={2} className={classes.specContent}>{viewItem.get('printRule__trust')}</Grid>
-              <Grid item xs={4} className={classes.specTitle}>{bull} 페이지 소스보기 통제</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbControlShowSource")}</Grid>
               <Grid item xs={2} className={classes.specContent}>{viewItem.get('viewSourceRule__trust')}</Grid>
-              <Grid item xs={4} className={classes.specTitle}>{bull} 신뢰사이트 설정정보</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbSetupTrustSiteInfo")}</Grid>
               <Grid item xs={8} className={classes.specContent}>
                 <div style={{maxHeight:120,overflowY:'auto'}}>{viewItem.get('trustSetup')}</div>
               </Grid>
-              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 비신뢰사이트 설정 ]</Grid>
-              <Grid item xs={6} className={classes.specTitle}>{bull} 개발자도구(웹인스펙터) 사용통제</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("lbSetupUntrustSite")} ]</Grid>
+              <Grid item xs={6} className={classes.specTitle}>{bull} {t("lbDevToolUseStop")}</Grid>
               <Grid item xs={6} className={classes.specContent}>{viewItem.get('devToolRule__untrust')}</Grid>
-              <Grid item xs={6} className={classes.specTitle}>{bull} 다운로드 통제</Grid>
+              <Grid item xs={6} className={classes.specTitle}>{bull} {t("lbLimitDownload")}</Grid>
               <Grid item xs={6} className={classes.specContent}>{viewItem.get('downloadRule__untrust')}</Grid>
-              <Grid item xs={4} className={classes.specTitle}>{bull} 프린팅 통제</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbControlPrint")}</Grid>
               <Grid item xs={2} className={classes.specContent}>{viewItem.get('printRule__untrust')}</Grid>
-              <Grid item xs={4} className={classes.specTitle}>{bull} 페이지 소스보기 통제</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbControlShowSource")}</Grid>
               <Grid item xs={2} className={classes.specContent}>{viewItem.get('viewSourceRule__untrust')}</Grid>
-              <Grid item xs={4} className={classes.specTitle}>{bull} 비신뢰사이트 설정정보</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbSetupUntrustSiteInfo")}</Grid>
               <Grid item xs={8} className={classes.specContent}>
                 <div style={{maxHeight:120,overflowY:'auto'}}>{viewItem.get('untrustSetup')}</div>
               </Grid>
-              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 접속가능 주소설정 ]</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} White List</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("lbConnectableAddress")} ]</Grid>
+              <Grid item xs={3} className={classes.specTitle}>{bull} {t("lbWhiteAddressList")}</Grid>
               <Grid item xs={9} className={classes.specContent}>
               {viewItem.get('trustUrlList').map(function(prop, index) {
                 return <span key={index}>{prop}<br/></span>;
@@ -120,9 +123,9 @@ class BrowserRuleSpec extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(BrowserRuleSpec);
+export default translate("translations")(withStyles(GRCommonStyle)(BrowserRuleSpec));
 
-export const generateBrowserRuleObject = (param, isForViewer) => {
+export const generateBrowserRuleObject = (param, isForViewer, t) => {
 
   if(param) {
     let webSocket = '';
@@ -152,9 +155,9 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
       } else if(ename == 'devToolRule__trust') {
         if(isForViewer) {
           if(evalue == '1') {
-            devToolRule__trust = "개발자도구 사용가능"
+            devToolRule__trust = t("selEnableDevTool")
           } else if(evalue == '2') {
-            devToolRule__trust = "개발자도구 사용불가"
+            devToolRule__trust = t("selDisableDevTool")
           }
         } else {
           devToolRule__trust = evalue;
@@ -162,9 +165,9 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
       } else if(ename == 'downloadRule__trust') {
         if(isForViewer) {
           if(evalue == '0') {
-            downloadRule__trust = "다운로드 제한 없음"
+            downloadRule__trust = t("selNolimitDownload")
           } else if(evalue == '3') {
-            downloadRule__trust = "모든 다운로드 제한"
+            downloadRule__trust = t("selLimitAllDownload")
           }
         } else {
           downloadRule__trust = evalue;
@@ -172,9 +175,9 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
       } else if(ename == 'printRule__trust') {
         if(isForViewer) {
           if(evalue == 'true') {
-            printRule__trust = "허용"
+            printRule__trust = t("selPermitRule")
           } else if(evalue == 'false') {
-            printRule__trust = "비허용"
+            printRule__trust = t("selNoPermitRule")
           }
         } else {
           printRule__trust = evalue;
@@ -182,9 +185,9 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
       } else if(ename == 'viewSourceRule__trust') {
         if(isForViewer) {
           if(evalue == 'true') {
-            viewSourceRule__trust = "허용"
+            viewSourceRule__trust = t("selPermitRule")
           } else if(evalue == 'false') {
-            viewSourceRule__trust = "비허용"
+            viewSourceRule__trust = t("selNoPermitRule")
           }
         } else {
           viewSourceRule__trust = evalue;
@@ -192,9 +195,9 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
       } else if(ename == 'devToolRule__untrust') {
         if(isForViewer) {
           if(evalue == '1') {
-            devToolRule__untrust = "개발자도구 사용가능"
+            devToolRule__untrust = t("selEnableDevTool")
           } else if(evalue == '2') {
-            devToolRule__untrust = "개발자도구 사용불가"
+            devToolRule__untrust = t("selDisableDevTool")
           }
         } else {
           devToolRule__untrust = evalue;
@@ -202,9 +205,9 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
       } else if(ename == 'downloadRule__untrust') {
         if(isForViewer) {
           if(evalue == '0') {
-            downloadRule__untrust = "다운로드 제한 없음"
+            downloadRule__untrust = t("selNolimitDownload")
           } else if(evalue == '3') {
-            downloadRule__untrust = "모든 다운로드 제한"
+            downloadRule__untrust = t("selLimitAllDownload")
           }
         } else {
           downloadRule__untrust = evalue;
@@ -212,9 +215,9 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
       } else if(ename == 'printRule__untrust') {
         if(isForViewer) {
           if(evalue == 'true') {
-            printRule__untrust = "허용"
+            printRule__untrust = t("selPermitRule")
           } else if(evalue == 'false') {
-            printRule__untrust = "비허용"
+            printRule__untrust = t("selNoPermitRule")
           }
         } else {
           printRule__untrust = evalue;
@@ -222,9 +225,9 @@ export const generateBrowserRuleObject = (param, isForViewer) => {
       } else if(ename == 'viewSourceRule__untrust') {
         if(isForViewer) {
           if(evalue == 'true') {
-            viewSourceRule__untrust = "허용"
+            viewSourceRule__untrust = t("selPermitRule")
           } else if(evalue == 'false') {
-            viewSourceRule__untrust = "비허용"
+            viewSourceRule__untrust = t("selNoPermitRule")
           }
         } else {
           viewSourceRule__untrust = evalue;

@@ -17,7 +17,6 @@ import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
@@ -26,10 +25,9 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class BrowserRuleSelector extends Component {
 
   componentDidMount() {
@@ -62,7 +60,7 @@ class BrowserRuleSelector extends Component {
   handleClickEdit = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
-      viewItem: generateBrowserRuleObject(viewItem, false),
+      viewItem: generateBrowserRuleObject(viewItem, false, this.props.t),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -72,6 +70,7 @@ class BrowserRuleSelector extends Component {
   render() {
     const { classes } = this.props;
     const { BrowserRuleProps, compId, targetType } = this.props;
+    const { t, i18n } = this.props;
 
     const selectedObj = (targetType && targetType != '') ? BrowserRuleProps.getIn(['viewItems', compId, targetType]) : BrowserRuleProps.getIn(['viewItems', compId]);
 
@@ -124,6 +123,6 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleSelector));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleSelector)));
 
 

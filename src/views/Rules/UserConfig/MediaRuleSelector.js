@@ -14,7 +14,6 @@ import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
@@ -23,10 +22,9 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class MediaRuleSelector extends Component {
 
   componentDidMount() {
@@ -69,7 +67,8 @@ class MediaRuleSelector extends Component {
   render() {
     const { classes } = this.props;
     const { MediaRuleProps, compId, targetType } = this.props;
-
+    const { t, i18n } = this.props;
+    
     const selectedObj = (targetType && targetType != '') ? MediaRuleProps.getIn(['viewItems', compId, targetType]) : MediaRuleProps.getIn(['viewItems', compId]);
 
     const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
@@ -125,6 +124,6 @@ const mapDispatchToProps = (dispatch) => ({
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(MediaRuleSelector));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(MediaRuleSelector)));
 
 

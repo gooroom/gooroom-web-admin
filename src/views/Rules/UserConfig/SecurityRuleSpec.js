@@ -22,12 +22,15 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class SecurityRuleSpec extends Component {
 
   render() {
 
     const { classes } = this.props;
+    const { t, i18n } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
 
@@ -44,7 +47,7 @@ class SecurityRuleSpec extends Component {
           <Card elevation={4} className={classes.ruleViewerCard}>
           { hasAction &&
             <GRRuleCardHeader avatar={RuleAvartar}
-              category='단말보안 정책' title={viewItem.get('objNm')} 
+              category={t("dtCategorySecuRule")} title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
@@ -67,7 +70,7 @@ class SecurityRuleSpec extends Component {
           }
           { simpleTitle &&
             <GRRuleCardHeader
-              category='단말보안 정책' title={viewItem.get('objNm')} 
+              category={t("dtCategorySecuRule")} title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             />
           }
@@ -81,15 +84,15 @@ class SecurityRuleSpec extends Component {
               </Grid>
               }
               <Grid container spacing={0}>
-                <Grid item xs={4} className={classes.specTitle}>{bull} 화면보호 설정시간(분)</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbScreenSaverTime")}</Grid>
                 <Grid item xs={2} className={classes.specContent}>{viewItem.get('screenTime')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} 패스워드 변경주기(일)</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbPasswordChangeCycle")}</Grid>
                 <Grid item xs={2} className={classes.specContent}>{viewItem.get('passwordTime')}</Grid>
-                <Grid item xs={5} className={classes.specTitle}>{bull} 패키지추가/삭제 차단기능</Grid>
-                <Grid item xs={7} className={classes.specContent}>{(viewItem.get('packageHandle')) ? '켜짐' : '꺼짐'}</Grid>
-                <Grid item xs={5} className={classes.specTitle}>{bull} 기본네트워크허용여부</Grid>
+                <Grid item xs={5} className={classes.specTitle}>{bull} {t("dtPackageEditStop")}</Grid>
+                <Grid item xs={7} className={classes.specContent}>{(viewItem.get('packageHandle')) ? t("selPackageStopOn") : t("selPackageStopOff")}</Grid>
+                <Grid item xs={5} className={classes.specTitle}>{bull} {t("dtBasicNetwork")}</Grid>
                 <Grid item xs={7} className={classes.specContent}>{viewItem.get('globalNetwork')}</Grid>
-                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ 방화벽 설정 ]</Grid>
+                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("lbSetupFirewall")} ]</Grid>
                 <Grid item xs={12} className={classes.specContent}>
                 <Table>
                 <TableHead>
@@ -130,7 +133,7 @@ class SecurityRuleSpec extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(SecurityRuleSpec);
+export default translate("translations")(withStyles(GRCommonStyle)(SecurityRuleSpec));
 
 export const generateSecurityRuleObject = (param, isForViewer) => {
 

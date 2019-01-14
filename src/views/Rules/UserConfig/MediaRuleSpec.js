@@ -15,12 +15,15 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class MediaRuleSpec extends Component {
 
   render() {
 
     const { classes } = this.props;
+    const { t, i18n } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
 
@@ -37,7 +40,7 @@ class MediaRuleSpec extends Component {
           <Card elevation={4} className={classes.ruleViewerCard}>
           { hasAction &&
             <GRRuleCardHeader avatar={RuleAvartar}
-              category='매체제어 정책' title={viewItem.get('objNm')} 
+              category={t("dtCategoryMediaRule")} title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
@@ -60,7 +63,7 @@ class MediaRuleSpec extends Component {
             }
           { simpleTitle &&
             <GRRuleCardHeader
-              category='매체제어 정책' title={viewItem.get('objNm')} 
+              category={t("dtCategoryMediaRule")} title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             />
             }
@@ -75,32 +78,32 @@ class MediaRuleSpec extends Component {
               </Grid>
               }
               <Grid container spacing={0}>
-                <Grid item xs={4} className={classes.specTitle}>{bull} 무선랜</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtWifi")}</Grid>
                 <Grid item xs={2} className={classes.specContent}>{viewItem.get('wireless')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} CD/DVD</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtCdDvd")}</Grid>
                 <Grid item xs={2} className={classes.specContent}>{viewItem.get('cdAndDvd')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} 프린터</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtPrinter")}</Grid>
                 <Grid item xs={2} className={classes.specContent}>{viewItem.get('printer')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} 사운드(소리,마이크)</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtSound")}</Grid>
                 <Grid item xs={2} className={classes.specContent}>{viewItem.get('sound')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} 카메라</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtCamera")}</Grid>
                 <Grid item xs={2} className={classes.specContent}>{viewItem.get('camera')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} USB키보드</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtUsbKeyboard")}</Grid>
                 <Grid item xs={2} className={classes.specContent}>{viewItem.get('keyboard')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} USB마우스</Grid>
+                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtUsbMouse")}</Grid>
                 <Grid item xs={2} className={classes.specContent}>{viewItem.get('mouse')}</Grid>
                 <Grid item xs={6} className={classes.specContent}></Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} USB메모리</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbMemory")}</Grid>
                 <Grid item xs={1} className={classes.specContent}>{viewItem.get('usbMemory')}</Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} USB시리얼정보</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbSerial")}</Grid>
                 <Grid item xs={5} className={classes.specContent}>
                 {viewItem.get('usbSerialNo').map(function(prop, index) {
                   return <span key={index}>{prop}<br/></span>;
                 })}
                 </Grid>
-                <Grid item xs={2} className={classes.specTitle}>{bull} 블루투스</Grid>
+                <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtBluetooth")}</Grid>
                 <Grid item xs={2} className={classes.specContent}>{viewItem.get('bluetoothState')}</Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} 블루투스 맥주소</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtBluetoothMac")}</Grid>
                 <Grid item xs={5} className={classes.specContent}>
                 {viewItem.get('macAddress').map(function(prop, index) {
                   return <span key={index}>{prop}<br/></span>;
@@ -115,7 +118,7 @@ class MediaRuleSpec extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(MediaRuleSpec);
+export default translate("translations")(withStyles(GRCommonStyle)(MediaRuleSpec));
 
 export const generateMediaRuleObject = (param, isForViewer) => {
 

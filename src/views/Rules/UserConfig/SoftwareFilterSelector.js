@@ -14,7 +14,6 @@ import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
@@ -23,10 +22,9 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class SoftwareFilterSelector extends Component {
 
   componentDidMount() {
@@ -69,7 +67,8 @@ class SoftwareFilterSelector extends Component {
   render() {
     const { classes } = this.props;
     const { SoftwareFilterProps, compId, targetType } = this.props;
-
+    const { t, i18n } = this.props;
+    
     const selectedObj = (targetType && targetType != '') ? SoftwareFilterProps.getIn(['viewItems', compId, targetType]) : SoftwareFilterProps.getIn(['viewItems', compId]);
 
     const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
@@ -121,6 +120,6 @@ const mapDispatchToProps = (dispatch) => ({
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SoftwareFilterSelector));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SoftwareFilterSelector)));
 
 

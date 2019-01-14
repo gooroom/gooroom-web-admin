@@ -20,12 +20,15 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class SoftwareFilterSpec extends Component {
 
   render() {
 
     const { classes } = this.props;
+    const { t, i18n } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
 
@@ -42,7 +45,7 @@ class SoftwareFilterSpec extends Component {
           <Card elevation={4} className={classes.ruleViewerCard}>
           { hasAction &&
             <GRRuleCardHeader avatar={RuleAvartar}
-              category='소프트웨어 제한 정책' title={viewItem.get('objNm')} 
+              category={t("dtCategorySWRule")} title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
@@ -65,12 +68,12 @@ class SoftwareFilterSpec extends Component {
             }
           { simpleTitle &&
             <GRRuleCardHeader 
-              category='소프트웨어 제한 정책' title={viewItem.get('objNm')} 
+              category={t("dtCategorySWRule")} title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             />
             }
             <CardContent>
-              <InputLabel className={classes.specTitle} style={{color:'black'}}>Red 색상의 소프트웨어는 실행을 금지합니다.</InputLabel>
+              <InputLabel className={classes.specTitle} style={{color:'black'}}>{t("msStopRunRedSW")}</InputLabel>
               <Grid container spacing={8} alignItems="flex-start" direction="row" justify="flex-start" style={{marginTop:10}}>
               {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
                 const selected = (viewItem.getIn(['SWITEM', n.tag])) ? true : false;
@@ -97,7 +100,7 @@ class SoftwareFilterSpec extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(SoftwareFilterSpec);
+export default translate("translations")(withStyles(GRCommonStyle)(SoftwareFilterSpec));
 
 export const generateSoftwareFilterObject = (param, isForViewer) => {
 
