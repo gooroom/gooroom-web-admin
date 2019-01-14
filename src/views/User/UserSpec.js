@@ -46,10 +46,9 @@ import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class UserSpec extends Component {
 
    // edit
@@ -86,7 +85,7 @@ class UserSpec extends Component {
   handleClickEditForBrowserRule = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
-      viewItem: generateBrowserRuleObject(viewItem, false),
+      viewItem: generateBrowserRuleObject(viewItem, false, this.props.t),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -219,5 +218,5 @@ const mapDispatchToProps = (dispatch) => ({
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserSpec));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserSpec)));
 

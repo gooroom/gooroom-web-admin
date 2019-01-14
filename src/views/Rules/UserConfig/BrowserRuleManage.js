@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
 
-import axios, { post } from 'axios';
-
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -32,7 +30,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import Divider from "@material-ui/core/Divider";
 import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
@@ -41,24 +38,13 @@ import AddIcon from '@material-ui/icons/Add';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import KeyboardVoiceICon from '@material-ui/icons/KeyboardVoice';
-import Icon from '@material-ui/core/Icon';
-
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class BrowserRuleManage extends Component {
-
-  columnHeaders = [
-    { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: '구분' },
-    { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: '정책이름' },
-    { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: '정책아이디' },
-    { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: '수정자' },
-    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
-  ];
-
+  
   componentDidMount() {
     this.handleSelectBtnClick();
   }
@@ -143,7 +129,7 @@ class BrowserRuleManage extends Component {
     const viewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
     BrowserRuleActions.showDialog({
-      viewItem: generateBrowserRuleObject(viewItem, false),
+      viewItem: generateBrowserRuleObject(viewItem, false, this.props.t),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -151,10 +137,12 @@ class BrowserRuleManage extends Component {
   // delete
   handleClickDeleteInRow = (event, id) => {
     const { BrowserRuleProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+
     const viewItem = getRowObjectById(BrowserRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
-      confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmTitle: t("lbDeleteBrowserRule"),
+      confirmMsg: t("msgDeleteBrowserRule", {objId: viewItem.get('objId')}),
       handleConfirmResult: (confirmValue, paramObject) => {
         if(confirmValue) {
           const { BrowserRuleProps, BrowserRuleActions } = this.props;
@@ -182,7 +170,7 @@ class BrowserRuleManage extends Component {
   handleClickEdit = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
-      viewItem: generateBrowserRuleObject(viewItem, false),
+      viewItem: generateBrowserRuleObject(viewItem, false, this.props.t),
       dialogType: BrowserRuleDialog.TYPE_EDIT
     });
   };
@@ -191,7 +179,17 @@ class BrowserRuleManage extends Component {
   render() {
     const { classes } = this.props;
     const { BrowserRuleProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    const columnHeaders = [
+      { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: t("colDivision") },
+      { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: t("colRuleName") },
+      { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colRuleId") },
+      { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: t("colModUser") },
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
+    ];
     
     const listObj = BrowserRuleProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -236,7 +234,7 @@ class BrowserRuleManage extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -275,7 +273,7 @@ class BrowserRuleManage extends Component {
 
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
-                    <TableCell colSpan={this.columnHeaders.length + 1} />
+                    <TableCell colSpan={columnHeaders.length + 1} />
                   </TableRow>
                 )}))}
               </TableBody>
@@ -320,7 +318,7 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(BrowserRuleManage)));
 
 
 

@@ -24,37 +24,15 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
-import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
 import Switch from '@material-ui/core/Switch';
-import Divider from '@material-ui/core/Divider';
-import Checkbox from '@material-ui/core/Checkbox';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
-
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-
-import AddIcon from '@material-ui/icons/Add';
-
-import Radio from '@material-ui/core/Radio';
-
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
+
 class SecurityRuleDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -85,10 +63,12 @@ class SecurityRuleDialog extends Component {
 
     handleCreateData = (event) => {
         const { SecurityRuleProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '단말보안정책정보 등록',
-                confirmMsg: '단말보안정책정보를 등록하시겠습니까?',
+                confirmTitle: t("lbAddSecuRule"),
+                confirmMsg: t("msgAddSecuRule"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: SecurityRuleProps.get('editingItem')
             });
@@ -114,10 +94,12 @@ class SecurityRuleDialog extends Component {
 
     handleEditData = (event, id) => {
         const { SecurityRuleProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '단말보안정책정보 수정',
-                confirmMsg: '단말보안정책정보를 수정하시겠습니까?',
+                confirmTitle: t("lbEditSecuRule"),
+                confirmMsg: t("msgEditSecuRule"),
                 handleConfirmResult: this.handleEditConfirmResult,
                 confirmObject: SecurityRuleProps.get('editingItem')
             });
@@ -142,6 +124,7 @@ class SecurityRuleDialog extends Component {
 
     handleInheritSaveData = (event, id) => {
         const { SecurityRuleProps, DeptProps, SecurityRuleActions, compId } = this.props;
+        const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
         SecurityRuleActions.inheritSecurityRuleData({
@@ -150,7 +133,7 @@ class SecurityRuleDialog extends Component {
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
-                alertMsg: '단말보안정책이 하위 조직에 적용되었습니다.'
+                alertMsg: t("msgApplySecuRuleChild")
             });
             this.handleClose();
         });
@@ -158,12 +141,14 @@ class SecurityRuleDialog extends Component {
 
     handleCopyCreateData = (event, id) => {
         const { SecurityRuleProps, SecurityRuleActions } = this.props;
+        const { t, i18n } = this.props;
+
         SecurityRuleActions.cloneSecurityRuleData({
             'objId': SecurityRuleProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
-                alertMsg: '단말보안정책을 복사하였습니다.'
+                alertMsg: t("msgCopySecuRule")
             });
             refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
             this.handleClose();
@@ -172,7 +157,7 @@ class SecurityRuleDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const bull = <span className={classes.bullet}>•</span>;
+        const { t, i18n } = this.props;
 
         const { SecurityRuleProps } = this.props;
         const dialogType = SecurityRuleProps.get('dialogType');
@@ -180,15 +165,15 @@ class SecurityRuleDialog extends Component {
 
         let title = "";
         if(dialogType === SecurityRuleDialog.TYPE_ADD) {
-            title = "단말보안정책설정 등록";
+            title = t("dtAddSecuRule");
         } else if(dialogType === SecurityRuleDialog.TYPE_VIEW) {
-            title = "단말보안정책설정 정보";
+            title = t("dtViewSecuRule");
         } else if(dialogType === SecurityRuleDialog.TYPE_EDIT) {
-            title = "단말보안정책설정 수정";
+            title = t("dtEditSecuRule");
         } else if(dialogType === SecurityRuleDialog.TYPE_INHERIT) {
-            title = "단말보안정책설정 상속";
+            title = t("dtInheritSecuRule");
         } else if(dialogType === SecurityRuleDialog.TYPE_COPY) {
-            title = "단말보안정책설정 복사";
+            title = t("dtCopySecuRule");
         }
 
         return (
@@ -220,7 +205,7 @@ class SecurityRuleDialog extends Component {
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                                 <Grid item xs={12} sm={4} md={4}>
                                     <TextField
-                                        label="화면보호기 설정시간(분)"
+                                        label={t("lbScreenSaverTime")}
                                         multiline
                                         value={(editingItem.get('screenTime')) ? editingItem.get('screenTime') : ''}
                                         onChange={this.handleValueChange("screenTime")}
@@ -229,7 +214,7 @@ class SecurityRuleDialog extends Component {
                                 </Grid>
                                 <Grid item xs={12} sm={4} md={4}>
                                     <TextField
-                                        label="패스워드 변경주기(일)"
+                                        label={t("lbPasswordChangeCycle")}
                                         multiline
                                         value={(editingItem.get('passwordTime')) ? editingItem.get('passwordTime') : ''}
                                         onChange={this.handleValueChange("passwordTime")}
@@ -242,7 +227,7 @@ class SecurityRuleDialog extends Component {
                                         <Switch onChange={this.handleValueChange('packageHandle')} color="primary"
                                             checked={(editingItem.get('packageHandle')) ? editingItem.get('packageHandle') : false} />
                                         }
-                                        label={(editingItem.get('packageHandle')) ? '패키지추가/삭제 차단기능 켜짐' : '패키지추가/삭제 차단기능 꺼짐'}
+                                        label={(editingItem.get('packageHandle')) ? t("selPackageEditStopOn") : t("selPackageEditStopOff")}
                                     />
                                 </Grid>
                             </Grid>
@@ -308,5 +293,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityRuleDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityRuleDialog)));
 

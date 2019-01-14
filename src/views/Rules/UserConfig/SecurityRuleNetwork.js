@@ -45,10 +45,8 @@ import Input from '@material-ui/core/Input';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 
 const columns = [
   { id: 'direction', numeric: false, label: 'DIRECTION' },
@@ -65,7 +63,7 @@ function createNetworkItem(editingItem, direction, protocol, address, srcport, d
 }
 
 let EnhancedTableToolbar = props => {
-  const { numSelected, classes } = props;
+  const { numSelected, classes, t } = props;
 
   return (
     <Toolbar style={{padding:0}}>
@@ -78,7 +76,7 @@ let EnhancedTableToolbar = props => {
           {numSelected} selected
         </Typography>
       ) : (
-        <Typography variant="subtitle1" id="tableTitle">방화벽 설정</Typography>
+        <Typography variant="subtitle1" id="tableTitle">{t("lbSetupFirewall")}</Typography>
       )}
     
       
@@ -95,7 +93,7 @@ let EnhancedTableToolbar = props => {
                     checked={(props.globalNetwork == 'accept')}
                     color="primary" />
                 }
-                label={(props.globalNetwork == 'accept') ? '기본네트워크 허가' : '기본네트워크 차단'}
+                label={(props.globalNetwork == 'accept') ? t("selEnableBasicNetwork") : t("selDisableBasicNetwork")}
             />
 
           </Grid>
@@ -126,8 +124,8 @@ let EnhancedTableToolbar = props => {
                 </Grid>
               </Grid>
             ) : (
-              <Tooltip title="항목 추가">
-                <IconButton aria-label="항목 추가" onClick={props.onAddClick} >
+              <Tooltip title={t("ttAddItem")}>
+                <IconButton aria-label={t("ttAddItem")} onClick={props.onAddClick} >
                   <AddIcon />
                 </IconButton>
               </Tooltip>
@@ -145,13 +143,6 @@ let EnhancedTableToolbar = props => {
 
 class SecurityRuleNetwork extends Component {
 
-  columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
-    { id: 'chDirection', isOrder: false, numeric: false, disablePadding: true, label: 'DIRECTION' },
-    { id: 'chConfName', isOrder: false, numeric: false, disablePadding: true, label: '내용' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
-  ];
-
   handleAddClick = () => {
     const { SecurityRuleProps } = this.props;
     const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
@@ -165,8 +156,8 @@ class SecurityRuleNetwork extends Component {
 
     if(selected.length > 0) {
       this.props.GRConfirmActions.showConfirm({
-        confirmTitle: '삭제',
-        confirmMsg: '선택한 항목(' + selected.length + '개)을 삭제하시겠습니까?',
+        confirmTitle: t("lbDeleteSecuItem"),
+        confirmMsg: t("msgDeleteSecuItem", {selectCnt: selected.length}),
         handleConfirmResult: this.handleDeleteConfirmResult,
         confirmObject: selected
       });
@@ -258,7 +249,8 @@ class SecurityRuleNetwork extends Component {
   render() {
     const { classes } = this.props;
     const { SecurityRuleProps } = this.props;
-
+    const { t, i18n } = this.props;
+    
     const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
     const selected = (editingItem && editingItem.get('selected')) ? editingItem.get('selected').toJS() : [];
     const networkItems = editingItem.get('networkItems');
@@ -275,6 +267,7 @@ class SecurityRuleNetwork extends Component {
         onDownwardClick={this.handleSelectDownwardClick}
         onGlobalNetworkChange={this.handleValueChange}
         globalNetwork={(editingItem) ? editingItem.get('globalNetwork') : 'drop'}
+        t={t}
       />
       
       <div>
@@ -287,7 +280,7 @@ class SecurityRuleNetwork extends Component {
                 <TableCell key={column.id}>{column.label}</TableCell>
               );
             }, this)}
-            <TableCell>이동</TableCell>
+            <TableCell>{t("lbNetworkMove")}</TableCell>
           </TableRow>
         </TableHead>
         {(networkItems) &&
@@ -413,5 +406,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityRuleNetwork));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(SecurityRuleNetwork)));
 

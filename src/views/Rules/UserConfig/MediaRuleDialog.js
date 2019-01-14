@@ -33,7 +33,6 @@ import Typography from "@material-ui/core/Typography";
 import Checkbox from '@material-ui/core/Checkbox';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -42,6 +41,8 @@ import AddIcon from '@material-ui/icons/Add';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class MediaRuleDialog extends Component {
 
@@ -79,10 +80,12 @@ class MediaRuleDialog extends Component {
 
     handleCreateData = (event) => {
         const { MediaRuleProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '매체제어정책정보 등록',
-                confirmMsg: '매체제어정책정보를 등록하시겠습니까?',
+                confirmTitle: t("lbAddMediaRule"),
+                confirmMsg: t("msgAddMediaRule"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: MediaRuleProps.get('editingItem')
             });
@@ -107,10 +110,12 @@ class MediaRuleDialog extends Component {
 
     handleEditData = (event, id) => {
         const { MediaRuleProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '매체제어정책정보 수정',
-                confirmMsg: '매체제어정책정보를 수정하시겠습니까?',
+                confirmTitle: t("lbEditMediaRule"),
+                confirmMsg: t("msgEditMediaRule"),
                 handleConfirmResult: this.handleEditConfirmResult,
                 confirmObject: MediaRuleProps.get('editingItem')
             });
@@ -135,6 +140,7 @@ class MediaRuleDialog extends Component {
 
     handleInheritSaveData = (event, id) => {
         const { MediaRuleProps, DeptProps, MediaRuleActions, compId } = this.props;
+        const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
         MediaRuleActions.inheritMediaRuleData({
@@ -143,7 +149,7 @@ class MediaRuleDialog extends Component {
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
-                alertMsg: '매체제어정책이 하위 조직에 적용되었습니다.'
+                alertMsg: t("msgApplyMediaRuleChild")
             });
             this.handleClose();
         });
@@ -151,12 +157,14 @@ class MediaRuleDialog extends Component {
 
     handleCopyCreateData = (event, id) => {
         const { MediaRuleProps, MediaRuleActions } = this.props;
+        const { t, i18n } = this.props;
+
         MediaRuleActions.cloneMediaRuleData({
             'objId': MediaRuleProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
-                alertMsg: '매체제어정책을 복사하였습니다.'
+                alertMsg: t("msgCopyMediaRule")
             });
             refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
             this.handleClose();
@@ -189,7 +197,7 @@ class MediaRuleDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const bull = <span className={classes.bullet}>•</span>;
+        const { t, i18n } = this.props;
 
         const { MediaRuleProps } = this.props;
         const dialogType = MediaRuleProps.get('dialogType');
@@ -197,15 +205,15 @@ class MediaRuleDialog extends Component {
 
         let title = "";
         if(dialogType === MediaRuleDialog.TYPE_ADD) {
-            title = "매체제어정책설정 등록";
+            title = t("dtAddMediaRule");
         } else if(dialogType === MediaRuleDialog.TYPE_VIEW) {
-            title = "매체제어정책설정 정보";
+            title = t("dtViewMediaRule");
         } else if(dialogType === MediaRuleDialog.TYPE_EDIT) {
-            title = "매체제어정책설정 수정";
+            title = t("dtEditMediaRule");
         } else if(dialogType === MediaRuleDialog.TYPE_INHERIT) {
-            title = "매체제어정책설정 상속";
+            title = t("dtInheritMediaRule");
         } else if(dialogType === MediaRuleDialog.TYPE_COPY) {
-            title = "매체제어정책설정 복사";
+            title = t("dtCopyMediaRule");
         }
 
         return (
@@ -240,7 +248,7 @@ class MediaRuleDialog extends Component {
                                     control={<Switch onChange={this.handleValueChange('cdAndDvd')} 
                                         checked={this.checkAllow(editingItem.get('cdAndDvd'))}
                                         color="primary" />}
-                                    label={(editingItem.get('cdAndDvd') == 'allow') ? 'CD/DVD 허가' : 'CD/DVD 금지'}
+                                    label={(editingItem.get('cdAndDvd') == 'allow') ? t("selCdDvdOn") : t("selCdDvdOff")}
                                 />
                             </Grid>
                             <Grid item xs={3} >
@@ -248,7 +256,7 @@ class MediaRuleDialog extends Component {
                                     control={<Switch onChange={this.handleValueChange('printer')} 
                                         checked={this.checkAllow(editingItem.get('printer'))}
                                         color="primary" />}
-                                    label={(editingItem.get('printer') == 'allow') ? '프린터 허가' : '프린터 금지'}
+                                    label={(editingItem.get('printer') == 'allow') ? t("selPrinterOn") : t("selPrinterOff")}
                                 />
                             </Grid>
                             <Grid item xs={3} >
@@ -256,7 +264,7 @@ class MediaRuleDialog extends Component {
                                     control={<Switch onChange={this.handleValueChange('camera')} 
                                         checked={this.checkAllow(editingItem.get('camera'))}
                                         color="primary" />}
-                                    label={(editingItem.get('camera') == 'allow') ? '카메라 허가' : '카메라 금지'}
+                                    label={(editingItem.get('camera') == 'allow') ? t("selCameraOn") : t("selCameraOff")}
                                 />
                             </Grid>
                         </Grid>
@@ -266,7 +274,7 @@ class MediaRuleDialog extends Component {
                                     control={<Switch onChange={this.handleValueChange('sound')} 
                                         checked={this.checkAllow(editingItem.get('sound'))}
                                         color="primary" />}
-                                    label={(editingItem.get('sound') == 'allow') ? '사운드(소리, 마이크) 허가' : '사운드(소리, 마이크) 금지'}
+                                    label={(editingItem.get('sound') == 'allow') ? t("selSoundOn") : t("selSoundOff")}
                                 />
                             </Grid>
                             <Grid item xs={3} >
@@ -274,7 +282,7 @@ class MediaRuleDialog extends Component {
                                     control={<Switch onChange={this.handleValueChange('wireless')} 
                                         checked={this.checkAllow(editingItem.get('wireless'))}
                                         color="primary" />}
-                                    label={(editingItem.get('wireless') == 'allow') ? '무선랜 허가' : '무선랜 금지'}
+                                    label={(editingItem.get('wireless') == 'allow') ? t("selWifiOn") : t("selWifiOff")}
                                 />
                             </Grid>
                             <Grid item xs={3}>
@@ -282,7 +290,7 @@ class MediaRuleDialog extends Component {
                                     control={<Switch onChange={this.handleValueChange('keyboard')} 
                                         checked={this.checkAllow(editingItem.get('keyboard'))}
                                         color="primary" />}
-                                    label={(editingItem.get('keyboard') == 'allow') ? 'USB키보드 허가' : 'USB키보드 금지'}
+                                    label={(editingItem.get('keyboard') == 'allow') ? t("selUsbKeyboardOn") : t("selUsbKeyboardOff")}
                                 />
                             </Grid>
                             <Grid item xs={3} >
@@ -290,7 +298,7 @@ class MediaRuleDialog extends Component {
                                     control={<Switch onChange={this.handleValueChange('mouse')} 
                                         checked={this.checkAllow(editingItem.get('mouse'))}
                                         color="primary" />}
-                                    label={(editingItem.get('mouse') == 'allow') ? 'USB마우스 허가' : 'USB마우스 금지'}
+                                    label={(editingItem.get('mouse') == 'allow') ? t("selUsbMouseOn") : t("selUsbMouseOff")}
                                 />
                             </Grid>
                         </Grid>
@@ -300,9 +308,9 @@ class MediaRuleDialog extends Component {
                                     control={<Switch onChange={this.handleValueChange('bluetoothState')} 
                                     checked={this.checkAllow(editingItem.get('bluetoothState'))}
                                     color="primary" />}
-                                    label={(editingItem.get('bluetoothState') == 'allow') ? '블루투스 허가' : '블루투스 금지'}
+                                    label={(editingItem.get('bluetoothState') == 'allow') ? t("selBluetoothOn") : t("selBluetoothOff")}
                                 />
-                                <FormLabel component="legend">연결가능 블루투스 Mac 주소
+                                <FormLabel component="legend">{t("dtBluetoothMac")}
                                     <Button size="small" variant="contained" color="primary" style={{marginLeft:30}}
                                             className={classes.smallIconButton}
                                             onClick={this.handleAddBluetoothMac}
@@ -326,14 +334,14 @@ class MediaRuleDialog extends Component {
                                     control={<Switch onChange={this.handleValueChange('usbMemory')}
                                         checked={this.checkAllow(editingItem.get('usbMemory'))}
                                         color="primary" />}
-                                    label={(editingItem.get('usbMemory')) ? 'USB 메모리 허가' : 'USB 메모리 금지'}
+                                    label={(editingItem.get('usbMemory')) ? t("selUsbMemoryOn") : t("selUsbMemoryOff")}
                                 />
                                 <FormControlLabel label="Readonly" disabled={!(editingItem.get('usbMemory'))} style={{heigth:32}}
                                     control={<Checkbox onChange={this.handleValueChange('usbReadonly')} color="primary"
                                         checked={this.checkAllow(editingItem.get('usbReadonly'))}
                                     />}                                
                                 />
-                                <FormLabel component="legend">연결가능 USB 시리얼 정보
+                                <FormLabel component="legend">{t("dtUsbMemorySerial")}
                                     <Button size="small" variant="contained" color="primary" style={{marginLeft:30}}
                                             className={classes.smallIconButton}
                                             onClick={this.handleAddSerialNo}
@@ -414,5 +422,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(MediaRuleDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(MediaRuleDialog)));
 
