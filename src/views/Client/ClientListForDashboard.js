@@ -30,11 +30,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class ClientListForDashboard extends Component {
 
   constructor(props) {
@@ -58,19 +56,6 @@ class ClientListForDashboard extends Component {
       })
     };
   }
-
-  columnHeaders = [
-    { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: '단말그룹'},
-    { id: 'temp1', isOrder: false, numeric: false,disablePadding: true,label: '접속자'},
-    { id: 'temp2', isOrder: false, numeric: false,disablePadding: true,label: '최종접속시간'},
-    { id: 'CNT_VIOLATED', isOrder: true, numeric: false, disablePadding: true, label: '침해수' },
-    { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: '최종접속IP' },
-    { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: '사용률', tooltip: '홈폴더 사용률'},
-    { id: 'temp3', isOrder: false, numeric: false,disablePadding: true,label: '패키지업데이트'}
-  ];
 
   handleGetClientList = (newListParam) => {
 
@@ -178,7 +163,23 @@ class ClientListForDashboard extends Component {
   
   render() {
     const { classes } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
+      { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: t("colClientGroup") },
+      { id: 'temp1', isOrder: false, numeric: false,disablePadding: true,label: t("colLoginId") },
+      { id: 'temp2', isOrder: false, numeric: false,disablePadding: true,label: t("colLastLoginDate") },
+      { id: 'CNT_VIOLATED', isOrder: true, numeric: false, disablePadding: true, label: t("colViolatedCnt") },
+      { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginIp") },
+      { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: t("colUseRate"), tooltip: t("spHomeSizeRate") },
+      { id: 'temp3', isOrder: false, numeric: false,disablePadding: true,label: t("colPackageUpdate") }
+    ];
+
     const listObj = this.state.stateData;
+    
     return (
       <div style={{paddingTop:10}}>
       <Grid container spacing={0} >
@@ -201,7 +202,7 @@ class ClientListForDashboard extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           <TableBody>
             {listObj.get('listData').map(n => {
@@ -293,5 +294,5 @@ class ClientListForDashboard extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(ClientListForDashboard);
+export default translate("translations")(withStyles(GRCommonStyle)(ClientListForDashboard));
 
