@@ -15,10 +15,9 @@ import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientUpdateServerSpec extends Component {
 
   // .................................................
@@ -26,6 +25,7 @@ class ClientUpdateServerSpec extends Component {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
     const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
+    const { t, i18n } = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -41,7 +41,7 @@ class ClientUpdateServerSpec extends Component {
           { hasAction &&
             <GRRuleCardHeader
               avatar={RuleAvartar}
-              category='업데이트서버 정보'
+              category={t("lbUpdateServerCategoty")}
               title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
@@ -62,7 +62,7 @@ class ClientUpdateServerSpec extends Component {
             }
             { simpleTitle &&
             <GRRuleCardHeader
-              category='업데이트서버 정보'
+              category={t("lbUpdateServerCategoty")}
               title={viewItem.get('objNm')} 
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             />
@@ -77,11 +77,11 @@ class ClientUpdateServerSpec extends Component {
               </Grid>
               }
               <Grid container spacing={0}>
-                <Grid item xs={3} className={classes.specTitle}>{bull} 주 OS 정보</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("lbMainOSInfo")}</Grid>
                 <Grid item xs={9} className={classes.specContent} style={{fontSize:'12px',textAlign:'left'}}><pre>{viewItem.get('mainos')}</pre></Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} 기반 OS 정보</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("lbBasicOSInfo")}</Grid>
                 <Grid item xs={9} className={classes.specContent} style={{fontSize:'12px',textAlign:'left',overflow:'auto'}}><pre>{viewItem.get('extos')}</pre></Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} gooroom.pref</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("lbGooroomPrefInfo")}</Grid>
                 <Grid item xs={9} className={classes.specContent} style={{fontSize:'12px',textAlign:'left'}}><pre>{viewItem.get('priorities')}</pre></Grid>
               </Grid>
             </CardContent>
@@ -92,7 +92,7 @@ class ClientUpdateServerSpec extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(ClientUpdateServerSpec);
+export default translate("translations")(withStyles(GRCommonStyle)(ClientUpdateServerSpec));
 
 export const generateUpdateServerObject = (param) => {
   

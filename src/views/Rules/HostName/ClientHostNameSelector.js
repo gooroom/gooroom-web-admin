@@ -17,7 +17,6 @@ import ClientHostNameDialog from './ClientHostNameDialog';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
@@ -26,10 +25,9 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientHostNameSelector extends Component {
 
   componentDidMount() {
@@ -72,6 +70,7 @@ class ClientHostNameSelector extends Component {
   render() {
     const { classes } = this.props;
     const { ClientHostNameProps, compId, targetType } = this.props;
+    const { t, i18n } = this.props;
 
     const selectedObj = (targetType && targetType != '') ? ClientHostNameProps.getIn(['viewItems', compId, targetType]) : ClientHostNameProps.getIn(['viewItems', compId]);
 
@@ -100,7 +99,7 @@ class ClientHostNameSelector extends Component {
                   <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
                 ))}
               </Select>
-              <FormHelperText>Hosts 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
+              <FormHelperText>{t("msgShowDetailHosts")}</FormHelperText>
             </FormControl>
           </div>
         }
@@ -126,6 +125,6 @@ const mapDispatchToProps = (dispatch) => ({
   ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameSelector));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientHostNameSelector)));
 
 

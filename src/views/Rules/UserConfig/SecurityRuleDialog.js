@@ -149,7 +149,7 @@ class SecurityRuleDialog extends Component {
             'deptCd': selectedDeptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
+                alertTitle: t("dtSystemNotice"),
                 alertMsg: '단말보안정책이 하위 조직에 적용되었습니다.'
             });
             this.handleClose();
@@ -162,7 +162,7 @@ class SecurityRuleDialog extends Component {
             'objId': SecurityRuleProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
+                alertTitle: t("dtSystemNotice"),
                 alertMsg: '단말보안정책을 복사하였습니다.'
             });
             refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);

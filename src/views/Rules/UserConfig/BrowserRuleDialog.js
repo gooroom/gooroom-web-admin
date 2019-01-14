@@ -154,7 +154,7 @@ class BrowserRuleDialog extends Component {
             'deptCd': selectedDeptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
+                alertTitle: t("dtSystemNotice"),
                 alertMsg: '브라우저제어정책이 하위 조직에 적용되었습니다.'
             });
             this.handleClose();
@@ -167,7 +167,7 @@ class BrowserRuleDialog extends Component {
             'objId': BrowserRuleProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
+                alertTitle: t("dtSystemNotice"),
                 alertMsg: '브라우저제어정책을 복사하였습니다.'
             });
             refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);

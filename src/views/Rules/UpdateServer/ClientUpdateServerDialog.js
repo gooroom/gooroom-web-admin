@@ -28,11 +28,9 @@ import Typography from "@material-ui/core/Typography";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class ClientUpdateServerDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -54,10 +52,12 @@ class ClientUpdateServerDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientUpdateServerProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '업데이트서버 정보 등록',
-                confirmMsg: '업데이트서버 정보를 등록하시겠습니까?',
+                confirmTitle: t("lbAddUpdateServer"),
+                confirmMsg: t("msgAddUpdateServer"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: ClientUpdateServerProps.get('editingItem')
             });
@@ -82,10 +82,12 @@ class ClientUpdateServerDialog extends Component {
 
     handleEditData = (event) => {
         const { ClientUpdateServerProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '업데이트서버 정보 수정',
-                confirmMsg: '업데이트서버 정보를 수정하시겠습니까?',
+                confirmTitle: t("lbEditUpdateServer"),
+                confirmMsg: t("msgEditUpdateServer"),
                 handleConfirmResult: this.handleEditConfirmResult,
                 confirmObject: ClientUpdateServerProps.get('editingItem')
             });
@@ -114,8 +116,8 @@ class ClientUpdateServerDialog extends Component {
             'objId': ClientUpdateServerProps.getIn(['editingItem', 'objId'])
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
-                alertTitle: '시스템알림',
-                alertMsg: '업데이트서버 정보를 복사하였습니다.'
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgCopyUpdateServer")
             });
             refreshDataListInComps(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
             this.handleClose();
@@ -126,18 +128,20 @@ class ClientUpdateServerDialog extends Component {
     render() {
         const { classes } = this.props;
         const { ClientUpdateServerProps } = this.props;
+        const { t, i18n } = this.props;
+
         const dialogType = ClientUpdateServerProps.get('dialogType');
         const editingItem = (ClientUpdateServerProps.get('editingItem')) ? ClientUpdateServerProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === ClientUpdateServerDialog.TYPE_ADD) {
-            title = "업데이트서버정책 등록";
+            title = t("dtAddUpdateServer");
         } else if(dialogType === ClientUpdateServerDialog.TYPE_VIEW) {
-            title = "업데이트서버정책 정보";
+            title = t("dtViewUpdateServer");
         } else if(dialogType === ClientUpdateServerDialog.TYPE_EDIT) {
-            title = "업데이트서버정책 수정";
+            title = t("dtEditUpdateServer");
         } else if(dialogType === ClientUpdateServerDialog.TYPE_COPY) {
-            title = "업데이트서버정책 복사";
+            title = t("dtCopyUpdateServer");
         }
 
         return (
@@ -156,17 +160,17 @@ class ClientUpdateServerDialog extends Component {
                         <TextField label={t("lbDesc")} className={classes.fullWidth}
                             value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                             onChange={this.handleValueChange("comment")} />
-                        <TextValidator label="주 OS 정보" multiline className={classes.fullWidth}
+                        <TextValidator label={t("lbMainOSInfo")} multiline className={classes.fullWidth}
                             value={(editingItem.get('mainos')) ? editingItem.get('mainos') : ''}
-                            name="mainos" validators={['required']} errorMessages={['주 OS 정보를 입력하세요.']}
+                            name="mainos" validators={['required']} errorMessages={[t("msgMainOSInfo")]}
                             onChange={this.handleValueChange("mainos")} />
-                        <TextValidator label="기반 OS 정보" multiline className={classes.fullWidth}
+                        <TextValidator label={t("lbBasicOSInfo")} multiline className={classes.fullWidth}
                             value={(editingItem.get('extos')) ? editingItem.get('extos') : ''}
-                            name="extos" validators={['required']} errorMessages={['기반 OS 정보를 입력하세요.']}
+                            name="extos" validators={['required']} errorMessages={[t("msgBasicOSInfo")]}
                             onChange={this.handleValueChange("extos")} />
-                        <TextValidator label="gooroom.pref" multiline className={classes.fullWidth}
+                        <TextValidator label={t("lbGooroomPrefInfo")} multiline className={classes.fullWidth}
                             value={(editingItem.get('priorities')) ? editingItem.get('priorities') : ''}
-                            name="priorities" validators={['required']} errorMessages={['gooroom.pref 정보를 입력하세요.']}
+                            name="priorities" validators={['required']} errorMessages={[t("msgGooroomPrefInfo")]}
                             onChange={this.handleValueChange("priorities")} />
                     </div>
                     }
@@ -212,5 +216,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientUpdateServerDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientUpdateServerDialog)));
 
