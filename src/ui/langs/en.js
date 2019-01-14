@@ -49,6 +49,7 @@ export default {
   "colProfile": "Profile",
   "colPackageInfo": "PackageInfo",
   "colPackageName": "PackageName",
+  "colPackageUpdate": "PackageCnt",
 
   "colArchitecture": "Architecture",
   "colInstalledVersion": "InstalledVer.",
@@ -78,6 +79,7 @@ export default {
   "colDeptNm": "Dept",
   "colLoginDate": "LastLoginDate",
   "colLoginClient": "LastLoginClient",
+  "colViolatedCnt": "VioratedCnt",
 
   // options
   "optDate": "Date",

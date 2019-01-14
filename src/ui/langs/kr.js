@@ -49,6 +49,7 @@ export default {
   "colProfile": "프로파일",
   "colPackageInfo": "패키지정보",
   "colPackageName": "패키지이름",
+  "colPackageUpdate": "패키지업데이트",
 
   "colArchitecture": "아키텍쳐",
   "colVersion": "버전",
@@ -78,6 +79,7 @@ export default {
   "colDeptNm": "조직",
   "colLoginDate": "최근로그인날짜",
   "colLoginClient": "최종접속단말정보",
+  "colViolatedCnt": "침해수",
 
   // options
   "optDate": "날짜",
