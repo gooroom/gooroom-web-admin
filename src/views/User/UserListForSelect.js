@@ -14,10 +14,8 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import FormControl from '@material-ui/core/FormControl';
 
@@ -30,7 +28,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
-
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
@@ -58,15 +56,6 @@ class UserListForSelect extends Component {
       })
     };
   }
-
-  columnHeaders = [
-    { id: 'chCheckbox', isCheckbox: true},
-    { id: 'chUserId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
-    { id: 'chUserNm', isOrder: true, numeric: false, disablePadding: true, label: '사용자이름' },
-    { id: 'chDeptNm', isOrder: true, numeric: false, disablePadding: true, label: '조직' },
-    { id: 'chStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' }
-    
-  ];
 
   handleGetUserList = (newListParam) => {
 
@@ -216,6 +205,16 @@ class UserListForSelect extends Component {
 
   render() {
     const { classes } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'chCheckbox', isCheckbox: true},
+      { id: 'chUserId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'chUserNm', isOrder: true, numeric: false, disablePadding: true, label: t("colUserNm") },
+      { id: 'chDeptNm', isOrder: true, numeric: false, disablePadding: true, label: t("colDeptNm") },
+      { id: 'chStatus', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") }
+      
+    ];
     
     const listObj = this.state.stateData;
     let emptyRows = 0; 
@@ -239,8 +238,7 @@ class UserListForSelect extends Component {
           </Grid>
           <Grid item xs={3}>
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-              <Search />
-              조회
+              <Search />{t("btnSearch")}
             </Button>
           </Grid>
         </Grid>
@@ -255,7 +253,7 @@ class UserListForSelect extends Component {
             onClickAllCheck={this.handleClickAllCheck}
             checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           <TableBody>
             {listObj.get('listData').map(n => {
@@ -295,7 +293,7 @@ class UserListForSelect extends Component {
             {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
               <TableRow key={e}>
                 <TableCell
-                  colSpan={this.columnHeaders.length + 1}
+                  colSpan={columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
@@ -327,5 +325,5 @@ class UserListForSelect extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(UserListForSelect);
+export default translate("translations")(withStyles(GRCommonStyle)(UserListForSelect));
 

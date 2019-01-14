@@ -14,7 +14,6 @@ import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
-import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
 import AdminUserDialog from './AdminUserDialog';
@@ -27,10 +26,8 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import FormControl from '@material-ui/core/FormControl';
 
@@ -43,6 +40,8 @@ import ListIcon from '@material-ui/icons/List';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class AdminUserManage extends Component {
 
@@ -53,15 +52,6 @@ class AdminUserManage extends Component {
       recordAdminId: ''
     };
   }
-
-  columnHeaders = [
-    { id: 'chAdminNm', isOrder: true, numeric: false, disablePadding: true, label: '이름' },
-    { id: 'chAdminId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
-    { id: 'chStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
-    { id: 'chRecord', isOrder: false, numeric: false, disablePadding: true, label: '작업이력' }
-  ];
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -150,10 +140,12 @@ class AdminUserManage extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { AdminUserProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+
     const viewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
     GRConfirmActions.showConfirm({
-      confirmTitle: '관리자계정 삭제',
-      confirmMsg: '관리자계정(' + viewItem.get('adminId') + ')을 삭제하시겠습니까?',
+      confirmTitle: t("lbDeleteAdminUser"),
+      confirmMsg: t("msgDeleteAdminUser", {adminId: viewItem.get('adminId')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmObject: viewItem
     });
@@ -192,7 +184,17 @@ class AdminUserManage extends Component {
   render() {
     const { classes } = this.props;
     const { AdminUserProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    const columnHeaders = [
+      { id: 'chAdminNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
+      { id: 'chAdminId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'chStatus', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
+      { id: 'chRecord', isOrder: false, numeric: false, disablePadding: true, label: t("colJobHistory") }
+    ];
 
     const listObj = AdminUserProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -230,7 +232,7 @@ class AdminUserManage extends Component {
             <Grid item xs={6} style={{textAlign:'right'}}>
               <Button className={classes.GRIconSmallButton} style={{marginRight:20,paddingLeft:5,paddingRight:5}}
                 variant="contained" color="primary" onClick={() => { this.handleClickAdminConnIpButton(); }} >
-                접속아이피관리
+                {t("btConnIpMng")}
               </Button>
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />{t("btnRegist")}
@@ -248,7 +250,7 @@ class AdminUserManage extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -288,7 +290,7 @@ class AdminUserManage extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -335,4 +337,4 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminUserManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminUserManage)));

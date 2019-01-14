@@ -7,12 +7,8 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { getSelectedObjectInComp, getSelectedObjectInCompAndId, getAvatarForRuleGrade } from 'components/GRUtils/GRTableListUtils';
-
 import * as ThemeManageActions from 'modules/ThemeManageModule';
 import ThemeDialog from './ThemeDialog';
-
-import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 
 import Button from '@material-ui/core/Button';
 
@@ -23,14 +19,7 @@ import Avatar from '@material-ui/core/Avatar';
 
 import Grid from '@material-ui/core/Grid';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
-import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -44,7 +33,6 @@ class ThemeSpec extends Component {
 
     const { classes } = this.props;
     const { compId, selectedItem } = this.props;
-    const bull = <span className={classes.bullet}>•</span>;
 
     let viewItem = null;
     if(selectedItem) {

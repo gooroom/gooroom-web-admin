@@ -29,6 +29,8 @@ import TextField from '@material-ui/core/TextField';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class ServerSiteConfig extends Component {
 
@@ -65,13 +67,15 @@ class ServerSiteConfig extends Component {
 
   handleSaveData = (event) => {
     const { GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
     GRConfirmActions.showConfirm({
-        confirmTitle: '구름관리서버설정 저장',
-        confirmMsg: '구름관리서버설정을 저장하시겠습니까?',
+        confirmTitle: t("lbSaveServerConfig"),
+        confirmMsg: t("msgSaveServerConfig"),
         handleConfirmResult: this.handleSaveDataConfirmResult
     });
   }
   handleSaveDataConfirmResult = (confirmValue) => {
+    const { t, i18n } = this.props;
       if(confirmValue) {
           const { stateData } = this.state;
           requestPostAPI('createMgServerConf', {
@@ -83,14 +87,14 @@ class ServerSiteConfig extends Component {
             (response) => {
               if(response && response.data && response.data.status && response.data.status.result === 'success') {
                 this.props.GRAlertActions.showAlert({
-                  alertTitle: '수정 완료',
-                  alertMsg: '구름관리서버설정을 저장되었습니다.'
+                  alertTitle: t("dtEditOK"),
+                  alertMsg: t("msgEditOkServerConfig")
                 });
                 this.getSeverUrlInfo();
               } else {
                 this.props.GRAlertActions.showAlert({
                   alertTitle: t("dtSystemError"),
-                  alertMsg: '구름관리서버설정을 저장되지 않았습니다.'
+                  alertMsg: t("msgEditErrorServerConfig")
                 });
                 this.getSeverUrlInfo();
               }
@@ -111,6 +115,7 @@ class ServerSiteConfig extends Component {
 
   render() {
     const { stateData } = this.state;
+    const { t, i18n } = this.props;
 
     return (
       <React.Fragment>
@@ -126,25 +131,24 @@ class ServerSiteConfig extends Component {
 
         <Card style={{marginTop: 16}}>
           <CardHeader style={{paddingBottom: 0}}
-            title="서버 정보"
-            subheader="domain"
+            title={t("lbServerInfo")} subheader="domain"
           />
           <CardContent style={{paddingTop: 0}}>
-            <TextField label="GPMS 정보"
+            <TextField label={t("lbGPMSServerInfo")}
               style={{ marginLeft: 8 }}
               margin="normal"
               variant="outlined"
               value={stateData.get('gpmsDomain')}
               onChange={this.handleValueChange("gpmsDomain")}
             />
-            <TextField label="GLM 정보"
+            <TextField label={t("lbGLMServerInfo")}
               style={{ marginLeft: 8 }}
               margin="normal"
               variant="outlined"
               value={stateData.get('glmDomain')}
               onChange={this.handleValueChange("glmDomain")}
             />
-            <TextField label="GRM 정보"
+            <TextField label={t("lbGRMServerInfo")}
               style={{ marginLeft: 8 }}
               margin="normal"
               variant="outlined"
@@ -156,8 +160,8 @@ class ServerSiteConfig extends Component {
 
         <Card style={{marginTop: 16}}>
           <CardHeader style={{paddingBottom: 0}}
-            title="구름 Agent 폴링 타임"
-            subheader="구름단말 Agent 와 GRM 서버간의 정보교환 주기"
+            title={t("lbAgentPollingTime")}
+            subheader={t("msgAgentPollingTime")}
           />
           <CardContent style={{paddingTop: 0}}>
             <TextField label="Polling Seconds"
@@ -185,5 +189,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ServerSiteConfig));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ServerSiteConfig)));
 

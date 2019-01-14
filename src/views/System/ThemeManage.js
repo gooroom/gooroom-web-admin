@@ -26,10 +26,8 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import FormControl from '@material-ui/core/FormControl';
 
@@ -38,10 +36,11 @@ import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import ListIcon from '@material-ui/icons/List';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class ThemeManage extends Component {
 
@@ -52,14 +51,6 @@ class ThemeManage extends Component {
       recordAdminId: ''
     };
   }
-
-  columnHeaders = [
-    { id: 'chThemeNm', isOrder: true, numeric: false, disablePadding: true, label: '이름' },
-    { id: 'chThemeId', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
-    { id: 'chThemeCmt', isOrder: false, numeric: false, disablePadding: true, label: '설명' },
-    { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: '수정일' },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
-  ];
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -137,10 +128,12 @@ class ThemeManage extends Component {
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
     const { ThemeManageProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+
     const viewItem = getRowObjectById(ThemeManageProps, this.props.match.params.grMenuId, id, 'themeId');
     GRConfirmActions.showConfirm({
-      confirmTitle: '테마 삭제',
-      confirmMsg: '테마(' + viewItem.get('adminNm') + ')를 삭제하시겠습니까?',
+      confirmTitle: t("lbDeleteTheme"),
+      confirmMsg: t("msgDeleteTheme", {themeNm: viewItem.get('themeNm')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmObject: viewItem
     });
@@ -177,7 +170,16 @@ class ThemeManage extends Component {
   render() {
     const { classes } = this.props;
     const { ThemeManageProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    const columnHeaders = [
+      { id: 'chThemeNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
+      { id: 'chThemeId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'chThemeCmt', isOrder: false, numeric: false, disablePadding: true, label: t("colInfo") },
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
+    ];
 
     const listObj = ThemeManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -222,7 +224,7 @@ class ThemeManage extends Component {
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -255,7 +257,7 @@ class ThemeManage extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -303,4 +305,4 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ThemeManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ThemeManage)));

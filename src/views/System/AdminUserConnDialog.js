@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -20,17 +19,14 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 
 import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
 import FormLabel from '@material-ui/core/FormLabel';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class AdminUserConnDialog extends Component {
 
     handleClickClose = (event) => {
@@ -40,10 +36,12 @@ class AdminUserConnDialog extends Component {
     // 수정
     handleClickSaveData = (event) => {
         const { AdminUserProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '접속가능 아이피 저장',
-                confirmMsg: '접속가능 아이피 정보를 저장하시겠습니까?',
+                confirmTitle: t("lbSaveAdminConnIp"),
+                confirmMsg: t("msgSaveAdminConnIp"),
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         this.props.AdminUserActions.updateAdminAddress({
@@ -81,6 +79,7 @@ class AdminUserConnDialog extends Component {
         const { classes } = this.props;
         const bull = <span className={classes.bullet}>•</span>;
         const { AdminUserProps, compId } = this.props;
+        const { t, i18n } = this.props;
 
         const gpmsAllowIps = AdminUserProps.get('gpmsAllowIps');
 
@@ -89,7 +88,7 @@ class AdminUserConnDialog extends Component {
             {(AdminUserProps.get('connDialogOpen')) &&
             <Dialog open={AdminUserProps.get('connDialogOpen')}>
                 <ValidatorForm ref="form">
-                <DialogTitle>관리자 접속 가능 아이피</DialogTitle>
+                <DialogTitle>{t("lbAdminConnIp")}</DialogTitle>
                 <DialogContent>
                     <FormLabel style={{marginRight:"20px"}}>{bull} 아이피 목록</FormLabel>
                     <Button onClick={this.handleAddIp} variant="contained" style={{padding:"3px 12px", minWidth: "auto", minHeight: "auto"}} color="secondary">{t("btnAdd")}</Button>
@@ -98,7 +97,7 @@ class AdminUserConnDialog extends Component {
                         <div key={index}>
                             <TextValidator value={value} 
                             name={"adminIp"+index} validators={['required', 'matchRegexp:^[a-zA-Z0-9.]*$']}
-                            errorMessages={['아이피(도메인)를 입력하세요.', '알파벳,숫자,"." 문자만 입력하세요.']}
+                            errorMessages={[t("msgAdminConnIp"), t("msgValidAdminConnIp")]}
                             onChange={this.handleIpValueChange(index)} style={{width:'80%'}} 
                             />
                             <IconButton onClick={this.handleDeleteIp(index)} style={{marginTop:10}}>
@@ -129,5 +128,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminUserConnDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminUserConnDialog)));
 

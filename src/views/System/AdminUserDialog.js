@@ -29,11 +29,9 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class AdminUserDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -61,10 +59,12 @@ class AdminUserDialog extends Component {
     // 생성
     handleCreateData = (event) => {
         const { AdminUserProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '관리자계정 등록',
-                confirmMsg: '관리자계정을 등록하시겠습니까?',
+                confirmTitle: t("lbAddAdminUser"),
+                confirmMsg: t("msgAddAdminUser"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: AdminUserProps.get('editingItem')
             });
@@ -93,10 +93,12 @@ class AdminUserDialog extends Component {
     // 수정
     handleEditData = (event) => {
         const { AdminUserProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '관리자계정 수정',
-                confirmMsg: '관리자계정을 수정하시겠습니까?',
+                confirmTitle: t("lbEditAdminUser"),
+                confirmMsg: t("msgEditAdminUser"),
                 handleConfirmResult: this.handleEditDataConfirmResult,
                 confirmObject: AdminUserProps.get('editingItem')
             });
@@ -138,17 +140,18 @@ class AdminUserDialog extends Component {
     render() {
         const { classes } = this.props;
         const { AdminUserProps, compId } = this.props;
+        const { t, i18n } = this.props;
 
         const dialogType = AdminUserProps.get('dialogType');
         const editingItem = (AdminUserProps.get('editingItem')) ? AdminUserProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === AdminUserDialog.TYPE_ADD) {
-            title = "관리자계정 등록";
+            title = t("dtAddAdminUser");
         } else if(dialogType === AdminUserDialog.TYPE_VIEW) {
-            title = "관리자계정 정보";
+            title = t("dtViewAdminUser");
         } else if(dialogType === AdminUserDialog.TYPE_EDIT) {
-            title = "관리자계정 수정";
+            title = t("dtEditAdminUser");
         }
 
         return (
@@ -159,25 +162,25 @@ class AdminUserDialog extends Component {
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     <TextValidator
-                        label="관리자아이디" value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
+                        label={t("lbAdminUserId")} value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
                         name="adminId" validators={['required', 'matchRegexp:^[a-zA-Z0-9]*$']}
-                        errorMessages={['관리자아이디를 입력하세요.', '알파벳 또는 숫자만 입력하세요.']}
+                        errorMessages={[t("msgAdminUserId"), t("msgValidAdminUserId")]}
                         onChange={this.handleValueChange("adminId")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                         disabled={(dialogType == AdminUserDialog.TYPE_EDIT) ? true : false}
                     />
                     <TextValidator
-                        label="관리자이름" value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
-                        name="adminNm" validators={['required']} errorMessages={['관리자이름을 입력하세요.']}
+                        label={t("lbAdminUserName")} value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
+                        name="adminNm" validators={['required']} errorMessages={[t("msgAdminUserName")]}
                         onChange={this.handleValueChange("adminNm")}
                         className={classes.fullWidth}
                     />
                     <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
                         <TextValidator
-                            label="Password"
+                            label={t("lbAdminPassowrd")}
                             type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
                             value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
-                            name="userPasswd" validators={['required']} errorMessages={['password를 입력하세요.']}
+                            name="userPasswd" validators={['required']} errorMessages={[t("msgAdminPassword")]}
                             onChange={this.handleValuePasswordChange('adminPw')}
                             InputProps={{
                                 endAdornment: (
@@ -224,5 +227,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminUserDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminUserDialog)));
 

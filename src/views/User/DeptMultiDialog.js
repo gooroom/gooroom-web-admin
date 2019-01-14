@@ -26,6 +26,8 @@ import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class DeptMultiDialog extends Component {
     
@@ -55,8 +57,8 @@ class DeptMultiDialog extends Component {
     handleEditData = (event) => {
         const { DeptProps, GRConfirmActions } = this.props;
         GRConfirmActions.showConfirm({
-            confirmTitle: '조직정보 일괄변경',
-            confirmMsg: '선택하신 조직의 정책정보를 수정하시겠습니까?',
+            confirmTitle: t("ttChangMultiDeptRule"),
+            confirmMsg: t("msgChangeDeptRuleSelected"),
             handleConfirmResult: this.handleEditConfirmResult,
         });
     }
@@ -87,12 +89,13 @@ class DeptMultiDialog extends Component {
     render() {
         const { classes } = this.props;
         const { DeptProps, compId } = this.props;
+        const { t, i18n } = this.props;
 
         return (
             <div>
             {(DeptProps.get('multiDialogOpen')) &&
                 <Dialog open={DeptProps.get('multiDialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
-                    <DialogTitle>{'조직 일괄 변경'}</DialogTitle>
+                    <DialogTitle>{t("dtChangDeptMultiple")}</DialogTitle>
                     <DialogContent>
                         <Grid container spacing={24}>
                             <Grid item xs={4}>
@@ -147,4 +150,4 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptMultiDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptMultiDialog)));

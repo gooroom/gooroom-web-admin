@@ -22,19 +22,16 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import Divider from '@material-ui/core/Divider';
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Grid from '@material-ui/core/Grid';
 
 import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
 class UserDialog extends Component {
@@ -80,10 +77,12 @@ class UserDialog extends Component {
     // 데이타 생성
     handleCreateData = (event) => {
         const { UserProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '사용자정보 등록',
-                confirmMsg: '사용자정보를 등록하시겠습니까?',
+                confirmTitle: t("lbAddUserInfo"),
+                confirmMsg: t("msgAddUserInfo"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: UserProps.get('editingItem')
             });
@@ -120,10 +119,12 @@ class UserDialog extends Component {
 
     handleEditData = (event) => {
         const { UserProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '사용자정보 수정',
-                confirmMsg: '사용자정보를 수정하시겠습니까?',
+                confirmTitle: t("lbEditUserInfo"),
+                confirmMsg: t("msgEditUserInfo"),
                 handleConfirmResult: this.handleEditConfirmResult,
                 confirmObject: UserProps.get('editingItem')
             });
@@ -158,8 +159,6 @@ class UserDialog extends Component {
         }
     }
 
-
-
     handleShowDeptSelector = () => {
         this.setState({ isOpenDeptSelect: true });
     }
@@ -174,17 +173,18 @@ class UserDialog extends Component {
     render() {
         const { classes } = this.props;
         const { UserProps, compId } = this.props;
+        const { t, i18n } = this.props;
 
         const ruleDialogType = UserProps.get('ruleDialogType');
         const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
 
         let title = "";
         if(ruleDialogType === UserDialog.TYPE_ADD) {
-            title = "사용자 등록";
+            title = t("dtAddUser");
         } else if(ruleDialogType === UserDialog.TYPE_VIEW) {
-            title = "사용자 정보";
+            title = t("dtViewUser");
         } else if(ruleDialogType === UserDialog.TYPE_EDIT) {
-            title = "사용자 수정";
+            title = t("dtEditUser");
         }
 
         return (
@@ -197,11 +197,11 @@ class UserDialog extends Component {
                         <Grid container spacing={24}>
                             <Grid item xs={6}>
                                 <TextValidator
-                                    label="사용자아이디"
+                                    label={t("lbUserId")}
                                     value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
                                     name="userId"
                                     validators={['required', 'matchRegexp:^[a-zA-Z0-9]*$']}
-                                    errorMessages={['사용자아이디를 입력하세요.', '알파벳 또는 숫자만 입력하세요.']}
+                                    errorMessages={[t("msgEnterUserId"), t("msgUserIdValid")]}
                                     onChange={this.handleValueChange("userId")}
                                     className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                     disabled={(ruleDialogType == UserDialog.TYPE_EDIT) ? true : false}
@@ -209,10 +209,10 @@ class UserDialog extends Component {
                             </Grid>
                             <Grid item xs={6}>
                                     <TextValidator
-                                        label="Password"
+                                        label={t("lbPassword")}
                                         type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
                                         value={(editingItem.get('userPasswd')) ? editingItem.get('userPasswd') : ''}
-                                        name="userPasswd" validators={['required']} errorMessages={['password를 입력하세요.']}
+                                        name="userPasswd" validators={['required']} errorMessages={[t("msgEnterPassword")]}
                                         onChange={this.handleValueChange('userPasswd')}
                                         InputProps={{
                                             endAdornment: (
@@ -234,18 +234,18 @@ class UserDialog extends Component {
                         <Grid container spacing={24}>
                             <Grid item xs={6}>
                                 <TextValidator
-                                    label="사용자이름"
+                                    label={t("lbUserName")}
                                     value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
-                                    name="userNm" validators={['required']} errorMessages={['사용자이름을 입력하세요.']}
+                                    name="userNm" validators={['required']} errorMessages={[t("msgEnterUserName")]}
                                     onChange={this.handleValueChange("userNm")}
                                     className={classes.fullWidth}
                                 />
                             </Grid>
                             <Grid item xs={6}>
                                 <TextValidator
-                                    label="조직"
+                                    label={t("lbDept")}
                                     value={(editingItem.get('deptNm')) ? editingItem.get('deptNm') : ''}
-                                    name="deptNm" validators={['required']} errorMessages={['조직을 선택하세요.']}
+                                    name="deptNm" validators={['required']} errorMessages={[t("msgSelectDept")]}
                                     onClick={() => this.handleShowDeptSelector()}
                                     className={classes.fullWidth}
                                 />
@@ -292,6 +292,6 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserDialog)));
 
 

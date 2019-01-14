@@ -28,10 +28,9 @@ import TableRow from '@material-ui/core/TableRow';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
+
 class ThemeDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -99,10 +98,12 @@ class ThemeDialog extends Component {
     // 생성
     handleCreateData = (event) => {
         const { ThemeManageProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '테마 등록',
-                confirmMsg: '테마를 등록하시겠습니까?',
+                confirmTitle: t("lbAddTheme"),
+                confirmMsg: t("msgAddTheme"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: ThemeManageProps.get('editingItem')
             });
@@ -127,10 +128,12 @@ class ThemeDialog extends Component {
     // 수정
     handleEditData = (event) => {
         const { ThemeManageProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '테마 수정',
-                confirmMsg: '테마를 수정하시겠습니까?',
+                confirmTitle: t("lbEditTheme"),
+                confirmMsg: t("msgEditTheme"),
                 handleConfirmResult: this.handleEditDataConfirmResult,
                 confirmObject: ThemeManageProps.get('editingItem')
             });
@@ -168,8 +171,6 @@ class ThemeDialog extends Component {
         const selectedFile = event.target.files[0];
         const viewFileName = gubunName + '_GRFILE';
         this.readFileContent(event.target.files[0]).then(content => {
-            //console.log('content :::::::::::: ', content);
-            //console.log('gubunName :::::::::::: ', gubunName);
             if(content) {
                 this.props.ThemeManageActions.setEditingItemObject({
                     [gubunName]: selectedFile,
@@ -191,17 +192,18 @@ class ThemeDialog extends Component {
     render() {
         const { classes } = this.props;
         const { ThemeManageProps, compId } = this.props;
+        const { t, i18n } = this.props;
 
         const dialogType = ThemeManageProps.get('dialogType');
         const editingItem = (ThemeManageProps.get('editingItem')) ? ThemeManageProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === ThemeDialog.TYPE_ADD) {
-            title = "테마 등록";
+            title = t("dtAddTheme");
         } else if(dialogType === ThemeDialog.TYPE_VIEW) {
-            title = "테마 정보";
+            title = t("dtViewTheme");
         } else if(dialogType === ThemeDialog.TYPE_EDIT) {
-            title = "테마 수정";
+            title = t("dtEditTheme");
         }
 
         return (
@@ -212,21 +214,21 @@ class ThemeDialog extends Component {
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                 {(dialogType === ThemeDialog.TYPE_EDIT) &&
-                    <TextField label="테마 아이디" className={classes.fullWidth}
+                    <TextField label={t("lbThemeId")} className={classes.fullWidth}
                         value={(editingItem.get('themeId')) ? editingItem.get('themeId') : ''}
                     />
                 }
-                    <TextValidator label="테마 이름" className={classes.fullWidth}
+                    <TextValidator label={t("lbThemeName")} className={classes.fullWidth}
                         value={(editingItem.get('themeNm')) ? editingItem.get('themeNm') : ''}
-                        name="themeNm" validators={['required']} errorMessages={['테마 이름을 입력하세요.']}
+                        name="themeNm" validators={['required']} errorMessages={[t("msgThemeName")]}
                         onChange={this.handleValueChange("themeNm")}
                     />
-                    <TextField label="테마 설명" className={classes.fullWidth}
+                    <TextField label={t("lbThemeDesc")} className={classes.fullWidth}
                         value={(editingItem.get('themeCmt')) ? editingItem.get('themeCmt') : ''}
                         onChange={this.handleValueChange("themeCmt")}
                     />
                     <div style={{marginTop:20}}></div>
-                    <FormLabel>업무환경(Application) 아이콘 설정</FormLabel>
+                    <FormLabel>{t("lbIconSetting")}</FormLabel>
                     <Table>
                         <TableBody>
                             {ThemeDialog.APP_LIST && ThemeDialog.APP_LIST.map(n => {
@@ -253,7 +255,7 @@ class ThemeDialog extends Component {
                                         <TableCell style={{width:80}}>
                                             <input style={{display:'none'}} id={n.name + '-file'} type="file" onChange={event => this.handleImageFileChange(event, n.name)} />
                                             <label htmlFor={n.name + '-file'}>
-                                                <Button variant="contained" size='small' component="span" className={classes.button}>File선택</Button>
+                                                <Button variant="contained" size='small' component="span" className={classes.button}>{t("btnSelectFile")}</Button>
                                             </label>
                                         </TableCell>
                                         <TableCell>
@@ -292,5 +294,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ThemeDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ThemeDialog)));
 

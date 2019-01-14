@@ -29,11 +29,9 @@ import FormLabel from '@material-ui/core/FormLabel';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class GcspDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -55,10 +53,12 @@ class GcspDialog extends Component {
     // 생성
     handleCreateData = (event) => {
         const { GcspManageProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '클라우드서비스 등록',
-                confirmMsg: '클라우드서비스를 등록하시겠습니까?',
+                confirmTitle: t("lbAddCloudService"),
+                confirmMsg: t("msgAddCloudService"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: GcspManageProps.get('editingItem')
             });
@@ -91,10 +91,12 @@ class GcspDialog extends Component {
     // 수정
     handleEditData = (event) => {
         const { GcspManageProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '클라우드서비스 수정',
-                confirmMsg: '클라우드서비스를 수정하시겠습니까?',
+                confirmTitle: t("lbEditCloudService"),
+                confirmMsg: t("msgEditCloudService"),
                 handleConfirmResult: this.handleEditDataConfirmResult,
                 confirmObject: GcspManageProps.get('editingItem')
             });
@@ -138,17 +140,18 @@ class GcspDialog extends Component {
     render() {
         const { classes } = this.props;
         const { GcspManageProps, compId } = this.props;
+        const { t, i18n } = this.props;
 
         const dialogType = GcspManageProps.get('dialogType');
         const editingItem = (GcspManageProps.get('editingItem')) ? GcspManageProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === GcspDialog.TYPE_ADD) {
-            title = "클라우드서비스 등록";
+            title = t("dtAddCloudService");
         } else if(dialogType === GcspDialog.TYPE_VIEW) {
-            title = "클라우드서비스 정보";
+            title = t("dtViewCloudService");
         } else if(dialogType === GcspDialog.TYPE_EDIT) {
-            title = "클라우드서비스 수정";
+            title = t("dtEditCloudService");
         }
 
         return (
@@ -161,10 +164,10 @@ class GcspDialog extends Component {
                     <Grid container spacing={24}>
                         <Grid item xs={6}>
                             <TextValidator
-                                label="서비스아이디"
+                                label={t("lbCloudServiceId")}
                                 value={(editingItem.get('gcspId')) ? editingItem.get('gcspId') : ''}
                                 name="gcspId" validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']} 
-                                errorMessages={['서비스아이디를 입력하세요.', '알파벳,숫자,"-","_","." 문자만 입력하세요.']}
+                                errorMessages={[t("msgCloudServiceId"), t("msgValidCloudServiceId")]}
                                 onChange={
                                     (dialogType == GcspDialog.TYPE_VIEW || dialogType == GcspDialog.TYPE_EDIT) ? null : this.handleValueChange("gcspId")
                                 }
@@ -173,9 +176,9 @@ class GcspDialog extends Component {
                         </Grid>
                         <Grid item xs={6}>
                             <TextValidator
-                                label="서비스이름"
+                                label={t("lbCloudServiceName")}
                                 value={(editingItem.get('gcspNm')) ? editingItem.get('gcspNm') : ''}
-                                name="gcspNm" validators={['required']} errorMessages={['서비스이름을 입력하세요.']}
+                                name="gcspNm" validators={['required']} errorMessages={[t("msgCloudServiceName")]}
                                 onChange={
                                     (dialogType == GcspDialog.TYPE_VIEW) ? null : this.handleValueChange("gcspNm")
                                 }
@@ -185,7 +188,7 @@ class GcspDialog extends Component {
                     </Grid>
 
                     <TextField
-                        label="서비스설명"
+                        label={t("lbCloudServiceDesc")}
                         value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                         onChange={
                             (dialogType == GcspDialog.TYPE_VIEW) ? null : this.handleValueChange("comment")
@@ -193,7 +196,7 @@ class GcspDialog extends Component {
                         className={classes.fullWidth}
                     />
                     <TextField
-                        label="접근가능 IP"
+                        label={t("lbCloudServiceIp")}
                         value={(editingItem.get('ipRanges')) ? editingItem.get('ipRanges') : ''}
                         onChange={
                             (dialogType == GcspDialog.TYPE_VIEW) ? null : this.handleValueChange("ipRanges")
@@ -201,7 +204,7 @@ class GcspDialog extends Component {
                         className={classes.fullWidth}
                     />
                     <TextField
-                        label="서비스 도메인"
+                        label={t("lbCloudServiceDomain")}
                         value={(editingItem.get('url')) ? editingItem.get('url') : ''}
                         onChange={
                             (dialogType == GcspDialog.TYPE_VIEW) ? null : this.handleValueChange("url")
@@ -212,7 +215,7 @@ class GcspDialog extends Component {
                     {(dialogType == GcspDialog.TYPE_ADD) &&
                         <div>
                             <FormControl component="fieldset" style={{marginTop:20}}>
-                                <FormLabel component="legend">인증서 생성 방법</FormLabel>
+                                <FormLabel component="legend">{t("lbCreateCertType")}</FormLabel>
                                 <RadioGroup row={true}
                                     aria-label="gender"
                                     name="gender2"
@@ -220,17 +223,17 @@ class GcspDialog extends Component {
                                     value={(editingItem.get('certGubun')) ? editingItem.get('certGubun') : ''}
                                     onChange={this.handleValueChange('certGubun')}
                                 >
-                                    <FormControlLabel value="cert1" control={<Radio />} label="자동 생성" />
-                                    <FormControlLabel value="cert2" control={<Radio />} label="CSR 생성" />
+                                    <FormControlLabel value="cert1" control={<Radio />} label={t("selAutoCreateCert")} />
+                                    <FormControlLabel value="cert2" control={<Radio />} label={t("selCSRCreateCert")} />
                                 </RadioGroup>
                                 <FormHelperText>
                                 {
-                                    (editingItem.get('certGubun') === 'cert1') ? "구름서버에서 인증서를 자동으로 생성합니다." : "CSR정보를 이용하여 인증서를 승인합니다."
+                                    (editingItem.get('certGubun') === 'cert1') ? t("msgAutoCreateCert") : t("msgCSRCreateCert")
                                 }
                                 </FormHelperText>
                             </FormControl>
                             {(editingItem.get('certGubun') === 'cert2') && 
-                                <TextField label="CSR 정보"
+                                <TextField label={t("lbCSRInfo")}
                                     margin="normal"
                                     multiline={true}
                                     rows={5}
@@ -243,8 +246,8 @@ class GcspDialog extends Component {
                     }
                     {(dialogType == GcspDialog.TYPE_VIEW) && 
                         <div style={{marginTop:20}}>
-                           <FormLabel component="legend">인증서 정보</FormLabel>
-                           <TextField label="인증서"
+                           <FormLabel component="legend">{t("lbCertInfo")}</FormLabel>
+                           <TextField label={t("lbCert")}
                                 margin="normal"
                                 multiline={true}
                                 rows={5}
@@ -252,7 +255,7 @@ class GcspDialog extends Component {
                                 variant="outlined"
                                 value={(editingItem.get('cert')) ? editingItem.get('cert') : ''}
                            />
-                           <TextField label="개인키"
+                           <TextField label={t("lbPrivateKey")}
                                 margin="normal"
                                 multiline={true}
                                 rows={5}
@@ -290,5 +293,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GcspDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GcspDialog)));
 
