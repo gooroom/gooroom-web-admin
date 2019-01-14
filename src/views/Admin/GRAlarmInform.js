@@ -1,12 +1,10 @@
 import React, { Component } from "react";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
-import { requestPostAPI } from 'components/GRUtils/GRRequester';
-import  { Redirect } from 'react-router-dom';
 
 import * as AdminActions from 'modules/AdminModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -15,25 +13,7 @@ import ViolatedClientDialog from "views/Client/ViolatedClientDialog";
 
 import Badge from '@material-ui/core/Badge';
 
-import AdminDialog from './AdminDialog';
-
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-
-import Button from '@material-ui/core/Button';
-import Search from '@material-ui/icons/Search';
-
 import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import NotificationsOffIcon from '@material-ui/icons/NotificationsOff';

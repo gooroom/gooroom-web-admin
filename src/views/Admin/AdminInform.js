@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
-import  { Redirect } from 'react-router-dom';
 
 import * as AdminActions from 'modules/AdminModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -16,7 +15,6 @@ import AdminDialog from './AdminDialog';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 
 import Table from '@material-ui/core/Table';
@@ -25,18 +23,15 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
 import Button from '@material-ui/core/Button';
-import Search from '@material-ui/icons/Search';
 
 import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class AdminInform extends Component {
 
   constructor(props) {
@@ -85,13 +80,15 @@ class AdminInform extends Component {
   render() {
     const { classes } = this.props;
     const { AdminProps } = this.props;
+    const { t, i18n } = this.props;
+
     const bull = <span className={classes.bullet}>•</span>;
 
     return (
       <div>
         <Card style={{width:242}}>
           <CardHeader
-            title="관리자"
+            title={t("lbAdminTitle")}
             action={
               <IconButton style={{marginTop:10}} onClick={event => this.handleShowAdminEdit(event)}>
                 <SettingsApplicationsIcon />
@@ -103,15 +100,15 @@ class AdminInform extends Component {
             <Table>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} 이름</TableCell>
+                  <TableCell component="th" scope="row">{bull} {t("lbAdminTitleName")}</TableCell>
                   <TableCell >{AdminProps.get('adminName')}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} 아이디</TableCell>
+                  <TableCell component="th" scope="row">{bull} {t("lbAdminTitleId")}</TableCell>
                   <TableCell >{AdminProps.get('adminId')}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell component="th" scope="row">{bull} 갱신주기</TableCell>
+                  <TableCell component="th" scope="row">{bull} {t("lbAdminCycleTime")}</TableCell>
                   <TableCell >{AdminProps.get('pollingCycle')}</TableCell>
                 </TableRow>
 
@@ -144,5 +141,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminInform));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminInform)));
 

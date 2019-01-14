@@ -20,10 +20,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class AdminDialog extends Component {
 
@@ -43,10 +44,12 @@ class AdminDialog extends Component {
 
     handleEditData = (event) => {
         const { AdminProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '관리자설정 수정',
-                confirmMsg: '관리자설정을 수정하시겠습니까?',
+                confirmTitle: t("lbEditAdminSetup"),
+                confirmMsg: t("msgEditAdminSetup"),
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         const { AdminProps, AdminActions } = this.props;
@@ -71,6 +74,7 @@ class AdminDialog extends Component {
     render() {
         const { classes } = this.props;
         const { isShowEdit, AdminProps } = this.props;
+        const { t, i18n } = this.props;
         const editPollingCycle = AdminProps.get('editPollingCycle');
 
         return (
@@ -78,13 +82,13 @@ class AdminDialog extends Component {
             {(isShowEdit) &&
             <Dialog open={isShowEdit} scroll="paper" fullWidth={true} maxWidth="xs">
                 <ValidatorForm ref="form">
-                <DialogTitle>관리자설정 수정</DialogTitle>
+                <DialogTitle>{t("lbEditAdminSetup")}</DialogTitle>
                 <DialogContent>
-                    <TextValidator label="갱신주기" className={classes.fullWidth}
+                    <TextValidator label={t("lbAdminCycleTime")} className={classes.fullWidth}
                         value={editPollingCycle}
                         name="editPollingCycle"
                         validators={['required', 'matchRegexp:^[0-9]*$', 'minNumber:5']}
-                        errorMessages={['갱신주기를 입력하세요.', '숫자만 입력하세요.', '5보다 작을수 없습니다.']}
+                        errorMessages={[t("msgAdminCycleTime"), t("msgValidAdminNumber"), t("msgValidAdminMinimum")]}
                         onChange={this.handleValueChange("editPollingCycle")} />
                 </DialogContent>
                 <DialogActions>
@@ -111,5 +115,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(AdminDialog)));
 

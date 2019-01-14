@@ -690,7 +690,16 @@ export default {
   "msgSelectSWItem": "실행금지로 지정할 소프트웨어를 선택하세요.",
   "msStopRunRedSW": "Red 색상의 소프트웨어는 실행을 금지합니다.",
 
-
+  // 관리자 개인 설정
+  "lbAdminTitle": "관리자",
+  "lbAdminTitleName": "이름",
+  "lbAdminTitleId": "아이디",
+  "lbAdminCycleTime": "갱신주기",
+  "msgAdminCycleTime": "갱신주기를 입력하세요.",
+  "msgValidAdminNumber": "숫자만 입력하세요.",
+  "msgValidAdminMinimum": "5보다 작을수 없습니다.",
+  "lbEditAdminSetup": "관리자설정 수정",
+  "msgEditAdminSetup": "관리자설정을 수정하시겠습니까?",
 
 
 };
