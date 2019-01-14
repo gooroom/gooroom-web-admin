@@ -27,6 +27,8 @@ import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class DeptDialog extends Component {
     
@@ -49,10 +51,12 @@ class DeptDialog extends Component {
 
     handleCreateData = (event) => {
         const { DeptProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
-                confirmTitle: '조직정보 등록',
-                confirmMsg: '조직정보를 등록하시겠습니까?',
+                confirmTitle: t("lbAddDeptInfo"),
+                confirmMsg: t("msgAddDeptInfo"),
                 handleConfirmResult: this.handleCreateConfirmResult,
                 confirmObject: DeptProps.get('editingItem')
             });
@@ -90,11 +94,13 @@ class DeptDialog extends Component {
 
     handleEditData = (event) => {
         const { DeptProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+        
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showCheckConfirm({
-                confirmTitle: '조직정보 수정',
-                confirmMsg: '조직정보를 수정하시겠습니까?',
-                confirmCheckMsg: '하위조직 적용여부',
+                confirmTitle: t("lbEditDeptInfo"),
+                confirmMsg: t("msgEditDeptInfo"),
+                confirmCheckMsg: t("lbEditChildDeptInfo"),
                 handleConfirmResult: this.handleEditConfirmResult,
             });
         } else {
@@ -136,6 +142,7 @@ class DeptDialog extends Component {
     render() {
         const { classes } = this.props;
         const { DeptProps, compId } = this.props;
+        const { t, i18n } = this.props;
 
         const dialogType = DeptProps.get('dialogType');
         const editingItem = (DeptProps.get('editingItem')) ? DeptProps.get('editingItem') : null;
@@ -143,12 +150,12 @@ class DeptDialog extends Component {
         let title = "";
         let editObject = null;
         if(dialogType === DeptDialog.TYPE_ADD) {
-            title = "조직 등록";
+            title = t("dtAddDept");
         } else if(dialogType === DeptDialog.TYPE_VIEW) {
-            title = "조직 정보";
+            title = t("dtViewDept");
             editObject = DeptProps.get('editingItem').toJS();
         } else if(dialogType === DeptDialog.TYPE_EDIT) {
-            title = "조직 수정";
+            title = t("dtEditDept");
             editObject = DeptProps.get('editingItem').toJS();
         }
 
@@ -164,17 +171,17 @@ class DeptDialog extends Component {
                     <DialogContent style={{minHeight:567}}>
                         {(dialogType === DeptDialog.TYPE_ADD) &&
                         <TextField
-                            label="상위조직"
+                            label={t("lbParentDept")}
                             value={upperDeptInfo}
                             className={classes.fullWidth}
                         />
                         }
                         <Grid container spacing={24}>
                             <Grid item xs={6}>
-                                <TextValidator label="조직아이디"
+                                <TextValidator label={t("lbDeptId")}
                                     name="deptCd"
                                     validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
-                                    errorMessages={['조직아이디를 입력하세요.', '알파벳,숫자,"-","_","." 문자만 입력하세요.']}
+                                    errorMessages={[t("msgEnterDeptId"), t("msgDeptIdValid")]}
                                     value={(editingItem.get('deptCd')) ? editingItem.get('deptCd') : ''}
                                     onChange={this.handleValueChange("deptCd")}
                                     className={classes.fullWidth}
@@ -182,10 +189,10 @@ class DeptDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={6}>
-                                <TextValidator label="조직이름"
+                                <TextValidator label={t("lbDeptName")}
                                     name="deptNm"
                                     validators={['required']}
-                                    errorMessages={['조직이름을 입력하세요.']}
+                                    errorMessages={[t("msgEnterDeptName")]}
                                     value={(editingItem.get('deptNm')) ? editingItem.get('deptNm') : ''}
                                     onChange={this.handleValueChange("deptNm")}
                                     className={classes.fullWidth}
@@ -229,4 +236,4 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptDialog)));

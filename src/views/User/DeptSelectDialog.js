@@ -19,13 +19,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import GRTreeList from "components/GRTree/GRTreeList";
 
-import Divider from '@material-ui/core/Divider';
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class DeptSelectDialog extends Component {
     
@@ -56,12 +55,13 @@ class DeptSelectDialog extends Component {
     render() {
         const { classes } = this.props;
         const { isOpen, compId, isShowCheck } = this.props;
+        const { t, i18n } = this.props;
 
         return (
             <div>
             {(isOpen) &&
                 <Dialog open={isOpen} scroll="paper" fullWidth={true} maxWidth="xs">
-                    <DialogTitle>{'조직 선택'}</DialogTitle>
+                    <DialogTitle>{t("dtSelectDept")}</DialogTitle>
                     <DialogContent>
                         <GRTreeList
                             useFolderIcons={true}
@@ -80,7 +80,7 @@ class DeptSelectDialog extends Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleSaveDept} variant='contained' color="secondary">선택</Button>
+                        <Button onClick={this.handleSaveDept} variant='contained' color="secondary">{t("btnSelect")}</Button>
                         <Button onClick={this.props.onClose} variant='contained' color="primary">{t("btnClose")}</Button>
                     </DialogActions>
                     <GRConfirm />
@@ -101,4 +101,4 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptSelectDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptSelectDialog)));

@@ -183,7 +183,7 @@ class DesktopAppManage extends Component {
     const columnHeaders = [
       { id: 'chAppId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chAppNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
-      { id: 'chAppInfo', isOrder: false, numeric: false, disablePadding: true, label: t("colDesc") },
+      { id: 'chAppInfo', isOrder: false, numeric: false, disablePadding: true, label: t("colInfo") },
       { id: 'chStatus', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
       { id: 'chModUser', isOrder: false, numeric: false, disablePadding: true, label: t("colModUser") },
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },

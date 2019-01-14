@@ -46,15 +46,13 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import MoveIcon from '@material-ui/icons/Redo';
 import TuneIcon from '@material-ui/icons/Tune';
 import UserIcon from '@material-ui/icons/Person';
-import AccountIcon from '@material-ui/icons/AccountBox';
 import DeptIcon from '@material-ui/icons/WebAsset';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
+import { translate, Trans } from "react-i18next";
 
 class UserMasterManage extends Component {
 
@@ -95,8 +93,7 @@ class UserMasterManage extends Component {
     
   // click dept row (in tree)
   handleSelectDept = (node) => {
-    const { DeptProps, DeptActions } = this.props;
-    const { UserProps, UserActions } = this.props;
+    const { DeptActions, UserActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -150,6 +147,7 @@ class UserMasterManage extends Component {
 
   handleCreateButtonForDept = (event) => {
     // 이전에 선택되어진 내용 삭제
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     this.props.BrowserRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
@@ -169,7 +167,7 @@ class UserMasterManage extends Component {
         dialogType: DeptDialog.TYPE_ADD
       });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '상위 조직을 선택 하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectParentDept"));
     }
   }
 
@@ -197,24 +195,26 @@ class UserMasterManage extends Component {
   }
 
   handleAddUserInDept = (event) => {
+    const { t, i18n } = this.props;
     const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
     if(selectedDeptCd && selectedDeptCd !== '') {
       this.setState({
         isOpenUserSelect: true
       });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 추가할 조직을 선택하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectDeptForAddUser"));
     }
   }
 
   handleMoveUserToDept = (event) => {
+    const { t, i18n } = this.props;
     const checkedIds = this.props.UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     if(checkedIds && checkedIds.size > 0) {
       this.setState({
         isOpenDeptSelect: true
       });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 선택하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectUser"));
     }
   }
 
@@ -229,13 +229,14 @@ class UserMasterManage extends Component {
 
 
   handleDeleteUserInDept = (event) => {
+    const { t, i18n } = this.props;
     const { UserProps, DeptProps, GRConfirmActions } = this.props;
     const selectedDeptCd = DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
     const selectedUsers = UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     if(selectedUsers && selectedUsers !== '') {
       GRConfirmActions.showConfirm({
-        confirmTitle: '사용자 삭제',
-        confirmMsg: '선택하신 사용자를 조직에서 삭제하시겠습니까?',
+        confirmTitle: t("lbDeleteUser"),
+        confirmMsg: t("msgDeleteUser"),
         handleConfirmResult: this.handleDeleteUserInDeptConfirmResult,
         confirmObject: {
           selectedDeptCd: selectedDeptCd,
@@ -243,7 +244,7 @@ class UserMasterManage extends Component {
         }
       });
     } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, '사용자를 선택하세요.');
+      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectUser"));
     }
   }
   handleDeleteUserInDeptConfirmResult = (confirmValue, paramObject) => {
@@ -264,11 +265,12 @@ class UserMasterManage extends Component {
   };
 
   handleUserSelectSave = (selectedUsers) => {
+    const { t, i18n } = this.props;
     const selectedDept = this.state.selectedDept;
     const { DeptProps, GRConfirmActions } = this.props;
     GRConfirmActions.showConfirm({
-        confirmTitle: '사용자 조직 변경',
-        confirmMsg: '선택한 사용자(' + selectedUsers.size + '명)를 조직(' + selectedDept.deptNm + ')으로 변경하시겠습니까?',
+        confirmTitle: t("lbChangeDeptForUser"),
+        confirmMsg: t("msgChangeDeptForUser", {userCnt:selectedUsers.size, deptNm:selectedDept.deptNm}),
         handleConfirmResult: this.handleUserSelectSaveConfirmResult,
         confirmObject: {
           selectedDeptCd: selectedDept.deptCd,
@@ -277,11 +279,12 @@ class UserMasterManage extends Component {
     });
   }
   handleDeptSelectSave = (selectedDept) => {
+    const { t, i18n } = this.props;
     const checkedUserIds = this.props.UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     const { DeptProps, GRConfirmActions } = this.props;
     GRConfirmActions.showConfirm({
-        confirmTitle: '사용자 조직 변경',
-        confirmMsg: '선택한 사용자(' + checkedUserIds.size + '명)를 조직(' + selectedDept.deptNm + ')으로 변경하시겠습니까?',
+        confirmTitle: t("lbChangeDeptForUser"),
+        confirmMsg: t("msgChangeDeptForUser", {userCnt:checkedUserIds.size, deptNm:selectedDept.deptNm}),
         handleConfirmResult: this.handleUserSelectSaveConfirmResult,
         confirmObject: {
           selectedDeptCd: selectedDept.deptCd,
@@ -357,6 +360,7 @@ class UserMasterManage extends Component {
 
   render() {
     const { classes } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     return (
@@ -369,14 +373,14 @@ class UserMasterManage extends Component {
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
                   <Grid item>
-                    <Tooltip title="신규조직등록">
+                    <Tooltip title={t("ttAddNewDept")}>
                       <span>
                       <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleCreateButtonForDept} disabled={this.isUserAddible()} >
                         <AddIcon /><DeptIcon />
                       </Button>
                       </span>
                     </Tooltip>
-                    <Tooltip title="조직삭제">
+                    <Tooltip title={t("ttDeleteDept")}>
                       <span>
                       <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "4px"}} >
                         <RemoveIcon /><DeptIcon />
@@ -385,7 +389,7 @@ class UserMasterManage extends Component {
                     </Tooltip>
                   </Grid>
                   <Grid item>
-                    <Tooltip title="조직정책 일괄변경">
+                    <Tooltip title={t("ttChangMultiDeptRule")}>
                       <span>
                       <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleApplyMultiDept} >
                         <TuneIcon />
@@ -394,7 +398,7 @@ class UserMasterManage extends Component {
                     </Tooltip>
                   </Grid>
                   <Grid item>
-                    <Tooltip title="조직에 사용자 추가">
+                    <Tooltip title={t("ttAddUserInDept")}>
                       <span>
                       <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserAddible()} >
                         <AddIcon /><UserIcon />
@@ -402,7 +406,7 @@ class UserMasterManage extends Component {
                       </span>
                     </Tooltip>
                     {/*
-                    <Tooltip title="조직에서 사용자 삭제">
+                    <Tooltip title={t("ttDeleteUserInDept")}>
                       <span>
                       <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserAddible()} style={{marginLeft: "4px"}} >
                         <RemoveIcon /><UserIcon />
@@ -500,6 +504,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserMasterManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserMasterManage)));
 
 

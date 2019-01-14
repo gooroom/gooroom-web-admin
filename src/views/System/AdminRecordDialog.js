@@ -14,13 +14,15 @@ import Button from "@material-ui/core/Button";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class AdminRecordDialog extends Component {
     render() {
         const { isOpen, adminId } = this.props;
         return (
                 <Dialog open={isOpen} fullWidth={true} maxWidth="md">
-                    <DialogTitle>관리자({adminId}) 작업 이력</DialogTitle>
+                    <DialogTitle>{t("dtAdminJobHist", {adminId: adminId})}</DialogTitle>
                     <DialogContent><AdminRecordListComp adminId={adminId} /></DialogContent>
                     <DialogActions><Button onClick={this.props.onClose} variant='contained' color="primary">{t("btnClose")}</Button></DialogActions>
                     <GRConfirm />
@@ -29,4 +31,4 @@ class AdminRecordDialog extends Component {
     }
 }
 
-export default withStyles(GRCommonStyle)(AdminRecordDialog);
+export default translate("translations")(withStyles(GRCommonStyle)(AdminRecordDialog));

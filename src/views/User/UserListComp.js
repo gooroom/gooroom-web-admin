@@ -18,12 +18,8 @@ import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, get
 import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
-import GRPageHeader from "containers/GRContent/GRPageHeader";
-import GRConfirm from 'components/GRComponents/GRConfirm';
-
 import UserBasicDialog from "views/User/UserBasicDialog";
 import UserDialog from "views/User/UserDialog";
-import GRPane from "containers/GRContent/GRPane";
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
@@ -31,10 +27,8 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import FormControl from '@material-ui/core/FormControl';
 
@@ -46,30 +40,19 @@ import Search from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
 import MoveIcon from '@material-ui/icons/Redo';
 import EditIcon from '@material-ui/icons/Edit';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 import AccountIcon from '@material-ui/icons/AccountBox';
 import DeptIcon from '@material-ui/icons/WebAsset';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class UserListComp extends Component {
-
-  columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
-    { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
-    { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
-    { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: "조직" },
-    { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
-    { id: "chLastLoginDt", isOrder: false, numeric: false, disablePadding: true, label: "최근로그인날짜" },
-    { id: "chLastClientId", isOrder: false, numeric: false, disablePadding: true, label: "최종접속단말정보" },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
-  ];
+  
   componentDidMount() {
     this.props.UserActions.readUserListPaged(this.props.UserProps, this.props.compId);
   }
@@ -128,10 +111,12 @@ class UserListComp extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { UserProps, GRConfirmActions, compId } = this.props;
+    const { t, i18n } = this.props;
+
     const viewItem = getRowObjectById(UserProps, compId, id, 'userId');
     GRConfirmActions.showConfirm({
-      confirmTitle: '사용자정보 삭제',
-      confirmMsg: '사용자정보(' + viewItem.get('userNm') + ')을 삭제하시겠습니까?',
+      confirmTitle: t("lbDeleteUserInfo"),
+      confirmMsg: t("msgDeleteUserInfo", {userNm: viewItem.get('userNm')}),
       handleConfirmResult: (confirmValue, confirmObject) => {
         if(confirmValue) {
           const { UserProps, UserActions, compId } = this.props;
@@ -227,7 +212,19 @@ class UserListComp extends Component {
 
     const { classes } = this.props;
     const { UserProps, compId } = this.props;
-    
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: "chCheckbox", isCheckbox: true},
+      { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: t("colUserNm") },
+      { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: t("colDeptNm") },
+      { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: "chLastLoginDt", isOrder: false, numeric: false, disablePadding: true, label: t("colLoginDate") },
+      { id: "chLastClientId", isOrder: false, numeric: false, disablePadding: true, label: t("colLoginClient") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
+    ];
+
     const listObj = UserProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
@@ -254,14 +251,14 @@ class UserListComp extends Component {
             </Button>
           </Grid>
           <Grid item xs={4} style={{textAlign:'right'}}>
-            <Tooltip title="부서이동">
+            <Tooltip title={t("ttMoveDept")}>
               <span>
               <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.props.onMoveUserToDept} disabled={this.isUserChecked()} >
                 <MoveIcon /><DeptIcon />
               </Button>
               </span>
             </Tooltip>
-            <Tooltip title="신규사용자 생성">
+            <Tooltip title={t("ttAddUser")}>
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateUserButton} style={{marginLeft: "4px"}}>
                 <AddIcon /><AccountIcon />
               </Button>
@@ -280,7 +277,7 @@ class UserListComp extends Component {
             onClickAllCheck={this.handleClickAllCheck}
             checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           <TableBody>
             {listObj.get('listData') && listObj.get('listData').map(n => {
@@ -323,7 +320,7 @@ class UserListComp extends Component {
             {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
               <TableRow key={e}>
                 <TableCell
-                  colSpan={this.columnHeaders.length + 1}
+                  colSpan={columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
@@ -366,5 +363,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserListComp));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserListComp)));
 
