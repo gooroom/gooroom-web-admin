@@ -709,5 +709,9 @@ export default {
   "lbEditAdminSetup": "관리자설정 수정",
   "msgEditAdminSetup": "관리자설정을 수정하시겠습니까?",
 
-
+  // Dashboard
+  "dtViewTotalRule": "정책 통합 조회",
+  "lbTotalRule": "정책 통합 조회",
+  "dtViewTotalRule": "정책 통합 조회",
+  
 };
