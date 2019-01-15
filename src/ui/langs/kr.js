@@ -170,7 +170,12 @@ export default {
   "dtNameAndId": "이름(아이디)",
   "selNoSelected": "지정안함",
   "msgShowSpecAsSelectRule": "정책 정보를 선택하면 상세 내용이 표시됩니다.",
-
+  "stBeforeJob": "작업전",
+  "stCompJob": "작업완료",
+  "stRunningJob": "작업중",
+  "stFailJob": "작업오류",
+  "stCancelJob": "작업취소",
+  "stRevokeClient": "폐기단말",
 
   // 일별접속통계
   "connectRequestCount": "접속요청수",
@@ -243,7 +248,7 @@ export default {
   "lbCertExpireDate": "인증서만료날짜",
   "lbValidRegIp": "유효 IP 범위",
   "msgInputValidIp": "유효 아이피를 입력하세요.",
-  "msgHelpInputIp": "여러개인 경우 콤마(.) 로 구분, 또는 "-" 로 영역 설정 가능합니다.",
+  "msgHelpInputIp": "여러개인 경우 콤마(.) 로 구분, 또는 '-' 로 영역 설정 가능합니다.",
   "msgSampleIputIp": "(샘플) '127.0.0.1, 169.0.0.1' 또는 '127.0.0.1 - 127.0.0.10'",
 
   // 프로파일정보
@@ -710,8 +715,6 @@ export default {
   "msgEditAdminSetup": "관리자설정을 수정하시겠습니까?",
 
   // Dashboard
-  "dtViewTotalRule": "정책 통합 조회",
-  "lbTotalRule": "정책 통합 조회",
   "dtViewTotalRule": "정책 통합 조회",
   
 };

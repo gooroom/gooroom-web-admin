@@ -187,7 +187,7 @@ class JobTargetComp extends Component {
               >
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
-                <TableCell className={classes.grSmallAndClickAndCenterCell}>{getJobStatusToString(n.get('jobStat'))}</TableCell>
+                <TableCell className={classes.grSmallAndClickAndCenterCell}>{getJobStatusToString(n.get('jobStat'), t)}</TableCell>
               </TableRow>
             );
           })}
