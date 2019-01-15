@@ -52,7 +52,7 @@ class ClientStatusSelect extends Component {
       >
         {CommonOptionProps.clientStatusData.map(x => (
           <MenuItem value={x.statusId} key={x.statusId}>
-            {x.statusNm}
+            {t(x.statusNm)}
           </MenuItem>
         ))}
       </Select>

@@ -26,11 +26,9 @@ import Grid from "@material-ui/core/Grid";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class ClientPackageSelectDialog extends Component {
 
     constructor(props) {
@@ -50,53 +48,55 @@ class ClientPackageSelectDialog extends Component {
     }
 
     handleInstallButton = (event) => {
+        const { t, i18n } = this.props;
         const selectedPackage = this.state.stateData.get('selectedPackage');
         if(selectedPackage && selectedPackage.size > 0) {
             if(this.props.onInstallHandle) {
                 this.props.onInstallHandle(selectedPackage);
             }
         } else {
-            this.props.GlobalActions.showElementMsg(event.currentTarget, '설치할 패키지가 선택되지 않았습니다.');
+            this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgNoSelectPackage"));
         }
     }
 
     handleUpdatePackageList = (event) => {
-
+        const { t, i18n } = this.props;
         event.stopPropagation();
         this.props.GRConfirmActions.showConfirm({
-        confirmTitle: '패키지리스트 업데이트',
-        confirmMsg: '패키지리스트를 업데이트 하겠습니까?',
-        handleConfirmResult: (confirmValue, confirmObject) => {
-            if(confirmValue) {
-            const { ClientManageProps, ClientPackageActions, compId } = this.props;
-            ClientPackageActions.updateTotalPackage({
-                compId: compId
-            }).then((response) => {
-                if(response && response.response.data && response.response.data.status && response.response.data.status.result == 'success') {
-                    this.props.GRAlertActions.showAlert({
-                      alertTitle: '업데이트 완료',
-                      alertMsg: '패키지 리스트를 업데이트 하기 위하여 작업이 생성되었습니다. 1~3분 정도 기다린후 확인하시기 바랍니다.'
+            confirmTitle: t("dtPackageListUpadte"),
+            confirmMsg: t("msgPackageListUpadte"),
+            handleConfirmResult: (confirmValue, confirmObject) => {
+                if(confirmValue) {
+                const { ClientManageProps, ClientPackageActions, compId } = this.props;
+                ClientPackageActions.updateTotalPackage({
+                    compId: compId
+                }).then((response) => {
+                    if(response && response.response.data && response.response.data.status && response.response.data.status.result == 'success') {
+                        this.props.GRAlertActions.showAlert({
+                        alertTitle: t("dtCompUpdate"),
+                        alertMsg: t("msgCompUpdateAndJob")
+                        });
+                    } else {
+                        this.props.GRAlertActions.showAlert({
+                        alertTitle: t("dtSystemError"),
+                        alertMsg: t("msgFailCompUpdate")
                     });
-                  } else {
-                    this.props.GRAlertActions.showAlert({
-                      alertTitle: t("dtSystemError"),
-                      alertMsg: '패키지 리스트 업데이트 작업이 생성되지 못하였습니다.'
-                  });
+                    }
+                });
                 }
-            });
-            }
-        },
+            },
         });
     }
 
     render() {
         const { isOpen } = this.props;
+        const { t, i18n } = this.props;
 
         return (
             <React.Fragment>
             {(isOpen) &&
                 <Dialog open={isOpen} fullWidth={true} >
-                    <DialogTitle>패키지 선택</DialogTitle>
+                    <DialogTitle>{t("dtSelectPackage")}</DialogTitle>
                     <DialogContent>
                         <ClientPackageTotalListForSelect name='ClientPackageTotalListForSelect' 
                             onSelectPackage={this.handleSelectPackage}
@@ -105,10 +105,10 @@ class ClientPackageSelectDialog extends Component {
                     <DialogActions>
                         <Grid container >
                             <Grid item xs={6}>
-                            <Button onClick={this.handleUpdatePackageList} variant='contained' color="secondary">전체리스트 업데이트</Button>
+                            <Button onClick={this.handleUpdatePackageList} variant='contained' color="secondary">{t("dtAllPackageListUpadte")}</Button>
                             </Grid>
                             <Grid item xs={6} style={{flex:'1 0',display:'flex',justifyContent:'flex-end'}}>
-                            <Button onClick={this.handleInstallButton} variant='contained' color="secondary">설치</Button>
+                            <Button onClick={this.handleInstallButton} variant='contained' color="secondary">{t("btnInstall")}</Button>
                             <Button onClick={this.props.onClose} variant='contained' color="primary" style={{marginLeft:10}}>{t("btnClose")}</Button>
                             </Grid>
                         </Grid>
@@ -132,4 +132,4 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageSelectDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageSelectDialog)));

@@ -9,15 +9,15 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class ProtectionTypeSelect extends Component {
 
   render() {
     const { CommonOptionProps, name, value, label } = this.props;
+    const { t, i18n } = this.props;
+
     return (
       <FormControl >
       <InputLabel htmlFor={name}>{label}</InputLabel>
@@ -28,7 +28,7 @@ class ProtectionTypeSelect extends Component {
       >
         {CommonOptionProps.protectionTypeData.map(x => (
           <MenuItem value={x.typeVal} key={x.typeId}>
-            {x.typeId}
+            {t(x.typeId)}
           </MenuItem>
         ))}
       </Select>
@@ -45,6 +45,6 @@ const mapDispatchToProps = (dispatch) => ({
   CommonOptionActions: bindActionCreators(CommonOptionActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProtectionTypeSelect);
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(ProtectionTypeSelect));
 
 

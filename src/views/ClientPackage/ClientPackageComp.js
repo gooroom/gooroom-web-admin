@@ -98,8 +98,7 @@ class ClientPackageComp extends Component {
 
   handleSelectRow = (event, id) => {
     const { ClientPackageProps, compId } = this.props;
-    const { ClientPackageActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
+    const { ClientPackageActions } = this.props;
 
     const selectRowObject = getRowObjectById(ClientPackageProps, compId, id, 'packageId');
     const newCheckedIds = setCheckedIdsInComp(ClientPackageProps, compId, id);

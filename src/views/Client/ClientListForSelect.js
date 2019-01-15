@@ -30,11 +30,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class ClientListForSelect extends Component {
 
   constructor(props) {
@@ -58,14 +56,6 @@ class ClientListForSelect extends Component {
       })
     };
   }
-
-  columnHeaders = [
-    { id: 'checkbox', isCheckbox: true},
-    { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: '단말그룹'},
-    { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' }
-  ];
 
   handleGetClientList = (newListParam) => {
 
@@ -215,6 +205,15 @@ class ClientListForSelect extends Component {
 
   render() {
     const { classes } = this.props;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'checkbox', isCheckbox: true},
+      { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: t("colClientGroup")},
+      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") }
+    ];
     
     const listObj = this.state.stateData;
     let emptyRows = 0; 
@@ -253,7 +252,7 @@ class ClientListForSelect extends Component {
             onClickAllCheck={this.handleClickAllCheck}
             checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           <TableBody>
             {listObj.get('listData').map(n => {
@@ -281,7 +280,7 @@ class ClientListForSelect extends Component {
             {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
               <TableRow key={e}>
                 <TableCell
-                  colSpan={this.columnHeaders.length + 1}
+                  colSpan={columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
@@ -313,5 +312,5 @@ class ClientListForSelect extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(ClientListForSelect);
+export default translate("translations")(withStyles(GRCommonStyle)(ClientListForSelect));
 
