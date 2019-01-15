@@ -140,6 +140,9 @@ export default {
   "menuJob": "Job",
   "menuJobManage": "JobMng",
 
+  "menuSiteConfig": "siteConfig",
+  "menuAdminUserMng": "AdminUserMng",
+
   // 공통
   "selOffline": "Offline",
   "selOnline": "Online",

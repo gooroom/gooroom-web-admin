@@ -140,6 +140,9 @@ export default {
   "menuJob": "작업",
   "menuJobManage": "작업정보",
 
+  "menuSiteConfig": "구름관리서버설정",
+  "menuAdminUserMng": "관리자관리",
+
   // 공통
   "selOffline": "오프라인",
   "selOnline": "온라인",
@@ -702,5 +705,10 @@ export default {
   "msgValidAdminMinimum": "5보다 작을수 없습니다.",
   "lbEditAdminSetup": "관리자설정 수정",
   "msgEditAdminSetup": "관리자설정을 수정하시겠습니까?",
+
+  // Dashboard
+  "dtViewTotalRule": "정책 통합 조회",
+  "lbTotalRule": "정책 통합 조회",
+  "dtViewTotalRule": "정책 통합 조회",
   
 };

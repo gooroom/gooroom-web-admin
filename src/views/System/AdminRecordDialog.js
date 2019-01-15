@@ -20,6 +20,7 @@ import { translate, Trans } from "react-i18next";
 class AdminRecordDialog extends Component {
     render() {
         const { isOpen, adminId } = this.props;
+        const { t, i18n } = this.props;
         return (
                 <Dialog open={isOpen} fullWidth={true} maxWidth="md">
                     <DialogTitle>{t("dtAdminJobHist", {adminId: adminId})}</DialogTitle>
