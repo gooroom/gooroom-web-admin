@@ -365,7 +365,7 @@ class UserMasterManage extends Component {
 
     return (
       <React.Fragment>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
 
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >

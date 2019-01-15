@@ -50,7 +50,7 @@ class ViolatedClientDialog extends Component {
         if(SecurityLogProps.getIn(['viewItems', 'GRM0935'])) {
             SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, 'GRM0935', {logItem:type,keyword:clientId,page:0});
         }
-        AdminActions.redirectPage({address:'/log/secretlog/GRM0935/보안로그?logItem=' + type + '&keyword=' + clientId});
+        AdminActions.redirectPage({address:'/log/secretlog/GRM0935/menuSecurityLog?logItem=' + type + '&keyword=' + clientId});
     }
     
     render() {

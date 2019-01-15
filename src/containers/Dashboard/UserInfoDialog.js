@@ -29,15 +29,15 @@ import Grid from "@material-ui/core/Grid";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
+
 class UserInfoDialog extends Component {
 
     render() {
         const { classes } = this.props;
         const { DashboardProps } = this.props;
+        const { t, i18n } = this.props;
 
         return (
             <div>
@@ -45,12 +45,12 @@ class UserInfoDialog extends Component {
                 <Dialog open={DashboardProps.get('userInfoDialog')} fullWidth={true} maxWidth="lg">
                     <DialogTitle>
                     <Grid container spacing={16}>
-                        <Grid item xs={6} md={6}>정책 통합 조회</Grid>
+                        <Grid item xs={6} md={6}>{t("dtViewTotalRule")}</Grid>
                         <Grid item xs={6} md={6} style={{textAlign:'right',fontSize:'12px'}}>
                         {(DashboardProps.getIn(['selectedUserInfo', 'userId']) != '') &&
-                        <div>사용자아이디: <font style={{fontWeight:'bold',fontSize:'15px'}}>{DashboardProps.getIn(['selectedUserInfo', 'userId'])}</font><br/></div>
+                        <div>{t("lbUserId")}: <font style={{fontWeight:'bold',fontSize:'15px'}}>{DashboardProps.getIn(['selectedUserInfo', 'userId'])}</font><br/></div>
                         }
-                        단말아이디: <font style={{fontWeight:'bold',fontSize:'15px'}}>{DashboardProps.getIn(['selectedUserInfo', 'clientId'])}</font>
+                        {t("lbClientId")}: <font style={{fontWeight:'bold',fontSize:'15px'}}>{DashboardProps.getIn(['selectedUserInfo', 'clientId'])}</font>
                         </Grid>
                     </Grid>
                     </DialogTitle>
@@ -118,4 +118,4 @@ const mapDispatchToProps = (dispatch) => ({
     DashboardActions: bindActionCreators(DashboardActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserInfoDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserInfoDialog)));

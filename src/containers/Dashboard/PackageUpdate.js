@@ -18,12 +18,12 @@ class PackageUpdate extends Component {
         const data = [
             {
               "id": "total",
-              "label": "불필요",
+              "label": "NO",
               "value": Number(noUpdateCount)
             },
             {
               "id": "update",
-              "label": "필요",
+              "label": "YES",
               "value": Number(updateCount)
             }
         ];

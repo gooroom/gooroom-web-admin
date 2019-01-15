@@ -119,7 +119,7 @@ class ServerSiteConfig extends Component {
 
     return (
       <React.Fragment>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
 
         <AppBar position="static" elevation={0} color="default">
