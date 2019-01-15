@@ -101,6 +101,9 @@ export default {
   "btnCopy": "Copy",
   "btnSelect": "Select",
   "btnSelectFile": "FileSelect",
+  "btnOK": "OK",
+  "btnYes": "Yes",
+  "btnNo": "No",
 
   // Menus
   "menuDashboard": "Dashboard",

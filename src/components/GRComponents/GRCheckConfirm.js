@@ -18,6 +18,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
+
 
 class GRCheckConfirm extends Component {
 
@@ -51,6 +53,7 @@ class GRCheckConfirm extends Component {
 
   render() {
     const { GRConfirmProps } = this.props;
+    const { t, i18n } = this.props;
 
     return (
        <Dialog
@@ -79,10 +82,10 @@ class GRCheckConfirm extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleCancel} color="primary" autoFocus>
-              아니오
+              {t("btnNo")}
             </Button>
             <Button onClick={this.handleOk} color="primary">
-              예
+              {t("btnYes")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -98,4 +101,4 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(grConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GRCheckConfirm));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GRCheckConfirm)));
