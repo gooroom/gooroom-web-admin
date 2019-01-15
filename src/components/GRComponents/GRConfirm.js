@@ -15,6 +15,7 @@ import Dialog from '@material-ui/core/Dialog';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 class GRConfirm extends Component {
 
@@ -40,6 +41,7 @@ class GRConfirm extends Component {
 
   render() {
     const { GRConfirmProps } = this.props;
+    const { t, i18n } = this.props;
 
     return (
        <Dialog
@@ -55,8 +57,8 @@ class GRConfirm extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleCancel} color="primary" autoFocus>아니오</Button>
-            <Button onClick={this.handleOk} color="primary">예</Button>
+            <Button onClick={this.handleCancel} color="primary" autoFocus>{t("btnNo")}</Button>
+            <Button onClick={this.handleOk} color="primary">{t("btnYes")}</Button>
           </DialogActions>
         </Dialog>
     );
@@ -71,4 +73,4 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(grConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GRConfirm));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GRConfirm)));

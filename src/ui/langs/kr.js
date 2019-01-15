@@ -101,6 +101,8 @@ export default {
   "btnCopy": "복사",
   "btnSelect": "선택",
   "btnSelectFile": "File선택",
+  "btnYes": "예",
+  "btnNo": "아니오",
 
   // Menus
   "menuDashboard": "Dashboard",

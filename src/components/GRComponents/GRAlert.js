@@ -12,6 +12,9 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
+import { translate, Trans } from "react-i18next";
+
+
 
 class GRAlert extends Component {
 
@@ -34,7 +37,8 @@ class GRAlert extends Component {
 
   render() {
     const { GRAlertProps } = this.props;
-
+    const { t, i18n } = this.props;
+    
     return (
        <Dialog
           onClose={this.handleCancel}
@@ -50,7 +54,7 @@ class GRAlert extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleOk} color="primary">
-              확인
+              {t("btnOK")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -66,6 +70,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRAlertActions: bindActionCreators(grAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(GRAlert);
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(GRAlert));
 
 
