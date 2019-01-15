@@ -34,22 +34,10 @@ import Search from '@material-ui/icons/Search';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class ClientManageCompWithPackage extends Component {
-
-  columnHeaders = [
-    { id: "checkbox", isOrder: false, isCheckbox: true},
-    { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
-    { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' },
-    { id: 'UPDATE_CNT', isOrder: true, numeric: false, disablePadding: true, label: '업데이트수' }
-  ];
 
   componentDidMount() {
     const { ClientManageActions, ClientManageProps, compId, } = this.props;
@@ -166,7 +154,18 @@ class ClientManageCompWithPackage extends Component {
   render() {
     const { classes } = this.props;
     const { ClientManageProps, compId } = this.props;
+    const { t, i18n } = this.props;
 
+    const columnHeaders = [
+      { id: "checkbox", isOrder: false, isCheckbox: true},
+      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
+      { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
+      { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageCnt") },
+      { id: 'UPDATE_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageUpdateCnt") }
+    ];
+    
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
@@ -180,7 +179,7 @@ class ClientManageCompWithPackage extends Component {
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4} >
             <FormControl fullWidth={true}>
-              <InputLabel htmlFor="client-status">단말상태</InputLabel>
+              <InputLabel htmlFor="client-status">{t("optClientStatus")}</InputLabel>
               <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
             </FormControl>
           </Grid>
@@ -210,7 +209,7 @@ class ClientManageCompWithPackage extends Component {
             onClickAllCheck={this.handleClickAllCheck}
             checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           <TableBody>
             {listObj.get('listData').map(n => {
@@ -243,7 +242,7 @@ class ClientManageCompWithPackage extends Component {
             {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
               <TableRow key={e}>
                 <TableCell
-                  colSpan={this.columnHeaders.length + 1}
+                  colSpan={columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
@@ -283,5 +282,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageCompWithPackage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageCompWithPackage)));
 

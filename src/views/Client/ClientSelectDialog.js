@@ -20,11 +20,9 @@ import CardContent from "@material-ui/core/CardContent";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class ClientSelectDialog extends Component {
 
     constructor(props) {
@@ -60,12 +58,13 @@ class ClientSelectDialog extends Component {
     render() {
         const { classes } = this.props;
         const { isOpen, UserProps, selectedGroupItem } = this.props;
+        const { t, i18n } = this.props;
 
         return (
             <div>
             {(isOpen) &&
                 <Dialog open={isOpen} fullWidth={true} >
-                    <DialogTitle>단말 선택 ({selectedGroupItem.get('grpNm')})</DialogTitle>
+                    <DialogTitle>{t("dtSelectClient")} ({selectedGroupItem.get('grpNm')})</DialogTitle>
                     <DialogContent>
                         <Grid container spacing={8}>
                             {/* <Grid item xs={12} sm={12} lg={4}>
@@ -107,4 +106,4 @@ class ClientSelectDialog extends Component {
     }
 }
 
-export default withStyles(GRCommonStyle)(ClientSelectDialog);
+export default translate("translations")(withStyles(GRCommonStyle)(ClientSelectDialog));

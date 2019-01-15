@@ -16,6 +16,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
+import { translate, Trans } from "react-i18next";
 
 
 class UserRuleSelector extends Component {
@@ -35,6 +36,7 @@ class UserRuleSelector extends Component {
     render() {
         const { selectedTab } = this.state;
         const { compId, module, targetType } = this.props;
+        const { t, i18n } = this.props;
 
         return (
             <React.Fragment>
@@ -46,11 +48,11 @@ class UserRuleSelector extends Component {
                         textColor="primary"
                         onChange={this.handleChangeTabs}
                     >
-                        <Tab label="브라우져정책" value={0} />
-                        <Tab label="매체제어정책" value={1} />
-                        <Tab label="단말보안정책" value={2} />
-                        <Tab label="Software제한정책" value={3} />
-                        <Tab label="데스크톱정보" value={4} />
+                        <Tab label={t("lbBrowserRule")} value={0} />
+                        <Tab label={t("lbMediaRule")} value={1} />
+                        <Tab label={t("lbSecuRule")} value={2} />
+                        <Tab label={t("lbSWRule")} value={3} />
+                        <Tab label={t("lbDesktopConf")} value={4} />
                     </Tabs>
                 </AppBar>
                 <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
@@ -65,6 +67,6 @@ class UserRuleSelector extends Component {
     }
 }
 
-export default withStyles(GRCommonStyle)(UserRuleSelector);
+export default translate("translations")(withStyles(GRCommonStyle)(UserRuleSelector));
 
 

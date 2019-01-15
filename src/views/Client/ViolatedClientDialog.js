@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Redirect, Switch, Router } from 'react-router';
-import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -21,17 +20,14 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 
-import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class ViolatedClientDialog extends Component {
 
     constructor(props) {
@@ -55,6 +51,7 @@ class ViolatedClientDialog extends Component {
     
     render() {
         const { AdminProps } = this.props;
+        const { t, i18n } = this.props;
         if (AdminProps.get('isNeedRedirect')) {
             return <Redirect push to = {AdminProps.get('redirectAddress')} />;
         }
@@ -65,7 +62,7 @@ class ViolatedClientDialog extends Component {
             <div>
             {(isOpen) &&
                 <Dialog open={isOpen} fullWidth={true} maxWidth="md">
-                    <DialogTitle>침해 단말 목록</DialogTitle>
+                    <DialogTitle>{t("lbViolatedClientList")}</DialogTitle>
                     <DialogContent>
                         <Card className={classes.deptUserCard}>
                             <CardContent style={{paddingTop:0,paddingBottom:0}}>
@@ -95,4 +92,4 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ViolatedClientDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ViolatedClientDialog)));

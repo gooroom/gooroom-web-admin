@@ -175,7 +175,7 @@ class ClientListForDashboard extends Component {
       { id: 'CNT_VIOLATED', isOrder: true, numeric: false, disablePadding: true, label: t("colViolatedCnt") },
       { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginIp") },
       { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: t("colUseRate"), tooltip: t("spHomeSizeRate") },
-      { id: 'temp3', isOrder: false, numeric: false,disablePadding: true,label: t("colPackageUpdate") }
+      { id: 'temp3', isOrder: false, numeric: false,disablePadding: true,label: t("colPackageUpdateCnt") }
     ];
 
     const listObj = this.state.stateData;

@@ -7,16 +7,14 @@ import * as CommonOptionActions from 'modules/CommonOptionModule';
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class LogLevelSelect extends Component {
 
   render() {
     const { CommonOptionProps, name, value, minNo=0 } = this.props;
+    const { t, i18n } = this.props;
     return (
       <React.Fragment>
       <Select
@@ -26,7 +24,7 @@ class LogLevelSelect extends Component {
       >
         {CommonOptionProps.logLevelData.filter(x => (x.levelNo >= minNo)).map(x => (
           <MenuItem value={x.levelVal} levelno={x.levelNo} key={x.levelId}>
-            {x.levelId} ({x.levelNm})
+            {x.levelId} {t(x.levelNm)}
           </MenuItem>
         ))}
       </Select>
@@ -43,6 +41,6 @@ const mapDispatchToProps = (dispatch) => ({
   CommonOptionActions: bindActionCreators(CommonOptionActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(LogLevelSelect);
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(LogLevelSelect));
 
 

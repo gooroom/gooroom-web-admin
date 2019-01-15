@@ -160,7 +160,7 @@ class JobTargetComp extends Component {
           <Grid item xs={4} >
           { (jobStatus != 'C') && 
             <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => this.handleClickJobCancel()} >
-              <ClearIcon />{t("btnJobCancel")}
+              <ClearIcon />{t("btnCancelJob")}
             </Button>
           }
           </Grid>
@@ -175,7 +175,7 @@ class JobTargetComp extends Component {
             orderDir={listObj.getIn(['listParam_target', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam_target', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
           <TableBody>
           {listObj.get('listData_target').map(n => {
@@ -194,7 +194,7 @@ class JobTargetComp extends Component {
           {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
             <TableRow key={e}>
               <TableCell
-                colSpan={this.columnHeaders.length + 1}
+                colSpan={columnHeaders.length + 1}
                 className={classes.grSmallAndClickCell}
               />
             </TableRow>

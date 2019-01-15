@@ -21,6 +21,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
+import { translate, Trans } from "react-i18next";
 
 
 class ClientRuleSelector extends Component {
@@ -40,6 +41,7 @@ class ClientRuleSelector extends Component {
     render() {
         const { selectedTab } = this.state;
         const { compId, module, targetType } = this.props;
+        const { t, i18n } = this.props;
 
         return (
             <React.Fragment>
@@ -51,14 +53,14 @@ class ClientRuleSelector extends Component {
                         textColor="primary"
                         onChange={this.handleChangeTabs}
                     >
-                        <Tab label="단말정책" value={0}/>
-                        <Tab label="Hosts정보" value={1} />
-                        <Tab label="업데이트서버정보" value={2} />
-                        <Tab label="브라우져정책" value={3} />
-                        <Tab label="매체제어정책" value={4} />
-                        <Tab label="단말보안정책" value={5} />
-                        <Tab label="Software제한정책" value={6} />
-                        <Tab label="데스크톱정보" value={7} />
+                        <Tab label={t("lbClientConf")} value={0}/>
+                        <Tab label={t("lbHosts")} value={1} />
+                        <Tab label={t("lbUpdateServer")} value={2} />
+                        <Tab label={t("lbBrowserRule")} value={3} />
+                        <Tab label={t("lbMediaRule")} value={4} />
+                        <Tab label={t("lbSecuRule")} value={5} />
+                        <Tab label={t("lbSWRule")} value={6} />
+                        <Tab label={t("lbDesktopConf")} value={7} />
                     </Tabs>
                 </AppBar>
                 <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
@@ -77,6 +79,6 @@ class ClientRuleSelector extends Component {
     }
 }
 
-export default withStyles(GRCommonStyle)(ClientRuleSelector);
+export default translate("translations")(withStyles(GRCommonStyle)(ClientRuleSelector));
 
 
