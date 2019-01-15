@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getMergedObject, getJobStatusToString } from 'components/GRUtils/GRCommonUtils';
+import { getJobStatusToString } from 'components/GRUtils/GRCommonUtils';
 
 import * as JobManageActions from 'modules/JobManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -14,9 +14,6 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import JobTargetComp from './JobTargetComp';
 
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import Table from '@material-ui/core/Table';
@@ -24,7 +21,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -129,7 +125,7 @@ class JobInform extends Component {
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row" >{bull} {t("dtJobResultStatus")}</TableCell>
-                  <TableCell >{getJobStatusToString(selectTargetObj.get('jobStat'))}</TableCell>
+                  <TableCell >{getJobStatusToString(selectTargetObj.get('jobStat'), t)}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ {t("dtJobModuleInfo")} ]</TableCell>
