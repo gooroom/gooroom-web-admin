@@ -67,7 +67,7 @@ class UserSpec extends Component {
       value: getValueInSelectedObjectInComp(this.props.SoftwareFilterProps, compId, 'USER', 'objId')      
     });
     this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
-      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'USER', 'objId')      
+      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'USER', 'confId')      
     });
 
     this.props.UserActions.showDialog({

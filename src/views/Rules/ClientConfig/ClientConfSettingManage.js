@@ -109,7 +109,7 @@ class ClientConfSettingManage extends Component {
     this.props.ClientConfSettingActions.showDialog({
       viewItem: Map({
         isDeleteLog: false,
-        logRemainDate: '0',
+        logRemainDate: '1',
         logMaxSize: 10000,
         logMaxCount: 3,
         systemKeepFree: 10,

@@ -395,7 +395,9 @@ class GRTreeList extends Component {
           root: {
             paddingLeft: (listItem.depth - startingDepth) * 8,
             backgroundColor: activeListItem === i ? "rgba(0,0,0,0.2)" : null,
-            height: listHeight,
+            paddingTop: "0px",
+            paddingBottom: "0px",
+            alignItems: "start",
             cursor: listItem.disabled ? "not-allowed" : "pointer",
             color: listItem.disabled ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.87)",
             overflow: "hidden",

@@ -86,7 +86,7 @@ class ClientGroupSpec extends Component {
       value: getValueInSelectedObjectInComp(this.props.SecurityRuleProps, compId, 'GROUP', 'objId')
     });
     this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'GROUP',
-      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'GROUP', 'objId')
+      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'GROUP', 'confId')
     });
 
     this.props.ClientGroupActions.showDialog({

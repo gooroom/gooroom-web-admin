@@ -380,6 +380,7 @@ class UserMasterManage extends Component {
                       </Button>
                       </span>
                     </Tooltip>
+                    {/**
                     <Tooltip title={t("ttDeleteDept")}>
                       <span>
                       <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "4px"}} >
@@ -387,6 +388,7 @@ class UserMasterManage extends Component {
                       </Button>
                       </span>
                     </Tooltip>
+                    */}
                   </Grid>
                   <Grid item>
                     <Tooltip title={t("ttChangMultiDeptRule")}>
