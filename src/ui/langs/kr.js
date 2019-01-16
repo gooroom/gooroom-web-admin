@@ -115,6 +115,7 @@ export default {
   "btnNo": "아니오",
 
   // Menus
+  "home": "",
   "menuDashboard": "Dashboard",
   "menuStatistic": "통계",
   "menuDailyViolated": "일별침해통계",

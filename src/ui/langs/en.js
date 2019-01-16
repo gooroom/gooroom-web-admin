@@ -115,6 +115,7 @@ export default {
   "btnNo": "No",
 
   // Menus
+  "home": "",
   "menuDashboard": "Dashboard",
   "menuStatistic": "Statistic",
   "menuDailyViolated": "DailyViolatedStatics",
