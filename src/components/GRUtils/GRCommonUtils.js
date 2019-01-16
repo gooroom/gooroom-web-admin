@@ -66,24 +66,24 @@ export const getMergedArray = (masterArray, newArray, isImport) => {
 };
 
 
-export const getJobStatusToString = (status) => {
+export const getJobStatusToString = (status, t) => {
 
     let clientStatus = '';
 
     if(status && status.startsWith('R')) {
-        clientStatus = '작업전';  
+        clientStatus = t("stBeforeJob");  
     } else if(status && status.startsWith('C')) {
-        clientStatus = '작업완료';  
+        clientStatus = t("stCompJob");  
     } else if(status && status.startsWith('D')) {
-        clientStatus = '작업중';  
+        clientStatus = t("stRunningJob");  
     } else if(status && status.startsWith('E')) {
-        clientStatus = '작업오류';  
+        clientStatus = t("stFailJob");  
     } else if(status && status.startsWith('Q')) {
-        clientStatus = '작업취소';  
+        clientStatus = t("stCancelJob");  
     }
 
     if(status && status.endsWith('K')) {
-        clientStatus = '폐기단말(' + clientStatus + ')';
+        clientStatus = t("stRevokeClient") + ' (' + clientStatus + ')';
     }
 
     return clientStatus;

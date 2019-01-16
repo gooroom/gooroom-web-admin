@@ -30,11 +30,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class ClientProfileSetDialog extends Component {
 
     static TYPE_VIEW = 'VIEW';
@@ -154,8 +152,6 @@ class ClientProfileSetDialog extends Component {
         // console.log('handleSelectClientArray selectedObj ::::::::::::::: ', selectedObj);
         // console.log('handleSelectClientArray checkedIds ::::::::::::::: ', checkedIds);
 
-
-
         // this.props.ClientProfileSetActions.setEditingItemValue({
         //   name: 'targetClientIdArray',
         //   value: checkedIds
@@ -165,7 +161,6 @@ class ClientProfileSetDialog extends Component {
     handleSelectGroupArray = (selectedObj, checkedIds) => {
         // console.log('handleSelectGroupArray selectedObj ::::::::::::::: ', selectedObj);
         // console.log('handleSelectGroupArray checkedIds ::::::::::::::: ', checkedIds);
-
 
         // this.props.ClientProfileSetActions.setEditingItemValue({
         //   name: 'targetGroupIdArray',
@@ -304,5 +299,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfileSetDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientProfileSetDialog)));
 

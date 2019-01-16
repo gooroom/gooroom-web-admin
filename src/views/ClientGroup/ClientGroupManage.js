@@ -53,6 +53,7 @@ import ClientGroupSpec from './ClientGroupSpec';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
 class ClientGroupManage extends Component {
@@ -198,6 +199,7 @@ class ClientGroupManage extends Component {
   render() {
     const { classes } = this.props;
     const { ClientGroupProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
     
     const listObj = ClientGroupProps.getIn(['viewItems', compId]);
@@ -337,6 +339,6 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupManage)));
 
 

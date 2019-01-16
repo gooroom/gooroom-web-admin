@@ -91,7 +91,7 @@ class Dashboard extends Component {
         if(SecurityLogProps.getIn(['viewItems', 'GRM0935'])) {
             SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, 'GRM0935', {logItem:type,keyword:clientId,page:0});
         }
-        AdminActions.redirectPage({address:'/log/secretlog/GRM0935/보안로그?logItem=' + type + '&keyword=' + clientId});
+        AdminActions.redirectPage({address:'/log/secretlog/GRM0935/menuSecurityLog?logItem=' + type + '&keyword=' + clientId});
     }
 
     handleClickPackageLink = (type, clientId) => {
@@ -99,7 +99,7 @@ class Dashboard extends Component {
         // if(SecurityLogProps.getIn(['viewItems', 'GRM0935'])) {
         //     SecurityLogActions.readSecurityLogListPaged(SecurityLogProps, 'GRM0935', {logItem:type,keyword:clientId,page:0});
         // }
-        //AdminActions.redirectPage({address:'/package/packagemanage/GRM0201/패키지관리?logItem=' + type + '&keyword=' + clientId});
+        //AdminActions.redirectPage({address:'/package/packagemanage/GRM0201/menuPackageManage?logItem=' + type + '&keyword=' + clientId});
     }
 
     handleClickShowUserInfo = (loginId, clientId) => {
@@ -115,11 +115,11 @@ class Dashboard extends Component {
     render() {
         if (this.state.redirect) {
             if(this.state.linkType == 'package') {
-                return <Redirect push to ='/package/packagemanage/GRM0201/패키지관리' />;
+                return <Redirect push to ='/package/packagemanage/GRM0201/menuPackageManage' />;
             } else if(this.state.linkType == 'client') {
-                return <Redirect push to="/clients/clientmastermanage/GRM0101/단말관리" />;
+                return <Redirect push to="/clients/clientmastermanage/GRM0101/menuClientManage" />;
             } else if(this.state.linkType == 'user') {
-                return <Redirect push to="/user/usermastermanage/GRM0301/사용자관리" />;
+                return <Redirect push to="/user/usermastermanage/GRM0301/menuUserManage" />;
             }            
         }
 

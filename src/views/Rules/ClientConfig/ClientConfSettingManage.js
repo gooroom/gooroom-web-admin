@@ -109,7 +109,7 @@ class ClientConfSettingManage extends Component {
     this.props.ClientConfSettingActions.showDialog({
       viewItem: Map({
         isDeleteLog: false,
-        logRemainDate: '0',
+        logRemainDate: '1',
         logMaxSize: 10000,
         logMaxCount: 3,
         systemKeepFree: 10,
@@ -151,7 +151,7 @@ class ClientConfSettingManage extends Component {
     const viewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
 
     ClientConfSettingActions.showDialog({
-      viewItem: generateClientConfSettingObject(viewItem),
+      viewItem: generateClientConfSettingObject(viewItem, false, this.props.t),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };
@@ -191,7 +191,7 @@ class ClientConfSettingManage extends Component {
   handleClickEdit = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.ClientConfSettingProps, compId, targetType);
     this.props.ClientConfSettingActions.showDialog({
-      viewItem: generateClientConfSettingObject(viewItem, false),
+      viewItem: generateClientConfSettingObject(viewItem, false, this.props.t),
       dialogType: ClientConfSettingDialog.TYPE_EDIT
     });
   };

@@ -7,9 +7,6 @@ import Dashboard from "containers/Dashboard/";
 // Client - client management
 import ClientMasterManage from "views/Client/ClientMasterManage";
 
-import ClientManage from "views/Client/ClientManage";
-import ClientGroupManage from "views/ClientGroup/ClientGroupManage";
-
 import ClientRegKey from "views/ClientSupport/ClientRegKey";
 import ClientProfileSet from "views/ClientSupport/ClientProfileSet";
 
@@ -26,7 +23,6 @@ import JobManage from "views/Job/JobManage";
 import PackageManage from 'views/ClientPackage/ClientPackageManage';
 
 import UserMasterManage from "views/User/UserMasterManage";
-import UserManage from "views/User/UserManage";
 
 import AdminUserManage from "views/System/AdminUserManage";
 import ServerSiteConfig from "views/System/ServerSiteConfig";
@@ -45,8 +41,6 @@ import DailyClientCountManage from "views/Stats/DailyClientCountManage";
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-import ComponentTests from "views/Test/ComponentTests";
-
 
 class GRRouters extends Component {
   constructor(props) {
@@ -64,8 +58,6 @@ class GRRouters extends Component {
           <Route path="/dashboard" name="Dashboard" component={Dashboard} />
           
           <Route path="/clients/clientmastermanage/:grMenuId/:grMenuName" component={ClientMasterManage} />
-          <Route path="/clients/clientmanage/:grMenuId/:grMenuName" component={ClientManage} />
-          <Route path="/clients/clientgroupmanage/:grMenuId/:grMenuName" component={ClientGroupManage} />
 
           <Route path="/clientconfig/regkey/:grMenuId/:grMenuName" component={ClientRegKey} />
           <Route path="/clientconfig/profileset/:grMenuId/:grMenuName" component={ClientProfileSet} />
@@ -82,7 +74,6 @@ class GRRouters extends Component {
           <Route path="/jobs/jobmanage/:grMenuId/:grMenuName" component={JobManage} />
           <Route path="/package/packagemanage/:grMenuId/:grMenuName" component={PackageManage} />
           <Route path="/user/usermastermanage/:grMenuId/:grMenuName" component={UserMasterManage} />
-          <Route path="/user/usermanage/:grMenuId/:grMenuName" component={UserManage} />
 
           <Route path="/desktopconfig/desktopapp/:grMenuId/:grMenuName" component={DesktopAppManage} />
           <Route path="/desktopconfig/desktopconf/:grMenuId/:grMenuName" component={DesktopConfManage} />
@@ -99,7 +90,6 @@ class GRRouters extends Component {
           <Route path="/statistic/dailyconnect/:grMenuId/:grMenuName" component={DailyLoginCountManage} />
           <Route path="/statistic/dailyregist/:grMenuId/:grMenuName" component={DailyClientCountManage} />
 
-          <Route path="/test/components/:grMenuId/:grMenuName" component={ComponentTests} />
         </Switch>
       </div>
     );

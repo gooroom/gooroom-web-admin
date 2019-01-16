@@ -156,15 +156,20 @@ class ClientGroupComp extends Component {
 
   render() {
     const { classes } = this.props;
-    const { ClientGroupProps, compId } = this.props;
+    const { ClientGroupProps, compId, hasEdit=false, selectorType } = this.props;
     const { t, i18n } = this.props;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: t("colGroupName") },
       { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: t("colClientCount") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEdit") },
     ];
-    if(this.props.selectorType && this.props.selectorType == 'multiple') {
+
+    if(!hasEdit) {
+      columnHeaders.pop();
+    }
+
+    if(selectorType && selectorType == 'multiple') {
       columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
     }
 
@@ -193,7 +198,7 @@ class ClientGroupComp extends Component {
 
         {listObj &&
         <Table>
-          {(this.props.selectorType && this.props.selectorType == 'multiple') && 
+          {(selectorType && selectorType == 'multiple') && 
           <GRCommonTableHead
             classes={classes}
             keyId="grpId"
@@ -206,7 +211,7 @@ class ClientGroupComp extends Component {
             columnData={columnHeaders}
           />
           }
-          {(!this.props.selectorType || this.props.selectorType == 'single') && 
+          {(!selectorType || selectorType == 'single') && 
           <GRCommonTableHead
             classes={classes}
             keyId="grpId"
@@ -229,20 +234,22 @@ class ClientGroupComp extends Component {
                 role="checkbox"
                 key={n.get('grpId')}
               >
-                {(this.props.selectorType && this.props.selectorType == 'multiple') && 
+                {(selectorType && selectorType == 'multiple') && 
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                     <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('grpId'))} />
                   </TableCell>
                 }
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
                 <TableCell className={classes.grSmallAndClickAndNumericCell}>{n.get('clientCount')}</TableCell>
-                <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                  <Button color='secondary' size="small" 
-                    className={classes.buttonInTableRow} 
-                    onClick={event => this.handleEditClick(event, n.get('grpId'))}>
-                    <SettingsApplicationsIcon />
-                  </Button>
-                </TableCell>
+                {(hasEdit) && 
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                    <Button color='secondary' size="small" 
+                      className={classes.buttonInTableRow} 
+                      onClick={event => this.handleEditClick(event, n.get('grpId'))}>
+                      <SettingsApplicationsIcon />
+                    </Button>
+                  </TableCell>
+                }
               </TableRow>
             );
           })}

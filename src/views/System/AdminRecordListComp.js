@@ -198,7 +198,7 @@ class AdminRecordListComp extends Component {
           </Grid>
           <Grid item xs={3}>
             <FormControl fullWidth={true}>
-              <KeywordOption handleKeywordChange={this.handleKeywordChange} />
+              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
             </FormControl>
           </Grid>
           <Grid item xs={3}>

@@ -365,7 +365,7 @@ class UserMasterManage extends Component {
 
     return (
       <React.Fragment>
-        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
 
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
@@ -380,6 +380,7 @@ class UserMasterManage extends Component {
                       </Button>
                       </span>
                     </Tooltip>
+                    {/**
                     <Tooltip title={t("ttDeleteDept")}>
                       <span>
                       <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "4px"}} >
@@ -387,6 +388,7 @@ class UserMasterManage extends Component {
                       </Button>
                       </span>
                     </Tooltip>
+                    */}
                   </Grid>
                   <Grid item>
                     <Tooltip title={t("ttChangMultiDeptRule")}>

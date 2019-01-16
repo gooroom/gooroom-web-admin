@@ -54,22 +54,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class UserManage extends Component {
-
-  columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
-    { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
-    { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
-    { id: "chDeptName", isOrder: true, numeric: false, disablePadding: true, label: "조직" },
-    { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
-    { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: "최근로그인정보" },
-    { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
-  ];
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -172,10 +160,11 @@ class UserManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { UserProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
     const viewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
     GRConfirmActions.showConfirm({
-      confirmTitle: '사용자정보 삭제',
-      confirmMsg: '사용자정보(' + viewItem.get('userNm') + ')을 삭제하시겠습니까?',
+      confirmTitle: t("lbDeleteUserInfo"),
+      confirmMsg: t("msgDeleteUserInfo", {userNm: viewItem.get('userNm')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmObject: viewItem
     });
@@ -213,7 +202,19 @@ class UserManage extends Component {
   render() {
     const { classes } = this.props;
     const { UserProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    const columnHeaders = [
+      { id: "chCheckbox", isCheckbox: true},
+      { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: t("colUserNm") },
+      { id: "chDeptName", isOrder: true, numeric: false, disablePadding: true, label: t("colDeptNm") },
+      { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: t("colLoginDate") },
+      { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
+    ];
     
     const listObj = UserProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -236,7 +237,7 @@ class UserManage extends Component {
                 </Grid>
                 <Grid item xs={4}>
                   <FormControl fullWidth={true}>
-                    <KeywordOption handleKeywordChange={this.handleKeywordChange} />
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                   </FormControl>
                 </Grid>
                 <Grid item xs={4}>
@@ -266,7 +267,7 @@ class UserManage extends Component {
                 onClickAllCheck={this.handleClickAllCheck}
                 checkedIds={listObj.get('checkedIds')}
                 listData={listObj.get('listData')}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
@@ -310,7 +311,7 @@ class UserManage extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -362,5 +363,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserManage)));
 

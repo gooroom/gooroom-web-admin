@@ -13,25 +13,18 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 
-import ClientStatusSelect from "views/Options/ClientStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
-
-import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
 import FormControl from '@material-ui/core/FormControl';
-
-import Checkbox from "@material-ui/core/Checkbox";
-
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 
@@ -45,11 +38,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class ClientListForViolated extends Component {
 
   constructor(props) {
@@ -71,22 +62,6 @@ class ClientListForViolated extends Component {
       })
     };
   }
-
-  columnHeaders = [
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-
-    { id: 'IS_BOOTPROTECTOR', isOrder: true, numeric: false,disablePadding: true,label: '부팅보안침해'},
-    { id: 'IS_EXEPROTECTOR', isOrder: true, numeric: false,disablePadding: true,label: '실행보안침해'},
-    { id: 'IS_OSPROTECTOR', isOrder: true, numeric: false,disablePadding: true,label: 'OS보안침해'},
-    { id: 'IS_MEDIAPROTECTOR', isOrder: true, numeric: false,disablePadding: true,label: '매체보안침해'},
-
-    { id: 'IS_BOOTPROTECTOR_STOP', isOrder: true, numeric: false,disablePadding: true,label: '부팅보안기능작동'},
-    { id: 'IS_EXEPROTECTOR_STOP', isOrder: true, numeric: false,disablePadding: true,label: '실행보안기능작동'},
-    { id: 'IS_OSPROTECTOR_STOP', isOrder: true, numeric: false,disablePadding: true,label: 'OS보안기능작동'},
-    { id: 'IS_MEDIAPROTECTOR_STOP', isOrder: true, numeric: false,disablePadding: true,label: '매체보안기능작동'},
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '조치' }
-  ];
 
   handleGetClientList = (newListParam) => {
     requestPostAPI('readViolatedClientList', {
@@ -191,24 +166,25 @@ class ClientListForViolated extends Component {
   };
 
   handleClickRepairClient = (clientId) => {
+    const { t, i18n } = this.props;
 
     if(clientId && clientId != '') {
       this.props.GRConfirmActions.showConfirm({
-        confirmTitle: '단말 침해 조치',
-        confirmMsg: '침해가 발생한 단말(' + clientId + ')을 조치 하시겠습니까?',
+        confirmTitle: t("lbRepairViolatedClient"),
+        confirmMsg: t("msgRepairViolatedClient", {clientId: clientId}),
         handleConfirmResult: ((confirmValue, confirmObject) => {
           if(confirmValue) {
             requestPostAPI('createResetViolatedClient', confirmObject).then(
               (response) => {
                 if(response && response.data && response.data.status && response.data.status.result == 'success') {
                   this.props.GRAlertActions.showAlert({
-                    alertTitle: '조치작업',
-                    alertMsg: '침해단말 조치작업이 생성 되었습니다.'
+                    alertTitle: t("lbRepairJob"),
+                    alertMsg: t("msgRepairJob")
                   });
                 } else {
                   this.props.GRAlertActions.showAlert({
                     alertTitle: t("dtSystemError"),
-                    alertMsg: '침해단말 조치작업이 생성되지 못하였습니다.'
+                    alertMsg: t("msgRepairJobFail")
                   });
                 }
               }
@@ -226,7 +202,8 @@ class ClientListForViolated extends Component {
 
   render() {
     const { classes } = this.props;
-    
+    const { t, i18n } = this.props;
+
     const listObj = this.state.stateData;
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
@@ -239,7 +216,7 @@ class ClientListForViolated extends Component {
         <Grid container alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4}>
             <FormControl fullWidth={true}>
-              <KeywordOption handleKeywordChange={this.handleKeywordChange} />
+              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
             </FormControl>
           </Grid>
           <Grid item xs={1}>
@@ -256,28 +233,28 @@ class ClientListForViolated extends Component {
             <TableRow>
               <TableCell className={classes.grSmallAndHeaderCell} rowSpan={2}
                 sortDirection={listObj.getIn(['listParam', 'orderColumn']) === 'CLIENT_ID' ? listObj.getIn(['listParam', 'orderDir']) : false}
-              >단말아이디
+              >{t("colClientId")}
               </TableCell>
 
               <TableCell className={classes.grSmallAndHeaderCell} rowSpan={2}
                 sortDirection={listObj.getIn(['listParam', 'orderColumn']) === 'CLIENT_NM' ? listObj.getIn(['listParam', 'orderDir']) : false}
-              >단말이름
+              >{t("colClientName")}
               </TableCell>
-              <TableCell className={classes.grSmallAndHeaderCell} colSpan={4}>침해상태</TableCell>
-              <TableCell className={classes.grSmallAndHeaderCell} colSpan={4}>보안점검기능 작동여부</TableCell>
-              <TableCell className={classes.grSmallAndHeaderCell} rowSpan={2} >조치</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} colSpan={4}>{t("colViolateStatus")}</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} colSpan={4}>{t("colViolateRun")}</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} rowSpan={2} >{t("colRepair")}</TableCell>
             </TableRow>
 
             <TableRow>
-              <TableCell className={classes.grSmallAndHeaderCell} >부팅보안</TableCell>
-              <TableCell className={classes.grSmallAndHeaderCell} >실행보안</TableCell>
-              <TableCell className={classes.grSmallAndHeaderCell} >OS보안</TableCell>
-              <TableCell className={classes.grSmallAndHeaderCell} >매체보안</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} >{t("colBootProtect")}</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} >{t("colExeProtect")}</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} >{t("colOSProtect")}</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} >{t("colMediaProtect")}</TableCell>
 
-              <TableCell className={classes.grSmallAndHeaderCell} >부팅보안</TableCell>
-              <TableCell className={classes.grSmallAndHeaderCell} >실행보안</TableCell>
-              <TableCell className={classes.grSmallAndHeaderCell} >OS보안</TableCell>
-              <TableCell className={classes.grSmallAndHeaderCell} >매체보안</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} >{t("colBootProtect")}</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} >{t("colExeProtect")}</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} >{t("colOSProtect")}</TableCell>
+              <TableCell className={classes.grSmallAndHeaderCell} >{t("colMediaProtect")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -309,7 +286,7 @@ class ClientListForViolated extends Component {
             {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
               <TableRow key={e}>
                 <TableCell
-                  colSpan={this.columnHeaders.length + 1}
+                  colSpan={13}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
@@ -351,5 +328,5 @@ const mapDispatchToProps = (dispatch) => ({
     GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientListForViolated));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientListForViolated)));
 
