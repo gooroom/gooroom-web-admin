@@ -68,7 +68,6 @@ class DesktopConfSelector extends Component {
     const { classes } = this.props;
     const { DesktopConfProps, compId, targetType } = this.props;
     const { t, i18n } = this.props;
-
     const selectedObj = (targetType && targetType != '') ? DesktopConfProps.getIn(['viewItems', compId, targetType]) : DesktopConfProps.getIn(['viewItems', compId]);
 
     const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;

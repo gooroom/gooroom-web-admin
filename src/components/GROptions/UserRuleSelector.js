@@ -60,7 +60,7 @@ class UserRuleSelector extends Component {
                 {selectedTab === 1 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} targetType={targetType} />}
                 {selectedTab === 2 && <SecurityRuleSelector compId={compId} initId={module ? module.securityRuleId : '-'} targetType={targetType} />}
                 {selectedTab === 3 && <SoftwareFilterSelector compId={compId} initId={module ? module.filteredSoftwareRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 4 && <DesktopConfSelector compId={compId} initId={module ? '+' : '-'} targetType={targetType} />}
+                {selectedTab === 4 && <DesktopConfSelector compId={compId} initId={module ? module.desktopConfigId : '-'} targetType={targetType} />}
                 </Paper>
             </React.Fragment>
         );

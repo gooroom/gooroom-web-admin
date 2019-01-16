@@ -402,6 +402,7 @@ export default {
   "dtSetupLogLevel": "로그레벨 설정",
   "dtIsUseDeleteFunc": "삭제기능 사용여부",
   "lbSetupClient": "단말 설정",
+  "msgValidOnlyUpperZero": "0보다 큰 숫자만 입력할 수 있습니다.",
 
   // 데스크톱앱관리
   "dtDeleteDesktopApp": "데스크톱앱 삭제",

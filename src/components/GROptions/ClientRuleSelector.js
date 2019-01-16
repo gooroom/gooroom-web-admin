@@ -71,7 +71,7 @@ class ClientRuleSelector extends Component {
                 {selectedTab === 4 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} targetType={targetType} />}
                 {selectedTab === 5 && <SecurityRuleSelector compId={compId} initId={module ? module.securityRuleId : '-'} targetType={targetType} />}
                 {selectedTab === 6 && <SoftwareFilterSelector compId={compId} initId={module ? module.filteredSoftwareRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 7 && <DesktopConfSelector compId={compId} initId={module ? '+' : '-'} targetType={targetType} />}
+                {selectedTab === 7 && <DesktopConfSelector compId={compId} initId={module ? module.desktopConfigId : '-'} targetType={targetType} />}
                 </Paper>
             
             </React.Fragment>
