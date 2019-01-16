@@ -98,6 +98,7 @@ class DesktopAppDialog extends Component {
 
     handleEditData = (event, id) => {
         const { DesktopAppProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtEditDesktopApp"),
@@ -164,7 +165,7 @@ class DesktopAppDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const bull = <span className={classes.bullet}>•</span>;
+        const { t, i18n } = this.props;
 
         const { DesktopAppProps } = this.props;
         const dialogType = DesktopAppProps.get('dialogType');
