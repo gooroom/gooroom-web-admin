@@ -163,7 +163,7 @@ class ClientManageCompWithPackage extends Component {
       { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
       { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
       { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageCnt") },
-      { id: 'UPDATE_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageUpdateCnt") }
+      { id: 'UPDATE_TARGET_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageUpdateCnt") }
     ];
     
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
