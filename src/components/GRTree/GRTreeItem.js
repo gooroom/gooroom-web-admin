@@ -46,14 +46,14 @@ class GRTreeItem extends Component {
                 }
                 {leftIcon}
                 <ListItemText inset primary={primaryText} onClick={onClickNode} />
-                {isEnableEdit && 
-                <IconButton style={{padding:0}} onClick={onEditNode}><SettingsApplicationsIcon style={{color:'darkgray', fontSize:18}} /></IconButton>
-                }
                 {(isExtend == 'Y') && 
                 <IconButton style={{padding:0}} onClick={onClickNode}><OpenIcon /></IconButton>
                 }
                 {(isExtend == 'N') && 
                 <IconButton style={{padding:0}} onClick={onFoldingNode}><CloseIcon /></IconButton>
+                }
+                {isEnableEdit && 
+                <IconButton onClick={onEditNode}><SettingsApplicationsIcon style={{color:'darkgray',fontSize:'28px',paddingTop:4}} /></IconButton>
                 }
             </ListItem>
 

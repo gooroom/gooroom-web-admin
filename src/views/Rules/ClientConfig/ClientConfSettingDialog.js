@@ -449,12 +449,14 @@ class ClientConfSettingDialog extends Component {
                                     </div>
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={6}>
-                                <TextField label={t("lbSaveDateAfterSend")} value={(editingItem.get('logRemainDate')) ? editingItem.get('logRemainDate') : ''}
+                                <TextValidator name="logRemainDate" label={t("lbSaveDateAfterSend")} 
+                                    validators={['required', 'matchRegexp:^[1-9]*$']}
+                                    errorMessages={[t("msgValidOnlyUpperZero"), t("msgValidOnlyUpperZero")]}
+                                    value={(editingItem.get('logRemainDate')) ? editingItem.get('logRemainDate') : ''}
                                     onChange={this.handleValueChange("logRemainDate")}
                                     className={classes.fullWidth}
                                     disabled={!(editingItem.get('isDeleteLog'))}
                                 />
-                                <Typography variant="caption">{t("msgHelpNoDeleteIfZero")}</Typography>
                                 </Grid>
                             </Grid>
                         </div>

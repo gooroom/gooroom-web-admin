@@ -6,6 +6,7 @@ import * as commonHandleActions from 'modules/commons/commonHandleActions';
 const COMMON_PENDING = 'clientProfileSet/COMMON_PENDING';
 const COMMON_FAILURE = 'clientProfileSet/COMMON_FAILURE';
 
+const CHG_LISTPARAM_DATA = 'adminUser/CHG_LISTPARAM_DATA';
 const GET_PROFILESET_LISTPAGED_SUCCESS = 'clientProfileSet/GET_LIST_SUCCESS';
 
 const CREATE_PROFILESET_DATA_SUCCESS = 'clientProfileSet/CREATE_DATA_SUCCESS';
@@ -163,6 +164,9 @@ export default handleActions({
 
     [GET_PROFILESET_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
+    },
+    [CHG_LISTPARAM_DATA]: (state, action) => {
+        return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CREATE_PROFILESET_DATA_SUCCESS]: (state, action) => {
         return state.merge({

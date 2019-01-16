@@ -67,7 +67,7 @@ class DeptSpec extends Component {
       value: getValueInSelectedObjectInComp(this.props.SoftwareFilterProps, compId, 'DEPT', 'objId')      
     });
     this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
-      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'DEPT', 'objId')      
+      value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'DEPT', 'confId')      
     });
 
     this.props.DeptActions.showDialog({

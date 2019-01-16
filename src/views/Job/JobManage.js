@@ -192,7 +192,7 @@ class JobManage extends Component {
                     >
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('jobNo')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('jobName')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{getJobStatusToString(n.get('jobStatus'))}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{getJobStatusToString(n.get('jobStatus'), t)}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientCount')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('errorCount')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('compCount')}</TableCell>

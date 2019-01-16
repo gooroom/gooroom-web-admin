@@ -34,7 +34,7 @@ class ClientConfSettingSpec extends Component {
     let viewItem = null;
     let RuleAvartar = null;
     if(selectedItem) {
-      viewItem = generateClientConfSettingObject(selectedItem, true);
+      viewItem = generateClientConfSettingObject(selectedItem, true, t);
       RuleAvartar = getAvatarForRuleGrade(targetType, ruleGrade);
     }
 
@@ -181,23 +181,23 @@ class ClientConfSettingSpec extends Component {
 
 export default translate("translations")(withStyles(GRCommonStyle)(ClientConfSettingSpec));
 
-export const convertLogLevelString = (param) => {
+export const convertLogLevelString = (param, t) => {
   if(param == 'emerg') {
-    return 'Emergency (긴급)';
+    return 'Emergency' + t('stEmergLevel');
   } else if(param == 'alert') {
-    return 'Alert (경보)';
+    return 'Alert' + t('stAlertLevel');
   } else if(param == 'crit') {
-    return 'Critical (위험)';
+    return 'Critical' + t('stCritLevel');
   } else if(param == 'err') {
-    return 'Error (오류)';
+    return 'Error' + t('stErrLevel');
   } else if(param == 'warnning') {
-    return 'Warning (경고)';
+    return 'Warning' + t('stWarningLevel');
   } else if(param == 'notice') {
-    return 'Notice (알림)';
+    return 'Notice' + t('stNoticeLevel');
   } else if(param == 'info') {
-    return 'Informational (정보)';
+    return 'Informational' + t('stInfoLevel');
   } else if(param == 'debug') {
-    return 'Debug (디버깅)';
+    return 'Debug' + t('stDebugLevel');
   } else {
     return param;
   }
@@ -225,7 +225,7 @@ export const convertLogLevelNo = (param) => {
   }
 }
 
-export const generateClientConfSettingObject = (param, isForViewer) => {
+export const generateClientConfSettingObject = (param, isForViewer, t) => {
 
   if(param) {
     let useHypervisor = false;
@@ -288,42 +288,42 @@ export const generateClientConfSettingObject = (param, isForViewer) => {
         systemKeepFree = evalue;
 
       } else if(ename == 'transmit_boot') {
-        transmit_boot = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        transmit_boot = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
       } else if(ename == 'transmit_exe') {
-        transmit_exe = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        transmit_exe = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
       } else if(ename == 'transmit_os') {
-        transmit_os = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        transmit_os = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
       } else if(ename == 'transmit_media') {
-        transmit_media = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        transmit_media = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
       } else if(ename == 'transmit_agent') {
-        transmit_agent = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        transmit_agent = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
 
       } else if(ename == 'notify_boot') {
-        notify_boot = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        notify_boot = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
         boot_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_exe') {
-        notify_exe = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        notify_exe = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
         exe_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_os') {
-        notify_os = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        notify_os = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
         os_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_media') {
-        notify_media = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        notify_media = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
         media_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_agent') {
-        notify_agent = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        notify_agent = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
         agent_minno = convertLogLevelNo(evalue);
 
       } else if(ename == 'show_boot') {
-        show_boot = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        show_boot = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
       } else if(ename == 'show_exe') {
-        show_exe = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        show_exe = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
       } else if(ename == 'show_os') {
-        show_os = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        show_os = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
       } else if(ename == 'show_media') {
-        show_media = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        show_media = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
       } else if(ename == 'show_agent') {
-        show_agent = (isForViewer) ? convertLogLevelString(evalue) : evalue;
+        show_agent = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
       }
 
     });

@@ -68,7 +68,6 @@ class MediaRuleSelector extends Component {
     const { classes } = this.props;
     const { MediaRuleProps, compId, targetType } = this.props;
     const { t, i18n } = this.props;
-    
     const selectedObj = (targetType && targetType != '') ? MediaRuleProps.getIn(['viewItems', compId, targetType]) : MediaRuleProps.getIn(['viewItems', compId]);
 
     const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;

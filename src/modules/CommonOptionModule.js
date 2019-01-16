@@ -22,18 +22,18 @@ const initialState = {
     },
 
     userStatusData: [
-        { statusId: "NORMAL", statusVal: "STAT010", statusNm: "정상" },
-        { statusId: "DELETE", statusVal: "STAT020", statusNm: "삭제" },
-        { statusId: "ALL", statusVal: "ALL", statusNm: "전체" }
+        { statusId: "NORMAL", statusVal: "STAT010", statusNm: "stNormal" },
+        { statusId: "DELETE", statusVal: "STAT020", statusNm: "stDelete" },
+        { statusId: "ALL", statusVal: "ALL", statusNm: "stAll" }
     ],
-    selectedUserStatus: { statusId: "NORMAL", statusVal: "STAT010", statusNm: "정상" },
+    selectedUserStatus: { statusId: "NORMAL", statusVal: "STAT010", statusNm: "stNormal" },
 
     clientStatusData: [
-        { statusId: "NORMAL", statusVal: "NORMAL", statusNm: "정상단말" },
-        { statusId: "SECURE", statusVal: "SECURE", statusNm: "침해단말" },
-        { statusId: "REVOKED", statusVal: "REVOKED", statusNm: "해지단말" },
-        { statusId: "ONLINE", statusVal: "ONLINE", statusNm: "온라인" },
-        { statusId: "ALL", statusVal: "ALL", statusNm: "전체" }
+        { statusId: "NORMAL", statusVal: "NORMAL", statusNm: "stNormalClient" },
+        { statusId: "SECURE", statusVal: "SECURE", statusNm: "stViolatedClient" },
+        { statusId: "REVOKED", statusVal: "REVOKED", statusNm: "stRevokedClient" },
+        { statusId: "ONLINE", statusVal: "ONLINE", statusNm: "stOnlineClient" },
+        { statusId: "ALL", statusVal: "ALL", statusNm: "stAll" }
     ],
     selectedClientStatus: {
         statusId: '',
@@ -42,37 +42,37 @@ const initialState = {
     },
 
     jobStatusData: [
-        { statusId: "R", statusVal: "R", statusNm: "작업전" },
-        { statusId: "D", statusVal: "D", statusNm: "작업중" },
-        { statusId: "C", statusVal: "C", statusNm: "작업완료" }
+        { statusId: "R", statusVal: "R", statusNm: "stBeforeJob" },
+        { statusId: "D", statusVal: "D", statusNm: "stRunningJob" },
+        { statusId: "C", statusVal: "C", statusNm: "stCompJob" }
     ],
     selectedJobStatus: {
         statusIds: ["R", "D"]
     },
 
     logLevelData: [
-        { levelNo: "0", levelId: "None", levelVal: "none", levelNm: "사용안함" },
-        { levelNo: "1", levelId: "Emergency", levelVal: "emerg", levelNm: "긴급" },
-        { levelNo: "2", levelId: "Alert", levelVal: "alert", levelNm: "경보" },
-        { levelNo: "3", levelId: "Critical", levelVal: "crit", levelNm: "위험" },
-        { levelNo: "4", levelId: "Error", levelVal: "err", levelNm: "오류" },
-        { levelNo: "5", levelId: "Warning", levelVal: "warnning", levelNm: "경고" },
-        { levelNo: "6", levelId: "Notice", levelVal: "notice", levelNm: "알림" },
-        { levelNo: "7", levelId: "Informational", levelVal: "info", levelNm: "정보" },
-        { levelNo: "8", levelId: "Debug", levelVal: "debug", levelNm: "디버깅" }
+        { levelNo: "0", levelId: "None", levelVal: "none", levelNm: "stNoUse" },
+        { levelNo: "1", levelId: "Emergency", levelVal: "emerg", levelNm: "stEmergLevel" },
+        { levelNo: "2", levelId: "Alert", levelVal: "alert", levelNm: "stAlertLevel" },
+        { levelNo: "3", levelId: "Critical", levelVal: "crit", levelNm: "stCritLevel" },
+        { levelNo: "4", levelId: "Error", levelVal: "err", levelNm: "stErrLevel" },
+        { levelNo: "5", levelId: "Warning", levelVal: "warnning", levelNm: "stWarningLevel" },
+        { levelNo: "6", levelId: "Notice", levelVal: "notice", levelNm: "stNoticeLevel" },
+        { levelNo: "7", levelId: "Informational", levelVal: "info", levelNm: "stInfoLevel" },
+        { levelNo: "8", levelId: "Debug", levelVal: "debug", levelNm: "stDebugLevel" }
     ],
     protectionTypeData: [
-        { typeId: "ALL", typeVal: "ALL", typeNm: "전체" },
-        { typeId: "MEDIA", typeVal: "MEDIA", typeNm: "매체보안" },
-        { typeId: "OS", typeVal: "OS", typeNm: "운영체제보안" },
-        { typeId: "EXE", typeVal: "EXE", typeNm: "실행보안" },
-        { typeId: "BOOT", typeVal: "BOOT", typeNm: "부팅보안" },
-        { typeId: "AGENT", typeVal: "AGENT", typeNm: "부팅보안" }
+        { typeId: "ALL", typeVal: "ALL", typeNm: "stAll" },
+        { typeId: "MEDIA", typeVal: "MEDIA", typeNm: "stMediaProctect" },
+        { typeId: "OS", typeVal: "OS", typeNm: "stOSProctect" },
+        { typeId: "EXE", typeVal: "EXE", typeNm: "stExeProctect" },
+        { typeId: "BOOT", typeVal: "BOOT", typeNm: "stBootProctect" },
+        { typeId: "AGENT", typeVal: "AGENT", typeNm: "stAgentProctect" }
     ],
     generalLogTypeData: [
-        { typeId: "ALL", typeVal: "ALL", typeNm: "전체" },
-        { typeId: "BROWSER", typeVal: "BROWSER", typeNm: "브라우저" },
-        { typeId: "AGENT", typeVal: "AGENT", typeNm: "에이전트" }
+        { typeId: "ALL", typeVal: "ALL", typeNm: "stAll" },
+        { typeId: "BROWSER", typeVal: "BROWSER", typeNm: "stBrowser" },
+        { typeId: "AGENT", typeVal: "AGENT", typeNm: "stAgent" }
     ]
 
 };

@@ -96,8 +96,8 @@ class GRHeader extends Component {
                   <Paper>
                     <ClickAwayListener onClickAway={this.handleClose}>
                       <MenuList>
-                        <MenuItem component={Link} to={'/system/siteconfig/GRM9901/구름관리서버설정'}>서버설정</MenuItem>
-                        <MenuItem component={Link} to={'/system/adminusermng/GRM9902/관리자계정관리'}>관리자관리</MenuItem>
+                        <MenuItem component={Link} to={'/system/siteconfig/GRM9901/menuSiteConfig'}>{t("menuSiteConfig")}</MenuItem>
+                        <MenuItem component={Link} to={'/system/adminusermng/GRM9902/menuAdminUserMng'}>{t("menuAdminUserMng")}</MenuItem>
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>

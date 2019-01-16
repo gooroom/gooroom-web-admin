@@ -49,7 +49,8 @@ export default {
   "colProfile": "프로파일",
   "colPackageInfo": "패키지정보",
   "colPackageName": "패키지이름",
-  "colPackageUpdate": "패키지업데이트",
+  "colPackageUpdateCnt": "업데이트수",
+  "colPackageCnt": "패키지수",
 
   "colArchitecture": "아키텍쳐",
   "colVersion": "버전",
@@ -81,6 +82,14 @@ export default {
   "colLoginClient": "최종접속단말정보",
   "colViolatedCnt": "침해수",
 
+  "colBootProtect": "부팅보안",
+  "colExeProtect": "실행보안",
+  "colOSProtect": "OS보안",
+  "colMediaProtect": "매체보안",
+  "colRepair": "조치",
+  "colViolateStatus": "침해상태",
+  "colViolateRun": "보안점검기능 작동여부",
+
   // options
   "optDate": "날짜",
   "searchStartDate": "조회시작일",
@@ -101,8 +110,12 @@ export default {
   "btnCopy": "복사",
   "btnSelect": "선택",
   "btnSelectFile": "File선택",
+  "btnOK": "확인",
+  "btnYes": "예",
+  "btnNo": "아니오",
 
   // Menus
+  "home": "",
   "menuDashboard": "Dashboard",
   "menuStatistic": "통계",
   "menuDailyViolated": "일별침해통계",
@@ -140,6 +153,9 @@ export default {
   "menuJob": "작업",
   "menuJobManage": "작업정보",
 
+  "menuSiteConfig": "구름관리서버설정",
+  "menuAdminUserMng": "관리자관리",
+
   // 공통
   "selOffline": "오프라인",
   "selOnline": "온라인",
@@ -165,7 +181,37 @@ export default {
   "selNoSelected": "지정안함",
   "msgShowSpecAsSelectRule": "정책 정보를 선택하면 상세 내용이 표시됩니다.",
 
-
+  // options
+  "stBeforeJob": "작업전",
+  "stCompJob": "작업완료",
+  "stRunningJob": "작업중",
+  "stFailJob": "작업오류",
+  "stCancelJob": "작업취소",
+  "stRevokeClient": "폐기단말",
+  "stNormal": "정상",
+  "stDelete": "삭제",
+  "stAll": "전체",
+  "stNormalClient": "정상단말",
+  "stViolatedClient": "침해단말",
+  "stRevokedClient": "해지단말",
+  "stOnlineClient": "온라인",
+  "stBrowser": "브라우저",
+  "stAgent": "에이전트",
+  "stMediaProctect": "매체보안",
+  "stOSProctect": "운영체제보안",
+  "stExeProctect": "실행보안",
+  "stBootProctect": "부팅보안",
+  "stAgentProctect": "에이전트",
+  "stNoUse": "(사용안함)",
+  "stEmergLevel": "(긴급)",
+  "stAlertLevel": "(경보)",
+  "stCritLevel": "(위험)",
+  "stErrLevel": "(오류)",
+  "stWarningLevel": "(경고)",
+  "stNoticeLevel": "(알림)",
+  "stInfoLevel": "(정보)",
+  "stDebugLevel": "(디버깅)",
+  
   // 일별접속통계
   "connectRequestCount": "접속요청수",
   "connReqUserCount": "접속요청 사용자수",
@@ -186,6 +232,7 @@ export default {
 
   "spClientGroup": "단말그룹",
   "spClientDesc": "단말설명",
+  "spClientStatus": "단말상태",
   "spClientGroupName": "단말그룹이름",
   "spClientGroupDesc": "단말그룹설명",
   "spIsOnline": "온라인여부",
@@ -217,6 +264,7 @@ export default {
   "msgSelectClient": "단말을 선택하세요.",
   "msgCfmDeleteClientFromGroup": "선택하신 단말을 그룹에서 삭제하시겠습니까?",
   "msgCfmSelectGroupForInsertClient": "단말을 추가할 그룹을 선택하세요.",
+  "dtSelectClient": "단말 선택",
   
   // 단말 등록키 관리
   "dtAddClientKey": "단말 등록키 등록",
@@ -237,7 +285,7 @@ export default {
   "lbCertExpireDate": "인증서만료날짜",
   "lbValidRegIp": "유효 IP 범위",
   "msgInputValidIp": "유효 아이피를 입력하세요.",
-  "msgHelpInputIp": "여러개인 경우 콤마(.) 로 구분, 또는 "-" 로 영역 설정 가능합니다.",
+  "msgHelpInputIp": "여러개인 경우 콤마(.) 로 구분, 또는 '-' 로 영역 설정 가능합니다.",
   "msgSampleIputIp": "(샘플) '127.0.0.1, 169.0.0.1' 또는 '127.0.0.1 - 127.0.0.10'",
 
   // 프로파일정보
@@ -287,7 +335,16 @@ export default {
   "dtViewClientPackage": "단말패키지 정보",
   "lbPackageName": "단말패키지 이름",
   "lbPackageDesc": "단말패키지 설명",
-
+  "dtSelectPackage": "패키지 선택",
+  "dtAllPackageListUpadte": "전체리스트 업데이트",
+  "btnInstall": "설치",
+  "msgNoSelectPackage": "설치할 패키지가 선택되지 않았습니다.",
+  "dtPackageListUpadte": "패키지리스트 업데이트",
+  "msgPackageListUpadte": "패키지리스트를 업데이트 하겠습니까?",
+  "dtCompUpdate": "업데이트 완료",
+  "msgCompUpdateAndJob": "패키지 리스트를 업데이트 하기 위하여 작업이 생성되었습니다. 1~3분 정도 기다린후 확인하시기 바랍니다.",
+  "msgFailCompUpdate": "패키지 리스트 업데이트 작업이 생성되지 못하였습니다.",
+  
   // 작업관리
   "dtJobStatus": "작업상태",
   "msgNoResult": "결과가 없습니다.",
@@ -306,6 +363,7 @@ export default {
   "msgCancelJob": "작업대상 단말중 '작업전' 상태 단말의 작업을 취소하시겠습니까?",
 
   // 단말정책설정
+  "lbClientConf": "단말정책",
   "dtAddClientConf": "단말정책설정 등록",
   "msgAddClientConf": "단말정책설정를 등록하시겠습니까?",
   "dtEditClientConf": "단말정책설정 수정",
@@ -344,6 +402,7 @@ export default {
   "dtSetupLogLevel": "로그레벨 설정",
   "dtIsUseDeleteFunc": "삭제기능 사용여부",
   "lbSetupClient": "단말 설정",
+  "msgValidOnlyUpperZero": "0보다 큰 숫자만 입력할 수 있습니다.",
 
   // 데스크톱앱관리
   "dtDeleteDesktopApp": "데스크톱앱 삭제",
@@ -523,6 +582,7 @@ export default {
   "dtAdminJobHist": "관리자({{adminId}}) 작업 이력",
 
   // 호스트정보 관리
+  "lbHosts": "Hosts정보",
   "lbAddHosts": "Hosts 정보 등록",
   "msgAddHosts": "Hosts 정보를 등록하시겠습니까?",
   "lbEditHosts": "Hosts 정보 수정",
@@ -540,6 +600,7 @@ export default {
   "msgShowDetailHosts": "Hosts 정보를 선택하면 상세 내용이 표시됩니다.",
 
   // 업데이트서버정보 관리
+  "lbUpdateServer": "업데이트서버정보",
   "lbAddUpdateServer": "업데이트서버정보 등록",
   "msgAddUpdateServer": "업데이트서버정보를 등록하시겠습니까?",
   "lbEditUpdateServer": "업데이트서버정보 수정",
@@ -561,6 +622,7 @@ export default {
   "msgShowDetailUpdateServer": "업데이트서버 정보를 선택하면 상세 내용이 표시됩니다.",
 
   // 브라우져제어정책 관리
+  "lbBrowserRule": "브라우져정책",
   "lbDeleteBrowserRule": "브라우져제어정책 삭제",
   "msgDeleteBrowserRule": "브라우져제어정책({{objId}})을 삭제하시겠습니까?",
   "lbAddBrowserRule": "브라우저제어정책 등록",
@@ -597,6 +659,7 @@ export default {
   "lbSetupUntrustSiteInfo": "비신뢰사이트 설정정보",
 
   // 매체제어정책 관리
+  "lbMediaRule": "매체제어정책",
   "lbDeleteMediaRule": "매체제어정책 삭제",
   "msgDeleteMediaRule": "매체제어정책({{objId}})을 삭제하시겠습니까?",
   "lbAddMediaRule": "매체제어정책정보 등록",
@@ -644,6 +707,7 @@ export default {
   "dtBluetoothMac": "블루투스 맥주소",
   
   // 단말보안정책 관리
+  "lbSecuRule": "단말보안정책",
   "lbDeleteSecuRule": "단말보안정책 삭제",
   "msgDeleteSecuRule": "단말보안정책({{objId}})을 삭제하시겠습니까?",
   "lbAddSecuRule": "단말보안정책정보 등록",
@@ -691,6 +755,7 @@ export default {
   "dtCategorySWRule": "소프트웨어제한 정책",
   "msgSelectSWItem": "실행금지로 지정할 소프트웨어를 선택하세요.",
   "msStopRunRedSW": "Red 색상의 소프트웨어는 실행을 금지합니다.",
+  "lbSWRule": "소프트웨어제한정책",
 
   // 관리자 개인 설정
   "lbAdminTitle": "관리자",
@@ -702,5 +767,14 @@ export default {
   "msgValidAdminMinimum": "5보다 작을수 없습니다.",
   "lbEditAdminSetup": "관리자설정 수정",
   "msgEditAdminSetup": "관리자설정을 수정하시겠습니까?",
+
+  // Dashboard
+  "dtViewTotalRule": "정책 통합 조회",
+  "lbRepairViolatedClient": "단말 침해 조치",
+  "msgRepairViolatedClient": "침해가 발생한 단말('{{clientId}}')을 조치 하시겠습니까?",
+  "lbRepairJob": "조치작업",
+  "msgRepairJob": "침해단말 조치작업이 생성 되었습니다.",
+  "msgRepairJobFail": "침해단말 조치작업이 생성되지 못하였습니다.",
+  "lbViolatedClientList": "침해 단말 목록",
   
 };

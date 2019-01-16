@@ -28,18 +28,13 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
-import DescIcon from '@material-ui/icons/Description';
 import Search from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
 
 import Checkbox from "@material-ui/core/Checkbox";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -51,25 +46,11 @@ import ClientStatusSelect from 'views/Options/ClientStatusSelect';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientManage extends Component {
 
-  columnHeaders = [
-    { id: "checkbox", isCheckbox: true},
-    { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: '아이디' },
-    { id: 'LOGIN_ID', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
-    { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
-    { id: 'LAST_LOGIN_TIME', isOrder: true, numeric: false, disablePadding: true, label: '최종접속일' },
-    { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: '최종접속IP' },
-    { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: '사용률' },
-    { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: '패키지수' }
-  ];
-  
   constructor(props) {
     super(props);
 
@@ -185,7 +166,21 @@ class ClientManage extends Component {
   render() {
     const { classes } = this.props;
     const { ClientManageProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
+
+    const columnHeaders = [
+      { id: "checkbox", isCheckbox: true},
+      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'LOGIN_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colLoginId") },
+      { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
+      { id: 'LAST_LOGIN_TIME', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginDate") },
+      { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginIp") },
+      { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: t("colUseRate") },
+      { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageCnt") }
+    ];
     
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -205,14 +200,14 @@ class ClientManage extends Component {
 
                 <Grid item xs={3} >
                   <FormControl fullWidth={true}>
-                    <InputLabel htmlFor="client-status">단말상태</InputLabel>
+                    <InputLabel htmlFor="client-status">{t("spClientStatus")}</InputLabel>
                     <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
                   </FormControl>
                 </Grid>
 
                 <Grid item xs={3} >
                   <FormControl fullWidth={true}>
-                    <InputLabel htmlFor="client-status">단말그룹</InputLabel>
+                    <InputLabel htmlFor="client-status">{t("spClientGroup")}</InputLabel>
                     <ClientGroupSelect onChangeSelect={this.handleChangeGroupSelect} />
                   </FormControl>
                 </Grid>
@@ -253,7 +248,7 @@ class ClientManage extends Component {
                 onClickAllCheck={this.handleClickAllCheck}
                 checkedIds={listObj.get('checkedIds')}
                 listData={listObj.get('listData')}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
               {listObj.get('listData').map(n => {
@@ -286,7 +281,7 @@ class ClientManage extends Component {
                 {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
                   <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
@@ -336,5 +331,5 @@ const mapDispatchToProps = (dispatch) => ({
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManage)));
 
