@@ -181,9 +181,9 @@ class DesktopConfManage extends Component {
 
     const columnHeaders = [
       { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: t("colDivision") },
-      { id: 'chConfId', isOrder: false, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
-      { id: 'chThemeName', isOrder: false, numeric: false, disablePadding: true, label: t("colThemeName") },
+      { id: 'chThemeName', isOrder: true, numeric: false, disablePadding: true, label: t("colThemeName") },
       { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: t("colModUser") },
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
       { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: t("colRegUser") },

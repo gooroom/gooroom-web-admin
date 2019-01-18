@@ -110,7 +110,7 @@ export const readGcspListPaged = (module, compId, extParam) => dispatch => {
 };
 
 // create (add)
-export const createGcspData = (param) => dispatch => {
+export const createGcspData = (param) => (dispatch, getState) => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('createGcspData', param).then(
         (response) => {
@@ -120,9 +120,12 @@ export const createGcspData = (param) => dispatch => {
                         type: CREATE_GCSP_SUCCESS,
                         response: response
                     });
-                }    
+                } else {
+                    dispatch({ type: COMMON_FAILURE, error: response.data });
+                    return response.data;
+                }
             } catch(error) {
-                dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
