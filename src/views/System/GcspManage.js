@@ -143,7 +143,7 @@ class GcspManage extends Component {
     this.props.GcspManageActions.changeListParamData({
       name: name, 
       value: value,
-      compId: this.props.match.params.grMenuIdUserStatusSelect
+      compId: this.props.match.params.grMenuId
     });
   }
 

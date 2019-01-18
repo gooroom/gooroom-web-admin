@@ -274,7 +274,7 @@ export const createDesktopAppData = (itemObj) => dispatch => {
 // clone create
 export const cloneDesktopAppData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClonedDesktopApp', {
+    return requestPostAPI('cloneDesktopApp', {
             'appId': param.appId
         }).then(
         (response) => {

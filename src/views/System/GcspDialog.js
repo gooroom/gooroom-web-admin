@@ -6,8 +6,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as GcspManageActions from 'modules/GcspManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import GRAlert from 'components/GRComponents/GRAlert';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -81,9 +83,16 @@ class GcspDialog extends Component {
                 url: paramObject.get('url'),
                 certGubun: paramObject.get('certGubun'),
                 gcspCsr: paramObject.get('gcspCsr')
-            }).then((res) => {
-                GcspManageActions.readGcspListPaged(GcspManageProps, compId);
-                this.handleClose();
+            }).then((reData) => {
+                if(reData.status.result === 'fail') {
+                    this.props.GRAlertActions.showAlert({
+                        alertTitle: this.props.t("dtSystemError"),
+                        alertMsg: reData.status.message
+                    });
+                } else {
+                    GcspManageActions.readGcspListPaged(GcspManageProps, compId);
+                    this.handleClose();
+                }
             });
         }
     }
@@ -279,6 +288,7 @@ class GcspDialog extends Component {
                 </ValidatorForm>
             </Dialog>
             }
+            <GRAlert />
             </div>
         );
     }
@@ -290,7 +300,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     GcspManageActions: bindActionCreators(GcspManageActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GcspDialog)));

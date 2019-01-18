@@ -322,7 +322,7 @@ export const createDesktopConfData = (itemObj) => dispatch => {
 // clone create
 export const cloneDesktopConfData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClonedDesktopConf', {
+    return requestPostAPI('cloneDesktopConf', {
             'desktopConfId': param.confId
         }).then(
         (response) => {

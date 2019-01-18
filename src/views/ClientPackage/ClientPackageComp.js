@@ -16,7 +16,6 @@ import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, get
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
-import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientPackageDialog from './ClientPackageDialog';
 import GRAlert from 'components/GRComponents/GRAlert';
 

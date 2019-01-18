@@ -144,12 +144,18 @@ export const createThemeData = (paramObject) => dispatch => {
 // edit
 export const editThemeData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateThemeData', param).then(
+    return requestMultipartFormAPI('updateThemeData', param).then(
         (response) => {
-            dispatch({
-                type: EDIT_THEMEMANAGE_SUCCESS,
-                response: response
-            });
+            try {
+                if(response.data.status.result === 'success') {
+                    dispatch({
+                        type: EDIT_THEMEMANAGE_SUCCESS,
+                        response: response
+                    });
+                }    
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+            }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });

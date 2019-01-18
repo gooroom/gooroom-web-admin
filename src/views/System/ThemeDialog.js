@@ -148,10 +148,7 @@ class ThemeDialog extends Component {
     handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ThemeManageProps, ThemeManageActions, compId } = this.props;
-            ThemeManageActions.editThemeData({
-                themeId: paramObject.get('themeId'),
-                themeNm: paramObject.get('themeNm')
-            }).then((res) => {
+            ThemeManageActions.editThemeData(this.makeParameter(paramObject)).then((res) => {
                 ThemeManageActions.readThemeListPaged(ThemeManageProps, compId);
                 this.handleClose();
             });
@@ -237,7 +234,7 @@ class ThemeDialog extends Component {
                                     const iconItem = editingItem.get('themeIcons').find(icon => {
                                         return icon.get('fileEtcInfo') == n.name;
                                     });
-                                    if(iconItem.get('fileName') && iconItem.get('fileName') !== '') {
+                                    if(iconItem && iconItem.get('fileName') && iconItem.get('fileName') !== '') {
                                         beforeImg = iconItem.get('imgUrl') + iconItem.get('fileName');
                                     }                                    
                                 }
