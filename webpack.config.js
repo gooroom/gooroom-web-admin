@@ -38,7 +38,7 @@ module.exports = (env = {}) => {
         ],
         target: `http://127.0.0.1:8080`,
         secure: false,
-        changeOrigin: true,
+        changeOrigin: false,
         headers: { host: 'localhost:9191' }
       }],
       watchOptions: {
