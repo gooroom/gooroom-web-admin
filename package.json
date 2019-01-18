@@ -6,7 +6,7 @@
   "NODE_PATH": "./src",
   "scripts": {
     "build": "webpack -p --progress",
-    "start": "webpack-dev-server --progress --color --inline --env.dev",
+    "start": "webpack-dev-server --progress --color --inline --watch-content-base --progress --env.dev",
     "clean": "rimraf ./build"
   },
   "devDependencies": {
