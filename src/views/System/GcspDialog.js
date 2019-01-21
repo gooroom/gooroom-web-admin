@@ -84,7 +84,7 @@ class GcspDialog extends Component {
                 certGubun: paramObject.get('certGubun'),
                 gcspCsr: paramObject.get('gcspCsr')
             }).then((reData) => {
-                if(reData.status.result === 'fail') {
+                if(reData && reData.status && reData.status.result === 'fail') {
                     this.props.GRAlertActions.showAlert({
                         alertTitle: this.props.t("dtSystemError"),
                         alertMsg: reData.status.message
