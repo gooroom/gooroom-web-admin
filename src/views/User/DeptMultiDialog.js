@@ -19,9 +19,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import GRTreeList from "components/GRTree/GRTreeList";
 
-import Divider from '@material-ui/core/Divider';
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -56,6 +54,7 @@ class DeptMultiDialog extends Component {
 
     handleEditData = (event) => {
         const { DeptProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         GRConfirmActions.showConfirm({
             confirmTitle: t("ttChangMultiDeptRule"),
             confirmMsg: t("msgChangeDeptRuleSelected"),

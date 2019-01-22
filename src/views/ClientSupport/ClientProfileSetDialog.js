@@ -46,7 +46,7 @@ class ClientProfileSetDialog extends Component {
 
     handleCreateData = (event) => {
         const { ClientProfileSetProps, GRConfirmActions } = this.props;
-
+        const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtAddClientProfile"),
@@ -78,6 +78,7 @@ class ClientProfileSetDialog extends Component {
 
     handleEditData = (event) => {
         const { ClientProfileSetProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtEditClientProfile"),
@@ -110,6 +111,7 @@ class ClientProfileSetDialog extends Component {
 
     handleProfileJob = (event) => {
         const { ClientProfileSetProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
         GRConfirmActions.showConfirm({
             confirmTitle: t("dtExecuteClientProfile"),
             confirmMsg: t("msgExecuteClientProfile"),

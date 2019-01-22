@@ -141,6 +141,7 @@ class SecurityRuleManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { SecurityRuleProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
     const viewItem = getRowObjectById(SecurityRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
       confirmTitle: t("lbDeleteSecuRule"),

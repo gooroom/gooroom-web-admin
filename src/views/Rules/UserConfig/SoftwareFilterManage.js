@@ -128,6 +128,7 @@ class SoftwareFilterManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { SoftwareFilterProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
     const viewItem = getRowObjectById(SoftwareFilterProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
       confirmTitle: t("lbDeleteSWRule"),
