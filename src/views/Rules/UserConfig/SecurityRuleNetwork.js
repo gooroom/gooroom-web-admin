@@ -151,6 +151,7 @@ class SecurityRuleNetwork extends Component {
 
   handleDeleteClick = () => {
     const { SecurityRuleProps } = this.props;
+    const { t, i18n } = this.props;
     const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
     const selected = (editingItem && editingItem.get('selected')) ? editingItem.get('selected').toJS() : [];
 

@@ -112,6 +112,7 @@ class ClientUpdateServerDialog extends Component {
 
     handleCopyCreateData = (event, id) => {
         const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+        const { t, i18n } = this.props;
         ClientUpdateServerActions.cloneClientUpdateServerData({
             'objId': ClientUpdateServerProps.getIn(['editingItem', 'objId'])
         }).then((res) => {

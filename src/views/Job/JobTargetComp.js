@@ -78,7 +78,7 @@ class JobTargetComp extends Component {
 
   handleClickJobCancel = (event) => {
     const { GRConfirmActions, JobManageProps, compId } = this.props;
-
+    const { t, i18n } = this.props;
     GRConfirmActions.showConfirm({
       confirmTitle: t("dtCancelJob"),
       confirmMsg: t("msgCancelJob"),

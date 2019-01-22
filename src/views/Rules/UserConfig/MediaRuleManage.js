@@ -136,6 +136,7 @@ class MediaRuleManage extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     const { MediaRuleProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
     const viewItem = getRowObjectById(MediaRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
       confirmTitle: t("lbDeleteMediaRule"),
