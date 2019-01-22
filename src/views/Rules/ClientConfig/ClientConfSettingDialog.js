@@ -61,25 +61,34 @@ class ClientConfSettingDialog extends Component {
     static TYPE_EDIT = 'EDIT';
     static TYPE_COPY = 'COPY';
 
+    componentDidMount() {
+        // GreaterThanZero
+        ValidatorForm.addValidationRule('isGreaterThanZero', (value) => {
+            if (value > 0) {
+                return true;
+            }
+            return false;
+        });
+    }
+
     handleClose = (event) => {
         this.props.ClientConfSettingActions.closeDialog();
     }
 
     handleValueChange = name => event => {
+        const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
         const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
-        this.props.ClientConfSettingActions.setEditingItemValue({
+        ClientConfSettingActions.setEditingItemValue({
             name: name,
             value: value
         });
         // handle 'isDeleteLog'
-        // if(name == 'isDeleteLog' && event.target.type === 'checkbox') {
-        //     if(!event.target.value) {
-        //         this.props.ClientConfSettingActions.setEditingItemValue({
-        //             name: 'logRemainDate',
-        //             value: '0'
-        //         });
-        //     }
-        // }
+        if(name == 'isDeleteLog' && event.target.type === 'checkbox' && !event.target.value) {
+            const editingItem = (ClientConfSettingProps.get('editingItem')) ? ClientConfSettingProps.get('editingItem') : null;
+            if(editingItem && editingItem.get('logRemainDate') == '0') {
+                ClientConfSettingActions.setEditingItemValue({ name: 'logRemainDate', value: '1' });
+            }            
+        }
     }
 
     handleWhiteIpValueChange = index => event => {
@@ -450,7 +459,7 @@ class ClientConfSettingDialog extends Component {
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={6}>
                                 <TextValidator name="logRemainDate" label={t("lbSaveDateAfterSend")} 
-                                    validators={['required', 'matchRegexp:^[1-9]*$']}
+                                    validators={['required', 'isGreaterThanZero']}
                                     errorMessages={[t("msgValidOnlyUpperZero"), t("msgValidOnlyUpperZero")]}
                                     value={(editingItem.get('logRemainDate')) ? editingItem.get('logRemainDate') : ''}
                                     onChange={this.handleValueChange("logRemainDate")}
