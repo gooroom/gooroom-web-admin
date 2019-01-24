@@ -129,7 +129,6 @@ class GRTreeList extends Component {
 
         // reset expandedListItems values for adding nodes.
         const expandedListItems = this.state.expandedListItems;
-        console.log("fetch expandedListItems ::: ", expandedListItems);
         const newExpandedListItems = expandedListItems.map(obj => {
             if(obj > index) {
                 return obj + resData.length;
@@ -467,7 +466,6 @@ class GRTreeList extends Component {
 
     function parentsAreExpanded(listItem) {
       if (listItem.depth > startingDepth) {
-        console.log('expandedListItems :::: ', expandedListItems);
         if (expandedListItems.indexOf(listItem.parentIndex) === -1) {
           return false;
         } else {
