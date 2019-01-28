@@ -35,10 +35,11 @@ class MediaRuleSelector extends Component {
     const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
     if(!MediaRuleProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
       MediaRuleActions.changeCompVariable({
-        compId: compId,
-        name: 'selectedOptionItemId',
-        value: initId,
-        targetType: targetType
+        compId: compId, name: 'selectedOptionItemId', value: initId, targetType: targetType
+      });
+    } else if(initId == '-') {
+      MediaRuleActions.changeCompVariable({
+        compId: compId, name: 'selectedOptionItemId', value: '', targetType: targetType
       });
     }
   }

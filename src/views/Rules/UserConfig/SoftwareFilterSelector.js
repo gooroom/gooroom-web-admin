@@ -35,10 +35,11 @@ class SoftwareFilterSelector extends Component {
     const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
     if(!SoftwareFilterProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
       SoftwareFilterActions.changeCompVariable({
-        compId: compId,
-        name: 'selectedOptionItemId',
-        value: initId,
-        targetType: targetType
+        compId: compId, name: 'selectedOptionItemId', value: initId, targetType: targetType
+      });
+    } else if(initId == '-') {
+      SoftwareFilterActions.changeCompVariable({
+        compId: compId, name: 'selectedOptionItemId', value: '', targetType: targetType
       });
     }
   }
