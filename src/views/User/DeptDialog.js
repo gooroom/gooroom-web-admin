@@ -200,7 +200,7 @@ class DeptDialog extends Component {
                             </Grid>
                         </Grid>
                         <Divider style={{marginBottom: 10}} />
-                        <UserRuleSelector compId={compId} module={editObject} targetType="DEPT" />
+                        <UserRuleSelector compId={compId} module={(dialogType === DeptDialog.TYPE_ADD) ? null : editObject} targetType="DEPT" />
                     </DialogContent>
                     <DialogActions>
                         {(dialogType === DeptDialog.TYPE_ADD) &&

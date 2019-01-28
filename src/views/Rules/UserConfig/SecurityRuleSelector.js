@@ -35,10 +35,11 @@ class SecurityRuleSelector extends Component {
     const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
     if(!SecurityRuleProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
       SecurityRuleActions.changeCompVariable({
-        compId: compId,
-        name: 'selectedOptionItemId',
-        value: initId,
-        targetType: targetType
+        compId: compId, name: 'selectedOptionItemId', value: initId, targetType: targetType
+      });
+    } else if(initId == '-') {
+      SecurityRuleActions.changeCompVariable({
+        compId: compId, name: 'selectedOptionItemId', value: '', targetType: targetType
       });
     }
   }
