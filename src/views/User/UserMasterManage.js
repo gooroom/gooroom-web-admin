@@ -146,17 +146,9 @@ class UserMasterManage extends Component {
   };
 
   handleCreateButtonForDept = (event) => {
-    // 이전에 선택되어진 내용 삭제
     const { t, i18n } = this.props;
-    const compId = this.props.match.params.grMenuId;
 
-    this.props.BrowserRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
-    this.props.MediaRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
-    this.props.SecurityRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
-    this.props.SoftwareFilterActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
-    this.props.DesktopConfActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
-
-    const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+    const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
     if(selectedDeptCd && selectedDeptCd !== '') {
       this.props.DeptActions.showDialog({
         viewItem: {
@@ -178,13 +170,6 @@ class UserMasterManage extends Component {
   }
 
   handleApplyMultiDept = (event) => {
-    const compId = this.props.match.params.grMenuId;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
-    // 이전에 선택되어진 내용 삭제
-    BrowserRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
-    MediaRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
-    SecurityRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'DEPT' });
-
     this.props.DeptActions.showMultiDialog({
       multiDialogType: DeptMultiDialog.TYPE_EDIT
     });
