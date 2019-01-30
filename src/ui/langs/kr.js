@@ -454,7 +454,7 @@ export default {
   "ttChangMultiDeptRule": "조직정책 일괄변경",
   "ttAddUserInDept": "조직에 사용자 추가",
   "ttDeleteUserInDept": "조직에서 사용자 삭제",
-  "ttMoveDept": "부서이동",
+  "ttMoveDept": "조직이동",
   "ttAddUser": "신규사용자 생성",
   "dtAddUser": "사용자 등록",
   "dtViewUser": "사용자 정보",
