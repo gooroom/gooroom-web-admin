@@ -262,6 +262,7 @@ export default {
   "msgDeleteGroup": "단말그룹을 삭제하시겠습니까?",
   "msgInputGroupName": "단말그룹이름을 입력하세요.",
   "msgSelectClient": "단말을 선택하세요.",
+  "msgSelectClientGroup": "단말그룹을 선택하세요.",
   "msgCfmDeleteClientFromGroup": "선택하신 단말을 그룹에서 삭제하시겠습니까?",
   "msgCfmSelectGroupForInsertClient": "단말을 추가할 그룹을 선택하세요.",
   "dtSelectClient": "단말 선택",
