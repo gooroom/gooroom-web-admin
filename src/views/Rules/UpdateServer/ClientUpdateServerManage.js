@@ -60,7 +60,7 @@ class ClientUpdateServerManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientUpdateServerActions, ClientUpdateServerProps } = this.props;
     ClientUpdateServerActions.readClientUpdateServerListPaged(ClientUpdateServerProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value, page: page
+      rowsPerPage: event.target.value, page: 0
     });
   };
 
