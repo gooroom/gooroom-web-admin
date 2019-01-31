@@ -158,7 +158,7 @@ class ClientManageCompWithPackage extends Component {
 
     const columnHeaders = [
       { id: "checkbox", isOrder: false, isCheckbox: true},
-      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'STATUS_CD', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
       { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
       { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
       { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
