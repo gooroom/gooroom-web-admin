@@ -226,12 +226,14 @@ export const handleGetObjectAction = (state, compId, data, extend, target, idNam
             return state
             .setIn(['viewItems', compId, target, 'viewItem'], fromJS(data[0]))
             .setIn(['viewItems', compId, target, 'selectedOptionItemId'], selectedOptionItemId)
+			.setIn(['viewItems', compId, target, 'beforeSelectedItemId'], selectedOptionItemId)
             .setIn(['viewItems', compId, target, 'ruleGrade'], ruleGrade)
             .setIn(['viewItems', compId, target, 'informOpen'], true);
         } else {
             return state
             .setIn(['viewItems', compId, 'viewItem'], fromJS(data[0]))
             .setIn(['viewItems', compId, 'selectedOptionItemId'], selectedOptionItemId)
+            .setIn(['viewItems', compId, 'beforeSelectedItemId'], selectedOptionItemId)
             .setIn(['viewItems', compId, 'ruleGrade'], ruleGrade)
             .setIn(['viewItems', compId, 'informOpen'], true);
         }

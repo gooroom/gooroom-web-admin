@@ -3,8 +3,21 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import ClientConfSettingSelector from 'views/Rules/ClientConfig/ClientConfSettingSelector'
 import ClientHostNameSelector from 'views/Rules/HostName/ClientHostNameSelector'
@@ -25,11 +38,78 @@ import { translate, Trans } from "react-i18next";
 
 
 class ClientRuleSelector extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             selectedTab: 0
         };
+    }
+
+    componentDidMount() {
+        const { compId, module, targetType } = this.props;
+
+        if(module == 'new') {
+            // delete selectedOptionItemId for new editing.
+            this.props.ClientConfSettingActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.ClientHostNameActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.ClientUpdateServerActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.MediaRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.BrowserRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.SecurityRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.SoftwareFilterActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.DesktopConfActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+        } else {
+            // reset selectedOptionItemId from beforeSelectedItemId.
+            this.props.ClientConfSettingActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.ClientConfSettingProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.ClientHostNameActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.ClientHostNameProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.ClientUpdateServerActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.ClientUpdateServerProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.MediaRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.MediaRuleProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.BrowserRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.BrowserRuleProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.SecurityRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.SecurityRuleProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.SoftwareFilterActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.SoftwareFilterProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.DesktopConfActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.DesktopConfProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+        }
     }
 
     handleChangeTabs = (event, value) => {
@@ -64,14 +144,14 @@ class ClientRuleSelector extends Component {
                     </Tabs>
                 </AppBar>
                 <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
-                {selectedTab === 0 && <ClientConfSettingSelector compId={compId} initId={module ? module.clientConfigId : '-'} targetType={targetType} />}
-                {selectedTab === 1 && <ClientHostNameSelector compId={compId} initId={module ? module.hostNameConfigId : '-'} targetType={targetType} />}
-                {selectedTab === 2 && <ClientUpdateServerSelector compId={compId} initId={module ? module.updateServerConfigId : '-'} targetType={targetType} />}
-                {selectedTab === 3 && <BrowserRuleSelector compId={compId} initId={module ? module.browserRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 4 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 5 && <SecurityRuleSelector compId={compId} initId={module ? module.securityRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 6 && <SoftwareFilterSelector compId={compId} initId={module ? module.filteredSoftwareRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 7 && <DesktopConfSelector compId={compId} initId={module ? module.desktopConfigId : '-'} targetType={targetType} />}
+                {selectedTab === 0 && <ClientConfSettingSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 1 && <ClientHostNameSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 2 && <ClientUpdateServerSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 3 && <BrowserRuleSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 4 && <MediaRuleSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 5 && <SecurityRuleSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 6 && <SoftwareFilterSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 7 && <DesktopConfSelector compId={compId} targetType={targetType} />}
                 </Paper>
             
             </React.Fragment>
@@ -79,6 +159,31 @@ class ClientRuleSelector extends Component {
     }
 }
 
-export default translate("translations")(withStyles(GRCommonStyle)(ClientRuleSelector));
+const mapStateToProps = (state) => ({
+    ClientConfSettingProps: state.ClientConfSettingModule,
+    ClientHostNameProps: state.ClientHostNameModule,
+    ClientUpdateServerProps: state.ClientUpdateServerModule,
+    
+    BrowserRuleProps: state.BrowserRuleModule,
+    MediaRuleProps: state.MediaRuleModule,
+    SecurityRuleProps: state.SecurityRuleModule,
+    SoftwareFilterProps: state.SoftwareFilterModule,
+    DesktopConfProps: state.DesktopConfModule
+});
+  
+const mapDispatchToProps = (dispatch) => ({
+    ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+    ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
+    ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+  
+    BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+    MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+    SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+    SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+    DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
+});
+
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientRuleSelector)));
+
 
 

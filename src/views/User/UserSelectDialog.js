@@ -17,9 +17,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
 
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
+
 class UserSelectDialog extends Component {
 
     constructor(props) {
@@ -31,13 +29,6 @@ class UserSelectDialog extends Component {
           selectedUser: []
         };
     }
-
-    // handleSelectDept = (node) => {
-    //     this.setState({
-    //         selectedDeptCd: node.key, 
-    //         selectedDeptNm: node.title
-    //     });
-    // }
 
     handleSelectUser = (newSelectedIds) => {
         this.setState({

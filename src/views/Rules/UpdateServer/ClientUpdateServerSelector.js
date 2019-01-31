@@ -32,20 +32,10 @@ import { translate, Trans } from "react-i18next";
 class ClientUpdateServerSelector extends Component {
 
   componentDidMount() {
-    const { ClientUpdateServerProps, ClientUpdateServerActions, compId, initId, targetType } = this.props;
+    const { ClientUpdateServerProps, ClientUpdateServerActions, compId, targetType } = this.props;
     //
     ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, compId, targetType);
     //
-    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
-    if(!ClientUpdateServerProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
-      ClientUpdateServerActions.changeCompVariable({
-        compId: compId, name: 'selectedOptionItemId', value: initId, targetType: targetType
-      });
-    } else if(initId == '-') {
-      ClientUpdateServerActions.changeCompVariable({
-        compId: compId, name: 'selectedOptionItemId', value: '', targetType: targetType
-      });
-    }
   }
 
   handleChange = (event, value) => {

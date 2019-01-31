@@ -118,7 +118,7 @@ class DeptMultiDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={8}>
-                                <UserRuleSelector compId={compId} module={null} targetType="DEPT" />
+                                <UserRuleSelector compId={compId} module="new" targetType="DEPT" />
                             </Grid>
                         </Grid>
                     </DialogContent>

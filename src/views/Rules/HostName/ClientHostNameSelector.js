@@ -31,20 +31,10 @@ import { translate, Trans } from "react-i18next";
 class ClientHostNameSelector extends Component {
 
   componentDidMount() {
-    const { ClientHostNameProps, ClientHostNameActions, compId, initId, targetType } = this.props;
+    const { ClientHostNameProps, ClientHostNameActions, compId, targetType } = this.props;
     //
     ClientHostNameActions.readClientHostNameList(ClientHostNameProps, compId, targetType);
     //
-    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
-    if(!ClientHostNameProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
-      ClientHostNameActions.changeCompVariable({
-        compId: compId, name: 'selectedOptionItemId', value: initId, targetType: targetType
-      });
-    } else if(initId == '-') {
-      ClientHostNameActions.changeCompVariable({
-        compId: compId, name: 'selectedOptionItemId', value: '', targetType: targetType
-      });
-    }
   }
 
   handleChange = (event, value) => {

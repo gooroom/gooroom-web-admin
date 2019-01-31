@@ -252,7 +252,7 @@ class UserDialog extends Component {
                             </Grid>
                         </Grid>
                         <Divider style={{marginBottom: 10}} />
-                        <UserRuleSelector compId={compId} module={(ruleDialogType === UserDialog.TYPE_ADD) ? null : UserProps.get('editingItem').toJS()} targetType="USER" />
+                        <UserRuleSelector compId={compId} module={(ruleDialogType === UserDialog.TYPE_ADD) ? 'new' : 'edit'} targetType="USER" />
                     </DialogContent>
                     <DialogActions>
                         {(ruleDialogType === UserDialog.TYPE_ADD) &&

@@ -3,8 +3,17 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
+
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
@@ -25,6 +34,51 @@ class UserRuleSelector extends Component {
         this.state = {
             selectedTab: 0
         };
+    }
+
+    componentDidMount() {
+        const { compId, module, targetType } = this.props;
+
+        if(module == 'new') {
+            // delete selectedOptionItemId for new editing.
+            this.props.MediaRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.BrowserRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.SecurityRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.SoftwareFilterActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+            this.props.DesktopConfActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
+        } else {
+            // reset selectedOptionItemId from beforeSelectedItemId.
+            this.props.MediaRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.MediaRuleProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.BrowserRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.BrowserRuleProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.SecurityRuleActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.SecurityRuleProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.SoftwareFilterActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.SoftwareFilterProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+            this.props.DesktopConfActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.DesktopConfProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
+        }
     }
 
     handleChangeTabs = (event, value) => {
@@ -56,17 +110,32 @@ class UserRuleSelector extends Component {
                     </Tabs>
                 </AppBar>
                 <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
-                {selectedTab === 0 && <BrowserRuleSelector compId={compId} initId={module ? module.browserRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 1 && <MediaRuleSelector compId={compId} initId={module ? module.mediaRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 2 && <SecurityRuleSelector compId={compId} initId={module ? module.securityRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 3 && <SoftwareFilterSelector compId={compId} initId={module ? module.filteredSoftwareRuleId : '-'} targetType={targetType} />}
-                {selectedTab === 4 && <DesktopConfSelector compId={compId} initId={module ? module.desktopConfigId : '-'} targetType={targetType} />}
+                {selectedTab === 0 && <BrowserRuleSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 1 && <MediaRuleSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 2 && <SecurityRuleSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 3 && <SoftwareFilterSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 4 && <DesktopConfSelector compId={compId} targetType={targetType} />}
                 </Paper>
             </React.Fragment>
         );
     }
 }
 
-export default translate("translations")(withStyles(GRCommonStyle)(UserRuleSelector));
+const mapStateToProps = (state) => ({
+    BrowserRuleProps: state.BrowserRuleModule,
+    MediaRuleProps: state.MediaRuleModule,
+    SecurityRuleProps: state.SecurityRuleModule,
+    SoftwareFilterProps: state.SoftwareFilterModule,
+    DesktopConfProps: state.DesktopConfModule
+});
+  
+const mapDispatchToProps = (dispatch) => ({
+    BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+    MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+    SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+    SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+    DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
+});
 
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserRuleSelector)));
 

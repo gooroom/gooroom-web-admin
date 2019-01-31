@@ -50,6 +50,7 @@ class ClientGroupDialog extends Component {
     handleCreateData = (event) => {
         const { ClientGroupProps, GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
+
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtAddGroup"),
@@ -181,7 +182,9 @@ class ClientGroupDialog extends Component {
                         </Grid>
                     </Grid>
                     <Divider style={{marginBottom: 10}} />
-                    <ClientRuleSelector compId={compId} module={(dialogType === ClientGroupDialog.TYPE_ADD) ? null : ClientGroupProps.get('editingItem').toJS()} targetType="GROUP" />
+                    
+                    <ClientRuleSelector compId={compId} module={(dialogType === ClientGroupDialog.TYPE_ADD) ? 'new' : 'edit'} targetType="GROUP" />
+
                 </DialogContent>
                 <DialogActions>
                     {(dialogType === ClientGroupDialog.TYPE_ADD) &&
