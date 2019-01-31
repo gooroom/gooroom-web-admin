@@ -53,7 +53,7 @@ class GRTreeItem extends Component {
                 <IconButton style={{padding:0}} onClick={onFoldingNode}><CloseIcon /></IconButton>
                 }
                 {isEnableEdit && 
-                <IconButton onClick={onEditNode}><SettingsApplicationsIcon style={{color:'darkgray',fontSize:'28px',paddingTop:4}} /></IconButton>
+                <IconButton onClick={onEditNode} style={{padding:0}}><SettingsApplicationsIcon style={{color:'darkgray',fontSize:'28px',paddingTop:4}} /></IconButton>
                 }
             </ListItem>
 

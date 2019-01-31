@@ -28,20 +28,10 @@ import { translate, Trans } from "react-i18next";
 class SoftwareFilterSelector extends Component {
 
   componentDidMount() {
-    const { SoftwareFilterProps, SoftwareFilterActions, compId, initId, targetType } = this.props;
+    const { SoftwareFilterProps, SoftwareFilterActions, compId, targetType } = this.props;
     //
     SoftwareFilterActions.readSoftwareFilterList(SoftwareFilterProps, compId, targetType);
     //
-    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
-    if(!SoftwareFilterProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
-      SoftwareFilterActions.changeCompVariable({
-        compId: compId, name: 'selectedOptionItemId', value: initId, targetType: targetType
-      });
-    } else if(initId == '-') {
-      SoftwareFilterActions.changeCompVariable({
-        compId: compId, name: 'selectedOptionItemId', value: '', targetType: targetType
-      });
-    }
   }
   
   handleChange = (event, value) => {

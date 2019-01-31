@@ -32,20 +32,10 @@ import { translate, Trans } from "react-i18next";
 class ClientConfSettingSelector extends Component {
 
   componentDidMount() {
-    const { ClientConfSettingProps, ClientConfSettingActions, compId, initId, targetType } = this.props;
+    const { ClientConfSettingProps, ClientConfSettingActions, compId, targetType } = this.props;
     //
     ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, compId, targetType);
     //
-    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
-    if(!ClientConfSettingProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
-      ClientConfSettingActions.changeCompVariable({
-        compId: compId, name: 'selectedOptionItemId', value: initId, targetType: targetType
-      });
-    } else if(initId == '-') {
-      ClientConfSettingActions.changeCompVariable({
-        compId: compId, name: 'selectedOptionItemId', value: '', targetType: targetType
-      });
-    }
   }
 
   handleChange = (event, value) => {

@@ -28,20 +28,10 @@ import { translate, Trans } from "react-i18next";
 class MediaRuleSelector extends Component {
 
   componentDidMount() {
-    const { MediaRuleProps, MediaRuleActions, compId, initId, targetType } = this.props;
+    const { MediaRuleProps, MediaRuleActions, compId, targetType } = this.props;
     //
     MediaRuleActions.readMediaRuleList(MediaRuleProps, compId, targetType);
     //
-    const targetNames = (targetType && targetType != '') ? ['viewItems', compId, targetType] : ['viewItems', compId];
-    if(!MediaRuleProps.getIn(List(targetNames).push('selectedOptionItemId'))) {
-      MediaRuleActions.changeCompVariable({
-        compId: compId, name: 'selectedOptionItemId', value: initId, targetType: targetType
-      });
-    } else if(initId == '-') {
-      MediaRuleActions.changeCompVariable({
-        compId: compId, name: 'selectedOptionItemId', value: '', targetType: targetType
-      });
-    }
   }
   
   handleChange = (event, value) => {
