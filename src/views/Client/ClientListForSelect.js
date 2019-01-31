@@ -212,7 +212,7 @@ class ClientListForSelect extends Component {
       { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
       { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
       { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: t("colClientGroup")},
-      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") }
+      { id: 'STATUS_CD', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") }
     ];
     
     const listObj = this.state.stateData;
