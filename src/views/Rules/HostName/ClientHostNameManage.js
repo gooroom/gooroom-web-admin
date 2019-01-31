@@ -60,7 +60,7 @@ class ClientHostNameManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientHostNameActions, ClientHostNameProps } = this.props;
     ClientHostNameActions.readClientHostNameListPaged(ClientHostNameProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value, page: page
+      rowsPerPage: event.target.value, page: 0
     });
   };
 
