@@ -150,7 +150,7 @@ class DailyLoginCountManage extends Component {
 
           <AppBar elevation={0} position="static" color="default">
             <Tabs value={selectedTab} 
-                scrollable    
+                variant="scrollable"    
                 scrollButtons="on"
                 indicatorColor="primary"
                 textColor="primary"
