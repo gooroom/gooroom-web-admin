@@ -168,7 +168,8 @@ class UserListForSelect extends Component {
   handleChangeUserStatusSelect = (value) => {
     const { stateData } = this.state;
     const newListParam = (stateData.get('listParam')).merge({
-      status: value, page: 0
+      status: (value == 'ALL') ? '' : value, 
+      page: 0
     });
     this.setState({
       stateData: stateData.set('listParam', newListParam)
