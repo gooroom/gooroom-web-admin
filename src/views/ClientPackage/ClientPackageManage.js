@@ -13,6 +13,16 @@ import * as ClientManageActions from 'modules/ClientManageModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
+import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as ClientHostNameActions from 'modules/ClientHostNameModule';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+import * as DesktopConfActions from 'modules/DesktopConfModule';
+
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
@@ -491,7 +501,18 @@ const mapDispatchToProps = (dispatch) => ({
   ClientPackageActions: bindActionCreators(ClientPackageActions, dispatch),
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+
+  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
+  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch) 
+
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageManage)));
