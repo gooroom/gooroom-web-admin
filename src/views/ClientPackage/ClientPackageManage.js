@@ -54,30 +54,36 @@ class ClientPackageManage extends Component {
     };
   }
 
+  // Check Group Item
+  handleClientGroupCheck = (selectedGroupObj, selectedGroupIdArray) => {
+    const { ClientGroupProps, ClientGroupActions } = this.props;
+    const { ClientManageProps, ClientManageActions } = this.props;
+    const compId = this.props.match.params.grMenuId;
+
+    // show client list
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+      groupId: selectedGroupIdArray.toJS(), page:0
+    }, {isResetSelect:true});
+
+  };
+
   // Select Group Item
   handleClientGroupSelect = (selectedGroupObj) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
     const { ClientManageProps, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    ClientGroupActions.changeCompVariable({
-      name: 'viewItem',
-      value: selectedGroupObj,
-      compId: compId
-    });
-    // show client list
-    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      groupId: [selectedGroupObj.get('grpId')], page:0
-    }, {isResetSelect:true});
+    // show client group info.
+    if(selectedGroupObj) {
+      ClientGroupActions.changeCompVariable({
+        name: 'viewItem',
+        value: selectedGroupObj,
+        compId: compId
+      });
+      this.resetClientGroupRules(compId, selectedGroupObj.get('grpId'));
+    }
   };
 
-  // Check Group Item
-  handleClientGroupCheck = (selectedGroupObj, selectedGroupIdArray) => {
-    const { ClientGroupProps, ClientGroupActions } = this.props;
-    const { ClientManageProps, ClientManageActions } = this.props;
-    const compId = this.props.match.params.grMenuId; 
-
-  };
 
   // Select Client Item
   handleClientSelect = (selectedClientObj) => {
@@ -94,13 +100,51 @@ class ClientPackageManage extends Component {
     ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {
       clientId: selectedClientObj.get('clientId'), page:0, isFiltered: false
     });
-
   };
+
+  resetClientGroupRules(compId, grpId) {
+    const { ClientGroupProps } = this.props;
+    const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
+
+    const selectedGroupObj = getRowObjectById(ClientGroupProps, compId, grpId, 'grpId');
+    if(selectedGroupObj) {
+      // show rules
+      ClientConfSettingActions.getClientConfByGroupId({ compId: compId, groupId: grpId });   
+      ClientHostNameActions.getClientHostNameByGroupId({ compId: compId, groupId: grpId });
+      ClientUpdateServerActions.getClientUpdateServerByGroupId({ compId: compId, groupId: grpId });   
+      // get browser rule info
+      BrowserRuleActions.getBrowserRuleByGroupId({ compId: compId, groupId: grpId });
+      // get media control setting info
+      MediaRuleActions.getMediaRuleByGroupId({ compId: compId, groupId: grpId });
+      // get client secu info
+      SecurityRuleActions.getSecurityRuleByGroupId({ compId: compId, groupId: grpId });   
+      // get filtered software rule
+      SoftwareFilterActions.getSoftwareFilterByGroupId({ compId: compId, groupId: grpId });   
+      // get desktop conf info
+      DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: grpId });   
+
+      ClientGroupActions.showClientGroupInform({ compId: compId, viewItem: selectedGroupObj, selectId: '' });
+    }
+
+  }
 
   // GROUP COMPONENT --------------------------------
 
   // create group
   handleCreateButtonForClientGroup = () => {
+    const compId = this.props.match.params.grMenuId;
+
+    this.props.ClientConfSettingActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
+    this.props.ClientHostNameActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
+    this.props.ClientUpdateServerActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
+
+    this.props.BrowserRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.MediaRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.SecurityRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.SoftwareFilterActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
+    this.props.DesktopConfActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP', value: ''});
+    
     this.props.ClientGroupActions.showDialog({
       viewItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD
@@ -157,7 +201,7 @@ class ClientPackageManage extends Component {
 
   isClientChecked = () => {
     const checkedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-    return (checkedIds && checkedIds.size > 0);
+    return !(checkedIds && checkedIds.size > 0);
   }
 
   isGroupChecked = () => {
@@ -166,8 +210,8 @@ class ClientPackageManage extends Component {
   }
 
   isGroupSelected = () => {
-    const selectedGroupItem = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
-    return (selectedGroupItem) ? true : false;
+    const groupSelectId = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectId']);
+    return (groupSelectId && groupSelectId !== '') ? false : true;
   }
 
   // install package user selected
@@ -342,17 +386,16 @@ class ClientPackageManage extends Component {
     const compId = this.props.match.params.grMenuId;
 
     return (
-
       <React.Fragment>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
+          
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}}>
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
               <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
                 <Grid item>
-
                   <Tooltip title={t("ttAddNewGroup")}>
                   <span>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} >
@@ -373,11 +416,26 @@ class ClientPackageManage extends Component {
 
                   <Tooltip title={t("ttAddClientInGroup")}>
                   <span>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={!(this.isGroupSelected())} >
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
                       <AddIcon /><ClientIcon />
                     </Button>
                   </span>
                   </Tooltip>
+
+                </Grid>
+              </Grid>
+              </Toolbar>
+              <ClientGroupComp compId={compId}
+                selectorType='multiple'
+                onCheck={this.handleClientGroupCheck}
+                onSelect={this.handleClientGroupSelect} 
+			  />
+            </Grid>
+
+              <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+                <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
+                  <Grid item xs={12} sm={6} lg={6} >
 
                   <Tooltip title={t("ttDeleteClientFromGroup")}>
                   <span>
@@ -386,21 +444,6 @@ class ClientPackageManage extends Component {
                     </Button>
                   </span>
                   </Tooltip>
-
-                </Grid>
-              </Grid>
-              </Toolbar>
-
-              <ClientGroupComp compId={compId}
-                selectorType='multiple'
-                onCheck={this.handleClientGroupCheck}
-                onSelect={this.handleClientGroupSelect} />
-            </Grid>
-
-              <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
-              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
-                <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
-                  <Grid item xs={12} sm={6} lg={6} >
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleAllUpdateForClient} disabled={!(this.isClientChecked() || this.isGroupChecked())} style={{marginLeft: "10px"}}>
