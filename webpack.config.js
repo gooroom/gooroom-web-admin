@@ -14,7 +14,7 @@ module.exports = (env = {}) => {
   return {
 
     resolve: {
-      modules: [path.resolve(__dirname, 'src'), 'node_modules']
+      modules: [path.resolve(__dirname, 'src'), 'node_modules', path.resolve(__dirname, 'src/lib')]
     },
 
     entry: {
