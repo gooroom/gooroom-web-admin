@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { Map, List } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -220,9 +220,8 @@ class ClientMasterManage extends Component {
     }
   }
 
-  isClientSelected = () => {
+  isClientChecked = () => {
     const checkedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-    // const checkedIds = getDataObjectVariableInComp(this.props.ClientManageProps, this.props.match.params.grMenuId, 'checkedIds');
     return !(checkedIds && checkedIds.size > 0);
   }
 
@@ -401,7 +400,7 @@ class ClientMasterManage extends Component {
 
                     <Tooltip title={t("ttDeleteClientFromGroup")} >
                     <span>
-                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientSelected()} style={{marginLeft: "10px"}} >
+                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={this.isClientChecked()} style={{marginLeft: "10px"}} >
                         <RemoveIcon /><ClientIcon />
                       </Button>
                     </span>
@@ -411,7 +410,7 @@ class ClientMasterManage extends Component {
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
                     <Tooltip title={t("ttRevokeClient")} >
                     <span>
-                      <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientSelected()} style={{marginLeft: "10px"}}>
+                      <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleDeleteClient} disabled={this.isClientChecked()} style={{marginLeft: "10px"}}>
                         <DeleteIcon /><ClientIcon />
                       </Button>
                     </span>
