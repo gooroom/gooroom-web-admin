@@ -85,10 +85,9 @@ class ClientPackageManage extends Component {
 
     // show client group info.
     if(selectedGroupObj) {
-      ClientGroupActions.changeCompVariable({
-        name: 'viewItem',
-        value: selectedGroupObj,
-        compId: compId
+      // show client group inform
+      ClientGroupActions.showClientGroupInform({
+        compId: compId, viewItem: selectedGroupObj, selectId: selectedGroupObj.get('grpId')
       });
       this.resetClientGroupRules(compId, selectedGroupObj.get('grpId'));
     }
