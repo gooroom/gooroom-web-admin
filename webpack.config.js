@@ -31,19 +31,7 @@ module.exports = (env = {}) => {
       hot: true,
       open: true,
       inline: true,
-      port: 9191,
-      proxy: [{
-        context: [
-            '/gpms'
-        ],
-        target: `http://127.0.0.1:8080`,
-        secure: false,
-        changeOrigin: false,
-        headers: { host: 'localhost:9191' }
-      }],
-      watchOptions: {
-          ignored: /node_modules/
-      }
+      port: 9191
     },
   
     module: {
