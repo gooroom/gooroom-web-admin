@@ -201,11 +201,8 @@ class UserListComp extends Component {
   }
 
   handleChangeUserStatusSelect = (value) => {
-    this.props.UserActions.changeListParamData({
-      name: 'status', 
-      value: (value == 'ALL') ? '' : value,
-      compId: this.props.compId
-    });
+    const { UserActions, UserProps, compId } = this.props;
+    UserActions.readUserListPaged(UserProps, compId, { page: 0, status: (value == 'ALL') ? '' : value });
   }
 
   render() {
