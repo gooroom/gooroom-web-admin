@@ -459,7 +459,7 @@ class UserMasterManage extends Component {
         <SecurityRuleDialog compId={compId} />
         <MediaRuleDialog compId={compId} />
         <SoftwareFilterDialog compId={compId} />
-        <DesktopConfDialog compId={compId} />
+        <DesktopConfDialog compId={compId} isEnableDelete={false} />
         <DesktopAppDialog compId={compId} />
 
         <GRConfirm />
