@@ -37,12 +37,6 @@ class ClientSelectDialog extends Component {
         };
     }
 
-    handleSelectDept = (node) => {
-        this.setState(({stateData}) => ({
-            stateData: stateData.set('selectedGroupId', node.key).set('selectedGroupNm', node.title)
-        }));
-    }
-
     handleSelectClient = (newSelectedIds) => {
         this.setState(({stateData}) => ({
             stateData: stateData.set('selectedClient', List(newSelectedIds))
@@ -67,21 +61,6 @@ class ClientSelectDialog extends Component {
                     <DialogTitle>{t("dtSelectClient")} ({selectedGroupItem.get('grpNm')})</DialogTitle>
                     <DialogContent>
                         <Grid container spacing={8}>
-                            {/* <Grid item xs={12} sm={12} lg={4}>
-                                <Card className={classNames(classes.deptTreeCard)}>
-                                    <GRTreeList
-                                        useFolderIcons={true}
-                                        listHeight='24px'
-                                        url='readChildrenDeptList'
-                                        paramKeyName='groupId'
-                                        rootKeyValue='0'
-                                        keyName='key'
-                                        title='title'
-                                        startingDepth='2'
-                                        onSelectNode={this.handleSelectDept}
-                                    />
-                                </Card>
-                            </Grid> */}
                             <Grid item xs={12} sm={12} lg={12}>
                                 <Card className={classes.deptUserCard}>
                                     <CardContent>
