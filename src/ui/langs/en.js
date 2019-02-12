@@ -10,6 +10,9 @@ export default {
   "colConnSuccess": "ConnSuccCnt",
   "colConnFail": "ConnFailCnt",
   "colConnRequest": "ConnReqCnt",
+  "colConnRequests": "ConnRequest",
+  "colConnRequestUser": "UserConnRequest",
+  "colConnRequestClient": "ClientConnRequest",
 
   "colBootViolated": "BootViolated",
   "colExeViolated": "ExeViolated",

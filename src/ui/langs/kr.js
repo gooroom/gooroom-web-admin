@@ -10,6 +10,9 @@ export default {
   "colConnSuccess": "접속성공",
   "colConnFail": "접속실패",
   "colConnRequest": "접속시도",
+  "colConnRequests": "접속요청",
+  "colConnRequestUser": "접속사용자수",
+  "colConnRequestClient": "접속단말기수",
 
   "colBootViolated": "부팅보안침해",
   "colExeViolated": "실행보안침해",
