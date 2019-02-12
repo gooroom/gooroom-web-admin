@@ -8,10 +8,12 @@ import { connect } from 'react-redux';
 
 import * as UserActions from 'modules/UserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRAlert from 'components/GRComponents/GRAlert';
 import UserRuleSelector from 'components/GROptions/UserRuleSelector';
 import DeptSelectDialog from "views/User/DeptSelectDialog";
 
@@ -110,9 +112,16 @@ class UserDialog extends Component {
                 securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
                 filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
                 desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
-            }).then((res) => {
-                UserActions.readUserListPaged(UserProps, compId);
-                this.handleClose();
+            }).then((reData) => {
+                if(reData && reData.status && reData.status.result === 'fail') {
+                    this.props.GRAlertActions.showAlert({
+                        alertTitle: this.props.t("dtSystemError"),
+                        alertMsg: reData.status.message
+                    });
+                } else {
+                    UserActions.readUserListPaged(UserProps, compId);
+                    this.handleClose();
+                }
             });
         }
     }
@@ -265,6 +274,7 @@ class UserDialog extends Component {
                     </DialogActions>
                     </ValidatorForm>
                     <GRConfirm />
+                    <GRAlert />
                 </Dialog>
             }
 
@@ -289,7 +299,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     UserActions: bindActionCreators(UserActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserDialog)));
