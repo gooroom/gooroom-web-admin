@@ -300,7 +300,7 @@ export default {
   "dtEditClientProfile": "단말프로파일 수정",
   "msgEditClientProfile": "단말프로파일을 수정하시겠습니까?",
   "dtDeleteClientProfile": "단말프로파일 삭제",
-  "msgDeleteClientProfile": "단말프로파일 ('{{profileNo}}')를 삭제하시겠습니까?",
+  "msgDeleteClientProfile": "단말프로파일 ('{{profileNm}}')를 삭제하시겠습니까?",
   "dtViewClientProfile": "단말프로파일 정보",
   "lbProfileName": "프로파일 이름",
   "msgInputProfileName": "프로파일 이름을 입력하세요.",
