@@ -58,8 +58,6 @@ class DesktopApp extends Component {
     }
     const isHaveAction = (hasAction) ? hasAction : false;
 
-    console.log('this.props.isEnableDelete ::: ', this.props.isEnableDelete);
-
     return (
       <Paper style={{width:120,height:174}} elevation={5}>
       { (appObj) &&
