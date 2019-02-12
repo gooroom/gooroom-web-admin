@@ -106,7 +106,8 @@ class JobManage extends Component {
 
   handleChangeJobStatusSelect = (event, property) => {
     this.props.JobManageActions.changeListParamData(this.props.JobManageProps, {
-      name: 'jobStatus', 
+      name: 'jobStatus',
+      page: 0, 
       value: property,
       compId: this.props.match.params.grMenuId,
       isGetList: true
