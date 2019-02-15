@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 
 import PropTypes from "prop-types";
@@ -217,26 +218,25 @@ class UserDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={6}>
-                                    <TextValidator
-                                        label={t("lbPassword")}
+                                <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
+                                    <InputLabel htmlFor="adornment-password">Password</InputLabel>
+                                    <Input
                                         type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
                                         value={(editingItem.get('userPasswd')) ? editingItem.get('userPasswd') : ''}
-                                        name="userPasswd" validators={['required']} errorMessages={[t("msgEnterPassword")]}
                                         onChange={this.handleValueChange('userPasswd')}
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                    aria-label="Toggle password visibility"
-                                                    onClick={this.handleClickShowPassword}
-                                                    onMouseDown={this.handleMouseDownPassword}
-                                                    >
-                                                    {(editingItem && editingItem.get('showPasswd')) ? <VisibilityOff /> : <Visibility />}
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            )
-                                        }}
+                                        endAdornment={
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                            aria-label="Toggle password visibility"
+                                            onClick={this.handleClickShowPassword}
+                                            onMouseDown={this.handleMouseDownPassword}
+                                            >
+                                            {(editingItem && editingItem.get('showPasswd')) ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                        }
                                     />
+                                </FormControl>                            
                             </Grid>
                         </Grid>
 
