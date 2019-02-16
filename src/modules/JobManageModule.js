@@ -119,8 +119,8 @@ export const changeListParamData = (module, param) => dispatch => {
         return requestPostAPI('readJobListPaged', {
             jobStatus: (param.value && param.value != '') ? param.value.join() : '',
             keyword: newListParam.get('keyword'),
-            page: newListParam.get('page'),
-            start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+            page: param.page,
+            start: param.page * newListParam.get('rowsPerPage'),
             length: newListParam.get('rowsPerPage'),
             orderColumn: newListParam.get('orderColumn'),
             orderDir: newListParam.get('orderDir')

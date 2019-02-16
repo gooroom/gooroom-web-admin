@@ -79,7 +79,7 @@ class DesktopApp extends Component {
                     onClick={() => this.handleEditClick(appObj)}
                   ><SettingsApplicationsIcon style={{fontSize:18}} /></Button>
                 }
-                {(isHaveAction && this.props.onDeleteClick) && 
+                {(isHaveAction && this.props.onDeleteClick && this.props.isEnableDelete) && 
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:18,minHeight:18,marginLeft:3}}
                     onClick={() => this.handleDeleteClick(appObj.get('appId'))}

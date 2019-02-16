@@ -170,7 +170,7 @@ class ClientManageComp extends Component {
       { id: 'LAST_LOGIN_TIME', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginDate") },
       { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginIp") },
       { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: t("colUseRate") },
-      { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") }
+      { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageCnt") }
     ];
     if(this.props.selectorType && this.props.selectorType == 'multiple') {
       columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });

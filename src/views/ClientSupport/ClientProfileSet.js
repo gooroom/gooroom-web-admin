@@ -158,7 +158,7 @@ class ClientProfileSet extends Component {
     const viewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     GRConfirmActions.showConfirm({
       confirmTitle: t("dtDeleteClientProfile"),
-      confirmMsg: t("msgDeleteClientProfile", {profileNo: viewItem.get('profileNo')}),
+      confirmMsg: t("msgDeleteClientProfile", {profileNm: viewItem.get('profileNm')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmObject: viewItem
     });

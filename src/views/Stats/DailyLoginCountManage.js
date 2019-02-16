@@ -21,6 +21,7 @@ import GRPane from 'containers/GRContent/GRPane';
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
@@ -100,19 +101,7 @@ class DailyLoginCountManage extends Component {
     const { t, i18n } = this.props;
     const { selectedTab } = this.state;
 
-    const columnHeaders = [
-      { id: 'logDate', isOrder: false, numeric: false, disablePadding: true, label: t("colDate") },
-      { id: 'loginAll', isOrder: false, numeric: false, disablePadding: true, label: t("colConnReqCount") },
-      { id: 'loginSuccess', isOrder: false, numeric: false, disablePadding: true, label: t("colConnSuccess") },
-      { id: 'loginFail', isOrder: false, numeric: false, disablePadding: true, label: t("colConnFail") },
-      { id: 'userAll', isOrder: false, numeric: false, disablePadding: true, label: t("colConnRequest") },
-      { id: 'userSuccess', isOrder: false, numeric: false, disablePadding: true, label: t("colConnSuccess") },
-      { id: 'clientAll', isOrder: false, numeric: false, disablePadding: true, label: t("colConnRequest") },
-      { id: 'clientSuccess', isOrder: false, numeric: false, disablePadding: true, label: t("colConnSuccess") }
-    ];
-
     const compId = this.props.match.params.grMenuId;
-    
     const listObj = DailyLoginCountProps.getIn(['viewItems', compId]);
     let data = [];
     if(listObj && listObj.get('listAllData')) {
@@ -208,15 +197,31 @@ class DailyLoginCountManage extends Component {
           {(listObj) &&
           <div style={{height:300,overflow:'auto'}}>
             <Table>
-              <GRCommonTableHead
-                classes={classes}
-                keyId="logDate"
-                headFix={true}
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
-                onRequestSort={this.handleChangeSort}
-                columnData={columnHeaders}
-              />
+              <TableHead>
+                <TableRow>
+                  <TableCell className={classes.grSmallAndHeaderCell} rowSpan={2}>{t("colDate")}</TableCell>
+                  <TableCell className={classes.grSmallAndHeaderCell} style={{padding: '0px 6px 0px 6px',border:0}}colSpan={3}>
+                    <div style={{borderBottom: '1px solid #cacaca',height:45,paddingTop:13}}>{t("colConnRequests")}</div>
+                  </TableCell>
+                  <TableCell className={classes.grSmallAndHeaderCell} style={{padding: '0px 6px 0px 6px',border:0}}colSpan={2}>
+                    <div style={{borderBottom: '1px solid #cacaca',height:45,paddingTop:13}}>{t("colConnRequestUser")}</div>
+                  </TableCell>
+                  <TableCell className={classes.grSmallAndHeaderCell} style={{padding: '0px 6px 0px 6px',border:0}}colSpan={2}>
+                    <div style={{borderBottom: '1px solid #cacaca',height:45,paddingTop:13}}>{t("colConnRequestClient")}</div>
+                  </TableCell>
+                </TableRow>
+
+                <TableRow>
+                  <TableCell className={classes.grSmallAndHeaderCell} >{t("colConnReqCount")}</TableCell>
+                  <TableCell className={classes.grSmallAndHeaderCell} >{t("colConnSuccess")}</TableCell>
+                  <TableCell className={classes.grSmallAndHeaderCell} >{t("colConnFail")}</TableCell>
+
+                  <TableCell className={classes.grSmallAndHeaderCell} >{t("colConnRequest")}</TableCell>
+                  <TableCell className={classes.grSmallAndHeaderCell} >{t("colConnSuccess")}</TableCell>
+                  <TableCell className={classes.grSmallAndHeaderCell} >{t("colConnRequest")}</TableCell>
+                  <TableCell className={classes.grSmallAndHeaderCell} >{t("colConnSuccess")}</TableCell>
+                </TableRow>
+              </TableHead>
               <TableBody>
                 {listObj.get('listAllData').map(n => {
                   return (

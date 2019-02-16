@@ -106,7 +106,8 @@ class JobManage extends Component {
 
   handleChangeJobStatusSelect = (event, property) => {
     this.props.JobManageActions.changeListParamData(this.props.JobManageProps, {
-      name: 'jobStatus', 
+      name: 'jobStatus',
+      page: 0, 
       value: property,
       compId: this.props.match.params.grMenuId,
       isGetList: true
@@ -124,7 +125,7 @@ class JobManage extends Component {
     const columnHeaders = [
       { id: "chJobNo", isOrder: true, numeric: false, disablePadding: true, label: t("colJobNo") },
       { id: "chJobName", isOrder: true, numeric: false, disablePadding: true, label: t("colJobName") },
-      { id: "chReadyCount", isOrder: true, numeric: false, disablePadding: true, label: t("colJobProgressStatus") },
+      { id: "chStstua", isOrder: false, numeric: false, disablePadding: true, label: t("colJobProgressStatus") },
       { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: t("colTargetCnt") },
       { id: "chErrorCount", isOrder: true, numeric: false, disablePadding: true, label: t("colJobErrorCnt") },
       { id: "chCompCount", isOrder: true, numeric: false, disablePadding: true, label: t("colJobCompCnt") },

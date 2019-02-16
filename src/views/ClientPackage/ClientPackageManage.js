@@ -68,6 +68,7 @@ class ClientPackageManage extends Component {
   handleClientGroupCheck = (selectedGroupObj, selectedGroupIdArray) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
     const { ClientManageProps, ClientManageActions } = this.props;
+    const { ClientPackageProps, ClientPackageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     // show client list
@@ -75,6 +76,9 @@ class ClientPackageManage extends Component {
       groupId: selectedGroupIdArray.toJS(), page:0
     }, {isResetSelect:true});
 
+    // reset package list and selected client id
+    ClientManageActions.changeCompVariable({ name: 'selectId', value: '', compId: compId });
+    ClientPackageActions.setDataInit({ compId: compId });
   };
 
   // Select Group Item

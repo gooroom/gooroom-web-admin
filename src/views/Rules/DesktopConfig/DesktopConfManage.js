@@ -310,7 +310,7 @@ class DesktopConfManage extends Component {
           onClickEdit={this.handleClickEdit}
         />
         </GRPane>
-        <DesktopConfDialog compId={compId} />
+        <DesktopConfDialog compId={compId} isEnableDelete={true} />
         <DesktopAppDialog compId={compId} />
         <GRConfirm />
       </div>
