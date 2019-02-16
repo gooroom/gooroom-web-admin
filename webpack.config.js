@@ -32,7 +32,7 @@ module.exports = (env = {}) => {
       open: true,
       inline: true,
       port: 9191,
-      proxy: [{
+	    proxy: [{
         context: [
             '/gpms'
         ],

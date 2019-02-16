@@ -177,21 +177,26 @@ const makeParameter = (param) => {
 // create (add)
 export const createUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    
     return requestPostAPI('createUserWithRule', makeParameter(param)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
-                        type: CREATE_USER_SUCCESS
+                        type: CREATE_USER_SUCCESS,
+                        response: response
                     });
+                } else {
+                    dispatch({ type: COMMON_FAILURE, error: response.data });
+                    return response.data;
                 }
             } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
+        return error;
     });
 };
 

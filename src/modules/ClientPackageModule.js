@@ -9,6 +9,7 @@ const COMMON_FAILURE = 'clientPackage/COMMON_FAILURE';
 const SET_EDITING_ITEM_VALUE = 'clientPackage/SET_EDITING_ITEM_VALUE';
 const CHG_LISTPARAM_DATA = 'clientPackage/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'clientPackage/CHG_COMPDATA_VALUE';
+const SET_INITDATA_SUCCESS = 'clientPackage/SET_INITDATA_SUCCESS';
 
 const SHOW_CLIENTPACKAGE_INFORM = 'clientPackage/SHOW_CLIENTPACKAGE_INFORM';
 const CLOSE_CLIENTPACKAGE_INFORM = 'clientPackage/CLOSE_CLIENTPACKAGE_INFORM';
@@ -267,6 +268,12 @@ export const updateTotalPackage = (param) => dispatch => {
     });
 };
 
+export const setDataInit = (param) => dispatch => {
+    return dispatch({
+        type: SET_INITDATA_SUCCESS,
+        compId: param.compId
+    });
+}
 
 export default handleActions({
 
@@ -299,6 +306,10 @@ export default handleActions({
     },
     [CLOSE_CLIENTPACKAGE_INFORM]: (state, action) => {
         return commonHandleActions.handleCloseInformAction(state, action);
+    },
+    [SET_INITDATA_SUCCESS]: (state, action) => {
+        return state.setIn(['viewItems', action.compId, 'listData'], List([]))
+        .setIn(['viewItems', action.compId, 'listParam'], state.get('defaultListParam'));
     },
 
     [GET_CLIENTPACKAGE_LISTPAGED_SUCCESS]: (state, action) => {

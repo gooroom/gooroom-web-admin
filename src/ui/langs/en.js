@@ -10,6 +10,9 @@ export default {
   "colConnSuccess": "ConnSuccCnt",
   "colConnFail": "ConnFailCnt",
   "colConnRequest": "ConnReqCnt",
+  "colConnRequests": "ConnRequest",
+  "colConnRequestUser": "UserConnRequest",
+  "colConnRequestClient": "ClientConnRequest",
 
   "colBootViolated": "BootViolated",
   "colExeViolated": "ExeViolated",
@@ -297,7 +300,7 @@ export default {
   "dtEditClientProfile": "Modify client profile",
   "msgEditClientProfile": "Are you sure you want to modify the profile?",
   "dtDeleteClientProfile": "Delete client profile",
-  "msgDeleteClientProfile": "Are you sure you want to delete your client profile ('{{profileNo}}')?",
+  "msgDeleteClientProfile": "Are you sure you want to delete your client profile ('{{profileNm}}')?",
   "dtViewClientProfile": "Client profile information",
   "lbProfileName": "Profile Name",
   "msgInputProfileName": "Please enter a profile name.",

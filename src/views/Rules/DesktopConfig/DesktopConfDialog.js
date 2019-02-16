@@ -215,7 +215,9 @@ class DesktopConfDialog extends Component {
 
                             <Grid item xs={12} >
                                 <DesktopAppSelector 
-                                    selectedApps={editingItem.get('apps') ? editingItem.get('apps') : List([])} />
+                                    selectedApps={editingItem.get('apps') ? editingItem.get('apps') : List([])}
+                                    isEnableDelete={this.props.isEnableDelete}
+                                />
                             </Grid>
                             
                         </Grid>

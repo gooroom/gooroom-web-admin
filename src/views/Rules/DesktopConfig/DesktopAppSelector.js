@@ -104,6 +104,7 @@ class DesktopAppSelector extends Component {
                       onEditClick={this.handleEditAppClick}
                       onDeleteClick={this.handleDeleteSelected}
                       isSelected={true}
+                      isEnableDelete={true}
                   />
               </Grid>
               );
@@ -128,6 +129,7 @@ class DesktopAppSelector extends Component {
                       onEditClick={this.handleEditAppClick}
                       onDeleteClick={this.handleDeleteApp}
                       isSelected={this.isSelected(n.get('appId'))}
+                      isEnableDelete={this.props.isEnableDelete}
                   />
               </Grid>
               );
