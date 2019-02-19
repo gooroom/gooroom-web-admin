@@ -45,7 +45,7 @@
     "react": "^16.2.0",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.2.0",
-    "react-i18next": "^9.0.2",
+    "react-i18next": "9.0.2",
     "react-measure": "^2.2.3",
     "react-motion": "^0.5.2",
     "react-redux": "^5.0.7",

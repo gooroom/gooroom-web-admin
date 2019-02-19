@@ -67,7 +67,7 @@ var ValidatorComponent = function (_React$Component) {
                 }
             }
             // eslint-disable-next-line
-            console.log('unknown errorMessages type', errorMessages);
+            //console.log('unknown errorMessages type', errorMessages);
             return true;
         }, _this.instantValidate = true, _this.invalid = [], _this.configure = function () {
             if (!_this.props.name) {

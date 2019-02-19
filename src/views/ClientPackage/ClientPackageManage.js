@@ -224,7 +224,7 @@ class ClientPackageManage extends Component {
 
   isGroupSelected = () => {
     const groupSelectId = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectId']);
-    return (groupSelectId && groupSelectId !== '') ? false : true;
+    return (groupSelectId && groupSelectId !== '') ? true : false;
   }
 
   // install package user selected
@@ -429,7 +429,7 @@ class ClientPackageManage extends Component {
 
                   <Tooltip title={t("ttAddClientInGroup")}>
                   <span>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isGroupSelected()} >
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={!(this.isGroupSelected())} >
                       <AddIcon /><ClientIcon />
                     </Button>
                   </span>
@@ -459,10 +459,10 @@ class ClientPackageManage extends Component {
                   </Tooltip>
                   </Grid>
                   <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleAllUpdateForClient} disabled={!(this.isClientChecked() || this.isGroupChecked())} style={{marginLeft: "10px"}}>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleAllUpdateForClient} disabled={(this.isClientChecked() || this.isGroupChecked())} style={{marginLeft: "10px"}}>
                       <AddIcon />{t("btnAllUpdate")}
                     </Button>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleAddPackage} disabled={!(this.isClientChecked() || this.isGroupChecked())} style={{marginLeft: "10px"}}>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={this.handleAddPackage} disabled={(this.isClientChecked() || this.isGroupChecked())} style={{marginLeft: "10px"}}>
                       <AddIcon />{t("btnAddPackage")}
                     </Button>
                   </Grid>

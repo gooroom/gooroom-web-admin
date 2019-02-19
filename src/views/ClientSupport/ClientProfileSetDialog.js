@@ -151,9 +151,6 @@ class ClientProfileSetDialog extends Component {
     }
 
     handleSelectClientArray = (selectedObj, checkedIds) => {
-        // console.log('handleSelectClientArray selectedObj ::::::::::::::: ', selectedObj);
-        // console.log('handleSelectClientArray checkedIds ::::::::::::::: ', checkedIds);
-
         // this.props.ClientProfileSetActions.setEditingItemValue({
         //   name: 'targetClientIdArray',
         //   value: checkedIds
@@ -161,9 +158,6 @@ class ClientProfileSetDialog extends Component {
     }
 
     handleSelectGroupArray = (selectedObj, checkedIds) => {
-        // console.log('handleSelectGroupArray selectedObj ::::::::::::::: ', selectedObj);
-        // console.log('handleSelectGroupArray checkedIds ::::::::::::::: ', checkedIds);
-
         // this.props.ClientProfileSetActions.setEditingItemValue({
         //   name: 'targetGroupIdArray',
         //   value: checkedIds

@@ -67,22 +67,18 @@ class GRFull extends Component {
   }
 
   toggleRightDrawer = (side, open) => () => {
-    // console.log('side : ', side);
-    // console.log('open : ', open);
     this.setState({
       [side]: open
     });
   };
 
   handleClickAdmin = () => {
-    //console.log("handleClickAdmin...........");
     this.setState({
       rightDrawer: true,
     });
   }
 
   handleClickSystem = () => {
-    //console.log("handleClickSystem...........");
     this.setState(state => ({ popMenu: !state.popMenu }));
   }
 
