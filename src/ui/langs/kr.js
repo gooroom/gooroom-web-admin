@@ -262,7 +262,6 @@ export default {
 
   "msgAddGroup": "단말그룹을 등록하시겠습니까?",
   "msgEditGroup": "단말그룹을 수정하시겠습니까?",
-  "msgDeleteGroup": "단말그룹을 삭제하시겠습니까?",
   "msgInputGroupName": "단말그룹이름을 입력하세요.",
   "msgSelectClient": "단말을 선택하세요.",
   "msgSelectClientGroup": "단말그룹을 선택하세요.",
@@ -283,8 +282,6 @@ export default {
   "msgCreateClientRegKey": "단말 등록키를 생성하세요.",
   "btnCreateClientRegKey": "키생성",
   "btnCopyToClipboard": "복사하기",
-  "colKeyValidDate": "유효날짜",
-  "colCertExpireDate": "인증서만료날짜",
   "lbKeyValidDate": "유효날짜",
   "lbCertExpireDate": "인증서만료날짜",
   "lbValidRegIp": "유효 IP 범위",
@@ -708,7 +705,7 @@ export default {
   "dtUsbMemory": "USB메모리",
   "dtUsbSerial": "USB시리얼정보",
   "dtBluetooth": "블루투스",
-  "dtBluetoothMac": "블루투스 맥주소",
+  "lbBluetoothMac": "블루투스 맥주소",
   
   // 단말보안정책 관리
   "lbSecuRule": "단말보안정책",

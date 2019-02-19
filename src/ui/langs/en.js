@@ -262,7 +262,6 @@ export default {
 
   "msgAddGroup": "Do you want to register the client group?",
   "msgEditGroup": "Do you want to edit the client group?",
-  "msgDeleteGroup": "Do you want to delete the client group?",
   "msgInputGroupName": "Please enter a client group name.",
   "msgSelectClient": "Please select a client.",
   "msgSelectClientGroup": "Please select a client group.",
@@ -283,8 +282,6 @@ export default {
   "msgCreateClientRegKey": "Create a client registration key.",
   "btnCreateClientRegKey": "KeyGeneration",
   "btnCopyToClipboard": "Copy",
-  "colKeyValidDate": "Effective Date",
-  "colCertExpireDate": "Certificate expiration date",
   "lbKeyValidDate": "Effective Date",
   "lbCertExpireDate": "Certificate expiration date",
   "lbValidRegIp": "Effective IP Range",
@@ -708,7 +705,7 @@ export default {
   "dtUsbMemory": "USB memory",
   "dtUsbSerial": "USB serial information",
   "dtBluetooth": "Bluetooth",
-  "dtBluetoothMac": "Bluetooth MAC address",
+  "lbBluetoothMac": "Bluetooth MAC address",
   
   // 단말보안정책 관리
   "lbSecuRule": "ClientSecuRule",
