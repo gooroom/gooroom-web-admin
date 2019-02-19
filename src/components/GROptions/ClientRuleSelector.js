@@ -127,7 +127,7 @@ class ClientRuleSelector extends Component {
             <React.Fragment>
                 <AppBar elevation={0} position="static" color="default">
                     <Tabs value={selectedTab} 
-                        scrollable    
+                        variant="scrollable"
                         scrollButtons="on"
                         indicatorColor="primary"
                         textColor="primary"
