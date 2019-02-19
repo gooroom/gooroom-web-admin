@@ -310,7 +310,7 @@ class MediaRuleDialog extends Component {
                                     color="primary" />}
                                     label={(editingItem.get('bluetoothState') == 'allow') ? t("selBluetoothOn") : t("selBluetoothOff")}
                                 />
-                                <FormLabel component="legend">{t("dtBluetoothMac")}
+                                <FormLabel component="legend">{t("lbBluetoothMac")}
                                     <Button size="small" variant="contained" color="primary" style={{marginLeft:30}}
                                             className={classes.smallIconButton}
                                             onClick={this.handleAddBluetoothMac}
