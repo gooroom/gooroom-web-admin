@@ -87,7 +87,7 @@ class GRSideMenu extends React.Component {
     }
 
     const menuDivider = (divider, key) => {
-      return (<Divider />);
+      return (<Divider key={key} />);
     }
 
     // nav item with nav link

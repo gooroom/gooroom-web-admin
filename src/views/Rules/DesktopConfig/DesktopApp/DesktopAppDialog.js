@@ -216,11 +216,9 @@ class DesktopAppDialog extends Component {
                         </Grid>
                     </Grid>
                     
-                    {(editingItem.get('appGubun') === 'application') && 
                     <TextField label={t("lbExecuteCmd")} className={classes.fullWidth} multiple
                         value={editingItem.get('appExec')}
                         onChange={this.handleValueChange('appExec')} />
-                    }
                     {(editingItem.get('appGubun') === 'mount') && 
                     <div>
                     <TextField label={t("lbMountUrl")} className={classes.fullWidth}
