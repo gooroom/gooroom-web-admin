@@ -99,7 +99,7 @@ class DesktopAppSpec extends Component {
                   <TableCell component="th" scope="row">{bull} {t("lbIconDivision")}</TableCell>
                   <TableCell >{viewItem.get('iconGubun')}</TableCell>
                   <TableCell component="th" scope="row">{bull} {t("lbIconInfo")}</TableCell>
-                  <TableCell >{(viewItem.get('iconGubun') == 'favicon') ? viewItem.get('iconUrl') : viewItem.get('iconNm')}</TableCell>
+                  <TableCell >{(viewItem.get('iconGubun') == 'favicon') ? viewItem.get('iconUrl') : viewItem.get('iconId')}</TableCell>
                 </TableRow>
 
               </TableBody>
