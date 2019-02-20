@@ -10,8 +10,9 @@ import KeywordOption from "views/Options/KeywordOption";
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
-import Grid from '@material-ui/core/Grid';
+import { InlineDatePicker } from 'material-ui-pickers';
 
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -138,21 +139,10 @@ class AdminRecordListComp extends Component {
     this.handleGetDataList(newListParam);
   };
 
-
-  handleFromDateChange = name => event => {
+  handleDateChange = (date, name) => {
     const { stateData } = this.state;
     const newListParam = (stateData.get('listParam')).merge({
-      fromDate: event.target.value
-    });
-    this.setState({
-      stateData : stateData.set('listParam', newListParam)
-    });
-  };
-
-  handleToDateChange = name => event => {
-    const { stateData } = this.state;
-    const newListParam = (stateData.get('listParam')).merge({
-      toDate: event.target.value
+      [name]: date.format('YYYY-MM-DD')
     });
     this.setState({
       stateData : stateData.set('listParam', newListParam)
@@ -185,16 +175,16 @@ class AdminRecordListComp extends Component {
         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
 
           <Grid item xs={3}>
-            <TextField label={t('searchStartDate')} type="date"
-              value={(stateData.getIn(['listParam', 'fromDate'])) ? stateData.getIn(['listParam', 'fromDate']) : '1999-01-01'}
-              onChange={this.handleFromDateChange()}
-              className={classes.fullWidth} />
+          <InlineDatePicker label={t('searchStartDate')} format='YYYY-MM-DD'
+            value={(stateData.getIn(['listParam', 'fromDate'])) ? stateData.getIn(['listParam', 'fromDate']) : '1999-01-01'}
+            onChange={(date) => {this.handleDateChange(date, 'fromDate');}} 
+            className={classes.fullWidth} />
           </Grid>
           <Grid item xs={3}>
-            <TextField label={t('searchEndDate')} type="date"
-              value={(stateData.getIn(['listParam', 'toDate'])) ? stateData.getIn(['listParam', 'toDate']) : '1999-01-01'}
-              onChange={this.handleToDateChange()}
-              className={classes.fullWidth} />
+          <InlineDatePicker label={t('searchEndDate')} format='YYYY-MM-DD'
+            value={(stateData.getIn(['listParam', 'toDate'])) ? stateData.getIn(['listParam', 'toDate']) : '1999-01-01'}
+            onChange={(date) => {this.handleDateChange(date, 'toDate');}} 
+            className={classes.fullWidth} />
           </Grid>
           <Grid item xs={3}>
             <FormControl fullWidth={true}>
