@@ -79,12 +79,14 @@ class DesktopAppSpec extends Component {
                   <TableCell  style={{wordBreak: 'break-word', maxWidth:200}}>{viewItem.get('appExec')}</TableCell>
                 </TableRow>
 
+                { (viewItem.get('appGubun') === 'mount') &&
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} {t("lbMountUrl")}</TableCell>
                   <TableCell >{viewItem.get('appMountUrl')}</TableCell>
                   <TableCell component="th" scope="row">{bull} {t("lbMountPoint")}</TableCell>
                   <TableCell >{viewItem.get('appMountPoint')}</TableCell>
                 </TableRow>
+                }
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} {t("lbServiceStatus")}</TableCell>
