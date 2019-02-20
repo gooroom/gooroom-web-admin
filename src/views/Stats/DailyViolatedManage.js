@@ -2,15 +2,14 @@ import React, { Component } from 'react';
 
 import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as DailyViolatedActions from 'modules/DailyViolatedModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
+
+import { InlineDatePicker } from 'material-ui-pickers';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -73,7 +72,14 @@ class DailyViolatedManage extends Component {
       value: event.target.value,
       compId: this.props.match.params.grMenuId
     });
+  };
 
+  handleDateChange = (date, name) => {
+    this.props.DailyViolatedActions.changeListParamData({
+      name: name, 
+      value: date.format('YYYY-MM-DD'),
+      compId: this.props.match.params.grMenuId
+    });
   };
 
   render() {
@@ -105,19 +111,19 @@ class DailyViolatedManage extends Component {
         <GRPane>
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={4} sm={4} lg={2} >
-              <TextField label={t('searchStartDate')} type="date" style={{width:150}}
+            <Grid item xs={4} sm={4} lg={2} style={{paddingLeft:10,paddingRight:10}}>
+              <InlineDatePicker label={t('searchStartDate')} format='YYYY-MM-DD'
                 value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
-                onChange={this.handleParamChange('fromDate')}
+                onChange={(date) => {this.handleDateChange(date, 'fromDate');}} 
                 className={classes.fullWidth} />
             </Grid>
-            <Grid item xs={4} sm={4} lg={2}>
-              <TextField label={t('searchEndDate')} type="date" style={{width:150}}
+            <Grid item xs={4} sm={4} lg={2} style={{paddingLeft:10,paddingRight:10}}>
+              <InlineDatePicker label={t('searchEndDate')} format='YYYY-MM-DD'
                 value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
-                onChange={this.handleParamChange('toDate')}
+                onChange={(date) => {this.handleDateChange(date, 'toDate');}} 
                 className={classes.fullWidth} />
             </Grid>
-            <Grid item xs={4} sm={4} lg={2} >
+            <Grid item xs={4} sm={4} lg={2} style={{paddingLeft:10,paddingRight:10}}>
               <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                 <Search />{t("btnSearch")}
               </Button>

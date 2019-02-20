@@ -13,6 +13,7 @@ import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import GRAlert from 'components/GRComponents/GRAlert';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { InlineDatePicker } from 'material-ui-pickers';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -51,6 +52,13 @@ class ClientRegKeyDialog extends Component {
             value: event.target.value
         });
     }
+
+    handleDateChange = (date, name) => {
+        this.props.ClientRegKeyActions.setEditingItemValue({
+          name: name, 
+          value: date.format('YYYY-MM-DD')
+        });
+    }    
 
     handleCreateData = (event) => {
         const { ClientRegKeyProps, GRConfirmActions } = this.props;
@@ -186,23 +194,16 @@ class ClientRegKeyDialog extends Component {
                     </Grid>
                     <Grid container spacing={16}>
                         <Grid item xs={6}>
-                        <TextField
-                            label={t("lbKeyValidDate")} type="date"
-                            value={(editingItem.get('validDate')) ? formatDateToSimple(editingItem.get('validDate'), 'YYYY-MM-DD') : ''}
-                            onChange={this.handleValueChange("validDate")}
-                            className={classes.fullWidth}
-                            disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
-                        />
+                            <InlineDatePicker label={t('lbKeyValidDate')} format='YYYY-MM-DD'
+                                value={(editingItem.get('validDate')) ? formatDateToSimple(editingItem.get('validDate'), 'YYYY-MM-DD') : ''}
+                                onChange={(date) => {this.handleDateChange(date, 'validDate');}} 
+                                className={classes.fullWidth} disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)} />
                         </Grid>
                         <Grid item xs={6}>
-                        <TextField
-                            label={t("lbCertExpireDate")} type="date"
-                            value={(editingItem.get('expireDate')) ? formatDateToSimple(editingItem.get('expireDate'), 'YYYY-MM-DD') : ''}
-                            onChange={this.handleValueChange("expireDate")}
-                            className={classes.fullWidth}
-                            InputLabelProps={{ shrink: true }}
-                            disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
-                        />
+                            <InlineDatePicker label={t('lbCertExpireDate')} format='YYYY-MM-DD'
+                                value={(editingItem.get('expireDate')) ? formatDateToSimple(editingItem.get('expireDate'), 'YYYY-MM-DD') : ''}
+                                onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
+                                className={classes.fullWidth} disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)} />
                         </Grid>
                     </Grid>
 

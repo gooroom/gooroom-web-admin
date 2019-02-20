@@ -21,6 +21,8 @@ import GeneralLogTypeSelect from "views/Options/GeneralLogTypeSelect";
 
 import GRPane from 'containers/GRContent/GRPane';
 
+import { InlineDatePicker } from 'material-ui-pickers';
+
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -94,6 +96,14 @@ class GeneralLogManage extends Component {
     });
   };
 
+  handleDateChange = (date, name) => {
+    this.props.GeneralLogActions.changeListParamData({
+      name: name, 
+      value: date.format('YYYY-MM-DD'),
+      compId: this.props.match.params.grMenuId
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const { GeneralLogProps } = this.props;
@@ -122,16 +132,16 @@ class GeneralLogManage extends Component {
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={2} >
-            <TextField label={t('searchStartDate')} type="date" style={{width:150}}
-              value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
-              onChange={this.handleParamChange('fromDate')}
-              className={classes.fullWidth} />
+              <InlineDatePicker label={t('searchStartDate')} format='YYYY-MM-DD'
+                value={(listObj && listObj.getIn(['listParam', 'fromDate'])) ? listObj.getIn(['listParam', 'fromDate']) : '1999-01-01'}
+                onChange={(date) => {this.handleDateChange(date, 'fromDate');}} 
+                className={classes.fullWidth} />
             </Grid>
             <Grid item xs={2} >
-            <TextField label={t('searchEndDate')} type="date" style={{width:150}}
-              value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
-              onChange={this.handleParamChange('toDate')}
-              className={classes.fullWidth} />
+              <InlineDatePicker label={t('searchEndDate')} format='YYYY-MM-DD'
+                value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
+                onChange={(date) => {this.handleDateChange(date, 'toDate');}} 
+                className={classes.fullWidth} />
             </Grid>
             <Grid item xs={2} >
               <GeneralLogTypeSelect name="generalLogGubun" label={t("optDivision")}
