@@ -53,7 +53,7 @@ class JobInform extends Component {
     
     const informOpen = JobManageProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = JobManageProps.getIn(['viewItems', compId, 'viewItem']);
-    const selectTargetObj = JobManageProps.getIn(['viewItems', compId, 'selectTargetObj']);
+    const selectTargetObj = JobManageProps.getIn(['viewItems', compId, 'listData_target', 0]);
     
     // json parse.
     let targetModuleList = <Typography variant="button" gutterBottom>{t("msgNoResult")}</Typography>;
