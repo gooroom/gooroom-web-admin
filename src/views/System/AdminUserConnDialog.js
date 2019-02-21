@@ -96,7 +96,7 @@ class AdminUserConnDialog extends Component {
                         {gpmsAllowIps && gpmsAllowIps.map((value, index) => (
                         <div key={index}>
                             <TextValidator value={value} 
-                            name={"adminIp"+index} validators={['required', 'matchRegexp:^[a-zA-Z0-9.]*$']}
+                            name={"adminIp"+index} validators={['required', 'matchRegexp:^[a-zA-Z0-9.*]*$']}
                             errorMessages={[t("msgAdminConnIp"), t("msgValidAdminConnIp")]}
                             onChange={this.handleIpValueChange(index)} style={{width:'80%'}} 
                             />
