@@ -278,6 +278,24 @@ export const GRCommonStyle = theme => ({
         width: 30
     },
     
+    // notice manager
+    noticeContentCard: {
+        boxShadow: 'initial',
+        backgroundColor: 'initial'
+    },
+    noticeContentCardHeader: {
+        padding: '14.5px',
+        textAlign: 'center'
+    },
+    noticeContentCardHeaderTitle: {
+        fontSize: '0.75rem',
+        color: 'rgba(0, 0, 0, 0.54);'
+    },
+    noticeContentCardContent: {
+        overflow: 'auto',
+        borderTop: '1px solid rgba(224, 224, 224, 1)',
+        borderBottom: '1px solid rgba(224, 224, 224, 1)'
+    },
 
 
 

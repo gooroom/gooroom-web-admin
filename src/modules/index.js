@@ -43,6 +43,9 @@ import DailyClientCountModule from './DailyClientCountModule';
 
 import DashboardModule from './DashboardModule';
 
+import NoticeModule from './NoticeModule';
+import NoticePublishModule from './NoticePublishModule';
+import NoticePublishExtensionModule from './NoticePublishExtensionModule';
 
 export default combineReducers({
 
@@ -87,6 +90,10 @@ export default combineReducers({
     DailyLoginCountModule,
     DailyClientCountModule,
 
-    DashboardModule
+    DashboardModule,
+
+    NoticeModule,
+    NoticePublishModule,
+    NoticePublishExtensionModule
 
 });

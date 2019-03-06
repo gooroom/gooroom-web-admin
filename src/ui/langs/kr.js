@@ -93,6 +93,11 @@ export default {
   "colViolateStatus": "침해상태",
   "colViolateRun": "보안점검기능 작동여부",
 
+  "colNoticeId": "공지글 ID",
+  "colTitle": "제목",
+  "colContent": "내용",
+  "colRegUserId": "생성 Admin",
+
   // options
   "optDate": "날짜",
   "searchStartDate": "조회시작일",
@@ -158,6 +163,9 @@ export default {
 
   "menuSiteConfig": "구름관리서버설정",
   "menuAdminUserMng": "관리자관리",
+
+  "menuNotice": "공지",
+  "menuNoticeManage": "공지관리",
 
   // 공통
   "selOffline": "오프라인",
@@ -777,5 +785,10 @@ export default {
   "msgRepairJob": "침해단말 조치작업이 생성 되었습니다.",
   "msgRepairJobFail": "침해단말 조치작업이 생성되지 못하였습니다.",
   "lbViolatedClientList": "침해 단말 목록",
+
+  // 공지
+  "btnInstantAlarm": "즉시 알람",
+  "btnNowExit": "지금 종료",
+  "btnNewPublish": "신규 게시"
   
 };
