@@ -38,6 +38,8 @@ import DailyViolatedManage from "views/Stats/DailyViolatedManage";
 import DailyLoginCountManage from "views/Stats/DailyLoginCountManage";
 import DailyClientCountManage from "views/Stats/DailyClientCountManage";
 
+import NoticeMasterManage from "views/Notice/NoticeMasterManage";
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
@@ -89,6 +91,8 @@ class GRRouters extends Component {
           <Route path="/statistic/dailyviolated/:grMenuId/:grMenuName" component={DailyViolatedManage} />
           <Route path="/statistic/dailyconnect/:grMenuId/:grMenuName" component={DailyLoginCountManage} />
           <Route path="/statistic/dailyregist/:grMenuId/:grMenuName" component={DailyClientCountManage} />
+
+          <Route path="/notices/noticemanage/:grMenuId/:grMenuName" component={NoticeMasterManage} />
 
         </Switch>
       </div>

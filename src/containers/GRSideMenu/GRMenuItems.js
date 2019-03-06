@@ -171,6 +171,19 @@ export default {
         },
       ]
     }, {
+      name: 'menuNotice',
+      id: 'notices',
+      url: '/notices',
+      level: 1,
+      children: [
+        {
+          name: 'menuNoticeManage',
+          id: 'GRM0801',
+          url: '/notices/noticemanage/GRM0801/menuNoticeManage',
+          level: 2
+        }
+      ]
+    }, {
       name: 'menuJob',
       id: 'jobs',
       url: '/jobs',

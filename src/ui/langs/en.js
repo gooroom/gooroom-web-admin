@@ -93,6 +93,11 @@ export default {
   "colViolateStatus": "ViolateStatus",
   "colViolateRun": "Prtector Func. Run",
 
+  "colNoticeId": "NoticeId",
+  "colTitle": "Title",
+  "colContent": "Content",
+  "colRegUserId": "Created Admin",
+
   // options
   "optDate": "Date",
   "searchStartDate": "From-Date",
@@ -158,6 +163,9 @@ export default {
 
   "menuSiteConfig": "siteConfig",
   "menuAdminUserMng": "AdminUserMng",
+
+  "menuNotice": "Notice",
+  "menuNoticeManage": "NoticeMng",
 
   // 공통
   "selOffline": "Offline",
@@ -778,4 +786,8 @@ export default {
   "msgRepairJobFail": "An infringing client action could not be created.",
   "lbViolatedClientList": "List of infringing devices",
 
+  // 공지
+  "btnInstantAlarm": "Instant alarm",
+  "btnNowExit": "Exit now",
+  "btnNewPublish": "New publish"
 };
