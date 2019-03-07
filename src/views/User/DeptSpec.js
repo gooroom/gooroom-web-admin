@@ -120,35 +120,35 @@ class DeptSpec extends Component {
     const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
       viewItem: viewItem,
-      dialogType: BrowserRuleDialog.TYPE_INHERIT
+      dialogType: BrowserRuleDialog.TYPE_INHERIT_DEPT
     });
   };
   handleClickInheritForMediaRule = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, targetType);
     this.props.MediaRuleActions.showDialog({
       viewItem: viewItem,
-      dialogType: MediaRuleDialog.TYPE_INHERIT
+      dialogType: MediaRuleDialog.TYPE_INHERIT_DEPT
     });
   };
   handleClickInheritForSecurityRule = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, targetType);
     this.props.SecurityRuleActions.showDialog({
       viewItem: viewItem,
-      dialogType: SecurityRuleDialog.TYPE_INHERIT
+      dialogType: SecurityRuleDialog.TYPE_INHERIT_DEPT
     });
   };
   handleClickInheritForSoftwareFilter = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, targetType);
     this.props.SoftwareFilterActions.showDialog({
       viewItem: viewItem,
-      dialogType: SoftwareFilterDialog.TYPE_INHERIT
+      dialogType: SoftwareFilterDialog.TYPE_INHERIT_DEPT
     });
   };
   handleClickInheritForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
-      dialogType: DesktopConfDialog.TYPE_INHERIT
+      dialogType: DesktopConfDialog.TYPE_INHERIT_DEPT
     });
   };
   // ===================================================================

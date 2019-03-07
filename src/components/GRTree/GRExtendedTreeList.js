@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import classNames from "classnames";
 
 import { grRequestPromise } from "components/GRUtils/GRRequester";
 import GRTreeItem from "./GRTreeItem";
@@ -6,15 +7,15 @@ import GRTreeItem from "./GRTreeItem";
 import List from '@material-ui/core/List';
 import FolderIcon from "@material-ui/icons/Folder";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
+import FileIcon from "@material-ui/icons/InsertDriveFile";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-class GRTreeList extends Component {
+class GRExtendedTreeList extends Component {
   constructor(props) {
     super(props);
-    
-    this._isMounted = false;
+
     this.state = {
       expandedListItems: [],
       activeListItem: null,
@@ -33,7 +34,7 @@ class GRTreeList extends Component {
 
       treeData: [],
 
-      checked: [],
+      checked: (props.checkedNodes && props.checkedNodes.size > 0) ? (props.checkedNodes.map(n => n.get(props.paramKeyName))) : [],
       imperfect: []
     };
 
@@ -42,7 +43,6 @@ class GRTreeList extends Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
     
     if(this.props.onRef) {
       this.props.onRef(this);
@@ -56,7 +56,6 @@ class GRTreeList extends Component {
   }
 
   componentWillUnmount() {
-    this._isMounted = false;
     if(this.props.onRef) {
       this.props.onRef(undefined)
     }
@@ -102,6 +101,19 @@ class GRTreeList extends Component {
         parents[index].children = resData.map(d => {
           return d.key;
         });
+
+        // check child if parent checked
+        // if(this.state.checked.includes(parents[index].key)) {
+        //   // add checked data, by default checked.
+        //   const newChecked = [...this.state.checked];
+        //   resData.map(d => {
+        //     newChecked.push(d.key);  
+        //     return d;
+        //   });
+        //   this.setState({
+        //     checked: newChecked  
+        //   });
+        // }
         
         // data merge.
         // 1. delete children
@@ -129,26 +141,23 @@ class GRTreeList extends Component {
             }
         });
 
-        if(this._isMounted) {
-          this.setState({
+        this.setState({
             expandedListItems: newExpandedListItems,
             treeData: parents
-          });
-        }
+        });
 
       } else {
-        if(this._isMounted) {
-          this.setState({
-            treeData: resData
-          });
+        this.setState({
+          treeData: resData
+        });
 
-          if(isDoExpand) {
-            this.handleClickNode(resData[0], 0);
-          }
+        // init tree and expand
+        if(isDoExpand) {
+          this.handleClickNode(resData[0], 0);
         }
       }
 
-      if(this._isMounted && onCallback) {
+      if(onCallback) {
         onCallback((resData && resData.length > 0) ? true : false);
       }
     });
@@ -204,6 +213,12 @@ class GRTreeList extends Component {
     // select node
     this.setState({
       activeListItem: index
+    });
+  }
+
+  resetTreeCheckedNode(newChecked) {
+    this.setState({
+      checked: newChecked  
     });
   }
 
@@ -297,7 +312,8 @@ class GRTreeList extends Component {
     };
   }
 
-  handleCheckNode = nodeKey => event => {
+  // handle node check event
+  handleCheckNode = (nodeKey, nodeTitle) => event => {
     const { checked, imperfect, treeData } = this.state;
 
     let newChecked = checked;
@@ -348,12 +364,16 @@ class GRTreeList extends Component {
       imperfect: newStatus.newImperfect
     });
 
-    // call select node event
-    if (this.props.onCheckedNode) this.props.onCheckedNode(newStatus.newChecked, newStatus.newImperfect);
+    // call node check event
+    if (this.props.onCheckedNode) {
+
+      const isChecked = event.target.checked;
+      this.props.onCheckedNode({name: nodeTitle, value: nodeKey, isChecked: isChecked});
+
+    }
   };
 
   handleClickFoldingNode(listItem, index) {
-
     const indexOfListItemInArray = this.state.expandedListItems.indexOf(index);
     listItem['hasChildren'] = true;
     let newArray = [].concat(this.state.expandedListItems);
@@ -388,7 +408,6 @@ class GRTreeList extends Component {
         listItem._styles = {
           root: {
             paddingLeft: (listItem.depth - startingDepth) * 8,
-            backgroundColor: activeListItem === i ? "rgba(0,0,0,0.2)" : null,
             paddingTop: "0px",
             paddingBottom: "0px",
             alignItems: "start",
@@ -478,4 +497,4 @@ class GRTreeList extends Component {
   }
 }
 
-export default withStyles(GRCommonStyle)(GRTreeList);
+export default withStyles(GRCommonStyle)(GRExtendedTreeList);

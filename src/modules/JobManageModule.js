@@ -188,7 +188,8 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     },
     [GET_JOBTARGET_LISTPAGED_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleCustomListPagedAction(state, action, 'target');
+        const newState = commonHandleActions.handleCustomListPagedAction(state, action, 'target');
+        return newState.deleteIn(['viewItems', action.compId, 'selectTargetObj']);
     },
     [SHOW_JOB_INFORM]: (state, action) => {
         return commonHandleActions.handleShowInformAction(state, action);

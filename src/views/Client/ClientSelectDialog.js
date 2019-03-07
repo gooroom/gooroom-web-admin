@@ -58,7 +58,7 @@ class ClientSelectDialog extends Component {
             <div>
             {(isOpen) &&
                 <Dialog open={isOpen} fullWidth={true} >
-                    <DialogTitle>{t("dtSelectClient")} ({selectedGroupItem.get('grpNm')})</DialogTitle>
+                    <DialogTitle>{t("dtSelectClient")} ({selectedGroupItem.grpNm})</DialogTitle>
                     <DialogContent>
                         <Grid container spacing={8}>
                             <Grid item xs={12} sm={12} lg={12}>

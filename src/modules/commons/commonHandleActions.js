@@ -98,7 +98,7 @@ export const handleListPagedAction = (state, action) => {
     let newState = null;
     if(state.getIn(['viewItems', action.compId])) {
         newState = state
-            .setIn(['viewItems', action.compId, 'listData'], List(data.map((e) => {return Map(e)})))
+            .setIn(['viewItems', action.compId, 'listData'], List(data.map((e) => {return fromJS(e)})))
             .setIn(['viewItems', action.compId, 'listParam'], action.listParam.merge({
                 rowsFiltered: parseInt(recordsFiltered, 10),
                 rowsTotal: parseInt(recordsTotal, 10),
@@ -110,7 +110,7 @@ export const handleListPagedAction = (state, action) => {
             .deleteIn(['viewItems', action.compId, 'checkedIds']);
     } else {
         newState = state.setIn(['viewItems', action.compId], Map({
-            'listData': List(data.map((e) => {return Map(e)})),
+            'listData': List(data.map((e) => {return fromJS(e)})),
             'listParam': action.listParam.merge({
                 rowsFiltered: parseInt(((recordsFiltered) ? recordsFiltered: 0), 10),
                 rowsTotal: parseInt(((recordsTotal) ? recordsTotal: 0), 10),
@@ -305,31 +305,26 @@ export const handleCloseInformAction = (state, action) => {
 }
 
 export const handleEditSuccessAction = (state, action) => {
-    let newState = state;
-    if(newState.get('viewItems')) {
-        newState.get('viewItems').forEach((e, i) => {
-            // if(e.get('viewItem')) {
-            //     if(e.getIn(['viewItem', 'objId']) == action.objId) {
-                    // replace
-                    newState = newState.setIn(['viewItems', i, 'viewItem'], fromJS(action.response.data.data[0]));
-                    // DEPT
-                    if(newState.getIn(['viewItems', i, 'DEPT', 'viewItem'])) {
-                        newState = newState.setIn(['viewItems', i, 'DEPT', 'viewItem'], fromJS(action.response.data.data[0]));
-                    }
-                    // USER
-                    if(newState.getIn(['viewItems', i, 'USER', 'viewItem'])) {
-                        newState = newState.setIn(['viewItems', i, 'USER', 'viewItem'], fromJS(action.response.data.data[0]));
-                    }
-                    // GROUP
-                    if(newState.getIn(['viewItems', i, 'GROUP', 'viewItem'])) {
-                        newState = newState.setIn(['viewItems', i, 'GROUP', 'viewItem'], fromJS(action.response.data.data[0]));
-                    }
-//                        .setIn(['viewItems', i, 'informOpen'], false);
-            //     }
-            // }
+    let tempState = state;
+    if(tempState.get('viewItems')) {
+        tempState.get('viewItems').forEach((e, i) => {
+            // replace
+            tempState = tempState.setIn(['viewItems', i, 'viewItem'], fromJS(action.response.data.data[0]));
+            // DEPT
+            if(tempState.getIn(['viewItems', i, 'DEPT', 'viewItem'])) {
+                tempState = tempState.setIn(['viewItems', i, 'DEPT', 'viewItem'], fromJS(action.response.data.data[0]));
+            }
+            // USER
+            if(tempState.getIn(['viewItems', i, 'USER', 'viewItem'])) {
+                tempState = tempState.setIn(['viewItems', i, 'USER', 'viewItem'], fromJS(action.response.data.data[0]));
+            }
+            // GROUP
+            if(tempState.getIn(['viewItems', i, 'GROUP', 'viewItem'])) {
+                tempState = tempState.setIn(['viewItems', i, 'GROUP', 'viewItem'], fromJS(action.response.data.data[0]));
+            }
         });
     }
-    return state.delete('editingItem').merge(newState).merge({
+    return state.delete('editingItem').merge(tempState).merge({
         pending: false,
         error: false,
         dialogOpen: false,

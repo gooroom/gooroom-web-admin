@@ -159,7 +159,7 @@ class GRSideMenu extends React.Component {
           </List>
         </div>
         <AppBar position="static" style={{backgroundColor:"gray"}}>
-          <Toolbar>
+          <Toolbar style={{minHeight:54}}>
             <Typography variant="overline" gutterBottom style={{width:'100%',textAlign:'center'}} >
               {/** SIDE FOOTER */}            
             </Typography>

@@ -177,6 +177,7 @@ const makeParameter = (param) => {
 // create (add)
 export const createUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
+
     return requestPostAPI('createUserWithRule', makeParameter(param)).then(
         (response) => {
             try {

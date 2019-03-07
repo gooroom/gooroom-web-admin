@@ -41,7 +41,8 @@ class SoftwareFilterDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
-    static TYPE_INHERIT = 'INHERIT';
+    static TYPE_INHERIT_DEPT = 'INHERIT_DEPT';
+    static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
     static SW_LIST = [
@@ -156,14 +157,31 @@ class SoftwareFilterDialog extends Component {
         }
     }
 
-    handleInheritSaveData = (event, id) => {
+    handleInheritSaveDataForDept = (event, id) => {
         const { SoftwareFilterProps, DeptProps, SoftwareFilterActions, compId } = this.props;
         const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
-        SoftwareFilterActions.inheritSoftwareFilterData({
+        SoftwareFilterActions.inheritSoftwareFilterDataForDept({
             'objId': SoftwareFilterProps.getIn(['editingItem', 'objId']),
             'deptCd': selectedDeptCd
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplySWRuleChild")
+            });
+            this.handleClose();
+        });
+    }
+
+    handleInheritSaveDataForGroup = (event, id) => {
+        const { SoftwareFilterProps, ClientGroupProps, SoftwareFilterActions, compId } = this.props;
+        const { t, i18n } = this.props;
+        const grpId = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']);
+
+        SoftwareFilterActions.inheritSoftwareFilterDataForGroup({
+            'objId': SoftwareFilterProps.getIn(['editingItem', 'objId']),
+            'grpId': grpId
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
@@ -218,7 +236,7 @@ class SoftwareFilterDialog extends Component {
             title = t("dtViewSWRule");
         } else if(dialogType === SoftwareFilterDialog.TYPE_EDIT) {
             title = t("dtEditSWRule");
-        } else if(dialogType === SoftwareFilterDialog.TYPE_INHERIT) {
+        } else if(dialogType === SoftwareFilterDialog.TYPE_INHERIT_DEPT || dialogType === SoftwareFilterDialog.TYPE_INHERIT_GROUP) {
             title = t("dtInheritSWRule");
         } else if(dialogType === SoftwareFilterDialog.TYPE_COPY) {
             title = t("dtCopySWRule");
@@ -269,7 +287,7 @@ class SoftwareFilterDialog extends Component {
                     }
                     </div>
                     }
-                    {(dialogType === SoftwareFilterDialog.TYPE_INHERIT) &&
+                    {(dialogType === SoftwareFilterDialog.TYPE_INHERIT_DEPT || dialogType === SoftwareFilterDialog.TYPE_INHERIT_GROUP) &&
                         <div>
                         <Typography variant="body1">
                             {t("msgApplyRuleToChild")}
@@ -294,8 +312,11 @@ class SoftwareFilterDialog extends Component {
                 {(dialogType === SoftwareFilterDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
-                {(dialogType === SoftwareFilterDialog.TYPE_INHERIT) &&
-                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">{t("dtApply")}</Button>
+                {(dialogType === SoftwareFilterDialog.TYPE_INHERIT_DEPT) &&
+                    <Button onClick={this.handleInheritSaveDataForDept} variant='contained' color="secondary">{t("dtApply")}</Button>
+                }
+                {(dialogType === SoftwareFilterDialog.TYPE_INHERIT_GROUP) &&
+                    <Button onClick={this.handleInheritSaveDataForGroup} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === SoftwareFilterDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
@@ -315,7 +336,8 @@ class SoftwareFilterDialog extends Component {
 
 const mapStateToProps = (state) => ({
     SoftwareFilterProps: state.SoftwareFilterModule,
-    DeptProps: state.DeptModule
+    DeptProps: state.DeptModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

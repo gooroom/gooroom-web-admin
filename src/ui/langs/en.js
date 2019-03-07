@@ -790,4 +790,28 @@ export default {
   "btnInstantAlarm": "Instant alarm",
   "btnNowExit": "Exit now",
   "btnNewPublish": "New publish"
+
+  // 1.3
+  "menuSite": "site",
+  "menuSiteManage": "SiteMng",
+
+  "menuSf": "Developing..",
+  "menuDividedAdminManage": "Administrator Manage",
+
+  "lbParentGroup": "Parent Client Group",
+  "msgSelectParentGroup": "Please select a parent client group.",
+  "ttChangMultiGroupRule": "Multiple changes to client group policies",
+
+  "dtInheritClientConf": "Inherit client rule settings",
+  "msgInheritClientConf": "Are you sure you want to inherit your client rule settings?",
+  "msgApplyClientConfChild": "The client rule settings has been applied to the subgroup.",
+
+  "dtInheritHosts": "Inherit hosts information",
+  "msgInheritHosts": "Are you sure you want to inherit your hosts information?",
+  "msgApplyHostsChild": "The hosts information has been applied to the subgroup.",
+
+  "dtInheritUpdateServer": "Inherit update server information",
+  "msgInheritUpdateServer": "Are you sure you want to inherit your update server information?",
+  "msgApplyUpdateServerChild": "The update server information has been applied to the subgroup.",
+
 };

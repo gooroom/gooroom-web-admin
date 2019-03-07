@@ -1,4 +1,5 @@
 import { handleActions } from 'redux-actions';
+import { List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -7,6 +8,7 @@ const COMMON_PENDING = 'clientGroup/COMMON_PENDING';
 const COMMON_FAILURE = 'clientGroup/COMMON_FAILURE';
 
 const GET_GROUP_LISTPAGED_SUCCESS = 'clientGroup/GET_GROUP_LISTPAGED_SUCCESS';
+const GET_GROUP_SUCCESS = 'clientGroup/GET_GROUP_SUCCESS';
 
 const CREATE_CLIENTGROUP_SUCCESS = 'clientGroup/CREATE_CLIENTGROUP_SUCCESS';
 const EDIT_CLIENTGROUP_SUCCESS = 'clientGroup/EDIT_CLIENTGROUP_SUCCESS';
@@ -17,10 +19,16 @@ const CLOSE_CLIENTGROUP_INFORM = 'clientGroup/CLOSE_CLIENTGROUP_INFORM';
 const SHOW_CLIENTGROUP_DIALOG = 'clientGroup/SHOW_CLIENTGROUP_DIALOG';
 const CLOSE_CLIENTGROUP_DIALOG = 'clientGroup/CLOSE_CLIENTGROUP_DIALOG';
 
+const SHOW_GROUPRULE_DIALOG = 'clientGroup/SHOW_GROUPRULE_DIALOG';
+const CLOSE_GROUPRULE_DIALOG = 'clientGroup/CLOSE_GROUPRULE_DIALOG';
+
 const SET_EDITING_ITEM_VALUE = 'clientGroup/SET_EDITING_ITEM_VALUE';
 
 const CHG_LISTPARAM_DATA = 'clientGroup/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'clientGroup/CHG_COMPDATA_VALUE';
+const CHG_COMPDATA_OBJECT = 'clientGroup/CHG_COMPDATA_OBJECT';
+const DELETE_COMPDATA_ITEM = 'clientGroup/DELETE_COMPDATA_ITEM';
+
 const ADD_CLIENTINGROUP_SUCCESS = 'clientGroup/ADD_CLIENTINGROUP_SUCCESS';
 const REMOVE_CLIENTINGROUP_SUCCESS = 'clientGroup/REMOVE_CLIENTINGROUP_SUCCESS';
 
@@ -54,6 +62,18 @@ export const closeClientGroupInform = (param) => dispatch => {
     return dispatch({
         type: CLOSE_CLIENTGROUP_INFORM,
         compId: param.compId
+    });
+};
+
+export const showMultiDialog = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_GROUPRULE_DIALOG
+    });
+};
+
+export const closeMultiDialog = () => dispatch => {
+    return dispatch({
+        type: CLOSE_GROUPRULE_DIALOG
     });
 };
 
@@ -92,6 +112,54 @@ export const setEditingItemValue = (param) => dispatch => {
     });
 };
 
+export const getClientGroup = (param) => dispatch => {
+    const compId = param.compId;
+    if(param.groupId && param.groupId !== '') {
+        dispatch({type: COMMON_PENDING});
+        return requestPostAPI('readClientGroupData', {'groupId': param.groupId}).then(
+            (response) => {
+                dispatch({
+                    type: GET_GROUP_SUCCESS,
+                    compId: compId,
+                    response: response
+                });
+            }
+        ).catch(error => {
+            dispatch({ type: COMMON_FAILURE, error: error });
+        });
+    } else {
+        return dispatch({
+            type: DELETE_COMPDATA_ITEM,
+            compId: compId,
+            itemName: 'viewItem'
+        });      
+    }
+};
+
+export const getClientGroupNode = (param) => dispatch => {
+    const compId = param.compId;
+    if(param.groupId && param.groupId !== '') {
+        dispatch({type: COMMON_PENDING});
+        return requestPostAPI('readClientGroupData', {'groupId': param.groupId}).then(
+            (response) => {
+                dispatch({
+                    type: GET_GROUP_SUCCESS,
+                    compId: compId,
+                    response: response
+                });
+            }
+        ).catch(error => {
+            dispatch({ type: COMMON_FAILURE, error: error });
+        });
+    } else {
+        return dispatch({
+            type: DELETE_COMPDATA_ITEM,
+            compId: compId,
+            itemName: 'viewItem'
+        });      
+    }
+};
+
 export const changeListParamData = (param) => dispatch => {
     return dispatch({
         type: CHG_LISTPARAM_DATA,
@@ -111,11 +179,20 @@ export const changeCompVariable = (param) => dispatch => {
     });
 };
 
+export const changeCompVariableObject = (param) => dispatch => {
+    return dispatch({
+        type: CHG_COMPDATA_OBJECT,
+        compId: param.compId,
+        valueObj: param.valueObj
+    });
+};
+
 const makeParameter = (param) => {
     return {
         groupId: param.groupId,
         groupName: param.groupName,
         groupComment: param.groupComment,
+        uprGrpId: param.uprGrpId,
         
         clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
         hostNameConfigId: (param.hostNameConfigId == '-') ? '' : param.hostNameConfigId,
@@ -249,6 +326,24 @@ export const removeClientsInGroup = (itemObj) => dispatch => {
     });
 };
 
+// edit multi group rule once.
+export const editMultiGroupRule = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateRuleForGroups', param).then(
+        (response) => {
+            if(response && response.data && response.data.status && response.data.status.result == 'success') {
+                dispatch({
+                    type: EDIT_DEPT_SUCCESS,
+                    response: response
+                });
+            } else {
+                dispatch({ type: COMMON_FAILURE, error: error });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
 
 export default handleActions({
 
@@ -261,9 +356,19 @@ export default handleActions({
             errorObj: (action.error) ? action.error : ''
         });
     },
-
     [GET_GROUP_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
+    },
+    [GET_GROUP_SUCCESS]: (state, action) => {
+        const compId = action.compId;
+        const data = action.response.data.data;
+        if(data && data.length > 0) {
+            return state
+                .setIn(['viewItems', compId, 'viewItem'], fromJS(data[0]))
+                .setIn(['viewItems', compId, 'informOpen'], true);
+        } else  {
+            return state.deleteIn(['viewItems', compId]);
+        }
     },
     [SHOW_CLIENTGROUP_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
@@ -282,11 +387,32 @@ export default handleActions({
             editingItem: state.get('editingItem').merge({[action.name]: action.value})
         });
     },
+    [SHOW_GROUPRULE_DIALOG]: (state, action) => {
+        return state.merge({
+            multiDialogOpen: true, multiDialogType: action.multiDialogType
+        });
+    },
+    [CLOSE_GROUPRULE_DIALOG]: (state, action) => {
+        return state.delete('editingItem').merge({
+            multiDialogOpen: false
+        });
+    },
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CHG_COMPDATA_VALUE]: (state, action) => {
         return commonHandleActions.handleChangeCompValue(state, action);
+    },
+    [CHG_COMPDATA_OBJECT]: (state, action) => {
+        const oldValue = state.getIn(['viewItems', action.compId]);
+        if(oldValue) {
+            return state.setIn(['viewItems', action.compId], oldValue.merge(fromJS(action.valueObj)));
+        } else {
+            return state.setIn(['viewItems', action.compId], fromJS(action.valueObj));
+        }        
+    },
+    [DELETE_COMPDATA_ITEM]: (state, action) => {
+        return commonHandleActions.handleDeleteCompItem(state, action);
     },
     [CREATE_CLIENTGROUP_SUCCESS]: (state, action) => {
         return state.merge({

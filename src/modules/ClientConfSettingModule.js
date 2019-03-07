@@ -303,6 +303,26 @@ export const deleteClientConfSettingData = (param) => dispatch => {
     });
 };
 
+// rule inherit - group
+export const inheritClientConfSettingDataForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateClientGroupConfInherit', {
+            'objId': param.objId,
+            'confType': 'CLIENTCONF',
+            'grpId': param.grpId
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_CONFSETTING_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 // clone rule
 export const cloneClientConfSettingData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});

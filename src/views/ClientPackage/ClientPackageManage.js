@@ -61,6 +61,7 @@ class ClientPackageManage extends Component {
     this.state = {
       isOpenClientSelect: false,
       isOpenClientPackageSelect: false,
+      selectedGrp: {grpId:'', grpNm:''}
     };
   }
 
@@ -68,17 +69,13 @@ class ClientPackageManage extends Component {
   handleClientGroupCheck = (selectedGroupObj, selectedGroupIdArray) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
     const { ClientManageProps, ClientManageActions } = this.props;
-    const { ClientPackageProps, ClientPackageActions } = this.props;
-    const compId = this.props.match.params.grMenuId;
+    const compId = this.props.match.params.grMenuId; 
 
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
       groupId: selectedGroupIdArray.toJS(), page:0
     }, {isResetSelect:true});
 
-    // reset package list and selected client id
-    ClientManageActions.changeCompVariable({ name: 'selectId', value: '', compId: compId });
-    ClientPackageActions.setDataInit({ compId: compId });
   };
 
   // Select Group Item
@@ -89,9 +86,10 @@ class ClientPackageManage extends Component {
 
     // show client group info.
     if(selectedGroupObj) {
-      // show client group inform
-      ClientGroupActions.showClientGroupInform({
-        compId: compId, viewItem: selectedGroupObj, selectId: selectedGroupObj.get('grpId')
+      ClientGroupActions.changeCompVariable({
+        name: 'viewItem',
+        value: selectedGroupObj,
+        compId: compId
       });
       this.resetClientGroupRules(compId, selectedGroupObj.get('grpId'));
     }
@@ -104,10 +102,9 @@ class ClientPackageManage extends Component {
     const { ClientPackageProps, ClientPackageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    ClientManageActions.changeCompVariable({
-      name: 'selectId',
-      value: selectedClientObj.get('clientId'),
-      compId: compId
+    // change selected info in state
+    this.setState({
+      selectedGrp: {grpId:selectedClientObj.get('clientGroupId'), grpNm:selectedClientObj.get('clientGroupName')}
     });
     // show package list by client id
     ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {
@@ -262,16 +259,33 @@ class ClientPackageManage extends Component {
 
   // add client in group - save
   handleClientSelectSave = (checkedClientIds) => {
-    const { ClientGroupProps, GRConfirmActions } = this.props;
     const { t, i18n } = this.props;
+    const selectedGrp = this.state.selectedGrp;
 
-    const selectedGroupItem = ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
-    GRConfirmActions.showConfirm({
+    this.props.GRConfirmActions.showConfirm({
         confirmTitle: t("dtAddClientInGroup"),
-        confirmMsg: t("msgAddClientInGroup", {clientCnt: checkedClientIds.size, groupName: selectedGroupItem.get('grpNm')}),
-        handleConfirmResult: this.handleClientSelectSaveConfirmResult,
+        confirmMsg: t("msgAddClientInGroup", {clientCnt: checkedClientIds.size, groupName: selectedGrp.grpNm}),
+        handleConfirmResult: (confirmValue, paramObject) => {
+          if(confirmValue) {
+            const { ClientGroupActions, ClientGroupProps } = this.props;
+            const { ClientManageActions, ClientManageProps } = this.props;
+            const compId = this.props.match.params.grMenuId;
+            ClientGroupActions.addClientsInGroup({
+                groupId: paramObject.selectedGroupId,
+                clients: paramObject.checkedClientIds.join(',')
+            }).then((res) => {
+              // show clients list in group
+              ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+                groupId: paramObject.selectedGroupId, page:0
+              }, {isResetSelect:true});
+              ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
+              // close dialog
+              this.setState({ isOpenClientSelect: false });
+            });
+          }
+        },
         confirmObject: {
-          selectedGroupId: selectedGroupItem.get('grpId'),
+          selectedGroupId: selectedGrp.grpId,
           checkedClientIds: checkedClientIds
         }
     });
@@ -402,7 +416,7 @@ class ClientPackageManage extends Component {
       <React.Fragment>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
-          
+
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef'}}>
@@ -481,7 +495,7 @@ class ClientPackageManage extends Component {
           isOpen={this.state.isOpenClientSelect} 
           onSaveHandle={this.handleClientSelectSave} 
           onClose={this.handleClientSelectClose} 
-          selectedGroupItem={ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem'])}
+          selectedGroupItem={this.state.selectedGrp}
         />
         <ClientPackageSelectDialog isOpen={this.state.isOpenClientPackageSelect} onInstallHandle={this.handleClientPackageInstall} onClose={this.handleClientPackageSelectClose} />
         <GRConfirm />
@@ -514,8 +528,7 @@ const mapDispatchToProps = (dispatch) => ({
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
-  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch) 
-
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientPackageManage)));

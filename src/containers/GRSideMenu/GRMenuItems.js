@@ -196,6 +196,22 @@ export default {
           level: 2,
         }
       ]
+    }, {
+      name: 'd1',
+      id: 'd1',
+      divider: true
+    }, {
+      name: 'menuSf',
+      id: 'site',
+      level: 1,
+      children: [
+        {
+          name: 'menuDividedAdminManage',
+          id: 'GRM0801',
+          url: '/sf/adminmanage/GRM0801/menuDividedAdminManage',
+          level: 2,
+        }
+      ]
     }
   ]
 };

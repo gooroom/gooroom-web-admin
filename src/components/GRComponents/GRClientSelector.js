@@ -1,16 +1,10 @@
 import React, { Component } from "react";
-import Immutable, { isImmutable } from 'immutable';
-
-import PropTypes from "prop-types";
-import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientManageActions from 'modules/ClientManageModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
-
-import { requestPostAPI } from 'components/GRUtils/GRRequester';
 
 import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
 import ClientManageComp from 'views/Client/ClientManageComp';

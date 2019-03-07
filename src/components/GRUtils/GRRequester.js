@@ -35,28 +35,6 @@ export function grRequestPromise(url, param) {
 
       if (response.data) {
         if (response.data.status && response.data.status.result === "success" && response.data.data && response.data.data.length > 0) {
-
-            // const listData = [];
-            // response.data.data.forEach(d => {
-            //   const obj = {
-            //     clientStatus: d.clientStatus,
-            //     clientId: d.clientId,
-            //     clientName: d.clientName,
-            //     loginId: d.loginId,
-            //     clientGroupName: d.clientGroupName,
-            //     regDate: d.regDate
-            //   };
-            //   listData.push(obj);
-            // });
-
-            // const res = {
-            //   rows: listData,
-            //   rowsTotal: response.data.recordsTotal,
-            //   rowsFiltered: response.data.recordsFiltered,
-            //   page: response.data.draw,
-            // };
-            // resolve(res);
-
             resolve(response.data);
         } else {
           resolve(response.data);

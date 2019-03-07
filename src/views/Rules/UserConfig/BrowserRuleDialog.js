@@ -52,7 +52,8 @@ class BrowserRuleDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
-    static TYPE_INHERIT = 'INHERIT';
+    static TYPE_INHERIT_DEPT = 'INHERIT_DEPT';
+    static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
     constructor(props) {
@@ -126,7 +127,16 @@ class BrowserRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditBrowserRule"),
                 confirmMsg: t("msgEditBrowserRule"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
+                        BrowserRuleActions.editBrowserRuleData(paramObject, compId)
+                            .then((res) => {
+                                refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: BrowserRuleProps.get('editingItem')
             });
         } else {
@@ -137,23 +147,13 @@ class BrowserRuleDialog extends Component {
             }
         }        
     }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { BrowserRuleProps, BrowserRuleActions } = this.props;
-            BrowserRuleActions.editBrowserRuleData(BrowserRuleProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
-                    this.handleClose();
-                });
-        }
-    }
 
-    handleInheritSaveData = (event, id) => {
+    handleInheritSaveDataForDept = (event, id) => {
         const { BrowserRuleProps, DeptProps, BrowserRuleActions, compId } = this.props;
         const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
-        BrowserRuleActions.inheritBrowserRuleData({
+        BrowserRuleActions.inheritBrowserRuleDataForDept({
             'objId': BrowserRuleProps.getIn(['editingItem', 'objId']),
             'deptCd': selectedDeptCd
         }).then((res) => {
@@ -164,6 +164,24 @@ class BrowserRuleDialog extends Component {
             this.handleClose();
         });
     }
+
+    handleInheritSaveDataForGroup = (event, id) => {
+        const { BrowserRuleProps, ClientGroupProps, BrowserRuleActions, compId } = this.props;
+        const { t, i18n } = this.props;
+        const grpId = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']);
+
+        BrowserRuleActions.inheritBrowserRuleDataForGroup({
+            'objId': BrowserRuleProps.getIn(['editingItem', 'objId']),
+            'grpId': grpId
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplyBrowserRuleChild")
+            });
+            this.handleClose();
+        });
+    }
+
 
     handleCopyCreateData = (event, id) => {
         const { BrowserRuleProps, BrowserRuleActions } = this.props;
@@ -227,7 +245,7 @@ class BrowserRuleDialog extends Component {
             title = t("dtViewBrowserRule");
         } else if(dialogType === BrowserRuleDialog.TYPE_EDIT) {
             title = t("dtEditBrowserRule");
-        } else if(dialogType === BrowserRuleDialog.TYPE_INHERIT) {
+        } else if(dialogType === BrowserRuleDialog.TYPE_INHERIT_DEPT || dialogType === BrowserRuleDialog.TYPE_INHERIT_GROUP) {
             title = t("dtInheritBrowserRule");
         } else if(dialogType === BrowserRuleDialog.TYPE_COPY) {
             title = t("dtCopyBrowserRule");
@@ -475,7 +493,7 @@ class BrowserRuleDialog extends Component {
 
                     </div>
                     }
-                    {(dialogType === BrowserRuleDialog.TYPE_INHERIT) &&
+                    {(dialogType === BrowserRuleDialog.TYPE_INHERIT_DEPT || dialogType === BrowserRuleDialog.TYPE_INHERIT_GROUP) &&
                         <div>
                         <Typography variant="body1">
                             {t("msgApplyRuleToChild")}
@@ -499,8 +517,11 @@ class BrowserRuleDialog extends Component {
                 {(dialogType === BrowserRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
-                {(dialogType === BrowserRuleDialog.TYPE_INHERIT) &&
-                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">{t("dtApply")}</Button>
+                {(dialogType === BrowserRuleDialog.TYPE_INHERIT_DEPT) &&
+                    <Button onClick={this.handleInheritSaveDataForDept} variant='contained' color="secondary">{t("dtApply")}</Button>
+                }
+                {(dialogType === BrowserRuleDialog.TYPE_INHERIT_GROUP) &&
+                    <Button onClick={this.handleInheritSaveDataForGroup} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === BrowserRuleDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
@@ -520,7 +541,8 @@ class BrowserRuleDialog extends Component {
 
 const mapStateToProps = (state) => ({
     BrowserRuleProps: state.BrowserRuleModule,
-    DeptProps: state.DeptModule
+    DeptProps: state.DeptModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

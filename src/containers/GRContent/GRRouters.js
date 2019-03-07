@@ -39,6 +39,7 @@ import DailyLoginCountManage from "views/Stats/DailyLoginCountManage";
 import DailyClientCountManage from "views/Stats/DailyClientCountManage";
 
 import NoticeMasterManage from "views/Notice/NoticeMasterManage";
+import DividedAdminManage from "views/Admin/DividedAdmin/DividedAdminManage";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -93,6 +94,7 @@ class GRRouters extends Component {
           <Route path="/statistic/dailyregist/:grMenuId/:grMenuName" component={DailyClientCountManage} />
 
           <Route path="/notices/noticemanage/:grMenuId/:grMenuName" component={NoticeMasterManage} />
+			    <Route path="/sf/adminmanage/:grMenuId/:grMenuName" component={DividedAdminManage} />
 
         </Switch>
       </div>

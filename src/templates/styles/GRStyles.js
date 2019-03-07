@@ -79,6 +79,8 @@ export const GRCommonStyle = theme => ({
             grLayout.breadcrumbHeight +
             " - " +
             grLayout.footerHeight +
+            " - " +
+            "20px" +
             ")",
     },
 
@@ -404,10 +406,9 @@ export const GRCommonStyle = theme => ({
         padding: '0px 2px 0px 2px',
         borderBottom: '1px solid rgba(224, 224, 224, 1)',
         verticalAlign: 'inherit',
-        color: 'orangered'
+        color: '#b69238'
     },
     specTitle: {
-        fontWeight: 'bold',
         fontSize: '0.75rem',
         padding: '0px 2px 0px 2px',
         borderBottom: '1px solid rgba(224, 224, 224, 1)',
@@ -415,7 +416,8 @@ export const GRCommonStyle = theme => ({
     },
     specContent: {
         fontSize: '0.75rem',
-        padding: '2px 2px 0px 2px',
+        fontWeight: 'bold',
+        padding: '2px 12px 0px 2px',
         textAlign: 'right',
         borderBottom: '1px solid rgba(224, 224, 224, 1)',
         verticalAlign: 'inherit'

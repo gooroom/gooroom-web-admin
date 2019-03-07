@@ -330,13 +330,33 @@ export const deleteBrowserRuleData = (param) => dispatch => {
     });
 };
 
-// rule inherit
-export const inheritBrowserRuleData = (param) => dispatch => {
+// rule inherit - dept
+export const inheritBrowserRuleDataForDept = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptConfInherit', {
             'objId': param.objId,
             'confType': 'BROWSERRULE',
             'deptCd': param.deptCd
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_BROWSERRULE_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// rule inherit - group
+export const inheritBrowserRuleDataForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateClientGroupConfInherit', {
+            'objId': param.objId,
+            'confType': 'BROWSERRULE',
+            'grpId': param.grpId
         }).then(
         (response) => {
             dispatch({

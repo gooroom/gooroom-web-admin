@@ -53,11 +53,11 @@ class JobInform extends Component {
     
     const informOpen = JobManageProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = JobManageProps.getIn(['viewItems', compId, 'viewItem']);
-    const selectTargetObj = JobManageProps.getIn(['viewItems', compId, 'listData_target', 0]);
+    const selectTargetObj = JobManageProps.getIn(['viewItems', compId, 'selectTargetObj']);
     
     // json parse.
     let targetModuleList = <Typography variant="button" gutterBottom>{t("msgNoResult")}</Typography>;
-    if(selectTargetObj && selectTargetObj.get('resultData')) {
+    if(selectTargetObj && selectTargetObj.get('resultData') && viewItem && selectTargetObj.get('jobNo') == viewItem.get('jobNo')) {
       const result = JSON.parse(selectTargetObj.get('resultData'));
       if(result && result.length > 0) {
         targetModuleList = (
@@ -85,6 +85,8 @@ class JobInform extends Component {
           </Table>
         );
       }
+    } else {
+      targetModuleList = (<div></div>);
     }
     
     return (

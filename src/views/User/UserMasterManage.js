@@ -60,6 +60,7 @@ class UserMasterManage extends Component {
     super(props);
 
     this.state = {
+      compId: this.props.match.params.grMenuId,
       isOpenUserSelect: false,
       isOpenDeptSelect: false,
       selectedDept: {deptCd:'', deptNm:''}
@@ -69,24 +70,22 @@ class UserMasterManage extends Component {
   handleInitTreeData = () => {
     // Check selectedDeptCd
     this.props.DeptActions.changeCompVariableObject({
-      compId: this.props.match.params.grMenuId,
+      compId: this.state.compId,
       valueObj: {selectedDeptCd: '', selectedDeptNm: ''}
     });
   }
 
-  // click dept row (in tree)
+  // click dept checkbox (in tree)
   handleCheckedDept = (checkedDeptCdArray, imperfect) => {
     const { UserProps, UserActions } = this.props;
-    const compId = this.props.match.params.grMenuId;
-
-    // Check selectedDeptCd
+    // set checkedDeptCd
     this.props.DeptActions.changeCompVariableObject({
-      compId: compId,
+      compId: this.state.compId,
       valueObj: {checkedDeptCd: checkedDeptCdArray}
     });
 
     // show user list in dept.
-    UserActions.readUserListPaged(UserProps, compId, {
+    UserActions.readUserListPaged(UserProps, this.state.compId, {
       deptCd: checkedDeptCdArray.join(), page:0
     });
   }
@@ -95,21 +94,13 @@ class UserMasterManage extends Component {
   handleSelectDept = (node) => {
     const { DeptActions, UserActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
-    const compId = this.props.match.params.grMenuId;
-
+    const compId = this.state.compId;
+    // change selected info in state
     this.setState({
       selectedDept: {deptCd:node.key, deptNm:node.title}
     });
-
-    UserActions.closeInform({
-      compId: compId
-    });
-
-    // show user list in dept.
-    // UserActions.readUserListPaged(UserProps, compId, {
-    //   deptCd: node.key, page:0
-    // });
-
+    // close user inform
+    UserActions.closeInform({ compId: compId });
     // Check selectedDeptCd
     DeptActions.changeCompVariableObject({
       compId: compId,
@@ -119,7 +110,6 @@ class UserMasterManage extends Component {
       }
     });
 
-    // show rules
     // get browser rule info
     BrowserRuleActions.getBrowserRuleByDeptCd({ compId: compId, deptCd: node.key });
     // get media control setting info
@@ -135,20 +125,52 @@ class UserMasterManage extends Component {
     DeptActions.showInform({ compId: compId, viewItem: null });
   }
   
-  handleEditDept = (listItem, i) => { 
+  // Select User Item
+  handleSelectUser = (selectedUserObj, selectedUserIdArray) => {
+    const { UserActions, DeptActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
+    const compId = this.state.compId;
+
+    // show user info.
+    if(selectedUserObj) {
+      const userId = selectedUserObj.get('userId');
+      DeptActions.closeInform({
+        compId: compId
+      });
+
+      // show user configurations.....
+      // get browser rule info
+      BrowserRuleActions.getBrowserRuleByUserId({ compId: compId, userId: userId });
+      // get media control setting info
+      MediaRuleActions.getMediaRuleByUserId({ compId: compId, userId: userId });
+      // get client secu info
+      SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
+      // get filtered software rule
+      SoftwareFilterActions.getSoftwareFilterByUserId({ compId: compId, userId: userId });   
+      // get desktop conf info
+      DesktopConfActions.getDesktopConfByUserId({ compId: compId, userId: userId });
+      
+      // show user inform pane.
+      UserActions.showInform({ compId: compId, viewItem: selectedUserObj });
+    }
+  };
+
+  // edit dept in tree
+  handleEditDept = (treeNode, i) => { 
     this.props.DeptActions.showDialog({
       viewItem: {
-        deptCd: listItem.key,
-        deptNm: listItem.title
+        deptCd: treeNode.key,
+        deptNm: treeNode.title
       },
       dialogType: DeptDialog.TYPE_EDIT
     });
   };
 
-  handleCreateButtonForDept = (event) => {
+  // create dept in tree
+  handleCreateDept = (event) => {
     const { t, i18n } = this.props;
 
-    const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
+    const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'selectedDeptCd']);
     if(selectedDeptCd && selectedDeptCd !== '') {
       this.props.DeptActions.showDialog({
         viewItem: {
@@ -169,19 +191,17 @@ class UserMasterManage extends Component {
   handleDeleteButtonForDeptConfirmResult = (confirmValue, confirmObject) => {
   }
 
+  // multiple rule change in depts
   handleApplyMultiDept = (event) => {
     this.props.DeptActions.showMultiDialog({
       multiDialogType: DeptMultiDialog.TYPE_EDIT
     });
   }
 
-  handleResetDeptTree = (deptCd) => {
-    this.grTreeList.resetTreeNode(deptCd);
-  }
-
+  // add user in dept
   handleAddUserInDept = (event) => {
     const { t, i18n } = this.props;
-    const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
+    const selectedDeptCd = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'selectedDeptCd']);
     if(selectedDeptCd && selectedDeptCd !== '') {
       this.setState({
         isOpenUserSelect: true
@@ -193,7 +213,7 @@ class UserMasterManage extends Component {
 
   handleMoveUserToDept = (event) => {
     const { t, i18n } = this.props;
-    const checkedIds = this.props.UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    const checkedIds = this.props.UserProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
     if(checkedIds && checkedIds.size > 0) {
       this.setState({
         isOpenDeptSelect: true
@@ -203,21 +223,21 @@ class UserMasterManage extends Component {
     }
   }
 
-  isUserAddible = () => {
-    return (this.props.DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd'])) ? false : true;
+  isUserSelected = () => {
+    return (this.props.DeptProps.getIn(['viewItems', this.state.compId, 'selectedDeptCd'])) ? false : true;
   }
 
   isUserChecked = () => {
-    const checkedIds = this.props.UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-    return (checkedIds && checkedIds.size > 0) ? false : true;
+    const checkedIds = this.props.UserProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
+    return !(checkedIds && checkedIds.size > 0);
   }
 
 
   handleDeleteUserInDept = (event) => {
     const { t, i18n } = this.props;
     const { UserProps, DeptProps, GRConfirmActions } = this.props;
-    const selectedDeptCd = DeptProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectedDeptCd']);
-    const selectedUsers = UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    const selectedDeptCd = DeptProps.getIn(['viewItems', this.state.compId, 'selectedDeptCd']);
+    const selectedUsers = UserProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
     if(selectedUsers && selectedUsers !== '') {
       GRConfirmActions.showConfirm({
         confirmTitle: t("lbDeleteUser"),
@@ -235,12 +255,11 @@ class UserMasterManage extends Component {
   handleDeleteUserInDeptConfirmResult = (confirmValue, paramObject) => {
     if(confirmValue) {
       const { DeptProps, DeptActions, UserActions, UserProps } = this.props;
-      const compId = this.props.match.params.grMenuId;
       DeptActions.deleteUsersInDept({
         users: paramObject.selectedUsers.join(',')
       }).then(() => {
         // show user list in dept.
-        UserActions.readUserListPaged(UserProps, compId, {
+        UserActions.readUserListPaged(UserProps, this.state.compId, {
           deptCd: paramObject.selectedDeptCd, page:0
         });
         // close dialog
@@ -265,7 +284,7 @@ class UserMasterManage extends Component {
   }
   handleDeptSelectSave = (selectedDept) => {
     const { t, i18n } = this.props;
-    const checkedUserIds = this.props.UserProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
+    const checkedUserIds = this.props.UserProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
     const { DeptProps, GRConfirmActions } = this.props;
     GRConfirmActions.showConfirm({
         confirmTitle: t("lbChangeDeptForUser"),
@@ -280,13 +299,12 @@ class UserMasterManage extends Component {
   handleUserSelectSaveConfirmResult = (confirmValue, paramObject) => {
     if(confirmValue) {
       const { DeptProps, DeptActions, UserActions, UserProps } = this.props;
-      const compId = this.props.match.params.grMenuId;
       DeptActions.createUsersInDept({
           deptCd: paramObject.selectedDeptCd,
           users: paramObject.selectedUsers.join(',')
       }).then((res) => {
         // show user list in dept.
-        UserActions.readUserListPaged(UserProps, compId, {
+        UserActions.readUserListPaged(UserProps, this.state.compId, {
           deptCd: paramObject.selectedDeptCd, page:0
         });
         // close dialog
@@ -308,45 +326,14 @@ class UserMasterManage extends Component {
     })
   }
 
-  // Select User Item
-  handleUserSelect = (selectedUserObj, selectedUserIdArray) => {
-    const { UserActions, DeptActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
-
-    const compId = this.props.match.params.grMenuId;
-
-    // show user info.
-    if(selectedUserObj) {
-      const userId = selectedUserObj.get('userId');
-
-      DeptActions.closeInform({
-        compId: compId
-      });
-
-      // show user configurations.....
-      // get browser rule info
-      BrowserRuleActions.getBrowserRuleByUserId({ compId: compId, userId: userId });
-      // get media control setting info
-      MediaRuleActions.getMediaRuleByUserId({ compId: compId, userId: userId });
-      // get client secu info
-      SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
-      // get filtered software rule
-      SoftwareFilterActions.getSoftwareFilterByUserId({ compId: compId, userId: userId });   
-
-      // get desktop conf info
-      DesktopConfActions.getDesktopConfByUserId({ compId: compId, userId: userId });
-      
-      
-      // show user inform pane.
-      UserActions.showInform({ compId: compId, viewItem: selectedUserObj });
-      
+  handleResetDeptTree = (deptCd) => {
+    this.grTreeList.resetTreeNode(deptCd);
     }
-  };
 
   render() {
     const { classes } = this.props;
     const { t, i18n } = this.props;
-    const compId = this.props.match.params.grMenuId;
+    const compId = this.state.compId;
 
     return (
       <React.Fragment>
@@ -360,7 +347,7 @@ class UserMasterManage extends Component {
                   <Grid item>
                     <Tooltip title={t("ttAddNewDept")}>
                       <span>
-                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleCreateButtonForDept} disabled={this.isUserAddible()} >
+                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleCreateDept} disabled={this.isUserSelected()} >
                         <AddIcon /><DeptIcon />
                       </Button>
                       </span>
@@ -368,7 +355,7 @@ class UserMasterManage extends Component {
                     {/**
                     <Tooltip title={t("ttDeleteDept")}>
                       <span>
-                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserAddible()} style={{marginLeft: "4px"}} >
+                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserSelected()} style={{marginLeft: "4px"}} >
                         <RemoveIcon /><DeptIcon />
                       </Button>
                       </span>
@@ -387,7 +374,7 @@ class UserMasterManage extends Component {
                   <Grid item>
                     <Tooltip title={t("ttAddUserInDept")}>
                       <span>
-                      <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserAddible()} >
+                      <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserSelected()} >
                         <AddIcon /><UserIcon />
                       </Button>
                       </span>
@@ -395,7 +382,7 @@ class UserMasterManage extends Component {
                     {/*
                     <Tooltip title={t("ttDeleteUserInDept")}>
                       <span>
-                      <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserAddible()} style={{marginLeft: "4px"}} >
+                      <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserSelected()} style={{marginLeft: "4px"}} >
                         <RemoveIcon /><UserIcon />
                       </Button>
                       </span>
@@ -412,7 +399,7 @@ class UserMasterManage extends Component {
                 rootKeyValue='0'
                 keyName='key'
                 title='title'
-                startingDepth='2'
+                startingDepth='1'
                 hasSelectChild={false}
                 hasSelectParent={false}
                 compId={compId}
@@ -427,7 +414,7 @@ class UserMasterManage extends Component {
 
             <Grid item xs={12} sm={7} style={{border: '0px solid #efefef'}} >
               <UserListComp name='UserListComp' compId={compId} deptCd='' 
-                onSelect={this.handleUserSelect}
+                onSelect={this.handleSelectUser}
                 onMoveUserToDept={this.handleMoveUserToDept}
               />
             </Grid>
@@ -472,23 +459,20 @@ class UserMasterManage extends Component {
 const mapStateToProps = (state) => ({
   GlobalProps: state.GlobalModule,
   DeptProps: state.DeptModule,
-  UserProps: state.UserModule,
-  BrowserRuleProps: state.BrowserRuleModule,
-  MediaRuleProps: state.MediaRuleModule,
-  SecurityRuleProps: state.SecurityRuleModule,
-  DesktopConfProps: state.DesktopConfModule
+  UserProps: state.UserModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
   GlobalActions: bindActionCreators(GlobalActions, dispatch),
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+
   DeptActions: bindActionCreators(DeptActions, dispatch),
   UserActions: bindActionCreators(UserActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
-  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
-  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserMasterManage)));

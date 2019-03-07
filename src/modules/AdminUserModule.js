@@ -2,6 +2,7 @@ import { handleActions } from 'redux-actions';
 import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
+import sha256 from 'sha-256-js';
 
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
@@ -17,6 +18,8 @@ const CREATE_ADMINUSER_SUCCESS = 'adminUser/CREATE_ADMINUSER_SUCCESS';
 const EDIT_ADMINUSER_SUCCESS = 'adminUser/EDIT_ADMINUSER_SUCCESS';
 const DELETE_ADMINUSER_SUCCESS = 'adminUser/DELETE_ADMINUSER_SUCCESS';
 
+const SHOW_ADMINUSER_INFORM = 'adminUser/SHOW_ADMINUSER_INFORM';
+const CLOSE_ADMINUSER_INFORM = 'adminUser/CLOSE_ADMINUSER_INFORM';
 const SHOW_ADMINUSER_DIALOG = 'adminUser/SHOW_ADMINUSER_DIALOG';
 const CLOSE_ADMINUSER_DIALOG = 'adminUser/CLOSE_ADMINUSER_DIALOG';
 
@@ -42,6 +45,22 @@ export const showDialog = (param) => dispatch => {
 export const closeDialog = () => dispatch => {
     return dispatch({
         type: CLOSE_ADMINUSER_DIALOG
+    });
+};
+
+export const showInform = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_ADMINUSER_INFORM,
+        compId: param.compId,
+        selectId: (param.viewItem) ? param.viewItem.get('userId') : '',
+        viewItem: param.viewItem
+    });
+};
+
+export const closeInform = (param) => dispatch => {
+    return dispatch({
+        type: CLOSE_ADMINUSER_INFORM,
+        compId: param.compId
     });
 };
 
@@ -91,10 +110,50 @@ export const changeListParamData = (param) => dispatch => {
     });
 };
 
+const makeParameter = (po) => {
+    return {
+        adminId: po.get('adminId'),
+        adminPw: (po.get('adminPw') !== '') ? sha256(po.get('adminId') + sha256(po.get('adminPw'))) : '',
+        adminNm: po.get('adminNm'),
+
+        isClientAdmin: (po.get('isClientAdmin') !== undefined) ? po.get('isClientAdmin') : '0',
+        clientAdd: (po.get('clientAdd') !== undefined) ? po.get('clientAdd') : '0',
+        clientDelete: (po.get('clientDelete') !== undefined) ? po.get('clientDelete') : '0',
+        clientMove: (po.get('clientMove') !== undefined) ? po.get('clientMove') : '0',
+        clientRule: (po.get('clientRule') !== undefined) ? po.get('clientRule') : '0',
+
+        isUserAdmin: (po.get('isUserAdmin') !== undefined) ? po.get('isUserAdmin') : '0',
+        userAdd: (po.get('userAdd') !== undefined) ? po.get('userAdd') : '0',
+        userDelete: (po.get('userDelete') !== undefined) ? po.get('userDelete') : '0',
+        userMove: (po.get('userMove') !== undefined) ? po.get('userMove') : '0',
+        userRule: (po.get('userRule') !== undefined) ? po.get('userRule') : '0',
+
+        isRuleAdmin: (po.get('isRuleAdmin') !== undefined) ? po.get('isRuleAdmin') : '0',
+        ruleEdit: (po.get('ruleEdit') !== undefined) ? po.get('ruleEdit') : '0',
+        ruleUser: (po.get('ruleUser') !== undefined) ? po.get('ruleUser') : '0',
+        ruleClient: (po.get('ruleClient') !== undefined) ? po.get('ruleClient') : '0',
+
+        isDesktopAdmin: (po.get('isDesktopAdmin') !== undefined) ? po.get('isDesktopAdmin') : '0',
+        desktopEdit: (po.get('desktopEdit') !== undefined) ? po.get('desktopEdit') : '0',
+        desktopUser: (po.get('desktopUser') !== undefined) ? po.get('desktopUser') : '0',
+        desktopClient: (po.get('desktopClient') !== undefined) ? po.get('desktopClient') : '0',
+
+        isNoticeAdmin: (po.get('isNoticeAdmin') !== undefined) ? po.get('isNoticeAdmin') : '0',
+        noticeEdit: (po.get('noticeEdit') !== undefined) ? po.get('noticeEdit') : '0',
+        noticeUser: (po.get('noticeUser') !== undefined) ? po.get('noticeUser') : '0',
+        noticeClient: (po.get('noticeClient') !== undefined) ? po.get('noticeClient') : '0',
+
+        connIps: (po.get('connIps') !== undefined) ? po.get('connIps').toJS() : [],
+        grpInfoList: (po.get('grpInfoList') !== undefined) ? po.get('grpInfoList').toJS() : [],
+        deptInfoList: (po.get('deptInfoList') !== undefined) ? po.get('deptInfoList').toJS() : []
+    };
+}
+
 // create (add)
 export const createAdminUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createAdminUser', param).then(
+
+    return requestPostAPI('createAdminUser', makeParameter(param.itemObj)).then(
         (response) => {
             try {
                 if(response.data.status.result === 'success') {
@@ -115,12 +174,20 @@ export const createAdminUserData = (param) => dispatch => {
 // edit
 export const editAdminUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateAdminUserData', param).then(
+    return requestPostAPI('updateAdminUserData', makeParameter(param.itemObj)).then(
         (response) => {
-            dispatch({
-                type: EDIT_ADMINUSER_SUCCESS,
-                response: response
-            });
+                // change selected object
+                requestPostAPI('readAdminUserData', {'adminId': param.itemObj.get('adminId')}).then(
+                    (response) => {
+                        dispatch({
+                            type: EDIT_ADMINUSER_SUCCESS,
+                            adminId: param.itemObj.get('adminId'),
+                            response: response
+                        });
+                    }
+                ).catch(error => {
+                    dispatch({ type: COMMON_FAILURE, error: error });
+                });
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
@@ -229,6 +296,12 @@ export default handleActions({
     [CLOSE_ADMINUSER_DIALOG]: (state, action) => {
         return commonHandleActions.handleCloseDialogAction(state.set('dialogTabValue', 0), action);
     },
+    [SHOW_ADMINUSER_INFORM]: (state, action) => {
+        return commonHandleActions.handleShowInformAction(state, action);
+    },
+    [CLOSE_ADMINUSER_INFORM]: (state, action) => {
+        return commonHandleActions.handleCloseInformAction(state, action);
+    },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
             editingItem: state.get('editingItem').merge({[action.name]: action.value})
@@ -244,6 +317,8 @@ export default handleActions({
     },
     [EDIT_ADMINUSER_SUCCESS]: (state, action) => {
         return commonHandleActions.handleEditSuccessAction(state, action);
+        // console.log('newState :::: ', newState);
+        // return commonHandleActions.handleCloseInformAction(newState, action);
     },
     [DELETE_ADMINUSER_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action, 'userId');

@@ -331,13 +331,33 @@ export const deleteSoftwareFilterData = (param) => dispatch => {
     });
 };
 
-// rule inherit
-export const inheritSoftwareFilterData = (param) => dispatch => {
+// rule inherit -dept
+export const inheritSoftwareFilterDataForDept = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptConfInherit', {
             'objId': param.objId,
             'confType': 'FILTEREDSWRULE',
             'deptCd': param.deptCd
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_SOFTWAREFILTER_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// rule inherit - group
+export const inheritSoftwareFilterDataForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateClientGroupConfInherit', {
+            'objId': param.objId,
+            'confType': 'FILTEREDSWRULE',
+            'grpId': param.grpId
         }).then(
         (response) => {
             dispatch({

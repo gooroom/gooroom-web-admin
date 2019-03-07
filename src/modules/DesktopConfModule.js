@@ -391,8 +391,8 @@ export const deleteDesktopConfData = (param) => dispatch => {
     });
 };
 
-// rule inherit
-export const inheritDesktopConfData = (param) => dispatch => {
+// rule inherit - dept
+export const inheritDesktopConfDataForDept = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptConfInherit', {
             'objId': param.confId,
@@ -401,9 +401,29 @@ export const inheritDesktopConfData = (param) => dispatch => {
         }).then(
         (response) => {
             dispatch({
-                type: EDIT_SECURITYRULE_SUCCESS,
+                type: EDIT_DESKTOPCONF_SUCCESS,
                 compId: param.compId,
                 confId: param.confId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// rule inherit - group
+export const inheritDesktopConfDataForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateClientGroupConfInherit', {
+            'objId': param.confId,
+            'confType': 'DESKTOPCONF',
+            'grpId': param.grpId
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_DESKTOPCONF_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
             });
         }
     ).catch(error => {
