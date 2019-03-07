@@ -789,7 +789,7 @@ export default {
   // 공지
   "btnInstantAlarm": "Instant alarm",
   "btnNowExit": "Exit now",
-  "btnNewPublish": "New publish"
+  "btnNewPublish": "New publish",
 
   // 1.3
   "menuSite": "site",
