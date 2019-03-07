@@ -59,6 +59,8 @@ class ClientConfSettingDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+    static TYPE_INHERIT_DEPT = 'INHERIT_DEPT';
+    static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
     componentDidMount() {
@@ -105,7 +107,16 @@ class ClientConfSettingDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtAddClientConf"),
                 confirmMsg: t("msgAddClientConf"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+                        ClientConfSettingActions.createClientConfSettingData(paramObject)
+                            .then((res) => {
+                                refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: ClientConfSettingProps.get('editingItem')
             });
         } else {
@@ -114,16 +125,6 @@ class ClientConfSettingDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-            ClientConfSettingActions.createClientConfSettingData(ClientConfSettingProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -153,6 +154,26 @@ class ClientConfSettingDialog extends Component {
                 });
             }
         }
+    }
+
+    handleInheritSaveDataForDept = (event, id) => {
+    }
+
+    handleInheritSaveDataForGroup = (event, id) => {
+        const { ClientConfSettingProps, ClientGroupProps, ClientConfSettingActions, compId } = this.props;
+        const { t, i18n } = this.props;
+        const grpId = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']);
+
+        ClientConfSettingActions.inheritClientConfSettingDataForGroup({
+            'objId': ClientConfSettingProps.getIn(['editingItem', 'objId']),
+            'grpId': grpId
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplyClientConfChild")
+            });
+            this.handleClose();
+        });
     }
 
     handleCopyCreateData = (event, id) => {
@@ -223,6 +244,8 @@ class ClientConfSettingDialog extends Component {
             title = t("dtViewClientConf");
         } else if(dialogType === ClientConfSettingDialog.TYPE_EDIT) {
             title = t("dtEditClientConf");
+        } else if(dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT || dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT) {
+            title = t("dtInheritClientConf");
         } else if(dialogType === ClientConfSettingDialog.TYPE_COPY) {
             title = t("dtCopyClientConf");
         }
@@ -529,6 +552,14 @@ class ClientConfSettingDialog extends Component {
 
                     </div>
                     }
+                    {(dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT || dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT) &&
+                        <div>
+                        <Typography variant="body1">
+                            {t("msgApplyRuleToChild")}
+                        </Typography>
+                        <ClientConfSettingSpec selectedItem={editingItem} hasAction={false} />
+                        </div>
+                    }
                     {(dialogType === ClientConfSettingDialog.TYPE_COPY) &&
                         <div>
                         <Typography variant="body1">
@@ -544,6 +575,12 @@ class ClientConfSettingDialog extends Component {
                 }
                 {(dialogType === ClientConfSettingDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
+                }
+                {(dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT) &&
+                    <Button onClick={this.handleInheritSaveDataForDept} variant='contained' color="secondary">{t("dtApply")}</Button>
+                }
+                {(dialogType === ClientConfSettingDialog.TYPE_INHERIT_GROUP) &&
+                    <Button onClick={this.handleInheritSaveDataForGroup} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === ClientConfSettingDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
@@ -563,7 +600,8 @@ class ClientConfSettingDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientConfSettingProps: state.ClientConfSettingModule
+    ClientConfSettingProps: state.ClientConfSettingModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

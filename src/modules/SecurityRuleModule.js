@@ -342,13 +342,33 @@ export const deleteSecurityRule = (param) => dispatch => {
     });
 };
 
-// rule inherit
-export const inheritSecurityRuleData = (param) => dispatch => {
+// rule inherit - dept
+export const inheritSecurityRuleDataForDept = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptConfInherit', {
             'objId': param.objId,
             'confType': 'SECURITYRULE',
             'deptCd': param.deptCd
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_SECURITYRULE_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// rule inherit - group
+export const inheritSecurityRuleDataForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateClientGroupConfInherit', {
+            'objId': param.objId,
+            'confType': 'SECURITYRULE',
+            'grpId': param.grpId
         }).then(
         (response) => {
             dispatch({

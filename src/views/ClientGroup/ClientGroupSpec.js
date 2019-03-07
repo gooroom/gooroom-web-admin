@@ -154,7 +154,65 @@ class ClientGroupSpec extends Component {
     });
   };
   // ===================================================================
-  
+  handleClickInheritForClientHostName = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientHostNameProps, compId, targetType);
+    this.props.ClientHostNameActions.showDialog({
+      viewItem: viewItem,
+      dialogType: ClientHostNameDialog.TYPE_INHERIT_GROUP
+    });
+  };
+  handleClickInheritForClientUpdateServer = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientUpdateServerProps, compId, targetType);
+    this.props.ClientUpdateServerActions.showDialog({
+      viewItem: viewItem,
+      dialogType: ClientUpdateServerDialog.TYPE_INHERIT_GROUP
+    });
+  };
+  handleClickInheritForClientConfSetting = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientConfSettingProps, compId, targetType);
+    this.props.ClientConfSettingActions.showDialog({
+      viewItem: viewItem,
+      dialogType: ClientConfSettingDialog.TYPE_INHERIT_GROUP
+    });
+  };
+
+  handleClickInheritForBrowserRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
+    this.props.BrowserRuleActions.showDialog({
+      viewItem: viewItem,
+      dialogType: BrowserRuleDialog.TYPE_INHERIT_GROUP
+    });
+  };
+  handleClickInheritForMediaRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, targetType);
+    this.props.MediaRuleActions.showDialog({
+      viewItem: viewItem,
+      dialogType: MediaRuleDialog.TYPE_INHERIT_GROUP
+    });
+  };
+  handleClickInheritForSecurityRule = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, targetType);
+    this.props.SecurityRuleActions.showDialog({
+      viewItem: viewItem,
+      dialogType: SecurityRuleDialog.TYPE_INHERIT_GROUP
+    });
+  };
+  handleClickInheritForSoftwareFilter = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, targetType);
+    this.props.SoftwareFilterActions.showDialog({
+      viewItem: viewItem,
+      dialogType: SoftwareFilterDialog.TYPE_INHERIT_GROUP
+    });
+  };
+  handleClickInheritForDesktopConf = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
+    this.props.DesktopConfActions.showDialog({
+      viewItem: viewItem,
+      dialogType: DesktopConfDialog.TYPE_INHERIT_GROUP
+    });
+  };
+  // ===================================================================
+
   render() {
     const { compId, ClientGroupProps } = this.props;
 
@@ -172,7 +230,7 @@ class ClientGroupSpec extends Component {
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'GROUP']);
 
     let groupInfo = '';
-    if(viewItem) {
+    if(viewItem && viewItem.get('grpId')) {
       groupInfo = viewItem.get('grpId');
       if(viewItem.get('regDate') && viewItem.get('regDate') !== '') {
         groupInfo += ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD');
@@ -184,10 +242,10 @@ class ClientGroupSpec extends Component {
 
     return (
       <div>
-      {(informOpen && viewItem) &&
+      {(informOpen && viewItem && viewItem.get('grpId')) &&
         <Card >
           <CardHeader
-            title={viewItem.get('grpNm')}
+            title={(viewItem.get('grpNm')) ? viewItem.get('grpNm') : ''}
             subheader={groupInfo}
             action={
               <div style={{width:48,paddingTop:10}}>
@@ -207,6 +265,8 @@ class ClientGroupSpec extends Component {
                   selectedItem={(selectedClientHostNameItem) ? selectedClientHostNameItem.get('viewItem') : null}
                   ruleGrade={(selectedClientHostNameItem) ? selectedClientHostNameItem.get('ruleGrade') : null}
                   onClickEdit={this.handleEditClickForClientHostName}
+                  onClickInherit={this.handleClickInheritForClientHostName}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -215,6 +275,8 @@ class ClientGroupSpec extends Component {
                   selectedItem={(selectedClientUpdateServerItem) ? selectedClientUpdateServerItem.get('viewItem') : null}
                   ruleGrade={(selectedClientUpdateServerItem) ? selectedClientUpdateServerItem.get('ruleGrade') : null}
                   onClickEdit={this.handleEditClickForClientUpdateServer}
+                  onClickInherit={this.handleClickInheritForClientUpdateServer}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6}>
@@ -223,6 +285,8 @@ class ClientGroupSpec extends Component {
                   selectedItem={(selectedClientConfSettingItem) ? selectedClientConfSettingItem.get('viewItem') : null}
                   ruleGrade={(selectedClientConfSettingItem) ? selectedClientConfSettingItem.get('ruleGrade') : null}
                   onClickEdit={this.handleEditClickForClientConfSetting}
+                  onClickInherit={this.handleClickInheritForClientConfSetting}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -231,6 +295,8 @@ class ClientGroupSpec extends Component {
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForMediaRule}
+                  onClickInherit={this.handleClickInheritForMediaRule}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6}>
@@ -239,6 +305,8 @@ class ClientGroupSpec extends Component {
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForBrowserRule}
+                  onClickInherit={this.handleClickInheritForBrowserRule}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -247,6 +315,8 @@ class ClientGroupSpec extends Component {
                   selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSecurityRule}
+                  onClickInherit={this.handleClickInheritForSecurityRule}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -255,6 +325,8 @@ class ClientGroupSpec extends Component {
                   selectedItem={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('viewItem') : null}
                   ruleGrade={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSoftwareFilter}
+                  onClickInherit={this.handleClickInheritForSoftwareFilter}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -263,6 +335,8 @@ class ClientGroupSpec extends Component {
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
                   ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForDesktopConf}
+                  onClickInherit={this.handleClickInheritForDesktopConf}
+                  inherit={viewItem.get('hasChildren')}
                 />
               </Grid>
             </Grid>

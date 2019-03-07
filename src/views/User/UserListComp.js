@@ -299,6 +299,8 @@ class UserListComp extends Component {
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                    {(n.get('statusCd') !== 'STAT020') &&
+                      <React.Fragment>
                     <Button color="secondary" size="small" 
                       className={classes.buttonInTableRow}
                       onClick={event => this.handleEditClick(event, n.get('userId'))}>
@@ -309,6 +311,8 @@ class UserListComp extends Component {
                       onClick={event => this.handleDeleteClick(event, n.get('userId'))}>
                       <DeleteIcon />
                     </Button>
+                      </React.Fragment>
+                    }
                   </TableCell>
                 </TableRow>
               );

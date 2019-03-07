@@ -790,5 +790,28 @@ export default {
   "btnInstantAlarm": "즉시 알람",
   "btnNowExit": "지금 종료",
   "btnNewPublish": "신규 게시"
+
+  // 1.3
+  "menuSite": "SITE",
+  "menuSiteManage": "Site관리",
+
+  "menuSf": "개발중",
+  "menuDividedAdminManage": "관리자관리",
+
+  "lbParentGroup": "상위단말그룹",
+  "msgSelectParentGroup": "상위단말그룹을 선택하세요.",
+  "ttChangMultiGroupRule": "단말그룹정책 일괄변경",
+
+  "dtInheritClientConf": "단말정책설정 상속",
+  "msgInheritClientConf": "단말정책설정을 상속하시겠습니까?",
+  "msgApplyClientConfChild": "단말정책설정이 하위 그룹에 적용되었습니다.",
+
+  "dtInheritHosts": "Hosts 정보 상속",
+  "msgInheritHosts": "Hosts 정보를 상속하시겠습니까?",
+  "msgApplyHostsChild": "Hosts 정보가 하위 그룹에 적용되었습니다.",
+
+  "dtInheritUpdateServer": "업데이트서버정보 상속",
+  "msgInheritUpdateServer": "업데이트서버정보를 상속하시겠습니까?",
+  "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다.",
   
 };

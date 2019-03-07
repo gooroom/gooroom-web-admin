@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from "react"
+import React, {Component} from "react"
 
 import IconButton from '@material-ui/core/IconButton';
 import OpenIcon from "@material-ui/icons/ExpandMore";
@@ -18,7 +18,7 @@ class GRTreeItem extends Component {
     };
 
     render() {
-        const {nodeKey, primaryText, style, checked, imperfect, isShowCheck, isEnableEdit} = this.props
+        const {nodeKey, primaryText, depth, style, checked, imperfect, isShowCheck, isEnableEdit, isCheckMasterOnly} = this.props
         const {onClickNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend} = this.props
 
         const styles = {
@@ -32,16 +32,17 @@ class GRTreeItem extends Component {
         }
 
         return (
-            <ListItem button
-                style={Object.assign({}, styles.root, style)}
-                >
-                {(isShowCheck) && 
+            <ListItem button style={Object.assign({}, styles.root, style)} >
+                {(isShowCheck) &&
                 <Checkbox color="primary"
                     onClick={this.onClickCheckbox}
-                    onChange={onCheckNode(nodeKey)}
+                    onChange={onCheckNode(nodeKey, primaryText)}
                     checked={checked.indexOf(nodeKey) !== -1}
                     disableRipple
                     indeterminate={imperfect.indexOf(nodeKey) !== -1}
+                    disabled={(isCheckMasterOnly && depth != 2)}
+
+                    style={{color: (isCheckMasterOnly && depth != 2) ? '#cecece' : '#737373'}}
                 />
                 }
                 {leftIcon}
@@ -60,14 +61,6 @@ class GRTreeItem extends Component {
         )
     }
 }
-
-// GRTreeItem.PropTypes = {
-//     primaryText: PropTypes.string.isRequired,
-//     style: PropTypes.object.isRequired,
-//     leftIcon: PropTypes.element,
-//     rightIcon: PropTypes.element,
-//     onTouchTap: PropTypes.func
-// }
 
 export default GRTreeItem;
 

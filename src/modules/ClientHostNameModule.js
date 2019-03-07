@@ -275,6 +275,26 @@ export const deleteClientHostNameData = (param) => dispatch => {
     });
 };
 
+// rule inherit - group
+export const inheritClientHostNameDataForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateClientGroupConfInherit', {
+            'objId': param.objId,
+            'confType': 'HOSTNAMECONF',
+            'grpId': param.grpId
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_HOSTNAME_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 // clone rule
 export const cloneClientHostNameData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});

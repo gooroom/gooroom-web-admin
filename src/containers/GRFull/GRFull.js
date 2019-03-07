@@ -100,7 +100,7 @@ class GRFull extends Component {
           <div className={classes.appBody}>
             <GRSideMenu sideOpen={this.state.sideOpen} />
             <div className={classNames({[classes.fullMain]: !this.state.isMainWide}, {[classes.fullWideMain]: this.state.isMainWide})}>
-              <div>
+              <div style={{overflowX:'auto'}}>
                 <GRBreadcrumb pathname={(this.props.location.pathname) ? this.props.location.pathname : ''}/>
                 <GRRouters />
               </div>

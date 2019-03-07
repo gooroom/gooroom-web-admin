@@ -330,13 +330,33 @@ export const deleteMediaRuleData = (param) => dispatch => {
     });
 };
 
-// rule inherit
-export const inheritMediaRuleData = (param) => dispatch => {
+// rule inherit -dept
+export const inheritMediaRuleDataForDept = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptConfInherit', {
             'objId': param.objId,
             'confType': 'MEDIARULE',
             'deptCd': param.deptCd
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_MEDIACONTROL_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// rule inherit - group
+export const inheritMediaRuleDataForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateClientGroupConfInherit', {
+            'objId': param.objId,
+            'confType': 'MEDIARULE',
+            'grpId': param.grpId
         }).then(
         (response) => {
             dispatch({

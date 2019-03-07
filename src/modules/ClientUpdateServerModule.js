@@ -276,6 +276,26 @@ export const deleteClientUpdateServerData = (param) => dispatch => {
     });
 };
 
+// rule inherit - group
+export const inheritClientUpdateServerDataForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateClientGroupConfInherit', {
+            'objId': param.objId,
+            'confType': 'UPDATESERVERCONF',
+            'grpId': param.grpId
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_UPDATESERVER_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 // clone rule
 export const cloneClientUpdateServerData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});

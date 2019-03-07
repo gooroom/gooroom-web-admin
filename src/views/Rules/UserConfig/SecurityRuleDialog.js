@@ -38,7 +38,8 @@ class SecurityRuleDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
-    static TYPE_INHERIT = 'INHERIT';
+    static TYPE_INHERIT_DEPT = 'INHERIT_DEPT';
+    static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
     handleClose = (event) => {
@@ -122,14 +123,31 @@ class SecurityRuleDialog extends Component {
         }
     }
 
-    handleInheritSaveData = (event, id) => {
+    handleInheritSaveDataForDept = (event, id) => {
         const { SecurityRuleProps, DeptProps, SecurityRuleActions, compId } = this.props;
         const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
-        SecurityRuleActions.inheritSecurityRuleData({
+        SecurityRuleActions.inheritSecurityRuleDataForDept({
             'objId': SecurityRuleProps.getIn(['editingItem', 'objId']),
             'deptCd': selectedDeptCd
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplySecuRuleChild")
+            });
+            this.handleClose();
+        });
+    }
+
+    handleInheritSaveDataForGroup = (event, id) => {
+        const { SecurityRuleProps, ClientGroupProps, SecurityRuleActions, compId } = this.props;
+        const { t, i18n } = this.props;
+        const grpId = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']);
+
+        SecurityRuleActions.inheritSecurityRuleDataForGroup({
+            'objId': SecurityRuleProps.getIn(['editingItem', 'objId']),
+            'grpId': grpId
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
@@ -170,7 +188,7 @@ class SecurityRuleDialog extends Component {
             title = t("dtViewSecuRule");
         } else if(dialogType === SecurityRuleDialog.TYPE_EDIT) {
             title = t("dtEditSecuRule");
-        } else if(dialogType === SecurityRuleDialog.TYPE_INHERIT) {
+        } else if(dialogType === SecurityRuleDialog.TYPE_INHERIT_DEPT || dialogType === SecurityRuleDialog.TYPE_INHERIT_GROUP) {
             title = t("dtInheritSecuRule");
         } else if(dialogType === SecurityRuleDialog.TYPE_COPY) {
             title = t("dtCopySecuRule");
@@ -238,7 +256,7 @@ class SecurityRuleDialog extends Component {
                     }
                     </div>
                     }
-                    {(dialogType === SecurityRuleDialog.TYPE_INHERIT) &&
+                    {(dialogType === SecurityRuleDialog.TYPE_INHERIT_DEPT || dialogType === SecurityRuleDialog.TYPE_INHERIT_GROUP) &&
                         <div>
                         <Typography variant="body1">
                             {t("msgApplyRuleToChild")}
@@ -263,8 +281,11 @@ class SecurityRuleDialog extends Component {
                 {(dialogType === SecurityRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
-                {(dialogType === SecurityRuleDialog.TYPE_INHERIT) &&
-                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">{t("dtApply")}</Button>
+                {(dialogType === SecurityRuleDialog.TYPE_INHERIT_DEPT) &&
+                    <Button onClick={this.handleInheritSaveDataForDept} variant='contained' color="secondary">{t("dtApply")}</Button>
+                }
+                {(dialogType === SecurityRuleDialog.TYPE_INHERIT_GROUP) &&
+                    <Button onClick={this.handleInheritSaveDataForGroup} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === SecurityRuleDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
@@ -284,7 +305,8 @@ class SecurityRuleDialog extends Component {
 
 const mapStateToProps = (state) => ({
     SecurityRuleProps: state.SecurityRuleModule,
-    DeptProps: state.DeptModule
+    DeptProps: state.DeptModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -55,7 +56,38 @@ class ClientGroupDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtAddGroup"),
                 confirmMsg: t("msgAddGroup"),
-                handleConfirmResult: this.handleCreateDataConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { ClientGroupProps, ClientGroupActions, compId, resetCallback } = this.props;
+                        const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+            
+                        const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
+                        ClientGroupActions.createClientGroupData({
+                            groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
+                            groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
+                            uprGrpId: ClientGroupProps.getIn(['editingItem', 'grpId']),
+                            isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
+                            
+                            clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
+                            hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
+                            updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
+                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+            
+                        }).then((res) => {
+                            // ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
+                            // tree refresh
+                            resetCallback(ClientGroupProps.getIn(['editingItem', 'grpId']));
+                            this.handleClose();
+                        }).catch((err) => {
+                            console.log('handleCreateDataConfirmResult - err :::: ', err);
+                        });
+                    }
+                },
                 confirmObject: ClientGroupProps.get('editingItem')
             });
         } else {
@@ -66,33 +98,6 @@ class ClientGroupDialog extends Component {
             }
         }
     }
-    handleCreateDataConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-            const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
-
-            const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
-            ClientGroupActions.createClientGroupData({
-                groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
-                groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
-                isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
-                
-                clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
-                hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
-                updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
-                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
-
-            }).then((res) => {
-                ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
-                this.handleClose();
-            });
-        }
-    }
     
     handleEditData = (event) => {
         const { GRConfirmActions } = this.props;
@@ -101,7 +106,36 @@ class ClientGroupDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtEditGroup"),
                 confirmMsg: t("msgEditGroup"),
-                handleConfirmResult: this.handleEditConfirmResult
+                handleConfirmResult: (confirmValue) => {
+                    if(confirmValue) {
+                        const { ClientGroupProps, ClientGroupActions, compId, resetCallback } = this.props;
+                        const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+            
+                        const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
+                        ClientGroupActions.editClientGroupData({
+                            groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
+                            groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
+                            groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
+                            isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
+            
+                            clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
+                            hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
+                            updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
+                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            
+                        }).then((res) => {
+                            // ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
+                            // tree refresh
+                            // resetCallback(ClientGroupProps.getIn(['editingItem', 'grpId']));
+                            this.handleClose();
+                        });
+                    }
+                }
             });
         } else {
             if(this.refs.form && this.refs.form.childs) {
@@ -109,34 +143,6 @@ class ClientGroupDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleEditConfirmResult = (confirmValue) => {
-        if(confirmValue) {
-            const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-            const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
-
-            const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
-            ClientGroupActions.editClientGroupData({
-                groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
-                groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
-                groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
-                isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
-
-                clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
-                hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
-                updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
-                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
-                
-            }).then((res) => {
-                ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
-                this.handleClose();
-            });
         }
     }
 
@@ -155,7 +161,10 @@ class ClientGroupDialog extends Component {
             title = t("dtViewGroup");
         } else if(dialogType === ClientGroupDialog.TYPE_EDIT) {
             title = t("dtEditGroup");
-        } 
+        }
+
+        const upperGroupInfo = ClientGroupProps.getIn(['viewItems', compId, 'selectedGrpNm']) +
+            ' (' + ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']) + ')';
 
         return (
             <div>
@@ -164,6 +173,13 @@ class ClientGroupDialog extends Component {
                 <ValidatorForm ref="form">
                 <DialogTitle >{title}</DialogTitle>
                 <DialogContent style={{minHeight:567}}>
+                {(dialogType === ClientGroupDialog.TYPE_ADD) &&
+                    <TextField
+                        label={t("lbParentGroup")}
+                        value={upperGroupInfo}
+                        className={classes.fullWidth}
+                    />
+                    }
                     <Grid container spacing={24}>
                         <Grid item xs={3}>
                             <TextValidator label={t("spClientGroupName")} className={classes.fullWidth}
