@@ -10,10 +10,10 @@ const COMMON_FAILURE = 'noticePublishExtension/COMMON_FAILURE';
 const SHOW_NOTICE_PUBLISH_EXTENSION_INFO = 'noticePublishExtension/SHOW_NOTICE_PUBLISH_EXTENSION_INFO';
 const CLOSE_NOTICE_PUBLISH_EXTENSION_INFO = 'noticePublishExtension/CLOSE_NOTICE_PUBLISH_EXTENSION_INFO';
 
-const GET_NOTICE_PUBLISH_TARGET_LIST_SUCCESS = 'noticePublishExtension/GET_NOTICE_PUBLISH_TARGET_LIST_SUCCESS';
-const GET_NOTICE_INSTANT_ALARM_LIST_SUCCESS = 'noticePublishExtension/GET_NOTICE_INSTANT_ALARM_LIST_SUCCESS';
+const GET_NOTICE_PUBLISH_TARGET_LISTPAGED_SUCCESS = 'noticePublishExtension/GET_NOTICE_PUBLISH_TARGET_LISTPAGED_SUCCESS';
+const GET_NOTICE_INSTANT_ALARM_LISTPAGED_SUCCESS = 'noticePublishExtension/GET_NOTICE_INSTANT_ALARM_LISTPAGED_SUCCESS';
 
-const initialState = commonHandleActions.getCommonInitialState('', '', {}, {});
+const initialState = commonHandleActions.getCommonInitialState('', 'desc', {}, {rowsPerPage: 5});
 
 export const showNoticePublishExtensionInfo = (param) => dispatch => {
     return dispatch({
@@ -31,16 +31,25 @@ export const closeNoticePublishExtensionInfo = (param) => dispatch => {
     });
 };
 
-export const readNoticePublishTargetList = (module, compId, extParam) => dispatch => {
+export const readNoticePublishTargetListPaged = (module, compId, extParam) => dispatch => {
+    const newListParam = (module.getIn(['viewItems', compId, 'listParam_NPT'])) ? 
+    module.getIn(['viewItems', compId, 'listParam_NPT']).merge(extParam) : 
+    module.get('defaultListParam').merge(extParam);
+
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readNoticePublishTargetList', {
-        noticePublishId: extParam.noticePublishId
+    return requestPostAPI('readNoticePublishTargetListPaged', {
+        noticePublishId: newListParam.get('noticePublishId'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
     }).then(
         (response) => {
             dispatch({
-                type: GET_NOTICE_PUBLISH_TARGET_LIST_SUCCESS,
+                type: GET_NOTICE_PUBLISH_TARGET_LISTPAGED_SUCCESS,
                 compId: compId,
-                targetType: 'NOTICE_PUBLISH_TARGET',
+                listParam: newListParam,
                 response: response
             });
         }
@@ -49,16 +58,25 @@ export const readNoticePublishTargetList = (module, compId, extParam) => dispatc
     });
 };
 
-export const readNoticeInstantAlarmList = (module, compId, extParam) => dispatch => {
+export const readNoticeInstantAlarmListPaged = (module, compId, extParam) => dispatch => {
+    const newListParam = (module.getIn(['viewItems', compId, 'listParam_NIA'])) ? 
+    module.getIn(['viewItems', compId, 'listParam_NIA']).merge(extParam) : 
+    module.get('defaultListParam').merge(extParam);
+
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readNoticeInstantAlarmList', {
-        noticePublishId: extParam.noticePublishId
+    return requestPostAPI('readNoticeInstantAlarmListPaged', {
+        noticePublishId: newListParam.get('noticePublishId'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
     }).then(
         (response) => {
             dispatch({
-                type: GET_NOTICE_INSTANT_ALARM_LIST_SUCCESS,
+                type: GET_NOTICE_INSTANT_ALARM_LISTPAGED_SUCCESS,
                 compId: compId,
-                targetType: 'NOTICE_INSTANT_ALARM',
+                listParam: newListParam,
                 response: response
             });
         }
@@ -83,11 +101,11 @@ export default handleActions({
     [CLOSE_NOTICE_PUBLISH_EXTENSION_INFO]: (state, action) => {
         return commonHandleActions.handleCloseInformAction(state, action);
     },
-    [GET_NOTICE_PUBLISH_TARGET_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action, 'objId');
+    [GET_NOTICE_PUBLISH_TARGET_LISTPAGED_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleCustomListPagedAction(state, action, 'NPT');
     },
-    [GET_NOTICE_INSTANT_ALARM_LIST_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleListAction(state, action, 'objId');
+    [GET_NOTICE_INSTANT_ALARM_LISTPAGED_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleCustomListPagedAction(state, action, 'NIA');
     }
 }, initialState);
 
