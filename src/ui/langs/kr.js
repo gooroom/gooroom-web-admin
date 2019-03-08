@@ -789,7 +789,7 @@ export default {
   // 공지
   "btnInstantAlarm": "즉시 알람",
   "btnDisable": "비활성화",
-  "btnNewPublish": "신규 게시"
+  "btnNewPublish": "신규 게시",
 
   // 1.3
   "menuSite": "SITE",
@@ -812,6 +812,6 @@ export default {
 
   "dtInheritUpdateServer": "업데이트서버정보 상속",
   "msgInheritUpdateServer": "업데이트서버정보를 상속하시겠습니까?",
-  "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다.",
+  "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다."
   
 };
