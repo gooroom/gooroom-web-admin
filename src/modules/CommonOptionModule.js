@@ -73,8 +73,11 @@ const initialState = {
         { typeId: "ALL", typeVal: "ALL", typeNm: "stAll" },
         { typeId: "BROWSER", typeVal: "BROWSER", typeNm: "stBrowser" },
         { typeId: "AGENT", typeVal: "AGENT", typeNm: "stAgent" }
+    ],
+    noticePublishStatusData: [
+        { statusId: "ACTIVE", statusVal: "STAT010", statusNm: "Active" },
+        { statusId: "DISABLED", statusVal: "STAT021", statusNm: "Disabled" }
     ]
-
 };
 
 export const readClientGroupListAll = (param) => dispatch => {

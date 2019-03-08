@@ -31,8 +31,6 @@ import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-import { resolve } from 'path';
-import { rejects } from 'assert';
 
 class NoticeMasterManage extends Component {
     constructor(props) {
@@ -62,7 +60,7 @@ class NoticeMasterManage extends Component {
             NoticePublishExtensionActions.closeNoticePublishExtensionInfo({compId: compId});
             // read notice publish list
             NoticePublishActions.readNoticePublishListPaged(this.props.NoticePublishProps, compId, {
-                noticeId: noticeId
+                noticeId: noticeId, page:0
             });
             // show notice content
             NoticePublishActions.showNoticePublishInfo({
@@ -102,7 +100,7 @@ class NoticeMasterManage extends Component {
 
     // Select NoticePublish Item - single
     handleNoticePublishSelect = (selectedNoticePublishObj) => {
-        const { NoticePublishExtensionActions } = this.props;
+        const { NoticePublishExtensionActions, NoticePublishExtensionProps } = this.props;
         const compId = this.props.match.params.grMenuId; 
 
         // show notice publish extension info.
@@ -111,12 +109,12 @@ class NoticeMasterManage extends Component {
             // close notice publish extension info
             NoticePublishExtensionActions.closeNoticePublishExtensionInfo({compId: compId});
             // read notice publish target list
-            NoticePublishExtensionActions.readNoticePublishTargetList(this.props.NoticePublishExtensionProps, compId, {
-                noticePublishId: noticePublishId
+            NoticePublishExtensionActions.readNoticePublishTargetListPaged(NoticePublishExtensionProps, compId, {
+                noticePublishId: noticePublishId, page:0
             });
             // read notice publish alarm list
-            NoticePublishExtensionActions.readNoticeInstantAlarmList(this.props.NoticePublishExtensionProps, compId, {
-                noticePublishId: noticePublishId
+            NoticePublishExtensionActions.readNoticeInstantAlarmListPaged(NoticePublishExtensionProps, compId, {
+                noticePublishId: noticePublishId, page:0
             });
             // show notice publish extension info
             NoticePublishExtensionActions.showNoticePublishExtensionInfo({
@@ -178,10 +176,12 @@ class NoticeMasterManage extends Component {
             if (noticePublish.get('openDt') > new Date().getTime()) {
                 const openDt = new Date().toISOString().replace('Z' , '+0000');
                 const closeDt = (typeof noticePublish.get('closeDt') !== 'undefined' ? new Date(noticePublish.get('closeDt')).toISOString().replace('Z' , '+0000') : undefined);
+                const statusCd = noticePublish.get('statusCd');
                 NoticePublishActions.updateNoticePublish({
                     noticePublishId: noticePublishId,
                     openDt: openDt,
-                    closeDt: closeDt
+                    closeDt: closeDt,
+                    statusCd: statusCd
                 }).then(() => resolve());
             } else {
                 resolve();
@@ -189,24 +189,58 @@ class NoticeMasterManage extends Component {
         });
     }
 
-    handleNowExit = () => {
-        const { NoticePublishProps, GRConfirmActions } = this.props;
+    handleChangeStatus = (statusId) => {
+        const { NoticePublishProps, GRConfirmActions, CommonOptionProps } = this.props;
         const { t, i18n } = this.props;
+        const status = CommonOptionProps.noticePublishStatusData.find(e => e.statusId === statusId);
 
         const checkedIds = NoticePublishProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
         if(checkedIds && checkedIds.size > 0) {
             GRConfirmActions.showConfirm({
-              confirmTitle: t("dtNowExit"),
-              confirmMsg: t("msgNowExit", {nowExitCnt: checkedIds.size}),
-              handleConfirmResult: this.handleNowExitConfirmResult,
-              confirmObject: {checkedIds: checkedIds}
+              confirmTitle: t('dt' + status.statusNm),
+              confirmMsg: t('msg' + status.statusNm, {cnt: checkedIds.size}),
+              handleConfirmResult: this.handleChangeStatusConfirmResult,
+              confirmObject: {checkedIds: checkedIds, statusCd: status.statusVal}
             });
+        }
+    }
+
+    handleChangeStatusConfirmResult = (confirmValue, confirmObject) => {
+        if(confirmValue) {
+            const { NoticePublishActions, NoticePublishProps, NoticeProps } = this.props;
+            const checkedIds = confirmObject.checkedIds;
+            if(checkedIds && checkedIds.size > 0) {
+                const promises = [];
+                for (const noticePublishId of checkedIds) {
+                    const promiseUpdateNoticePublish = new Promise((resolve, reject) => {
+                        const noticePublish = getRowObjectById(NoticePublishProps, this.props.match.params.grMenuId, noticePublishId, 'noticePublishId');
+                        const openDt = new Date(noticePublish.get('openDt')).toISOString().replace('Z' , '+0000');
+                        let closeDt = undefined;
+                        if (typeof noticePublish.get('closeDt') !== 'undefined') {
+                            closeDt = new Date(noticePublish.get('closeDt')).toISOString().replace('Z' , '+0000');
+                        }
+                        NoticePublishActions.updateNoticePublish({
+                            noticePublishId: noticePublishId,
+                            openDt: openDt,
+                            closeDt: closeDt,
+                            statusCd: confirmObject.statusCd
+                        }).then(() => resolve());
+                    });
+                    promises.push(promiseUpdateNoticePublish);
+                }
+                Promise.all(promises).then(() => {
+                    const compId = this.props.match.params.grMenuId;
+                    const noticeId = NoticeProps.getIn(['viewItems', compId, 'viewItem', 'noticeId']);
+                    const selectRowObject = getRowObjectById(NoticeProps, compId, noticeId, 'noticeId');
+                    this.handleNoticeSelect(selectRowObject);
+                });
+            }
         }
     }
 
     handleNowExitConfirmResult = (confirmValue, confirmObject) => {
         if(confirmValue) {
-            const { NoticePublishActions, NoticePublishProps } = this.props;
+            const { NoticePublishActions, NoticePublishProps, NoticeProps } = this.props;
             const checkedIds = confirmObject.checkedIds;
             if(checkedIds && checkedIds.size > 0) {
                 const promises = [];
@@ -219,14 +253,19 @@ class NoticeMasterManage extends Component {
                         } else {
                             openDt = new Date().toISOString().replace('Z' , '+0000');
                         }
-                        const closeDt = new Date().toISOString().replace('Z' , '+0000');
+                        let closeDt = undefined;
+                        if (typeof noticePublish.get('closeDt') !== 'undefined' && noticePublish.get('closeDt') <= new Date().getTime()) {
+                            closeDt = new Date(noticePublish.get('closeDt')).toISOString().replace('Z' , '+0000');
+                        } else {
+                            closeDt = new Date().toISOString().replace('Z' , '+0000');
+                        }
                         NoticePublishActions.updateNoticePublish({
                             noticePublishId: noticePublishId,
                             openDt: openDt,
                             closeDt: closeDt
                         }).then(() => resolve());
                     });
-                    promises.push(promiseUpdateNoticePublish);
+                    promises.push(promiseUpdateNoticePublish);NoticePublishExtensionProps
                 }
                 Promise.all(promises).then(() => {
                     const compId = this.props.match.params.grMenuId;
@@ -306,8 +345,8 @@ class NoticeMasterManage extends Component {
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleNowExit() }} disabled={this.isNoticePublishChecked()}>
-                                        {t('btnNowExit')}
+                                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleChangeStatus('DISABLED') }} disabled={this.isNoticePublishChecked()}>
+                                        {t('btnDisable')}
                                     </Button>
                                 </Grid>
                                 <Grid item>
@@ -352,7 +391,8 @@ const mapStateToProps = (state) => ({
     GlobalProps: state.GlobalModule,
     NoticeProps: state.NoticeModule,
     NoticePublishProps: state.NoticePublishModule,
-    NoticePublishExtensionProps: state.NoticePublishExtensionModule
+    NoticePublishExtensionProps: state.NoticePublishExtensionModule,
+    CommonOptionProps: state.CommonOptionModule
 });
   
 const mapDispatchToProps = (dispatch) => ({

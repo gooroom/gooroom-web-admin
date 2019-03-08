@@ -95,12 +95,12 @@ class NoticePublishListComp extends Component {
 
     render() {
         const { classes } = this.props;
-        const { NoticePublishProps, compId } = this.props;
+        const { NoticePublishProps, compId, CommonOptionProps } = this.props;
         const { t, i18n } = this.props;
 
         const columnHeaders = [
             { id: "chCheckbox", isCheckbox: true },
-            { id: 'chStatusCd', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+            { id: 'chStatusCd', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
             { id: 'chNoticePublishId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
             { id: 'chOpenDt', isOrder: true, numeric: false, disablePadding: true, label: t('colOpenDt') },
             { id: 'chCloseDt', isOrder: true, numeric: false, disablePadding: true, label: t('colCloseDt') },
@@ -146,13 +146,19 @@ class NoticePublishListComp extends Component {
                                 <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                                     <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('noticePublishId'))}/>
                                 </TableCell>
-                                <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('statusCd')}</TableCell>
+                                <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                                    { CommonOptionProps.noticePublishStatusData.find(e => e.statusVal === n.get('statusCd')).statusNm }
+                                </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('noticePublishId')}</TableCell>
-                                <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('openDt'), 'YYYY-MM-DD HH:mm')}</TableCell>
+                                <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                                    {formatDateToSimple(n.get('openDt'), 'YYYY-MM-DD HH:mm')}
+                                </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
                                     {(n.get('closeDt') !== undefined && n.get('closeDt') !== null) ? formatDateToSimple(n.get('closeDt'), 'YYYY-MM-DD HH:mm') : '무기한'}
                                 </TableCell>
-                                <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('viewType') === '0' ? '알림만' : '제목과함께'}</TableCell>
+                                <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                                    {n.get('viewType') === '0' ? '알림만' : '제목과함께'}
+                                </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
                                     {(n.get('openedUserCnt') !== undefined ? n.get('openedUserCnt') : '0') + '명' }
                                 </TableCell>
@@ -200,7 +206,8 @@ class NoticePublishListComp extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    NoticePublishProps: state.NoticePublishModule
+    NoticePublishProps: state.NoticePublishModule,
+    CommonOptionProps: state.CommonOptionModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

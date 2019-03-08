@@ -13,11 +13,24 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
+import TablePagination from '@material-ui/core/TablePagination';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class NoticeInstantAlarmListComp extends Component {
     componentDidMount() {
+    }
+
+    handleChangePage = (event, page) => {
+        this.props.NoticePublishExtensionActions.readNoticeInstantAlarmListPaged(this.props.NoticePublishExtensionProps, this.props.compId, {
+          page: page
+        });
+    }
+    
+    handleChangeRowsPerPage = event => {
+        this.props.NoticePublishExtensionActions.readNoticeInstantAlarmListPaged(this.props.NoticePublishExtensionProps, this.props.compId, {
+          rowsPerPage: event.target.value, page: 0
+        });
     }
 
     render() {
@@ -30,7 +43,11 @@ class NoticeInstantAlarmListComp extends Component {
             { id: 'chRegUserId', isOrder: false,GRCommonTableHeadnumeric: false, disablePadding: true, label: t('colRegUserId') }
         ];
 
-        const listObj = NoticePublishExtensionProps.getIn(['viewItems', compId, 'NOTICE_INSTANT_ALARM']);
+        const listObj = NoticePublishExtensionProps.getIn(['viewItems', compId]);
+        let emptyRows = 0; 
+        if(listObj && listObj.get('listData_NIA')) {
+          emptyRows = listObj.getIn(['listParam_NIA', 'rowsPerPage']) - listObj.get('listData_NIA').size;
+        }
 
         return (
         <div>
@@ -39,11 +56,11 @@ class NoticeInstantAlarmListComp extends Component {
                     <GRCommonTableHead
                         classes={classes}
                         keyId='objId'
-                        listData={listObj.get('listAllData')}
+                        listData={listObj.get('listData_NIA')}
                         columnData={columnHeaders}
                     />
                     <TableBody>
-                        {listObj.get('listAllData') && listObj.get('listAllData').map(n => {
+                        {listObj.get('listData_NIA') && listObj.get('listData_NIA').map(n => {
                             return (
                             <TableRow key={n}>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD HH:mm')}</TableCell>
@@ -51,8 +68,29 @@ class NoticeInstantAlarmListComp extends Component {
                             </TableRow>
                             );
                         })}
+                        {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                            <TableRow key={e}>
+                                <TableCell
+                                    colSpan={columnHeaders.length + 1}
+                                    className={classes.grSmallAndClickCell}
+                                />
+                            </TableRow>
+                        )}))}
                     </TableBody>
                 </Table>
+            }
+            {listObj && listObj.get('listData_NIA') && listObj.get('listData_NIA').size > 0 &&
+                <TablePagination
+                    component='div'
+                    count={listObj.getIn(['listParam_NIA', 'rowsFiltered'])}
+                    rowsPerPage={listObj.getIn(['listParam_NIA', 'rowsPerPage'])}
+                    rowsPerPageOptions={listObj.getIn(['listParam_NIA', 'rowsPerPageOptions']).toJS()}
+                    page={listObj.getIn(['listParam_NIA', 'page'])}
+                    backIconButtonProps={{'aria-label': 'Previous Page'}}
+                    nextIconButtonProps={{'aria-label': 'Next Page'}}
+                    onChangePage={this.handleChangePage}
+                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                />
             }
         </div>
         );
