@@ -789,7 +789,7 @@ export default {
   // 공지
   "btnInstantAlarm": "Instant alarm",
   "btnDisable": "Disable",
-  "btnNewPublish": "New publish"
+  "btnNewPublish": "New publish",
 
   // 1.3
   "menuSite": "site",
@@ -812,6 +812,6 @@ export default {
 
   "dtInheritUpdateServer": "Inherit update server information",
   "msgInheritUpdateServer": "Are you sure you want to inherit your update server information?",
-  "msgApplyUpdateServerChild": "The update server information has been applied to the subgroup.",
+  "msgApplyUpdateServerChild": "The update server information has been applied to the subgroup."
 
 };
