@@ -12,6 +12,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
 import DividedAdminManageRuleSelector from './DividedAdminManageRuleSelector';
+import DeptMultiSelector from 'components/GROptions/DeptMultiSelector';
 
 import GRTreeList from "components/GRTree/GRTreeList";
 import GRExtendedTreeList from "components/GRTree/GRExtendedTreeList";
@@ -209,6 +210,16 @@ class DividedAdminManageDialog extends Component {
         }
     }
 
+    handleSelectDept = (selectedItems) => {
+
+        this.props.AdminUserActions.setEditingItemValue({ name: 'deptInfoList', value: selectedItems });
+    }
+
+    handleSelectGrp = (selectedItems) => {
+
+        this.props.AdminUserActions.setEditingItemValue({ name: 'grpInfoList', value: selectedItems });
+    }
+
     render() {
         const { classes } = this.props;
         const { AdminUserProps, compId } = this.props;
@@ -219,13 +230,15 @@ class DividedAdminManageDialog extends Component {
 
         const connectableIpList = (editingItem && editingItem.get('connIps')) ? editingItem.get('connIps') : GRIMTList([]);
 
-        const selectedDept = (editingItem && editingItem.get('deptInfoList')) ? editingItem.get('deptInfoList').map((n) => {
-            return Map({deptCd: n.get('value'), deptNm: n.get('name')});
-        }) : null;
+        // const selectedDept = (editingItem && editingItem.get('deptInfoList')) ? editingItem.get('deptInfoList').map((n) => {
+        //     return Map({deptCd: n.get('value'), deptNm: n.get('name')});
+        // }) : null;
+        const selectedDept = (editingItem && editingItem.get('deptInfoList')) ? editingItem.get('deptInfoList') : null;
 
-        const selectedGrp = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList').map((n) => {
-            return Map({grpId: n.get('value'), grpNm: n.get('name')});
-        }) : null;
+        // const selectedGrp = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList').map((n) => {
+        //     return Map({grpId: n.get('value'), grpNm: n.get('name')});
+        // }) : null;
+        const selectedGrp = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList') : null;
 
         let title = "";
         if(dialogType === DividedAdminManageDialog.TYPE_ADD) {
@@ -324,9 +337,37 @@ class DividedAdminManageDialog extends Component {
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
                     </Grid>
+                    <Grid container spacing={0} style={{marginTop:10}}>
+                        <Grid item xs={6} style={{paddingRight:5}}>
+
+                        <DeptMultiSelector compId={compId} title={"관리대상 조직"} 
+                        url='readChildrenDeptList'
+                        paramKeyName='deptCd'
+                        isCheckMasterOnly={true}
+                        selectedItem={selectedDept} 
+                        onSelectItem={this.handleSelectDept} />
+
+
+
+                        </Grid>
+                        <Grid item xs={6} style={{paddingLeft:5}}>
+
+                        <DeptMultiSelector compId={compId} title={"관리대상 단말그룹"} 
+                        url='readChildrenClientGroupList'
+                        paramKeyName='grpId'
+                        isCheckMasterOnly={false}
+                        selectedItem={selectedGrp} 
+                        onSelectItem={this.handleSelectGrp} />
+
+
+
+                        </Grid>
+                    </Grid>
+
 
                     <Grid container spacing={0} style={{marginTop:10}}>
                         <Grid item xs={6} style={{paddingRight:5}}>
+                        {/* 
                         <Card >
                             <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={"관리대상 조직"}></CardHeader>
                             <CardContent style={{padding:0,height:100,overflowY:'scroll',marginBottom:10}}>
@@ -372,8 +413,10 @@ class DividedAdminManageDialog extends Component {
                             />
                             </CardContent>
                         </Card>
+                        */}
                         </Grid>
                         <Grid item xs={6} style={{paddingLeft:5}}>
+                        {/*
                         <Card >
                             <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={"관리대상 단말그룹"}></CardHeader>
                             <CardContent style={{padding:0,height:100,overflowY:'scroll',marginBottom:10}}>
@@ -419,6 +462,7 @@ class DividedAdminManageDialog extends Component {
                             />
                             </CardContent>
                         </Card>
+                         */}
                         </Grid>
                     </Grid>
           

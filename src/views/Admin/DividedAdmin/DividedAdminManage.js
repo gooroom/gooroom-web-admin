@@ -16,6 +16,7 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import DividedAdminManageDialog from './DividedAdminManageDialog';
+import DividedAdminManageTestDialog from './DividedAdminManageTestDialog';
 import DividedAdminManageSpec from './DividedAdminManageSpec';
 import GRPane from 'containers/GRContent/GRPane';
 

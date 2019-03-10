@@ -20,7 +20,6 @@ class GRTreeItem extends Component {
     render() {
         const {nodeKey, primaryText, depth, style, checked, imperfect, isShowCheck, isEnableEdit, isCheckMasterOnly} = this.props
         const {onClickNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend} = this.props
-
         const styles = {
             root: {
                 cursor: "pointer",

@@ -60,6 +60,12 @@ class GRExtendedTreeList extends Component {
       this.props.onRef(undefined)
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      checked: (nextProps.checkedNodes && nextProps.checkedNodes.size > 0) ? (nextProps.checkedNodes.map(n => n.get('value'))) : []  
+    });
+  }
   
   fetchTreeData(keyValue, index, isDoExpand, onCallback) {
 
@@ -160,6 +166,8 @@ class GRExtendedTreeList extends Component {
       if(onCallback) {
         onCallback((resData && resData.length > 0) ? true : false);
       }
+    }).catch(function (err) {
+      console.log(err); // Error: Request is failed
     });
   }
 
@@ -390,6 +398,7 @@ class GRExtendedTreeList extends Component {
   }
 
   render() {
+
     const contentKey = "title";
 
     const startingDepth = this.state.startingDepth;
