@@ -151,6 +151,8 @@ class GRTreeList extends Component {
       if(this._isMounted && onCallback) {
         onCallback((resData && resData.length > 0) ? true : false);
       }
+    }).catch(function (err) {
+      console.log(err); // Error: Request is failed
     });
   }
 

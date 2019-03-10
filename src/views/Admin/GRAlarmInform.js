@@ -37,7 +37,7 @@ class GRAlarmInform extends Component {
   componentDidMount() {
     clearInterval(this.violatedTimer)
     this.violatedTimer = null;
-    this.violatedTimer = setInterval(()=> this.getViolatedData(), 20000);
+    this.violatedTimer = setInterval(()=> this.getViolatedData(), 200000000);
   }
   
   componentWillUnmount() {
