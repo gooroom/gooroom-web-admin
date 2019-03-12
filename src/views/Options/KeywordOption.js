@@ -29,7 +29,11 @@ class KeywordOption extends Component {
     const { label } = this.props;
     const { t, i18n } = this.props;
     return (
-      <TextField label={(label) ? label : t("optKeyword")} onChange={this.handleKeywordChange()} onKeyDown={this.handleKeyPress()} value={this.props.keywordValue} />
+      <TextField label={(label) ? label : t("optKeyword")} 
+        InputProps={{style:{margin:0}}}
+        InputLabelProps={{style:{lineHeight:0}}}
+        onChange={this.handleKeywordChange()} 
+        onKeyDown={this.handleKeyPress()} value={this.props.keywordValue} />
     );
   }
 }

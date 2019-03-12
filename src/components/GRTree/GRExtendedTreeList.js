@@ -179,12 +179,16 @@ class GRExtendedTreeList extends Component {
         this.fetchTreeData(listItem.key, index, false, (hasChildren) => {
           // call select node event
           listItem['hasChildren'] = hasChildren;
-          if (this.props.onSelectNode) this.props.onSelectNode(listItem);
+          if (this.props.onSelectNode) {
+            this.props.onSelectNode({name: listItem.title, value: listItem.key});
+          }
         });
       } else {
         // call select node event
         listItem['hasChildren'] = true;
-        if (this.props.onSelectNode) this.props.onSelectNode(listItem);
+        if (this.props.onSelectNode) {
+          this.props.onSelectNode({name: listItem.title, value: listItem.key});
+        }
       }
 
       const indexOfListItemInArray = this.state.expandedListItems.indexOf(index);
@@ -203,7 +207,9 @@ class GRExtendedTreeList extends Component {
       }
     } else {
       listItem['hasChildren'] = false;
-      if (this.props.onSelectNode) this.props.onSelectNode(listItem);
+      if (this.props.onSelectNode) {
+        this.props.onSelectNode({name: listItem.title, value: listItem.key});
+      }
     }
 
     // select node
