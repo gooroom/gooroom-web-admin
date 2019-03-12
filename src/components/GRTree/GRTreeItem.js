@@ -8,7 +8,7 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import Checkbox from "@material-ui/core/Checkbox"
+import Checkbox from "@material-ui/core/Checkbox";
 
 class GRTreeItem extends Component {
 

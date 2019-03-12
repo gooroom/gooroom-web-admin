@@ -16,7 +16,6 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import DividedAdminManageDialog from './DividedAdminManageDialog';
-import DividedAdminManageTestDialog from './DividedAdminManageTestDialog';
 import DividedAdminManageSpec from './DividedAdminManageSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -92,7 +91,12 @@ class DividedAdminManage extends Component {
   handleCreateButton = () => {
     const { AdminUserProps, AdminUserActions } = this.props;
     AdminUserActions.showDialog({
-      viewItem: Map({grpInfoList: List([]), deptInfoList: List([])}),
+      viewItem: Map({
+        deptInfoList: List([]), 
+        userInfoList: List([]), 
+        grpInfoList: List([]), 
+        clientInfoList: List([])
+      }),
       dialogType: DividedAdminManageDialog.TYPE_ADD
     });
   }

@@ -12,10 +12,11 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
 import DividedAdminManageRuleSelector from './DividedAdminManageRuleSelector';
-import DeptMultiSelector from 'components/GROptions/DeptMultiSelector';
 
-import GRTreeList from "components/GRTree/GRTreeList";
-import GRExtendedTreeList from "components/GRTree/GRExtendedTreeList";
+import TreeMultiSelector from 'components/GROptions/TreeMultiSelector';
+
+import DeptAndUserMultiSelector from 'components/GrOptions/DeptAndUserMultiSelector';
+import GroupAndClientMultiSelector from 'components/GrOptions/GroupAndClientMultiSelector';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import GRAlert from 'components/GRComponents/GRAlert';
@@ -29,19 +30,14 @@ import DialogActions from "@material-ui/core/DialogActions";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import Divider from '@material-ui/core/Divider';
 
 import IconButton from '@material-ui/core/IconButton';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -49,17 +45,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import GRItemIcon from '@material-ui/icons/Adjust';
 import GRAddIcon from '@material-ui/icons/AddCircleOutline';
 
-import Typography from '@material-ui/core/Typography';
-import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
-import Add from "@material-ui/icons/Add";
-import FolderIcon from "@material-ui/icons/Folder";
 import DeleteIcon from '@material-ui/icons/Delete';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-
-import {CopyToClipboard} from 'react-copy-to-clipboard'
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -215,9 +205,19 @@ class DividedAdminManageDialog extends Component {
         this.props.AdminUserActions.setEditingItemValue({ name: 'deptInfoList', value: selectedItems });
     }
 
-    handleSelectGrp = (selectedItems) => {
+    handleSelectUser = (selectedItems) => {
+
+        this.props.AdminUserActions.setEditingItemValue({ name: 'userInfoList', value: selectedItems });
+    }
+
+    handleSelectGroup = (selectedItems) => {
 
         this.props.AdminUserActions.setEditingItemValue({ name: 'grpInfoList', value: selectedItems });
+    }
+
+    handleSelectClient = (selectedItems) => {
+
+        this.props.AdminUserActions.setEditingItemValue({ name: 'clientInfoList', value: selectedItems });
     }
 
     render() {
@@ -234,11 +234,13 @@ class DividedAdminManageDialog extends Component {
         //     return Map({deptCd: n.get('value'), deptNm: n.get('name')});
         // }) : null;
         const selectedDept = (editingItem && editingItem.get('deptInfoList')) ? editingItem.get('deptInfoList') : null;
+        const selectedUser = (editingItem && editingItem.get('userInfoList')) ? editingItem.get('userInfoList') : null;
 
-        // const selectedGrp = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList').map((n) => {
+        // const selectedGroup = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList').map((n) => {
         //     return Map({grpId: n.get('value'), grpNm: n.get('name')});
         // }) : null;
-        const selectedGrp = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList') : null;
+        const selectedGroup = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList') : null;
+        const selectedClient = (editingItem && editingItem.get('clientInfoList')) ? editingItem.get('clientInfoList') : null;
 
         let title = "";
         if(dialogType === DividedAdminManageDialog.TYPE_ADD) {
@@ -337,33 +339,42 @@ class DividedAdminManageDialog extends Component {
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
                     </Grid>
+
+                    <GroupAndClientMultiSelector compId={compId} title={"관리대상 단말그룹"} 
+                        isCheckMasterOnly={false}
+                        selectedGroup={selectedGroup} 
+                        onSelectGroup={this.handleSelectGroup}
+                        selectedClient={selectedClient} 
+                        onSelectClient={this.handleSelectClient}
+                    />
+
+                    <DeptAndUserMultiSelector compId={compId} title={"관리대상 조직"} 
+                        isCheckMasterOnly={true}
+                        selectedDept={selectedDept} 
+                        onSelectDept={this.handleSelectDept}
+                        selectedUser={selectedUser} 
+                        onSelectUser={this.handleSelectUser}
+                    />
+
+
                     <Grid container spacing={0} style={{marginTop:10}}>
                         <Grid item xs={6} style={{paddingRight:5}}>
-
-                        <DeptMultiSelector compId={compId} title={"관리대상 조직"} 
-                        url='readChildrenDeptList'
-                        paramKeyName='deptCd'
-                        isCheckMasterOnly={true}
-                        selectedItem={selectedDept} 
-                        onSelectItem={this.handleSelectDept} />
-
-
-
+                            <TreeMultiSelector compId={compId} title={"관리대상 조직"} 
+                                url='readChildrenDeptList'
+                                paramKeyName='deptCd'
+                                isCheckMasterOnly={true}
+                                selectedItem={selectedDept} 
+                                onSelectItem={this.handleSelectDept} />
                         </Grid>
                         <Grid item xs={6} style={{paddingLeft:5}}>
-
-                        <DeptMultiSelector compId={compId} title={"관리대상 단말그룹"} 
-                        url='readChildrenClientGroupList'
-                        paramKeyName='grpId'
-                        isCheckMasterOnly={false}
-                        selectedItem={selectedGrp} 
-                        onSelectItem={this.handleSelectGrp} />
-
-
-
+                            <TreeMultiSelector compId={compId} title={"관리대상 단말그룹"} 
+                                url='readChildrenClientGroupList'
+                                paramKeyName='grpId'
+                                isCheckMasterOnly={false}
+                                selectedItem={selectedGroup} 
+                                onSelectItem={this.handleSelectGrp} />
                         </Grid>
                     </Grid>
-
 
                     <Grid container spacing={0} style={{marginTop:10}}>
                         <Grid item xs={6} style={{paddingRight:5}}>
@@ -421,7 +432,7 @@ class DividedAdminManageDialog extends Component {
                             <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={"관리대상 단말그룹"}></CardHeader>
                             <CardContent style={{padding:0,height:100,overflowY:'scroll',marginBottom:10}}>
                                 <List >
-                                {selectedGrp && selectedGrp.map((n) => (
+                                {selectedGroup && selectedGroup.map((n) => (
                                     <ListItem key={n.get('grpId')} style={{padding:'2px 32px 2px 32px'}}>
                                         <ListItemIcon style={{marginRight:0}}><FolderIcon fontSize='small'/></ListItemIcon>
                                         <ListItemText primary={n.get('grpNm')} />
@@ -457,7 +468,7 @@ class DividedAdminManageDialog extends Component {
                                 isCheckMasterOnly={false}
                                 isEnableEdit={false}
                                 onCheckedNode={(param) => {this.handleTreeNodeCheck('grpInfoList', param);}}
-                                checkedNodes={selectedGrp}
+                                checkedNodes={selectedGroup}
                                 onRef={ref => (this.grExtendedTreeListForGrp = ref)}
                             />
                             </CardContent>
