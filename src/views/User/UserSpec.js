@@ -75,7 +75,8 @@ class UserSpec extends Component {
         userId: viewItem.get('userId'),
         userNm: viewItem.get('userNm'),
         deptCd: viewItem.get('deptCd'),
-        deptNm: viewItem.get('deptNm')
+        deptNm: viewItem.get('deptNm'),
+        expireDate: viewItem.get('expireDate')
       },
       ruleDialogType: UserDialog.TYPE_EDIT
     }, true);
@@ -138,7 +139,7 @@ class UserSpec extends Component {
         <Card>
           <CardHeader
             title={viewItem.get('userNm')}
-            subheader={viewItem.get('userId') + ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}
+            subheader={viewItem.get('userId') + ', [Registered:' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD') + '], [Expired:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"

@@ -104,6 +104,7 @@ export default {
   "searchEndDate": "To-Date",
   "optDivision": "Division",
   "optViolatedDivision": "ViolatedDiv",
+  "expireDate": "Expire-Date",
 
   "optClientStatus": "ClientStatus",
   "optKeyword": "Keyword",

@@ -104,6 +104,7 @@ export default {
   "searchEndDate": "조회종료일",
   "optDivision": "구분",
   "optViolatedDivision": "침해구분",
+  "expireDate": "만료일",
 
   "optClientStatus": "단말상태",
   "optKeyword": "검색어",
