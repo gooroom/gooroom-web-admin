@@ -72,9 +72,8 @@ class GroupAndClientMultiSelector extends Component {
         onSelectGroup(GRIMTList(newInfoList));
     }
 
-    handleSelectClient = (isChecked, param) => {
+    handleClientCheck = (isChecked, param) => {
         const { selectedClient, onSelectClient } = this.props;
-
         let newInfoList = [];
         if(isChecked) {
             // add
@@ -83,6 +82,13 @@ class GroupAndClientMultiSelector extends Component {
             // delete
             newInfoList = selectedClient.filter(n => (n.get('value') != param.clientId));
         }
+        onSelectClient(GRIMTList(newInfoList));
+    }
+
+    handleClientDeleteItem = (param) => {
+        const { selectedClient, onSelectClient } = this.props;
+        // delete
+        const newInfoList = selectedClient.filter(n => (n.get('value') != param));
         onSelectClient(GRIMTList(newInfoList));
     }
 
@@ -147,7 +153,7 @@ class GroupAndClientMultiSelector extends Component {
                                     <ClientListForSelectByGroup 
                                         groupId={this.state.selectedGroupId}
                                         checkedClient={selectedClient} 
-                                        onSelectClient={this.handleSelectClient}
+                                        onSelectClient={this.handleClientCheck}
                                     />
                                 </Grid>
                                 <Grid item xs={6} style={{padding:0,height:310,marginBottom:0,border:'1px solid lightgray'}}>
@@ -160,7 +166,7 @@ class GroupAndClientMultiSelector extends Component {
                                                 <ListItemText primary={n.get('name')} />
                                                 <ListItemSecondaryAction>
                                                     <Button size="small" color="secondary" className={classes.buttonInTableRow} 
-                                                        onClick={event => this.handleGroupDeleteItem(n.get('value'))}>
+                                                        onClick={event => this.handleClientDeleteItem(n.get('value'))}>
                                                         <DeleteIcon />
                                                     </Button>
                                                 </ListItemSecondaryAction>
