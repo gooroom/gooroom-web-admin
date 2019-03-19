@@ -155,6 +155,7 @@ export const changeStoreData = (param) => dispatch => {
 };
 
 const makeParameter = (param) => {
+
     const isChangePasswd = (param.userPasswd && param.userPasswd != '') ? 'Y' : 'N';
     return {
         userId: param.userId,
@@ -163,13 +164,13 @@ const makeParameter = (param) => {
         userNm: param.userNm,
         deptCd: param.deptCd,
         isChangePasswd: isChangePasswd,
+        expireDate: param.expireDate,
 
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
         securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
         filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
         desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId
-
     };
 }
 

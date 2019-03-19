@@ -12,6 +12,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { InlineDatePicker } from 'material-ui-pickers';
 
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from "@material-ui/core/InputLabel";
@@ -111,6 +112,7 @@ class UserDialog extends Component {
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                 userNm: UserProps.getIn(['editingItem', 'userNm']),
                 deptCd: UserProps.getIn(['editingItem', 'deptCd']),
+                expireDate: UserProps.getIn(['editingItem', 'expireDate']),
 
                 browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
@@ -160,6 +162,7 @@ class UserDialog extends Component {
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                 userNm: UserProps.getIn(['editingItem', 'userNm']),
                 deptCd: UserProps.getIn(['editingItem', 'deptCd']),
+                expireDate: UserProps.getIn(['editingItem', 'expireDate']),
 
                 browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
@@ -183,6 +186,13 @@ class UserDialog extends Component {
         this.props.UserActions.setEditingItemValues({ 'deptNm': selectedDept.deptNm, 'deptCd': selectedDept.deptCd });
         this.setState({ isOpenDeptSelect: false });
     }
+
+    handleDateChange = (date, name) => {
+        this.props.UserActions.setEditingItemValue({
+          name: name, 
+          value: date.format('YYYY-MM-DD')
+        });
+    };
 
     render() {
         const { classes } = this.props;
@@ -243,7 +253,6 @@ class UserDialog extends Component {
                                 </FormControl>                            
                             </Grid>
                         </Grid>
-
                         <Grid container spacing={24}>
                             <Grid item xs={6}>
                                 <TextValidator
@@ -264,7 +273,19 @@ class UserDialog extends Component {
                                 />
                             </Grid>
                         </Grid>
-                        <Divider style={{marginBottom: 10}} />
+
+                        <Grid container spacing={24}>
+                            <Grid item xs={6}>
+                                <InlineDatePicker label={t('expireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : '1999-01-01'}
+                                    onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
+                                    className={classes.fullWidth} />
+                            </Grid>
+                            <Grid item xs={6}>
+                            </Grid>
+                        </Grid>
+
+                        <Divider style={{marginTop: 10, marginBottom: 10}} />
                         <UserRuleSelector compId={compId} module={(ruleDialogType === UserDialog.TYPE_ADD) ? 'new' : 'edit'} targetType="USER" />
                     </DialogContent>
                     <DialogActions>
