@@ -134,8 +134,6 @@ class UserSpec extends Component {
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'USER']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'USER']);
 
-    console.log((viewItem) ? viewItem.toJS() : '0000');
-
     return (
       <div style={{marginTop: 10}} >
       {(informOpen && viewItem) &&
