@@ -478,6 +478,7 @@ export default {
   "lbPassword": "Password",
   "lbUserName": "User name",
   "lbDept": "Organization",
+  "lbLoginTrial": "Remain login trial count",
   "lbParentDept": "Parent organization",
   "msgEnterUserName": "Please enter your username.",
   "msgSelectDept": "Please select an organization.",
