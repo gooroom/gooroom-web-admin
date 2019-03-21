@@ -5,6 +5,7 @@ import sha256 from 'sha-256-js';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 const COMMON_PENDING = 'user/COMMON_PENDING';
 const COMMON_FAILURE = 'user/COMMON_FAILURE';
@@ -164,7 +165,8 @@ const makeParameter = (param) => {
         userNm: param.userNm,
         deptCd: param.deptCd,
         isChangePasswd: isChangePasswd,
-        expireDate: param.expireDate,
+        expireDate: formatDateToSimple(param.expireDate, 'YYYY-MM-DD'),
+        loginTrial: param.loginTrial,
 
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,

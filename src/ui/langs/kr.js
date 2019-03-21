@@ -478,6 +478,7 @@ export default {
   "lbPassword": "Password",
   "lbUserName": "사용자이름",
   "lbDept": "조직",
+  "lbLoginTrial": "남은 로그인시도 횟수",
   "lbParentDept": "상위조직",
   "msgEnterUserName": "사용자이름을 입력하세요.",
   "msgSelectDept": "조직을 선택하세요.",

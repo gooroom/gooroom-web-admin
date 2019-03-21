@@ -163,6 +163,7 @@ class UserDialog extends Component {
                 userNm: UserProps.getIn(['editingItem', 'userNm']),
                 deptCd: UserProps.getIn(['editingItem', 'deptCd']),
                 expireDate: UserProps.getIn(['editingItem', 'expireDate']),
+                loginTrial: UserProps.getIn(['editingItem', 'loginTrial']),
 
                 browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
@@ -277,11 +278,20 @@ class UserDialog extends Component {
                         <Grid container spacing={24}>
                             <Grid item xs={6}>
                                 <InlineDatePicker label={t('expireDate')} format='YYYY-MM-DD'
-                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : '1999-01-01'}
+                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : (new Date()).getTime()}
                                     onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
                                     className={classes.fullWidth} />
                             </Grid>
                             <Grid item xs={6}>
+                            {(ruleDialogType === UserDialog.TYPE_EDIT) &&
+                                <TextValidator
+                                    label={t("lbLoginTrial")}
+                                    value={(editingItem.get('loginTrial')) ? editingItem.get('loginTrial') : ''}
+                                    name="loginTrial" validators={['required']} errorMessages={[t("msgEnterUserName")]}
+                                    onChange={this.handleValueChange("loginTrial")}
+                                    className={classes.fullWidth}
+                                />
+                            }
                             </Grid>
                         </Grid>
 

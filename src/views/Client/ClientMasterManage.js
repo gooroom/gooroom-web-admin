@@ -401,7 +401,7 @@ class ClientMasterManage extends Component {
           
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             <Grid item xs={12} sm={5} style={{border: '0px solid #efefef'}} >
-              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+              <Toolbar elevation={0} style={{minHeight:0,padding:0,marginBottom:10}}>
                 <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
                   <Grid item>
                     <Tooltip title={t("ttAddNewGroup")}>
@@ -441,6 +441,7 @@ class ClientMasterManage extends Component {
                   </Grid>
                 </Grid>
               </Toolbar>
+              <div style={{maxHeight:450,overflowY:'auto'}}>
               <GRTreeList
                 useFolderIcons={true}
                 listHeight='24px'
@@ -460,8 +461,8 @@ class ClientMasterManage extends Component {
                 onEditNode={this.handleEditClientGroup}
                 onRef={ref => (this.grTreeList = ref)}
               />
+              </div>
             </Grid>
-
             <Grid item xs={12} sm={7} style={{border: '0px solid #efefef'}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >

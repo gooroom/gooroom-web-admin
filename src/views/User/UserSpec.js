@@ -76,7 +76,8 @@ class UserSpec extends Component {
         userNm: viewItem.get('userNm'),
         deptCd: viewItem.get('deptCd'),
         deptNm: viewItem.get('deptNm'),
-        expireDate: viewItem.get('expireDate')
+        expireDate: viewItem.get('expireDate'),
+        loginTrial: viewItem.get('loginTrial')
       },
       ruleDialogType: UserDialog.TYPE_EDIT
     }, true);
@@ -133,13 +134,17 @@ class UserSpec extends Component {
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'USER']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'USER']);
 
+    console.log((viewItem) ? viewItem.toJS() : '0000');
+
     return (
       <div style={{marginTop: 10}} >
       {(informOpen && viewItem) &&
         <Card>
           <CardHeader
             title={viewItem.get('userNm')}
-            subheader={viewItem.get('userId') + ', [Registered:' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD') + '], [Expired:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}
+            subheader={viewItem.get('userId') + 
+              ', [Registered:' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD') + 
+              '], [Expired:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
