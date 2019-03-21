@@ -537,6 +537,20 @@ export default {
   "lbGRMServerInfo": "GRM Information",
   "lbAgentPollingTime": "Agent Polling Time",
   "msgAgentPollingTime": "Information exchange cycle between cloud client agent and GRM server",
+  "lbLoginTrialCount": "Number of user login attempts",
+  "msgLoginTrialCount": "Specifies the number of retry attempts for failed authentication during user login to the cloud terminal.",
+  "lbPasswordRule": "User password complexity",
+  "msgPasswordRule": "Set the complexity when setting the password of the user.",
+
+  "lbPwMinLength": "Password minimum length",
+  "lbPwIncludeNumber": "Include numbers",
+  "lbPwIncludeUpper": "Include capitalization",
+  "lbPwIncludeLower": "Include lowercase",
+  "lbPwIncludeSpecial": "Include special",
+  "lbPwDiffBefore": "Number of previous passwords and character differences",
+  "lbPwDiffZero": "Not match",
+  "lbPwDiffSmall": "Little",
+  "lbPwDiffMany": "Much",
 
   // 클라우드서비스 관리
   "lbDeleteCloudService": "Delete cloud service",

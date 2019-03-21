@@ -537,6 +537,20 @@ export default {
   "lbGRMServerInfo": "GRM 정보",
   "lbAgentPollingTime": "구름 Agent 폴링 타임",
   "msgAgentPollingTime": "구름단말 Agent 와 GRM 서버간의 정보교환 주기",
+  "lbLoginTrialCount": "사용자 로그인 시도 횟수",
+  "msgLoginTrialCount": "구름단말에 사용자 로그인중 인증실패시 재시도 횟수를 지정합니다.",
+  "lbPasswordRule": "사용자 비밀번호 복잡도",
+  "msgPasswordRule": "구름단말 사용자의 비밀번호 설정시 복잡도를 설정합니다.",
+
+  "lbPwMinLength": "패스워드 최소 길이",
+  "lbPwIncludeNumber": "숫자 포함 여부",
+  "lbPwIncludeUpper": "영어 대문자 포함 여부",
+  "lbPwIncludeLower": "영어 소문자 포함 여부",
+  "lbPwIncludeSpecial": "특수문자 포함 여부",
+  "lbPwDiffBefore": "이전 비밀번호와 문자 차이 갯수",
+  "lbPwDiffZero": "일치하지 않음",
+  "lbPwDiffSmall": "조금 다름",
+  "lbPwDiffMany": "많이 다름",
 
   // 클라우드서비스 관리
   "lbDeleteCloudService": "클라우드서비스 삭제",
