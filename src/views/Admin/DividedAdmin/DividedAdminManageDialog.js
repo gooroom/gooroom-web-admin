@@ -15,8 +15,8 @@ import DividedAdminManageRuleSelector from './DividedAdminManageRuleSelector';
 
 import TreeMultiSelector from 'components/GROptions/TreeMultiSelector';
 
-import DeptAndUserMultiSelector from 'components/GrOptions/DeptAndUserMultiSelector';
-import GroupAndClientMultiSelector from 'components/GrOptions/GroupAndClientMultiSelector';
+import DeptAndUserMultiSelector from 'components/GROptions/DeptAndUserMultiSelector';
+import GroupAndClientMultiSelector from 'components/GROptions/GroupAndClientMultiSelector';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import GRAlert from 'components/GRComponents/GRAlert';

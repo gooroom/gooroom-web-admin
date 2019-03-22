@@ -100,7 +100,7 @@ class GroupAndClientMultiSelector extends Component {
         return (
 
                     <Card >
-                        <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={title}></CardHeader>
+                    	{title && <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={title}></CardHeader>}
                         <CardContent >
 
                             <Grid container spacing={0}>
@@ -183,4 +183,3 @@ class GroupAndClientMultiSelector extends Component {
 }
 
 export default translate("translations")(withStyles(GRCommonStyle)(GroupAndClientMultiSelector));
-

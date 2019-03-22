@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Map, List, Iterable } from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { translate, Trans } from 'react-i18next';
@@ -145,14 +146,14 @@ class NoticeMasterManage extends Component {
 
     handleInstantAlarmConfirmResult = (confirmValue, confirmObject) => {
         if(confirmValue) {
-            const { NoticePublishActions, NoticeProps } = this.props;
+            const { NoticePublishExtensionActions, NoticeProps } = this.props;
             const checkedIds = confirmObject.checkedIds;
             if(checkedIds && checkedIds.size > 0) {
                 const promises = [];
                 for (const noticePublishId of checkedIds) {
                     const promiseCreateNoticeInstantAlarm = new Promise((resolve, reject) => {
                         this.getPromiseOpenDtCheck(noticePublishId).then(() => {
-                            NoticePublishActions.createNoticeInstantAlarm({
+                            NoticePublishExtensionActions.createNoticeInstantAlarm({
                                 noticePublishId: noticePublishId
                             }).then(() => resolve());
                         });
@@ -280,15 +281,24 @@ class NoticeMasterManage extends Component {
     // create dialog (NewNoticePublish)
     handleCreateNewNoticePublish = (noticeId) => {
         this.props.NoticePublishActions.showNoticePublishDialog({
-            viewItem: {
-                noticeId: noticeId
-            },
+            viewItem: Map({
+                noticeId: noticeId,
+                deptInfoList: List([]), 
+                userInfoList: List([]), 
+                grpInfoList: List([]), 
+                clientInfoList: List([]),
+                openDate: (new Date()).setMonth((new Date()).getMonth()),
+                closeDate: (new Date()).setMonth((new Date()).getMonth() + 1),
+                isInstantAlarm: false,
+                isUnlimited: false,
+                viewType: '0'
+            }),
             dialogType: NoticePublishDialog.TYPE_ADD
         });
     }
 
     render() {
-        const { classes, t, i18n, NoticeProps, NoticePublishProps, NoticePublishExtensionProps } = this.props;
+        const { classes, t, NoticeProps, NoticePublishProps, NoticePublishExtensionProps } = this.props;
         const compId = this.props.match.params.grMenuId;
         const noticeId = NoticeProps.getIn(['viewItems', compId, 'viewItem', 'noticeId']);
         const informOpenNoticePublish = NoticePublishProps.getIn(['viewItems', compId, 'informOpen']);
@@ -345,8 +355,8 @@ class NoticeMasterManage extends Component {
                                     </Button>
                                 </Grid>
                                 <Grid item>
-                                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleChangeStatus('DISABLED') }} disabled={this.isNoticePublishChecked()}>
-                                        {t('btnDisable')}
+                                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleChangeStatus('INACTIVE') }} disabled={this.isNoticePublishChecked()}>
+                                        {t('btnInactive')}
                                     </Button>
                                 </Grid>
                                 <Grid item>
