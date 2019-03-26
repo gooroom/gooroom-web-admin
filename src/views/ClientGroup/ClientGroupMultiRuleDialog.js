@@ -107,7 +107,7 @@ class DeptMultiDialog extends Component {
             <div>
             {(ClientGroupProps.get('multiDialogOpen')) &&
                 <Dialog open={ClientGroupProps.get('multiDialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
-                    <DialogTitle>{t("dtChangDeptMultiple")}</DialogTitle>
+                    <DialogTitle>{t("dtChangGroupMultiple")}</DialogTitle>
                     <DialogContent>
                         <Grid container spacing={24}>
                             <Grid item xs={4}>
