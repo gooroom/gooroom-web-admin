@@ -10,7 +10,10 @@ const COMMON_FAILURE = 'noticePublishExtension/COMMON_FAILURE';
 const SHOW_NOTICE_PUBLISH_EXTENSION_INFO = 'noticePublishExtension/SHOW_NOTICE_PUBLISH_EXTENSION_INFO';
 const CLOSE_NOTICE_PUBLISH_EXTENSION_INFO = 'noticePublishExtension/CLOSE_NOTICE_PUBLISH_EXTENSION_INFO';
 
+const CREATE_NOTICE_PUBLISH_TARGET_SUCCESS = 'noticePublishExtension/CREATE_NOTICE_PUBLISH_TARGET_SUCCESS';
 const GET_NOTICE_PUBLISH_TARGET_LISTPAGED_SUCCESS = 'noticePublishExtension/GET_NOTICE_PUBLISH_TARGET_LISTPAGED_SUCCESS';
+
+const CREATE_NOTICE_INSTANT_ALARM_SUCCESS = 'noticePublishExtension/CREATE_NOTICE_INSTANT_ALARM_SUCCESS';
 const GET_NOTICE_INSTANT_ALARM_LISTPAGED_SUCCESS = 'noticePublishExtension/GET_NOTICE_INSTANT_ALARM_LISTPAGED_SUCCESS';
 
 const initialState = commonHandleActions.getCommonInitialState('', 'desc', {}, {rowsPerPage: 5});
@@ -28,6 +31,26 @@ export const closeNoticePublishExtensionInfo = (param) => dispatch => {
     return dispatch({
         type: CLOSE_NOTICE_PUBLISH_EXTENSION_INFO,
         compId: param.compId
+    });
+};
+
+export const createNoticePublishTarget = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createNoticePublishTarget', param).then(
+        (response) => {
+            try {
+                if(response.data.status.result === 'success') {
+                    dispatch({
+                        type: CREATE_NOTICE_PUBLISH_TARGET_SUCCESS,
+                        response: response
+                    });
+                }    
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -52,6 +75,26 @@ export const readNoticePublishTargetListPaged = (module, compId, extParam) => di
                 listParam: newListParam,
                 response: response
             });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+export const createNoticeInstantAlarm = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createNoticeInstantAlarm', param).then(
+        (response) => {
+            try {
+                if(response.data.status.result === 'success') {
+                    dispatch({
+                        type: CREATE_NOTICE_INSTANT_ALARM_SUCCESS,
+                        response: response
+                    });
+                }    
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+            }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
@@ -101,8 +144,18 @@ export default handleActions({
     [CLOSE_NOTICE_PUBLISH_EXTENSION_INFO]: (state, action) => {
         return commonHandleActions.handleCloseInformAction(state, action);
     },
+    [CREATE_NOTICE_PUBLISH_TARGET_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false, error: false
+        });
+    },
     [GET_NOTICE_PUBLISH_TARGET_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleCustomListPagedAction(state, action, 'NPT');
+    },
+    [CREATE_NOTICE_INSTANT_ALARM_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false, error: false
+        });
     },
     [GET_NOTICE_INSTANT_ALARM_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleCustomListPagedAction(state, action, 'NIA');
