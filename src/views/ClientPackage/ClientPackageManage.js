@@ -45,7 +45,7 @@ import ClientIcon from '@material-ui/icons/Laptop';
 
 import ClientManageCompWithPackage from 'views/Client/ClientManageCompWithPackage';
 
-import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
+import ClientGroupTreeComp from 'views/ClientGroup/ClientGroupTreeComp';
 import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
 
 import ClientPackageComp from 'views/ClientPackage/ClientPackageComp';
@@ -67,34 +67,37 @@ class ClientPackageManage extends Component {
   }
 
   // Check Group Item
-  handleClientGroupCheck = (selectedGroupObj, selectedGroupIdArray) => {
+  handleClientGroupCheck = (selectedGroupIdArray) => {
     const { ClientManageProps, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
 
+    this.props.ClientGroupActions.changeCompVariableObject({
+      compId: compId,
+      valueObj: {checkedIds: selectedGroupIdArray}
+    });
+
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      groupId: selectedGroupIdArray.toJS(), page:0
+      groupId: selectedGroupIdArray, page:0
     }, {isResetSelect:true});
-
   };
 
   // Select Group Item
-  handleClientGroupSelect = (selectedGroupObj) => {
+  handleClientGroupSelect = (selectedGroupId) => {
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const { ClientManageProps, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
+    const selectRowObject = getRowObjectById(ClientGroupProps, compId, selectedGroupId, 'grpId');
     // show client group info.
-    if(selectedGroupObj) {
+    if(selectRowObject) {
       ClientGroupActions.changeCompVariable({
         name: 'viewItem',
-        value: selectedGroupObj,
+        value: selectRowObject,
         compId: compId
       });
-      this.resetClientGroupRules(compId, selectedGroupObj.get('grpId'));
+      this.resetClientGroupRules(compId, selectRowObject.get('grpId'));
     }
   };
-
 
   // Select Client Item
   handleClientSelect = (selectedClientObj) => {
@@ -543,7 +546,11 @@ class ClientPackageManage extends Component {
                 </Grid>
               </Grid>
               </Toolbar>
-              <ClientGroupComp compId={compId} selectorType='multiple' onCheck={this.handleClientGroupCheck} onSelect={this.handleClientGroupSelect} />
+              <ClientGroupTreeComp compId={compId} 
+                selectorType='multiple' 
+                onCheck={this.handleClientGroupCheck} 
+                onSelect={this.handleClientGroupSelect} 
+              />
             </Grid>
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
