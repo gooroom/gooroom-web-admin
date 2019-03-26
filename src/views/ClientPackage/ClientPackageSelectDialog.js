@@ -63,8 +63,8 @@ class ClientPackageSelectDialog extends Component {
         const { t, i18n } = this.props;
         event.stopPropagation();
         this.props.GRConfirmActions.showConfirm({
-            confirmTitle: t("dtPackageListUpadte"),
-            confirmMsg: t("msgPackageListUpadte"),
+            confirmTitle: t("dtPackageListUpdate"),
+            confirmMsg: t("msgPackageListUpdate"),
             handleConfirmResult: (confirmValue, confirmObject) => {
                 if(confirmValue) {
                 const { ClientManageProps, ClientPackageActions, compId } = this.props;
@@ -105,7 +105,7 @@ class ClientPackageSelectDialog extends Component {
                     <DialogActions>
                         <Grid container >
                             <Grid item xs={6}>
-                            <Button onClick={this.handleUpdatePackageList} variant='contained' color="secondary">{t("dtAllPackageListUpadte")}</Button>
+                            <Button onClick={this.handleUpdatePackageList} variant='contained' color="secondary">{t("dtAllPackageListUpdate")}</Button>
                             </Grid>
                             <Grid item xs={6} style={{flex:'1 0',display:'flex',justifyContent:'flex-end'}}>
                             <Button onClick={this.handleInstallButton} variant='contained' color="secondary">{t("btnInstall")}</Button>

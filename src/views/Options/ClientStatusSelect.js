@@ -10,6 +10,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import { translate, Trans } from "react-i18next";
 
+import FormControl from '@material-ui/core/FormControl';
+
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
@@ -44,6 +46,7 @@ class ClientStatusSelect extends Component {
 
     return (
       <React.Fragment>
+      <FormControl fullWidth={true}>
       <InputLabel htmlFor="client-status">{t("optClientStatus")}</InputLabel>
       <Select
         value={CommonOptionProps.selectedClientStatus.statusId}
@@ -56,6 +59,7 @@ class ClientStatusSelect extends Component {
           </MenuItem>
         ))}
       </Select>
+      </FormControl>
       </React.Fragment>
     );
   }

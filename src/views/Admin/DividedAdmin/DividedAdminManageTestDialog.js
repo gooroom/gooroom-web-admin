@@ -213,8 +213,6 @@ class DividedAdminManageTestDialog extends Component {
 
     handleSelectDept = (selectedItems) => {
 
-        console.log('selectedItems :::: ',selectedItems);
-
         this.props.AdminUserActions.setEditingItemValue({ name: 'deptInfoList', value: selectedItems });
     }
 

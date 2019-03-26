@@ -163,7 +163,7 @@ class ClientGroupDialog extends Component {
             title = t("dtEditGroup");
         }
 
-        const upperGroupInfo = ClientGroupProps.getIn(['viewItems', compId, 'selectedGrpNm']) +
+        const upperGroupInfo = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpNm']) +
             ' (' + ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']) + ')';
 
         return (

@@ -205,6 +205,26 @@ export const updatePackageInClient = (param) => dispatch => {
     });
 };
 
+export const updatePackageInGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updatePackageInGroup', param).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: UPDATE_PACKAGETOCLIENT_SUCCESS,
+                        response: response
+                    });
+                }
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export const deletePackageInClient = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deletePackageInClient', {
@@ -233,6 +253,43 @@ export const deletePackageInClient = (param) => dispatch => {
 export const createPackageAllUpgrade = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('createPackageAllUpgrade', param).then(
+        (response) => {
+            dispatch({
+                type: UPDATE_PACKAGEALLLIST_SUCCESS,
+                compId: param.compId
+            });
+            return {response: response};
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+
+export const createTotalPackageUpgradeForClient = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createTotalPackageUpgradeForClient', param).then(
+        (response) => {
+            dispatch({
+                type: UPDATE_PACKAGEALLLIST_SUCCESS,
+                compId: param.compId
+            });
+            return {response: response};
+        }
+    ).catch(error => {
+        dispatch({
+            type: COMMON_FAILURE,
+            error: error
+        });
+    });
+};
+
+export const createTotalPackageUpgradeForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createTotalPackageUpgradeForGroup', param).then(
         (response) => {
             dispatch({
                 type: UPDATE_PACKAGEALLLIST_SUCCESS,

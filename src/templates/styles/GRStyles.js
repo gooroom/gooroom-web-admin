@@ -320,6 +320,11 @@ export const GRCommonStyle = theme => ({
     smallIconButton: {
         minWidth: '34px'
     },
+    GRSmallButton: {
+        padding: "0px 2px 0px 2px",
+        minWidth: "26px",
+        minHeight: "24px"
+    },
     GRIconSmallButton: {
         padding: "0px 2px 0px 0px",
         minWidth: "48px",
