@@ -406,20 +406,18 @@ class ClientMasterManage extends Component {
                   <Grid item>
                     <Tooltip title={t("ttAddNewGroup")}>
                     <span>
-                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateClientGroup} >
-                        <AddIcon /><GroupIcon />
+                      <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateClientGroup} style={{marginRight: "5px"}} >
+                        <AddIcon />
                       </Button>
                     </span>
                     </Tooltip>
-                    {/**
                     <Tooltip title={t("ttDeleteGroup")}>
                     <span>
-                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} style={{marginLeft: "10px"}} >
-                        <RemoveIcon /><GroupIcon />
+                      <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} >
+                        <RemoveIcon />
                       </Button>
                     </span>
                     </Tooltip>
-                    */}
                   </Grid>
                   <Grid item>
                     <Tooltip title={t("ttChangMultiGroupRule")}>
