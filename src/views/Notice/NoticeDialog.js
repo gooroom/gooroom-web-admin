@@ -80,7 +80,7 @@ class NoticeDialog extends Component {
             const { NoticeProps, NoticeActions, compId, onAfterConfirmResult } = this.props;
             NoticeActions.createNotice({
                 title: paramObject.get('title'),
-                content: paramObject.get('content'),
+                content: paramObject.get('content')
             }).then((res) => {
                 NoticeActions.readNoticeListPaged(NoticeProps, compId, {page:0}).then((res) => {
                     const newNoticeId = this.props.NoticeProps.getIn(['viewItems', compId, 'listData',0, 'noticeId']);

@@ -17,7 +17,6 @@ const GET_NOTICE_PUBLISH_LISTPAGED_SUCCESS = 'noticePublish/GET_NOTICE_PUBLISH_L
 
 const CREATE_NOTICE_PUBLISH_SUCCESS = 'noticePublish/CREATE_NOTICE_PUBLISH_SUCCESS';
 const UPDATE_NOTICE_PUBLISH_SUCCESS = 'noticePublish/UPDATE_NOTICE_PUBLISH_SUCCESS';
-const CREATE_NOTICE_INSTANT_ALARM_SUCCESS = 'noticePublish/CREATE_NOTICE_INSTANT_ALARM_SUCCESS';
 
 const CHG_LISTPARAM_DATA = 'noticePublish/CHG_LISTPARAM_DATA';
 const SET_EDITING_ITEM_VALUE = 'noticePublish/SET_EDITING_ITEM_VALUE';
@@ -52,6 +51,14 @@ export const closeNoticePublishInfo = (param) => dispatch => {
     return dispatch({
         type: CLOSE_NOTICE_PUBLISH_INFO,
         compId: param.compId
+    });
+};
+
+export const setEditingItemValue = (param) => dispatch => {
+    return dispatch({
+        type: SET_EDITING_ITEM_VALUE,
+        name: param.name,
+        value: param.value
     });
 };
 
@@ -93,6 +100,28 @@ export const readNoticePublishListPaged = (module, compId, extParam) => dispatch
     });
 };
 
+// create
+export const createNoticePublish = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('createNoticePublish', param).then(
+        (response) => {
+            try {
+                if(response.data.status.result === 'success') {
+                    dispatch({
+                        type: CREATE_NOTICE_PUBLISH_SUCCESS,
+                        response: response
+                    });
+                    return response;
+                }                    
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 // update
 export const updateNoticePublish = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
@@ -102,26 +131,6 @@ export const updateNoticePublish = (param) => dispatch => {
                 type: UPDATE_NOTICE_PUBLISH_SUCCESS,
                 response: response
             });
-        }
-    ).catch(error => {
-        dispatch({ type: COMMON_FAILURE, error: error });
-    });
-};
-
-export const createNoticeInstantAlarm = (param) => dispatch => {
-    dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createNoticeInstantAlarm', param).then(
-        (response) => {
-            try {
-                if(response.data.status.result === 'success') {
-                    dispatch({
-                        type: CREATE_NOTICE_INSTANT_ALARM_SUCCESS,
-                        response: response
-                    });
-                }    
-            } catch(error) {
-                dispatch({ type: COMMON_FAILURE, error: error });
-            }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
@@ -150,19 +159,24 @@ export default handleActions({
     [CLOSE_NOTICE_PUBLISH_INFO]: (state, action) => {
         return commonHandleActions.handleCloseInformAction(state, action);
     },
+    [SET_EDITING_ITEM_VALUE]: (state, action) => {
+        return state.merge({
+            editingItem: state.get('editingItem').merge({[action.name]: action.value})
+        });
+    },
     [CHG_COMPDATA_VALUE]: (state, action) => {
         return commonHandleActions.handleChangeCompValue(state, action);
     },
     [GET_NOTICE_PUBLISH_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     },
-    [UPDATE_NOTICE_PUBLISH_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleEditSuccessAction(state, action);
-    },
-    [CREATE_NOTICE_INSTANT_ALARM_SUCCESS]: (state, action) => {
+    [CREATE_NOTICE_PUBLISH_SUCCESS]: (state, action) => {
         return state.merge({
             pending: false, error: false
         });
+    },
+    [UPDATE_NOTICE_PUBLISH_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleEditSuccessAction(state, action);
     }
 }, initialState);
 

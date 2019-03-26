@@ -37,8 +37,10 @@ class NoticePublishListComp extends Component {
 
     isSelected = id => {
         const { NoticePublishProps, compId } = this.props;
-        const selectedNoticeItem = getDataObjectVariableInComp(NoticePublishProps, compId, 'viewItem');
-        return (selectedNoticeItem && selectedNoticeItem.get('noticePublishId') == id);
+        console.log(NoticePublishProps);
+        const selectedNoticePublishItem = getDataObjectVariableInComp(NoticePublishProps, compId, 'viewItem');
+        console.log(selectedNoticePublishItem.get('regUserId'));
+        return (selectedNoticePublishItem && selectedNoticePublishItem.get('noticePublishId') == id);
     }
 
     handleChangePage = (event, page) => {
@@ -99,14 +101,14 @@ class NoticePublishListComp extends Component {
         const { t, i18n } = this.props;
 
         const columnHeaders = [
-            { id: "chCheckbox", isCheckbox: true },
-            { id: 'chStatusCd', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
-            { id: 'chNoticePublishId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
-            { id: 'chOpenDt', isOrder: true, numeric: false, disablePadding: true, label: t('colOpenDt') },
-            { id: 'chCloseDt', isOrder: true, numeric: false, disablePadding: true, label: t('colCloseDt') },
-            { id: 'chViewType', isOrder: true, numeric: false, disablePadding: true, label: t('colViewType') },
-            { id: 'chViewCnt', isOrder: true, numeric: false, disablePadding: true, label: t('colViewCnt') },
-            { id: 'chInstantAlarm', isOrder: true, numeric: false, disablePadding: true, label: t('colInstantAlarm') },
+            { id: 'chCheckbox', isCheckbox: true },
+            { id: 'chStatusCd', isOrder: false, numeric: false, disablePadding: true, label: t('colStatus') },
+            { id: 'chNoticePublishId', isOrder: true, numeric: false, disablePadding: true, label: t('colId') },
+            { id: 'chOpenDt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishOpenDt') },
+            { id: 'chCloseDt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishCloseDt') },
+            { id: 'chViewType', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishViewType') },
+            { id: 'chViewCnt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishViewCnt') },
+            { id: 'chInstantAlarmCnt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishInstantAlarmCnt') },
             { id: 'chRegUserId', isOrder: true, numeric: false, disablePadding: true, label: t('colRegUserId') },
             { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t('colEdit') },
         ];
@@ -123,7 +125,7 @@ class NoticePublishListComp extends Component {
                 <Table>
                     <GRCommonTableHead
                         classes={classes}
-                        keyId="noticePublishId"
+                        keyId='noticePublishId'
                         orderDir={listObj.getIn(['listParam', 'orderDir'])}
                         orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                         onRequestSort={this.handleChangeSort}
@@ -136,6 +138,7 @@ class NoticePublishListComp extends Component {
                         {listObj.get('listData') && listObj.get('listData').map(n => {
                             const isChecked = this.isChecked(n.get('noticePublishId'));
                             const isSelected = this.isSelected(n.get('noticePublishId'));
+                            const status = CommonOptionProps.noticePublishStatusData.find(e => e.statusVal === n.get('statusCd'));
                             return (
                             <TableRow
                                 hover
@@ -144,26 +147,26 @@ class NoticePublishListComp extends Component {
                                 role='checkbox'
                                 key={n.get('noticePublishId')}>
                                 <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                                    <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('noticePublishId'))}/>
+                                    <Checkbox checked={isChecked} color='primary' className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('noticePublishId'))}/>
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                                    { CommonOptionProps.noticePublishStatusData.find(e => e.statusVal === n.get('statusCd')).statusNm }
+                                    { t('lb' + status.statusNm) }
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('noticePublishId')}</TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
                                     {formatDateToSimple(n.get('openDt'), 'YYYY-MM-DD HH:mm')}
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                                    {(n.get('closeDt') !== undefined && n.get('closeDt') !== null) ? formatDateToSimple(n.get('closeDt'), 'YYYY-MM-DD HH:mm') : '무기한'}
+                                    {(n.get('closeDt') !== undefined && n.get('closeDt') !== null) ? formatDateToSimple(n.get('closeDt'), 'YYYY-MM-DD HH:mm') : t('lbUnlimited')}
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                                    {n.get('viewType') === '0' ? '알림만' : '제목과함께'}
+                                    {n.get('viewType') === '0' ? t('lbOnlyAlarm') : t('lbWithTitle')}
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                                    {(n.get('openedUserCnt') !== undefined ? n.get('openedUserCnt') : '0') + '명' }
+                                    {(n.get('openedUserCnt') !== undefined ? n.get('openedUserCnt') : '0') }
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                                    {(n.get('instantAlarmCnt') !== undefined ? n.get('instantAlarmCnt') : '0') + '회' }
+                                    {(n.get('instantAlarmCnt') !== undefined ? n.get('instantAlarmCnt') : '0') }
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>

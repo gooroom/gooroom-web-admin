@@ -76,7 +76,7 @@ const initialState = {
     ],
     noticePublishStatusData: [
         { statusId: "ACTIVE", statusVal: "STAT010", statusNm: "Active" },
-        { statusId: "DISABLED", statusVal: "STAT021", statusNm: "Disabled" }
+        { statusId: "INACTIVE", statusVal: "STAT021", statusNm: "Inactive" }
     ]
 };
 

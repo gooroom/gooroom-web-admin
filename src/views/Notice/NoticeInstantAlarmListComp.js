@@ -39,7 +39,7 @@ class NoticeInstantAlarmListComp extends Component {
         const { t, i18n } = this.props;
 
         const columnHeaders = [
-            { id: 'chRegDt', isOrder: false, numeric: false, disablePadding: true, label: t('colRegDt') },
+            { id: 'chRegDt', isOrder: false, numeric: false, disablePadding: true, label: t('colRegDate') },
             { id: 'chRegUserId', isOrder: false,GRCommonTableHeadnumeric: false, disablePadding: true, label: t('colRegUserId') }
         ];
 
