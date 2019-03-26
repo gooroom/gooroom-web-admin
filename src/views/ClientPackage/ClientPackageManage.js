@@ -68,7 +68,6 @@ class ClientPackageManage extends Component {
 
   // Check Group Item
   handleClientGroupCheck = (selectedGroupObj, selectedGroupIdArray) => {
-    const { ClientGroupProps, ClientGroupActions } = this.props;
     const { ClientManageProps, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
 
