@@ -199,19 +199,6 @@ class ClientPackageManage extends Component {
 
   // CLIENT COMPONENT --------------------------------
 
-  // add client in group
-  handleAddClientInGroup = (event) => {
-    const { t, i18n } = this.props;
-    const selectedGroupItem = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'viewItem']);
-    if(selectedGroupItem) {
-      this.setState({
-        isOpenClientSelect: true
-      });
-    } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgCfmSelectGroupForInsertClient"));
-    }
-  }
-
   isClientChecked = () => {
     const checkedIds = this.props.ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     return (checkedIds && checkedIds.size > 0);
@@ -220,11 +207,6 @@ class ClientPackageManage extends Component {
   isGroupChecked = () => {
     const checkedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
     return (checkedIds && checkedIds.size > 0);
-  }
-
-  isGroupSelected = () => {
-    const groupSelectId = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'selectId']);
-    return (groupSelectId && groupSelectId !== '') ? true : false;
   }
 
   // install package user selected
@@ -335,42 +317,6 @@ class ClientPackageManage extends Component {
       });
     }
   }
-
-  // remove client in group - save
-  handleRemoveClientInGroup = (event) => {
-    const { ClientManageProps, GRConfirmActions } = this.props;
-    const { t, i18n } = this.props;
-
-    const checkedClientIds = ClientManageProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-    if(checkedClientIds && checkedClientIds !== '') {
-      GRConfirmActions.showConfirm({
-        confirmTitle: t("dtDeleteClientFromGroup"),
-        confirmMsg: t("msgCfmDeleteClientFromGroup"),
-        handleConfirmResult: this.handleRemoveClientInGroupConfirmResult,
-        confirmObject: {
-          checkedClientIds: checkedClientIds
-        }
-      });
-    } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectClient"));
-    }
-  }
-  handleRemoveClientInGroupConfirmResult = (confirmValue, paramObject) => {
-    if(confirmValue) {
-      const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
-      const compId = this.props.match.params.grMenuId;
-      ClientGroupActions.removeClientsInGroup({
-        clients: paramObject.checkedClientIds.join(',')
-      }).then(() => {
-        // show user list in dept.
-        ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-          page:0
-        }, {isResetSelect:true});
-        // close dialog
-        this.setState({ isOpenClientSelect: false });
-      });
-    }
-  };
 
   handleClientSelectClose = () => {
     this.setState({
@@ -536,13 +482,6 @@ class ClientPackageManage extends Component {
                       </Button>
                     </span>
                   </Tooltip>
-                  <Tooltip title={t("ttAddClientInGroup")}>
-                  <span>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={!(this.isGroupSelected())} >
-                      <AddIcon /><ClientIcon />
-                    </Button>
-                  </span>
-                  </Tooltip>
                 </Grid>
               </Grid>
               </Toolbar>
@@ -556,13 +495,6 @@ class ClientPackageManage extends Component {
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={6} sm={6} lg={6} >
-                  <Tooltip title={t("ttDeleteClientFromGroup")}>
-                  <span>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleRemoveClientInGroup} disabled={!(this.isClientChecked())} style={{marginLeft: "10px"}} >
-                      <RemoveIcon /><ClientIcon />
-                    </Button>
-                  </span>
-                  </Tooltip>
                   </Grid>
                   <Grid item xs={6} sm={6} lg={6} style={{textAlign:'right'}}>
                     <Tooltip title={t("ttUpdateTotalPackgeInClient")}>

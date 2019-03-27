@@ -339,6 +339,7 @@ class DividedAdminManageDialog extends Component {
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
                     </Grid>
+                        {/* 
 
                     <GroupAndClientMultiSelector compId={compId} title={"관리대상 단말그룹"} 
                         isCheckMasterOnly={false}
@@ -355,6 +356,7 @@ class DividedAdminManageDialog extends Component {
                         selectedUser={selectedUser} 
                         onSelectUser={this.handleSelectUser}
                     />
+                        */}
 
 
                     <Grid container spacing={0} style={{marginTop:10}}>
@@ -372,10 +374,9 @@ class DividedAdminManageDialog extends Component {
                                 paramKeyName='grpId'
                                 isCheckMasterOnly={false}
                                 selectedItem={selectedGroup} 
-                                onSelectItem={this.handleSelectGrp} />
+                                onSelectItem={this.handleSelectGroup} />
                         </Grid>
                     </Grid>
-
                     <Grid container spacing={0} style={{marginTop:10}}>
                         <Grid item xs={6} style={{paddingRight:5}}>
                         {/* 
