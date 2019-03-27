@@ -67,18 +67,18 @@ class ClientPackageManage extends Component {
   }
 
   // Check Group Item
-  handleClientGroupCheck = (selectedGroupIdArray) => {
+  handleClientGroupCheck = (checkedGroupIdArray) => {
     const { ClientManageProps, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
 
     this.props.ClientGroupActions.changeCompVariableObject({
       compId: compId,
-      valueObj: {checkedIds: selectedGroupIdArray}
+      valueObj: {checkedIds: checkedGroupIdArray}
     });
 
     // show client list
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      groupId: selectedGroupIdArray, page:0
+      groupId: checkedGroupIdArray, page:0
     }, {isResetSelect:true});
   };
 
@@ -488,7 +488,8 @@ class ClientPackageManage extends Component {
               <ClientGroupTreeComp compId={compId} 
                 selectorType='multiple' 
                 onCheck={this.handleClientGroupCheck} 
-                onSelect={this.handleClientGroupSelect} 
+                onSelect={this.handleClientGroupSelect}
+                isEnableEdit={false} 
               />
             </Grid>
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
