@@ -99,7 +99,7 @@ class ClientMasterManage extends Component {
     });
     // show client list in group.
     ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
-      groupId: checkedGrpIdArray.join(), page:0
+      groupId: checkedGrpIdArray, page:0
     }, {isResetSelect:true});
   }
 

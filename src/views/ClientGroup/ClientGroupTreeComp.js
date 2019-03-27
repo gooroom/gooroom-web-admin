@@ -27,7 +27,7 @@ import KeywordOption from "views/Options/KeywordOption";
 import ClientGroupDialog from './ClientGroupDialog';
 
 import Grid from '@material-ui/core/Grid';
-import GRTreeList from "components/GRTree/GRTreeList";
+import GRTreeClientGroupList from "components/GRTree/GRTreeClientGroupList";
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -43,6 +43,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import Search from '@material-ui/icons/Search'; 
+import TreeIcon from '@material-ui/icons/DeviceHub'; 
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -50,8 +51,15 @@ import { translate, Trans } from "react-i18next";
 
 class ClientGroupTreeComp extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isShowTree: true
+    };
+  }
+
   componentDidMount() {
-    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId);
+    //this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId);
   }
 
   handleChangePage = (event, page) => {
@@ -94,7 +102,7 @@ class ClientGroupTreeComp extends Component {
     });
 
     if(this.props.onCheck) {
-      this.props.onCheck(getRowObjectById(ClientGroupProps, compId, id, 'grpId'), newCheckedIds);
+      this.props.onCheck(newCheckedIds);
     }
   }
 
@@ -153,8 +161,30 @@ class ClientGroupTreeComp extends Component {
 
   handleSelectBtnClick = () => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.compId, {page: 0});
+    const keyword = ClientGroupProps.getIn(['viewItems', this.props.compId, 'listParam', 'keyword']);
+    if(keyword && keyword != '') {
+      this.setState({
+        isShowTree: false
+      })
+      ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.compId, {page: 0});
+
+    } else {
+
+
+    }
+    
   };
+
+  handleShowTreeBtnClick = () => {
+    this.props.ClientGroupActions.changeListParamData({
+      name: 'keyword', 
+      value: '',
+      compId: this.props.compId
+    });
+    this.setState({
+      isShowTree: true
+    })
+};
 
 
 
@@ -257,10 +287,9 @@ class ClientGroupTreeComp extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, t } = this.props;
     const { ClientGroupProps, compId, hasEdit=false, selectorType } = this.props;
-    const { t, i18n } = this.props;
-
+    const keyword = (ClientGroupProps.getIn(['viewItems', compId, 'listParam', 'keyword'])) ? ClientGroupProps.getIn(['viewItems', compId, 'listParam', 'keyword']) : '';
     let columnHeaders = [
       { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: t("colGroupName") },
       { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: t("colClientCount") },
@@ -287,36 +316,128 @@ class ClientGroupTreeComp extends Component {
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={6} >
             <FormControl fullWidth={true}>
-              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+              <KeywordOption paramName="keyword" keywordValue={keyword}
+                handleKeywordChange={this.handleKeywordChange} 
+                handleSubmit={() => this.handleSelectBtnClick()} />
             </FormControl>
           </Grid>
           <Grid item xs={6} >
-            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} style={{marginRight:10}}>
               <Search />{t("btnSearch")}
             </Button>
+            {!this.state.isShowTree &&
+            <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => this.handleShowTreeBtnClick()} >
+              <TreeIcon />{t("stAll")}
+            </Button>
+            }
           </Grid>
         </Grid>
-        <div style={{maxHeight:450,overflowY:'auto'}}>
-        <GRTreeList
-          useFolderIcons={true}
-          listHeight='24px'
-          url='readChildrenClientGroupList'
-          paramKeyName='grpId'
-          rootKeyValue='0'
-          keyName='key'
-          title='title'
-          startingDepth='1'
-          hasSelectChild={false}
-          hasSelectParent={false}
-          compId={compId}
-          isEnableEdit={true}
-          onInitTreeData={this.handleInitTreeData}
-          onSelectNode={this.handleSelectClientGroup}
-          onCheckedNode={this.handleCheckedClientGroup}
-          onEditNode={this.handleEditClientGroup}
-          onRef={ref => (this.grTreeList = ref)}
-        />
-      </div>
+
+        {!this.state.isShowTree && listObj && listObj.get('listData') && listObj.get('listData').size > 0 &&
+          <Table>
+            {(selectorType && selectorType == 'multiple') && 
+            <GRCommonTableHead
+              classes={classes}
+              keyId="grpId"
+              orderDir={listObj.getIn(['listParam', 'orderDir'])}
+              orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+              onRequestSort={this.handleChangeSort}
+              onClickAllCheck={this.handleCheckAllClick}
+              checkedIds={listObj.get('checkedIds')}
+              listData={listObj.get('listData')}
+              columnData={columnHeaders}
+            />
+            }
+            {(!selectorType || selectorType == 'single') && 
+            <GRCommonTableHead
+              classes={classes}
+              keyId="grpId"
+              orderDir={listObj.getIn(['listParam', 'orderDir'])}
+              orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+              onRequestSort={this.handleChangeSort}
+              columnData={columnHeaders}
+            />
+            }
+            <TableBody>
+            {listObj.get('listData') && listObj.get('listData').map(n => {
+              const isChecked = this.isChecked(n.get('grpId'));
+              const isSelected = this.isSelected(n.get('grpId'));
+  
+              return (
+                <TableRow
+                  hover
+                  className={(isSelected) ? classes.grSelectedRow : ''}
+                  onClick={event => this.handleSelectRow(event, n.get('grpId'))}
+                  role="checkbox"
+                  key={n.get('grpId')}
+                >
+                  {(selectorType && selectorType == 'multiple') && 
+                    <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
+                      <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('grpId'))} />
+                    </TableCell>
+                  }
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndNumericCell}>{n.get('clientCount')}</TableCell>
+                  {(hasEdit) && 
+                    <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      <Button color='secondary' size="small" 
+                        className={classes.buttonInTableRow} 
+                        onClick={event => this.handleEditClick(event, n.get('grpId'))}>
+                        <SettingsApplicationsIcon />
+                      </Button>
+                    </TableCell>
+                  }
+                </TableRow>
+              );
+            })}
+  
+            {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+              <TableRow key={e}>
+                <TableCell
+                  colSpan={columnHeaders.length + 1}
+                  className={classes.grSmallAndClickCell}
+                />
+              </TableRow>
+            )}))}
+            </TableBody>
+          </Table>
+        }
+        {!this.state.isShowTree && listObj && listObj.get('listData') && listObj.get('listData').size > 0 &&
+          <TablePagination
+            component='div'
+            count={listObj.getIn(['listParam', 'rowsFiltered'])}
+            rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
+            rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
+            page={listObj.getIn(['listParam', 'page'])}
+            labelDisplayedRows={() => {return ''}}
+            labelRowsPerPage=""
+            backIconButtonProps={{
+              'aria-label': 'Previous Page'
+            }}
+            nextIconButtonProps={{
+              'aria-label': 'Next Page'
+            }}
+            onChangePage={this.handleChangePage}
+            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+          />
+        }
+        {this.state.isShowTree && 
+        <div style={{maxHeight:411,overflowY:'auto',marginTop:10}}>
+          <GRTreeClientGroupList
+            useFolderIcons={true}
+            listHeight='24px'
+            hasSelectChild={false}
+            hasSelectParent={false}
+            compId={compId}
+            isEnableEdit={true}
+            onInitTreeData={this.handleInitTreeData}
+            onSelectNode={this.handleSelectClientGroup}
+            onCheckedNode={this.handleCheckedClientGroup}
+            onEditNode={this.handleEditClientGroup}
+            onRef={ref => (this.grTreeList = ref)}
+          />
+        </div>
+        }
       </React.Fragment>
     );
   }

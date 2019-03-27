@@ -81,7 +81,7 @@ class GRRouters extends Component {
           <Route path="/desktopconfig/desktopapp/:grMenuId/:grMenuName" component={DesktopAppManage} />
           <Route path="/desktopconfig/desktopconf/:grMenuId/:grMenuName" component={DesktopConfManage} />
 
-          <Route path="/system/adminusermng/:grMenuId/:grMenuName" component={AdminUserManage} />
+          <Route path="/system/adminusermng/:grMenuId/:grMenuName" component={DividedAdminManage} />
           <Route path="/system/siteconfig/:grMenuId/:grMenuName" component={ServerSiteConfig} />
           <Route path="/system/cloudservicemng/:grMenuId/:grMenuName" component={GcspManage} />
           <Route path="/system/thememng/:grMenuId/:grMenuName" component={ThemeManage} />
@@ -94,7 +94,6 @@ class GRRouters extends Component {
           <Route path="/statistic/dailyregist/:grMenuId/:grMenuName" component={DailyClientCountManage} />
 
           <Route path="/notices/noticemanage/:grMenuId/:grMenuName" component={NoticeMasterManage} />
-			    <Route path="/sf/adminmanage/:grMenuId/:grMenuName" component={DividedAdminManage} />
 
         </Switch>
       </div>

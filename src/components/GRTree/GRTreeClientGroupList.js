@@ -10,7 +10,7 @@ import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-class GRTreeList extends Component {
+class GRTreeClientGroupList extends Component {
   constructor(props) {
     super(props);
     
@@ -20,12 +20,10 @@ class GRTreeList extends Component {
       activeListItem: null,
       searchTerm: "",
 
-      url: props.url,
-      paramKeyName: props.paramKeyName,
-      rootKeyValue: props.rootKeyValue,
-      keyName: props.keyName,
-      title: props.title,
-      startingDepth: props.startingDepth ? props.startingDepth: 0,
+      url: 'readChildrenClientGroupList',
+      paramKeyName: 'grpId',
+      rootKeyValue: '0',
+      startingDepth: '1',
       
       isShowCheck: (props.isShowCheck !== undefined) ? props.isShowCheck : true,
       isEnableEdit: (props.isEnableEdit !== undefined) ? props.isEnableEdit : false,
@@ -64,13 +62,10 @@ class GRTreeList extends Component {
   
   fetchTreeData(keyValue, index, isDoExpand, onCallback) {
 
-    const keyName = this.state.keyName;
     const param = {};
     param[this.state.paramKeyName] = keyValue;
 
     grRequestPromise(this.state.url, param).then(res => {
-      let indexCount = 0;
-
       const resData = res.map(x => {
         let children = null;
         if (x.hasChildren) {
@@ -78,10 +73,10 @@ class GRTreeList extends Component {
         }
 
         let node = {
-          key: x[keyName],
+          key: x.key,
           depth: x.level,
           disabled: false,
-          title: x[this.state.title],
+          title: x.title,
           children: children,
           regDate: x.regDt,
           modDate: x.modDt,
@@ -482,4 +477,4 @@ class GRTreeList extends Component {
   
 }
 
-export default withStyles(GRCommonStyle)(GRTreeList);
+export default withStyles(GRCommonStyle)(GRTreeClientGroupList);

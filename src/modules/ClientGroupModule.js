@@ -79,7 +79,9 @@ export const closeMultiDialog = () => dispatch => {
 
 export const readClientGroupListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
+        (module.getIn(['viewItems', compId, 'listParam', 'rowsPerPage']) !== undefined ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam').merge(extParam).merge(module.getIn(['viewItems', compId, 'listParam']))) :
         module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
