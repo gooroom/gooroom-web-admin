@@ -31,6 +31,7 @@ import GRTreeList from "components/GRTree/GRTreeList";
 import GRPane from 'containers/GRContent/GRPane';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientSelectDialog from "views/Client/ClientSelectDialog";
+import ClientGroupTreeComp from 'views/ClientGroup/ClientGroupTreeComp';
 
 import ClientConfSettingDialog from "views/Rules/ClientConfig/ClientConfSettingDialog";
 import ClientHostNameDialog from "views/Rules/HostName/ClientHostNameDialog";
@@ -90,16 +91,16 @@ class ClientMasterManage extends Component {
   }
 
   // click group checkbox (in tree)
-  handleCheckedClientGroup = (checkedGrpIdArray, imperfect) => {
+  handleCheckedClientGroup = (checkedGroupIdArray, imperfect) => {
     const { ClientManageProps, ClientManageActions } = this.props;
     // set checkedGrpId
     this.props.ClientGroupActions.changeCompVariableObject({
       compId: this.state.compId,
-      valueObj: {checkedGrpId: checkedGrpIdArray}
+      valueObj: {checkedGrpId: checkedGroupIdArray}
     });
     // show client list in group.
     ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
-      groupId: checkedGrpIdArray, page:0
+      groupId: checkedGroupIdArray, page:0
     }, {isResetSelect:true});
   }
 
@@ -111,6 +112,9 @@ class ClientMasterManage extends Component {
     this.setState({
       selectedGrp: {grpId:treeNode.key, grpNm:treeNode.title}
     });
+
+    // const selectRowObject = getRowObjectById(ClientGroupProps, compId, selectedGroupId, 'grpId');
+
     // close client inform
     ClientManageActions.closeClientManageInform({compId: compId});
     
@@ -439,27 +443,13 @@ class ClientMasterManage extends Component {
                   </Grid>
                 </Grid>
               </Toolbar>
-              <div style={{maxHeight:450,overflowY:'auto'}}>
-              <GRTreeList
-                useFolderIcons={true}
-                listHeight='24px'
-                url='readChildrenClientGroupList'
-                paramKeyName='grpId'
-                rootKeyValue='0'
-                keyName='key'
-                title='title'
-                startingDepth='1'
-                hasSelectChild={false}
-                hasSelectParent={false}
-                compId={compId}
-                isEnableEdit={true}
-                onInitTreeData={this.handleInitTreeData}
-                onSelectNode={this.handleSelectClientGroup}
-                onCheckedNode={this.handleCheckedClientGroup}
+              <ClientGroupTreeComp compId={compId} 
+                selectorType='multiple' 
+                onCheck={this.handleCheckedClientGroup} 
+                onSelect={this.handleSelectClientGroup}
                 onEditNode={this.handleEditClientGroup}
-                onRef={ref => (this.grTreeList = ref)}
+                isEnableEdit={true} 
               />
-              </div>
             </Grid>
             <Grid item xs={12} sm={7} style={{border: '0px solid #efefef'}} >
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
