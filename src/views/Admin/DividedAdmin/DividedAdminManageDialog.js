@@ -287,7 +287,7 @@ class DividedAdminManageDialog extends Component {
                                         onClick={this.handleClickShowPassword}
                                         onMouseDown={this.handleMouseDownPassword}
                                         >
-                                        {(editingItem && editingItem.get('showPasswd')) ? <VisibilityOff /> : <Visibility />}
+                                        {(editingItem && editingItem.get('showPasswd')) ? <Visibility /> : <VisibilityOff />}
                                         </IconButton>
                                     </InputAdornment>
                                 )
