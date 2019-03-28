@@ -105,12 +105,12 @@ class ClientMasterManage extends Component {
   }
 
   // click group row (in tree)
-  handleSelectClientGroup = (treeNode) => {
+  handleSelectClientGroup = (selectedGroupObj) => {
     const { ClientGroupActions, ClientManageActions } = this.props;
     const compId = this.state.compId;
     // change selected info in state
     this.setState({
-      selectedGrp: {grpId:treeNode.key, grpNm:treeNode.title}
+      selectedGrp: {grpId:selectedGroupObj.get('grpId'), grpNm:selectedGroupObj.get('grpNm')}
     });
 
     // const selectRowObject = getRowObjectById(ClientGroupProps, compId, selectedGroupId, 'grpId');
@@ -136,24 +136,14 @@ class ClientMasterManage extends Component {
     ClientGroupActions.changeCompVariableObject({
       compId: compId,
       valueObj: {
-        viewItem: (fromJS(treeNode)).merge(Map({
-          grpId: treeNode.key,
-          grpNm: treeNode.title,
-          hasChildren: treeNode.hasChildren 
-        })),
+        viewItem: selectedGroupObj,
         informOpen: true
       }
     });
 
-    this.showClientGroupSpec(compId, Map({
-      key: treeNode.key,
-      regDate: treeNode.regDate,
-      comment: treeNode.comment,
-      title: treeNode.title,
-      hasChildren: treeNode.hasChildren,
-    }));
+    this.showClientGroupSpec(compId, selectedGroupObj.get("grpId"));
   }
-
+  
   // click client row (in list)
   handleSelectClient = (selectedClientObj) => {
     const { ClientGroupProps } = this.props;
@@ -170,35 +160,32 @@ class ClientMasterManage extends Component {
       });
       // show client group info.
       ClientGroupActions.getClientGroup({ compId: compId, groupId: selectedClientObj.get('clientGroupId') });
-      this.showClientGroupSpec(compId, Map({
-        key: selectedClientObj.get('clientGroupId')
-      }));
+      this.showClientGroupSpec(compId, selectedClientObj.get('clientGroupId'));
     }
   };
 
   // get rules info by client group id
-  showClientGroupSpec(compId, viewItem) {
-    const { ClientGroupProps, ClientGroupActions } = this.props;
+  showClientGroupSpec(compId, groupId) {
     const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
 
-    if(viewItem) {
+    if(groupId) {
       // get client conf setting info
-      ClientConfSettingActions.getClientConfByGroupId({ compId: compId, groupId: viewItem.get('key') });   
+      ClientConfSettingActions.getClientConfByGroupId({ compId: compId, groupId: groupId });   
       // get Hosts conf info
-      ClientHostNameActions.getClientHostNameByGroupId({ compId: compId, groupId: viewItem.get('key') });
+      ClientHostNameActions.getClientHostNameByGroupId({ compId: compId, groupId: groupId });
       // get Update server conf info
-      ClientUpdateServerActions.getClientUpdateServerByGroupId({ compId: compId, groupId: viewItem.get('key') });   
+      ClientUpdateServerActions.getClientUpdateServerByGroupId({ compId: compId, groupId: groupId });   
       // get browser rule info
-      BrowserRuleActions.getBrowserRuleByGroupId({ compId: compId, groupId: viewItem.get('key') });
+      BrowserRuleActions.getBrowserRuleByGroupId({ compId: compId, groupId: groupId });
       // get media control setting info
-      MediaRuleActions.getMediaRuleByGroupId({ compId: compId, groupId: viewItem.get('key') });
+      MediaRuleActions.getMediaRuleByGroupId({ compId: compId, groupId: groupId });
       // get client secu info
-      SecurityRuleActions.getSecurityRuleByGroupId({ compId: compId, groupId: viewItem.get('key') });   
+      SecurityRuleActions.getSecurityRuleByGroupId({ compId: compId, groupId: groupId });   
       // get filtered software rule
-      SoftwareFilterActions.getSoftwareFilterByGroupId({ compId: compId, groupId: viewItem.get('key') });   
+      SoftwareFilterActions.getSoftwareFilterByGroupId({ compId: compId, groupId: groupId });   
       // get desktop conf info
-      DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: viewItem.get('key') });   
+      DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: groupId });   
     }
   }
 
@@ -402,46 +389,45 @@ class ClientMasterManage extends Component {
       <React.Fragment>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
-          
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
-            <Grid item xs={12} sm={5} style={{border: '0px solid #efefef'}} >
-              <Toolbar elevation={0} style={{minHeight:0,padding:0,marginBottom:10}}>
-                <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
-                  <Grid item>
-                    <Tooltip title={t("ttAddNewGroup")}>
-                    <span>
-                      <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateClientGroup} style={{marginRight: "5px"}} >
-                        <AddIcon />
-                      </Button>
-                    </span>
-                    </Tooltip>
-                    <Tooltip title={t("ttDeleteGroup")}>
-                    <span>
-                      <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} >
-                        <RemoveIcon />
-                      </Button>
-                    </span>
-                    </Tooltip>
-                  </Grid>
-                  <Grid item>
-                    <Tooltip title={t("ttChangMultiGroupRule")}>
-                      <span>
-                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleApplyMultiGroup} >
-                        <TuneIcon />
-                      </Button>
-                      </span>
-                    </Tooltip>
-                  </Grid>
-                  <Grid item>
-                    <Tooltip title={t("ttAddClientInGroup")}>
-                    <span>
-                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isClientGroupSelected()} >
-                        <AddIcon /><ClientIcon />
-                      </Button>
-                    </span>
-                    </Tooltip>
-                  </Grid>
+            <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef',minWidth:320}}>
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+              <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
+                <Grid item>
+                  <Tooltip title={t("ttAddNewGroup")}>
+                  <span>
+                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateClientGroup} style={{marginRight: "5px"}} >
+                      <AddIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
+                  <Tooltip title={t("ttDeleteGroup")}>
+                  <span>
+                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} >
+                      <RemoveIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
                 </Grid>
+                <Grid item>
+                  <Tooltip title={t("ttChangMultiGroupRule")}>
+                    <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleApplyMultiGroup} >
+                      <TuneIcon />
+                    </Button>
+                    </span>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title={t("ttAddClientInGroup")}>
+                  <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddClientInGroup} disabled={this.isClientGroupSelected()} >
+                      <AddIcon /><ClientIcon />
+                    </Button>
+                  </span>
+                  </Tooltip>
+                </Grid>
+              </Grid>
               </Toolbar>
               <ClientGroupTreeComp compId={compId} 
                 selectorType='multiple' 
@@ -451,7 +437,7 @@ class ClientMasterManage extends Component {
                 isEnableEdit={true} 
               />
             </Grid>
-            <Grid item xs={12} sm={7} style={{border: '0px solid #efefef'}} >
+            <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
