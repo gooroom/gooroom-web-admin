@@ -91,10 +91,10 @@ class ServerSiteConfig extends Component {
             .set('passwordRule', data[0].passwordRule)
 
             .set('pwMinLength', pwRule ? pwRule.minlen : '8')
-            .set('pwIncludeNumber', pwRule ? pwRule.dcredit : '1')
-            .set('pwIncludeUpper', pwRule ? pwRule.ucredit : '1')
-            .set('pwIncludeLower', pwRule ? pwRule.lcredit : '1')
-            .set('pwIncludeSpecial', pwRule ? pwRule.ocredit : '1')
+            .set('pwIncludeNumber', pwRule ? pwRule.dcredit : '0')
+            .set('pwIncludeUpper', pwRule ? pwRule.ucredit : '0')
+            .set('pwIncludeLower', pwRule ? pwRule.lcredit : '0')
+            .set('pwIncludeSpecial', pwRule ? pwRule.ocredit : '0')
             .set('pwDiffBefore', pwRule ? pwRule.difok : '0')
           }));
         }
@@ -171,7 +171,7 @@ class ServerSiteConfig extends Component {
   handlePwIncludeRuleChange = name => event => {
     const { stateData } = this.state;
     this.setState({
-      stateData: (event.target.checked) ? stateData.set(name, "-1") : stateData.set(name, "1")
+      stateData: (event.target.checked) ? stateData.set(name, "-1") : stateData.set(name, "0")
     });
   }
 

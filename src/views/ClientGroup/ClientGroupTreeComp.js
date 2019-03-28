@@ -107,7 +107,7 @@ class ClientGroupTreeComp extends Component {
   }
 
   handleCheckAllClick = (event, checked) => {
-
+    event.stopPropagation();
     const { ClientGroupActions, ClientGroupProps, compId } = this.props;
     const newCheckedIds = getDataPropertyInCompByParam(ClientGroupProps, compId, 'grpId', checked);
 
@@ -124,11 +124,18 @@ class ClientGroupTreeComp extends Component {
 
   handleSelectRow = (event, id) => {
     event.stopPropagation();
-    const { ClientGroupProps, ClientGroupActions, compId } = this.props;
+    const { ClientGroupProps, compId } = this.props;
     // get Object
     const selectRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+
     if(this.props.onSelect && selectRowObject) {
-      this.props.onSelect(selectRowObject);
+      this.props.onSelect(Map({
+        grpId: selectRowObject.get('grpId'),
+        grpNm: selectRowObject.get('grpNm'),
+        comment: selectRowObject.get('comment'),
+        regDate: selectRowObject.get('regDate'),
+        hasChildren: selectRowObject.get('hasChildren')
+      }));
     }
 
   };
@@ -245,7 +252,13 @@ class ClientGroupTreeComp extends Component {
   handleSelectClientGroup = (treeNode) => {
 
     if(this.props.onSelect) {
-      this.props.onSelect(treeNode.key);
+      this.props.onSelect(Map({
+        grpId: treeNode.key,
+        grpNm: treeNode.title,
+        comment: treeNode.comment,
+        regDate: treeNode.regDate,
+        hasChildren: treeNode.hasChildren
+      }));
     }
 
     // close client inform
