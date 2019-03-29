@@ -2,9 +2,13 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { translate, Trans } from 'react-i18next'
+import { Map, List } from 'immutable';
 
 import * as NoticePublishActions from 'modules/NoticePublishModule';
+import * as NoticePublishExtensionActions from 'modules/NoticePublishExtensionModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+
+import NoticePublishDialog from './NoticePublishDialog';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -35,11 +39,13 @@ class NoticePublishListComp extends Component {
         }
     }
 
+    isDisabled = (statusCd, closeDt) => {
+        return (statusCd !== 'STAT010') || ((typeof closeDt !== 'undefined') && closeDt <= new Date().getTime());
+    }
+
     isSelected = id => {
-        const { NoticePublishProps, compId } = this.props;
-        console.log(NoticePublishProps);
-        const selectedNoticePublishItem = getDataObjectVariableInComp(NoticePublishProps, compId, 'viewItem');
-        console.log(selectedNoticePublishItem.get('regUserId'));
+        const { NoticePublishExtensionProps, compId } = this.props;
+        const selectedNoticePublishItem = getDataObjectVariableInComp(NoticePublishExtensionProps, compId, 'viewItem');
         return (selectedNoticePublishItem && selectedNoticePublishItem.get('noticePublishId') == id);
     }
 
@@ -64,7 +70,15 @@ class NoticePublishListComp extends Component {
 
     handleClickAllCheck = (event, checked) => {
         const { NoticePublishActions, NoticePublishProps, compId } = this.props;
-        const newCheckedIds = getDataPropertyInCompByParam(NoticePublishProps, compId, 'noticePublishId', checked);
+        let newCheckedIds = List([]);
+        if (checked) {
+            newCheckedIds = NoticePublishProps.getIn(['viewItems', compId, 'listData'])
+                .filter((data) => {
+                    return (data.get('statusCd') === 'STAT010')
+                        && ((typeof data.get('closeDt') === 'undefined') || data.get('closeDt') > new Date().getTime());
+                })
+                .map((data) => data.get('noticePublishId'));
+        }
     
         NoticePublishActions.changeCompVariable({
             name: 'checkedIds',
@@ -94,6 +108,46 @@ class NoticePublishListComp extends Component {
           this.props.onSelect(selectRowObject);
         }
     }
+
+    // edit dialog
+    handleEditClick = (event, id) => {
+        event.stopPropagation();
+        const { NoticePublishProps, NoticePublishActions, NoticePublishExtensionActions, compId } = this.props;
+        const viewItem = getRowObjectById(NoticePublishProps, compId, id, 'noticePublishId');
+        NoticePublishExtensionActions.readNoticePublishTargetList({noticePublishId: id})
+            .then((res) => {
+                const targets = res.data;
+                const users = targets.filter((target) => target.targetType === '0')
+                    .map((user) => Map({ name: user.targetName, value: user.targetId }));
+                const departments = targets.filter((target) => target.targetType === '1')
+                    .map((department) => {
+                        return Map({ name: department.targetName, value: department.targetId, isCheck: department.isChildCheck === '1' ? true : false });
+                    });
+                const clients = targets.filter((target) => target.targetType === '2')
+                    .map((client) => Map({ name: client.targetName, value: client.targetId }));
+                const clientGroups = targets.filter((target) => target.targetType === '3')
+                    .map((clientGroup) => {
+                        return Map({ name: clientGroup.targetName, value: clientGroup.targetId, isCheck: clientGroup.isChildCheck === '1' ? true : false });
+                    });
+                const isUnlimitedDisabled = typeof viewItem.get('closeDt') !== 'undefined' && new Date(viewItem.get('closeDt')).getTime() < new Date().getTime();
+                NoticePublishActions.showNoticePublishDialog({
+                    viewItem: Map({
+                        noticePublishId: id,
+                        userInfoList: users,
+                        deptInfoList: departments,
+                        clientInfoList: clients,
+                        grpInfoList: clientGroups,
+                        openDate: viewItem.get('openDt'),
+                        closeDate: viewItem.get('closeDt'),
+                        statusCd: viewItem.get('statusCd'),
+                        viewType: viewItem.get('viewType'),
+                        isUnlimited: typeof viewItem.get('closeDt') === 'undefined',
+                        isUnlimitedDisabled: isUnlimitedDisabled
+                    }),
+                    dialogType: NoticePublishDialog.TYPE_EDIT
+                });
+            });
+    };
 
     render() {
         const { classes } = this.props;
@@ -137,6 +191,7 @@ class NoticePublishListComp extends Component {
                     <TableBody>
                         {listObj.get('listData') && listObj.get('listData').map(n => {
                             const isChecked = this.isChecked(n.get('noticePublishId'));
+                            const isDisabled = this.isDisabled(n.get('statusCd'), n.get('closeDt'));
                             const isSelected = this.isSelected(n.get('noticePublishId'));
                             const status = CommonOptionProps.noticePublishStatusData.find(e => e.statusVal === n.get('statusCd'));
                             return (
@@ -147,7 +202,7 @@ class NoticePublishListComp extends Component {
                                 role='checkbox'
                                 key={n.get('noticePublishId')}>
                                 <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                                    <Checkbox checked={isChecked} color='primary' className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('noticePublishId'))}/>
+                                    <Checkbox checked={isChecked} disabled={isDisabled} color='primary' className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('noticePublishId'))}/>
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
                                     { t('lb' + status.statusNm) }
@@ -210,11 +265,13 @@ class NoticePublishListComp extends Component {
 
 const mapStateToProps = (state) => ({
     NoticePublishProps: state.NoticePublishModule,
+    NoticePublishExtensionProps: state.NoticePublishExtensionModule,
     CommonOptionProps: state.CommonOptionModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
     NoticePublishActions: bindActionCreators(NoticePublishActions, dispatch),
+    NoticePublishExtensionActions: bindActionCreators(NoticePublishExtensionActions, dispatch),
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
   

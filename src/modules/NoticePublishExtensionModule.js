@@ -81,6 +81,17 @@ export const readNoticePublishTargetListPaged = (module, compId, extParam) => di
     });
 };
 
+export const readNoticePublishTargetList = (extParam) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readNoticePublishTargetList', {
+        noticePublishId: extParam.noticePublishId
+    }).then(
+        (response) => response.data
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export const createNoticeInstantAlarm = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('createNoticeInstantAlarm', param).then(

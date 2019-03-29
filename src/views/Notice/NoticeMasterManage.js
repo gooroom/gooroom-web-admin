@@ -177,12 +177,12 @@ class NoticeMasterManage extends Component {
             if (noticePublish.get('openDt') > new Date().getTime()) {
                 const openDt = new Date().toISOString().replace('Z' , '+0000');
                 const closeDt = (typeof noticePublish.get('closeDt') !== 'undefined' ? new Date(noticePublish.get('closeDt')).toISOString().replace('Z' , '+0000') : undefined);
-                const statusCd = noticePublish.get('statusCd');
                 NoticePublishActions.updateNoticePublish({
                     noticePublishId: noticePublishId,
                     openDt: openDt,
                     closeDt: closeDt,
-                    statusCd: statusCd
+                    statusCd: noticePublish.get('statusCd'),
+                    viewType: noticePublish.get('viewType')
                 }).then(() => resolve());
             } else {
                 resolve();
@@ -224,7 +224,8 @@ class NoticeMasterManage extends Component {
                             noticePublishId: noticePublishId,
                             openDt: openDt,
                             closeDt: closeDt,
-                            statusCd: confirmObject.statusCd
+                            statusCd: confirmObject.statusCd,
+                            viewType: noticePublish.get('viewType')
                         }).then(() => resolve());
                     });
                     promises.push(promiseUpdateNoticePublish);
@@ -263,7 +264,9 @@ class NoticeMasterManage extends Component {
                         NoticePublishActions.updateNoticePublish({
                             noticePublishId: noticePublishId,
                             openDt: openDt,
-                            closeDt: closeDt
+                            closeDt: closeDt,
+                            statusCd: noticePublish.get('statusCd'),
+                            viewType: noticePublish.get('viewType')
                         }).then(() => resolve());
                     });
                     promises.push(promiseUpdateNoticePublish);NoticePublishExtensionProps
@@ -309,13 +312,8 @@ class NoticeMasterManage extends Component {
             <GRPageHeader name={t(this.props.match.params.grMenuName)}/>
             <GRPane>
                 <Grid container alignItems="flex-end" direction="row" justify="space-between">
-                    <Grid item xs={6} style={{textAlign:'right'}}>
-                        <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateNotice(); }}>
-                            <AddIcon/>{t('btnRegist')}
-                        </Button>
-                    </Grid>
-                    <Grid item xs={6} style={{textAlign:'right'}}>
-                        <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-end">
+                    <Grid item xs={3}>
+                        <Grid container alignItems="flex-end" direction="row">
                             <Grid item>
                                 <FormControl>
                                     <KeywordOption handleKeywordChange={this.handleNoticeKeywordChange} handleSubmit={() => this.handleSearchNotice()}/>
@@ -327,6 +325,13 @@ class NoticeMasterManage extends Component {
                                 </Button>
                             </Grid>
                         </Grid>
+                    </Grid>
+                    <Grid item xs={3} style={{textAlign:'right'}}>
+                        <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateNotice(); }}>
+                            <AddIcon/>{t('btnRegist')}
+                        </Button>
+                    </Grid>
+                    <Grid item xs={6} style={{textAlign:'right'}}>
                     </Grid>
                 </Grid>
                 <Grid container alignItems="flex-start" direction="row" justify="space-between">
@@ -390,7 +395,7 @@ class NoticeMasterManage extends Component {
             </GRPane>
             {/* dialog(popup) component area */}
             <NoticeDialog compId={compId} onAfterConfirmResult={this.handleNoticeSelect} />
-            <NoticePublishDialog compId={compId} />
+            <NoticePublishDialog compId={compId} onAfterConfirmResult={this.handleNoticePublishSelect} />
             <GRConfirm />
         </React.Fragment>
         );
