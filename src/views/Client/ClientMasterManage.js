@@ -464,7 +464,6 @@ class ClientMasterManage extends Component {
                 onSelect={this.handleSelectClient}
               />
             </Grid>
-
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef', padding: 0, marginTop: 20}}>
               <ClientManageSpec compId={compId} />
               <ClientGroupSpec compId={compId} />

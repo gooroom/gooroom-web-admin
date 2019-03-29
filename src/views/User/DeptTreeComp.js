@@ -4,17 +4,15 @@ import { Map } from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientGroupActions from 'modules/ClientGroupModule';
+import * as DeptActions from 'modules/DeptModule';
 
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
-import ClientGroupDialog from './ClientGroupDialog';
-
 import Grid from '@material-ui/core/Grid';
-import GRTreeClientGroupList from "components/GRTree/GRTreeClientGroupList";
+import GRTreeDeptList from "components/GRTree/GRTreeDeptList";
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -33,7 +31,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
 
-class ClientGroupTreeComp extends Component {
+class DeptTreeComp extends Component {
 
   constructor(props) {
     super(props);
@@ -43,43 +41,43 @@ class ClientGroupTreeComp extends Component {
   }
 
   componentDidMount() {
-    //this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId);
+    //this.props.DeptActions.readDeptListPaged(this.props.DeptProps, this.props.compId);
   }
 
   handleChangePage = (event, page) => {
-    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {
+    this.props.DeptActions.readDeptListPaged(this.props.DeptProps, this.props.compId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {
+    this.props.DeptActions.readDeptListPaged(this.props.DeptProps, this.props.compId, {
       rowsPerPage: event.target.value, page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
-    this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId, {
+    this.props.DeptActions.readDeptListPaged(this.props.DeptProps, this.props.compId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
   // edit
   handleEditClick = (event, id) => {
-    const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-    const viewItem = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
-    ClientGroupActions.showDialog({
-      viewItem: viewItem,
-      dialogType: ClientGroupDialog.TYPE_EDIT
-    });
+    // const { DeptProps, DeptActions, compId } = this.props;
+    // const viewItem = getRowObjectById(DeptProps, compId, id, 'deptCd');
+    // DeptActions.showDialog({
+    //   viewItem: viewItem,
+    //   dialogType: ClientGroupDialog.TYPE_EDIT
+    // });
   };
 
   handleCheckClick = (event, id) => {
     event.stopPropagation();
-    const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-    const newCheckedIds = setCheckedIdsInComp(ClientGroupProps, compId, id);
+    const { DeptProps, DeptActions, compId } = this.props;
+    const newCheckedIds = setCheckedIdsInComp(DeptProps, compId, id);
 
-    ClientGroupActions.changeCompVariable({
+    DeptActions.changeCompVariable({
       name: 'checkedIds',
       value: newCheckedIds,
       compId: compId
@@ -92,10 +90,10 @@ class ClientGroupTreeComp extends Component {
 
   handleCheckAllClick = (event, checked) => {
     event.stopPropagation();
-    const { ClientGroupActions, ClientGroupProps, compId } = this.props;
-    const newCheckedIds = getDataPropertyInCompByParam(ClientGroupProps, compId, 'grpId', checked);
+    const { DeptActions, DeptProps, compId } = this.props;
+    const newCheckedIds = getDataPropertyInCompByParam(DeptProps, compId, 'deptCd', checked);
 
-    ClientGroupActions.changeCompVariable({
+    DeptActions.changeCompVariable({
       name: 'checkedIds',
       value: newCheckedIds,
       compId: compId
@@ -108,14 +106,14 @@ class ClientGroupTreeComp extends Component {
 
   handleSelectRow = (event, id) => {
     event.stopPropagation();
-    const { ClientGroupProps, compId } = this.props;
+    const { DeptProps, compId } = this.props;
     // get Object
-    const selectRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+    const selectRowObject = getRowObjectById(DeptProps, compId, id, 'deptCd');
 
     if(this.props.onSelect && selectRowObject) {
       this.props.onSelect(Map({
-        grpId: selectRowObject.get('grpId'),
-        grpNm: selectRowObject.get('grpNm'),
+        deptCd: selectRowObject.get('deptCd'),
+        deptNm: selectRowObject.get('deptNm'),
         comment: selectRowObject.get('comment'),
         regDate: selectRowObject.get('regDate'),
         hasChildren: selectRowObject.get('hasChildren')
@@ -125,8 +123,8 @@ class ClientGroupTreeComp extends Component {
   };
 
   isChecked = id => {
-    const { ClientGroupProps, compId } = this.props;
-    const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
+    const { DeptProps, compId } = this.props;
+    const checkedIds = getDataObjectVariableInComp(DeptProps, compId, 'checkedIds');
 
     if(checkedIds) {
       return checkedIds.includes(id);
@@ -136,14 +134,14 @@ class ClientGroupTreeComp extends Component {
   }
 
   isSelected = id => {
-    const { ClientGroupProps, compId } = this.props;
-    const selectedGroupItem = getDataObjectVariableInComp(ClientGroupProps, compId, 'viewItem');
-    return (selectedGroupItem && selectedGroupItem.get('grpId') == id);
+    const { DeptProps, compId } = this.props;
+    const selectedGroupItem = getDataObjectVariableInComp(DeptProps, compId, 'viewItem');
+    return (selectedGroupItem && selectedGroupItem.get('deptCd') == id);
   }
 
   // .................................................
   handleKeywordChange = (name, value) => {
-    this.props.ClientGroupActions.changeListParamData({
+    this.props.DeptActions.changeListParamData({
       name: name, 
       value: value,
       compId: this.props.compId
@@ -151,22 +149,21 @@ class ClientGroupTreeComp extends Component {
   }
 
   handleSelectBtnClick = () => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    const keyword = ClientGroupProps.getIn(['viewItems', this.props.compId, 'listParam', 'keyword']);
+    const { DeptActions, DeptProps } = this.props;
+    const keyword = DeptProps.getIn(['viewItems', this.props.compId, 'listParam', 'keyword']);
     if(keyword && keyword != '') {
       this.setState({
         isShowTree: false
       })
-      ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.compId, {page: 0});
+      DeptActions.readDeptListPaged(DeptProps, this.props.compId, {page: 0});
 
     } else {
-
 
     }
   };
 
   handleShowTreeBtnClick = () => {
-    this.props.ClientGroupActions.changeListParamData({
+    this.props.DeptActions.changeListParamData({
       name: 'keyword', 
       value: '',
       compId: this.props.compId
@@ -181,92 +178,71 @@ class ClientGroupTreeComp extends Component {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   handleInitTreeData = () => {
-    // 필요없음. ????
-    // this.props.ClientGroupActions.changeCompVariableObject({
-    //   compId: this.props.compId,
-    //   valueObj: {selectedGrpId: '', selectedGrpNm: ''}
-    // });
   }
 
   // click group checkbox (in tree)
-  handleCheckedClientGroup = (checkedGrpIdArray, imperfect) => {
-
+  handleCheckedDept = (checkedDeptCdArray, imperfect) => {
     if(this.props.onCheck) {
-      this.props.onCheck(checkedGrpIdArray);
+      this.props.onCheck(checkedDeptCdArray);
     }
-
-    // 이것은 상위에서 처리해야함
-    // const { ClientManageProps, ClientManageActions } = this.props;
-    // // set checkedGrpId
-    // this.props.ClientGroupActions.changeCompVariableObject({
-    //   compId: this.props.compId,
-    //   valueObj: {checkedGrpId: checkedGrpIdArray}
-    // });
-    // // show client list in group.
-    // ClientManageActions.readClientListPaged(ClientManageProps, this.props.compId, {
-    //   groupId: checkedGrpIdArray.join(), page:0
-    // }, {isResetSelect:true});
   }
 
   // click group row (in tree)
-  handleSelectClientGroup = (treeNode) => {
-
+  handleSelectDept = (treeNode) => {
     if(this.props.onSelect) {
       this.props.onSelect(Map({
-        grpId: treeNode.key,
-        grpNm: treeNode.title,
+        deptCd: treeNode.key,
+        deptNm: treeNode.title,
         comment: treeNode.comment,
         regDate: treeNode.regDate,
         hasChildren: treeNode.hasChildren
       }));
     }
-
-    // close client inform
-    // 이것은 상위에서 처리해야함
-    // ClientManageActions.closeClientManageInform({compId: compId});
-
-    // 이것은 상위에서 처리해야함
-    // ClientGroupActions.changeCompVariableObject({
-    //   compId: compId,
-    //   valueObj: {
-    //     viewItem: (fromJS(treeNode)).merge(Map({
-    //       grpId: treeNode.key,
-    //       grpNm: treeNode.title,
-    //       hasChildren: treeNode.hasChildren 
-    //     })),
-    //     informOpen: true
-    //   }
-    // });
-
-    // 이것은 상위에서 처리해야함
-    // this.showClientGroupSpec(compId, Map({
-    //   key: treeNode.key,
-    //   regDate: treeNode.regDate,
-    //   comment: treeNode.comment,
-    //   title: treeNode.title,
-    //   hasChildren: treeNode.hasChildren,
-    // }));
   }
 
   // edit group in tree
-  handleEditClientGroup = (treeNode) => {
-    this.props.ClientGroupActions.showDialog({
-      viewItem: {
-        grpId: treeNode.key,
-        grpNm: treeNode.title
-      },
-      dialogType: ClientGroupDialog.TYPE_EDIT
-    });
+  handleEditDept = (treeNode) => {
+    if(this.props.onEdit) {
+      this.props.onEdit(Map({
+        deptCd: treeNode.key,
+        deptNm: treeNode.title,
+        comment: treeNode.comment,
+        regDate: treeNode.regDate,
+        hasChildren: treeNode.hasChildren
+      }));
+    }
   };
 
   render() {
     const { classes, t } = this.props;
-    const { ClientGroupProps, compId, hasEdit=false, selectorType } = this.props;
-    const keyword = (ClientGroupProps.getIn(['viewItems', compId, 'listParam', 'keyword'])) ? ClientGroupProps.getIn(['viewItems', compId, 'listParam', 'keyword']) : '';
+    const { DeptProps, compId, hasEdit=false, selectorType } = this.props;
+    const keyword = (DeptProps.getIn(['viewItems', compId, 'listParam', 'keyword'])) ? DeptProps.getIn(['viewItems', compId, 'listParam', 'keyword']) : '';
     let columnHeaders = [
-      { id: "chGrpNm", isOrder: true, numeric: false, disablePadding: true, label: t("colGroupName") },
-      { id: "chClientCount", isOrder: true, numeric: false, disablePadding: true, label: t("colClientCount") },
+      { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: t("colDeptName") },
+      { id: "chUserCount", isOrder: true, numeric: false, disablePadding: true, label: t("colUserCount") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEdit") },
     ];
 
@@ -278,7 +254,7 @@ class ClientGroupTreeComp extends Component {
       columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
     }
 
-    const listObj = ClientGroupProps.getIn(['viewItems', compId]);
+    const listObj = DeptProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
@@ -312,7 +288,7 @@ class ClientGroupTreeComp extends Component {
             {(selectorType && selectorType == 'multiple') && 
             <GRCommonTableHead
               classes={classes}
-              keyId="grpId"
+              keyId="deptCd"
               orderDir={listObj.getIn(['listParam', 'orderDir'])}
               orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
               onRequestSort={this.handleChangeSort}
@@ -325,7 +301,7 @@ class ClientGroupTreeComp extends Component {
             {(!selectorType || selectorType == 'single') && 
             <GRCommonTableHead
               classes={classes}
-              keyId="grpId"
+              keyId="deptCd"
               orderDir={listObj.getIn(['listParam', 'orderDir'])}
               orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
               onRequestSort={this.handleChangeSort}
@@ -334,29 +310,29 @@ class ClientGroupTreeComp extends Component {
             }
             <TableBody>
             {listObj.get('listData') && listObj.get('listData').map(n => {
-              const isChecked = this.isChecked(n.get('grpId'));
-              const isSelected = this.isSelected(n.get('grpId'));
+              const isChecked = this.isChecked(n.get('deptCd'));
+              const isSelected = this.isSelected(n.get('deptCd'));
   
               return (
                 <TableRow
                   hover
                   className={(isSelected) ? classes.grSelectedRow : ''}
-                  onClick={event => this.handleSelectRow(event, n.get('grpId'))}
+                  onClick={event => this.handleSelectRow(event, n.get('deptCd'))}
                   role="checkbox"
-                  key={n.get('grpId')}
+                  key={n.get('deptCd')}
                 >
                   {(selectorType && selectorType == 'multiple') && 
                     <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                      <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('grpId'))} />
+                      <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('deptCd'))} />
                     </TableCell>
                   }
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndNumericCell}>{n.get('clientCount')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndNumericCell}>{n.get('userCnt')}</TableCell>
                   {(hasEdit) && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       <Button color='secondary' size="small" 
                         className={classes.buttonInTableRow} 
-                        onClick={event => this.handleEditClick(event, n.get('grpId'))}>
+                        onClick={event => this.handleEditClick(event, n.get('deptCd'))}>
                         <SettingsApplicationsIcon />
                       </Button>
                     </TableCell>
@@ -397,7 +373,7 @@ class ClientGroupTreeComp extends Component {
         }
         {this.state.isShowTree && 
         <div style={{maxHeight:411,overflowY:'auto',marginTop:10}}>
-          <GRTreeClientGroupList
+          <GRTreeDeptList
             useFolderIcons={true}
             listHeight='24px'
             hasSelectChild={false}
@@ -405,9 +381,9 @@ class ClientGroupTreeComp extends Component {
             compId={compId}
             isEnableEdit={this.props.isEnableEdit}
             onInitTreeData={this.handleInitTreeData}
-            onSelectNode={this.handleSelectClientGroup}
-            onCheckedNode={this.handleCheckedClientGroup}
-            onEditNode={this.handleEditClientGroup}
+            onSelectNode={this.handleSelectDept}
+            onCheckedNode={this.handleCheckedDept}
+            onEditNode={this.handleEditDept}
             onRef={ref => (this.grTreeList = ref)}
           />
         </div>
@@ -418,13 +394,13 @@ class ClientGroupTreeComp extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientGroupProps: state.ClientGroupModule
+  DeptProps: state.DeptModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch)
+  DeptActions: bindActionCreators(DeptActions, dispatch)
 });
 
-export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupTreeComp)));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptTreeComp)));
 
 

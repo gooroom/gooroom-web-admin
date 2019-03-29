@@ -229,7 +229,7 @@ class UserListComp extends Component {
     }
 
     return (
-      <div>
+      <React.Fragment>
       {/* data option area */}
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
           <Grid item xs={3} >
@@ -248,6 +248,7 @@ class UserListComp extends Component {
             </Button>
           </Grid>
           <Grid item xs={4} style={{textAlign:'right'}}>
+            {/**
             <Tooltip title={t("ttMoveDept")}>
               <span>
               <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.props.onMoveUserToDept} disabled={this.isUserChecked()} >
@@ -260,6 +261,7 @@ class UserListComp extends Component {
                 <AddIcon /><AccountIcon />
               </Button>
             </Tooltip>
+             */}
           </Grid>
         </Grid>
 
@@ -349,7 +351,7 @@ class UserListComp extends Component {
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
       }
-      </div>
+      </React.Fragment>
     );
 
   }

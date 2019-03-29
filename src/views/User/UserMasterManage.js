@@ -16,6 +16,7 @@ import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import GRPageHeader from "containers/GRContent/GRPageHeader";
+import DeptTreeComp from 'views/User/DeptTreeComp';
 
 import GRTreeList from "components/GRTree/GRTreeList";
 import GRPane from "containers/GRContent/GRPane";
@@ -49,6 +50,8 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import TuneIcon from '@material-ui/icons/Tune';
 import UserIcon from '@material-ui/icons/Person';
 import DeptIcon from '@material-ui/icons/WebAsset';
+import MoveIcon from '@material-ui/icons/Redo';
+import AccountIcon from '@material-ui/icons/AccountBox';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -91,13 +94,13 @@ class UserMasterManage extends Component {
   }
     
   // click dept row (in tree)
-  handleSelectDept = (node) => {
+  handleSelectDept = (selectedDeptObj) => {
     const { DeptActions, UserActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
     const compId = this.state.compId;
     // change selected info in state
     this.setState({
-      selectedDept: {deptCd:node.key, deptNm:node.title}
+      selectedDept: {deptCd:selectedDeptObj.get('deptCd'), deptNm:selectedDeptObj.get('deptNm')}
     });
     // close user inform
     UserActions.closeInform({ compId: compId });
@@ -105,21 +108,21 @@ class UserMasterManage extends Component {
     DeptActions.changeCompVariableObject({
       compId: compId,
       valueObj: {
-        selectedDeptCd: node.key, selectedDeptNm: node.title,
-        hasChildren: node.hasChildren
+        selectedDeptCd: selectedDeptObj.get('deptCd'), selectedDeptNm: selectedDeptObj.get('deptNm'),
+        hasChildren: selectedDeptObj.get('hasChildren')
       }
     });
 
     // get browser rule info
-    BrowserRuleActions.getBrowserRuleByDeptCd({ compId: compId, deptCd: node.key });
+    BrowserRuleActions.getBrowserRuleByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });
     // get media control setting info
-    MediaRuleActions.getMediaRuleByDeptCd({ compId: compId, deptCd: node.key });
+    MediaRuleActions.getMediaRuleByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });
     // get client secu info
-    SecurityRuleActions.getSecurityRuleByDeptCd({ compId: compId, deptCd: node.key });
+    SecurityRuleActions.getSecurityRuleByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });
     // get filtered software rule
-    SoftwareFilterActions.getSoftwareFilterByDeptCd({ compId: compId, deptCd: node.key });   
+    SoftwareFilterActions.getSoftwareFilterByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });   
     // get desktop conf info
-    DesktopConfActions.getDesktopConfByDeptCd({ compId: compId, deptCd: node.key });
+    DesktopConfActions.getDesktopConfByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });
 
     // show Dept. inform pane.
     DeptActions.showInform({ compId: compId, viewItem: null });
@@ -328,7 +331,20 @@ class UserMasterManage extends Component {
 
   handleResetDeptTree = (deptCd) => {
     this.grTreeList.resetTreeNode(deptCd);
-    }
+  }
+
+  handleCreateUserButton = value => {
+    const { UserActions } = this.props;
+    UserActions.showDialog({
+      ruleSelectedViewItem: {
+        userId: '',
+        userNm: '',
+        userPasswd: '',
+        showPasswd: false
+      },
+      ruleDialogType: UserDialog.TYPE_ADD
+    }, true);
+  };
 
   render() {
     const { classes } = this.props;
@@ -339,93 +355,97 @@ class UserMasterManage extends Component {
       <React.Fragment>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
-
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
-            <Grid item xs={12} sm={5} style={{border: '0px solid #efefef', marginTop:21}} >
-              <Toolbar elevation={0} style={{minHeight:0,padding:0,marginBottom:10}}>
-                <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
-                  <Grid item>
-                    <Tooltip title={t("ttAddNewDept")}>
-                      <span>
-                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleCreateDept} disabled={this.isUserSelected()} >
-                        <AddIcon /><DeptIcon />
+            <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef',minWidth:320}}>
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+              <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
+                <Grid item>
+                  <Tooltip title={t("ttAddNewDept")}>
+                    <span>
+                    <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleCreateDept} disabled={this.isUserSelected()} >
+                      <AddIcon /><DeptIcon />
+                    </Button>
+                    </span>
+                  </Tooltip>
+                  {/**
+                  <Tooltip title={t("ttDeleteDept")}>
+                    <span>
+                    <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserSelected()} style={{marginLeft: "4px"}} >
+                      <RemoveIcon /><DeptIcon />
+                    </Button>
+                    </span>
+                  </Tooltip>
+                  */}
+                </Grid>
+                <Grid item>
+                  <Tooltip title={t("ttChangMultiDeptRule")}>
+                    <span>
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleApplyMultiDept} >
+                      <TuneIcon />
+                    </Button>
+                    </span>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title={t("ttAddUserInDept")}>
+                    <span>
+                    <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserSelected()} >
+                      <AddIcon /><UserIcon />
+                    </Button>
+                    </span>
+                  </Tooltip>
+                  {/*
+                  <Tooltip title={t("ttDeleteUserInDept")}>
+                    <span>
+                    <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserSelected()} style={{marginLeft: "4px"}} >
+                      <RemoveIcon /><UserIcon />
+                    </Button>
+                    </span>
+                  </Tooltip>
+                  */}
+                </Grid>
+              </Grid>
+              </Toolbar>
+              <DeptTreeComp compId={compId} 
+                selectorType='multiple' 
+                onCheck={this.handleCheckedDept} 
+                onSelect={this.handleSelectDept}
+                onEditNode={this.handleEditDept}
+                isEnableEdit={true} 
+              />
+            </Grid>
+            <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
+              <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
+                <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
+                  <Grid item xs={12} sm={6} lg={6} >
+                    <Tooltip title={t("ttMoveDept")}>
+                    <span>
+                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleMoveUserToDept} disabled={this.isUserChecked()} >
+                        <MoveIcon /><DeptIcon />
                       </Button>
-                      </span>
+                    </span>
                     </Tooltip>
-                    {/**
-                    <Tooltip title={t("ttDeleteDept")}>
-                      <span>
-                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isUserSelected()} style={{marginLeft: "4px"}} >
-                        <RemoveIcon /><DeptIcon />
-                      </Button>
-                      </span>
-                    </Tooltip>
-                    */}
                   </Grid>
-                  <Grid item>
-                    <Tooltip title={t("ttChangMultiDeptRule")}>
-                      <span>
-                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleApplyMultiDept} >
-                        <TuneIcon />
+                  <Grid item xs={12} sm={6} lg={6} style={{textAlign:'right'}}>
+                    <Tooltip title={t("ttAddUser")}>
+                    <span>
+                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleCreateUserButton} style={{marginLeft: "4px"}}>
+                        <AddIcon /><AccountIcon />
                       </Button>
-                      </span>
+                    </span>
                     </Tooltip>
-                  </Grid>
-                  <Grid item>
-                    <Tooltip title={t("ttAddUserInDept")}>
-                      <span>
-                      <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserSelected()} >
-                        <AddIcon /><UserIcon />
-                      </Button>
-                      </span>
-                    </Tooltip>
-                    {/*
-                    <Tooltip title={t("ttDeleteUserInDept")}>
-                      <span>
-                      <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserSelected()} style={{marginLeft: "4px"}} >
-                        <RemoveIcon /><UserIcon />
-                      </Button>
-                      </span>
-                    </Tooltip>
-                    */}
                   </Grid>
                 </Grid>
               </Toolbar>
-              <div style={{maxHeight:450,overflowY:'auto'}}>
-              <GRTreeList 
-                useFolderIcons={true}
-                listHeight='24px'
-                url='readChildrenDeptList'
-                paramKeyName='deptCd'
-                rootKeyValue='0'
-                keyName='key'
-                title='title'
-                startingDepth='1'
-                hasSelectChild={false}
-                hasSelectParent={false}
-                compId={compId}
-                isEnableEdit={true}
-                onInitTreeData={this.handleInitTreeData}
-                onSelectNode={this.handleSelectDept}
-                onCheckedNode={this.handleCheckedDept}
-                onEditNode={this.handleEditDept}
-                onRef={ref => (this.grTreeList = ref)}
-              />
-              </div>
-            </Grid>
-
-            <Grid item xs={12} sm={7} style={{border: '0px solid #efefef'}} >
               <UserListComp name='UserListComp' compId={compId} deptCd='' 
                 onSelect={this.handleSelectUser}
                 onMoveUserToDept={this.handleMoveUserToDept}
               />
             </Grid>
-
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef'}} >
               <UserSpec compId={compId} />
               <DeptSpec compId={compId} />
             </Grid>
-
           </Grid>
         </GRPane>
 
