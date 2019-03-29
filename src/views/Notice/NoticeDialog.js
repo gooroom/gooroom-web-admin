@@ -86,7 +86,7 @@ class NoticeDialog extends Component {
                     const newNoticeId = this.props.NoticeProps.getIn(['viewItems', compId, 'listData',0, 'noticeId']);
                     const selectRowObject = getRowObjectById(this.props.NoticeProps, compId, newNoticeId, 'noticeId');
                     if(onAfterConfirmResult && selectRowObject) {
-                        onAfterConfirmResult(selectRowObject)
+                        onAfterConfirmResult(selectRowObject);
                     }
                 });
                 this.handleClose();
@@ -126,7 +126,7 @@ class NoticeDialog extends Component {
                 NoticeActions.readNoticeListPaged(NoticeProps, compId).then((res) => {
                     const selectRowObject = getRowObjectById(this.props.NoticeProps, compId, noticeId, 'noticeId');
                     if(onAfterConfirmResult && selectRowObject) {
-                        onAfterConfirmResult(selectRowObject)
+                        onAfterConfirmResult(selectRowObject);
                     }
                 });
                 this.handleClose();
