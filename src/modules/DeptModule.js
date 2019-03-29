@@ -4,13 +4,13 @@ import { List, fromJS } from 'immutable';
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
-
 const COMMON_PENDING = 'dept/COMMON_PENDING';
 const COMMON_FAILURE = 'dept/COMMON_FAILURE';
 
 const GET_DEPT_LIST_SUCCESS = 'dept/GET_DEPT_LIST_SUCCESS';
 const GET_DEPT_LISTPAGED_SUCCESS = 'dept/GET_DEPT_LISTPAGED_SUCCESS';
 const GET_DEPT_SUCCESS = 'dept/GET_DEPT_SUCCESS';
+
 const CREATE_DEPT_SUCCESS = 'dept/CREATE_DEPT_SUCCESS';
 const EDIT_DEPT_SUCCESS = 'dept/EDIT_DEPT_SUCCESS';
 const DELETE_DEPT_SUCCESS = 'dept/DELETE_DEPT_SUCCESS';
@@ -99,7 +99,9 @@ export const readDeptList = (module, compId) => dispatch => {
 
 export const readDeptListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
+        (module.getIn(['viewItems', compId, 'listParam', 'rowsPerPage']) !== undefined ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam').merge(extParam).merge(module.getIn(['viewItems', compId, 'listParam']))) :
         module.get('defaultListParam');
 
     dispatch({type: COMMON_PENDING});
