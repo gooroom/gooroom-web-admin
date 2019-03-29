@@ -81,6 +81,8 @@ class GRTreeClientGroupList extends Component {
           regDate: x.regDt,
           modDate: x.modDt,
           comment: x.comment,
+          clientCount: x.clientCount,
+          clientTotalCount: x.clientTotalCount,
           _shouldRender: true
         };
         if (index !== undefined) {
@@ -456,6 +458,8 @@ class GRTreeClientGroupList extends Component {
             onCheckNode={this.handleCheckNode}
             onEditNode={() => this.handleEditClickNode(listItem, i)}
             onFoldingNode={() => this.handleClickFoldingNode(listItem, i)}
+            isShowMemberCnt={(this.props.isShowMemberCnt) ? this.props.isShowMemberCnt : false}
+            memberCntValue={listItem.clientCount + '/' + listItem.clientTotalCount}
           />
         );
       } else {

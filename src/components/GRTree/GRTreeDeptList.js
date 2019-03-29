@@ -81,6 +81,8 @@ class GRTreeDeptList extends Component {
           regDate: x.regDt,
           modDate: x.modDt,
           comment: x.comment,
+          userCount: x.userCount,
+          userTotalCount: x.userTotalCount,
           _shouldRender: true
         };
         if (index !== undefined) {
@@ -456,6 +458,8 @@ class GRTreeDeptList extends Component {
             onCheckNode={this.handleCheckNode}
             onEditNode={() => this.handleEditClickNode(listItem, i)}
             onFoldingNode={() => this.handleClickFoldingNode(listItem, i)}
+            isShowMemberCnt={(this.props.isShowMemberCnt) ? this.props.isShowMemberCnt : false}
+            memberCntValue={listItem.userCount + '/' + listItem.userTotalCount}
           />
         );
       } else {
