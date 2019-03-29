@@ -19,6 +19,7 @@ class GRTreeItem extends Component {
 
     render() {
         const {nodeKey, primaryText, depth, style, checked, imperfect, isShowCheck, isEnableEdit, isCheckMasterOnly} = this.props
+        const {isShowMemberCnt, memberCntValue} = this.props
         const {onClickNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend} = this.props
         const styles = {
             root: {
@@ -28,6 +29,11 @@ class GRTreeItem extends Component {
             primaryText: {
                 lineHeight: "32px"
             }
+        }
+
+        let nodeTitle = primaryText;
+        if(isShowMemberCnt) {
+            nodeTitle = '[' + memberCntValue + '] ' + primaryText;
         }
 
         return (
@@ -45,12 +51,12 @@ class GRTreeItem extends Component {
                 />
                 }
                 {leftIcon}
-                <ListItemText inset primary={primaryText} onClick={onClickNode} />
+                <ListItemText inset primary={nodeTitle} onClick={onClickNode} />
                 {(isExtend == 'Y') && 
-                <IconButton style={{padding:0}} onClick={onClickNode}><OpenIcon /></IconButton>
+                    <IconButton style={{padding:0}} onClick={onClickNode}><OpenIcon /></IconButton>
                 }
                 {(isExtend == 'N') && 
-                <IconButton style={{padding:0}} onClick={onFoldingNode}><CloseIcon /></IconButton>
+                    <IconButton style={{padding:0}} onClick={onFoldingNode}><CloseIcon /></IconButton>
                 }
                 {isEnableEdit && 
                 <IconButton onClick={onEditNode} style={{padding:0}}><SettingsApplicationsIcon style={{color:'darkgray',fontSize:'28px',paddingTop:4}} /></IconButton>

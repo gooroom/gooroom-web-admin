@@ -327,7 +327,7 @@ class DeptTreeComp extends Component {
                     </TableCell>
                   }
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndNumericCell}>{n.get('userCnt')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('userCnt')}/{n.get('userTotalCnt')}</TableCell>
                   {(hasEdit) && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       <Button color='secondary' size="small" 
@@ -380,6 +380,7 @@ class DeptTreeComp extends Component {
             hasSelectParent={false}
             compId={compId}
             isEnableEdit={this.props.isEnableEdit}
+            isShowMemberCnt={true}
             onInitTreeData={this.handleInitTreeData}
             onSelectNode={this.handleSelectDept}
             onCheckedNode={this.handleCheckedDept}
