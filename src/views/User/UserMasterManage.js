@@ -340,7 +340,8 @@ class UserMasterManage extends Component {
         userId: '',
         userNm: '',
         userPasswd: '',
-        showPasswd: false
+        showPasswd: false,
+        userEmail: '',
       },
       ruleDialogType: UserDialog.TYPE_ADD
     }, true);

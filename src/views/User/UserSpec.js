@@ -141,8 +141,9 @@ class UserSpec extends Component {
           <CardHeader
             title={viewItem.get('userNm')}
             subheader={viewItem.get('userId') + 
-              ', [Registered:' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD') + 
-              '], [Expired:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}
+            ', ' + viewItem.get('userEmail') + 
+            ', [Registered:' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD') + 
+            '], [Expired:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"

@@ -163,6 +163,7 @@ const makeParameter = (param) => {
         userPasswd: (param.userPasswd && param.userPasswd !== '') ? sha256(param.userId + sha256(param.userPasswd)) : '',
 
         userNm: param.userNm,
+        userEmail: param.userEmail,
         deptCd: param.deptCd,
         isChangePasswd: isChangePasswd,
         expireDate: formatDateToSimple(param.expireDate, 'YYYY-MM-DD'),
