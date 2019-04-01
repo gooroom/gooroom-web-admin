@@ -17,6 +17,7 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRAlert from 'components/GRComponents/GRAlert';
 
 import GRPane from 'containers/GRContent/GRPane';
+import Grid from '@material-ui/core/Grid';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -63,7 +64,8 @@ class ServerSiteConfig extends Component {
         pwIncludeUpper: false,
         pwIncludeLower: false,
         pwIncludeSpecial: false,
-        pwDiffBefore: ''
+        pwDiffBefore: '',
+        enableDuplicateLogin: false
       })
     };
   }
@@ -91,11 +93,12 @@ class ServerSiteConfig extends Component {
             .set('passwordRule', data[0].passwordRule)
 
             .set('pwMinLength', pwRule ? pwRule.minlen : '8')
-            .set('pwIncludeNumber', pwRule ? pwRule.dcredit : '0')
-            .set('pwIncludeUpper', pwRule ? pwRule.ucredit : '0')
-            .set('pwIncludeLower', pwRule ? pwRule.lcredit : '0')
-            .set('pwIncludeSpecial', pwRule ? pwRule.ocredit : '0')
+            .set('pwIncludeNumber', pwRule ? pwRule.dcredit : false)
+            .set('pwIncludeUpper', pwRule ? pwRule.ucredit : false)
+            .set('pwIncludeLower', pwRule ? pwRule.lcredit : false)
+            .set('pwIncludeSpecial', pwRule ? pwRule.ocredit : false)
             .set('pwDiffBefore', pwRule ? pwRule.difok : '0')
+            .set('enableDuplicateLogin', (data[0].enableDuplicateLogin === '1') ? true : false)
           }));
         }
     });
@@ -120,7 +123,7 @@ class ServerSiteConfig extends Component {
                 "ucredit": stateData.get('pwIncludeUpper'), 
                 "lcredit": stateData.get('pwIncludeLower'), 
                 "ocredit": stateData.get('pwIncludeSpecial'), 
-                "difok":stateData.get('pwDiffBefore')
+                "difok":stateData.get('pwDiffBefore')                
               });
 
               requestPostAPI('createMgServerConf', {
@@ -129,7 +132,8 @@ class ServerSiteConfig extends Component {
                 rmUrl: stateData.get('grmDomain'),
                 pollingTime: stateData.get('pollingTime'),
                 trialCount: stateData.get('trialCount'),
-                passwordRule: newPasswordRule
+                passwordRule: newPasswordRule,
+                enableDuplicateLogin: (stateData.get('enableDuplicateLogin')) ? 1 : 0
               }).then(
                 (response) => {
                   if(response && response.data && response.data.status && response.data.status.result === 'success') {
@@ -156,8 +160,9 @@ class ServerSiteConfig extends Component {
 
   handleValueChange = name => event => {
     const { stateData } = this.state;
+    const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
     this.setState({
-      stateData: stateData.set(name, event.target.value)
+      stateData: stateData.set(name, value)
     });
   }
 
@@ -233,115 +238,139 @@ class ServerSiteConfig extends Component {
           </CardContent>
         </Card>
 
-        <Card style={{marginTop: 16}}>
-          <CardHeader style={{paddingBottom: 0}}
-            title={t("lbAgentPollingTime")}
-            subheader={t("msgAgentPollingTime")}
-          />
-          <CardContent style={{paddingTop: 0}}>
-            <TextField label="Polling Seconds"
-              style={{ marginLeft: 8 }}
-              margin="normal"
-              variant="outlined"
-              value={stateData.get('pollingTime')}
-              onChange={this.handleValueChange("pollingTime")}
-            />
-          </CardContent>
-        </Card>
+        <Grid container spacing={24}>
+          <Grid item xs={6}>
+            <Card style={{marginTop: 16}}>
+              <CardHeader style={{paddingBottom: 0}}
+                title={t("lbAgentPollingTime")}
+                subheader={t("msgAgentPollingTime")}
+              />
+              <CardContent style={{paddingTop: 0}}>
+                <TextField label="Polling Seconds"
+                  style={{ marginLeft: 8 }}
+                  margin="normal"
+                  variant="outlined"
+                  value={stateData.get('pollingTime')}
+                  onChange={this.handleValueChange("pollingTime")}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card style={{marginTop: 16}}>
+              <CardHeader style={{paddingBottom: 0}}
+                title={t("lbLoginTrialCount")}
+                subheader={t("msgLoginTrialCount")}
+              />
+              <CardContent style={{paddingTop: 0}}>
+                <TextField label="Login Trial Count"
+                  style={{ marginLeft: 8 }}
+                  margin="normal"
+                  variant="outlined"
+                  value={stateData.get('trialCount')}
+                  onChange={this.handleValueChange("trialCount")}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
 
-        <Card style={{marginTop: 16}}>
-          <CardHeader style={{paddingBottom: 0}}
-            title={t("lbLoginTrialCount")}
-            subheader={t("msgLoginTrialCount")}
-          />
-          <CardContent style={{paddingTop: 0}}>
-            <TextField label="Login Trial Count"
-              style={{ marginLeft: 8 }}
-              margin="normal"
-              variant="outlined"
-              value={stateData.get('trialCount')}
-              onChange={this.handleValueChange("trialCount")}
-            />
-          </CardContent>
-        </Card>
+        <Grid container spacing={24}>
+          <Grid item xs={6}>
+            <Card style={{marginTop: 16}}>
+              <CardHeader style={{paddingBottom: 0}}
+                title={t("lbPasswordRule")}
+                subheader={t("msgPasswordRule")}
+              />
+              <CardContent style={{paddingTop: 0}}>
+                <List dense={true} style={{maxWidth:440,borderStyle:'solid',borderWidth:1,borderRadius:4,borderColor:'#0000003b',margin:10,padding:10}}>
+                  <ListItem >
+                    <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                    <ListItemText primary={t("lbPwMinLength")} style={{padding:0}} />
+                    <ListItemSecondaryAction>
+                    <Select value={stateData.get('pwMinLength')}
+                      onChange={this.handlePwRuleChange('pwMinLength')}
+                    >
+                      {tempArray.map((n, i) => (
+                        <MenuItem key={i} value={minLength+i}>{minLength+i}</MenuItem>
+                      ))}
+                    </Select>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                    <ListItemText primary={t("lbPwIncludeNumber")} style={{padding:0}} />
+                    <ListItemSecondaryAction>
+                      <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeNumber')} checked={this.checkInclude(stateData.get('pwIncludeNumber'))} color="primary" />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                    <ListItemText primary={t("lbPwIncludeUpper")} style={{padding:0}} />
+                    <ListItemSecondaryAction>
+                      <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeUpper')} checked={this.checkInclude(stateData.get('pwIncludeUpper'))} color="primary" />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                    <ListItemText primary={t("lbPwIncludeLower")} style={{padding:0}} />
+                    <ListItemSecondaryAction>
+                      <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeLower')} checked={this.checkInclude(stateData.get('pwIncludeLower'))} color="primary" />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                    <ListItemText primary={t("lbPwIncludeSpecial")} style={{padding:0}} />
+                    <ListItemSecondaryAction>
+                      <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeSpecial')} checked={this.checkInclude(stateData.get('pwIncludeSpecial'))} color="primary" />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                    <ListItemText primary={t("lbPwDiffBefore")} style={{padding:0}} />
+                  </ListItem>
+                  <ListItem style={{marginTop:10}}>
+                    <ListItemSecondaryAction>
+                      <RadioGroup row aria-label="diff-radio" name="diff"
+                        value={stateData.get('pwDiffBefore')} onChange={this.handlePwRuleChange('pwDiffBefore')}
+                      >
+                        <FormControlLabel value="0"
+                          control={<Radio color="primary" />}
+                          label={t("lbPwDiffZero")} labelPlacement="end"
+                        />
+                        <FormControlLabel value="2"
+                          control={<Radio color="primary" />}
+                          label={t("lbPwDiffSmall")} labelPlacement="end"
+                        />
+                        <FormControlLabel value="5"
+                          control={<Radio color="primary" />}
+                          label={t("lbPwDiffMany")} labelPlacement="end"
+                        />
+                      </RadioGroup>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </List>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card style={{marginTop: 16}}>
+              <CardHeader style={{paddingBottom: 0}}
+                title={t("lbLoginDuplicatgeEnable")}
+                subheader={t("msgLoginDuplicatgeEnable")}
+              />
+              <CardContent style={{paddingTop: 0}}>
+                <FormControlLabel style={{heigth:32}}
+                    control={<Switch onChange={this.handleValueChange('enableDuplicateLogin')} 
+                        checked={stateData.get('enableDuplicateLogin')}
+                        color="primary" />}
+                    label={(stateData.get('enableDuplicateLogin')) ? t("selPermitRule") : t("selNoPermitRule")}
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
 
-        <Card style={{marginTop: 16}}>
-          <CardHeader style={{paddingBottom: 0}}
-            title={t("lbPasswordRule")}
-            subheader={t("msgPasswordRule")}
-          />
-          <CardContent style={{paddingTop: 0}}>
-
-            <List dense={true} style={{maxWidth:440,borderStyle:'solid',borderWidth:1,borderRadius:4,borderColor:'#0000003b',margin:10,padding:10}}>
-              <ListItem >
-                <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
-                <ListItemText primary={t("lbPwMinLength")} style={{padding:0}} />
-                <ListItemSecondaryAction>
-                <Select value={stateData.get('pwMinLength')}
-                  onChange={this.handlePwRuleChange('pwMinLength')}
-                >
-                  {tempArray.map((n, i) => (
-                    <MenuItem key={i} value={minLength+i}>{minLength+i}</MenuItem>
-                  ))}
-                </Select>
-                </ListItemSecondaryAction>
-              </ListItem>
-              <ListItem>
-                <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
-                <ListItemText primary={t("lbPwIncludeNumber")} style={{padding:0}} />
-                <ListItemSecondaryAction>
-                  <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeNumber')} checked={this.checkInclude(stateData.get('pwIncludeNumber'))} color="primary" />
-                </ListItemSecondaryAction>
-              </ListItem>
-              <ListItem>
-                <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
-                <ListItemText primary={t("lbPwIncludeUpper")} style={{padding:0}} />
-                <ListItemSecondaryAction>
-                  <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeUpper')} checked={this.checkInclude(stateData.get('pwIncludeUpper'))} color="primary" />
-                </ListItemSecondaryAction>
-              </ListItem>
-              <ListItem>
-                <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
-                <ListItemText primary={t("lbPwIncludeLower")} style={{padding:0}} />
-                <ListItemSecondaryAction>
-                  <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeLower')} checked={this.checkInclude(stateData.get('pwIncludeLower'))} color="primary" />
-                </ListItemSecondaryAction>
-              </ListItem>
-              <ListItem>
-                <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
-                <ListItemText primary={t("lbPwIncludeSpecial")} style={{padding:0}} />
-                <ListItemSecondaryAction>
-                  <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeSpecial')} checked={this.checkInclude(stateData.get('pwIncludeSpecial'))} color="primary" />
-                </ListItemSecondaryAction>
-              </ListItem>
-              <ListItem>
-                <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
-                <ListItemText primary={t("lbPwDiffBefore")} style={{padding:0}} />
-              </ListItem>
-              <ListItem style={{marginTop:10}}>
-                <ListItemSecondaryAction>
-                  <RadioGroup row aria-label="diff-radio" name="diff"
-                    value={stateData.get('pwDiffBefore')} onChange={this.handlePwRuleChange('pwDiffBefore')}
-                  >
-                    <FormControlLabel value="0"
-                      control={<Radio color="primary" />}
-                      label={t("lbPwDiffZero")} labelPlacement="end"
-                    />
-                    <FormControlLabel value="2"
-                      control={<Radio color="primary" />}
-                      label={t("lbPwDiffSmall")} labelPlacement="end"
-                    />
-                    <FormControlLabel value="5"
-                      control={<Radio color="primary" />}
-                      label={t("lbPwDiffMany")} labelPlacement="end"
-                    />
-                  </RadioGroup>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </List>
-
-          </CardContent>
-        </Card>
 
         </GRPane>
         <GRConfirm />

@@ -91,7 +91,37 @@ class UserDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddUserInfo"),
                 confirmMsg: t("msgAddUserInfo"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { UserProps, UserActions, compId } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
+                        UserActions.createUserData({
+                            userId: UserProps.getIn(['editingItem', 'userId']),
+                            userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
+                            userNm: UserProps.getIn(['editingItem', 'userNm']),
+                            userEmail: UserProps.getIn(['editingItem', 'userEmail']),
+                            deptCd: UserProps.getIn(['editingItem', 'deptCd']),
+                            expireDate: UserProps.getIn(['editingItem', 'expireDate']),
+            
+                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                        }).then((reData) => {
+                            if(reData && reData.status && reData.status.result === 'fail') {
+                                this.props.GRAlertActions.showAlert({
+                                    alertTitle: this.props.t("dtSystemError"),
+                                    alertMsg: reData.status.message
+                                });
+                            } else {
+                                UserActions.readUserListPaged(UserProps, compId);
+                                this.handleClose();
+                            }
+                        });
+                    }
+                },
                 confirmObject: UserProps.get('editingItem')
             });
         } else {
@@ -100,36 +130,6 @@ class UserDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { UserProps, UserActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
-            const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
-            UserActions.createUserData({
-                userId: UserProps.getIn(['editingItem', 'userId']),
-                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userNm']),
-                deptCd: UserProps.getIn(['editingItem', 'deptCd']),
-                expireDate: UserProps.getIn(['editingItem', 'expireDate']),
-
-                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
-            }).then((reData) => {
-                if(reData && reData.status && reData.status.result === 'fail') {
-                    this.props.GRAlertActions.showAlert({
-                        alertTitle: this.props.t("dtSystemError"),
-                        alertMsg: reData.status.message
-                    });
-                } else {
-                    UserActions.readUserListPaged(UserProps, compId);
-                    this.handleClose();
-                }
-            });
         }
     }
 
@@ -161,6 +161,7 @@ class UserDialog extends Component {
                 userId: UserProps.getIn(['editingItem', 'userId']),
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                 userNm: UserProps.getIn(['editingItem', 'userNm']),
+                userEmail: UserProps.getIn(['editingItem', 'userEmail']),
                 deptCd: UserProps.getIn(['editingItem', 'deptCd']),
                 expireDate: UserProps.getIn(['editingItem', 'expireDate']),
                 loginTrial: UserProps.getIn(['editingItem', 'loginTrial']),
@@ -255,7 +256,7 @@ class UserDialog extends Component {
                             </Grid>
                         </Grid>
                         <Grid container spacing={24}>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
                                 <TextValidator
                                     label={t("lbUserName")}
                                     value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
@@ -264,12 +265,21 @@ class UserDialog extends Component {
                                     className={classes.fullWidth}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
                                 <TextValidator
                                     label={t("lbDept")}
                                     value={(editingItem.get('deptNm')) ? editingItem.get('deptNm') : ''}
                                     name="deptNm" validators={['required']} errorMessages={[t("msgSelectDept")]}
                                     onClick={() => this.handleShowDeptSelector()}
+                                    className={classes.fullWidth}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <TextValidator
+                                    label={t("lbEmail")}
+                                    value={(editingItem.get('userEmail')) ? editingItem.get('userEmail') : ''}
+                                    name="userEmail" validators={['required', 'isEmail']} errorMessages={[t("msgSelectDept")]}
+                                    onChange={this.handleValueChange('userEmail')}
                                     className={classes.fullWidth}
                                 />
                             </Grid>
