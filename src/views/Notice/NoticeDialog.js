@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,17 +12,16 @@ import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-
+import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from 'react-i18next';
+
+import { Editor } from '@tinymce/tinymce-react';
+import { Card, CardContent, CardHeader, CardActions } from '@material-ui/core';
 
 //
 //  ## Dialog ########## ########## ########## ########## ##########
@@ -34,15 +31,29 @@ class NoticeDialog extends Component {
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
 
+    constructor(props) {
+        super(props);
+    
+        this.state = { title:'', content: '' };
+        this.handleTitleChange = this.handleTitleChange.bind(this);
+        this.handleContentChange = this.handleContentChange.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const editingItem = (nextProps.NoticeProps.get('editingItem')) ? nextProps.NoticeProps.get('editingItem') : null;
+        if (editingItem) {
+            const title = (editingItem.get('title')) ? editingItem.get('title') : '';
+            const content = (editingItem.get('content')) ? editingItem.get('content') : '';
+            this.setState({ title: title, content: content });
+        }
+    }
+
     handleClose = (event) => {
         this.props.NoticeActions.closeNoticeDialog(this.props.compId);
     }
 
-    handleValueChange = name => event => {
-        this.props.NoticeActions.setEditingItemValue({
-            name: name,
-            value: event.target.value
-        });
+    handleTitleChange = (event) => {
+        this.setState({ title: event.target.value });
     }
 
     handleSubmit = (event) => {
@@ -64,7 +75,10 @@ class NoticeDialog extends Component {
                 confirmTitle: t('dtAddNotice'),
                 confirmMsg: t('msgAddNotice'),
                 handleConfirmResult: this.handleCreateDataConfirmResult,
-                confirmObject: NoticeProps.get('editingItem')
+                confirmObject: { 
+                    title: this.state.title,
+                    content: this.state.content
+                }
             });
         } else {
             if(this.refs.form && this.refs.form.childs) {
@@ -79,8 +93,8 @@ class NoticeDialog extends Component {
         if(confirmValue) {
             const { NoticeProps, NoticeActions, compId, onAfterConfirmResult } = this.props;
             NoticeActions.createNotice({
-                title: paramObject.get('title'),
-                content: paramObject.get('content')
+                title: paramObject.title,
+                content: paramObject.content
             }).then((res) => {
                 NoticeActions.readNoticeListPaged(NoticeProps, compId, {page:0}).then((res) => {
                     const newNoticeId = this.props.NoticeProps.getIn(['viewItems', compId, 'listData',0, 'noticeId']);
@@ -102,7 +116,11 @@ class NoticeDialog extends Component {
                 confirmTitle: t('dtEditNotice'),
                 confirmMsg: t('msgEditNotice'),
                 handleConfirmResult: this.handleEditDataConfirmResult,
-                confirmObject: NoticeProps.get('editingItem')
+                confirmObject: {
+                    noticeId: NoticeProps.get('editingItem').get('noticeId'),
+                    title: this.state.title,
+                    content: this.state.content
+                }
             });
         } else {
             if(this.refs.form && this.refs.form.childs) {
@@ -116,12 +134,12 @@ class NoticeDialog extends Component {
     handleEditDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { NoticeProps, NoticeActions, compId, onAfterConfirmResult } = this.props;
-            const noticeId = paramObject.get('noticeId');
+            const noticeId = paramObject.noticeId;
 
             NoticeActions.updateNotice({
                 noticeId: noticeId,
-                title: paramObject.get('title'),
-                content: paramObject.get('content')
+                title: paramObject.title,
+                content: paramObject.content
             }).then((res) => {
                 NoticeActions.readNoticeListPaged(NoticeProps, compId).then((res) => {
                     const selectRowObject = getRowObjectById(this.props.NoticeProps, compId, noticeId, 'noticeId');
@@ -129,9 +147,13 @@ class NoticeDialog extends Component {
                         onAfterConfirmResult(selectRowObject);
                     }
                 });
-                this.handleClose();
             });
+            this.handleClose();
         }
+    }
+
+    handleContentChange = (content) => {
+        this.setState({ content: content });
     }
 
     render() {
@@ -149,45 +171,81 @@ class NoticeDialog extends Component {
             title = t('dtEditNotice');
         }
 
+        const tinymceInit = {
+            language: (i18n.language === 'kr' ? 'ko_KR' : null),
+            height: 400,
+            menubar: false,
+            resize: false,
+            branding: false,
+            statusbar: false,
+            plugins: 'link code, image',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | link image code',
+            image_advtab: true,
+            file_picker_types: 'image',
+            file_picker_callback: function (callback, value, meta) {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+                input.onchange = function () {
+                    const file = this.files[0];
+                
+                    const reader = new FileReader();
+                    reader.onload = function () {
+                        const id = 'blobid' + (new Date()).getTime();
+                        const blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+                        const base64 = reader.result.split(',')[1];
+                        const blobInfo = blobCache.create(id, file, base64);
+                        blobCache.add(blobInfo);
+
+                        if (blobInfo.blob().size > 524288) {
+                            alert('big size');
+                        } else {
+                            callback(blobInfo.blobUri(), { title: file.name });
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                };
+                input.click();
+            }
+        };
+
         return (
         <div>
             {(NoticeProps.get('dialogOpen') && editingItem) &&
-                <Dialog open={NoticeProps.get('dialogOpen')}>
-                    <ValidatorForm ref="form" onSubmit={this.handleSubmit}>
-                        <DialogTitle>{title}</DialogTitle>
-                        <DialogContent>
-                            <TextField
-                                label={t('lbNoticeTitle')}
-                                value={(editingItem.get('title')) ? editingItem.get('title') : ''}
-                                onChange={this.handleValueChange('title')}
-                                className={classes.fullWidth}
-                                required
-                                margin="normal"
-                                variant="outlined"
-                            />
-                            <TextField
-                                label={t('lbNoticeContent')}
-                                value={(editingItem.get('content')) ? editingItem.get('content') : ''}
-                                onChange={this.handleValueChange("content")}
-                                className={classes.fullWidth}
-                                required
-                                multiline
-                                rows="10"
-                                margin="normal"
-                                variant="outlined"
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            {(dialogType === NoticeDialog.TYPE_ADD) &&
-                                <Button type="submit" variant="contained" color="secondary">{t('btnRegist')}</Button>
-                            }
-                            {(dialogType === NoticeDialog.TYPE_EDIT) &&
-                                <Button type="submit" variant="contained" color="secondary">{t('btnSave')}</Button>
-                            }
-                            <Button onClick={this.handleClose} variant="contained" color="primary">{t('btnClose')}</Button>
-                        </DialogActions>
-                    </ValidatorForm>
-                </Dialog>
+                <Modal open={NoticeProps.get('dialogOpen')}>
+                    <div className={classes.noticeDialogContainer} tabIndex="">
+                        <Card style={{width:'100%', maxWidth:'600px', margin:'48px'}}>
+                            <ValidatorForm ref="form" onSubmit={this.handleSubmit}>
+                                <CardHeader className={classes.noticeDialogHeader} titleTypographyProps={{variant:'h6'}} title={title}></CardHeader>
+                                <CardContent className={classes.noticeDialogContent}>
+                                    <TextField
+                                        label={t('lbNoticeTitle')}
+                                        value={this.state.title}
+                                        onChange={this.handleTitleChange}
+                                        className={classes.fullWidth}
+                                        required
+                                        margin="normal"
+                                        variant="outlined"
+                                    />
+                                    <Editor
+                                        init={tinymceInit}
+                                        value={this.state.content}
+                                        onEditorChange={this.handleContentChange}
+                                    />
+                                </CardContent>
+                                <CardActions className={classes.noticeDialogActions}>
+                                    {(dialogType === NoticeDialog.TYPE_ADD) &&
+                                        <Button type="submit" variant="contained" color="secondary">{t('btnRegist')}</Button>
+                                    }
+                                    {(dialogType === NoticeDialog.TYPE_EDIT) &&
+                                        <Button type="submit" variant="contained" color="secondary">{t('btnSave')}</Button>
+                                    }
+                                    <Button onClick={this.handleClose} variant="contained" color="primary">{t('btnClose')}</Button>
+                                </CardActions>
+                            </ValidatorForm>
+                        </Card>
+                    </div>
+                </Modal>
             }
             <GRAlert />
         </div>
