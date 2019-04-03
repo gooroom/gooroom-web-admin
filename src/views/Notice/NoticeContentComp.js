@@ -39,13 +39,8 @@ class NoticeContentComp extends Component {
                     title={t('colContent')}
                 />
                 <CardContent className={classes.noticeContentCardContent} style={{ height: contentHeight[rowPerPage] }}>
-                    {informOpen && viewItem && 
-                        viewItem.get('content')
-                            .replace(/(?:\r\n|\r|\n)/g, '\n')
-                            .split('\n')
-                            .map(function (line, idx) {
-                                return (<span key={idx}>{line.replace(/\s/g, '\u00A0')}<br/></span>);
-                            })
+                    {informOpen && viewItem &&
+                        <div dangerouslySetInnerHTML={{__html: viewItem.get('content')}}></div>
                     }
                 </CardContent>
             </Card>
