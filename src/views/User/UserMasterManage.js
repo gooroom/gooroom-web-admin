@@ -159,12 +159,9 @@ class UserMasterManage extends Component {
   };
 
   // edit dept in tree
-  handleEditDept = (treeNode, i) => { 
+  handleEditDept = (treeNode) => { 
     this.props.DeptActions.showDialog({
-      viewItem: {
-        deptCd: treeNode.key,
-        deptNm: treeNode.title
-      },
+      viewItem: treeNode,
       dialogType: DeptDialog.TYPE_EDIT
     });
   };
@@ -411,7 +408,7 @@ class UserMasterManage extends Component {
                 selectorType='multiple' 
                 onCheck={this.handleCheckedDept} 
                 onSelect={this.handleSelectDept}
-                onEditNode={this.handleEditDept}
+                onEdit={this.handleEditDept}
                 isEnableEdit={true} 
               />
             </Grid>
