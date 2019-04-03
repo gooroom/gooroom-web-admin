@@ -73,7 +73,8 @@ export const changeCompVariable = (param) => dispatch => {
 };
 
 export const readNoticePublishListPaged = (module, compId, extParam) => dispatch => {
-    const newListParam = (module.getIn(['viewItems', compId])) ? 
+    const newListParam =
+        ((module.getIn(['viewItems', compId])) && module.getIn(['viewItems', compId, 'listParam'])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam').merge(extParam);
 
