@@ -251,13 +251,15 @@ class ClientGroupTreeComp extends Component {
 
   // edit group in tree
   handleEditClientGroup = (treeNode) => {
-    this.props.ClientGroupActions.showDialog({
-      viewItem: {
+    if(this.props.onEdit) {
+      this.props.onEdit(Map({
         grpId: treeNode.key,
-        grpNm: treeNode.title
-      },
-      dialogType: ClientGroupDialog.TYPE_EDIT
-    });
+        grpNm: treeNode.title,
+        comment: treeNode.comment,
+        regDate: treeNode.regDate,
+        hasChildren: treeNode.hasChildren
+      }));
+    }
   };
 
   render() {

@@ -192,10 +192,7 @@ class ClientMasterManage extends Component {
   // edit group in tree
   handleEditClientGroup = (treeNode) => {
     this.props.ClientGroupActions.showDialog({
-      viewItem: {
-        grpId: treeNode.key,
-        grpNm: treeNode.title
-      },
+      viewItem: treeNode,
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
@@ -433,7 +430,7 @@ class ClientMasterManage extends Component {
                 selectorType='multiple' 
                 onCheck={this.handleCheckedClientGroup} 
                 onSelect={this.handleSelectClientGroup}
-                onEditNode={this.handleEditClientGroup}
+                onEdit={this.handleEditClientGroup}
                 isEnableEdit={true} 
               />
             </Grid>
