@@ -61,7 +61,7 @@ class ThemeSpec extends Component {
                 {viewItem.get('themeIcons').map(n => {
                   const iconUrl = n.get('imgUrl') + n.get('fileName');
                   return (
-                <Grid item xs={12} md={6} lg={4} xl={3}>
+                <Grid key={iconUrl} item xs={12} md={6} lg={4} xl={3}>
                   <Card>
                   <CardHeader
                     avatar={
