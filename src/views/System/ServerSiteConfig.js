@@ -37,6 +37,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
+import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -58,6 +60,7 @@ class ServerSiteConfig extends Component {
         grmDomain: '',
         pollingTime: '',
         trialCount: '',
+        lockTime: '',
         passwordRule: '',
         pwMinLength: '',
         pwIncludeNumber: false,
@@ -65,7 +68,8 @@ class ServerSiteConfig extends Component {
         pwIncludeLower: false,
         pwIncludeSpecial: false,
         pwDiffBefore: '',
-        enableDuplicateLogin: false
+        enableDuplicateLogin: false,
+        duplicateLoginNotiType: '0'
       })
     };
   }
@@ -79,9 +83,15 @@ class ServerSiteConfig extends Component {
       (response) => {
         const { data } = response.data;
         if(data && data.length > 0) {
+          
           let pwRule = null;
           if(data[0].passwordRule) {
             pwRule = JSON.parse(data[0].passwordRule);
+          }
+
+          let dupValue = 0;
+          if(data[0].enableDuplicateLogin) {
+            dupValue = Math.abs(data[0].enableDuplicateLogin);
           }
 
           this.setState(({stateData}) => ({
@@ -90,15 +100,16 @@ class ServerSiteConfig extends Component {
             .set('grmDomain', data[0].rmUrl)
             .set('pollingTime', data[0].pollingTime)
             .set('trialCount', data[0].trialCount)
+            .set('lockTime', data[0].lockTime)            
             .set('passwordRule', data[0].passwordRule)
-
             .set('pwMinLength', pwRule ? pwRule.minlen : '8')
             .set('pwIncludeNumber', pwRule ? pwRule.dcredit : false)
             .set('pwIncludeUpper', pwRule ? pwRule.ucredit : false)
             .set('pwIncludeLower', pwRule ? pwRule.lcredit : false)
             .set('pwIncludeSpecial', pwRule ? pwRule.ocredit : false)
             .set('pwDiffBefore', pwRule ? pwRule.difok : '0')
-            .set('enableDuplicateLogin', (data[0].enableDuplicateLogin === '1') ? true : false)
+            .set('enableDuplicateLogin', (data[0].enableDuplicateLogin > 0) ? true : false)
+            .set('duplicateLoginNotiType', dupValue.toString())
           }));
         }
     });
@@ -123,17 +134,20 @@ class ServerSiteConfig extends Component {
                 "ucredit": stateData.get('pwIncludeUpper'), 
                 "lcredit": stateData.get('pwIncludeLower'), 
                 "ocredit": stateData.get('pwIncludeSpecial'), 
-                "difok":stateData.get('pwDiffBefore')                
+                "difok":stateData.get('pwDiffBefore')
               });
 
+              const dupValue = (stateData.get('enableDuplicateLogin')) ? stateData.get('duplicateLoginNotiType') : stateData.get('duplicateLoginNotiType') * -1;
+              
               requestPostAPI('createMgServerConf', {
                 pmUrl: stateData.get('gpmsDomain'),
                 lmUrl: stateData.get('glmDomain'),
                 rmUrl: stateData.get('grmDomain'),
                 pollingTime: stateData.get('pollingTime'),
                 trialCount: stateData.get('trialCount'),
+                lockTime: stateData.get('lockTime'),
                 passwordRule: newPasswordRule,
-                enableDuplicateLogin: (stateData.get('enableDuplicateLogin')) ? 1 : 0
+                enableDuplicateLogin: dupValue
               }).then(
                 (response) => {
                   if(response && response.data && response.data.status && response.data.status.result === 'success') {
@@ -190,12 +204,6 @@ class ServerSiteConfig extends Component {
 
     const tempArray = new Array(13).fill(0);
     const minLength = 8;
-
-    let passwordRule = null;
-    if(stateData.get('passwordRule')) {
-      passwordRule = JSON.parse(stateData.get('passwordRule'))
-    }
-
 
     return (
       <React.Fragment>
@@ -255,28 +263,6 @@ class ServerSiteConfig extends Component {
                 />
               </CardContent>
             </Card>
-          </Grid>
-          <Grid item xs={6}>
-            <Card style={{marginTop: 16}}>
-              <CardHeader style={{paddingBottom: 0}}
-                title={t("lbLoginTrialCount")}
-                subheader={t("msgLoginTrialCount")}
-              />
-              <CardContent style={{paddingTop: 0}}>
-                <TextField label="Login Trial Count"
-                  style={{ marginLeft: 8 }}
-                  margin="normal"
-                  variant="outlined"
-                  value={stateData.get('trialCount')}
-                  onChange={this.handleValueChange("trialCount")}
-                />
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={24}>
-          <Grid item xs={6}>
             <Card style={{marginTop: 16}}>
               <CardHeader style={{paddingBottom: 0}}
                 title={t("lbPasswordRule")}
@@ -301,28 +287,48 @@ class ServerSiteConfig extends Component {
                     <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
                     <ListItemText primary={t("lbPwIncludeNumber")} style={{padding:0}} />
                     <ListItemSecondaryAction>
-                      <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeNumber')} checked={this.checkInclude(stateData.get('pwIncludeNumber'))} color="primary" />
+                      <FormControlLabel style={{heigth:32}}
+                          control={<Switch onChange={this.handlePwIncludeRuleChange('pwIncludeNumber')} 
+                              checked={this.checkInclude(stateData.get('pwIncludeNumber'))}
+                              color="primary" />}
+                          label={(stateData.get('pwIncludeNumber') === '-1') ? t("selHasInclude") : t("selHasNoInclude")}
+                      />
                     </ListItemSecondaryAction>
                   </ListItem>
                   <ListItem>
                     <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
                     <ListItemText primary={t("lbPwIncludeUpper")} style={{padding:0}} />
                     <ListItemSecondaryAction>
-                      <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeUpper')} checked={this.checkInclude(stateData.get('pwIncludeUpper'))} color="primary" />
+                      <FormControlLabel style={{heigth:32}}
+                        control={<Switch onChange={this.handlePwIncludeRuleChange('pwIncludeUpper')} 
+                            checked={this.checkInclude(stateData.get('pwIncludeUpper'))}
+                            color="primary" />}
+                        label={(stateData.get('pwIncludeUpper') === '-1') ? t("selHasInclude") : t("selHasNoInclude")}
+                      />
                     </ListItemSecondaryAction>
                   </ListItem>
                   <ListItem>
                     <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
                     <ListItemText primary={t("lbPwIncludeLower")} style={{padding:0}} />
                     <ListItemSecondaryAction>
-                      <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeLower')} checked={this.checkInclude(stateData.get('pwIncludeLower'))} color="primary" />
+                      <FormControlLabel style={{heigth:32}}
+                        control={<Switch onChange={this.handlePwIncludeRuleChange('pwIncludeLower')} 
+                            checked={this.checkInclude(stateData.get('pwIncludeLower'))}
+                            color="primary" />}
+                        label={(stateData.get('pwIncludeLower') === '-1') ? t("selHasInclude") : t("selHasNoInclude")}
+                      />
                     </ListItemSecondaryAction>
                   </ListItem>
                   <ListItem>
                     <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
                     <ListItemText primary={t("lbPwIncludeSpecial")} style={{padding:0}} />
                     <ListItemSecondaryAction>
-                      <Switch onChange={this.handlePwIncludeRuleChange('pwIncludeSpecial')} checked={this.checkInclude(stateData.get('pwIncludeSpecial'))} color="primary" />
+                      <FormControlLabel style={{heigth:32}}
+                        control={<Switch onChange={this.handlePwIncludeRuleChange('pwIncludeSpecial')} 
+                            checked={this.checkInclude(stateData.get('pwIncludeSpecial'))}
+                            color="primary" />}
+                        label={(stateData.get('pwIncludeSpecial') === '-1') ? t("selHasInclude") : t("selHasNoInclude")}
+                      />
                     </ListItemSecondaryAction>
                   </ListItem>
                   <ListItem>
@@ -356,21 +362,80 @@ class ServerSiteConfig extends Component {
           <Grid item xs={6}>
             <Card style={{marginTop: 16}}>
               <CardHeader style={{paddingBottom: 0}}
+                title={t("lbLoginTrialCount")}
+                subheader={t("msgLoginTrialCount")}
+              />
+              <CardContent style={{paddingTop: 0}}>
+                <TextField label="Login Trial Count"
+                  style={{ marginLeft: 8 }}
+                  margin="normal" variant="outlined"
+                  value={stateData.get('trialCount')}
+                  onChange={this.handleValueChange("trialCount")}
+                />
+                <TextField label="Account lockout time"
+                  style={{ marginLeft:8,width:223 }}
+                  margin="normal" variant="outlined"
+                  InputProps={{
+                    endAdornment: <InputAdornment position="start">Minutes</InputAdornment>,
+                  }}
+                  value={stateData.get('lockTime')}
+                  onChange={this.handleValueChange("lockTime")}
+                />
+              </CardContent>
+            </Card>
+            <Card style={{marginTop: 16}}>
+              <CardHeader style={{paddingBottom: 0}}
                 title={t("lbLoginDuplicatgeEnable")}
                 subheader={t("msgLoginDuplicatgeEnable")}
               />
               <CardContent style={{paddingTop: 0}}>
-                <FormControlLabel style={{heigth:32}}
-                    control={<Switch onChange={this.handleValueChange('enableDuplicateLogin')} 
-                        checked={stateData.get('enableDuplicateLogin')}
-                        color="primary" />}
-                    label={(stateData.get('enableDuplicateLogin')) ? t("selPermitRule") : t("selNoPermitRule")}
-                />
+
+                <List dense={true} style={{maxWidth:440,borderStyle:'solid',borderWidth:1,borderRadius:4,borderColor:'#0000003b',margin:10,padding:10}}>
+                  <ListItem>
+                    <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                    <ListItemText primary={t("lbSelectLoginDuplicatgeEnable")} style={{padding:0}} />
+                    <ListItemSecondaryAction>
+                    <FormControlLabel style={{heigth:32}}
+                        control={<Switch onChange={this.handleValueChange('enableDuplicateLogin')} 
+                            checked={stateData.get('enableDuplicateLogin')}
+                            color="primary" />}
+                        label={(stateData.get('enableDuplicateLogin')) ? t("selPermitRule") : t("selNoPermitRule")}
+                    />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
+                    <ListItemText primary={t("lbLoginDuplicatgeNotiType")} style={{padding:0}} />
+                  </ListItem>
+                  <ListItem style={{marginTop:10}}>
+                    <ListItemSecondaryAction>
+                      <RadioGroup row aria-label="dup-radio" name="dup"
+                        value={stateData.get('duplicateLoginNotiType')} onChange={this.handleValueChange('duplicateLoginNotiType')}
+                      >
+                        <FormControlLabel value="1"
+                          control={<Radio color="primary" />}
+                          label={t("lbLoginDuplicatgeNotiType0")} labelPlacement="end"
+                        />
+                        <FormControlLabel value="2"
+                          control={<Radio color="primary" />}
+                          label={t("lbLoginDuplicatgeNotiType1")} labelPlacement="end"
+                        />
+                        <FormControlLabel value="3"
+                          control={<Radio color="primary" />}
+                          label={t("lbLoginDuplicatgeNotiType2")} labelPlacement="end"
+                        />
+                        <FormControlLabel value='4'
+                          control={<Radio color="primary" />}
+                          label={t("lbLoginDuplicatgeNotiType3")} labelPlacement="end"
+                        />
+                      </RadioGroup>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </List>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
-
 
         </GRPane>
         <GRConfirm />

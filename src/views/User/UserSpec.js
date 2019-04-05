@@ -77,7 +77,8 @@ class UserSpec extends Component {
         deptCd: viewItem.get('deptCd'),
         deptNm: viewItem.get('deptNm'),
         expireDate: viewItem.get('expireDate'),
-        loginTrial: viewItem.get('loginTrial')
+        loginTrial: viewItem.get('loginTrial'),
+        userEmail: viewItem.get('userEmail')
       },
       ruleDialogType: UserDialog.TYPE_EDIT
     }, true);
