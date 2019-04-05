@@ -832,6 +832,8 @@ export default {
   "msgEditNotice": "공지글을 수정하시겠습니까?",
   "dtInstantNotice": "즉시 알림",
   "msgInstantNotice": "즉시 알림을 하시겠습니까?",
+  "dtInactive": "비활성화",
+  "msgInactive": "비활성화 하겠습니까?",
   "lbNoticeTitle": "제목",
   "lbNoticeContent": "내용",
   "btnInstantAlarm": "즉시 알람",

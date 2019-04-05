@@ -832,6 +832,8 @@ export default {
   "msgEditNotice": "Do you want to edit the notice?",
   "dtInstantNotice": "Instant Notice",
   "msgInstantNotice": "Do you want to send the instant notice?",
+  "dtInactive": "Inactive",
+  "msgInactive": "Do you want to disable it?",
   "lbNoticeTitle": "Title",
   "lbNoticeContent": "Content",
   "btnInstantAlarm": "Instant alarm",
