@@ -817,7 +817,7 @@ export default {
   "lbViolatedClientList": "침해 단말 목록",
 
   // 공지
-  "dtAddNotice": "공직글 작성",
+  "dtAddNotice": "공지글 작성",
   "msgAddNotice": "공지글을 등록하시겠습니까?",
   "dtEditNotice": "공지글 수정",
   "msgEditNotice": "공지글을 수정하시겠습니까?",
