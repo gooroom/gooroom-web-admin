@@ -166,6 +166,7 @@ export default {
 
   "menuSiteConfig": "구름관리서버설정",
   "menuAdminUserMng": "관리자관리",
+  "menuDeptAndUser": "조직/사용자 일괄등록",
 
   "menuNotice": "공지",
   "menuNoticeManage": "공지관리",
