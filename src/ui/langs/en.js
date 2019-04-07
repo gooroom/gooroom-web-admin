@@ -166,6 +166,7 @@ export default {
 
   "menuSiteConfig": "GPMS settings",
   "menuAdminUserMng": "Admin Mng.",
+  "menuDeptAndUser": "Dept/User Batch registration",
 
   "menuNotice": "Notice",
   "menuNoticeManage": "NoticeMng",
