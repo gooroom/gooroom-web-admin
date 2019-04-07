@@ -136,8 +136,8 @@ class NoticeMasterManage extends Component {
         const checkedIds = NoticePublishProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
         if(checkedIds && checkedIds.size > 0) {
             GRConfirmActions.showConfirm({
-              confirmTitle: t("dtInstantAlarm"),
-              confirmMsg: t("msgInstantAlarm", {instantAlarmCnt: checkedIds.size}),
+              confirmTitle: t("dtInstantNotice"),
+              confirmMsg: t("msgInstantNotice", {instantAlarmCnt: checkedIds.size}),
               handleConfirmResult: this.handleInstantAlarmConfirmResult,
               confirmObject: {checkedIds: checkedIds}
             });
