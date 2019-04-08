@@ -111,6 +111,9 @@ export default {
   "optClientStatus": "ClientStatus",
   "optKeyword": "Keyword",
 
+  "optMinutes" : "Min",
+  "optHours" : "Hours",
+
   // Buttons
   "btnSearch": "Search",
   "btnRegist": "Regist",
@@ -771,7 +774,7 @@ export default {
   "dtInheritSecuRule": "Inheriting client security policies",
   "dtCopySecuRule": "Copy client security rule",
   "dtCategorySecuRule": "Client security rule",
-  "lbScreenSaverTime": "Screen Saver Setting Time (minutes)",
+  "lbScreenSaverTime": "Screen Saver Setting Time",
   "lbPasswordChangeCycle": "Password Change Cycle (Days)",
   "selPackageEditStopOn": "Package addition / deletion blocking function turned on",
   "selPackageEditStopOff": "Add / Remove Package Blocking function turned off",

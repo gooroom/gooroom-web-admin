@@ -28,6 +28,11 @@ import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
@@ -177,6 +182,11 @@ class SecurityRuleDialog extends Component {
         const { classes } = this.props;
         const { t, i18n } = this.props;
 
+        const screenTimeList = [[1,'1' + t('optMinutes')], [2,'2' + t('optMinutes')], [3,'3' + t('optMinutes')], [5,'5' + t('optMinutes')], 
+        [10,'10' + t('optMinutes')], [15,'15' + t('optMinutes')], [20,'20' + t('optMinutes')], [25,'25' + t('optMinutes')], 
+        [30,'30' + t('optMinutes')], [45,'45' + t('optMinutes')], 
+        [60,'1' + t('optHours')], [120,'2' + t('optHours')], [180,'3' + t('optHours')], [240,'4' + t('optHours')], [300,'5' + t('optHours')]];
+
         const { SecurityRuleProps } = this.props;
         const dialogType = SecurityRuleProps.get('dialogType');
         const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
@@ -222,13 +232,19 @@ class SecurityRuleDialog extends Component {
                         <div>
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                                 <Grid item xs={12} sm={4} md={4}>
-                                    <TextField
-                                        label={t("lbScreenSaverTime")}
-                                        multiline
+                                <FormControl style={{width:'100%'}} >
+                                    <InputLabel htmlFor="screenTime">{t("lbScreenSaverTime")}</InputLabel>
+                                    <Select 
                                         value={(editingItem.get('screenTime')) ? editingItem.get('screenTime') : ''}
+                                        inputProps={{
+                                            name: t("lbScreenSaverTime"),
+                                            id: 'screenTime',
+                                        }}
                                         onChange={this.handleValueChange("screenTime")}
-                                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                    />
+                                    >
+                                        {screenTimeList.map(n => (<MenuItem key={n[0]} value={n[0]}>{n[1]}</MenuItem>))}
+                                    </Select>
+                                </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4} md={4}>
                                     <TextField
