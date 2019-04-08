@@ -55,26 +55,10 @@ class DeptUserReg extends Component {
     super(props);
     this.state = {
       stateData: Map({
-
         deptSelectedFile: null,
         deptFileContent: null,
-
-
-        gpmsDomain: '',
-        glmDomain: '',
-        grmDomain: '',
-        pollingTime: '',
-        trialCount: '',
-        lockTime: '',
-        passwordRule: '',
-        pwMinLength: '',
-        pwIncludeNumber: false,
-        pwIncludeUpper: false,
-        pwIncludeLower: false,
-        pwIncludeSpecial: false,
-        pwDiffBefore: '',
-        enableDuplicateLogin: false,
-        duplicateLoginNotiType: '0'
+        userSelectedFile: null,
+        userFileContent: null
       })
     };
   }
@@ -120,48 +104,6 @@ class DeptUserReg extends Component {
     });
   };
 
-
-  handleSaveData = (event) => {
-    const { GRConfirmActions } = this.props;
-    const { t } = this.props;
-    
-    GRConfirmActions.showConfirm({
-        confirmTitle: t("lbSaveServerConfig"),
-        confirmMsg: t("msgSaveServerConfig"),
-        handleConfirmResult: (confirmValue) => {
-          const { t } = this.props;
-          if(confirmValue) {
-              const { stateData } = this.state;
-
-              
-              
-              requestMultipartFormAPI('createDeptDataFromFile', {
-                deptSelectedFile: stateData.get('deptSelectedFile'),
-                deptFileContent: stateData.get('deptFileContent')
-              }).then(
-                (response) => {
-                  if(response && response.data && response.data.status && response.data.status.result === 'success') {
-                    this.props.GRAlertActions.showAlert({
-                      alertTitle: t("dtEditOK"),
-                      alertMsg: t("msgEditOkServerConfig")
-                    });
-                    this.getSeverUrlInfo();
-                  } else {
-                    this.props.GRAlertActions.showAlert({
-                      alertTitle: t("dtSystemError"),
-                      alertMsg: t("msgEditErrorServerConfig")
-                    });
-                    this.getSeverUrlInfo();
-                  }
-                }
-              );
-          } else {
-            this.getSeverUrlInfo();
-          }
-        }
-    });
-  }
-
   handleValueChange = name => event => {
     const { stateData } = this.state;
     const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
@@ -198,11 +140,11 @@ class DeptUserReg extends Component {
 
 
 
-    // file select
-  handleFileChange = (event, gubunName) => {
+  // file select
+  handleDeptFileChange = (event, gubunName) => {
     const selectedFile = event.target.files[0];
     const viewFileName = gubunName + '_GRFILE';
-    this.readFileContent(event.target.files[0]).then(content => {
+    this.readDeptFileContent(event.target.files[0]).then(content => {
         if(content) {
           const { stateData } = this.state;
           this.setState({
@@ -219,7 +161,8 @@ class DeptUserReg extends Component {
         }
     }).catch(error => console.log(error));
   }
-  readFileContent(file) {
+
+  readDeptFileContent(file) {
       const reader = new FileReader()
       return new Promise((resolve, reject) => {
           reader.onload = event => resolve(event.target.result)
@@ -228,16 +171,113 @@ class DeptUserReg extends Component {
       });
   }
 
+  handleDeptSaveData = (event) => {
+    const { GRConfirmActions } = this.props;
+    const { t } = this.props;
+    
+    GRConfirmActions.showConfirm({
+        confirmTitle: t("lbSaveServerConfig"),
+        confirmMsg: t("msgSaveServerConfig"),
+        handleConfirmResult: (confirmValue) => {
+          const { t } = this.props;
+          if(confirmValue) {
+              const { stateData } = this.state;
+              requestMultipartFormAPI('createDeptDataFromFile', {
+                deptSelectedFile: stateData.get('deptSelectedFile'),
+                deptFileContent: stateData.get('deptFileContent')
+              }).then(
+                (response) => {
+                  if(response && response.data && response.data.status && response.data.status.result === 'success') {
+                    this.props.GRAlertActions.showAlert({
+                      alertTitle: t("dtEditOK"),
+                      alertMsg: t("msgEditOkServerConfig")
+                    });
+                    this.getSeverUrlInfo();
+                  } else {
+                    this.props.GRAlertActions.showAlert({
+                      alertTitle: t("dtSystemError"),
+                      alertMsg: t("msgEditErrorServerConfig")
+                    });
+                    this.getSeverUrlInfo();
+                  }
+                }
+              );
+          } else {
+            this.getSeverUrlInfo();
+          }
+        }
+    });
+  }
+
+
+  // file select
+  handleUserFileChange = (event, gubunName) => {
+    const selectedFile = event.target.files[0];
+    this.readUserFileContent(event.target.files[0]).then(content => {
+        if(content) {
+          const { stateData } = this.state;
+          this.setState({
+            stateData: stateData.set('userSelectedFile', selectedFile).set('userFileContent', content)
+          });
+        }
+    }).catch(error => console.log(error));
+  }
+  
+  readUserFileContent(file) {
+      const reader = new FileReader()
+      return new Promise((resolve, reject) => {
+          reader.onload = event => resolve(event.target.result)
+          reader.onerror = error => reject(error)
+          reader.readAsDataURL(file)
+      });
+  }
+
+  handleUserSaveData = (event) => {
+    const { GRConfirmActions } = this.props;
+    const { t } = this.props;
+    
+    GRConfirmActions.showConfirm({
+        confirmTitle: t("lbSaveServerConfig"),
+        confirmMsg: t("msgSaveServerConfig"),
+        handleConfirmResult: (confirmValue) => {
+          const { t } = this.props;
+          if(confirmValue) {
+              const { stateData } = this.state;
+              requestMultipartFormAPI('createUserDataFromFile', {
+                userSelectedFile: stateData.get('userSelectedFile'),
+                userFileContent: stateData.get('userFileContent')
+              }).then(
+                (response) => {
+                  if(response && response.data && response.data.status && response.data.status.result === 'success') {
+                    this.props.GRAlertActions.showAlert({
+                      alertTitle: t("dtEditOK"),
+                      alertMsg: t("msgEditOkServerConfig")
+                    });
+                    this.getSeverUrlInfo();
+                  } else {
+                    this.props.GRAlertActions.showAlert({
+                      alertTitle: t("dtSystemError"),
+                      alertMsg: t("msgEditErrorServerConfig")
+                    });
+                    this.getSeverUrlInfo();
+                  }
+                }
+              );
+          } else {
+            this.getSeverUrlInfo();
+          }
+        }
+    });
+  }
+  
 
   render() {
     const { classes } = this.props;
     const { stateData } = this.state;
     const { t } = this.props;
 
-    const tempArray = new Array(13).fill(0);
-    const minLength = 8;
-
-    const help1 = <React.Fragment><Typography variant="subtitle2">{t("조직정보를 파일을 이용하여 등록할 수 있습니다.!!!")}</Typography><Typography variant="subtitle2">{t("조직정보를 파일을 이용하여 등록할 수 있습니다.???")}</Typography></React.Fragment>;
+    const deptHelp1 = <React.Fragment><Typography variant="subtitle2">{t("조직정보를 파일을 이용하여 등록할 수 있습니다.!!!")}</Typography><Typography variant="subtitle2">{t("조직정보를 파일을 이용하여 등록할 수 있습니다.???")}</Typography></React.Fragment>;
+    const userHelp1 = <React.Fragment><Typography variant="subtitle2">{t("사용자정보를 파일을 이용하여 등록할 수 있습니다.!!!")}</Typography><Typography variant="subtitle2">{t("사용자정보를 파일을 이용하여 등록할 수 있습니다.???")}</Typography></React.Fragment>;
 
     return (
       <React.Fragment>
@@ -247,7 +287,7 @@ class DeptUserReg extends Component {
         <AppBar position="static" elevation={0} color="default">
           <Toolbar variant="dense">
             <div style={{flexGrow: 1}} />
-            <Button onClick={this.handleSaveData} size="small" variant='contained' color="primary">{t("btnSave")}</Button>
+            
           </Toolbar>
         </AppBar>
 
@@ -256,15 +296,46 @@ class DeptUserReg extends Component {
             <Card style={{marginTop: 16}}>
               <CardHeader style={{paddingBottom: 0}}
                 title={t("조직정보 일괄등록")}
-                subheader={help1}
+                subheader={deptHelp1}
               />
               <CardContent style={{paddingTop: 0}}>
-              
-                <input style={{display:'none'}} id={'dept-file'} type="file" onChange={event => this.handleFileChange(event, 'deptFile')} />
-                <label htmlFor={'dept-file'}>
-                  <Button variant="contained" size='small' component="span" className={classes.button}>{t("btnSelectFile")}</Button>
-                </label>
+                <Grid container spacing={24}>
+                  <Grid item xs={8}>
+                    <input style={{display:'none'}} id={'dept-file'} type="file" onChange={event => this.handleDeptFileChange(event, 'deptFile')} />
+                    <label htmlFor={'dept-file'}>
+                      <Button variant="contained" size='small' component="span" className={classes.button}>{t("btnSelectFile")}</Button>
+                    </label>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Button onClick={this.handleDeptSaveData} size="small" variant='contained' color="primary">{t("btnSave")}</Button>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+          </Grid>
+        </Grid>
 
+        <Grid container spacing={24}>
+          <Grid item xs={6}>
+            <Card style={{marginTop: 16}}>
+              <CardHeader style={{paddingBottom: 0}}
+                title={t("사용자정보 일괄등록")}
+                subheader={userHelp1}
+              />
+              <CardContent style={{paddingTop: 0}}>
+                <Grid container spacing={24}>
+                  <Grid item xs={8}>
+                    <input style={{display:'none'}} id={'user-file'} type="file" onChange={event => this.handleUserFileChange(event, 'userFile')} />
+                    <label htmlFor={'user-file'}>
+                      <Button variant="contained" size='small' component="span" className={classes.button}>{t("btnSelectFile")}</Button>
+                    </label>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Button onClick={this.handleUserSaveData} size="small" variant='contained' color="primary">{t("btnSave")}</Button>
+                  </Grid>
+                </Grid>
               </CardContent>
             </Card>
           </Grid>
