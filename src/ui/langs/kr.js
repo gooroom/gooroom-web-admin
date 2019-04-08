@@ -111,6 +111,9 @@ export default {
   "optClientStatus": "단말상태",
   "optKeyword": "검색어",
 
+  "optMinutes" : "분",
+  "optHours" : "시간",
+
   // Buttons
   "btnSearch": "조회",
   "btnRegist": "등록",
@@ -771,7 +774,7 @@ export default {
   "dtInheritSecuRule": "단말보안정책 상속",
   "dtCopySecuRule": "단말보안정책 복사",
   "dtCategorySecuRule": "단말보안 정책",
-  "lbScreenSaverTime": "화면보호기 설정시간(분)",
+  "lbScreenSaverTime": "화면보호기 설정시간",
   "lbPasswordChangeCycle": "패스워드 변경주기(일)",
   "selPackageEditStopOn": "패키지추가/삭제 차단기능 켜짐",
   "selPackageEditStopOff": "패키지추가/삭제 차단기능 꺼짐",
