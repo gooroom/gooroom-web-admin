@@ -60,15 +60,24 @@ class DividedAdminManage extends Component {
 
   // .................................................
   handleChangePage = (event, page) => {
-
+    const { AdminUserActions, AdminUserProps } = this.props;
+    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {
+      page: page
+    });
   };
 
   handleChangeRowsPerPage = event => {
-
+    const { AdminUserActions, AdminUserProps } = this.props;
+    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value, page: 0
+    });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
-
+    const { AdminUserActions, AdminUserProps } = this.props;
+    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
+    });
   };
 
   handleSelectBtnClick = () => {
