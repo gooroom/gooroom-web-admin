@@ -703,7 +703,7 @@ export default {
   "selLimitAllDownload": "모든 다운로드 제한",
   "lbControlPrint": "프린팅 통제",
   "lbControlShowSource": "페이지 소스보기 통제",
-  "btUploadTrustSetup": "파일을 이용하여 비신뢰사이트 내용 등록",
+  "btUploadTrustSetup": "파일을 이용하여 신뢰사이트 내용 등록",
   "btUploadUntrustSetup": "파일을 이용하여 비신뢰사이트 내용 등록",
   "lbConnectableAddress": "접속가능 주소설정",
   "lbWhiteAddressList": "White Address List",
