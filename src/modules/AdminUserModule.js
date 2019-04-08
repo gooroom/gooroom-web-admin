@@ -156,18 +156,23 @@ export const createAdminUserData = (param) => dispatch => {
     return requestPostAPI('createAdminUser', makeParameter(param.itemObj)).then(
         (response) => {
             try {
-                if(response.data.status.result === 'success') {
+                if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
                         type: CREATE_ADMINUSER_SUCCESS,
                         response: response
                     });
-                }    
+                } else {
+                    dispatch({ type: COMMON_FAILURE, error: response.data });
+                    return response.data;
+                }
             } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
+        return error;
     });
 };
 

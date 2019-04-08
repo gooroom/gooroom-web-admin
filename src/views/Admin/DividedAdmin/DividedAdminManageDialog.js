@@ -96,9 +96,16 @@ class DividedAdminManageDialog extends Component {
                         AdminUserActions.createAdminUserData({
                             itemObj: paramObject,
                             compId: this.props.compId
-                        }).then((res) => {
-                            AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
-                            this.handleClose();
+                        }).then((reData) => {
+                            if(reData && reData.status && reData.status.result === 'fail') {
+                                this.props.GRAlertActions.showAlert({
+                                    alertTitle: this.props.t("dtSystemError"),
+                                    alertMsg: reData.status.message
+                                });
+                            } else {
+                                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
+                                this.handleClose();
+                            }
                         });
                     }
                 },
