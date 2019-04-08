@@ -582,27 +582,29 @@ export default handleActions({
     },
 
     [UPWARD_NETWORK_ITEM]: (state, action) => {
-        if(action.id <= 0) {
+        const aid = Number(action.id);
+        if(aid <= 0) {
             return state;
         } else {
-            const target = state.getIn(['editingItem', 'networkItems', action.id]);
-            const next = state.getIn(['editingItem', 'networkItems', (action.id-1)]);
+            const target = state.getIn(['editingItem', 'networkItems', aid]);
+            const next = state.getIn(['editingItem', 'networkItems', (aid-1)]);
 
-            let newState = state.setIn(['editingItem', 'networkItems', action.id], next.set('no', action.id));
-            newState = newState.setIn(['editingItem', 'networkItems', (action.id-1)], target.set('no', (action.id-1)));
+            let newState = state.setIn(['editingItem', 'networkItems', aid], next.set('no', aid));
+            newState = newState.setIn(['editingItem', 'networkItems', (aid-1)], target.set('no', (aid-1)));
             newState = newState.setIn(['editingItem', 'selected'], List([]));
             return newState;
         }
     },
     [DOWNWARD_NETWORK_ITEM]: (state, action) => {
-        if(action.id+1 >= state.getIn(['editingItem', 'networkItems']).size) {
+        const aid = Number(action.id);
+        if(aid+1 >= state.getIn(['editingItem', 'networkItems']).size) {
             return state;
         } else {
-            const target = state.getIn(['editingItem', 'networkItems', action.id]);
-            const next = state.getIn(['editingItem', 'networkItems', (action.id+1)]);
+            const target = state.getIn(['editingItem', 'networkItems', aid]);
+            const next = state.getIn(['editingItem', 'networkItems', (aid+1)]);
 
-            let newState = state.setIn(['editingItem', 'networkItems', action.id], next.set('no', action.id));
-            newState = newState.setIn(['editingItem', 'networkItems', (action.id+1)], target.set('no', (action.id+1)));
+            let newState = state.setIn(['editingItem', 'networkItems', aid], next.set('no', aid));
+            newState = newState.setIn(['editingItem', 'networkItems', (aid+1)], target.set('no', (aid+1)));
             newState = newState.setIn(['editingItem', 'selected'], List([]));
             return newState;
         }
