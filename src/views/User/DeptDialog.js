@@ -101,7 +101,32 @@ class DeptDialog extends Component {
                 confirmTitle: t("lbEditDeptInfo"),
                 confirmMsg: t("msgEditDeptInfo"),
                 confirmCheckMsg: t("lbEditChildDeptInfo"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, confirmObject, isChecked) => {
+                    if(confirmValue) {
+                        const isInherit = isChecked;
+                        const { DeptProps, DeptActions, compId, resetCallback } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
+                        DeptActions.editDeptInfo({
+                            deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
+                            deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
+                
+                            paramIsInherit: (isInherit) ? 'Y' : 'N',
+                
+                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                            
+                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                        }).then((res) => {
+                            // DeptActions.readDeptListPaged(DeptProps, compId);
+                            // tree refresh
+                            resetCallback(DeptProps.getIn(['editingItem', 'deptCd']));
+                            this.handleClose();
+                        });
+                    }
+                },
             });
         } else {
             if(this.refs.form && this.refs.form.childs) {
@@ -109,33 +134,6 @@ class DeptDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleEditConfirmResult = (confirmValue, confirmObject, isChecked) => {
-
-        if(confirmValue) {
-            const isInherit = isChecked;
-            const { DeptProps, DeptActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
-            const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
-            DeptActions.editDeptInfo({
-                deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
-                deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-    
-                paramIsInherit: (isInherit) ? 'Y' : 'N',
-    
-                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                
-                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
-            }).then((res) => {
-                // DeptActions.readDeptListPaged(DeptProps, compId);
-                // tree refresh
-                // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
-                this.handleClose();
-            });
         }
     }
 

@@ -35,12 +35,18 @@ class DeptTreeComp extends Component {
 
   constructor(props) {
     super(props);
+
+    this.handleResetDeptInfo = this.handleResetDeptInfo.bind(this);
     this.state = {
       isShowTree: true
     };
   }
 
   componentDidMount() {
+    if(this.props.onRef) {
+      this.props.onRef(this);
+    }
+
     //this.props.DeptActions.readDeptListPaged(this.props.DeptProps, this.props.compId);
   }
 
@@ -235,6 +241,13 @@ class DeptTreeComp extends Component {
       }));
     }
   };
+
+  // edit group in tree
+  handleResetDeptInfo = (deptCd) => {
+    console.log('handleResetDeptInfo ::: ', deptCd);
+    this.grTreeList.resetTreeNode(deptCd);
+  }
+
 
   render() {
     const { classes, t } = this.props;
