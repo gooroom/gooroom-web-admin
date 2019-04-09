@@ -327,9 +327,9 @@ class UserMasterManage extends Component {
   }
 
   handleResetDeptTree = (deptCd) => {
-    this.grTreeList.resetTreeNode(deptCd);
+    //this.refDeptComp.handleResetDeptInfo('000000001');
   }
-
+ 
   handleCreateUserButton = value => {
     const { UserActions } = this.props;
     UserActions.showDialog({
@@ -409,7 +409,8 @@ class UserMasterManage extends Component {
                 onCheck={this.handleCheckedDept} 
                 onSelect={this.handleSelectDept}
                 onEdit={this.handleEditDept}
-                isEnableEdit={true} 
+                isEnableEdit={true}
+                onRef={el => this.refDeptComp = el}
               />
             </Grid>
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>

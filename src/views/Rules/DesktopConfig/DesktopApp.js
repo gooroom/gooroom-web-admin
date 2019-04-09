@@ -50,11 +50,11 @@ class DesktopApp extends Component {
   render() {
 
     const { classes } = this.props;
-    const { isSelected, appObj, hasAction } = this.props;
+    const { isSelected, appObj, hasAction, themeId } = this.props;
 
     let iconUrl = '';
     if(appObj && appObj.get('iconGubun')) {
-      iconUrl = (appObj.get('iconGubun') == 'library') ? '/gpms/images/gr_icons/1_' + appObj.get('iconId') + '.svg' : appObj.get('iconUrl');
+      iconUrl = (appObj.get('iconGubun') == 'library') ? '/gpms/images/gr_icons/' + themeId + '_' + appObj.get('iconId') + '.svg' : appObj.get('iconUrl');
     }
     const isHaveAction = (hasAction) ? hasAction : false;
 
