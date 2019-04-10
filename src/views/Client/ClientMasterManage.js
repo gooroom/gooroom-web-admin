@@ -171,21 +171,21 @@ class ClientMasterManage extends Component {
 
     if(groupId) {
       // get client conf setting info
-      ClientConfSettingActions.getClientConfByGroupId({ compId: compId, groupId: groupId });   
-      // get Hosts conf info
-      ClientHostNameActions.getClientHostNameByGroupId({ compId: compId, groupId: groupId });
-      // get Update server conf info
-      ClientUpdateServerActions.getClientUpdateServerByGroupId({ compId: compId, groupId: groupId });   
+      // ClientConfSettingActions.getClientConfByGroupId({ compId: compId, groupId: groupId });   
+      // // get Hosts conf info
+      // ClientHostNameActions.getClientHostNameByGroupId({ compId: compId, groupId: groupId });
+      // // get Update server conf info
+      // ClientUpdateServerActions.getClientUpdateServerByGroupId({ compId: compId, groupId: groupId });   
       // get browser rule info
       BrowserRuleActions.getBrowserRuleByGroupId({ compId: compId, groupId: groupId });
       // get media control setting info
       MediaRuleActions.getMediaRuleByGroupId({ compId: compId, groupId: groupId });
-      // get client secu info
-      SecurityRuleActions.getSecurityRuleByGroupId({ compId: compId, groupId: groupId });   
-      // get filtered software rule
-      SoftwareFilterActions.getSoftwareFilterByGroupId({ compId: compId, groupId: groupId });   
-      // get desktop conf info
-      DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: groupId });   
+      // // get client secu info
+      // SecurityRuleActions.getSecurityRuleByGroupId({ compId: compId, groupId: groupId });   
+      // // get filtered software rule
+      // SoftwareFilterActions.getSoftwareFilterByGroupId({ compId: compId, groupId: groupId });   
+      // // get desktop conf info
+      // DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: groupId });   
     }
   }
 

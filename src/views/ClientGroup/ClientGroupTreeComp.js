@@ -398,7 +398,7 @@ class ClientGroupTreeComp extends Component {
           />
         }
         {this.state.isShowTree && 
-        <div style={{maxHeight:411,overflowY:'auto',marginTop:10}}>
+        <div style={{maxHeight:411,overflowY:'scroll',marginTop:10}}>
           <GRTreeClientGroupList
             useFolderIcons={true}
             listHeight='24px'
