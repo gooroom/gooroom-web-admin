@@ -7,8 +7,11 @@ import * as commonHandleActions from 'modules/commons/commonHandleActions';
 const COMMON_PENDING = 'clientGroup/COMMON_PENDING';
 const COMMON_FAILURE = 'clientGroup/COMMON_FAILURE';
 
-const GET_GROUP_LISTPAGED_SUCCESS = 'clientGroup/GET_GROUP_LISTPAGED_SUCCESS';
-const GET_GROUP_SUCCESS = 'clientGroup/GET_GROUP_SUCCESS';
+const GET_CLIENTGROUP_LISTPAGED_SUCCESS = 'clientGroup/GET_CLIENTGROUP_LISTPAGED_SUCCESS';
+const GET_CLIENTGROUP_SUCCESS = 'clientGroup/GET_CLIENTGROUP_SUCCESS';
+
+const GET_CLIENTGROUP_TREECHILD_SUCCESS = 'clientGroup/GET_CLIENTGROUP_TREECHILD_SUCCESS';
+const CHG_TREEDATA_VALUE = 'clientGroup/CHG_TREEDATA_VALUE';
 
 const CREATE_CLIENTGROUP_SUCCESS = 'clientGroup/CREATE_CLIENTGROUP_SUCCESS';
 const EDIT_CLIENTGROUP_SUCCESS = 'clientGroup/EDIT_CLIENTGROUP_SUCCESS';
@@ -95,7 +98,7 @@ export const readClientGroupListPaged = (module, compId, extParam) => dispatch =
     }).then(
         (response) => {
             dispatch({
-                type: GET_GROUP_LISTPAGED_SUCCESS,
+                type: GET_CLIENTGROUP_LISTPAGED_SUCCESS,
                 compId: compId,
                 listParam: newListParam,
                 response: response
@@ -105,6 +108,26 @@ export const readClientGroupListPaged = (module, compId, extParam) => dispatch =
         dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
+
+export const readChildrenClientGroupList = (compId, grpId, index) => dispatch => {
+
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readChildrenClientGroupList', {
+        grpId: grpId
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_CLIENTGROUP_TREECHILD_SUCCESS,
+                compId: compId,
+                index: index,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({
@@ -121,7 +144,7 @@ export const getClientGroup = (param) => dispatch => {
         return requestPostAPI('readClientGroupData', {'groupId': param.groupId}).then(
             (response) => {
                 dispatch({
-                    type: GET_GROUP_SUCCESS,
+                    type: GET_CLIENTGROUP_SUCCESS,
                     compId: compId,
                     response: response
                 });
@@ -145,7 +168,7 @@ export const getClientGroupNode = (param) => dispatch => {
         return requestPostAPI('readClientGroupData', {'groupId': param.groupId}).then(
             (response) => {
                 dispatch({
-                    type: GET_GROUP_SUCCESS,
+                    type: GET_CLIENTGROUP_SUCCESS,
                     compId: compId,
                     response: response
                 });
@@ -186,6 +209,15 @@ export const changeCompVariableObject = (param) => dispatch => {
         type: CHG_COMPDATA_OBJECT,
         compId: param.compId,
         valueObj: param.valueObj
+    });
+};
+
+export const changeTreeDataVariable = (param) => dispatch => {
+    return dispatch({
+        type: CHG_TREEDATA_VALUE,
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
@@ -358,10 +390,74 @@ export default handleActions({
             errorObj: (action.error) ? action.error : ''
         });
     },
-    [GET_GROUP_LISTPAGED_SUCCESS]: (state, action) => {
+    [GET_CLIENTGROUP_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
     },
-    [GET_GROUP_SUCCESS]: (state, action) => {
+    [GET_CLIENTGROUP_TREECHILD_SUCCESS]: (state, action) => {
+        const compId = action.compId;
+        const index = action.index;
+        const data = action.response.data;
+        if(data && data.length > 0) {
+
+            const resData = data.map(x => {
+                let node = {
+                    key: x.key,
+                    depth: x.level,
+                    disabled: false,
+                    title: x.title,
+                    children: (x.hasChildren) ? [] : null,
+                    regDate: x.regDt,
+                    modDate: x.modDt,
+                    comment: x.comment,
+                    clientCount: x.clientCount,
+                    clientTotalCount: x.clientTotalCount,
+                    _shouldRender: true
+                };
+                if (index !== undefined) {
+                    node["parentIndex"] = index;
+                }
+                return node;
+            });
+
+            if(state.getIn(['viewItems', compId, 'treeComp', 'treeData'])) {
+
+                let parents = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+                parents[index].children = resData.map(d => (d.key));
+                // data merge.
+                // 1. delete children
+                parents = parents.filter(e => e.parentIndex != index);
+                // 2. insert new child data
+                parents.splice.apply(parents, [index + 1, 0].concat(resData));
+                // 3. reset parent index 
+                parents = parents.map((obj, i) => {
+                    if (i > index + resData.length && obj.parentIndex > 0) {
+                        if(obj.parentIndex > index) {
+                            obj.parentIndex = obj.parentIndex + resData.length;
+                        }
+                    }
+                    return obj;
+                });
+
+                // reset expandedListItems values for adding nodes.
+                const expandedListItems = state.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
+                const newExpandedListItems = (expandedListItems) ? expandedListItems.map(obj => {
+                    if(obj > index) {
+                        return obj + resData.length;
+                    } else {
+                        return obj;
+                    }
+                }) : [];
+
+                return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], parents)
+                            .setIn(['viewItems', compId, 'treeComp', 'expandedListItems'], newExpandedListItems);
+            } else {
+                return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], resData);
+            }
+        } else  {
+            return state.deleteIn(['viewItems', compId, 'treeComp', 'treeData']);
+        }
+    },
+    [GET_CLIENTGROUP_SUCCESS]: (state, action) => {
         const compId = action.compId;
         const data = action.response.data.data;
         if(data && data.length > 0) {
@@ -412,6 +508,9 @@ export default handleActions({
         } else {
             return state.setIn(['viewItems', action.compId], fromJS(action.valueObj));
         }        
+    },
+    [CHG_TREEDATA_VALUE]: (state, action) => {
+        return state.setIn(['viewItems', action.compId, 'treeComp', action.name], action.value);
     },
     [DELETE_COMPDATA_ITEM]: (state, action) => {
         return commonHandleActions.handleDeleteCompItem(state, action);
