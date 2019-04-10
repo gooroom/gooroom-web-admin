@@ -355,9 +355,12 @@ class GRTreeClientGroupList extends Component {
 
     if(expandedListItems && expandedListItems.length > 0) {
       const indexOfListItemInArray = expandedListItems.indexOf(index);
+console.log('indexOfListItemInArray ::::::::::::: ', indexOfListItemInArray);
       listItem['hasChildren'] = true;
       let newArray = [].concat(expandedListItems);
+console.log('newArray[1] ::::::::::::: ', newArray);
       newArray.splice(indexOfListItemInArray, 1);
+console.log('newArray[2] ::::::::::::: ', newArray);
       ClientGroupActions.changeTreeDataVariable({
         compId: compId,
         name: 'expandedListItems',
@@ -379,6 +382,7 @@ class GRTreeClientGroupList extends Component {
         backgroundColor: isActive ? "rgba(0,0,0,0.2)" : null,
         paddingTop: "0px",
         paddingBottom: "0px",
+        paddingRight: "0px",
         alignItems: "start",
         cursor: listItem.disabled ? "not-allowed" : "pointer",
         color: listItem.disabled ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.87)",
@@ -416,18 +420,27 @@ class GRTreeClientGroupList extends Component {
               // child
               parentItem = beforeItem;
               listItem._styles = this.applyStyle(listItem, (activeListItem === i));
-              listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1);
+              listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1) ? (parentItem._shouldRender) : false;
               listItem._primaryText = listItem['title'];
-            } else if(beforeItem.depth < listItem.depth) {
+            } else if(beforeItem.depth > listItem.depth) {
+
+
               // upper - another parent
               parentItem = treeData[listItem.parentIndex];
+              
               listItem._styles = this.applyStyle(listItem, (activeListItem === i));
-              listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1);
+              
+              //listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1);
+              listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1) ? (parentItem._shouldRender) : false;
+              
               listItem._primaryText = listItem['title'];
+
+
+
             } else {
               // siblings
               listItem._styles = this.applyStyle(listItem, (activeListItem === i));
-              listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1);
+              listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1) ? (parentItem._shouldRender) : false;
               listItem._primaryText = listItem['title'];
             }
           }
