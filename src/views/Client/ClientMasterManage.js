@@ -17,6 +17,8 @@ import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
 
+import * as TotalRuleActions from 'modules/TotalRuleModule';
+
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
@@ -169,17 +171,23 @@ class ClientMasterManage extends Component {
     const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
     const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
 
+    const { TotalRuleActions } = this.props;
+
     if(groupId) {
-      // get client conf setting info
+
+      TotalRuleActions.getAllClientRuleByGroupId({ compId: compId, groupId: groupId });
+
+
+      // // get client conf setting info
       // ClientConfSettingActions.getClientConfByGroupId({ compId: compId, groupId: groupId });   
       // // get Hosts conf info
       // ClientHostNameActions.getClientHostNameByGroupId({ compId: compId, groupId: groupId });
       // // get Update server conf info
       // ClientUpdateServerActions.getClientUpdateServerByGroupId({ compId: compId, groupId: groupId });   
-      // get browser rule info
-      BrowserRuleActions.getBrowserRuleByGroupId({ compId: compId, groupId: groupId });
-      // get media control setting info
-      MediaRuleActions.getMediaRuleByGroupId({ compId: compId, groupId: groupId });
+      // // get browser rule info
+      // BrowserRuleActions.getBrowserRuleByGroupId({ compId: compId, groupId: groupId });
+      // // get media control setting info
+      // MediaRuleActions.getMediaRuleByGroupId({ compId: compId, groupId: groupId });
       // // get client secu info
       // SecurityRuleActions.getSecurityRuleByGroupId({ compId: compId, groupId: groupId });   
       // // get filtered software rule
@@ -515,6 +523,8 @@ const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
   ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
+
+  TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch),
 
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),

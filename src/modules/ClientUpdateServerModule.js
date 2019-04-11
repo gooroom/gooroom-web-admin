@@ -112,7 +112,9 @@ export const getClientUpdateServer = (param) => dispatch => {
                 dispatch({
                     type: GET_UPDATESERVER_SUCCESS,
                     compId: compId,
-                    response: response
+                    data: (response.data.data) ? response.data.data : null,
+                    extend: (response.data.extend) ? response.data.extend : null,
+                    target: ''
                 });
             }
         ).catch(error => {
@@ -135,8 +137,9 @@ export const getClientUpdateServerByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_UPDATESERVER_SUCCESS,
                 compId: compId,
-                target: 'GROUP',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'GROUP'
             });
         }
     ).catch(error => {
@@ -332,7 +335,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     },
     [GET_UPDATESERVER_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'objId');
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.data, action.extend, action.target, 'objId');
     },
     [SHOW_UPDATESERVER_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);
