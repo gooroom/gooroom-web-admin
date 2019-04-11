@@ -116,7 +116,9 @@ export const getSoftwareFilter = (param) => dispatch => {
                 dispatch({
                     type: GET_SOFTWAREFILTER_SUCCESS,
                     compId: compId,
-                    response: response
+                    data: (response.data.data) ? response.data.data : null,
+                    extend: (response.data.extend) ? response.data.extend : null,
+                    target: ''
                 });
             }
         ).catch(error => {
@@ -140,8 +142,9 @@ export const getSoftwareFilterByUserId = (param) => dispatch => {
             dispatch({
                 type: GET_SOFTWAREFILTER_SUCCESS,
                 compId: compId,
-                target: 'USER',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'USER'
             });
         }
     ).catch(error => {
@@ -157,8 +160,9 @@ export const getSoftwareFilterByDeptCd = (param) => dispatch => {
             dispatch({
                 type: GET_SOFTWAREFILTER_SUCCESS,
                 compId: compId,
-                target: 'DEPT',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'DEPT'
             });
         }
     ).catch(error => {
@@ -174,8 +178,9 @@ export const getSoftwareFilterByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_SOFTWAREFILTER_SUCCESS,
                 compId: compId,
-                target: 'GROUP',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'GROUP'
             });
         }
     ).catch(error => {
@@ -407,7 +412,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_SOFTWAREFILTER_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'objId');
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.data, action.extend, action.target, 'objId');
     },
     [SHOW_SOFTWAREFILTER_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);

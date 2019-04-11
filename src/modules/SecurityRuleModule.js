@@ -122,7 +122,9 @@ export const getSecurityRule = (param) => dispatch => {
                 dispatch({
                     type: GET_SECURITYRULE_SUCCESS,
                     compId: compId,
-                    response: response
+                    data: (response.data.data) ? response.data.data : null,
+                    extend: (response.data.extend) ? response.data.extend : null,
+                    target: ''
                 });
             }
         ).catch(error => {
@@ -146,8 +148,9 @@ export const getSecurityRuleByUserId = (param) => dispatch => {
             dispatch({
                 type: GET_SECURITYRULE_SUCCESS,
                 compId: compId,
-                target: 'USER',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'USER'
             });
         }
     ).catch(error => {
@@ -163,8 +166,9 @@ export const getSecurityRuleByDeptCd = (param) => dispatch => {
             dispatch({
                 type: GET_SECURITYRULE_SUCCESS,
                 compId: compId,
-                target: 'DEPT',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'DEPT'
             });
         }
     ).catch(error => {
@@ -180,8 +184,9 @@ export const getSecurityRuleByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_SECURITYRULE_SUCCESS,
                 compId: compId,
-                target: 'GROUP',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'GROUP'
             });
         }
     ).catch(error => {
@@ -462,7 +467,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_SECURITYRULE_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'objId');
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.data, action.extend, action.target, 'objId');
     },
     [SHOW_SECURITYRULE_DIALOG]: (state, action) => {
         // generate firewall data
