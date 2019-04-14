@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { Map, fromJS } from 'immutable';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -13,16 +10,7 @@ import * as ClientManageActions from 'modules/ClientManageModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
-import * as ClientHostNameActions from 'modules/ClientHostNameModule';
-import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
-
 import * as TotalRuleActions from 'modules/TotalRuleModule';
-
-import * as BrowserRuleActions from 'modules/BrowserRuleModule';
-import * as MediaRuleActions from 'modules/MediaRuleModule';
-import * as SecurityRuleActions from 'modules/SecurityRuleModule';
-import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
@@ -168,8 +156,7 @@ class ClientMasterManage extends Component {
 
   // get rules info by client group id
   showClientGroupSpec(compId, groupId) {
-    const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
+    const { DesktopConfActions } = this.props;
 
     const { TotalRuleActions } = this.props;
 
@@ -381,8 +368,22 @@ class ClientMasterManage extends Component {
     }
   }
 
-  handleResetGroupTree = (grpId) => {
-    this.grTreeList.resetTreeNode(grpId);
+  handleResetGroupTree = (listItem) => {
+    const compId = this.state.compId;
+    const { ClientGroupProps, ClientGroupActions } = this.props;
+    console.log('listItem :::: ', listItem);
+    // changed grpId - re-select parentId of grpId
+
+    //this.grTreeList.resetTreeNode(grpId);
+    if(listItem.parentIndex) {
+      const parentListItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData'])[listItem.parentIndex];
+      ClientGroupActions.readChildrenClientGroupList(compId, parentListItem.key, listItem.parentIndex);
+    } else {
+      ClientGroupActions.readChildrenClientGroupList(compId, 0, undefined);
+    }
+    
+
+    
   }
 
   render() {
@@ -518,18 +519,9 @@ const mapDispatchToProps = (dispatch) => ({
   ClientMasterManageActions: bindActionCreators(ClientMasterManageActions, dispatch),
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
-
-  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
-  ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
-  ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
 
   TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch),
 
-  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
-  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
-  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
-  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
 });
 

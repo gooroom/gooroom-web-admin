@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Map, fromJS } from 'immutable';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -149,12 +150,15 @@ class GRTreeClientGroupList extends Component {
   handleClickNode(listItem, index) {
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
 
-    if (listItem.children) {
+    if (listItem.get('children')) {
       // fetch children data
       // request to server if children array is empty.
-      if (listItem.children.length < 1) {
-        ClientGroupActions.readChildrenClientGroupList(this.props.compId, listItem.key, index)
+      if (listItem.get('children').size < 1) {
+        ClientGroupActions.readChildrenClientGroupList(this.props.compId, listItem.get('key'), index);
+      } else {
+        ClientGroupActions.readChildrenClientGroupList(this.props.compId, listItem.get('key'), index);
       }
+
       const expandedListItems = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
       if(expandedListItems && expandedListItems.length > 0 && expandedListItems.indexOf(index) === -1) {
         ClientGroupActions.changeTreeDataVariable({
@@ -355,12 +359,9 @@ class GRTreeClientGroupList extends Component {
 
     if(expandedListItems && expandedListItems.length > 0) {
       const indexOfListItemInArray = expandedListItems.indexOf(index);
-console.log('indexOfListItemInArray ::::::::::::: ', indexOfListItemInArray);
       listItem['hasChildren'] = true;
       let newArray = [].concat(expandedListItems);
-console.log('newArray[1] ::::::::::::: ', newArray);
       newArray.splice(indexOfListItemInArray, 1);
-console.log('newArray[2] ::::::::::::: ', newArray);
       ClientGroupActions.changeTreeDataVariable({
         compId: compId,
         name: 'expandedListItems',
@@ -376,20 +377,20 @@ console.log('newArray[2] ::::::::::::: ', newArray);
   }
 
   applyStyle = (listItem, isActive) => {
-    return {
+    return fromJS({
       root: {
-        paddingLeft: (listItem.depth - this.state.startingDepth) * 8,
+        paddingLeft: (listItem.get('depth') - this.state.startingDepth) * 8,
         backgroundColor: isActive ? "rgba(0,0,0,0.2)" : null,
         paddingTop: "0px",
         paddingBottom: "0px",
         paddingRight: "0px",
         alignItems: "start",
-        cursor: listItem.disabled ? "not-allowed" : "pointer",
-        color: listItem.disabled ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.87)",
+        cursor: listItem.get('disabled') ? "not-allowed" : "pointer",
+        color: listItem.get('disabled') ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.87)",
         overflow: "hidden",
         transform: "translateZ(0)"
       }
-    }
+    });
   }
 
   getListItemModified = () => {
@@ -408,40 +409,30 @@ console.log('newArray[2] ::::::::::::: ', newArray);
       let beforeItem = null;
 
       modifiedList = treeData.map (
-
         (listItem, i) => {
 
           if(beforeItem === null) {
-            listItem._styles = this.applyStyle(listItem, (activeListItem === i));
-            listItem._shouldRender = (listItem.depth >= startingDepth);
-            listItem._primaryText = listItem['title'];
+            listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
+                                .set('_shouldRender', (listItem.get('depth') >= startingDepth))
+                                .set('_primaryText', listItem.get('title'));
           } else {
-            if(beforeItem.depth < listItem.depth) {
+            if(beforeItem.get('depth') < listItem.get('depth')) {
               // child
               parentItem = beforeItem;
-              listItem._styles = this.applyStyle(listItem, (activeListItem === i));
-              listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1) ? (parentItem._shouldRender) : false;
-              listItem._primaryText = listItem['title'];
-            } else if(beforeItem.depth > listItem.depth) {
-
-
+              listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
+                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
+                                  .set('_primaryText', listItem.get('title'));
+            } else if(beforeItem.get('depth') > listItem.get('depth')) {
               // upper - another parent
-              parentItem = treeData[listItem.parentIndex];
-              
-              listItem._styles = this.applyStyle(listItem, (activeListItem === i));
-              
-              //listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1);
-              listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1) ? (parentItem._shouldRender) : false;
-              
-              listItem._primaryText = listItem['title'];
-
-
-
+              parentItem = treeData.get(listItem.get('parentIndex'));
+              listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
+                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
+                                  .set('_primaryText', listItem.get('title'));
             } else {
               // siblings
-              listItem._styles = this.applyStyle(listItem, (activeListItem === i));
-              listItem._shouldRender = (expandedListItems.indexOf(listItem.parentIndex) > -1) ? (parentItem._shouldRender) : false;
-              listItem._primaryText = listItem['title'];
+              listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
+                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
+                                  .set('_primaryText', listItem.get('title'));
             }
           }
           beforeItem = listItem;
@@ -449,29 +440,27 @@ console.log('newArray[2] ::::::::::::: ', newArray);
           // listItem._styles = this.applyStyle(listItem, (activeListItem === i));
           // listItem._shouldRender = // (listItem._shouldRender) ||
           //   (listItem.depth >= startingDepth && parentsAreExpanded(listItem));
-          // listItem._primaryText = listItem['title'];
-          
-          
+          // listItem.set('_primaryText', listItem.get('title'));
           return listItem;
         }
       );
     }
 
-    function parentsAreExpanded(listItem) {
-      if (listItem.depth > startingDepth) {
-        if (expandedListItems.indexOf(listItem.parentIndex) === -1) {
-          return false;
-        } else {
-          return true;
-          // const parent = treeData.filter((_listItem, index) => {
-          //   return index === listItem.parentIndex;
-          // })[0];
-          // return parentsAreExpanded(parent);
-        }
-      } else {
-        return true;
-      }
-    }
+    // function parentsAreExpanded(listItem) {
+    //   if (listItem.depth > startingDepth) {
+    //     if (expandedListItems.indexOf(listItem.parentIndex) === -1) {
+    //       return false;
+    //     } else {
+    //       return true;
+    //       // const parent = treeData.filter((_listItem, index) => {
+    //       //   return index === listItem.parentIndex;
+    //       // })[0];
+    //       // return parentsAreExpanded(parent);
+    //     }
+    //   } else {
+    //     return true;
+    //   }
+    // }
 
     return modifiedList;
   }
@@ -489,13 +478,13 @@ console.log('newArray[2] ::::::::::::: ', newArray);
 
     function getLeftIcon(listItem, localProps) {
       if (localProps.useFolderIcons) {
-        if (listItem.children) {
+        if (listItem.get('children')) {
           return <FolderOpenIcon className={localProps.classes.parentNodeClass} />;
         } else {
           return <FolderIcon className={localProps.classes.childNodeClass} />;
         }
       } else {
-        return listItem.icon;
+        return listItem.get('icon');
       }
     }
 
@@ -503,14 +492,14 @@ console.log('newArray[2] ::::::::::::: ', newArray);
     let listItemsJSX = null;
     if(listItemsModified) {
       listItemsJSX = listItemsModified.map((listItem, i) => {
-        if (listItem._shouldRender) {
+        if (listItem.get('_shouldRender')) {
           return (
             <GRTreeItem
               key={"treeListItem-" + i}
-              nodeKey={listItem.key}
-              depth={listItem.depth}
-              primaryText={listItem._primaryText}
-              style={Object.assign({}, listItem._styles.root)}
+              nodeKey={listItem.get('key')}
+              depth={listItem.get('depth')}
+              primaryText={listItem.get('title')}
+              style={Object.assign({}, listItem.getIn(['_styles','root']).toJS())}
               isShowCheck={this.state.isShowCheck}
               isEnableEdit={this.state.isEnableEdit}
               isCheckMasterOnly={this.state.isCheckMasterOnly}
@@ -518,10 +507,10 @@ console.log('newArray[2] ::::::::::::: ', newArray);
               imperfect={imperfect}
               leftIcon={getLeftIcon(listItem, this.props)}
               isExtend={
-                !listItem.children ? null : (expandedListItems && expandedListItems.indexOf(i) === -1) ? ('Y') : ('N')
+                !listItem.get('children') ? null : (expandedListItems && expandedListItems.indexOf(i) === -1) ? ('Y') : ('N')
               }
               onClickNode={() => {
-                if (listItem.disabled) {
+                if (listItem.get('disabled')) {
                   return;
                 }
                 this.handleClickNode(listItem, i);
@@ -530,7 +519,7 @@ console.log('newArray[2] ::::::::::::: ', newArray);
               onEditNode={() => this.handleEditClickNode(listItem, i)}
               onFoldingNode={() => this.handleClickFoldingNode(listItem, i)}
               isShowMemberCnt={(this.props.isShowMemberCnt) ? this.props.isShowMemberCnt : false}
-              memberCntValue={listItem.clientCount + '/' + listItem.clientTotalCount}
+              memberCntValue={listItem.get('clientCount') + '/' + listItem.get('clientTotalCount')}
             />
           );
         } else {

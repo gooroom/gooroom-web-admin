@@ -124,6 +124,7 @@ export const readChildrenClientGroupList = (compId, grpId, index) => dispatch =>
             });
         }
     ).catch(error => {
+        console.log('error : ', error);
         dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
@@ -399,7 +400,7 @@ export default handleActions({
         const data = action.response.data;
         if(data && data.length > 0) {
 
-            const resData = data.map(x => {
+            const resData = fromJS(data.map(x => {
                 let node = {
                     key: x.key,
                     depth: x.level,
@@ -417,39 +418,61 @@ export default handleActions({
                     node["parentIndex"] = index;
                 }
                 return node;
-            });
+            }));
 
             if(state.getIn(['viewItems', compId, 'treeComp', 'treeData'])) {
 
-                let parents = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
-                parents[index].children = resData.map(d => (d.key));
-                // data merge.
-                // 1. delete children
-                parents = parents.filter(e => e.parentIndex != index);
-                // 2. insert new child data
-                parents.splice.apply(parents, [index + 1, 0].concat(resData));
-                // 3. reset parent index 
-                parents = parents.map((obj, i) => {
-                    if (i > index + resData.length && obj.parentIndex > 0) {
-                        if(obj.parentIndex > index) {
-                            obj.parentIndex = obj.parentIndex + resData.length;
+                if(index !== undefined) {
+                    let parents = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+                    parents = parents.setIn([index, 'children'], resData.map(d => (d.get('key'))));
+                    
+                    // data merge.
+                    // 1. delete children
+                    parents = parents.filter(e => e.get('parentIndex') != index);
+
+                    const siblings = parents.filter(e => (e.get('parentIndex') && e.get('parentIndex') === index));
+
+//console.log('siblings :::: ', siblings);
+
+
+
+                    // 2. insert new child data
+                    //parents = parents.splice.apply(parents, [index + 1, 0].concat(resData));
+
+                    parents = parents.splice(index+1, parents.size-(index+1)).concat(resData).concat(parents.splice(0, index+1))
+
+                    // 3. reset parent index 
+                    parents = parents.map((obj, i) => {
+                        if (i > index + resData.size && obj.get('parentIndex') > 0) {
+                            if(obj.get('parentIndex') > index) {
+                                obj = obj.set('parentIndex', obj.get('parentIndex') + resData.size);
+                            }
                         }
-                    }
-                    return obj;
-                });
-
-                // reset expandedListItems values for adding nodes.
-                const expandedListItems = state.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
-                const newExpandedListItems = (expandedListItems) ? expandedListItems.map(obj => {
-                    if(obj > index) {
-                        return obj + resData.length;
-                    } else {
                         return obj;
-                    }
-                }) : [];
+                    });
+    
+                    // reset expandedListItems values for adding nodes.
+                    const expandedListItems = state.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
+                    const newExpandedListItems = (expandedListItems) ? expandedListItems.map(obj => {
+                        if(obj > index) {
+                            return obj + resData.size;
+                        } else {
+                            return obj;
+                        }
+                    }) : [];
+    
+                    return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], parents)
+                                .setIn(['viewItems', compId, 'treeComp', 'expandedListItems'], newExpandedListItems);
+                } else {
+                    // root node
+                    return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', 0], {
+                        comment: resData.getIn([0, 'comment']),
+                        modDate: resData.getIn([0, 'modDate']),
+                        regDate: resData.getIn([0, 'regDate']),
+                        title: resData.getIn([0, 'title'])
+                    });
+                }
 
-                return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], parents)
-                            .setIn(['viewItems', compId, 'treeComp', 'expandedListItems'], newExpandedListItems);
             } else {
                 return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], resData);
             }

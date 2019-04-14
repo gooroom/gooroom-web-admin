@@ -130,7 +130,9 @@ export const getDesktopConf = (param) => dispatch => {
                 dispatch({
                     type: GET_DESKTOPCONF_SUCCESS,
                     compId: compId,
-                    response: response
+                    data: (response.data.data) ? response.data.data : null,
+                    extend: (response.data.extend) ? response.data.extend : null,
+                    target: ''
                 });
             }
         ).catch(error => {
@@ -204,8 +206,9 @@ export const getDesktopConfByUserId = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
-                target: 'USER',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'USER'
             });
         }
     ).catch(error => {
@@ -221,8 +224,9 @@ export const getDesktopConfByDeptCd = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
-                target: 'DEPT',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'DEPT'
             });
         }
     ).catch(error => {
@@ -238,8 +242,9 @@ export const getDesktopConfByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
-                target: 'GROUP',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'GROUP'
             });
         }
     ).catch(error => {
@@ -509,7 +514,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_DESKTOPCONF_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'confId');
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.data, action.extend, action.target, 'confId');
     },
     [CHANGE_DESKTOPCONF_EDITING_SUCCESS]: (state, action) => {
         const data = action.response.data.data;
