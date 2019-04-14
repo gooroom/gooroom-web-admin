@@ -423,26 +423,41 @@ export default handleActions({
             if(state.getIn(['viewItems', compId, 'treeComp', 'treeData'])) {
 
                 if(index !== undefined) {
-                    let parents = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
-                    parents = parents.setIn([index, 'children'], resData.map(d => (d.get('key'))));
+
+                    let newTreeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+                    newTreeData = newTreeData.setIn([index, 'children'], resData.map(d => (d.get('key'))));
                     
                     // data merge.
-                    // 1. delete children
-                    parents = parents.filter(e => e.get('parentIndex') != index);
+                    if(index === 0) {
+                        // root
+                        newTreeData = newTreeData.filter((e, i) => (i === 0));
+                    } else {
 
-                    const siblings = parents.filter(e => (e.get('parentIndex') && e.get('parentIndex') === index));
+                        // 1. delete children
+                        const parentIndex = newTreeData.getIn([index, 'parentIndex']);
+                        let nextSiblings = newTreeData.map((e, i) => {
+                            if(e.get('parentIndex') !== undefined && e.get('parentIndex') === parentIndex && i > index) {
+                                return i;
+                            } else {
+                                return -1;
+                            }
+                        });
 
-//console.log('siblings :::: ', siblings);
-
+                        nextSiblings = nextSiblings.filter(e => (e > -1));
+                        if(nextSiblings && nextSiblings.size > 0) {
+                            newTreeData = newTreeData.filter((e, i) => !(i > index && i < nextSiblings.get(0)));
+                        } else {
+                            newTreeData = newTreeData.filter((e, i) => (i <= index));
+                        }
+                    }
 
 
                     // 2. insert new child data
-                    //parents = parents.splice.apply(parents, [index + 1, 0].concat(resData));
-
-                    parents = parents.splice(index+1, parents.size-(index+1)).concat(resData).concat(parents.splice(0, index+1))
+                    //newTreeData = newTreeData.splice.apply(newTreeData, [index + 1, 0].concat(resData));
+                    newTreeData = newTreeData.splice(index+1, newTreeData.size-(index+1)).concat(resData).concat(newTreeData.splice(0, index+1))
 
                     // 3. reset parent index 
-                    parents = parents.map((obj, i) => {
+                    newTreeData = newTreeData.map((obj, i) => {
                         if (i > index + resData.size && obj.get('parentIndex') > 0) {
                             if(obj.get('parentIndex') > index) {
                                 obj = obj.set('parentIndex', obj.get('parentIndex') + resData.size);
@@ -461,7 +476,7 @@ export default handleActions({
                         }
                     }) : [];
     
-                    return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], parents)
+                    return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], newTreeData)
                                 .setIn(['viewItems', compId, 'treeComp', 'expandedListItems'], newExpandedListItems);
                 } else {
                     // root node

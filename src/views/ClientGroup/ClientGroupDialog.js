@@ -131,8 +131,7 @@ class ClientGroupDialog extends Component {
                         }).then((res) => {
                             // ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
                             // tree refresh
-                            const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.key === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                            console.log('listItem :::: ', listItem);
+                            const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
                             resetCallback(listItem);
                             this.handleClose();
                         });
