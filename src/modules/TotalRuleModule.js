@@ -19,6 +19,8 @@ const GET_MEDIACONTROL_SUCCESS = 'mediaRule/GET_MEDIACONTROL_SUCCESS';
 const GET_SOFTWAREFILTER_SUCCESS = 'softwareFilter/GET_SOFTWAREFILTER_SUCCESS';
 const GET_SECURITYRULE_SUCCESS = 'securityRule/GET_SECURITYRULE_SUCCESS';
 
+const GET_DESKTOPCONF_SUCCESS = 'desktopConf/GET_DESKTOPCONF_SUCCESS';
+
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chConfId');
 
@@ -112,6 +114,16 @@ export const getClientRuleByGroupId = (param) => dispatch => {
                 });
             }
 
+            if(response.data && response.data.DESKTOPCONF) {
+                const resObj = response.data.DESKTOPCONF;
+                dispatch({
+                    type: GET_DESKTOPCONF_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
@@ -124,86 +136,100 @@ export const getAllClientRuleByGroupId = (param) => dispatch => {
     return requestPostAPI('readAllClientRuleByGroupId', {'groupId': param.groupId}).then(
         (response) => {
 
-            console.log('response.data ::::: ', response.data);
+            if(response.data && response.data.data && response.data.data.length < 1) {
+                dispatch({type: COMMON_FAILURE});
+            }
+
+            const rules = response.data.data[0];
             dispatch({type: COMMON_PENDING});
 
-            // if(response.data && response.data.CLIENTCONF) {
-            //     const resObj = response.data.CLIENTCONF;
-            //     dispatch({
-            //         type: GET_CONFSETTING_SUCCESS,
-            //         compId: compId,
-            //         data: (resObj.data) ? resObj.data : null,
-            //         extend: (resObj.extend) ? resObj.extend : null,
-            //         target: 'GROUP'
-            //     });
-            // }
+            if(rules && rules.CLIENTCONF) {
+                const resObj = rules.CLIENTCONF;
+                dispatch({
+                    type: GET_CONFSETTING_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
 
-            // if(response.data && response.data.HOST) {
-            //     const resObj = response.data.HOST;
-            //     dispatch({
-            //         type: GET_HOSTNAME_SUCCESS,
-            //         compId: compId,
-            //         data: (resObj.data) ? resObj.data : null,
-            //         extend: (resObj.extend) ? resObj.extend : null,
-            //         target: 'GROUP'
-            //     });
-            // }
+            if(rules && rules.HOSTNAMECONF) {
+                const resObj = rules.HOSTNAMECONF;
+                dispatch({
+                    type: GET_HOSTNAME_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
 
-            // if(response.data && response.data.UPDATE) {
-            //     const resObj = response.data.UPDATE;
-            //     dispatch({
-            //         type: GET_UPDATESERVER_SUCCESS,
-            //         compId: compId,
-            //         data: (resObj.data) ? resObj.data : null,
-            //         extend: (resObj.extend) ? resObj.extend : null,
-            //         target: 'GROUP'
-            //     });
-            // }
+            if(rules && rules.UPDATESERVERCONF) {
+                const resObj = rules.UPDATESERVERCONF;
+                dispatch({
+                    type: GET_UPDATESERVER_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
 
-            // if(response.data && response.data.BROWSER) {
-            //     const resObj = response.data.BROWSER;
-            //     dispatch({
-            //         type: GET_BROWSERRULE_SUCCESS,
-            //         compId: compId,
-            //         data: (resObj.data) ? resObj.data : null,
-            //         extend: (resObj.extend) ? resObj.extend : null,
-            //         target: 'GROUP'
-            //     });
-            // }
+            if(rules && rules.BROWSERRULE) {
+                const resObj = rules.BROWSERRULE;
+                dispatch({
+                    type: GET_BROWSERRULE_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
 
-            // if(response.data && response.data.MEDIA) {
-            //     const resObj = response.data.MEDIA;
-            //     dispatch({
-            //         type: GET_MEDIACONTROL_SUCCESS,
-            //         compId: compId,
-            //         data: (resObj.data) ? resObj.data : null,
-            //         extend: (resObj.extend) ? resObj.extend : null,
-            //         target: 'GROUP'
-            //     });
-            // }
+            if(rules && rules.MEDIARULE) {
+                const resObj = rules.MEDIARULE;
+                dispatch({
+                    type: GET_MEDIACONTROL_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
 
-            // if(response.data && response.data.SECURITY) {
-            //     const resObj = response.data.SECURITY;
-            //     dispatch({
-            //         type: GET_SECURITYRULE_SUCCESS,
-            //         compId: compId,
-            //         data: (resObj.data) ? resObj.data : null,
-            //         extend: (resObj.extend) ? resObj.extend : null,
-            //         target: 'GROUP'
-            //     });
-            // }
+            if(rules && rules.SECURITYRULE) {
+                const resObj = rules.SECURITYRULE;
+                dispatch({
+                    type: GET_SECURITYRULE_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
 
-            // if(response.data && response.data.SWFILTER) {
-            //     const resObj = response.data.SWFILTER;
-            //     dispatch({
-            //         type: GET_SOFTWAREFILTER_SUCCESS,
-            //         compId: compId,
-            //         data: (resObj.data) ? resObj.data : null,
-            //         extend: (resObj.extend) ? resObj.extend : null,
-            //         target: 'GROUP'
-            //     });
-            // }
+            if(rules && rules.FILTEREDSWRULE) {
+                const resObj = rules.FILTEREDSWRULE;
+                dispatch({
+                    type: GET_SOFTWAREFILTER_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
 
+            if(rules && rules.DESKTOPCONF) {
+                const resObj = rules.DESKTOPCONF;
+                dispatch({
+                    type: GET_DESKTOPCONF_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
@@ -222,7 +248,7 @@ export default handleActions({
         });
     },
     [GET_CLIENTRULE_SUCCESS]: (state, action) => {
-
+        // no use
         return state; // commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'objId');
     }
 

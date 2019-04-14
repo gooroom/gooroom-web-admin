@@ -210,15 +210,15 @@ class ClientGroupTreeComp extends Component {
   }
 
   // click group row (in tree)
-  handleSelectClientGroup = (treeNode) => {
+  handleSelectClientGroup = (listItem) => {
 
     if(this.props.onSelect) {
       this.props.onSelect(Map({
-        grpId: treeNode.key,
-        grpNm: treeNode.title,
-        comment: treeNode.comment,
-        regDate: treeNode.regDate,
-        hasChildren: treeNode.hasChildren
+        grpId: listItem.get('key'),
+        grpNm: listItem.get('title'),
+        comment: listItem.get('comment'),
+        regDate: listItem.get('regDate'),
+        hasChildren: listItem.get('hasChildren')
       }));
     }
 
@@ -230,10 +230,10 @@ class ClientGroupTreeComp extends Component {
     // ClientGroupActions.changeCompVariableObject({
     //   compId: compId,
     //   valueObj: {
-    //     viewItem: (fromJS(treeNode)).merge(Map({
-    //       grpId: treeNode.key,
-    //       grpNm: treeNode.title,
-    //       hasChildren: treeNode.hasChildren 
+    //     viewItem: (fromJS(listItem)).merge(Map({
+    //       grpId: listItem.get('key'),
+    //       grpNm: listItem.get('title'),
+    //       hasChildren: listItem.get('hasChildren') 
     //     })),
     //     informOpen: true
     //   }
@@ -241,23 +241,23 @@ class ClientGroupTreeComp extends Component {
 
     // 이것은 상위에서 처리해야함
     // this.showClientGroupSpec(compId, Map({
-    //   key: treeNode.key,
-    //   regDate: treeNode.regDate,
-    //   comment: treeNode.comment,
-    //   title: treeNode.title,
-    //   hasChildren: treeNode.hasChildren,
+    //   key: listItem.get('key'),
+    //   regDate: listItem.get('regDate'),
+    //   comment: listItem.get('comment'),
+    //   title: listItem.get('title'),
+    //   hasChildren: listItem.get('hasChildren'),
     // }));
   }
 
   // edit group in tree
-  handleEditClientGroup = (treeNode) => {
+  handleEditClientGroup = (listItem) => {
     if(this.props.onEdit) {
       this.props.onEdit(Map({
-        grpId: treeNode.key,
-        grpNm: treeNode.title,
-        comment: treeNode.comment,
-        regDate: treeNode.regDate,
-        hasChildren: treeNode.hasChildren
+        grpId: listItem.get('key'),
+        grpNm: listItem.get('title'),
+        comment: listItem.get('comment'),
+        regDate: listItem.get('regDate'),
+        hasChildren: listItem.get('hasChildren')
       }));
     }
   };
@@ -402,9 +402,9 @@ class ClientGroupTreeComp extends Component {
           <GRTreeClientGroupList
             useFolderIcons={true}
             listHeight='24px'
+            compId={compId}
             hasSelectChild={false}
             hasSelectParent={false}
-            compId={compId}
             isEnableEdit={this.props.isEnableEdit}
             isShowMemberCnt={true}
             onInitTreeData={this.handleInitTreeData}
