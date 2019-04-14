@@ -183,22 +183,22 @@ class GRTreeClientGroupList extends Component {
     });
   }
 
-  resetTreeNode(keyValue) {
-    const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-    const treeData = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+  // resetTreeNode(keyValue) {
+  //   const { ClientGroupProps, ClientGroupActions, compId } = this.props;
+  //   const treeData = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']);
 
-    const index = treeData.findIndex((e) => {
-      return e.key == keyValue;
-    })
+  //   const index = treeData.findIndex((e) => {
+  //     return e.key == keyValue;
+  //   })
 
-    //this.fetchTreeData(keyValue, index);
-    this.props.ClientGroupActions.readChildrenClientGroupList(this.props.compId, keyValue, index);
+  //   //this.fetchTreeData(keyValue, index);
+  //   this.props.ClientGroupActions.readChildrenClientGroupList(this.props.compId, keyValue, index);
 
-    // set active node
-    ClientGroupActions.changeTreeDataVariable({
-      compId: compId, name: 'activeListItem', value: index
-    });
-  }
+  //   // set active node
+  //   ClientGroupActions.changeTreeDataVariable({
+  //     compId: compId, name: 'activeListItem', value: index
+  //   });
+  // }
 
   updateCheckStatus = (nodeKey, tempChecked, isChecked) => {
     const newChecked = [...tempChecked];

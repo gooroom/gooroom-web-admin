@@ -371,19 +371,14 @@ class ClientMasterManage extends Component {
   handleResetGroupTree = (listItem) => {
     const compId = this.state.compId;
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    console.log('listItem :::: ', listItem);
-    // changed grpId - re-select parentId of grpId
 
-    //this.grTreeList.resetTreeNode(grpId);
-    if(listItem.parentIndex) {
-      const parentListItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData'])[listItem.parentIndex];
-      ClientGroupActions.readChildrenClientGroupList(compId, parentListItem.key, listItem.parentIndex);
+    // changed grpId - re-select parentId of grpId
+    if(listItem.get('parentIndex') !== undefined) {
+      const parentListItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData', listItem.get('parentIndex')]);
+      ClientGroupActions.readChildrenClientGroupList(compId, parentListItem.get('key'), listItem.get('parentIndex'));
     } else {
       ClientGroupActions.readChildrenClientGroupList(compId, 0, undefined);
     }
-    
-
-    
   }
 
   render() {
