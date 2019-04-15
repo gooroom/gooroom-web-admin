@@ -12,8 +12,6 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import * as TotalRuleActions from 'modules/TotalRuleModule';
 
-import * as DesktopConfActions from 'modules/DesktopConfModule';
-
 import { getRowObjectById, getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from "containers/GRContent/GRPageHeader";
@@ -156,15 +154,10 @@ class ClientMasterManage extends Component {
 
   // get rules info by client group id
   showClientGroupSpec(compId, groupId) {
-    const { DesktopConfActions } = this.props;
-
     const { TotalRuleActions } = this.props;
 
     if(groupId) {
-
       TotalRuleActions.getAllClientRuleByGroupId({ compId: compId, groupId: groupId });
-
-
       // // get client conf setting info
       // ClientConfSettingActions.getClientConfByGroupId({ compId: compId, groupId: groupId });   
       // // get Hosts conf info
@@ -515,9 +508,7 @@ const mapDispatchToProps = (dispatch) => ({
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
 
-  TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch),
-
-  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
+  TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch)
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientMasterManage)));

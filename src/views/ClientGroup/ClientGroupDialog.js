@@ -79,9 +79,9 @@ class ClientGroupDialog extends Component {
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             
                         }).then((res) => {
-                            // ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
                             // tree refresh
-                            resetCallback(ClientGroupProps.getIn(['editingItem', 'grpId']));
+                            const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
+                            resetCallback(listItem);
                             this.handleClose();
                         }).catch((err) => {
                             console.log('handleCreateDataConfirmResult - err :::: ', err);
@@ -129,7 +129,6 @@ class ClientGroupDialog extends Component {
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                             
                         }).then((res) => {
-                            // ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
                             // tree refresh
                             const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
                             resetCallback(listItem);

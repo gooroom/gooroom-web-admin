@@ -436,7 +436,7 @@ export default handleActions({
                         // 1. delete children
                         const parentIndex = newTreeData.getIn([index, 'parentIndex']);
                         let nextSiblings = newTreeData.map((e, i) => {
-                            if(e.get('parentIndex') !== undefined && e.get('parentIndex') === parentIndex && i > index) {
+                            if(e.get('parentIndex') !== undefined && e.get('parentIndex') <= parentIndex && i > index) {
                                 return i;
                             } else {
                                 return -1;
