@@ -326,8 +326,17 @@ class UserMasterManage extends Component {
     })
   }
 
-  handleResetDeptTree = (deptCd) => {
-    //this.refDeptComp.handleResetDeptInfo('000000001');
+  handleResetDeptTree = (listItem) => {
+    const compId = this.state.compId;
+    const { DeptProps, DeptActions } = this.props;
+
+    // changed dept - re-select parentId of deptCd
+    if(listItem.get('parentIndex') !== undefined) {
+      const parentListItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData', listItem.get('parentIndex')]);
+      DeptActions.readChildrenDeptList(compId, parentListItem.get('key'), listItem.get('parentIndex'));
+    } else {
+      DeptActions.readChildrenDeptList(compId, 0, undefined);
+    }
   }
  
   handleCreateUserButton = value => {
@@ -410,7 +419,6 @@ class UserMasterManage extends Component {
                 onSelect={this.handleSelectDept}
                 onEdit={this.handleEditDept}
                 isEnableEdit={true}
-                onRef={el => this.refDeptComp = el}
               />
             </Grid>
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>

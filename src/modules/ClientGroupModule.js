@@ -110,7 +110,6 @@ export const readClientGroupListPaged = (module, compId, extParam) => dispatch =
 };
 
 export const readChildrenClientGroupList = (compId, grpId, index) => dispatch => {
-
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readChildrenClientGroupList', {
         grpId: grpId
@@ -421,18 +420,15 @@ export default handleActions({
             }));
 
             if(state.getIn(['viewItems', compId, 'treeComp', 'treeData'])) {
-
                 if(index !== undefined) {
-
                     let newTreeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
                     newTreeData = newTreeData.setIn([index, 'children'], resData.map(d => (d.get('key'))));
-                    
+                   
                     // data merge.
                     if(index === 0) {
                         // root
                         newTreeData = newTreeData.filter((e, i) => (i === 0));
                     } else {
-
                         // 1. delete children
                         const parentIndex = newTreeData.getIn([index, 'parentIndex']);
                         let nextSiblings = newTreeData.map((e, i) => {
@@ -450,7 +446,6 @@ export default handleActions({
                             newTreeData = newTreeData.filter((e, i) => (i <= index));
                         }
                     }
-
 
                     // 2. insert new child data
                     //newTreeData = newTreeData.splice.apply(newTreeData, [index + 1, 0].concat(resData));
@@ -487,7 +482,6 @@ export default handleActions({
                         title: resData.getIn([0, 'title'])
                     });
                 }
-
             } else {
                 return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], resData);
             }

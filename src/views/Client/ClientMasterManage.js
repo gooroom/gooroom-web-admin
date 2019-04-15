@@ -100,26 +100,8 @@ class ClientMasterManage extends Component {
     this.setState({
       selectedGrp: {grpId:selectedGroupObj.get('grpId'), grpNm:selectedGroupObj.get('grpNm')}
     });
-
-    // const selectRowObject = getRowObjectById(ClientGroupProps, compId, selectedGroupId, 'grpId');
-
     // close client inform
     ClientManageActions.closeClientManageInform({compId: compId});
-    
-    // // select selectedGrpId
-    // ClientGroupActions.changeCompVariableObject({
-    //   compId: compId,
-    //   valueObj: {
-    //     selectedGrpId: treeNode.key, 
-    //     selectedGrpNm: treeNode.title,
-    //     hasChildren: treeNode.hasChildren
-    //   }
-    // });
-    // // show client group inform
-    // ClientGroupActions.showClientGroupInform({
-    //   compId: compId, viewItem: Map(treeNode), selectId: treeNode.key
-    // });
-
     // uni
     ClientGroupActions.changeCompVariableObject({
       compId: compId,
@@ -128,7 +110,6 @@ class ClientMasterManage extends Component {
         informOpen: true
       }
     });
-
     this.showClientGroupSpec(compId, selectedGroupObj.get("grpId"));
   }
   

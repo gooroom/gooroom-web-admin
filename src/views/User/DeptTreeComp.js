@@ -11,6 +11,8 @@ import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, get
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
+import DeptDialog from './DeptDialog';
+
 import Grid from '@material-ui/core/Grid';
 import GRTreeDeptList from "components/GRTree/GRTreeDeptList";
 
@@ -35,18 +37,12 @@ class DeptTreeComp extends Component {
 
   constructor(props) {
     super(props);
-
-    this.handleResetDeptInfo = this.handleResetDeptInfo.bind(this);
     this.state = {
       isShowTree: true
     };
   }
 
   componentDidMount() {
-    if(this.props.onRef) {
-      this.props.onRef(this);
-    }
-
     //this.props.DeptActions.readDeptListPaged(this.props.DeptProps, this.props.compId);
   }
 
@@ -70,12 +66,12 @@ class DeptTreeComp extends Component {
 
   // edit
   handleEditClick = (event, id) => {
-    // const { DeptProps, DeptActions, compId } = this.props;
-    // const viewItem = getRowObjectById(DeptProps, compId, id, 'deptCd');
-    // DeptActions.showDialog({
-    //   viewItem: viewItem,
-    //   dialogType: ClientGroupDialog.TYPE_EDIT
-    // });
+    const { DeptProps, DeptActions, compId } = this.props;
+    const viewItem = getRowObjectById(DeptProps, compId, id, 'deptCd');
+    DeptActions.showDialog({
+      viewItem: viewItem,
+      dialogType: DeptDialog.TYPE_EDIT
+    });
   };
 
   handleCheckClick = (event, id) => {
@@ -162,9 +158,6 @@ class DeptTreeComp extends Component {
         isShowTree: false
       })
       DeptActions.readDeptListPaged(DeptProps, this.props.compId, {page: 0});
-
-    } else {
-
     }
   };
 
@@ -178,33 +171,6 @@ class DeptTreeComp extends Component {
       isShowTree: true
     })
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   handleInitTreeData = () => {
   }
@@ -220,11 +186,11 @@ class DeptTreeComp extends Component {
   handleSelectDept = (treeNode) => {
     if(this.props.onSelect) {
       this.props.onSelect(Map({
-        deptCd: treeNode.key,
-        deptNm: treeNode.title,
-        comment: treeNode.comment,
-        regDate: treeNode.regDate,
-        hasChildren: treeNode.hasChildren
+        deptCd: treeNode.get('key'),
+        deptNm: treeNode.get('title'),
+        comment: treeNode.get('comment'),
+        regDate: treeNode.get('regDate'),
+        hasChildren: treeNode.get('hasChildren')
       }));
     }
   }
@@ -233,11 +199,11 @@ class DeptTreeComp extends Component {
   handleEditDept = (treeNode) => {
     if(this.props.onEdit) {
       this.props.onEdit(Map({
-        deptCd: treeNode.key,
-        deptNm: treeNode.title,
-        comment: treeNode.comment,
-        regDate: treeNode.regDate,
-        hasChildren: treeNode.hasChildren
+        deptCd: treeNode.get('key'),
+        deptNm: treeNode.get('title'),
+        comment: treeNode.get('comment'),
+        regDate: treeNode.get('regDate'),
+        hasChildren: treeNode.get('hasChildren')
       }));
     }
   };
@@ -389,16 +355,15 @@ class DeptTreeComp extends Component {
           <GRTreeDeptList
             useFolderIcons={true}
             listHeight='24px'
+            compId={compId}
             hasSelectChild={false}
             hasSelectParent={false}
-            compId={compId}
             isEnableEdit={this.props.isEnableEdit}
             isShowMemberCnt={true}
             onInitTreeData={this.handleInitTreeData}
             onSelectNode={this.handleSelectDept}
             onCheckedNode={this.handleCheckedDept}
             onEditNode={this.handleEditDept}
-            onRef={ref => (this.grTreeList = ref)}
           />
         </div>
         }

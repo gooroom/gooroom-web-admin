@@ -158,10 +158,6 @@ class ClientGroupTreeComp extends Component {
         isShowTree: false
       })
       ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.compId, {page: 0});
-
-    } else {
-
-
     }
   };
 
@@ -176,42 +172,18 @@ class ClientGroupTreeComp extends Component {
     })
   };
 
-
-
-
-
-
   handleInitTreeData = () => {
-    // 필요없음. ????
-    // this.props.ClientGroupActions.changeCompVariableObject({
-    //   compId: this.props.compId,
-    //   valueObj: {selectedGrpId: '', selectedGrpNm: ''}
-    // });
   }
 
   // click group checkbox (in tree)
   handleCheckedClientGroup = (checkedGrpIdArray, imperfect) => {
-
     if(this.props.onCheck) {
       this.props.onCheck(checkedGrpIdArray);
     }
-
-    // 이것은 상위에서 처리해야함
-    // const { ClientManageProps, ClientManageActions } = this.props;
-    // // set checkedGrpId
-    // this.props.ClientGroupActions.changeCompVariableObject({
-    //   compId: this.props.compId,
-    //   valueObj: {checkedGrpId: checkedGrpIdArray}
-    // });
-    // // show client list in group.
-    // ClientManageActions.readClientListPaged(ClientManageProps, this.props.compId, {
-    //   groupId: checkedGrpIdArray.join(), page:0
-    // }, {isResetSelect:true});
   }
 
   // click group row (in tree)
   handleSelectClientGroup = (listItem) => {
-
     if(this.props.onSelect) {
       this.props.onSelect(Map({
         grpId: listItem.get('key'),
@@ -221,32 +193,6 @@ class ClientGroupTreeComp extends Component {
         hasChildren: listItem.get('hasChildren')
       }));
     }
-
-    // close client inform
-    // 이것은 상위에서 처리해야함
-    // ClientManageActions.closeClientManageInform({compId: compId});
-
-    // 이것은 상위에서 처리해야함
-    // ClientGroupActions.changeCompVariableObject({
-    //   compId: compId,
-    //   valueObj: {
-    //     viewItem: (fromJS(listItem)).merge(Map({
-    //       grpId: listItem.get('key'),
-    //       grpNm: listItem.get('title'),
-    //       hasChildren: listItem.get('hasChildren') 
-    //     })),
-    //     informOpen: true
-    //   }
-    // });
-
-    // 이것은 상위에서 처리해야함
-    // this.showClientGroupSpec(compId, Map({
-    //   key: listItem.get('key'),
-    //   regDate: listItem.get('regDate'),
-    //   comment: listItem.get('comment'),
-    //   title: listItem.get('title'),
-    //   hasChildren: listItem.get('hasChildren'),
-    // }));
   }
 
   // edit group in tree
@@ -411,7 +357,6 @@ class ClientGroupTreeComp extends Component {
             onSelectNode={this.handleSelectClientGroup}
             onCheckedNode={this.handleCheckedClientGroup}
             onEditNode={this.handleEditClientGroup}
-            onRef={ref => (this.grTreeList = ref)}
           />
         </div>
         }
