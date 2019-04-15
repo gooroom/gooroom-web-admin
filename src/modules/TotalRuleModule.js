@@ -236,6 +236,153 @@ export const getAllClientRuleByGroupId = (param) => dispatch => {
     });
 };
 
+
+export const getAllClientUseRuleByDeptCd = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readAllClientUseRuleByDeptCd', {'deptCd': param.deptCd}).then(
+        (response) => {
+
+            if(response.data && response.data.data && response.data.data.length < 1) {
+                dispatch({type: COMMON_FAILURE});
+            }
+
+            const rules = response.data.data[0];
+            dispatch({type: COMMON_PENDING});
+
+            if(rules && rules.BROWSERRULE) {
+                const resObj = rules.BROWSERRULE;
+                dispatch({
+                    type: GET_BROWSERRULE_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'DEPT'
+                });
+            }
+
+            if(rules && rules.MEDIARULE) {
+                const resObj = rules.MEDIARULE;
+                dispatch({
+                    type: GET_MEDIACONTROL_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'DEPT'
+                });
+            }
+
+            if(rules && rules.SECURITYRULE) {
+                const resObj = rules.SECURITYRULE;
+                dispatch({
+                    type: GET_SECURITYRULE_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'DEPT'
+                });
+            }
+
+            if(rules && rules.FILTEREDSWRULE) {
+                const resObj = rules.FILTEREDSWRULE;
+                dispatch({
+                    type: GET_SOFTWAREFILTER_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'DEPT'
+                });
+            }
+
+            if(rules && rules.DESKTOPCONF) {
+                const resObj = rules.DESKTOPCONF;
+                dispatch({
+                    type: GET_DESKTOPCONF_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'DEPT'
+                });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+export const getAllClientUseRuleByUserId = (param) => dispatch => {
+    const compId = param.compId;
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readAllClientUseRuleByUserId', {'userId': param.userId}).then(
+        (response) => {
+
+            if(response.data && response.data.data && response.data.data.length < 1) {
+                dispatch({type: COMMON_FAILURE});
+            }
+
+            const rules = response.data.data[0];
+            dispatch({type: COMMON_PENDING});
+
+            if(rules && rules.BROWSERRULE) {
+                const resObj = rules.BROWSERRULE;
+                dispatch({
+                    type: GET_BROWSERRULE_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'USER'
+                });
+            }
+
+            if(rules && rules.MEDIARULE) {
+                const resObj = rules.MEDIARULE;
+                dispatch({
+                    type: GET_MEDIACONTROL_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'USER'
+                });
+            }
+
+            if(rules && rules.SECURITYRULE) {
+                const resObj = rules.SECURITYRULE;
+                dispatch({
+                    type: GET_SECURITYRULE_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'USER'
+                });
+            }
+
+            if(rules && rules.FILTEREDSWRULE) {
+                const resObj = rules.FILTEREDSWRULE;
+                dispatch({
+                    type: GET_SOFTWAREFILTER_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'USER'
+                });
+            }
+
+            if(rules && rules.DESKTOPCONF) {
+                const resObj = rules.DESKTOPCONF;
+                dispatch({
+                    type: GET_DESKTOPCONF_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'USER'
+                });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {

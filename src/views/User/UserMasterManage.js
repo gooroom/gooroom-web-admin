@@ -8,17 +8,13 @@ import { connect } from 'react-redux';
 import * as GlobalActions from 'modules/GlobalModule';
 import * as DeptActions from 'modules/DeptModule';
 import * as UserActions from 'modules/UserModule';
-import * as BrowserRuleActions from 'modules/BrowserRuleModule';
-import * as MediaRuleActions from 'modules/MediaRuleModule';
-import * as SecurityRuleActions from 'modules/SecurityRuleModule';
-import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
-import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+
+import * as TotalRuleActions from 'modules/TotalRuleModule';
 
 import GRPageHeader from "containers/GRContent/GRPageHeader";
 import DeptTreeComp from 'views/User/DeptTreeComp';
 
-import GRTreeList from "components/GRTree/GRTreeList";
 import GRPane from "containers/GRContent/GRPane";
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
@@ -95,8 +91,8 @@ class UserMasterManage extends Component {
     
   // click dept row (in tree)
   handleSelectDept = (selectedDeptObj) => {
+    const { TotalRuleActions } = this.props;
     const { DeptActions, UserActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
     const compId = this.state.compId;
     // change selected info in state
     this.setState({
@@ -113,16 +109,7 @@ class UserMasterManage extends Component {
       }
     });
 
-    // get browser rule info
-    BrowserRuleActions.getBrowserRuleByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });
-    // get media control setting info
-    MediaRuleActions.getMediaRuleByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });
-    // get client secu info
-    SecurityRuleActions.getSecurityRuleByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });
-    // get filtered software rule
-    SoftwareFilterActions.getSoftwareFilterByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });   
-    // get desktop conf info
-    DesktopConfActions.getDesktopConfByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });
+    TotalRuleActions.getAllClientUseRuleByDeptCd({ compId: compId, deptCd: selectedDeptObj.get('deptCd') });
 
     // show Dept. inform pane.
     DeptActions.showInform({ compId: compId, viewItem: null });
@@ -130,8 +117,8 @@ class UserMasterManage extends Component {
   
   // Select User Item
   handleSelectUser = (selectedUserObj, selectedUserIdArray) => {
+    const { TotalRuleActions } = this.props;
     const { UserActions, DeptActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
     const compId = this.state.compId;
 
     // show user info.
@@ -142,16 +129,7 @@ class UserMasterManage extends Component {
       });
 
       // show user configurations.....
-      // get browser rule info
-      BrowserRuleActions.getBrowserRuleByUserId({ compId: compId, userId: userId });
-      // get media control setting info
-      MediaRuleActions.getMediaRuleByUserId({ compId: compId, userId: userId });
-      // get client secu info
-      SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
-      // get filtered software rule
-      SoftwareFilterActions.getSoftwareFilterByUserId({ compId: compId, userId: userId });   
-      // get desktop conf info
-      DesktopConfActions.getDesktopConfByUserId({ compId: compId, userId: userId });
+      TotalRuleActions.getAllClientUseRuleByUserId({ compId: compId, userId: userId });
       
       // show user inform pane.
       UserActions.showInform({ compId: compId, viewItem: selectedUserObj });
@@ -285,7 +263,7 @@ class UserMasterManage extends Component {
   handleDeptSelectSave = (selectedDept) => {
     const { t, i18n } = this.props;
     const checkedUserIds = this.props.UserProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
-    const { DeptProps, GRConfirmActions } = this.props;
+    const { GRConfirmActions } = this.props;
     GRConfirmActions.showConfirm({
         confirmTitle: t("lbChangeDeptForUser"),
         confirmMsg: t("msgChangeDeptForUser", {userCnt:checkedUserIds.size, deptNm:selectedDept.deptNm}),
@@ -298,7 +276,7 @@ class UserMasterManage extends Component {
   }
   handleUserSelectSaveConfirmResult = (confirmValue, paramObject) => {
     if(confirmValue) {
-      const { DeptProps, DeptActions, UserActions, UserProps } = this.props;
+      const { DeptActions, UserActions, UserProps } = this.props;
       DeptActions.createUsersInDept({
           deptCd: paramObject.selectedDeptCd,
           users: paramObject.selectedUsers.join(',')
@@ -497,11 +475,8 @@ const mapDispatchToProps = (dispatch) => ({
 
   DeptActions: bindActionCreators(DeptActions, dispatch),
   UserActions: bindActionCreators(UserActions, dispatch),
-  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
-  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
-  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
-  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
-  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
+
+  TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch)
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserMasterManage)));
