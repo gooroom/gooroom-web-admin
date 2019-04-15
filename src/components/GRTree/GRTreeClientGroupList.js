@@ -44,7 +44,6 @@ class GRTreeClientGroupList extends Component {
       this.props.onInitTreeData();
     }
     
-    //this.fetchTreeData(this.state.rootKeyValue, undefined, true);
     this.props.ClientGroupActions.readChildrenClientGroupList(this.props.compId, this.state.rootKeyValue, undefined)
   }
 
@@ -54,98 +53,6 @@ class GRTreeClientGroupList extends Component {
       this.props.onRef(undefined)
     }
   }
-  
-  // fetchTreeData(keyValue, index, isDoExpand, onCallback) {
-
-  //   const param = {};
-  //   param[this.state.paramKeyName] = keyValue;
-
-  //   grRequestPromise(this.state.url, param).then(res => {
-  //     const resData = res.map(x => {
-  //       let children = null;
-  //       if (x.hasChildren) {
-  //         children = [];
-  //       }
-
-  //       let node = {
-  //         key: x.key,
-  //         depth: x.level,
-  //         disabled: false,
-  //         title: x.title,
-  //         children: children,
-  //         regDate: x.regDt,
-  //         modDate: x.modDt,
-  //         comment: x.comment,
-  //         clientCount: x.clientCount,
-  //         clientTotalCount: x.clientTotalCount,
-  //         _shouldRender: true
-  //       };
-  //       if (index !== undefined) {
-  //         node["parentIndex"] = index;
-  //       }
-  //       return node;
-  //     });
-
-  //     if (this.state.treeData.length > 0) {
-  //       // set children data for stop refetch.
-  //       let parents = this.state.treeData;
-
-  //       parents[index].children = resData.map(d => {
-  //         return d.key;
-  //       });
-        
-  //       // data merge.
-  //       // 1. delete children
-  //       parents = parents.filter(e => e.parentIndex != index);
-  //       // 2. insert new child data
-  //       parents.splice.apply(parents, [index + 1, 0].concat(resData));
-
-  //       // 3. reset parent index 
-  //       parents = parents.map((obj, i) => {
-  //         if (i > index + resData.length && obj.parentIndex > 0) {
-  //           if(obj.parentIndex > index) {
-  //             obj.parentIndex = obj.parentIndex + resData.length;
-  //           }
-  //         }
-  //         return obj;
-  //       });
-
-  //       // reset expandedListItems values for adding nodes.
-  //       const expandedListItems = this.state.expandedListItems;
-  //       const newExpandedListItems = expandedListItems.map(obj => {
-  //           if(obj > index) {
-  //               return obj + resData.length;
-  //           } else {
-  //               return obj;
-  //           }
-  //       });
-
-  //       if(this._isMounted) {
-  //         this.setState({
-  //           expandedListItems: newExpandedListItems,
-  //           treeData: parents
-  //         });
-  //       }
-
-  //     } else {
-  //       if(this._isMounted) {
-  //         this.setState({
-  //           treeData: resData
-  //         });
-
-  //         if(isDoExpand) {
-  //           this.handleClickNode(resData[0], 0);
-  //         }
-  //       }
-  //     }
-
-  //     if(this._isMounted && onCallback) {
-  //       onCallback((resData && resData.length > 0) ? true : false);
-  //     }
-  //   }).catch(function (err) {
-  //     console.log(err); // Error: Request is failed
-  //   });
-  // }
 
   handleClickNode(listItem, index) {
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
@@ -154,8 +61,6 @@ class GRTreeClientGroupList extends Component {
       // fetch children data
       // request to server if children array is empty.
       if (listItem.get('children').size < 1) {
-        ClientGroupActions.readChildrenClientGroupList(this.props.compId, listItem.get('key'), index);
-      } else {
         ClientGroupActions.readChildrenClientGroupList(this.props.compId, listItem.get('key'), index);
       }
 
@@ -182,23 +87,6 @@ class GRTreeClientGroupList extends Component {
       value: index
     });
   }
-
-  // resetTreeNode(keyValue) {
-  //   const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-  //   const treeData = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']);
-
-  //   const index = treeData.findIndex((e) => {
-  //     return e.key == keyValue;
-  //   })
-
-  //   //this.fetchTreeData(keyValue, index);
-  //   this.props.ClientGroupActions.readChildrenClientGroupList(this.props.compId, keyValue, index);
-
-  //   // set active node
-  //   ClientGroupActions.changeTreeDataVariable({
-  //     compId: compId, name: 'activeListItem', value: index
-  //   });
-  // }
 
   updateCheckStatus = (nodeKey, tempChecked, isChecked) => {
     const newChecked = [...tempChecked];
@@ -353,7 +241,8 @@ class GRTreeClientGroupList extends Component {
     if (this.props.onCheckedNode) this.props.onCheckedNode(newStatus.newChecked, newStatus.newImperfect);
   };
 
-  handleClickFoldingNode(listItem, index) {
+  handleClickFoldingNode(event, listItem, index) {
+    event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
     const expandedListItems = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
 
@@ -437,30 +326,10 @@ class GRTreeClientGroupList extends Component {
           }
           beforeItem = listItem;
 
-          // listItem._styles = this.applyStyle(listItem, (activeListItem === i));
-          // listItem._shouldRender = // (listItem._shouldRender) ||
-          //   (listItem.depth >= startingDepth && parentsAreExpanded(listItem));
-          // listItem.set('_primaryText', listItem.get('title'));
           return listItem;
         }
       );
     }
-
-    // function parentsAreExpanded(listItem) {
-    //   if (listItem.depth > startingDepth) {
-    //     if (expandedListItems.indexOf(listItem.parentIndex) === -1) {
-    //       return false;
-    //     } else {
-    //       return true;
-    //       // const parent = treeData.filter((_listItem, index) => {
-    //       //   return index === listItem.parentIndex;
-    //       // })[0];
-    //       // return parentsAreExpanded(parent);
-    //     }
-    //   } else {
-    //     return true;
-    //   }
-    // }
 
     return modifiedList;
   }
@@ -517,7 +386,7 @@ class GRTreeClientGroupList extends Component {
               }}
               onCheckNode={this.handleCheckNode}
               onEditNode={() => this.handleEditClickNode(listItem, i)}
-              onFoldingNode={() => this.handleClickFoldingNode(listItem, i)}
+              onFoldingNode={() => this.handleClickFoldingNode(event, listItem, i)}
               isShowMemberCnt={(this.props.isShowMemberCnt) ? this.props.isShowMemberCnt : false}
               memberCntValue={listItem.get('clientCount') + '/' + listItem.get('clientTotalCount')}
             />
