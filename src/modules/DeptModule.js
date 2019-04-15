@@ -11,6 +11,9 @@ const GET_DEPT_LIST_SUCCESS = 'dept/GET_DEPT_LIST_SUCCESS';
 const GET_DEPT_LISTPAGED_SUCCESS = 'dept/GET_DEPT_LISTPAGED_SUCCESS';
 const GET_DEPT_SUCCESS = 'dept/GET_DEPT_SUCCESS';
 
+const GET_DEPT_TREECHILD_SUCCESS = 'dept/GET_CLIENTGROUP_TREECHILD_SUCCESS';
+const CHG_TREEDATA_VALUE = 'dept/CHG_TREEDATA_VALUE';
+
 const CREATE_DEPT_SUCCESS = 'dept/CREATE_DEPT_SUCCESS';
 const EDIT_DEPT_SUCCESS = 'dept/EDIT_DEPT_SUCCESS';
 const DELETE_DEPT_SUCCESS = 'dept/DELETE_DEPT_SUCCESS';
@@ -126,6 +129,26 @@ export const readDeptListPaged = (module, compId, extParam) => dispatch => {
     });
 };
 
+export const readChildrenDeptList = (compId, deptCd, index) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readChildrenDeptList', {
+        deptCd: deptCd
+    }).then(
+        (response) => {
+            dispatch({
+                type: GET_DEPT_TREECHILD_SUCCESS,
+                compId: compId,
+                index: index,
+                response: response
+            });
+        }
+    ).catch(error => {
+        console.log('error : ', error);
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+
 export const getDeptInfo = (param) => dispatch => {
     const compId = param.compId;
     dispatch({type: COMMON_PENDING});
@@ -196,6 +219,15 @@ export const changeCompVariableObject = (param) => dispatch => {
 export const changeStoreData = (param) => dispatch => {
     return dispatch({
         type: CHG_STORE_DATA,
+        name: param.name,
+        value: param.value
+    });
+};
+
+export const changeTreeDataVariable = (param) => dispatch => {
+    return dispatch({
+        type: CHG_TREEDATA_VALUE,
+        compId: param.compId,
         name: param.name,
         value: param.value
     });
@@ -359,7 +391,103 @@ export default handleActions({
     }, 
     [GET_DEPT_LISTPAGED_SUCCESS]: (state, action) => {
         return commonHandleActions.handleListPagedAction(state, action);
-    }, 
+    },
+    [GET_DEPT_TREECHILD_SUCCESS]: (state, action) => {
+        const compId = action.compId;
+        const index = action.index;
+        const data = action.response.data;
+        if(data && data.length > 0) {
+
+            const resData = fromJS(data.map(x => {
+                let node = {
+                    key: x.key,
+                    depth: x.level,
+                    disabled: false,
+                    title: x.title,
+                    children: (x.hasChildren) ? [] : null,
+                    regDate: x.regDt,
+                    modDate: x.modDt,
+                    comment: x.comment,
+                    userCount: x.userCount,
+                    userTotalCount: x.userTotalCount,
+                    _shouldRender: true
+                };
+                if (index !== undefined) {
+                    node["parentIndex"] = index;
+                }
+                return node;
+            }));
+
+            if(state.getIn(['viewItems', compId, 'treeComp', 'treeData'])) {
+                if(index !== undefined) {
+                    let newTreeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+                    newTreeData = newTreeData.setIn([index, 'children'], resData.map(d => (d.get('key'))));
+                   
+                    // data merge.
+                    if(index === 0) {
+                        // root
+                        newTreeData = newTreeData.filter((e, i) => (i === 0));
+                    } else {
+                        // 1. delete children
+                        const parentIndex = newTreeData.getIn([index, 'parentIndex']);
+                        let nextSiblings = newTreeData.map((e, i) => {
+                            if(e.get('parentIndex') !== undefined && e.get('parentIndex') <= parentIndex && i > index) {
+                                return i;
+                            } else {
+                                return -1;
+                            }
+                        });
+
+                        nextSiblings = nextSiblings.filter(e => (e > -1));
+                        if(nextSiblings && nextSiblings.size > 0) {
+                            newTreeData = newTreeData.filter((e, i) => !(i > index && i < nextSiblings.get(0)));
+                        } else {
+                            newTreeData = newTreeData.filter((e, i) => (i <= index));
+                        }
+                    }
+
+                    // 2. insert new child data
+                    //newTreeData = newTreeData.splice.apply(newTreeData, [index + 1, 0].concat(resData));
+                    newTreeData = newTreeData.splice(index+1, newTreeData.size-(index+1)).concat(resData).concat(newTreeData.splice(0, index+1))
+
+                    // 3. reset parent index 
+                    newTreeData = newTreeData.map((obj, i) => {
+                        if (i > index + resData.size && obj.get('parentIndex') > 0) {
+                            if(obj.get('parentIndex') > index) {
+                                obj = obj.set('parentIndex', obj.get('parentIndex') + resData.size);
+                            }
+                        }
+                        return obj;
+                    });
+    
+                    // reset expandedListItems values for adding nodes.
+                    const expandedListItems = state.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
+                    const newExpandedListItems = (expandedListItems) ? expandedListItems.map(obj => {
+                        if(obj > index) {
+                            return obj + resData.size;
+                        } else {
+                            return obj;
+                        }
+                    }) : [];
+    
+                    return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], newTreeData)
+                                .setIn(['viewItems', compId, 'treeComp', 'expandedListItems'], newExpandedListItems);
+                } else {
+                    // root node
+                    return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', 0], {
+                        comment: resData.getIn([0, 'comment']),
+                        modDate: resData.getIn([0, 'modDate']),
+                        regDate: resData.getIn([0, 'regDate']),
+                        title: resData.getIn([0, 'title'])
+                    });
+                }
+            } else {
+                return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], resData);
+            }
+        } else  {
+            return state.deleteIn(['viewItems', compId, 'treeComp', 'treeData']);
+        }
+    },
     [GET_DEPT_SUCCESS]: (state, action) => {
         return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, 'deptCd');
     },
@@ -385,7 +513,6 @@ export default handleActions({
             multiDialogOpen: false
         });
     },
-
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
             editingItem: state.get('editingItem').merge({[action.name]: action.value})
@@ -404,6 +531,9 @@ export default handleActions({
         } else {
             return state.setIn(['viewItems', action.compId], fromJS(action.valueObj));
         }        
+    },
+    [CHG_TREEDATA_VALUE]: (state, action) => {
+        return state.setIn(['viewItems', action.compId, 'treeComp', action.name], action.value);
     },
     [CHG_STORE_DATA]: (state, action) => {
         return state.merge({

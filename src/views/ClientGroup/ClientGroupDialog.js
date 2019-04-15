@@ -84,7 +84,7 @@ class ClientGroupDialog extends Component {
                             resetCallback(listItem);
                             this.handleClose();
                         }).catch((err) => {
-                            console.log('handleCreateDataConfirmResult - err :::: ', err);
+                            console.log('handleCreateData - err :::: ', err);
                         });
                     }
                 },
