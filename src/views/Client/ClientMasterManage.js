@@ -193,7 +193,7 @@ class ClientMasterManage extends Component {
   };
 
   // create group in tree
-  handleCreateClientGroup = () => {
+  handleCreateClientGroup = (event) => {
     const { t, i18n } = this.props;
     
     const grpId = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'viewItem', 'grpId']);
