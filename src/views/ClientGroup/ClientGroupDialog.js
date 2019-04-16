@@ -81,7 +81,7 @@ class ClientGroupDialog extends Component {
                         }).then((res) => {
                             // tree refresh
                             const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                            resetCallback(listItem);
+                            resetCallback(listItem.get('parentIndex'));
                             this.handleClose();
                         }).catch((err) => {
                             console.log('handleCreateData - err :::: ', err);
@@ -131,7 +131,7 @@ class ClientGroupDialog extends Component {
                         }).then((res) => {
                             // tree refresh
                             const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                            resetCallback(listItem);
+                            resetCallback(listItem.get('parentIndex'));
                             this.handleClose();
                         });
                     }
