@@ -11,6 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import ShowIcon from "@material-ui/icons/RemoveRedEyeOutlined";
+import ShowIconSelected from "@material-ui/icons/RemoveRedEye";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -24,9 +25,9 @@ class GRTreeItem extends Component {
 
     render() {
         const { classes } = this.props;
-        const { nodeKey, primaryText, depth, style, checked, imperfect, isShowCheck, isEnableEdit, isCheckMasterOnly } = this.props
+        const { nodeKey, primaryText, depth, style, checked, imperfect, isShowCheck, isShowDetail = false, isEnableEdit, isCheckMasterOnly } = this.props
         const { isShowMemberCnt, memberCntValue } = this.props
-        const { onClickNode, onClickDetailNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend } = this.props
+        const { onClickNode, onClickDetailNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend, isActive } = this.props
         const styles = {
             root: {
                 cursor: "pointer",
@@ -41,15 +42,15 @@ class GRTreeItem extends Component {
         if(isShowMemberCnt) {
             nodeTitle = '[' + memberCntValue + '] ' + primaryText;
         }
-
-        const showIcon = <IconButton style={{padding:0}} onClick={onClickDetailNode}><ShowIcon /></IconButton>;      
+        
+        const showIcon = <IconButton style={{padding:0}} onClick={onClickDetailNode}>{(isActive) ? <ShowIconSelected /> : <ShowIcon />}</IconButton>;
 
         return (
             <ListItem button style={Object.assign({}, styles.root, style)} >
                 {(isShowCheck) &&
                 <Checkbox color="primary"
                     onClick={this.onClickCheckbox}
-                    onChange={onCheckNode(nodeKey, primaryText)}
+                    onChange={onCheckNode}
                     checked={checked.indexOf(nodeKey) !== -1}
                     disableRipple
                     indeterminate={imperfect.indexOf(nodeKey) !== -1}
@@ -58,7 +59,9 @@ class GRTreeItem extends Component {
                 />
                 }
                 {leftIcon}
-                {showIcon}
+                {(isShowDetail) &&
+                    <IconButton style={{padding:0}} onClick={onClickDetailNode}>{(isActive) ? <ShowIconSelected /> : <ShowIcon />}</IconButton>
+                }
                 <ListItemText inset primary={nodeTitle} onClick={onClickNode} style={{paddingLeft:4}} />
                 {(isExtend == 'Y') && 
                     <IconButton style={{padding:0}} onClick={onClickNode}><OpenIcon /></IconButton>

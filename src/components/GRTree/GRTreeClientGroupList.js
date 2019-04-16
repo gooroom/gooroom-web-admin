@@ -180,7 +180,7 @@ class GRTreeClientGroupList extends Component {
     // };
   }
 
-  handleCheckNode = nodeKey => event => {
+  handleCheckNode = (event, listItem, i) => {
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
     const treeComp = ClientGroupProps.getIn(['viewItems', compId, 'treeComp']);
 
@@ -193,30 +193,30 @@ class GRTreeClientGroupList extends Component {
     let newStatus = null;
 
     if(!this.props.hasSelectChild && !this.props.hasSelectParent) {
-      newChecked = this.updateCheckStatus(nodeKey, checked, event.target.checked);
+      newChecked = this.updateCheckStatus(listItem.get('key'), checked, event.target.checked);
       newStatus = {
         newChecked: newChecked,
         newImperfect: newImperfect
       };
     } else {
       if(this.props.hasSelectChild) {
-        const children = treeData.filter(obj => obj.key === nodeKey)[0].children;
+        const children = treeData.filter(obj => obj.key === listItem.get('key'))[0].children;
         if(children) {
           if(event.target.checked) {
             // check self and children
-            newChecked = this.updateCheckStatus(nodeKey, newChecked, true);
+            newChecked = this.updateCheckStatus(listItem.get('key'), newChecked, true);
           } else {
             // uncheck self and children
-            newChecked = this.updateCheckStatus(nodeKey, newChecked, false);
+            newChecked = this.updateCheckStatus(listItem.get('key'), newChecked, false);
           }
           // remove from imperfect
-          newImperfect = this.updateCheckStatus(nodeKey, newImperfect, false);
+          newImperfect = this.updateCheckStatus(listItem.get('key'), newImperfect, false);
           // check children from this
           const newChildrenStatus = this.updateChildrenNode(children, event.target.checked, newChecked, newImperfect);
           newChecked = newChildrenStatus.newChecked;
           newImperfect = newChildrenStatus.newImperfect;
         } else {
-          newChecked = this.updateCheckStatus(nodeKey, checked, event.target.checked);
+          newChecked = this.updateCheckStatus(listItem.get('key'), checked, event.target.checked);
         }
         
         newStatus = {
@@ -227,15 +227,19 @@ class GRTreeClientGroupList extends Component {
 
       if(this.props.hasSelectParent) {
         // check parent from this
-        newStatus = this.updateParentNode(nodeKey, event.target.checked, newChecked, newImperfect);
+        newStatus = this.updateParentNode(listItem.get('key'), event.target.checked, newChecked, newImperfect);
       }
     }
 
+    // set checked items
     ClientGroupActions.changeTreeDataVariable({ compId: compId, name: 'checked', value: newStatus.newChecked });
+    // set imperfect items
     ClientGroupActions.changeTreeDataVariable({ compId: compId, name: 'imperfect', value: newStatus.newImperfect });
 
     // call select node event
     if (this.props.onCheckedNode) this.props.onCheckedNode(newStatus.newChecked, newStatus.newImperfect);
+
+    this.handleClickDetailNode(listItem, i);
   };
 
   handleClickFoldingNode(event, listItem, index) {
@@ -332,70 +336,103 @@ class GRTreeClientGroupList extends Component {
   }
 
   getTreeItemList = () => {
+    const { startingDepth } = this.state;
     const { ClientGroupProps, compId } = this.props;
     const treeComp = ClientGroupProps.getIn(['viewItems', compId, 'treeComp']);
     if(!treeComp) {
       return;
     }
 
+    const treeData = (treeComp.get('treeData')) ? treeComp.get('treeData') : [];
     const expandedListItems = (treeComp.get('expandedListItems')) ? treeComp.get('expandedListItems') : [];
     const checked = (treeComp.get('checked')) ? treeComp.get('checked') : [];
     const imperfect = (treeComp.get('imperfect')) ? treeComp.get('imperfect') : [];
+    const activeListItem = (treeComp.get('activeListItem')) ? treeComp.get('activeListItem') : '';
 
     function getLeftIcon(listItem, localProps) {
-      if (localProps.useFolderIcons) {
-        if (listItem.get('children')) {
-          return <FolderOpenIcon className={localProps.classes.parentNodeClass} />;
-        } else {
-          return <FolderIcon className={localProps.classes.childNodeClass} />;
-        }
+      if (listItem.get('children')) {
+        return <FolderOpenIcon className={localProps.classes.parentNodeClass} />;
       } else {
-        return listItem.get('icon');
+        return <FolderIcon className={localProps.classes.childNodeClass} />;
       }
     }
 
-    const listItemsModified = this.getListItemModified();
-    let listItemsJSX = null;
-    if(listItemsModified) {
-      listItemsJSX = listItemsModified.map((listItem, i) => {
-        if (listItem.get('_shouldRender')) {
-          return (
-            <GRTreeItem
-              key={"treeListItem-" + i}
-              nodeKey={listItem.get('key')}
-              depth={listItem.get('depth')}
-              primaryText={listItem.get('title')}
-              style={Object.assign({}, listItem.getIn(['_styles','root']).toJS())}
-              isShowCheck={this.state.isShowCheck}
-              isEnableEdit={this.state.isEnableEdit}
-              isCheckMasterOnly={this.state.isCheckMasterOnly}
-              checked={checked}
-              imperfect={imperfect}
-              leftIcon={getLeftIcon(listItem, this.props)}
-              isExtend={
-                !listItem.get('children') ? null : (expandedListItems && expandedListItems.indexOf(i) === -1) ? ('Y') : ('N')
-              }
-              onClickNode={() => {
-                if (listItem.get('disabled')) {
-                  return;
-                }
-                this.handleClickNode(listItem, i);
-              }}
-              onClickDetailNode={() => this.handleClickDetailNode(listItem, i)}
-              onCheckNode={this.handleCheckNode}
-              onEditNode={() => this.handleEditClickNode(listItem, i)}
-              onFoldingNode={() => this.handleClickFoldingNode(event, listItem, i)}
-              isShowMemberCnt={(this.props.isShowMemberCnt) ? this.props.isShowMemberCnt : false}
-              memberCntValue={listItem.get('clientCount') + '/' + listItem.get('clientTotalCount')}
-            />
-          );
-        } else {
-          return null;
-        }
-      });
-    }
+    if(treeData) {
+      let parentItem = null;
+      let beforeItem = null;
+      const listItemsJSX = treeData.map (
+        (listItem, i) => {
 
-    return listItemsJSX;
+          if(beforeItem === null) {
+            listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
+                                .set('_shouldRender', (listItem.get('depth') >= startingDepth))
+                                .set('_primaryText', listItem.get('title'));
+          } else {
+            if(beforeItem.get('depth') < listItem.get('depth')) {
+              // child
+              parentItem = beforeItem;
+              listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
+                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
+                                  .set('_primaryText', listItem.get('title'));
+            } else if(beforeItem.get('depth') > listItem.get('depth')) {
+              // upper - another parent
+              parentItem = treeData.get(listItem.get('parentIndex'));
+              listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
+                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
+                                  .set('_primaryText', listItem.get('title'));
+            } else {
+              // siblings
+              listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
+                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
+                                  .set('_primaryText', listItem.get('title'));
+            }
+          }
+          beforeItem = listItem;
+
+          // create treeItem
+          if (listItem.get('_shouldRender')) {
+            return (
+              <GRTreeItem
+                key={"treeListItem-" + i}
+                nodeKey={listItem.get('key')}
+                depth={listItem.get('depth')}
+                primaryText={listItem.get('title')}
+                style={Object.assign({}, listItem.getIn(['_styles','root']).toJS())}
+                isShowCheck={this.state.isShowCheck}
+                isShowDetail={true}
+                isEnableEdit={this.state.isEnableEdit}
+                isCheckMasterOnly={this.state.isCheckMasterOnly}
+                checked={checked}
+                imperfect={imperfect}
+                leftIcon={getLeftIcon(listItem, this.props)}
+                isActive={(activeListItem === i)}
+                isExtend={
+                  !listItem.get('children') ? null : (expandedListItems && expandedListItems.indexOf(i) === -1) ? ('Y') : ('N')
+                }
+                onClickNode={() => {
+                  if (listItem.get('disabled')) {
+                    return;
+                  }
+                  this.handleClickNode(listItem, i);
+                }}
+                onClickDetailNode={() => this.handleClickDetailNode(listItem, i)}
+                onCheckNode={() => this.handleCheckNode(event, listItem, i)}
+                onEditNode={() => this.handleEditClickNode(listItem, i)}
+                onFoldingNode={() => this.handleClickFoldingNode(event, listItem, i)}
+                isShowMemberCnt={(this.props.isShowMemberCnt) ? this.props.isShowMemberCnt : false}
+                memberCntValue={listItem.get('clientCount') + '/' + listItem.get('clientTotalCount')}
+              />
+            );
+          } else {
+            return null;
+          }
+        }
+      );
+
+      return listItemsJSX;
+    } else {
+      return null;
+    }
   }
 
   render() {

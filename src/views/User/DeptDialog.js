@@ -127,6 +127,7 @@ class DeptDialog extends Component {
                         });
                     }
                 },
+                confirmObject: null
             });
         } else {
             if(this.refs.form && this.refs.form.childs) {
