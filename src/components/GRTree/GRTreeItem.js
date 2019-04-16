@@ -8,7 +8,12 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
+import ShowIcon from "@material-ui/icons/RemoveRedEyeOutlined";
+
+import { withStyles } from '@material-ui/core/styles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 class GRTreeItem extends Component {
 
@@ -18,9 +23,10 @@ class GRTreeItem extends Component {
     };
 
     render() {
-        const {nodeKey, primaryText, depth, style, checked, imperfect, isShowCheck, isEnableEdit, isCheckMasterOnly} = this.props
-        const {isShowMemberCnt, memberCntValue} = this.props
-        const {onClickNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend} = this.props
+        const { classes } = this.props;
+        const { nodeKey, primaryText, depth, style, checked, imperfect, isShowCheck, isEnableEdit, isCheckMasterOnly } = this.props
+        const { isShowMemberCnt, memberCntValue } = this.props
+        const { onClickNode, onClickDetailNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend } = this.props
         const styles = {
             root: {
                 cursor: "pointer",
@@ -36,6 +42,8 @@ class GRTreeItem extends Component {
             nodeTitle = '[' + memberCntValue + '] ' + primaryText;
         }
 
+        const showIcon = <IconButton style={{padding:0}} onClick={onClickDetailNode}><ShowIcon /></IconButton>;      
+
         return (
             <ListItem button style={Object.assign({}, styles.root, style)} >
                 {(isShowCheck) &&
@@ -46,12 +54,12 @@ class GRTreeItem extends Component {
                     disableRipple
                     indeterminate={imperfect.indexOf(nodeKey) !== -1}
                     disabled={(isCheckMasterOnly && depth != 2)}
-
-                    style={{color: (isCheckMasterOnly && depth != 2) ? '#cecece' : '#737373'}}
+                    style={{color: (isCheckMasterOnly && depth != 2) ? '#cecece' : '#737373',width:24}}
                 />
                 }
                 {leftIcon}
-                <ListItemText inset primary={nodeTitle} onClick={onClickNode} />
+                {showIcon}
+                <ListItemText inset primary={nodeTitle} onClick={onClickNode} style={{paddingLeft:4}} />
                 {(isExtend == 'Y') && 
                     <IconButton style={{padding:0}} onClick={onClickNode}><OpenIcon /></IconButton>
                 }
@@ -67,5 +75,5 @@ class GRTreeItem extends Component {
     }
 }
 
-export default GRTreeItem;
+export default (withStyles(GRCommonStyle)(GRTreeItem));
 
