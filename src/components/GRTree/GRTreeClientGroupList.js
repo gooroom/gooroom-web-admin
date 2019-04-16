@@ -63,6 +63,18 @@ class GRTreeClientGroupList extends Component {
         });
       }
     }
+    // // call select node event
+    // if (this.props.onSelectNode) this.props.onSelectNode(listItem);
+    // // set active node
+    // ClientGroupActions.changeTreeDataVariable({
+    //   compId: compId,
+    //   name: 'activeListItem',
+    //   value: index
+    // });
+  }
+
+  handleClickDetailNode(listItem, index) {
+    const { ClientGroupActions, compId } = this.props;
 
     // call select node event
     if (this.props.onSelectNode) this.props.onSelectNode(listItem);
@@ -369,6 +381,7 @@ class GRTreeClientGroupList extends Component {
                 }
                 this.handleClickNode(listItem, i);
               }}
+              onClickDetailNode={() => this.handleClickDetailNode(listItem, i)}
               onCheckNode={this.handleCheckNode}
               onEditNode={() => this.handleEditClickNode(listItem, i)}
               onFoldingNode={() => this.handleClickFoldingNode(event, listItem, i)}
