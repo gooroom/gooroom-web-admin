@@ -393,6 +393,7 @@ class GRTreeClientGroupList extends Component {
           if (listItem.get('_shouldRender')) {
             return (
               <GRTreeItem
+                startingDepth={startingDepth}
                 key={"treeListItem-" + i}
                 nodeKey={listItem.get('key')}
                 depth={listItem.get('depth')}
