@@ -523,11 +523,63 @@ export default handleActions({
                         title: resData.getIn([0, 'title'])
                     });
                 }
+
             } else {
                 return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], resData);
             }
         } else  {
-            return state.deleteIn(['viewItems', compId, 'treeComp', 'treeData']);
+
+            if(state.getIn(['viewItems', compId, 'treeComp', 'treeData'])) {
+                if(index !== undefined) {
+                    let newTreeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+                    newTreeData = newTreeData.deleteIn([index, 'children']);
+                   
+                    // data merge.
+                    if(index === 0) {
+                        // root
+                        newTreeData = newTreeData.filter((e, i) => (i === 0));
+                    } else {
+                        // 1. delete children
+                        const parentIndex = newTreeData.getIn([index, 'parentIndex']);
+                        let nextSiblings = newTreeData.map((e, i) => {
+                            if(e.get('parentIndex') !== undefined && e.get('parentIndex') <= parentIndex && i > index) {
+                                return i;
+                            } else {
+                                return -1;
+                            }
+                        });
+
+                        nextSiblings = nextSiblings.filter(e => (e > -1));
+                        if(nextSiblings && nextSiblings.size > 0) {
+                            newTreeData = newTreeData.filter((e, i) => !(i > index && i < nextSiblings.get(0)));
+                        } else {
+                            newTreeData = newTreeData.filter((e, i) => (i <= index));
+                        }
+                    }
+
+                    // 3. reset parent index 
+                    newTreeData = newTreeData.map((obj, i) => {
+                        if (i > index && obj.get('parentIndex') > 0) {
+                            if(obj.get('parentIndex') > index) {
+                                obj = obj.set('parentIndex', obj.get('parentIndex'));
+                            }
+                        }
+                        return obj;
+                    });
+    
+                    // reset expandedListItems values for adding nodes.
+                    const expandedListItems = state.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
+                    const newExpandedListItems = (expandedListItems) ? expandedListItems.filter(obj => (obj !== index)) : [];
+    
+                    return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], newTreeData)
+                                .setIn(['viewItems', compId, 'treeComp', 'expandedListItems'], newExpandedListItems);
+                } else {
+                    // root node
+                    return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], []);
+                }
+            } else {
+                return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], []);
+            }
         }
     },
     [GET_CLIENTGROUP_NODE]: (state, action) => {

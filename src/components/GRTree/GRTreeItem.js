@@ -26,7 +26,7 @@ class GRTreeItem extends Component {
     render() {
         const { classes } = this.props;
         const { nodeKey, primaryText, depth, style, checked, imperfect, isShowCheck, isShowDetail = false, isEnableEdit, isCheckMasterOnly } = this.props
-        const { isShowMemberCnt, memberCntValue } = this.props
+        const { startingDepth, isShowMemberCnt, memberCntValue } = this.props
         const { onClickNode, onClickDetailNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend, isActive } = this.props
         const styles = {
             root: {
@@ -39,7 +39,7 @@ class GRTreeItem extends Component {
         }
 
         let nodeTitle = primaryText;
-        if(isShowMemberCnt) {
+        if(isShowMemberCnt && depth > startingDepth) {
             nodeTitle = '[' + memberCntValue + '] ' + primaryText;
         }
         
