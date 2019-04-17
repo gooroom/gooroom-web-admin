@@ -270,6 +270,7 @@ export default {
   "dtEditGroup": "Client Group Edit",
   "dtDeleteGroup": "Client Group Delete",
   "msgDeleteGroup": "Are you sure you want to delete {{groupCnt}} client groups?",
+  "lbDeleteInClient": "Whether client in the group is deleted",
   "dtViewGroup": "Client Group Information",
   "dtAddClientInGroup": "Add Client To Group",
   "msgAddClientInGroup": "Are you sure you want to change the selected clients ({{clientCnt}}) to the client group ('{{groupName}}')?",

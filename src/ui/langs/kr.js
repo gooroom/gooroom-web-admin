@@ -270,6 +270,7 @@ export default {
   "dtEditGroup": "단말그룹 수정",
   "dtDeleteGroup": "단말그룹 삭제",
   "msgDeleteGroup": "단말그룹({{groupCnt}}개)을 삭제하시겠습니까?",
+  "lbDeleteInClient": "그룹내 단말삭제여부",
   "dtViewGroup": "단말그룹 정보",
   "dtAddClientInGroup": "그룹에 단말 추가",
   "msgAddClientInGroup": "선택한 단말({{clientCnt}}개)을 단말그룹('{{groupName}}')으로 변경하시겠습니까?",
