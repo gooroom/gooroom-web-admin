@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { List, fromJS } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -12,6 +12,8 @@ const GET_CLIENTGROUP_SUCCESS = 'clientGroup/GET_CLIENTGROUP_SUCCESS';
 
 const GET_CLIENTGROUP_TREECHILD_SUCCESS = 'clientGroup/GET_CLIENTGROUP_TREECHILD_SUCCESS';
 const CHG_TREEDATA_VALUE = 'clientGroup/CHG_TREEDATA_VALUE';
+const GET_CLIENTGROUP_NODE = 'clientGroup/GET_CLIENTGROUP_NODE';
+const GET_CLIENTGROUP_NODELIST = 'clientGroup/GET_CLIENTGROUP_NODELIST';
 
 const CREATE_CLIENTGROUP_SUCCESS = 'clientGroup/CREATE_CLIENTGROUP_SUCCESS';
 const EDIT_CLIENTGROUP_SUCCESS = 'clientGroup/EDIT_CLIENTGROUP_SUCCESS';
@@ -168,7 +170,31 @@ export const getClientGroupNode = (param) => dispatch => {
         return requestPostAPI('readClientGroupData', {'groupId': param.groupId}).then(
             (response) => {
                 dispatch({
-                    type: GET_CLIENTGROUP_SUCCESS,
+                    type: GET_CLIENTGROUP_NODE,
+                    compId: compId,
+                    response: response
+                });
+            }
+        ).catch(error => {
+            dispatch({ type: COMMON_FAILURE, error: error });
+        });
+    } else {
+        return dispatch({
+            type: DELETE_COMPDATA_ITEM,
+            compId: compId,
+            itemName: 'viewItem'
+        });      
+    }
+};
+
+export const getClientGroupNodeList = (param) => dispatch => {
+    const compId = param.compId;
+    if(param.groupIds && param.groupIds.length > 0) {
+        dispatch({type: COMMON_PENDING});
+        return requestPostAPI('readClientGroupNodeList', {'groupIds': param.groupIds}).then(
+            (response) => {
+                dispatch({
+                    type: GET_CLIENTGROUP_NODELIST,
                     compId: compId,
                     response: response
                 });
@@ -308,20 +334,31 @@ export const deleteSelectedClientGroupData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteClientGroupList', {
         'groupIds': param.grpIds,
-        'isDeleteClient': (param.isDeleteClient) ? param.isDeleteClient : false
+        'isDeleteClient': ((param.isDeleteClient) ? param.isDeleteClient : false) ? 'Y' : 'N'
     }).then(
         (response) => {
-            dispatch({
-                type: DELETE_CLIENTGROUP_SUCCESS,
-                compId: param.compId,
-                grpId: param.grpId
-            });
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: DELETE_CLIENTGROUP_SUCCESS,
+                        compId: param.compId,
+                        grpId: param.grpId
+                    });
+                    return response.data;
+                } else {
+                    dispatch({ type: COMMON_FAILURE, error: response.data });
+                    return response.data;
+                }
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
+            }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
+        return error;
     });
 };
-
 
 // add clients in group
 export const addClientsInGroup = (itemObj) => dispatch => {
@@ -333,7 +370,8 @@ export const addClientsInGroup = (itemObj) => dispatch => {
                     dispatch({
                         type: ADD_CLIENTINGROUP_SUCCESS
                     });
-                }    
+                }
+                return response.data;    
             } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
             }
@@ -490,6 +528,47 @@ export default handleActions({
             }
         } else  {
             return state.deleteIn(['viewItems', compId, 'treeComp', 'treeData']);
+        }
+    },
+    [GET_CLIENTGROUP_NODE]: (state, action) => {
+        const compId = action.compId;
+        const data = action.response.data.data;
+        // get index
+        if(data && data.length > 0) {
+            const treeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+            const index = treeData.findIndex((e => (e.get('key') === data[0].grpId)));
+            return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
+                regDate: data[0].regDate,
+                clientCount: data[0].clientCount,
+                clientTotalCount: data[0].clientTotalCount,
+                modDate: data[0].modDate,
+                grpNm: data[0].grpNm,
+                comment: data[0].comment
+            }));
+        } else  {
+            return state;
+        }
+    },
+    [GET_CLIENTGROUP_NODELIST]: (state, action) => {
+        const compId = action.compId;
+        const data = action.response.data.data;
+        if(data && data.length > 0) {
+            let newState = state;
+            const treeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+            for(let i = 0; i < data.length; i++) {
+                const index = treeData.findIndex((e => (e.get('key') === data[i].grpId)));
+                newState = newState.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
+                    regDate: data[i].regDate,
+                    clientCount: data[i].clientCount,
+                    clientTotalCount: data[i].clientTotalCount,
+                    modDate: data[i].modDate,
+                    grpNm: data[i].grpNm,
+                    comment: data[i].comment
+                }));
+            }
+            return newState;
+        } else  {
+            return state;
         }
     },
     [GET_CLIENTGROUP_SUCCESS]: (state, action) => {

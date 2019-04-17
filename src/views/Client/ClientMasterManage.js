@@ -199,16 +199,20 @@ class ClientMasterManage extends Component {
       this.props.GRConfirmActions.showCheckConfirm({
         confirmTitle: t("dtDeleteGroup"),
         confirmMsg: t("msgDeleteGroup", {groupCnt: checkedGrpId.size}),
-        confirmCheckMsg: t("lbEditChildDeptInfo"),
-        handleConfirmResult: (confirmValue, confirmObject) => {
+        confirmCheckMsg: t("lbDeleteInClient"),
+        handleConfirmResult: (confirmValue, confirmObject, isChecked) => {
           if(confirmValue) {
+            const isInherit = isChecked;
             const { ClientGroupProps, ClientGroupActions } = this.props;
             const checkedGrpId = getDataObjectVariableInComp(ClientGroupProps, this.state.compId, 'checkedGrpId');
 
             if(checkedGrpId && checkedGrpId.size > 0) {
               ClientGroupActions.deleteSelectedClientGroupData({
-                grpIds: checkedGrpId.toArray()
-              }).then(() => {
+                grpIds: checkedGrpId.toArray(),
+                isDeleteClient: isInherit
+              }).then((reData) => {
+
+                console.log('reData ::::::::: ', reData);
 
                 // get parent index
                 // const grpIds = checkedGrpId.toArray();
@@ -291,17 +295,24 @@ class ClientMasterManage extends Component {
         confirmMsg: t("msgAddClientInGroup", {clientCnt: checkedClientIds.size, groupName: selectedGrp.grpNm}),
         handleConfirmResult: (confirmValue, paramObject) => {
           if(confirmValue) {
-            const { ClientGroupActions, ClientManageActions, ClientManageProps } = this.props;
+            const { ClientGroupActions, ClientManageActions, ClientManageProps, ClientGroupProps } = this.props;
             ClientGroupActions.addClientsInGroup({
                 groupId: paramObject.selectedGroupId,
                 clients: paramObject.checkedClientIds.join(',')
             }).then((res) => {
-              // show clients list in group
-              ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
-                groupId: paramObject.selectedGroupId, page:0
-              }, {isResetSelect:true});
-              // close dialog
-              this.setState({ isOpenClientSelect: false });
+              if(res && res.status && res.status.result === 'success') {
+                // change group node info as client count
+                ClientGroupActions.getClientGroupNodeList({
+                  groupIds: ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData']).map(e => (e.get('key'))).toJS(),
+                  compId: this.state.compId
+                });
+                // show clients list in group
+                ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
+                  groupId: [paramObject.selectedGroupId], page:0
+                }, {isResetSelect:true});
+                // close dialog
+                this.setState({ isOpenClientSelect: false });
+              }
             });
           }
         },
@@ -328,7 +339,6 @@ class ClientMasterManage extends Component {
             ClientGroupActions.removeClientsInGroup({
               clients: paramObject.checkedClientIds.join(',')
             }).then(() => {
-              // show user list in dept.
               ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
                 page:0
               }, {isResetSelect:true});
