@@ -327,7 +327,7 @@ class GRExtendedTreeList extends Component {
   }
 
   // handle node check event
-  handleCheckNode = (nodeKey, nodeTitle) => event => {
+  handleCheckNode = (event, listItem, index) => {
     const { checked, imperfect, treeData } = this.state;
 
     let newChecked = checked;
@@ -335,30 +335,30 @@ class GRExtendedTreeList extends Component {
     let newStatus = null;
 
     if(!this.props.hasSelectChild && !this.props.hasSelectParent) {
-      newChecked = this.updateCheckStatus(nodeKey, checked, event.target.checked);
+      newChecked = this.updateCheckStatus(listItem.key, checked, event.target.checked);
       newStatus = {
         newChecked: newChecked,
         newImperfect: newImperfect
       };
     } else {
       if(this.props.hasSelectChild) {
-        const children = treeData.filter(obj => obj.key === nodeKey)[0].children;
+        const children = treeData.filter(obj => obj.key === listItem.key)[0].children;
         if(children) {
           if(event.target.checked) {
             // check self and children
-            newChecked = this.updateCheckStatus(nodeKey, newChecked, true);
+            newChecked = this.updateCheckStatus(listItem.key, newChecked, true);
           } else {
             // uncheck self and children
-            newChecked = this.updateCheckStatus(nodeKey, newChecked, false);
+            newChecked = this.updateCheckStatus(listItem.key, newChecked, false);
           }
           // remove from imperfect
-          newImperfect = this.updateCheckStatus(nodeKey, newImperfect, false);
+          newImperfect = this.updateCheckStatus(listItem.key, newImperfect, false);
           // check children from this
           const newChildrenStatus = this.updateChildrenNode(children, event.target.checked, newChecked, newImperfect);
           newChecked = newChildrenStatus.newChecked;
           newImperfect = newChildrenStatus.newImperfect;
         } else {
-          newChecked = this.updateCheckStatus(nodeKey, checked, event.target.checked);
+          newChecked = this.updateCheckStatus(listItem.key, checked, event.target.checked);
         }
         
         newStatus = {
@@ -369,7 +369,7 @@ class GRExtendedTreeList extends Component {
 
       if(this.props.hasSelectParent) {
         // check parent from this
-        newStatus = this.updateParentNode(nodeKey, event.target.checked, newChecked, newImperfect);
+        newStatus = this.updateParentNode(listItem.key, event.target.checked, newChecked, newImperfect);
       }
     }
 
@@ -382,7 +382,7 @@ class GRExtendedTreeList extends Component {
     if (this.props.onCheckedNode) {
 
       const isChecked = event.target.checked;
-      this.props.onCheckedNode({name: nodeTitle, value: nodeKey, isChecked: isChecked});
+      this.props.onCheckedNode({name: listItem.title, value: listItem.key, isChecked: isChecked});
 
     }
   };
@@ -450,9 +450,11 @@ class GRExtendedTreeList extends Component {
             key={"treeListItem-" + i}
             nodeKey={listItem.key}
             depth={listItem.depth}
+            startingDepth={startingDepth}
             primaryText={listItem._primaryText}
             style={Object.assign({}, listItem._styles.root)}
             isShowCheck={this.state.isShowCheck}
+            isShowDetail={false}
             isEnableEdit={this.state.isEnableEdit}
             isCheckMasterOnly={this.state.isCheckMasterOnly}
             checked={this.state.checked}
@@ -467,7 +469,7 @@ class GRExtendedTreeList extends Component {
               }
               this.handleClickNode(listItem, i);
             }}
-            onCheckNode={this.handleCheckNode}
+            onCheckNode={() => this.handleCheckNode(event, listItem, i)}
             onEditNode={() => this.handleEditClickNode(listItem, i)}
             onFoldingNode={() => this.handleClickFoldingNode(listItem, i)}
           />
