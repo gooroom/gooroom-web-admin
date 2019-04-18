@@ -270,7 +270,7 @@ class GRTreeClientGroupList extends Component {
     return fromJS({
       root: {
         paddingLeft: (listItem.get('depth') - this.state.startingDepth) * 8,
-        backgroundColor: isActive ? "rgba(0,0,0,0.2)" : null,
+        backgroundColor: isActive ? '#fbcc57' : null,
         paddingTop: "0px",
         paddingBottom: "0px",
         paddingRight: "0px",
