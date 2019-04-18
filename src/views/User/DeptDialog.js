@@ -65,7 +65,7 @@ class DeptDialog extends Component {
                         DeptActions.createDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                             deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-                            uprDeptCd: DeptProps.getIn(['editingItem', 'selectedDeptCd']),
+                            uprDeptCd: DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']),
             
                             browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                             mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
@@ -75,7 +75,7 @@ class DeptDialog extends Component {
                         }).then((res) => {
                             // DeptActions.readDeptListPaged(DeptProps, compId);
                             // tree refresh
-                            const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['editingItem', 'deptCd'])));
+                            const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd'])));
                             resetCallback(listItem);
                             this.handleClose();
                         }).catch((err) => {
@@ -158,8 +158,8 @@ class DeptDialog extends Component {
             editObject = DeptProps.get('editingItem').toJS();
         }
 
-        const upperDeptInfo = DeptProps.getIn(['viewItems', compId, 'selectedDeptNm']) +
-            ' (' + DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']) + ')';
+        const upperDeptInfo = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptNm']) +
+            ' (' + DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']) + ')';
 
         return (
             <div>

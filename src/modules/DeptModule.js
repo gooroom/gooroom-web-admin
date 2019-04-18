@@ -11,8 +11,10 @@ const GET_DEPT_LIST_SUCCESS = 'dept/GET_DEPT_LIST_SUCCESS';
 const GET_DEPT_LISTPAGED_SUCCESS = 'dept/GET_DEPT_LISTPAGED_SUCCESS';
 const GET_DEPT_SUCCESS = 'dept/GET_DEPT_SUCCESS';
 
-const GET_DEPT_TREECHILD_SUCCESS = 'dept/GET_CLIENTGROUP_TREECHILD_SUCCESS';
+const GET_DEPT_TREECHILD_SUCCESS = 'dept/GET_DEPT_TREECHILD_SUCCESS';
 const CHG_TREEDATA_VALUE = 'dept/CHG_TREEDATA_VALUE';
+const GET_DEPT_NODE = 'dept/GET_DEPT_NODE';
+const GET_DEPT_NODELIST = 'dept/GET_DEPT_NODELIST';
 
 const CREATE_DEPT_SUCCESS = 'dept/CREATE_DEPT_SUCCESS';
 const EDIT_DEPT_SUCCESS = 'dept/EDIT_DEPT_SUCCESS';
@@ -187,6 +189,54 @@ export const setEditingItemValue = (param) => dispatch => {
         name: param.name,
         value: param.value
     });
+};
+
+export const getDeptNode = (param) => dispatch => {
+    const compId = param.compId;
+    if(param.groupId && param.groupId !== '') {
+        dispatch({type: COMMON_PENDING});
+        return requestPostAPI('readDeptData', {'deptCd': param.deptCd}).then(
+            (response) => {
+                dispatch({
+                    type: GET_DEPT_NODE,
+                    compId: compId,
+                    response: response
+                });
+            }
+        ).catch(error => {
+            dispatch({ type: COMMON_FAILURE, error: error });
+        });
+    } else {
+        return dispatch({
+            type: DELETE_COMPDATA_ITEM,
+            compId: compId,
+            itemName: 'viewItem'
+        });      
+    }
+};
+
+export const getDeptNodeList = (param) => dispatch => {
+    const compId = param.compId;
+    if(param.groupIds && param.groupIds.length > 0) {
+        dispatch({type: COMMON_PENDING});
+        return requestPostAPI('readDeptNodeList', {'deptCds': param.deptCds}).then(
+            (response) => {
+                dispatch({
+                    type: GET_DEPT_NODELIST,
+                    compId: compId,
+                    response: response
+                });
+            }
+        ).catch(error => {
+            dispatch({ type: COMMON_FAILURE, error: error });
+        });
+    } else {
+        return dispatch({
+            type: DELETE_COMPDATA_ITEM,
+            compId: compId,
+            itemName: 'viewItem'
+        });      
+    }
 };
 
 export const changeListParamData = (param) => dispatch => {
@@ -485,7 +535,100 @@ export default handleActions({
                 return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], resData);
             }
         } else  {
-            return state.deleteIn(['viewItems', compId, 'treeComp', 'treeData']);
+
+            if(state.getIn(['viewItems', compId, 'treeComp', 'treeData'])) {
+                if(index !== undefined) {
+                    let newTreeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+                    newTreeData = newTreeData.deleteIn([index, 'children']);
+                   
+                    // data merge.
+                    if(index === 0) {
+                        // root
+                        newTreeData = newTreeData.filter((e, i) => (i === 0));
+                    } else {
+                        // 1. delete children
+                        const parentIndex = newTreeData.getIn([index, 'parentIndex']);
+                        let nextSiblings = newTreeData.map((e, i) => {
+                            if(e.get('parentIndex') !== undefined && e.get('parentIndex') <= parentIndex && i > index) {
+                                return i;
+                            } else {
+                                return -1;
+                            }
+                        });
+
+                        nextSiblings = nextSiblings.filter(e => (e > -1));
+                        if(nextSiblings && nextSiblings.size > 0) {
+                            newTreeData = newTreeData.filter((e, i) => !(i > index && i < nextSiblings.get(0)));
+                        } else {
+                            newTreeData = newTreeData.filter((e, i) => (i <= index));
+                        }
+                    }
+
+                    // 3. reset parent index 
+                    newTreeData = newTreeData.map((obj, i) => {
+                        if (i > index && obj.get('parentIndex') > 0) {
+                            if(obj.get('parentIndex') > index) {
+                                obj = obj.set('parentIndex', obj.get('parentIndex'));
+                            }
+                        }
+                        return obj;
+                    });
+    
+                    // reset expandedListItems values for adding nodes.
+                    const expandedListItems = state.getIn(['viewItems', compId, 'treeComp', 'expandedListItems']);
+                    const newExpandedListItems = (expandedListItems) ? expandedListItems.filter(obj => (obj !== index)) : [];
+    
+                    return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], newTreeData)
+                                .setIn(['viewItems', compId, 'treeComp', 'expandedListItems'], newExpandedListItems);
+                } else {
+                    // root node
+                    return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], []);
+                }
+            } else {
+                return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], []);
+            }
+        }
+    },
+    [GET_DEPT_NODE]: (state, action) => {
+        const compId = action.compId;
+        const data = action.response.data.data;
+        // get index
+        if(data && data.length > 0) {
+            const treeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+            const index = treeData.findIndex((e => (e.get('key') === data[0].grpId)));
+            return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
+                regDate: data[0].regDate,
+                userCount: data[0].userCount,
+                userTotalCount: data[0].userTotalCount,
+                modDate: data[0].modDate,
+                deptNm: data[0].deptNm,
+                comment: data[0].comment
+            }));
+        } else  {
+            return state;
+        }
+    },
+    [GET_DEPT_NODELIST]: (state, action) => {
+        const compId = action.compId;
+        const data = action.response.data.data;
+        if(data && data.length > 0) {
+            let newState = state;
+            const treeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+            for(let i = 0; i < data.length; i++) {
+                const index = treeData.findIndex((e => (e.get('key') === data[i].grpId)));
+                newState = newState.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
+                    regDate: data[i].regDate,
+                    userCount: data[i].userCount,
+                    userTotalCount: data[i].userTotalCount,
+                    modDate: data[i].modDate,
+                    deptNm: data[i].deptNm,
+                    title: data[i].deptNm,
+                    comment: data[i].comment
+                }));
+            }
+            return newState;
+        } else  {
+            return state;
         }
     },
     [GET_DEPT_SUCCESS]: (state, action) => {
