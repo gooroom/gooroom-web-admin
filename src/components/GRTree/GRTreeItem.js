@@ -8,7 +8,6 @@ import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import ShowIcon from "@material-ui/icons/RemoveRedEyeOutlined";
 import ShowIconSelected from "@material-ui/icons/RemoveRedEye";
@@ -26,7 +25,7 @@ class GRTreeItem extends Component {
     render() {
         const { classes } = this.props;
         const { nodeKey, primaryText, depth, style, checked, imperfect, isShowCheck, isShowDetail = false, isEnableEdit, isCheckMasterOnly } = this.props
-        const { startingDepth, isShowMemberCnt, memberCntValue } = this.props
+        const { isShowMemberCnt, memberCntValue } = this.props
         const { onClickNode, onClickDetailNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend, isActive } = this.props
         const styles = {
             root: {
@@ -39,7 +38,7 @@ class GRTreeItem extends Component {
         }
 
         let nodeTitle = primaryText;
-        if(isShowMemberCnt && depth > startingDepth) {
+        if(isShowMemberCnt) {
             nodeTitle = '[' + memberCntValue + '] ' + primaryText;
         }
         
@@ -79,4 +78,3 @@ class GRTreeItem extends Component {
 }
 
 export default (withStyles(GRCommonStyle)(GRTreeItem));
-

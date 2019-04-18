@@ -615,6 +615,7 @@ export default handleActions({
                     clientTotalCount: data[i].clientTotalCount,
                     modDate: data[i].modDate,
                     grpNm: data[i].grpNm,
+                    title: data[i].grpNm,
                     comment: data[i].comment
                 }));
             }

@@ -81,7 +81,7 @@ class ClientGroupDialog extends Component {
                         }).then((res) => {
                             // tree refresh
                             const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                            resetCallback(listItem.get('parentIndex'));
+                            resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
                             this.handleClose();
                         }).catch((err) => {
                             console.log('handleCreateData - err :::: ', err);

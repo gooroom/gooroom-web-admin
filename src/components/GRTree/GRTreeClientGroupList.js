@@ -283,58 +283,6 @@ class GRTreeClientGroupList extends Component {
     });
   }
 
-  getListItemModified = () => {
-    const { startingDepth } = this.state;
-    const { ClientGroupProps, compId } = this.props;
-    const treeComp = ClientGroupProps.getIn(['viewItems', compId, 'treeComp']);
-
-    const treeData = (treeComp.get('treeData')) ? treeComp.get('treeData') : [];
-    const expandedListItems = (treeComp.get('expandedListItems')) ? treeComp.get('expandedListItems') : [];
-    const activeListItem = (treeComp.get('activeListItem')) ? treeComp.get('activeListItem') : '';
-
-    let modifiedList = null;
-    if(treeData) {
-
-      let parentItem = null;
-      let beforeItem = null;
-
-      modifiedList = treeData.map (
-        (listItem, i) => {
-
-          if(beforeItem === null) {
-            listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
-                                .set('_shouldRender', (listItem.get('depth') >= startingDepth))
-                                .set('_primaryText', listItem.get('title'));
-          } else {
-            if(beforeItem.get('depth') < listItem.get('depth')) {
-              // child
-              parentItem = beforeItem;
-              listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
-                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
-                                  .set('_primaryText', listItem.get('title'));
-            } else if(beforeItem.get('depth') > listItem.get('depth')) {
-              // upper - another parent
-              parentItem = treeData.get(listItem.get('parentIndex'));
-              listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
-                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
-                                  .set('_primaryText', listItem.get('title'));
-            } else {
-              // siblings
-              listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
-                                  .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
-                                  .set('_primaryText', listItem.get('title'));
-            }
-          }
-          beforeItem = listItem;
-
-          return listItem;
-        }
-      );
-    }
-
-    return modifiedList;
-  }
-
   getTreeItemList = () => {
     const { startingDepth } = this.state;
     const { ClientGroupProps, compId } = this.props;
@@ -347,7 +295,7 @@ class GRTreeClientGroupList extends Component {
     const expandedListItems = (treeComp.get('expandedListItems')) ? treeComp.get('expandedListItems') : [];
     const checked = (treeComp.get('checked')) ? treeComp.get('checked') : [];
     const imperfect = (treeComp.get('imperfect')) ? treeComp.get('imperfect') : [];
-    const activeListItem = (treeComp.get('activeListItem')) ? treeComp.get('activeListItem') : '';
+    const activeListItem = treeComp.get('activeListItem');
 
     function getLeftIcon(listItem, localProps) {
       if (listItem.get('children')) {
@@ -393,7 +341,6 @@ class GRTreeClientGroupList extends Component {
           if (listItem.get('_shouldRender')) {
             return (
               <GRTreeItem
-                startingDepth={startingDepth}
                 key={"treeListItem-" + i}
                 nodeKey={listItem.get('key')}
                 depth={listItem.get('depth')}

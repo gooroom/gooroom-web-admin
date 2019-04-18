@@ -187,15 +187,25 @@ class ClientMasterManage extends Component {
 
   // check has group for delete
   isClientGroupRemovable = () => {
-    const checkedGrpId = getDataObjectVariableInComp(this.props.ClientGroupProps, this.state.compId, 'checkedGrpId');
-    return !(checkedGrpId && checkedGrpId.size > 0);
+    let checkedGrpId = getDataObjectVariableInComp(this.props.ClientGroupProps, this.state.compId, 'checkedGrpId');
+    if(checkedGrpId && checkedGrpId.size > 0) {
+      // except default item
+      checkedGrpId = checkedGrpId.filter(e => (e !== 'CGRPDEFAULT'));
+      return !(checkedGrpId && checkedGrpId.size > 0);
+    } else {
+      return true;
+    }
   }
 
   // delete group
   handleDeleteButtonForClientGroup = () => {
     const { t, i18n } = this.props;
-    const checkedGrpId = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'checkedGrpId']);
+    let checkedGrpId = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'checkedGrpId']);
     if(checkedGrpId && checkedGrpId.size > 0) {
+
+      // except default item
+      checkedGrpId = checkedGrpId.filter(e => (e !== 'CGRPDEFAULT'));
+
       this.props.GRConfirmActions.showCheckConfirm({
         confirmTitle: t("dtDeleteGroup"),
         confirmMsg: t("msgDeleteGroup", {groupCnt: checkedGrpId.size}),
@@ -212,8 +222,6 @@ class ClientMasterManage extends Component {
                 isDeleteClient: isInherit
               }).then((reData) => {
 
-                console.log('reData ::::::::: ', reData);
-
                 // get parent index
                 // const grpIds = checkedGrpId.toArray();
                 const treeData = ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData'])
@@ -227,7 +235,7 @@ class ClientMasterManage extends Component {
                 const uniqueParentIndexList = [...new Set(parentIndexList.toJS())];
                 if(uniqueParentIndexList.length > 0) {
                   uniqueParentIndexList.forEach(e => {
-                    this.handleResetGroupTree(e);
+                    this.handleResetTreeForDelete(e);
                   });
                 }
                 
@@ -277,8 +285,8 @@ class ClientMasterManage extends Component {
   }
 
   isClientGroupChecked = () => {
-    const checkedIds = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
-    return !(checkedIds && checkedIds.size > 0);
+    const checkedGrpId = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'checkedGrpId']);
+    return !(checkedGrpId && checkedGrpId.size > 0);
   }
 
   isClientGroupSelected = () => {
@@ -302,13 +310,11 @@ class ClientMasterManage extends Component {
             }).then((res) => {
               if(res && res.status && res.status.result === 'success') {
                 // change group node info as client count
-                ClientGroupActions.getClientGroupNodeList({
-                  groupIds: ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData']).map(e => (e.get('key'))).toJS(),
-                  compId: this.state.compId
-                });
+                this.handleResetTreeForEdit();
                 // show clients list in group
                 ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
-                  groupId: [paramObject.selectedGroupId], page:0
+                  groupId: ClientGroupProps.getIn(['viewItems', this.state.compId, 'checkedGrpId']), 
+                  page:0
                 }, {isResetSelect:true});
                 // close dialog
                 this.setState({ isOpenClientSelect: false });
@@ -327,7 +333,6 @@ class ClientMasterManage extends Component {
   handleRemoveClientInGroup = (event) => {
     const { ClientManageProps, GRConfirmActions } = this.props;
     const { t, i18n } = this.props;
-
     const checkedClientIds = ClientManageProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
     if(checkedClientIds && checkedClientIds !== '') {
       GRConfirmActions.showConfirm({
@@ -335,15 +340,17 @@ class ClientMasterManage extends Component {
         confirmMsg: t("msgCfmDeleteClientFromGroup"),
         handleConfirmResult: (confirmValue, paramObject) => {
           if(confirmValue) {
-            const { ClientManageProps, ClientGroupActions, ClientManageActions } = this.props;
+            const { ClientManageProps, ClientManageActions, ClientGroupProps, ClientGroupActions } = this.props;
             ClientGroupActions.removeClientsInGroup({
               clients: paramObject.checkedClientIds.join(',')
             }).then(() => {
+              // change group node info as client count
+              this.handleResetTreeForEdit();
+              // show clients list in group
               ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
+                groupId: ClientGroupProps.getIn(['viewItems', this.state.compId, 'checkedGrpId']), 
                 page:0
               }, {isResetSelect:true});
-              // close dialog
-              this.setState({ isOpenClientSelect: false });
             });
           }
         },
@@ -383,18 +390,28 @@ class ClientMasterManage extends Component {
     }
   }
 
-  handleResetGroupTree = (index) => {
+  handleResetTreeForEdit = (index) => {
+    // change group node info as client count
+    this.props.ClientGroupActions.getClientGroupNodeList({
+      groupIds: this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData']).map(e => (e.get('key'))).toJS(),
+      compId: this.state.compId
+    });
 
-    console.log('handleResetGroupTree index : ', index);
-    const compId = this.state.compId;
-    const { ClientGroupProps, ClientGroupActions } = this.props;
+    // if(index !== undefined) {
+    //   const parentListItem = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
+    //   this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, parentListItem.get('key'), index);
+    // } else {
+    //   this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, 'CGRP000000', 0);
+    // }
+  }
 
+  handleResetTreeForDelete = (index) => {
     // changed grpId - re-select parentId of grpId
     if(index !== undefined) {
-      const parentListItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData', index]);
-      ClientGroupActions.readChildrenClientGroupList(compId, parentListItem.get('key'), index);
+      const parentListItem = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
+      this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, parentListItem.get('key'), index);
     } else {
-      ClientGroupActions.readChildrenClientGroupList(compId, 0, undefined);
+      this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, 'CGRP000000', 0);
     }
   }
 
@@ -489,7 +506,7 @@ class ClientMasterManage extends Component {
           </Grid>
         </GRPane>
 
-        <ClientGroupDialog compId={compId} resetCallback={this.handleResetGroupTree} />
+        <ClientGroupDialog compId={compId} resetCallback={this.handleResetTreeForEdit} />
         <ClientGroupMultiRuleDialog compId={compId} />
 
         <ClientSelectDialog 
