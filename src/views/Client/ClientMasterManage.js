@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Map, fromJS } from 'immutable';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -15,7 +14,6 @@ import * as TotalRuleActions from 'modules/TotalRuleModule';
 import { getRowObjectById, getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from "containers/GRContent/GRPageHeader";
-import GRTreeList from "components/GRTree/GRTreeList";
 import GRPane from 'containers/GRContent/GRPane';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRCheckConfirm from 'components/GRComponents/GRCheckConfirm';
@@ -43,19 +41,17 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import TuneIcon from '@material-ui/icons/Tune';
 import DeleteIcon from '@material-ui/icons/Delete';
-import GroupIcon from '@material-ui/icons/GroupWork';
 import ClientIcon from '@material-ui/icons/Laptop';
 
 import ClientManageComp from 'views/Client/ClientManageComp';
 import ClientManageSpec from 'views/Client/ClientManageSpec';
 
-import ClientGroupComp from 'views/ClientGroup/ClientGroupComp';
 import ClientGroupSpec from 'views/ClientGroup/ClientGroupSpec';
 import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-import { translate, Trans } from "react-i18next";
+import { translate } from "react-i18next";
 
 
 class ClientMasterManage extends Component {
