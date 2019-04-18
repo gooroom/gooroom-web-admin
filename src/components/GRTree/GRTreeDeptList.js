@@ -367,7 +367,7 @@ class GRTreeDeptList extends Component {
                 onEditNode={() => this.handleEditClickNode(listItem, i)}
                 onFoldingNode={() => this.handleClickFoldingNode(event, listItem, i)}
                 isShowMemberCnt={(this.props.isShowMemberCnt) ? this.props.isShowMemberCnt : false}
-                memberCntValue={listItem.get('userCount') + '/' + listItem.get('userTotalCount')}
+                memberCntValue={listItem.get('userCnt') + '/' + listItem.get('userTotalCnt')}
               />
             );
           } else {

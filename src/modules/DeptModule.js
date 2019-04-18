@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions';
-import { List, fromJS } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
@@ -206,18 +206,12 @@ export const getDeptNode = (param) => dispatch => {
         ).catch(error => {
             dispatch({ type: COMMON_FAILURE, error: error });
         });
-    } else {
-        return dispatch({
-            type: DELETE_COMPDATA_ITEM,
-            compId: compId,
-            itemName: 'viewItem'
-        });      
     }
 };
 
 export const getDeptNodeList = (param) => dispatch => {
     const compId = param.compId;
-    if(param.groupIds && param.groupIds.length > 0) {
+    if(param.deptCds && param.deptCds.length > 0) {
         dispatch({type: COMMON_PENDING});
         return requestPostAPI('readDeptNodeList', {'deptCds': param.deptCds}).then(
             (response) => {
@@ -230,12 +224,6 @@ export const getDeptNodeList = (param) => dispatch => {
         ).catch(error => {
             dispatch({ type: COMMON_FAILURE, error: error });
         });
-    } else {
-        return dispatch({
-            type: DELETE_COMPDATA_ITEM,
-            compId: compId,
-            itemName: 'viewItem'
-        });      
     }
 };
 
@@ -375,7 +363,8 @@ export const createUsersInDept = (itemObj) => dispatch => {
                     dispatch({
                         type: ADD_USERINDEPT_SUCCESS
                     });
-                }    
+                }
+                return response.data;    
             } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
             }
@@ -458,8 +447,8 @@ export default handleActions({
                     regDate: x.regDt,
                     modDate: x.modDt,
                     comment: x.comment,
-                    userCount: x.userCount,
-                    userTotalCount: x.userTotalCount,
+                    userCnt: x.userCnt,
+                    userTotalCnt: x.userTotalCnt,
                     _shouldRender: true
                 };
                 if (index !== undefined) {
@@ -595,11 +584,11 @@ export default handleActions({
         // get index
         if(data && data.length > 0) {
             const treeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
-            const index = treeData.findIndex((e => (e.get('key') === data[0].grpId)));
+            const index = treeData.findIndex((e => (e.get('key') === data[0].deptCd)));
             return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
                 regDate: data[0].regDate,
-                userCount: data[0].userCount,
-                userTotalCount: data[0].userTotalCount,
+                userCnt: data[0].userCnt,
+                userTotalCnt: data[0].userTotalCnt,
                 modDate: data[0].modDate,
                 deptNm: data[0].deptNm,
                 comment: data[0].comment
@@ -615,11 +604,11 @@ export default handleActions({
             let newState = state;
             const treeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
             for(let i = 0; i < data.length; i++) {
-                const index = treeData.findIndex((e => (e.get('key') === data[i].grpId)));
+                const index = treeData.findIndex((e => (e.get('key') === data[i].deptCd)));
                 newState = newState.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
                     regDate: data[i].regDate,
-                    userCount: data[i].userCount,
-                    userTotalCount: data[i].userTotalCount,
+                    userCnt: data[i].userCnt,
+                    userTotalCnt: data[i].userTotalCnt,
                     modDate: data[i].modDate,
                     deptNm: data[i].deptNm,
                     title: data[i].deptNm,
