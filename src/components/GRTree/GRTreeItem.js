@@ -41,8 +41,6 @@ class GRTreeItem extends Component {
         if(isShowMemberCnt) {
             nodeTitle = '[' + memberCntValue + '] ' + primaryText;
         }
-        
-        const showIcon = <IconButton style={{padding:0}} onClick={onClickDetailNode}>{(isActive) ? <ShowIconSelected /> : <ShowIcon />}</IconButton>;
 
         return (
             <ListItem button style={Object.assign({}, styles.root, style)} >
@@ -59,7 +57,7 @@ class GRTreeItem extends Component {
                 }
                 {leftIcon}
                 {(isShowDetail) &&
-                    <IconButton style={{padding:0}} onClick={onClickDetailNode}>{(isActive) ? <ShowIconSelected /> : <ShowIcon />}</IconButton>
+                    <IconButton style={{padding:0}} onClick={onClickDetailNode}>{(isActive) ? <ShowIconSelected style={{color:'#ef5350'}} /> : <ShowIcon />}</IconButton>
                 }
                 <ListItemText inset primary={nodeTitle} onClick={onClickNode} style={{paddingLeft:4}} />
                 {(isExtend == 'Y') && 

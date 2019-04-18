@@ -124,13 +124,19 @@ class ClientMasterManage extends Component {
     if(selectedClientObj) {
       // show client information
       ClientManageActions.showClientManageInform({ compId: compId, viewItem: selectedClientObj });
+      // get client group info.
+      ClientGroupActions.getClientGroup({ compId: compId, groupId: selectedClientObj.get('clientGroupId') });
+      // get client group rule info.
+      this.showClientGroupSpec(compId, selectedClientObj.get('clientGroupId'));
+
+      // hide client group active
+      ClientGroupActions.changeTreeDataVariable({
+        compId: compId, name: 'activeListItem', value: ''
+      });
       // show client group info.
       ClientGroupActions.showClientGroupInform({
         compId: compId, viewItem: getRowObjectById(ClientGroupProps, compId, selectedClientObj.get('clientGroupId'), 'grpId')
       });
-      // show client group info.
-      ClientGroupActions.getClientGroup({ compId: compId, groupId: selectedClientObj.get('clientGroupId') });
-      this.showClientGroupSpec(compId, selectedClientObj.get('clientGroupId'));
     }
   };
 
