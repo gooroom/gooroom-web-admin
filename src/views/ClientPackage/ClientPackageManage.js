@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { Map, List } from 'immutable';
-
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import { Map } from 'immutable';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -23,8 +20,7 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById, getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRPane from 'containers/GRContent/GRPane';
@@ -40,8 +36,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import GroupIcon from '@material-ui/icons/GroupWork';
-import ClientIcon from '@material-ui/icons/Laptop';
 
 import ClientManageCompWithPackage from 'views/Client/ClientManageCompWithPackage';
 
@@ -52,7 +46,7 @@ import ClientPackageComp from 'views/ClientPackage/ClientPackageComp';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-import { translate, Trans } from "react-i18next";
+import { translate } from "react-i18next";
 
 class ClientPackageManage extends Component {
   constructor(props) {
