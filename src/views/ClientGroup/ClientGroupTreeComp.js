@@ -351,6 +351,7 @@ class ClientGroupTreeComp extends Component {
             hasSelectChild={false}
             hasSelectParent={false}
             isEnableEdit={this.props.isEnableEdit}
+            isActivable={this.props.isActivable}
             isShowMemberCnt={true}
             onInitTreeData={this.handleInitTreeData}
             onSelectNode={this.handleSelectClientGroup}

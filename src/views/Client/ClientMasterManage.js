@@ -62,8 +62,7 @@ class ClientMasterManage extends Component {
     this.state = {
       compId: this.props.match.params.grMenuId,
       isOpenClientSelect: false,
-      isOpenGroupSelect: false,
-      selectedGrp: {grpId:'', grpNm:''}
+      isOpenGroupSelect: false
     };
   }
 
@@ -93,10 +92,8 @@ class ClientMasterManage extends Component {
   handleSelectClientGroup = (selectedGroupObj) => {
     const { ClientGroupActions, ClientManageActions } = this.props;
     const compId = this.state.compId;
-    // change selected info in state
-    this.setState({
-      selectedGrp: {grpId:selectedGroupObj.get('grpId'), grpNm:selectedGroupObj.get('grpNm')}
-    });
+    // change selected info in store
+    ClientGroupActions.changeTreeDataVariable({ compId: compId, name: 'selectedGrp', value: selectedGroupObj });
     // close client inform
     ClientManageActions.closeClientManageInform({compId: compId});
     // uni
@@ -298,11 +295,11 @@ class ClientMasterManage extends Component {
   // add client in group - save
   handleClientSelectSave = (checkedClientIds) => {
     const { t, i18n } = this.props;
-    const selectedGrp = this.state.selectedGrp;
+    const selectedGrp = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'selectedGrp']);
 
     this.props.GRConfirmActions.showConfirm({
         confirmTitle: t("dtAddClientInGroup"),
-        confirmMsg: t("msgAddClientInGroup", {clientCnt: checkedClientIds.size, groupName: selectedGrp.grpNm}),
+        confirmMsg: t("msgAddClientInGroup", {clientCnt: checkedClientIds.size, groupName: selectedGrp.get('grpNm')}),
         handleConfirmResult: (confirmValue, paramObject) => {
           if(confirmValue) {
             const { ClientGroupActions, ClientManageActions, ClientManageProps, ClientGroupProps } = this.props;
@@ -325,7 +322,7 @@ class ClientMasterManage extends Component {
           }
         },
         confirmObject: {
-          selectedGroupId: selectedGrp.grpId,
+          selectedGroupId: selectedGrp.get('grpId'),
           checkedClientIds: checkedClientIds
         }
     });
@@ -422,6 +419,8 @@ class ClientMasterManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.state.compId;
 
+    const selectedGrp = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'selectedGrp']);
+
     return (
       <React.Fragment>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
@@ -471,7 +470,8 @@ class ClientMasterManage extends Component {
                 onCheck={this.handleCheckedClientGroup} 
                 onSelect={this.handleSelectClientGroup}
                 onEdit={this.handleEditClientGroup}
-                isEnableEdit={true} 
+                isEnableEdit={true}
+                isActivable={true} 
               />
             </Grid>
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
@@ -515,7 +515,7 @@ class ClientMasterManage extends Component {
           isOpen={this.state.isOpenClientSelect} 
           onSaveHandle={this.handleClientSelectSave} 
           onClose={() => { this.setState({ isOpenClientSelect: false }); }}
-          selectedGroupItem={this.state.selectedGrp}
+          groupName={(selectedGrp) ? selectedGrp.get('grpNm') : ''}
         />
 
         <ClientConfSettingDialog compId={compId} />
