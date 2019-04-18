@@ -262,7 +262,7 @@ class UserMasterManage extends Component {
   }
 
   isUserSelected = () => {
-    return (this.props.DeptProps.getIn(['viewItems', this.state.compId, 'selectedDeptCd'])) ? false : true;
+    return (this.props.DeptProps.getIn(['viewItems', this.state.compId, 'viewItem', 'deptCd'])) ? false : true;
   }
 
   handleDeleteUserInDept = (event) => {
@@ -305,7 +305,7 @@ class UserMasterManage extends Component {
     const selectedDept = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'selectedDept']);
     this.props.GRConfirmActions.showConfirm({
         confirmTitle: t("lbChangeDeptForUser"),
-        confirmMsg: t("msgChangeDeptForUser", {userCnt:checkedUserIds.size, deptNm:selectedDept.deptNm}),
+        confirmMsg: t("msgChangeDeptForUser", {userCnt:checkedUserIds.size, deptNm:selectedDept.get('deptNm')}),
         handleConfirmResult: (confirmValue, paramObject) => {
           if(confirmValue) {
             const { DeptActions, DeptProps, UserActions, UserProps } = this.props;
@@ -430,6 +430,8 @@ class UserMasterManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.state.compId;
 
+    const selectedDept = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'selectedDept']);
+
     return (
       <React.Fragment>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
@@ -534,7 +536,7 @@ class UserMasterManage extends Component {
         <DeptMultiDialog compId={compId} />
         
         <UserSelectDialog isOpen={this.state.isOpenUserSelect}
-          selectedDept={this.state.selectedDept}
+          deptNm={(selectedDept !== undefined) ? selectedDept.get('deptNm') : ''}
           onSaveHandle={this.handleUserSelectSave} 
           onClose={this.handleUserSelectionClose} />
         <DeptSelectDialog isOpen={this.state.isOpenDeptSelect}

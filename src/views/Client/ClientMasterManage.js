@@ -510,7 +510,7 @@ class ClientMasterManage extends Component {
           isOpen={this.state.isOpenClientSelect} 
           onSaveHandle={this.handleClientSelectSave} 
           onClose={() => { this.setState({ isOpenClientSelect: false }); }}
-          groupName={(selectedGrp) ? selectedGrp.get('grpNm') : ''}
+          groupName={(selectedGrp !== undefined) ? selectedGrp.get('grpNm') : ''}
         />
 
         <ClientConfSettingDialog compId={compId} />

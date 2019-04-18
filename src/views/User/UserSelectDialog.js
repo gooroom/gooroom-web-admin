@@ -44,14 +44,14 @@ class UserSelectDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { isOpen, selectedDept } = this.props;
+        const { isOpen, deptNm } = this.props;
         const { t, i18n } = this.props;
 
         return (
             <div>
             {(isOpen) &&
                 <Dialog open={isOpen} fullWidth={true} >
-                    <DialogTitle>{t("lbAddUserInDept", {deptNm:selectedDept.deptNm})}</DialogTitle>
+                    <DialogTitle>{t("lbAddUserInDept", {deptNm:deptNm})}</DialogTitle>
                     <DialogContent>
                         <UserListForSelect name='UserListForSelect' deptCd={this.state.selectedDeptCd} 
                             onSelectUser={this.handleSelectUser}
