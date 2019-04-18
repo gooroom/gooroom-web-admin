@@ -26,6 +26,7 @@ class GRTreeClientGroupList extends Component {
       
       isShowCheck: (props.isShowCheck !== undefined) ? props.isShowCheck : true,
       isEnableEdit: (props.isEnableEdit !== undefined) ? props.isEnableEdit : false,
+      isActivable: (props.isActivable !== undefined) ? props.isActivable : false,
       isCheckMasterOnly: (props.isCheckMasterOnly !== undefined) ? props.isCheckMasterOnly : false
     };
   }
@@ -59,7 +60,7 @@ class GRTreeClientGroupList extends Component {
       } else {
         ClientGroupActions.changeTreeDataVariable({
           compId: compId, name: 'expandedListItems',
-          value: (expandedListItems) ? expandedListItems : [index]
+          value: [index]
         });
       }
     }
@@ -180,8 +181,8 @@ class GRTreeClientGroupList extends Component {
     // };
   }
 
-  handleCheckNode = (event, listItem, i) => {
-    const { ClientGroupProps, ClientGroupActions, compId } = this.props;
+  handleCheckNode = (event, listItem, index) => {
+    const { ClientGroupProps, ClientGroupActions, compId, isActivable } = this.props;
     const treeComp = ClientGroupProps.getIn(['viewItems', compId, 'treeComp']);
 
     const treeData = (treeComp.get('treeData')) ? treeComp.get('treeData') : [];
@@ -239,7 +240,10 @@ class GRTreeClientGroupList extends Component {
     // call select node event
     if (this.props.onCheckedNode) this.props.onCheckedNode(newStatus.newChecked, newStatus.newImperfect);
 
-    this.handleClickDetailNode(listItem, i);
+    if(isActivable) {
+      this.handleClickDetailNode(listItem, index);
+    }
+    
   };
 
   handleClickFoldingNode(event, listItem, index) {
@@ -344,10 +348,11 @@ class GRTreeClientGroupList extends Component {
                 key={"treeListItem-" + i}
                 nodeKey={listItem.get('key')}
                 depth={listItem.get('depth')}
+                startingDepth={startingDepth}
                 primaryText={listItem.get('title')}
                 style={Object.assign({}, listItem.getIn(['_styles','root']).toJS())}
                 isShowCheck={this.state.isShowCheck}
-                isShowDetail={true}
+                isShowDetail={this.props.isActivable}
                 isEnableEdit={this.state.isEnableEdit}
                 isCheckMasterOnly={this.state.isCheckMasterOnly}
                 checked={checked}

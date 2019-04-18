@@ -5,6 +5,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as GlobalActions from 'modules/GlobalModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
+
 import * as ClientPackageActions from 'modules/ClientPackageModule';
 import * as ClientManageActions from 'modules/ClientManageModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
@@ -20,13 +22,12 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 
-import { getRowObjectById, getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRPane from 'containers/GRContent/GRPane';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import ClientSelectDialog from "views/Client/ClientSelectDialog";
 import ClientPackageSelectDialog from "views/ClientPackage/ClientPackageSelectDialog";
 
 import Grid from '@material-ui/core/Grid';
@@ -34,14 +35,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-
 import ClientManageCompWithPackage from 'views/Client/ClientManageCompWithPackage';
 
 import ClientGroupTreeComp from 'views/ClientGroup/ClientGroupTreeComp';
-import ClientGroupDialog from 'views/ClientGroup/ClientGroupDialog';
-
 import ClientPackageComp from 'views/ClientPackage/ClientPackageComp';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -53,10 +49,8 @@ class ClientPackageManage extends Component {
     super(props);
 
     this.state = {
-      isOpenClientSelect: false,
       isOpenClientPackageSelect: false,
-      targetType: '',
-      selectedGrp: {grpId:'', grpNm:''}
+      targetType: ''
     };
   }
 
@@ -95,14 +89,9 @@ class ClientPackageManage extends Component {
 
   // Select Client Item
   handleClientSelect = (selectedClientObj) => {
-    const { ClientManageActions, ClientGroupActions } = this.props;
     const { ClientPackageProps, ClientPackageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    // change selected info in state
-    this.setState({
-      selectedGrp: {grpId:selectedClientObj.get('clientGroupId'), grpNm:selectedClientObj.get('clientGroupName')}
-    });
     // show package list by client id
     ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {
       clientId: selectedClientObj.get('clientId'), page:0, isFiltered: false
@@ -135,62 +124,6 @@ class ClientPackageManage extends Component {
     }
 
   }
-
-  // GROUP COMPONENT --------------------------------
-
-  // create group
-  handleCreateButtonForClientGroup = () => {
-    const compId = this.props.match.params.grMenuId;
-
-    this.props.ClientConfSettingActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
-    this.props.ClientHostNameActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
-    this.props.ClientUpdateServerActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP'});
-
-    this.props.BrowserRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
-    this.props.MediaRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
-    this.props.SecurityRuleActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
-    this.props.SoftwareFilterActions.deleteCompDataItem({ compId: compId, name: 'selectedOptionItemId', targetType: 'GROUP' });
-    this.props.DesktopConfActions.deleteCompDataItem({compId:compId, name:'selectedOptionItemId', targetType:'GROUP', value: ''});
-    
-    this.props.ClientGroupActions.showDialog({
-      viewItem: Map(),
-      dialogType: ClientGroupDialog.TYPE_ADD
-    });
-  }
-
-  isClientGroupRemovable = () => {
-    const checkedIds = getDataObjectVariableInComp(this.props.ClientGroupProps, this.props.match.params.grMenuId, 'checkedIds');
-    return !(checkedIds && checkedIds.size > 0);
-  }
-
-  // delete group
-  handleDeleteButtonForClientGroup = () => {
-    const { t, i18n } = this.props;
-    const checkedIds = this.props.ClientGroupProps.getIn(['viewItems', this.props.match.params.grMenuId, 'checkedIds']);
-    if(checkedIds && checkedIds.size > 0) {
-      this.props.GRConfirmActions.showConfirm({
-        confirmTitle: t("dtDeleteGroup"),
-        confirmMsg: t("msgDeleteGroup", {groupCnt: checkedIds.size}),
-        handleConfirmResult: this.handleDeleteButtonForClientGroupConfirmResult,
-        confirmObject: null
-      });
-    }
-  }
-  handleDeleteButtonForClientGroupConfirmResult = (confirmValue, confirmObject) => {
-    if(confirmValue) {
-      const { ClientGroupProps, ClientGroupActions } = this.props;
-      const compId = this.props.match.params.grMenuId;
-      const checkedIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
-      if(checkedIds && checkedIds.size > 0) {
-        ClientGroupActions.deleteSelectedClientGroupData({
-          grpIds: checkedIds.toArray()
-        }).then(() => {
-          ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
-        });
-      }
-    }
-  }
-
   // CLIENT COMPONENT --------------------------------
 
   isClientChecked = () => {
@@ -257,65 +190,6 @@ class ClientPackageManage extends Component {
   
       }
     }
-  }
-
-  // add client in group - save
-  handleClientSelectSave = (checkedClientIds) => {
-    const { t, i18n } = this.props;
-    const selectedGrp = this.state.selectedGrp;
-
-    this.props.GRConfirmActions.showConfirm({
-        confirmTitle: t("dtAddClientInGroup"),
-        confirmMsg: t("msgAddClientInGroup", {clientCnt: checkedClientIds.size, groupName: selectedGrp.grpNm}),
-        handleConfirmResult: (confirmValue, paramObject) => {
-          if(confirmValue) {
-            const { ClientGroupActions, ClientGroupProps } = this.props;
-            const { ClientManageActions, ClientManageProps } = this.props;
-            const compId = this.props.match.params.grMenuId;
-            ClientGroupActions.addClientsInGroup({
-                groupId: paramObject.selectedGroupId,
-                clients: paramObject.checkedClientIds.join(',')
-            }).then((res) => {
-              // show clients list in group
-              ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-                groupId: paramObject.selectedGroupId, page:0
-              }, {isResetSelect:true});
-              ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
-              // close dialog
-              this.setState({ isOpenClientSelect: false });
-            });
-          }
-        },
-        confirmObject: {
-          selectedGroupId: selectedGrp.grpId,
-          checkedClientIds: checkedClientIds
-        }
-    });
-  }
-  handleClientSelectSaveConfirmResult = (confirmValue, paramObject) => {
-    if(confirmValue) {
-      const { ClientGroupActions, ClientGroupProps } = this.props;
-      const { ClientManageActions, ClientManageProps } = this.props;
-      const compId = this.props.match.params.grMenuId;
-      ClientGroupActions.addClientsInGroup({
-          groupId: paramObject.selectedGroupId,
-          clients: paramObject.checkedClientIds.join(',')
-      }).then((res) => {
-        // show clients list in group
-        ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-          groupId: paramObject.selectedGroupId, page:0
-        }, {isResetSelect:true});
-        ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
-        // close dialog
-        this.setState({ isOpenClientSelect: false });
-      });
-    }
-  }
-
-  handleClientSelectClose = () => {
-    this.setState({
-      isOpenClientSelect: false
-    })
   }
 
   handleClientPackageSelectClose = () => {
@@ -387,7 +261,11 @@ class ClientPackageManage extends Component {
           ClientPackageActions.createTotalPackageUpgradeForGroup({
             compId: compId,
             groupIds: (checkedGroupIds) ? checkedGroupIds.toJS().join(',') : ''
-          }).then(() => {
+          }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+              alertTitle: t("dtSystemNotice"),
+              alertMsg: res.response.data.status.message
+            });
             ClientManageActions.readClientListPaged(ClientManageProps, compId, { page:0 });
           });
         }
@@ -446,32 +324,18 @@ class ClientPackageManage extends Component {
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
               <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
                 <Grid item xs={3} sm={3} lg={3}>
-                  <Tooltip title={t("ttAddNewGroup")}>
-                  <span>
-                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateButtonForClientGroup} style={{marginRight: "5px"}} >
-                      <AddIcon />
-                    </Button>
-                  </span>
-                  </Tooltip>
-                  <Tooltip title={t("ttDeleteGroup")}>
-                  <span>
-                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForClientGroup} disabled={this.isClientGroupRemovable()} >
-                      <RemoveIcon />
-                    </Button>
-                  </span>
-                  </Tooltip>
                 </Grid>
                 <Grid item xs={9} sm={9} lg={9} style={{textAlign:'right'}}>
                   <Tooltip title={t("ttUpdateTotalPackgeInGroup")}>
                     <span>
-                      <Button className={classes.GRSmallButton} variant="contained" color="secondary" onClick={this.handleTotalPackageUpgradeForGroup} disabled={!(this.isGroupChecked())} style={{marginRight: "10px"}} >
+                      <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleTotalPackageUpgradeForGroup} disabled={!(this.isGroupChecked())} style={{marginRight: "10px"}} >
                         {t("btnAllUpdate")}
                       </Button>
                     </span>
                   </Tooltip>
                   <Tooltip title={t("ttUpdateSelectedPackgeInGroup")}>
                     <span>
-                      <Button className={classes.GRSmallButton} variant="contained" color="secondary" onClick={this.handleAddPackageForGroup} disabled={!(this.isGroupChecked())} style={{marginRight: "10px"}} >
+                      <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleAddPackageForGroup} disabled={!(this.isGroupChecked())} style={{marginRight: "10px"}} >
                         {t("btnAddPackage")}
                       </Button>
                     </span>
@@ -484,6 +348,7 @@ class ClientPackageManage extends Component {
                 onCheck={this.handleClientGroupCheck} 
                 onSelect={this.handleClientGroupSelect}
                 isEnableEdit={false} 
+                isActivable={false} 
               />
             </Grid>
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
@@ -494,14 +359,14 @@ class ClientPackageManage extends Component {
                   <Grid item xs={6} sm={6} lg={6} style={{textAlign:'right'}}>
                     <Tooltip title={t("ttUpdateTotalPackgeInClient")}>
                     <span>
-                      <Button className={classes.GRSmallButton} variant="contained" color="secondary" onClick={this.handleTotalPackageUpgradeForClient} disabled={!(this.isClientChecked())} style={{marginLeft: "10px"}}>
+                      <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleTotalPackageUpgradeForClient} disabled={!(this.isClientChecked())} style={{marginLeft: "10px"}}>
                         {t("btnAllUpdate")}
                       </Button>
                     </span>
                     </Tooltip>
                     <Tooltip title={t("ttUpdateSelectedPackgeInClient")}>
                     <span>
-                      <Button className={classes.GRSmallButton} variant="contained" color="secondary" onClick={this.handleAddPackageForClient} disabled={!(this.isClientChecked())} style={{marginLeft: "10px"}}>
+                      <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleAddPackageForClient} disabled={!(this.isClientChecked())} style={{marginLeft: "10px"}}>
                         {t("btnAddPackage")}
                       </Button>
                     </span>
@@ -509,7 +374,10 @@ class ClientPackageManage extends Component {
                   </Grid>
                 </Grid>
               </Toolbar>
-              <ClientManageCompWithPackage compId={compId} onSelectAll={this.handleClientSelectAll} onSelect={this.handleClientSelect} />
+              <ClientManageCompWithPackage compId={compId} 
+                onSelectAll={this.handleClientSelectAll} 
+                onSelect={this.handleClientSelect} 
+              />
             </Grid>
 
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef'}}>
@@ -517,13 +385,6 @@ class ClientPackageManage extends Component {
             </Grid>
           </Grid>
 
-        <ClientGroupDialog compId={compId} />
-        <ClientSelectDialog 
-          isOpen={this.state.isOpenClientSelect} 
-          onSaveHandle={this.handleClientSelectSave} 
-          onClose={this.handleClientSelectClose} 
-          selectedGroupItem={this.state.selectedGrp}
-        />
         <ClientPackageSelectDialog 
           isOpen={this.state.isOpenClientPackageSelect} 
           onInstallHandle={this.handleClientPackageInstall} 
@@ -545,6 +406,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   GlobalActions: bindActionCreators(GlobalActions, dispatch),
+  GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
   ClientPackageActions: bindActionCreators(ClientPackageActions, dispatch),
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
   ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
