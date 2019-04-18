@@ -72,8 +72,8 @@ class DeptSpec extends Component {
 
     this.props.DeptActions.showDialog({
       viewItem: {
-        deptCd: paramObj.get('selectedDeptCd'),
-        deptNm: paramObj.get('selectedDeptNm')
+        deptCd: paramObj.get('deptCd'),
+        deptNm: paramObj.get('deptNm')
       },
       dialogType: DeptDialog.TYPE_EDIT
     });
@@ -158,7 +158,7 @@ class DeptSpec extends Component {
     const { DeptProps, compId } = this.props;
 
     const informOpen = DeptProps.getIn(['viewItems', compId, 'informOpen']);
-    const viewItem = DeptProps.getIn(['viewItems', compId]);
+    const viewItem = DeptProps.getIn(['viewItems', compId, 'viewItem']);
 
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'DEPT']);
@@ -171,8 +171,8 @@ class DeptSpec extends Component {
       {(informOpen && viewItem) &&
         <Card>
           <CardHeader
-            title={viewItem.get('selectedDeptNm')}
-            subheader={viewItem.get('selectedDeptCd')}
+            title={viewItem.get('deptNm')}
+            subheader={viewItem.get('deptCd')}
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"

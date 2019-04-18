@@ -82,6 +82,7 @@ class ClientMasterManage extends Component {
       compId: this.state.compId,
       valueObj: {checkedGrpId: checkedGroupIdArray}
     });
+
     // show client list in group.
     ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
       groupId: checkedGroupIdArray, page:0
@@ -283,11 +284,6 @@ class ClientMasterManage extends Component {
     return !(checkedIds && checkedIds.size > 0);
   }
 
-  isClientGroupChecked = () => {
-    const checkedGrpId = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'checkedGrpId']);
-    return !(checkedGrpId && checkedGrpId.size > 0);
-  }
-
   isClientGroupSelected = () => {
     return (this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'viewItem', 'grpId'])) ? false : true;
   }
@@ -296,7 +292,6 @@ class ClientMasterManage extends Component {
   handleClientSelectSave = (checkedClientIds) => {
     const { t, i18n } = this.props;
     const selectedGrp = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'selectedGrp']);
-
     this.props.GRConfirmActions.showConfirm({
         confirmTitle: t("dtAddClientInGroup"),
         confirmMsg: t("msgAddClientInGroup", {clientCnt: checkedClientIds.size, groupName: selectedGrp.get('grpNm')}),
@@ -410,7 +405,7 @@ class ClientMasterManage extends Component {
       const parentListItem = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
       this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, parentListItem.get('key'), index);
     } else {
-      this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, 'CGRP000000', 0);
+      this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, 'CGRPDEFAULT', 0);
     }
   }
 

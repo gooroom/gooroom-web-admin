@@ -112,6 +112,8 @@ class DeptTreeComp extends Component {
     // get Object
     const selectRowObject = getRowObjectById(DeptProps, compId, id, 'deptCd');
 
+    console.log('selectRowObject :::::::::: ', selectRowObject.toJS());
+
     if(this.props.onSelect && selectRowObject) {
       this.props.onSelect(Map({
         deptCd: selectRowObject.get('deptCd'),
@@ -359,6 +361,7 @@ class DeptTreeComp extends Component {
             hasSelectChild={false}
             hasSelectParent={false}
             isEnableEdit={this.props.isEnableEdit}
+            isActivable={this.props.isActivable}
             isShowMemberCnt={true}
             onInitTreeData={this.handleInitTreeData}
             onSelectNode={this.handleSelectDept}
