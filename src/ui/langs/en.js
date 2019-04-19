@@ -527,6 +527,9 @@ export default {
   "lbEditChildDeptInfo": "Whether sub-organizations are applied",
   "lbAddDeptInfo": "Organization information registration",
   "msgAddDeptInfo": "Do you want to register organizational information?",
+  "dtDeleteDept": "Delete Organization.",
+  "msgDeletedDept": "Are you sure you want to remove the selected organization ({{deptCnt}}ea) ?",
+  "lbDeleteInUser": "Whether users in your organization are deleted",
 
   // 테마관리
   "lbDeleteTheme": "Remove theme",

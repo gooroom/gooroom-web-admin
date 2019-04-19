@@ -527,6 +527,9 @@ export default {
   "lbEditChildDeptInfo": "하위조직 적용여부",
   "lbAddDeptInfo": "조직정보 등록",
   "msgAddDeptInfo": "조직정보를 등록하시겠습니까?",
+  "dtDeleteDept": "조직정보 삭제",
+  "msgDeletedDept": "조직정보({{deptCnt}}개)를 삭제하시겠습니까? (최상위조직제외)",
+  "lbDeleteInUser": "조직내 사용자삭제여부",
 
   // 테마관리
   "lbDeleteTheme": "테마 삭제",

@@ -338,6 +338,7 @@ export const editDeptInfo = (param) => dispatch => {
 };
 
 // delete
+// - NO USE
 export const deleteDeptInfo = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteDeptConf', {'objId': param.objId}).then(
@@ -350,6 +351,37 @@ export const deleteDeptInfo = (param) => dispatch => {
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// delete group selected - array
+export const deleteSelectedDeptData = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('deleteDeptList', {
+        'deptCds': param.deptCds,
+        'isDeleteUser': ((param.isDeleteUser) ? param.isDeleteUser : false) ? 'Y' : 'N'
+    }).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: DELETE_CLIENTGROUP_SUCCESS,
+                        compId: param.compId,
+                        grpId: param.grpId
+                    });
+                    return response.data;
+                } else {
+                    dispatch({ type: COMMON_FAILURE, error: response.data });
+                    return response.data;
+                }
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+        return error;
     });
 };
 

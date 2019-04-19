@@ -17,6 +17,7 @@ import DeptTreeComp from 'views/User/DeptTreeComp';
 
 import GRPane from "containers/GRContent/GRPane";
 import GRConfirm from 'components/GRComponents/GRConfirm';
+import GRCheckConfirm from 'components/GRComponents/GRCheckConfirm';
 
 import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
@@ -173,9 +174,9 @@ class UserMasterManage extends Component {
       checkedDeptCd = checkedDeptCd.filter(e => (e !== 'DEPTDEFAULT'));
 
       this.props.GRConfirmActions.showCheckConfirm({
-        confirmTitle: t("dtDeleteGroup"),
-        confirmMsg: t("msgDeleteGroup", {deptCnt: checkedDeptCd.size}),
-        confirmCheckMsg: t("lbDeleteInClient"),
+        confirmTitle: t("dtDeleteDept"),
+        confirmMsg: t("msgDeletedDept", {deptCnt: checkedDeptCd.size}),
+        confirmCheckMsg: t("lbDeleteInUser"),
         handleConfirmResult: (confirmValue, confirmObject, isChecked) => {
           if(confirmValue) {
             const isInherit = isChecked;
@@ -183,7 +184,7 @@ class UserMasterManage extends Component {
             const checkedDeptCd = getDataObjectVariableInComp(DeptProps, this.state.compId, 'checkedDeptCd');
 
             if(checkedDeptCd && checkedDeptCd.size > 0) {
-              DeptActions.deleteSelectedClientGroupData({
+              DeptActions.deleteSelectedDeptData({
                 deptCds: checkedDeptCd.toArray(),
                 isDeleteClient: isInherit
               }).then((reData) => {
@@ -552,6 +553,7 @@ class UserMasterManage extends Component {
         <DesktopAppDialog compId={compId} />
 
         <GRConfirm />
+        <GRCheckConfirm />
 
       </React.Fragment>
     );
