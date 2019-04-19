@@ -314,6 +314,7 @@ export const editClientGroupData = (param) => dispatch => {
 };
 
 // delete
+// - NO USE
 export const deleteClientGroupData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteClientGroup', {'groupId': param.grpId}).then(
@@ -329,7 +330,7 @@ export const deleteClientGroupData = (param) => dispatch => {
     });
 };
 
-// delete group selected
+// delete group selected - array
 export const deleteSelectedClientGroupData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteClientGroupList', {
