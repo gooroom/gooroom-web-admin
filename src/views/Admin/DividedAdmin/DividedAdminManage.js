@@ -228,8 +228,8 @@ class DividedAdminManage extends Component {
                       onClick={event => this.handleSelectRow(event, n.get('adminId'))}
                       key={n.get('adminId')}
                     >
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{
                         (n.get('deptInfoList').size > 0) ? ((n.get('deptInfoList').size > 1) ? n.getIn(['deptInfoList', 0, 'name']) + '+' : n.getIn(['deptInfoList', 0, 'name'])) : '-'

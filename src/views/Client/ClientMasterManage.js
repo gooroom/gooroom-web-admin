@@ -212,14 +212,13 @@ class ClientMasterManage extends Component {
         confirmCheckMsg: t("lbDeleteInClient"),
         handleConfirmResult: (confirmValue, confirmObject, isChecked) => {
           if(confirmValue) {
-            const isInherit = isChecked;
             const { ClientGroupProps, ClientGroupActions } = this.props;
             const checkedGrpId = getDataObjectVariableInComp(ClientGroupProps, this.state.compId, 'checkedGrpId');
 
             if(checkedGrpId && checkedGrpId.size > 0) {
               ClientGroupActions.deleteSelectedClientGroupData({
                 grpIds: checkedGrpId.toArray(),
-                isDeleteClient: isInherit
+                isDeleteClient: isChecked
               }).then((reData) => {
 
                 // get parent index

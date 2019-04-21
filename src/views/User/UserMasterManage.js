@@ -179,14 +179,13 @@ class UserMasterManage extends Component {
         confirmCheckMsg: t("lbDeleteInUser"),
         handleConfirmResult: (confirmValue, confirmObject, isChecked) => {
           if(confirmValue) {
-            const isInherit = isChecked;
             const { DeptProps, DeptActions } = this.props;
             const checkedDeptCd = getDataObjectVariableInComp(DeptProps, this.state.compId, 'checkedDeptCd');
 
             if(checkedDeptCd && checkedDeptCd.size > 0) {
               DeptActions.deleteSelectedDeptData({
                 deptCds: checkedDeptCd.toArray(),
-                isDeleteClient: isInherit
+                isDeleteUser: isChecked
               }).then((reData) => {
 
                 // get parent index
