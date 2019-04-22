@@ -43,7 +43,6 @@ class GRTreeDeptList extends Component {
   }
 
   handleClickNode(listItem, index) {
-    console.log('handleClickNode...................');
     const { DeptProps, DeptActions, compId } = this.props;
 
     if (listItem.get('children')) {
@@ -176,7 +175,6 @@ class GRTreeDeptList extends Component {
   }
 
   handleCheckNode = (event, listItem, index) => {
-    console.log('handleCheckNode ...................');
     const { DeptProps, DeptActions, compId, isActivable } = this.props;
     const treeComp = DeptProps.getIn(['viewItems', compId, 'treeComp']);
 
