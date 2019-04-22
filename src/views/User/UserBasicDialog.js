@@ -165,7 +165,7 @@ class UserBasicDialog extends Component {
                     <DialogContent>
                         <TextValidator
                             label={t("lbUserId")} value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
-                            name="userId" validators={['required', 'matchRegexp:^[a-zA-Z0-9]*$']}
+                            name="userId" validators={['required', 'matchRegexp:^[a-z][-a-z0-9_]*$']}
                             errorMessages={[t("msgEnterUserId"), t("msgUserIdValid")]}
                             onChange={this.handleValueChange("userId")}
                             className={classNames(classes.fullWidth, classes.dialogItemRow)}
