@@ -112,8 +112,6 @@ class DeptTreeComp extends Component {
     // get Object
     const selectRowObject = getRowObjectById(DeptProps, compId, id, 'deptCd');
 
-    console.log('selectRowObject :::::::::: ', selectRowObject.toJS());
-
     if(this.props.onSelect && selectRowObject) {
       this.props.onSelect(Map({
         deptCd: selectRowObject.get('deptCd'),
@@ -212,7 +210,6 @@ class DeptTreeComp extends Component {
 
   // edit group in tree
   handleResetDeptInfo = (deptCd) => {
-    console.log('handleResetDeptInfo ::: ', deptCd);
     this.grTreeList.resetTreeNode(deptCd);
   }
 
