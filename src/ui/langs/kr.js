@@ -71,7 +71,7 @@ export default {
   "colJobProgressStatus": "진행상태",
   "colTargetCnt": "대상단말수",
   "colJobErrorCnt": "작업오류수",
-  "colJobCompCnt": "작업완료수",
+  "colJobCompCnt": "작업종료수",
   "colRegUser": "등록자",
   "colModUser": "수정자",
 
@@ -205,7 +205,7 @@ export default {
 
   // options
   "stBeforeJob": "작업전",
-  "stCompJob": "작업완료",
+  "stCompJob": "작업종료",
   "stRunningJob": "작업중",
   "stFailJob": "작업오류",
   "stCancelJob": "작업취소",
