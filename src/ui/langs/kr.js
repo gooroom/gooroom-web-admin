@@ -835,6 +835,7 @@ export default {
   "lbRepairJob": "조치작업",
   "msgRepairJob": "침해단말 조치작업이 생성 되었습니다.",
   "msgRepairJobFail": "침해단말 조치작업이 생성되지 못하였습니다.",
+  "msgShowOnlyClientGroupRule": "로컬계정으로 접속한 단말입니다. 단말정책만 표시됩니다.",
   "lbViolatedClientList": "침해 단말 목록",
 
   // 공지

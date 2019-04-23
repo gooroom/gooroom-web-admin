@@ -835,6 +835,7 @@ export default {
   "lbRepairJob": "Repair Action",
   "msgRepairJob": "An infringing client action has been created.",
   "msgRepairJobFail": "An infringing client action could not be created.",
+  "msgShowOnlyClientGroupRule": "This is the Client connected to the local account. Only client rules are displayed.",
   "lbViolatedClientList": "List of infringing devices",
 
   // 공지
