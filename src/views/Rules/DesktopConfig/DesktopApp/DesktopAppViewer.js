@@ -55,7 +55,7 @@ class DesktopAppViewer extends Component {
 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} {t("lbServiceStatus")}</TableCell>
-                  <TableCell >{viewItem.get('statusCd')}</TableCell>
+                  <TableCell >{(viewItem.get('statusCd') === 'STAT010') ? t("selSeviceOn") : t("selSeviceOff")}</TableCell>
                   <TableCell component="th" scope="row">{bull} {t("lbIconEditDate")}</TableCell>
                   <TableCell >{formatDateToSimple(viewItem.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                 </TableRow>

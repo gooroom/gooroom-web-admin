@@ -28,6 +28,8 @@ const CHG_COMPDATA_VALUE = 'desktopApp/CHG_COMPDATA_VALUE';
 const DELETE_COMPDATA = 'desktopApp/DELETE_COMPDATA';
 const DELETE_COMPDATA_ITEM = 'desktopApp/DELETE_COMPDATA_ITEM';
 
+// desktop conf action
+const SET_EDITING_APP_ITEM = 'desktopConf/SET_EDITING_APP_ITEM';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chAppId', 'asc');
@@ -297,31 +299,22 @@ export const editDesktopAppData = (itemObj, compId) => dispatch => {
                 requestPostAPI('readDesktopAppData', {'desktopAppId': itemObj.get('appId')}).then(
                     (response) => {
                         dispatch({
+                            type: SET_EDITING_APP_ITEM,
+                            appId: itemObj.get('appId'),
+                            response: response
+                        });
+                        dispatch({
                             type: EDIT_DESKTOPAPP_SUCCESS,
                             appId: itemObj.get('appId'),
                             response: response
                         });
                     }
                 ).catch(error => {
+                    console.log('error ::  ', error);
                     dispatch({ type: COMMON_FAILURE, error: error });
                 });
-
-                // // change object array for selector
-                // IS NEED ????????????????????????????????????????????????????????????
-                // requestPostAPI('readDesktopAppList', {
-                // }).then(
-                //     (response) => {
-                //         dispatch({
-                //             type: GET_DESKTOPAPP_LIST_SUCCESS,
-                //             compId: compId,
-                //             response: response
-                //         });
-                //     }
-                // ).catch(error => {
-                //     dispatch({ type: COMMON_FAILURE, error: error });
-                // });
             } else {
-                dispatch({ type: COMMON_FAILURE, error: error });
+                dispatch({ type: COMMON_FAILURE, error: '' });
             }
         }
     ).catch(error => {
@@ -409,7 +402,22 @@ export default handleActions({
         });
     },
     [EDIT_DESKTOPAPP_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleEditSuccessAction(state, action);
+        //return commonHandleActions.handleEditSuccessAction(state, action);
+
+        let tempState = state;
+    if(tempState.get('viewItems')) {
+        tempState.get('viewItems').forEach((e, i) => {
+            // replace
+            tempState = tempState.setIn(['viewItems', i, 'viewItem'], fromJS(action.response.data.data[0]));
+        });
+    }
+    return state.delete('editingItem').merge(tempState).merge({
+        pending: false,
+        error: false,
+        dialogOpen: false,
+        dialogType: ''
+    });
+
     },
     [DELETE_DESKTOPAPP_SUCCESS]: (state, action) => {
         return commonHandleActions.handleDeleteSuccessAction(state, action, 'appId');

@@ -20,6 +20,7 @@ const SHOW_DESKTOPCONF_DIALOG = 'desktopConf/SHOW_DESKTOPCONF_DIALOG';
 const CLOSE_DESKTOPCONF_DIALOG = 'desktopConf/CLOSE_DESKTOPCONF_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'desktopConf/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_APP_ITEM = 'desktopConf/SET_EDITING_APP_ITEM';
 
 const CHG_LISTPARAM_DATA = 'desktopConf/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'desktopConf/CHG_COMPDATA_VALUE';
@@ -578,7 +579,21 @@ export default handleActions({
         if(data && data.length > 0) {
             return state.set('themeListData', List(data.map((e) => {return Map(e)})));
         };
-    }, 
+    },
+    [SET_EDITING_APP_ITEM]: (state, action) => {
+        let tempState = state;
+        if(action.response && action.response.data && action.response.data.data && action.response.data.data.length > 0) {
+            const appObj = action.response.data.data[0];
+            if(tempState.getIn(['editingItem', 'apps']) !== undefined) {
+                const appIndex = tempState.getIn(['editingItem', 'apps']).findIndex((e) => (e.get('appId') === appObj.appId));
+                if(appIndex > -1) {
+                    tempState = tempState.setIn(['editingItem', 'apps', appIndex], fromJS(appObj));
+                }
+            }
+        }
+
+        return tempState;
+    }
 
 }, initialState);
 
