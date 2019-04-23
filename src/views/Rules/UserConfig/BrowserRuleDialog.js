@@ -70,6 +70,9 @@ class BrowserRuleDialog extends Component {
     }
 
     handleClose = (event) => {
+        this.setState({
+            selectedTab: 0
+        });
         this.props.BrowserRuleActions.closeDialog();
     }
 
@@ -275,38 +278,6 @@ class BrowserRuleDialog extends Component {
                             />
                             </Grid>
                         </Grid>
-                        <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
-                            <Grid item xs={6}>
-                                <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
-                                    <Grid item xs={6}><FormLabel component="legend">{t("lbUseWebSocket")}</FormLabel></Grid>
-                                    <Grid item >
-                                        <FormControlLabel value="allow" control={
-                                            <Radio color="primary" value="allow" onChange={this.handleValueChange("webSocket")} checked={editingItem.get('webSocket') === 'allow'} />
-                                        } label={t("selPermitRule")} labelPlacement="end" />
-                                    </Grid>
-                                    <Grid item >
-                                        <FormControlLabel value="disallow" control={
-                                            <Radio color="primary" value="disallow" onChange={this.handleValueChange("webSocket")} checked={editingItem.get('webSocket') === 'disallow'} />
-                                        } label={t("selNoPermitRule")} labelPlacement="end" />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
-                                    <Grid item xs={6}><FormLabel component="legend">{t("lbUseWebWorker")}</FormLabel></Grid>
-                                    <Grid item >
-                                        <FormControlLabel value="allow" control={
-                                            <Radio color="primary" value="allow" onChange={this.handleValueChange("webWorker")} checked={editingItem.get('webWorker') === 'allow'} />
-                                        } label={t("selPermitRule")} labelPlacement="end" />
-                                    </Grid>
-                                    <Grid item >
-                                        <FormControlLabel value="disallow" control={
-                                            <Radio color="primary" value="disallow" onChange={this.handleValueChange("webWorker")} checked={editingItem.get('webWorker') === 'disallow'} />
-                                        } label={t("selNoPermitRule")} labelPlacement="end" />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </Grid>
                         <AppBar elevation={0} position="static" color="default" style={{marginTop:20}} >
                             <Tabs value={selectedTab} indicatorColor="primary" textColor="primary" onChange={this.handleChangeTabs} >
                                 <Tab label={t("lbSetupTrustSite")} value={0} />
@@ -395,35 +366,72 @@ class BrowserRuleDialog extends Component {
                         }
                         {selectedTab === 1 && 
                             <div style={{border:'1px solid lightGray',padding:20}}>
+                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+                                <Grid item xs={6}>
+                                    <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
+                                        <Grid item xs={6}><FormLabel component="legend">{t("lbUseWebSocket")}</FormLabel></Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="allow" control={
+                                                <Radio color="primary" value="allow" onChange={this.handleValueChange("webSocket")} checked={editingItem.get('webSocket') === 'allow'} />
+                                            } label={t("selPermitRule")} labelPlacement="end" />
+                                        </Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="disallow" control={
+                                                <Radio color="primary" value="disallow" onChange={this.handleValueChange("webSocket")} checked={editingItem.get('webSocket') === 'disallow'} />
+                                            } label={t("selNoPermitRule")} labelPlacement="end" />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
+                                        <Grid item xs={6}><FormLabel component="legend">{t("lbUseWebWorker")}</FormLabel></Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="allow" control={
+                                                <Radio color="primary" value="allow" onChange={this.handleValueChange("webWorker")} checked={editingItem.get('webWorker') === 'allow'} />
+                                            } label={t("selPermitRule")} labelPlacement="end" />
+                                        </Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="disallow" control={
+                                                <Radio color="primary" value="disallow" onChange={this.handleValueChange("webWorker")} checked={editingItem.get('webWorker') === 'disallow'} />
+                                            } label={t("selNoPermitRule")} labelPlacement="end" />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:0}}>
+                                <Grid item xs={6}>
+                                    <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                        <Grid item xs={12}><FormLabel component="legend">{t("lbDevToolUseStop")}</FormLabel></Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="1" control={
+                                                <Radio color="primary" value="1" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '1'} />
+                                            } label={t("selEnableDevTool")} labelPlacement="end" />
+                                        </Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="2" control={
+                                                <Radio color="primary" value="2" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '2'} />
+                                            } label={t("selDisableDevTool")} labelPlacement="end" />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{marginTop:10}}>
+                                        <Grid item xs={12}><FormLabel component="legend">{t("lbLimitDownload")}</FormLabel></Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="0" control={
+                                                <Radio color="primary" value="0" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '0'} />
+                                            } label={t("selNolimitDownload")} labelPlacement="end" />
+                                        </Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="3" control={
+                                                <Radio color="primary" value="3" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '3'} />
+                                            } label={t("selLimitAllDownload")} labelPlacement="end" />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                             
-                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                <Grid item xs={12}><FormLabel component="legend">{t("lbDevToolUseStop")}</FormLabel></Grid>
-                                <Grid item >
-                                    <FormControlLabel value="1" control={
-                                        <Radio color="primary" value="1" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '1'} />
-                                    } label={t("selEnableDevTool")} labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="2" control={
-                                        <Radio color="primary" value="2" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '2'} />
-                                    } label={t("selDisableDevTool")} labelPlacement="end" />
-                                </Grid>
-                            </Grid>
-
-                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{marginTop:10}}>
-                                <Grid item xs={12}><FormLabel component="legend">{t("lbLimitDownload")}</FormLabel></Grid>
-                                <Grid item >
-                                    <FormControlLabel value="0" control={
-                                        <Radio color="primary" value="0" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '0'} />
-                                    } label={t("selNolimitDownload")} labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="3" control={
-                                        <Radio color="primary" value="3" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '3'} />
-                                    } label={t("selLimitAllDownload")} labelPlacement="end" />
-                                </Grid>
-                            </Grid>
-
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
                                 <Grid item xs={6}>
                                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
