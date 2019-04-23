@@ -182,10 +182,15 @@ class SecurityRuleDialog extends Component {
         const { classes } = this.props;
         const { t, i18n } = this.props;
 
-        const screenTimeList = [[1,'1' + t('optMinutes')], [2,'2' + t('optMinutes')], [3,'3' + t('optMinutes')], [5,'5' + t('optMinutes')], 
+        const screenTimeListAll = [[1,'1' + t('optMinutes')], [2,'2' + t('optMinutes')], [3,'3' + t('optMinutes')], [5,'5' + t('optMinutes')], 
         [10,'10' + t('optMinutes')], [15,'15' + t('optMinutes')], [20,'20' + t('optMinutes')], [25,'25' + t('optMinutes')], 
         [30,'30' + t('optMinutes')], [45,'45' + t('optMinutes')], 
         [60,'1' + t('optHours')], [120,'2' + t('optHours')], [180,'3' + t('optHours')], [240,'4' + t('optHours')], [300,'5' + t('optHours')]];
+
+        const screenTimeList = [[1,'1' + t('optMinutes')], [2,'2' + t('optMinutes')], [3,'3' + t('optMinutes')], [5,'5' + t('optMinutes')], 
+        [10,'10' + t('optMinutes')], [15,'15' + t('optMinutes')], [20,'20' + t('optMinutes')], [25,'25' + t('optMinutes')], 
+        [30,'30' + t('optMinutes')], [45,'45' + t('optMinutes')], 
+        [60,'1' + t('optHours')]];
 
         const { SecurityRuleProps } = this.props;
         const dialogType = SecurityRuleProps.get('dialogType');
