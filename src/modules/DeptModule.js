@@ -716,6 +716,7 @@ export default handleActions({
             newState.get('viewItems').forEach((e, i) => {
                 newState = newState
                         .deleteIn(['viewItems', i, 'viewItem'])
+                        .deleteIn(['viewItems', i, 'treeComp', 'activeListItem'])
                         .setIn(['viewItems', i, 'informOpen'], false)
                         .delete('editingItem')
                         .merge({
