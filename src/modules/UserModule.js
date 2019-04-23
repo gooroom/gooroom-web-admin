@@ -89,10 +89,12 @@ export const readUserListPaged = (module, compId, extParam) => dispatch => {
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
 
+    const deptCdParam = (newListParam.get('deptCd') && List(newListParam.get('deptCd')).size > 0) ? List(newListParam.get('deptCd')).join() : '';
+
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readUserListPagedInDept', {
         status: newListParam.get('status'),
-        deptCd: newListParam.get('deptCd'),
+        deptCd: deptCdParam,
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),
