@@ -445,15 +445,15 @@ class UserMasterManage extends Component {
                 <Grid item>
                   <Tooltip title={t("ttAddNewDept")}>
                     <span>
-                    <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleCreateDept} >
-                      <AddIcon /><DeptIcon />
+                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateDept} style={{marginRight: "5px"}} >
+                      <AddIcon />
                     </Button>
                     </span>
                   </Tooltip>
                   <Tooltip title={t("ttDeleteDept")}>
                     <span>
-                    <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isDeptRemovable()} style={{marginLeft: "4px"}} >
-                      <RemoveIcon /><DeptIcon />
+                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleDeleteButtonForDept} disabled={this.isDeptRemovable()} >
+                      <RemoveIcon />
                     </Button>
                     </span>
                   </Tooltip>
@@ -470,7 +470,7 @@ class UserMasterManage extends Component {
                 <Grid item>
                   <Tooltip title={t("ttAddUserInDept")}>
                     <span>
-                    <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserSelected()} >
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserSelected()} >
                       <AddIcon /><UserIcon />
                     </Button>
                     </span>
@@ -502,7 +502,7 @@ class UserMasterManage extends Component {
                   <Grid item xs={12} sm={6} lg={6} >
                     <Tooltip title={t("ttMoveDept")}>
                     <span>
-                      <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleMoveUserToDept} disabled={this.isUserChecked()} >
+                      <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleMoveUserToDept} disabled={this.isUserChecked()} >
                         <MoveIcon /><DeptIcon />
                       </Button>
                     </span>
