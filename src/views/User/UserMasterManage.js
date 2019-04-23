@@ -341,30 +341,32 @@ class UserMasterManage extends Component {
     GRConfirmActions.showConfirm({
         confirmTitle: t("lbChangeDeptForUser"),
         confirmMsg: t("msgChangeDeptForUser", {userCnt:checkedUserIds.size, deptNm:selectedDept.deptNm}),
-        handleConfirmResult: this.handleUserSelectSaveConfirmResult,
+        handleConfirmResult: (confirmValue, paramObject) => {
+          if(confirmValue) {
+            const { DeptActions, DeptProps, UserActions, UserProps } = this.props;
+            DeptActions.createUsersInDept({
+                deptCd: paramObject.selectedDeptCd,
+                users: paramObject.selectedUsers.join(',')
+            }).then((res) => {
+              if(res && res.status && res.status.result === 'success') {
+                // change dept node info as user count
+                this.handleResetTreeForEdit();
+                // show user list in dept.
+                UserActions.readUserListPaged(UserProps, this.state.compId, {
+                  deptCd: DeptProps.getIn(['viewItems', this.state.compId, 'checkedDeptCd']),
+                  page:0
+                });
+              }
+              // close dialog
+              this.setState({ isOpenDeptSelect: false });
+            });
+          }
+        },
         confirmObject: {
           selectedDeptCd: selectedDept.deptCd,
           selectedUsers: checkedUserIds
         }
     });
-  }
-
-  handleUserSelectSaveConfirmResult = (confirmValue, paramObject) => {
-    if(confirmValue) {
-      const { DeptActions, UserActions, UserProps } = this.props;
-      DeptActions.createUsersInDept({
-          deptCd: paramObject.selectedDeptCd,
-          users: paramObject.selectedUsers.join(',')
-      }).then((res) => {
-        // show user list in dept.
-        UserActions.readUserListPaged(UserProps, this.state.compId, {
-          deptCd: paramObject.selectedDeptCd, page:0
-        });
-        // close dialog
-        this.setState({ isOpenUserSelect: false });
-        this.setState({ isOpenDeptSelect: false });
-      });
-    }
   }
 
   handleUserSelectionClose = () => {
