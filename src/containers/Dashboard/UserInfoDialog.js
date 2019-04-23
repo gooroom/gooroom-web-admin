@@ -26,6 +26,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
+import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -53,6 +54,9 @@ class UserInfoDialog extends Component {
                         {t("lbClientId")}: <font style={{fontWeight:'bold',fontSize:'15px'}}>{DashboardProps.getIn(['selectedUserInfo', 'clientId'])}</font>
                         </Grid>
                     </Grid>
+                    {(DashboardProps.getIn(['selectedUserInfo', 'userId']) === undefined || DashboardProps.getIn(['selectedUserInfo', 'userId']) === '') &&
+                    <Typography variant="overline" gutterBottom style={{marginTop:2,marginBottom:0,color:'#ca1717'}}>{t("msgShowOnlyClientGroupRule")}</Typography>
+                    }
                     </DialogTitle>
                     <DialogContent>
                         <Grid container spacing={16}>
