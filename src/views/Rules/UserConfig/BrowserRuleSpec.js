@@ -77,10 +77,6 @@ class BrowserRuleSpec extends Component {
             </Grid>
             }
             <Grid container spacing={0}>
-              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbUseWebSocket")}</Grid>
-              <Grid item xs={2} className={classes.specContent}>{viewItem.get('webSocket')}</Grid>
-              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbUseWebWorker")}</Grid>
-              <Grid item xs={2} className={classes.specContent}>{viewItem.get('webWorker')}</Grid>
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("lbSetupTrustSite")} ]</Grid>
               <Grid item xs={6} className={classes.specTitle}>{bull} {t("lbDevToolUseStop")}</Grid>
               <Grid item xs={6} className={classes.specContent}>{viewItem.get('devToolRule__trust')}</Grid>
@@ -95,6 +91,10 @@ class BrowserRuleSpec extends Component {
                 <div style={{maxHeight:120,overflowY:'auto'}}>{viewItem.get('trustSetup')}</div>
               </Grid>
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("lbSetupUntrustSite")} ]</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbUseWebSocket")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{viewItem.get('webSocket')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbUseWebWorker")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{viewItem.get('webWorker')}</Grid>
               <Grid item xs={6} className={classes.specTitle}>{bull} {t("lbDevToolUseStop")}</Grid>
               <Grid item xs={6} className={classes.specContent}>{viewItem.get('devToolRule__untrust')}</Grid>
               <Grid item xs={6} className={classes.specTitle}>{bull} {t("lbLimitDownload")}</Grid>
