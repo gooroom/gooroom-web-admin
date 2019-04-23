@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -18,7 +15,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
-import GRTreeList from "components/GRTree/GRTreeList";
+import GRTreeClientGroupList from "components/GRTree/GRTreeClientGroupList";
 
 import Button from "@material-ui/core/Button";
 import Grid from '@material-ui/core/Grid';
@@ -28,7 +25,7 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
 
 
-class DeptMultiDialog extends Component {
+class ClientGroupMultiRuleDialog extends Component {
     
     static TYPE_EDIT = 'EDIT';
 
@@ -111,20 +108,15 @@ class DeptMultiDialog extends Component {
                     <DialogContent>
                         <Grid container spacing={24}>
                             <Grid item xs={4}>
-                                <GRTreeList
-                                    useFolderIcons={true}
+                                <GRTreeClientGroupList
                                     listHeight='24px'
-                                    url='readChildrenClientGroupList'
-                                    paramKeyName='grpId'
-                                    rootKeyValue='0'
-                                    keyName='key'
-                                    title='title'
-                                    startingDepth='1'
+                                    compId={compId+'_MRDIALOG'}
                                     hasSelectChild={false}
                                     hasSelectParent={false}
-                                    compId={compId}
+                                    isEnableEdit={false}
+                                    isActivable={false}
+                                    isShowMemberCnt={true}
                                     onCheckedNode={this.handleCheckedClientGroup}
-                                    onRef={ref => (this.grTreeList = ref)}
                                 />
                             </Grid>
                             <Grid item xs={8}>
@@ -165,4 +157,4 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptMultiDialog)));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupMultiRuleDialog)));

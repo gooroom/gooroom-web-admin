@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -17,7 +14,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 
-import GRTreeList from "components/GRTree/GRTreeList";
+import GRTreeDeptList from "components/GRTree/GRTreeDeptList";
 
 import Button from "@material-ui/core/Button";
 import Grid from '@material-ui/core/Grid';
@@ -98,23 +95,16 @@ class DeptMultiDialog extends Component {
                     <DialogContent>
                         <Grid container spacing={24}>
                             <Grid item xs={4}>
-                                <GRTreeList
+                                <GRTreeDeptList
                                     useFolderIcons={true}
                                     listHeight='24px'
-                                    url='readChildrenDeptList'
-                                    paramKeyName='deptCd'
-                                    rootKeyValue='0'
-                                    keyName='key'
-                                    title='title'
-                                    startingDepth='2'
+                                    compId={compId+'_MRDIALOG'}
                                     hasSelectChild={false}
                                     hasSelectParent={false}
-                                    compId={compId}
-                                    onInitTreeData={this.handleInitTreeData}
-                                    onSelectNode={this.handleSelectDept}
+                                    isEnableEdit={false}
+                                    isActivable={false}
+                                    isShowMemberCnt={true}
                                     onCheckedNode={this.handleCheckedDept}
-                                    onEditNode={this.handleEditDept}
-                                    onRef={ref => (this.grTreeList = ref)}
                                 />
                             </Grid>
                             <Grid item xs={8}>
