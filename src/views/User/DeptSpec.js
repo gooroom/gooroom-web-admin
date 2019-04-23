@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
 import * as DeptActions from 'modules/DeptModule';
@@ -29,6 +29,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
 
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -43,6 +44,12 @@ import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
+
+import Avatar from '@material-ui/core/Avatar';
+import DefaultIcon from '@material-ui/icons/Language';
+import DeptIcon from '@material-ui/icons/BusinessCenter';
+import UserIcon from '@material-ui/icons/Person';
+import GroupIcon from '@material-ui/icons/LaptopChromebook';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -166,6 +173,8 @@ class DeptSpec extends Component {
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'DEPT']);
 
+    const avatarRef = getAvatarExplainForUser(this.props.t);
+
     return (
       <div style={{marginTop: 10}}>
       {(informOpen && viewItem) &&
@@ -184,6 +193,7 @@ class DeptSpec extends Component {
           ></CardHeader>
           <Divider />
           <CardContent style={{padding:10}}>
+            {avatarRef}
             <Grid container spacing={16}>
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}

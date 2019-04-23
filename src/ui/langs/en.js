@@ -198,6 +198,10 @@ export default {
   "dtNameAndId": "Name(ID)",
   "selNoSelected": "NoSelect",
   "msgShowSpecAsSelectRule": "When you select the rule information, details are displayed.",
+  "lbDefaultRule": "Default Rule",
+  "lbClientGroupRule": "Client Group Rule",
+  "lbDeptRule": "Dept. Rule",
+  "lbUserRule": "User Rule",
 
   // options
   "stBeforeJob": "Before",

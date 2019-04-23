@@ -21,7 +21,7 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
-import { getRowObjectById, getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getAvatarExplainForGroup, getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import ClientConfSettingSpec, { generateClientConfSettingObject } from 'views/Rules/ClientConfig/ClientConfSettingSpec';
 import ClientHostNameSpec, { generateClientHostNameObject } from 'views/Rules/HostName/ClientHostNameSpec';
@@ -240,6 +240,8 @@ class ClientGroupSpec extends Component {
       }
     }
 
+    const avatarRef = getAvatarExplainForGroup(this.props.t);
+
     return (
       <div>
       {(informOpen && viewItem && viewItem.get('grpId')) &&
@@ -258,6 +260,7 @@ class ClientGroupSpec extends Component {
           ></CardHeader>
           <Divider />
           <CardContent style={{padding:10}}>
+            {avatarRef}
             <Grid container spacing={16}>
               <Grid item xs={12} md={12} lg={6} xl={6} >
                 <ClientHostNameSpec compId={compId} specType="inform" targetType="GROUP"

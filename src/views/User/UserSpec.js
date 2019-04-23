@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
 
@@ -135,6 +135,8 @@ class UserSpec extends Component {
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'USER']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'USER']);
 
+    const avatarRef = getAvatarExplainForUser(this.props.t);
+
     return (
       <div style={{marginTop: 10}} >
       {(informOpen && viewItem) &&
@@ -156,6 +158,7 @@ class UserSpec extends Component {
           />
           <Divider />
           <CardContent style={{padding:10}}>
+            {avatarRef}
             <Grid container spacing={16}>
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
