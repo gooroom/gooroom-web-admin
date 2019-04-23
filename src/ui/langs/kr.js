@@ -198,6 +198,10 @@ export default {
   "dtNameAndId": "이름(아이디)",
   "selNoSelected": "지정안함",
   "msgShowSpecAsSelectRule": "정책 정보를 선택하면 상세 내용이 표시됩니다.",
+  "lbDefaultRule": "기본정책",
+  "lbClientGroupRule": "단말그룹정책",
+  "lbDeptRule": "조직정책",
+  "lbUserRule": "사용자정책",
 
   // options
   "stBeforeJob": "작업전",
