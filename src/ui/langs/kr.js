@@ -361,7 +361,7 @@ export default {
   "lbPackageName": "단말패키지 이름",
   "lbPackageDesc": "단말패키지 설명",
   "dtSelectPackage": "패키지 선택",
-  "dtAllPackageListUpdate": "전체리스트 업데이트",
+  "dtAllPackageListUpdate": "전체리스트 목록 업데이트",
   "btnInstall": "설치",
   "msgNoSelectPackage": "설치할 패키지가 선택되지 않았습니다.",
   "dtPackageListUpdate": "패키지리스트 업데이트",
