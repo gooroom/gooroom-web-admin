@@ -64,6 +64,7 @@ class DividedAdminManageSpec extends Component {
             }
           />
           <CardContent style={{padding:10,width:'100%'}}>
+{/*          
             <Grid container spacing={0}>
               {(selectedItem.get('isClientAdmin') === '1') && 
                 <React.Fragment>
@@ -173,6 +174,7 @@ class DividedAdminManageSpec extends Component {
                 <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{"관리대상 단말그룹정보"}</strike> ]</Grid>
               }
             </Grid>
+*/}            
             <Grid container spacing={0}>
               {(selectedItem.get('connIps') && selectedItem.get('connIps').size > 0) &&
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"접속가능 아이피"} ]</Grid>

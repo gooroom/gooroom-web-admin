@@ -161,7 +161,7 @@ class DividedAdminManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const columnHeaders = [
+    const columnHeader_FULL = [
       { id: 'ch1', isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
       { id: 'ch2', isOrder: true, numeric: false, disablePadding: true, label: "이름" },
       { id: 'ch201', isOrder: false, numeric: false, disablePadding: true, label: "상태" },
@@ -172,6 +172,12 @@ class DividedAdminManage extends Component {
       { id: 'ch5', isOrder: false, numeric: false, disablePadding: true, label: "정책관리" },
       { id: 'ch6', isOrder: false, numeric: false, disablePadding: true, label: "데스크톱환경관리" },
       { id: 'ch7', isOrder: false, numeric: false, disablePadding: true, label: "공지관리" },
+      { id: 'ch99', isOrder: false, numeric: false, disablePadding: true, label: "수정/삭제" },
+    ];
+    const columnHeaders = [
+      { id: 'ch1', isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
+      { id: 'ch2', isOrder: true, numeric: false, disablePadding: true, label: "이름" },
+      { id: 'ch201', isOrder: false, numeric: false, disablePadding: true, label: "상태" },
       { id: 'ch99', isOrder: false, numeric: false, disablePadding: true, label: "수정/삭제" },
     ];
 
@@ -231,6 +237,7 @@ class DividedAdminManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
+{/* 
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{
                         (n.get('deptInfoList').size > 0) ? ((n.get('deptInfoList').size > 1) ? n.getIn(['deptInfoList', 0, 'name']) + '+' : n.getIn(['deptInfoList', 0, 'name'])) : '-'
                       }</TableCell>
@@ -242,6 +249,7 @@ class DividedAdminManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isRuleAdmin')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isDesktopAdmin')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isNoticeAdmin')}</TableCell>
+*/}                                            
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('adminId'))}>
