@@ -426,7 +426,7 @@ class ClientMasterManage extends Component {
                 <Grid item>
                   <Tooltip title={t("ttAddNewGroup")}>
                   <span>
-                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateClientGroup} style={{marginRight: "5px"}} >
+                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateClientGroup} disabled={this.isClientGroupSelected()} style={{marginRight: "5px"}} >
                       <AddIcon />
                     </Button>
                   </span>
