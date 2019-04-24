@@ -135,12 +135,22 @@ class UserMasterManage extends Component {
     });
   };
 
+  getSingleCheckedDept = () => {
+    const checkedDeptCds = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'checkedDeptCd']);
+    if(checkedDeptCds && checkedDeptCds.size > 0) {
+      const deptCd = checkedDeptCds.get(0);
+      if(deptCd !== undefined && deptCd !== '') {
+        return this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData']).find(e => (e.get('key') === deptCd));
+      }
+    }
+    return null;
+  }
+
   // create dept in tree
   handleCreateDept = (event) => {
     const { t, i18n } = this.props;
-
-    const deptCd = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'viewItem', 'deptCd']);
-    if(deptCd && deptCd !== '') {
+    const checkedDept = this.getSingleCheckedDept();
+    if(checkedDept !== undefined) {
       this.props.DeptActions.showDialog({
         viewItem: {
           deptCd: '',
@@ -165,6 +175,15 @@ class UserMasterManage extends Component {
     }
   }
 
+  isDeptOneSelect = () => {
+    let checkedDeptCd = getDataObjectVariableInComp(this.props.DeptProps, this.state.compId, 'checkedDeptCd');
+    if(checkedDeptCd && checkedDeptCd.size > 0) {
+      return !(checkedDeptCd && checkedDeptCd.size === 1);
+    } else {
+      return true;
+    }
+  }
+
   handleDeleteButtonForDept = () => {
     const { t, i18n } = this.props;
     let checkedDeptCd = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'checkedDeptCd']);
@@ -179,12 +198,13 @@ class UserMasterManage extends Component {
         confirmCheckMsg: t("lbDeleteInUser"),
         handleConfirmResult: (confirmValue, confirmObject, isChecked) => {
           if(confirmValue) {
-            const { DeptProps, DeptActions } = this.props;
+            const { DeptProps, DeptActions, UserProps, UserActions } = this.props;
             const checkedDeptCd = getDataObjectVariableInComp(DeptProps, this.state.compId, 'checkedDeptCd');
 
             if(checkedDeptCd && checkedDeptCd.size > 0) {
               DeptActions.deleteSelectedDeptData({
                 deptCds: checkedDeptCd.toArray(),
+                compId: this.state.compId,
                 isDeleteUser: isChecked
               }).then((reData) => {
 
@@ -203,17 +223,22 @@ class UserMasterManage extends Component {
                     this.handleResetTreeForDelete(e);
                   });
                 }
-                
-                DeptActions.changeCompVariableObject({
-                  compId: this.state.compId,
-                  valueObj: {checkedDeptCd: []}
-                });
 
-                DeptActions.changeTreeDataVariable({
-                  compId: this.state.compId, 
-                  name: 'checked', 
-                  value: []
-                });
+                // show client list in group.
+                UserActions.readUserListPaged(UserProps, this.state.compId, {
+                  deptCd: [], page:0
+                }, {isResetSelect:true});
+                
+                // DeptActions.changeCompVariableObject({
+                //   compId: this.state.compId,
+                //   valueObj: {checkedDeptCd: []}
+                // });
+
+                // DeptActions.changeTreeDataVariable({
+                //   compId: this.state.compId, 
+                //   name: 'checked', 
+                //   value: []
+                // });
 
               });
             }
@@ -261,51 +286,16 @@ class UserMasterManage extends Component {
     }
   }
 
-  isDeptSelected = () => {
-    return (this.props.DeptProps.getIn(['viewItems', this.state.compId, 'viewItem', 'deptCd'])) ? false : true;
-  }
-
-  handleDeleteUserInDept = (event) => {
-    const { t, i18n } = this.props;
-    const { UserProps, DeptProps, GRConfirmActions } = this.props;
-    const selectedDeptCd = DeptProps.getIn(['viewItems', this.state.compId, 'selectedDeptCd']);
-    const selectedUsers = UserProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
-    if(selectedUsers && selectedUsers !== '') {
-      GRConfirmActions.showConfirm({
-        confirmTitle: t("lbDeleteUser"),
-        confirmMsg: t("msgDeleteUser"),
-        handleConfirmResult: this.handleDeleteUserInDeptConfirmResult,
-        confirmObject: {
-          selectedDeptCd: selectedDeptCd,
-          selectedUsers: selectedUsers
-        }
-      });
-    } else {
-      this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectUser"));
-    }
-  }
-  handleDeleteUserInDeptConfirmResult = (confirmValue, paramObject) => {
-    if(confirmValue) {
-      const { DeptProps, DeptActions, UserActions, UserProps } = this.props;
-      DeptActions.deleteUsersInDept({
-        users: paramObject.selectedUsers.join(',')
-      }).then(() => {
-        // show user list in dept.
-        UserActions.readUserListPaged(UserProps, this.state.compId, {
-          deptCd: paramObject.selectedDeptCd, page:0
-        });
-        // close dialog
-        this.setState({ isOpenUserSelect: false });
-      });
-    }
-  };
-
+  // add user in dept - save
   handleUserSelectSave = (checkedUserIds) => {
     const { t, i18n } = this.props;
-    const selectedDept = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'selectedDept']);
-    this.props.GRConfirmActions.showConfirm({
+
+    const checkedDept = this.getSingleCheckedDept();
+    if(checkedDept !== undefined) {
+
+      this.props.GRConfirmActions.showConfirm({
         confirmTitle: t("lbChangeDeptForUser"),
-        confirmMsg: t("msgChangeDeptForUser", {userCnt:checkedUserIds.size, deptNm:selectedDept.get('deptNm')}),
+        confirmMsg: t("msgChangeDeptForUser", {userCnt:checkedUserIds.size, deptNm:checkedDept.get('title')}),
         handleConfirmResult: (confirmValue, paramObject) => {
           if(confirmValue) {
             const { DeptActions, DeptProps, UserActions, UserProps } = this.props;
@@ -328,10 +318,12 @@ class UserMasterManage extends Component {
           }
         },
         confirmObject: {
-          selectedDeptCd: selectedDept.get('deptCd'),
+          selectedDeptCd: checkedDept.get('key'),
           checkedUserIds: checkedUserIds
         }
-    });
+      });
+     
+    }
   }
 
   handleDeptSelectSave = (selectedDept) => {
@@ -400,10 +392,17 @@ class UserMasterManage extends Component {
       deptCds: this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData']).map(e => (e.get('key'))).toJS(),
       compId: this.state.compId
     });
+
+    if(index !== undefined) {
+      const parentListItem = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
+      this.props.DeptActions.readChildrenDeptList(this.state.compId, parentListItem.get('key'), index);
+    } else {
+      this.props.DeptActions.readChildrenDeptList(this.state.compId, 'DEPTDEFAULT', 0);
+    }
   }
 
   handleResetTreeForDelete = (index) => {
-    // changed grpId - re-select parentId of grpId
+
     if(index !== undefined) {
       const parentListItem = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
       this.props.DeptActions.readChildrenDeptList(this.state.compId, parentListItem.get('key'), index);
@@ -445,7 +444,7 @@ class UserMasterManage extends Component {
                 <Grid item>
                   <Tooltip title={t("ttAddNewDept")}>
                     <span>
-                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateDept} disabled={this.isDeptSelected()} style={{marginRight: "5px"}} >
+                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateDept} disabled={this.isDeptOneSelect()} style={{marginRight: "5px"}} >
                       <AddIcon />
                     </Button>
                     </span>
@@ -470,20 +469,11 @@ class UserMasterManage extends Component {
                 <Grid item>
                   <Tooltip title={t("ttAddUserInDept")}>
                     <span>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isDeptSelected()} >
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isDeptOneSelect()} >
                       <AddIcon /><UserIcon />
                     </Button>
                     </span>
                   </Tooltip>
-                  {/*
-                  <Tooltip title={t("ttDeleteUserInDept")}>
-                    <span>
-                    <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isDeptSelected()} style={{marginLeft: "4px"}} >
-                      <RemoveIcon /><UserIcon />
-                    </Button>
-                    </span>
-                  </Tooltip>
-                  */}
                 </Grid>
               </Grid>
               </Toolbar>
@@ -538,10 +528,12 @@ class UserMasterManage extends Component {
         <DeptMultiDialog compId={compId} />
         
         <UserSelectDialog isOpen={this.state.isOpenUserSelect}
+          compId={compId}
           deptNm={(selectedDept !== undefined) ? selectedDept.get('deptNm') : ''}
           onSaveHandle={this.handleUserSelectSave} 
           onClose={this.handleUserSelectionClose} />
         <DeptSelectDialog isOpen={this.state.isOpenDeptSelect}
+          compId={compId}
           isShowCheck={false}
           onSaveHandle={this.handleDeptSelectSave} 
           onClose={this.handleDeptSelectionClose} />

@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
+
 import * as DeptActions from 'modules/DeptModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
@@ -73,6 +73,12 @@ class DeptDialog extends Component {
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                         }).then((res) => {
+
+                            this.props.GRAlertActions.showAlert({
+                                alertTitle: t("dtSystemNotice"),
+                                alertMsg: res.status.message
+                            });
+
                             // DeptActions.readDeptListPaged(DeptProps, compId);
                             // tree refresh
                             const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd'])));
@@ -158,9 +164,12 @@ class DeptDialog extends Component {
             editObject = DeptProps.get('editingItem').toJS();
         }
 
-        const upperDeptInfo = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptNm']) +
-            ' (' + DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']) + ')';
-
+        let checkedDeptCd = getDataObjectVariableInComp(DeptProps, compId, 'checkedDeptCd');
+        let upperDeptInfo = '';
+        if(checkedDeptCd != undefined && checkedDeptCd.size > 0) {
+            upperDeptInfo = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedDeptCd.get(0))).get('title') + ' (' + checkedDeptCd.get(0) + ')';
+        }
+    
         return (
             <div>
             {(DeptProps.get('dialogOpen') && editingItem) &&
@@ -232,7 +241,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     DeptActions: bindActionCreators(DeptActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptDialog)));

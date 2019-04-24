@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Map, List, fromJS } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import { getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -163,8 +162,11 @@ class ClientGroupDialog extends Component {
             title = t("dtEditGroup");
         }
 
-        const upperGroupInfo = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpNm']) +
-            ' (' + ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']) + ')';
+        let checkedGrpId = getDataObjectVariableInComp(this.props.ClientGroupProps, compId, 'checkedGrpId');
+        let upperGroupInfo = '';
+        if(checkedGrpId != undefined && checkedGrpId.size > 0) {
+            upperGroupInfo = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedGrpId.get(0))).get('title') + ' (' + checkedGrpId.get(0) + ')';
+        }
 
         return (
             <div>

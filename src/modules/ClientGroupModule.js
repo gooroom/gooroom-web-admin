@@ -709,7 +709,13 @@ export default handleActions({
         return newState;
     },
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action, 'grpId');
+        const newState = commonHandleActions.handleDeleteSuccessAction(state, action, 'grpId');
+        return newState.deleteIn(['viewItems', action.compId, 'treeComp', 'activeListItem'])
+                    .deleteIn(['viewItems', action.compId, 'checkedGrpId'])
+                    .deleteIn(['viewItems', action.compId, 'treeComp', 'checked'])
+                    .deleteIn(['viewItems', action.compId, 'informOpen'])
+                    .deleteIn(['viewItems', action.compId, 'viewItem']);
+
     },
     [ADD_CLIENTINGROUP_SUCCESS]: (state, action) => {
         return state.merge({
