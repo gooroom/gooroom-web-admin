@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Map, List, fromJS } from 'immutable';
-
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { generateSoftwareFilterObject } from './SoftwareFilterSpec';
 
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';

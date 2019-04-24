@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { Map, List } from 'immutable';
-
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';

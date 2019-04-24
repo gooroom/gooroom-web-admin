@@ -10,7 +10,7 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 import GRAlert from 'components/GRComponents/GRAlert';
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { ValidatorForm } from 'react-material-ui-form-validator';
 
 import Modal from '@material-ui/core/Modal';
 import Button from '@material-ui/core/Button';
@@ -18,7 +18,7 @@ import TextField from '@material-ui/core/TextField';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-import { translate, Trans } from 'react-i18next';
+import { translate } from 'react-i18next';
 
 import { Editor } from '@tinymce/tinymce-react';
 import { Card, CardContent, CardHeader, CardActions } from '@material-ui/core';

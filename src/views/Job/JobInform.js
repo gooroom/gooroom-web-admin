@@ -29,7 +29,7 @@ import { translate, Trans } from "react-i18next";
 
 class JobInform extends Component {
 
-  handleClickTargetSelect = (selectedTargetObj) => {
+  handleClickTargetSelect = (selectedGroupObj) => {
     const { ClientGroupActions, ClientManageActions } = this.props;
     const compId = this.props.match.params.grMenuId; 
 
