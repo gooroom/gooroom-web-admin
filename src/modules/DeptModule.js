@@ -300,6 +300,9 @@ export const createDeptInfo = (param) => dispatch => {
                     dispatch({
                         type: CREATE_DEPT_SUCCESS
                     });
+                    return response.data;
+                } else {
+                    return response.data;
                 }    
             } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
@@ -365,7 +368,7 @@ export const deleteSelectedDeptData = (param) => dispatch => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
                     dispatch({
-                        type: DELETE_CLIENTGROUP_SUCCESS,
+                        type: DELETE_DEPT_SUCCESS,
                         compId: param.compId,
                         grpId: param.grpId
                     });
@@ -730,7 +733,12 @@ export default handleActions({
         return newState;
     },
     [DELETE_DEPT_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action, 'deptCd');
+        const newState = commonHandleActions.handleDeleteSuccessAction(state, action, 'deptCd');
+        return newState.deleteIn(['viewItems', action.compId, 'treeComp', 'activeListItem'])
+                    .deleteIn(['viewItems', action.compId, 'checkedDeptCd'])
+                    .deleteIn(['viewItems', action.compId, 'treeComp', 'checked'])
+                    .deleteIn(['viewItems', action.compId, 'informOpen'])
+                    .deleteIn(['viewItems', action.compId, 'viewItem']);
     },
     [ADD_USERINDEPT_SUCCESS]: (state, action) => {
         return state.merge({
