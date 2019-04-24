@@ -261,7 +261,7 @@ class UserMasterManage extends Component {
     }
   }
 
-  isUserSelected = () => {
+  isDeptSelected = () => {
     return (this.props.DeptProps.getIn(['viewItems', this.state.compId, 'viewItem', 'deptCd'])) ? false : true;
   }
 
@@ -445,7 +445,7 @@ class UserMasterManage extends Component {
                 <Grid item>
                   <Tooltip title={t("ttAddNewDept")}>
                     <span>
-                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateDept} style={{marginRight: "5px"}} >
+                    <Button className={classes.GRSmallButton} variant="contained" color="primary" onClick={this.handleCreateDept} disabled={this.isDeptSelected()} style={{marginRight: "5px"}} >
                       <AddIcon />
                     </Button>
                     </span>
@@ -470,7 +470,7 @@ class UserMasterManage extends Component {
                 <Grid item>
                   <Tooltip title={t("ttAddUserInDept")}>
                     <span>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isUserSelected()} >
+                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleAddUserInDept} disabled={this.isDeptSelected()} >
                       <AddIcon /><UserIcon />
                     </Button>
                     </span>
@@ -478,7 +478,7 @@ class UserMasterManage extends Component {
                   {/*
                   <Tooltip title={t("ttDeleteUserInDept")}>
                     <span>
-                    <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isUserSelected()} style={{marginLeft: "4px"}} >
+                    <Button component="div" className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.handleDeleteUserInDept} disabled={this.isDeptSelected()} style={{marginLeft: "4px"}} >
                       <RemoveIcon /><UserIcon />
                     </Button>
                     </span>
