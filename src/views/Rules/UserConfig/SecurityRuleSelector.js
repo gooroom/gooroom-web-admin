@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { Map, List, fromJS } from 'immutable';
-
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
+import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { generateSecurityRuleObject } from './SecurityRuleSpec';
 
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
@@ -22,7 +21,7 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
-import { translate, Trans } from "react-i18next";
+import { translate } from "react-i18next";
 
 
 class SecurityRuleSelector extends Component {

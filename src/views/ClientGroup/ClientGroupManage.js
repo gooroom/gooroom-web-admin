@@ -136,10 +136,10 @@ class ClientGroupManage extends Component {
     });
     // get filtered software rule
     SoftwareFilterActions.getSoftwareFilterByGroupId({ 
-      compId: compId, groupId: grpId 
+      compId: compId, groupId: id 
     });
     // get desktop conf info
-    DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: grpId });   
+    DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: id });   
   };
   // .................................................
 

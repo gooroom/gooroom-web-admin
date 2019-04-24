@@ -269,7 +269,7 @@ class NoticeMasterManage extends Component {
                             viewType: noticePublish.get('viewType')
                         }).then(() => resolve());
                     });
-                    promises.push(promiseUpdateNoticePublish);NoticePublishExtensionProps
+                    promises.push(promiseUpdateNoticePublish);
                 }
                 Promise.all(promises).then(() => {
                     const compId = this.props.match.params.grMenuId;

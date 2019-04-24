@@ -409,7 +409,7 @@ export const editMultiGroupRule = (param) => dispatch => {
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 dispatch({
-                    type: EDIT_DEPT_SUCCESS,
+                    type: EDIT_CLIENTGROUP_SUCCESS,
                     response: response
                 });
             } else {
