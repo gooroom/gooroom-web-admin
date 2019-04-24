@@ -60,7 +60,7 @@ class GRTreeClientGroupList extends Component {
       } else {
         ClientGroupActions.changeTreeDataVariable({
           compId: compId, name: 'expandedListItems',
-          value: [index]
+          value: (expandedListItems) ? expandedListItems : [index]
         });
       }
     }
