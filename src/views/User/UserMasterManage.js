@@ -124,6 +124,12 @@ class UserMasterManage extends Component {
       DeptActions.closeInform({ compId: compId });
       // show user inform pane.
       UserActions.showInform({ compId: compId, viewItem: selectedUserObj });
+
+      // hide dept active
+      DeptActions.changeTreeDataVariable({
+        compId: compId, name: 'activeListItem', value: ''
+      });
+      
     }
   };
 
