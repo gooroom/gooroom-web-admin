@@ -216,9 +216,9 @@ class UserListComp extends Component {
       { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: t("colUserNm") },
       { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: t("colDeptNm") },
-      { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
-      { id: "chLastLoginDt", isOrder: false, numeric: false, disablePadding: true, label: t("colLoginDate") },
-      { id: "chLastClientId", isOrder: false, numeric: false, disablePadding: true, label: t("colLoginClient") },
+      { id: "chStatus", isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: t("colLoginDate") },
+      { id: "chLastClientId", isOrder: true, numeric: false, disablePadding: true, label: t("colLoginClient") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
 
