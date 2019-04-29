@@ -564,6 +564,8 @@ export default {
   "msgAgentPollingTime": "Information exchange cycle between cloud client agent and GRM server",
   "lbLoginTrialCount": "User login attempts and account lockout times",
   "msgLoginTrialCount": "Specifies the number of retry attempts and the number of minutes to lock the account when authentication fails during user login to the client. If the account lock time is set to '0', the lock time is set to unlimited.",
+  "msgLoginTrialCountAndLockTime": "Specifies the number of retry attempts and the number of minutes to lock the account when authentication fails during user login to the client.",
+  "msgLoginLockTime": "• If the account lock time is set to '0', the lock time is set to unlimited.",
   "lbLoginDuplicatgeEnable": "Duplicate user login settings",
   "lbSelectLoginDuplicatgeEnable": "Allow/Disallow",
   "lbLoginDuplicatgeNotiType": "How to notify when a duplicate login is requested",

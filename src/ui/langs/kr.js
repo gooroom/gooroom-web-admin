@@ -564,6 +564,8 @@ export default {
   "msgAgentPollingTime": "구름단말 Agent 와 GRM 서버간의 정보교환 주기",
   "lbLoginTrialCount": "사용자 로그인 시도횟수와 계정잠금시간",
   "msgLoginTrialCount": "구름단말에 사용자 로그인중 인증실패시 재시도 횟수와 계정잠금시간(분)을 지정합니다. 계정잠금시간을 '0'으로 하면 잠금시간이 무제한으로 설정 됩니다.",
+  "msgLoginTrialCountAndLockTime": "구름단말에 사용자 로그인중 인증실패시 재시도 횟수와 계정잠금시간(분)을 지정합니다.",
+  "msgLoginLockTime": "• 계정잠금시간을 '0'으로 하면 잠금시간이 무제한으로 설정 됩니다.",
   "lbLoginDuplicatgeEnable": "사용자 로그인 중복 설정",
   "lbSelectLoginDuplicatgeEnable": "허용/비허용",
   "lbLoginDuplicatgeNotiType": "중복 로그인 요청시 알림방법",

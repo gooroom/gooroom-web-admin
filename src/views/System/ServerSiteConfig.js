@@ -37,7 +37,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
-import Input from '@material-ui/core/Input';
+import Typography from '@material-ui/core/Typography';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
 import Button from '@material-ui/core/Button';
@@ -205,6 +205,11 @@ class ServerSiteConfig extends Component {
     const tempArray = new Array(13).fill(0);
     const minLength = 8;
 
+    const subLogin = <div>
+      <Typography variant="body2" gutterBottom>{t("msgLoginTrialCountAndLockTime")}</Typography>
+      <Typography variant="body2" gutterBottom>{t("msgLoginLockTime")}</Typography>
+      </div>;
+
     return (
       <React.Fragment>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
@@ -363,7 +368,7 @@ class ServerSiteConfig extends Component {
             <Card style={{marginTop: 16}}>
               <CardHeader style={{paddingBottom: 0}}
                 title={t("lbLoginTrialCount")}
-                subheader={t("msgLoginTrialCount")}
+                subheader={subLogin}
               />
               <CardContent style={{paddingTop: 0}}>
                 <TextField label="Login Trial Count"
