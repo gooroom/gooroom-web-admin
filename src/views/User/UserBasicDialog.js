@@ -5,6 +5,7 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import * as UserActions from 'modules/UserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -19,6 +20,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -71,7 +73,21 @@ class UserBasicDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddUserInfo"),
                 confirmMsg: t("msgAddUserInfo"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { UserProps, UserActions, compId } = this.props;
+                        UserActions.createUserData({
+                            userId: UserProps.getIn(['editingItem', 'userId']),
+                            userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
+                            userNm: UserProps.getIn(['editingItem', 'userNm']),
+                            expireDate: UserProps.getIn(['editingItem', 'expireDate']),
+                            passwordExpireDate: UserProps.getIn(['editingItem', 'passwordExpireDate'])
+                        }).then((res) => {
+                            UserActions.readUserListPaged(UserProps, compId);
+                            this.handleClose();
+                        });
+                    }
+                },
                 confirmObject: UserProps.get('editingItem')
             });
         } else {
@@ -80,20 +96,6 @@ class UserBasicDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { UserProps, UserActions, compId } = this.props;
-            UserActions.createUserData({
-                userId: UserProps.getIn(['editingItem', 'userId']),
-                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userNm']),
-                expireDate: UserProps.getIn(['editingItem', 'expireDate'])
-            }).then((res) => {
-                UserActions.readUserListPaged(UserProps, compId);
-                this.handleClose();
-            });
         }
     }
 
@@ -105,7 +107,22 @@ class UserBasicDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditUserInfo"),
                 confirmMsg: t("msgEditUserInfo"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { UserProps, UserActions, compId } = this.props;
+            
+                        UserActions.editUserData({
+                            userId: UserProps.getIn(['editingItem', 'userId']),
+                            userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
+                            userNm: UserProps.getIn(['editingItem', 'userNm']),
+                            expireDate: UserProps.getIn(['editingItem', 'expireDate']),
+                            passwordExpireDate: UserProps.getIn(['editingItem', 'passwordExpireDate'])
+                        }).then((res) => {
+                            UserActions.readUserListPaged(UserProps, compId);
+                            this.handleClose();
+                        });
+                    }
+                },
                 confirmObject: UserProps.get('editingItem')
             });
         } else {
@@ -114,21 +131,6 @@ class UserBasicDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { UserProps, UserActions, compId } = this.props;
-
-            UserActions.editUserData({
-                userId: UserProps.getIn(['editingItem', 'userId']),
-                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userNm']),
-                expireDate: UserProps.getIn(['editingItem', 'expireDate'])
-            }).then((res) => {
-                UserActions.readUserListPaged(UserProps, compId);
-                this.handleClose();
-            });
         }
     }
 
@@ -146,6 +148,9 @@ class UserBasicDialog extends Component {
 
         const dialogType = UserProps.get('dialogType');
         const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
+
+        // default date
+        const initDate = moment().add(7, 'days');
 
         let title = "";
         if(dialogType === UserBasicDialog.TYPE_ADD) {
@@ -171,6 +176,23 @@ class UserBasicDialog extends Component {
                             className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             disabled={(dialogType == UserBasicDialog.TYPE_EDIT) ? true : false}
                         />
+
+                        <Grid container spacing={24}>
+                            <Grid item xs={6}>
+                                <InlineDatePicker label={t('expireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10)}
+                                    onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
+                                    className={classes.fullWidth} />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <InlineDatePicker label={t('passwordExpireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('passwordExpireDate')) ? editingItem.get('passwordExpireDate') : initDate.toJSON().slice(0,10) }
+                                    onChange={(date) => {this.handleDateChange(date, 'passwordExpireDate');}} 
+                                    className={classes.fullWidth} />
+                            </Grid>
+                        </Grid>
+
+
                         <TextValidator
                             label={t("lbUserName")} value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
                             name="userNm" validators={['required']} errorMessages={[t("msgEnterUserName")]}
@@ -199,10 +221,21 @@ class UserBasicDialog extends Component {
                                 }}
                             />
                         </FormControl>
-                        <InlineDatePicker label={t('expireDate')} format='YYYY-MM-DD'
-                            value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : '1999-01-01'}
-                            onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
-                            className={classes.fullWidth} />
+
+                        <Grid container spacing={24}>
+                            <Grid item xs={6}>
+                                <InlineDatePicker label={t('expireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10)}
+                                    onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
+                                    className={classes.fullWidth} />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <InlineDatePicker label={t('passwordExpireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('passwordExpireDate')) ? editingItem.get('passwordExpireDate') : initDate.toJSON().slice(0,10) }
+                                    onChange={(date) => {this.handleDateChange(date, 'passwordExpireDate');}} 
+                                    className={classes.fullWidth} />
+                            </Grid>
+                        </Grid>
 
                     </DialogContent>
                     <DialogActions>

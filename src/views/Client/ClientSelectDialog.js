@@ -57,6 +57,10 @@ class ClientSelectDialog extends Component {
         const { isOpen, compId } = this.props;
         const { t, i18n } = this.props;
 
+        if(!isOpen) {
+            return (<React.Fragment></React.Fragment>);
+        }
+
         let checkedGrpId = getDataObjectVariableInComp(this.props.ClientGroupProps, compId, 'checkedGrpId');
         let selectedGrpNm = '';
         if(checkedGrpId && checkedGrpId.size > 0) {

@@ -107,6 +107,7 @@ export default {
   "optDivision": "구분",
   "optViolatedDivision": "침해구분",
   "expireDate": "만료일",
+  "passwordExpireDate": "비밀번호 만료일",
 
   "optClientStatus": "단말상태",
   "optKeyword": "검색어",
@@ -504,7 +505,7 @@ export default {
   "msgSelectDept": "조직을 선택하세요.",
   "msgEnterEmail": "이메일 정보가 잘못 되었습니다.",
   "msgEnterUserId": "사용자아이디를 입력하세요.",
-  "msgUserIdValid": "알파벳 또는 숫자만 입력하세요.",
+  "msgUserIdValid": "소문자 알파벳 또는 숫자만 입력하세요.",
   "msgEnterPassword": "password를 입력하세요.",
   "msgSelectParentDept": "상위 조직을 선택 하세요.",
   "msgSelectDeptForAddUser": "사용자를 추가할 조직을 선택하세요.",

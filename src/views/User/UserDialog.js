@@ -6,6 +6,7 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import * as UserActions from 'modules/UserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -203,6 +204,8 @@ class UserDialog extends Component {
 
         const ruleDialogType = UserProps.get('ruleDialogType');
         const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
+        // default date
+        const initDate = moment().add(7, 'days');
 
         let title = "";
         if(ruleDialogType === UserDialog.TYPE_ADD) {
@@ -288,7 +291,7 @@ class UserDialog extends Component {
                         <Grid container spacing={24}>
                             <Grid item xs={6}>
                                 <InlineDatePicker label={t('expireDate')} format='YYYY-MM-DD'
-                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : (new Date()).getTime()}
+                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10) }
                                     onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
                                     className={classes.fullWidth} />
                             </Grid>

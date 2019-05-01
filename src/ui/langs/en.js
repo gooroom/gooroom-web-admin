@@ -107,6 +107,7 @@ export default {
   "optDivision": "Division",
   "optViolatedDivision": "ViolatedDiv",
   "expireDate": "Expire-Date",
+  "passwordExpireDate": "Password Expire-Date",
 
   "optClientStatus": "ClientStatus",
   "optKeyword": "Keyword",
@@ -504,7 +505,7 @@ export default {
   "msgSelectDept": "Please select an organization.",
   "msgEnterEmail": "Please enter email.",
   "msgEnterUserId": "Please enter user ID.",
-  "msgUserIdValid": "Please enter only alphanumeric characters.",
+  "msgUserIdValid": "Please enter only lower alphabet characters or numbers.",
   "msgEnterPassword": "Please enter a password.",
   "msgSelectParentDept": "Please select a parent organization.",
   "msgSelectDeptForAddUser": "Please select an organization to add users to.",
