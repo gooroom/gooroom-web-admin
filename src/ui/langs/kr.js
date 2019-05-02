@@ -115,6 +115,9 @@ export default {
   "optMinutes" : "분",
   "optHours" : "시간",
 
+  "optUse" : "사용",
+  "optNoUse" : "미사용",
+
   // Buttons
   "btnSearch": "조회",
   "btnRegist": "등록",
@@ -535,6 +538,10 @@ export default {
   "dtDeleteDept": "조직정보 삭제",
   "msgDeletedDept": "조직정보({{deptCnt}}개)를 삭제하시겠습니까? (최상위조직제외)",
   "lbDeleteInUser": "조직내 사용자삭제여부",
+  "lbUsePasswordExpire": "Password 만료일 사용여부",
+  "lbPasswordExpireDate": "Password 만료일",
+  "lbUseUserExpire": "사용자 만료일 사용여부",
+  "lbUserExpireDate": "사용자 만료일",
 
   // 테마관리
   "lbDeleteTheme": "테마 삭제",

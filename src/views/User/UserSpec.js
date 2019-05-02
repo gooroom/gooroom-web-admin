@@ -137,16 +137,26 @@ class UserSpec extends Component {
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
 
+    let userSubinfo = null;
+    if(informOpen && viewItem) {
+      userSubinfo = <div>
+        {'[Id:' + viewItem.get('userId') + ']'}
+        {', [Regist:' + viewItem.get('regDate') + ']'}
+        {', [Email:' + ((viewItem.get('userEmail')) ? viewItem.get('userEmail') : ' - ') + ']'}
+        {(viewItem.get('expireDate')) ? ', ' : ''}
+        {(viewItem.get('isExpired') === '1') ? <font color='red'>{'[Expire:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}</font> : ((viewItem.get('expireDate')) ? '[Expire:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']' : '')}
+        {(viewItem.get('loginTrial')) ? ', ' : ''}
+        {(viewItem.get('loginTrial') === '0') ? <font color='red'>{'[Account: Locked]'}</font> : '[RemainTrial:' + viewItem.get('loginTrial') + ']'}
+      </div>;
+    }
+
     return (
       <div style={{marginTop: 10}} >
       {(informOpen && viewItem) &&
         <Card>
           <CardHeader
             title={viewItem.get('userNm')}
-            subheader={viewItem.get('userId') + 
-            ', ' + viewItem.get('userEmail') + 
-            ', [Registered:' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD') + 
-            '], [Expired:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}
+            subheader={userSubinfo}
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"

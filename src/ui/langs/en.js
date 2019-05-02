@@ -115,6 +115,9 @@ export default {
   "optMinutes" : "Min",
   "optHours" : "Hours",
 
+  "optUse" : "Use",
+  "optNoUse" : "No Use",
+
   // Buttons
   "btnSearch": "Search",
   "btnRegist": "Regist",
@@ -535,6 +538,10 @@ export default {
   "dtDeleteDept": "Delete Organization.",
   "msgDeletedDept": "Are you sure you want to remove the selected organization ({{deptCnt}}ea) ?",
   "lbDeleteInUser": "Whether users in your organization are deleted",
+  "lbUsePasswordExpire": "Whether Use Password Expire Date",
+  "lbPasswordExpireDate": "Password Expire Date",
+  "lbUseUserExpire": "Whether User Expire Date",
+  "lbUserExpireDate": "Expire Date",
 
   // 테마관리
   "lbDeleteTheme": "Remove theme",
