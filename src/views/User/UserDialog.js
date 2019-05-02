@@ -16,6 +16,8 @@ import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { InlineDatePicker } from 'material-ui-pickers';
 
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from '@material-ui/core/Input';
 
@@ -32,6 +34,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import Divider from '@material-ui/core/Divider';
 import Button from "@material-ui/core/Button";
 import Grid from '@material-ui/core/Grid';
+import Radio from "@material-ui/core/Radio";
 
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -97,30 +100,46 @@ class UserDialog extends Component {
                         const { UserProps, UserActions, compId } = this.props;
                         const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
                         const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
-                        UserActions.createUserData({
-                            userId: UserProps.getIn(['editingItem', 'userId']),
-                            userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                            userNm: UserProps.getIn(['editingItem', 'userNm']),
-                            userEmail: UserProps.getIn(['editingItem', 'userEmail']),
-                            deptCd: UserProps.getIn(['editingItem', 'deptCd']),
-                            expireDate: UserProps.getIn(['editingItem', 'expireDate']),
-            
-                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
-                        }).then((reData) => {
-                            if(reData && reData.status && reData.status.result === 'fail') {
-                                this.props.GRAlertActions.showAlert({
-                                    alertTitle: this.props.t("dtSystemError"),
-                                    alertMsg: reData.status.message
-                                });
-                            } else {
-                                UserActions.readUserListPaged(UserProps, compId);
-                                this.handleClose();
+                        const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
+                        if(editingItem !== undefined) {
+
+                            // user expire date
+                            let userExpireDate = '';
+                            if(editingItem.get("isUseExpire") !== undefined && editingItem.get("isUseExpire") === '1') {
+                                userExpireDate = editingItem.get('expireDate')
                             }
-                        });
+                            // password expire date
+                            let passwordExpireDate = '';
+                            if(editingItem.get("isUsePasswordExpire") !== undefined && editingItem.get("isUsePasswordExpire") === '1') {
+                                passwordExpireDate = editingItem.get('passwordExpireDate')
+                            }
+
+                            UserActions.createUserData({
+                                userId: UserProps.getIn(['editingItem', 'userId']),
+                                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
+                                userNm: UserProps.getIn(['editingItem', 'userNm']),
+                                userEmail: UserProps.getIn(['editingItem', 'userEmail']),
+                                deptCd: UserProps.getIn(['editingItem', 'deptCd']),
+                                expireDate: userExpireDate,
+                                passwordExpireDate: passwordExpireDate,
+                
+                                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            }).then((reData) => {
+                                if(reData && reData.status && reData.status.result === 'fail') {
+                                    this.props.GRAlertActions.showAlert({
+                                        alertTitle: this.props.t("dtSystemError"),
+                                        alertMsg: reData.status.message
+                                    });
+                                } else {
+                                    UserActions.readUserListPaged(UserProps, compId);
+                                    this.handleClose();
+                                }
+                            });
+                        }
                     }
                 },
                 confirmObject: UserProps.get('editingItem')
@@ -137,12 +156,49 @@ class UserDialog extends Component {
     handleEditData = (event) => {
         const { UserProps, GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
-
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditUserInfo"),
                 confirmMsg: t("msgEditUserInfo"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { UserProps, UserActions, compId } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
+                        if(editingItem !== undefined) {
+                            // user expire date
+                            let userExpireDate = '';
+                            if(editingItem.get("isUseExpire") !== undefined && editingItem.get("isUseExpire") === '1') {
+                                userExpireDate = editingItem.get('expireDate')
+                            }
+                            // password expire date
+                            let passwordExpireDate = '';
+                            if(editingItem.get("isUsePasswordExpire") !== undefined && editingItem.get("isUsePasswordExpire") === '1') {
+                                passwordExpireDate = editingItem.get('passwordExpireDate')
+                            }
+
+                            UserActions.editUserData({
+                                userId: UserProps.getIn(['editingItem', 'userId']),
+                                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
+                                userNm: UserProps.getIn(['editingItem', 'userNm']),
+                                userEmail: UserProps.getIn(['editingItem', 'userEmail']),
+                                deptCd: UserProps.getIn(['editingItem', 'deptCd']),
+                                expireDate: userExpireDate,
+                                passwordExpireDate: passwordExpireDate,
+                                loginTrial: UserProps.getIn(['editingItem', 'loginTrial']),
+                
+                                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            }).then((res) => {
+                                UserActions.readUserListPaged(UserProps, compId);
+                                this.handleClose();
+                            });
+                        }
+                    }
+                },
                 confirmObject: UserProps.get('editingItem')
             });
         } else {
@@ -153,38 +209,15 @@ class UserDialog extends Component {
             }
         }
     }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { UserProps, UserActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
-            const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
-            UserActions.editUserData({
-                userId: UserProps.getIn(['editingItem', 'userId']),
-                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userNm']),
-                userEmail: UserProps.getIn(['editingItem', 'userEmail']),
-                deptCd: UserProps.getIn(['editingItem', 'deptCd']),
-                expireDate: UserProps.getIn(['editingItem', 'expireDate']),
-                loginTrial: UserProps.getIn(['editingItem', 'loginTrial']),
-
-                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
-            }).then((res) => {
-                UserActions.readUserListPaged(UserProps, compId);
-                this.handleClose();
-            });
-        }
-    }
 
     handleShowDeptSelector = () => {
         this.setState({ isOpenDeptSelect: true });
     }
+
     handleDeptSelectionClose = () => {
         this.setState({ isOpenDeptSelect: false });
     }
+    
     handleDeptSelectSave = (selectedDept) => {
         this.props.UserActions.setEditingItemValues({ 'deptNm': selectedDept.deptNm, 'deptCd': selectedDept.deptCd });
         this.setState({ isOpenDeptSelect: false });
@@ -216,6 +249,9 @@ class UserDialog extends Component {
             title = t("dtEditUser");
         }
 
+        const isUseUserExpireDate = (editingItem && editingItem.get('isUseExpire') === '1');
+        const isUsePasswordExpireDate = (editingItem && editingItem.get('isUsePasswordExpire') === '1');
+
         return (
             <React.Fragment>
             {(UserProps.get('ruleDialogOpen') && editingItem) &&
@@ -224,7 +260,7 @@ class UserDialog extends Component {
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent style={{minHeight:567}}>
                         <Grid container spacing={24}>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
                                 <TextValidator
                                     label={t("lbUserId")}
                                     value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
@@ -236,7 +272,16 @@ class UserDialog extends Component {
                                     disabled={(ruleDialogType == UserDialog.TYPE_EDIT) ? true : false}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
+                                <TextValidator
+                                    label={t("lbUserName")}
+                                    value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
+                                    name="userNm" validators={['required']} errorMessages={[t("msgEnterUserName")]}
+                                    onChange={this.handleValueChange("userNm")}
+                                    className={classes.fullWidth}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
                                 <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
                                     <InputLabel htmlFor="adornment-password">Password</InputLabel>
                                     <Input
@@ -258,16 +303,8 @@ class UserDialog extends Component {
                                 </FormControl>                            
                             </Grid>
                         </Grid>
+
                         <Grid container spacing={24}>
-                            <Grid item xs={4}>
-                                <TextValidator
-                                    label={t("lbUserName")}
-                                    value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
-                                    name="userNm" validators={['required']} errorMessages={[t("msgEnterUserName")]}
-                                    onChange={this.handleValueChange("userNm")}
-                                    className={classes.fullWidth}
-                                />
-                            </Grid>
                             <Grid item xs={4}>
                                 <TextValidator
                                     label={t("lbDept")}
@@ -286,8 +323,66 @@ class UserDialog extends Component {
                                     className={classes.fullWidth}
                                 />
                             </Grid>
+                            <Grid item xs={4}>
+                            </Grid>
                         </Grid>
 
+                        <Grid container spacing={24}>
+                            <Grid item xs={3}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12} style={{paddingBottom:0}}><FormLabel component="legend" style={{fontSize:'0.8rem'}}>{t("lbUseUserExpire")}</FormLabel></Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="true" control={
+                                            <Radio color="primary" value="1" onChange={this.handleValueChange("isUseExpire")} checked={isUseUserExpireDate} />
+                                        } label={t("optUse")} labelPlacement="end" />
+                                    </Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="false" control={
+                                            <Radio color="primary" value="0" onChange={this.handleValueChange("isUseExpire")} checked={!isUseUserExpireDate} />
+                                        } label={t("optNoUse")} labelPlacement="end" />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12}>
+                                    <InlineDatePicker label={t('lbUserExpireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10)}
+                                    onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
+                                    className={classes.fullWidth} 
+                                    disabled={!isUseUserExpireDate} />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12} style={{paddingBottom:0}}><FormLabel component="legend" style={{fontSize:'0.8rem'}}>{t("lbUsePasswordExpire")}</FormLabel></Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="true" control={
+                                            <Radio color="primary" value="1" onChange={this.handleValueChange("isUsePasswordExpire")} checked={isUsePasswordExpireDate} />
+                                        } label={t("optUse")} labelPlacement="end" />
+                                    </Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="false" control={
+                                            <Radio color="primary" value="0" onChange={this.handleValueChange("isUsePasswordExpire")} checked={!isUsePasswordExpireDate} />
+                                        } label={t("optNoUse")} labelPlacement="end" />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12}>
+                                    <InlineDatePicker label={t('lbPasswordExpireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('passwordExpireDate')) ? editingItem.get('passwordExpireDate') : initDate.toJSON().slice(0,10)}
+                                    onChange={(date) => {this.handleDateChange(date, 'passwordExpireDate');}} 
+                                    className={classes.fullWidth} 
+                                    disabled={!isUsePasswordExpireDate} />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
+{/* 
                         <Grid container spacing={24}>
                             <Grid item xs={6}>
                                 <InlineDatePicker label={t('expireDate')} format='YYYY-MM-DD'
@@ -307,7 +402,7 @@ class UserDialog extends Component {
                             }
                             </Grid>
                         </Grid>
-
+*/}
                         <Divider style={{marginTop: 10, marginBottom: 10}} />
                         <UserRuleSelector compId={compId} module={(ruleDialogType === UserDialog.TYPE_ADD) ? 'new' : 'edit'} targetType="USER" />
                     </DialogContent>
