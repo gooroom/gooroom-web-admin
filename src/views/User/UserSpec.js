@@ -32,6 +32,7 @@ import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import LoginResetIcon from '@material-ui/icons/Flare';
 
 import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
 import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
@@ -138,6 +139,7 @@ class UserSpec extends Component {
     const avatarRef = getAvatarExplainForUser(this.props.t);
 
     let userSubinfo = null;
+    let actionButton = null;
     if(informOpen && viewItem) {
       userSubinfo = <div>
         {'[Id:' + viewItem.get('userId') + ']'}
@@ -148,8 +150,28 @@ class UserSpec extends Component {
         {(viewItem.get('loginTrial')) ? ', ' : ''}
         {(viewItem.get('loginTrial') === '0') ? <font color='red'>{'[Account: Locked]'}</font> : '[RemainTrial:' + viewItem.get('loginTrial') + ']'}
       </div>;
-    }
 
+      if(viewItem.get('loginTrial') === '0') {
+        actionButton = <div style={{width:98,paddingTop:10,display:'flex'}}>
+                        <Button size="small"
+                          variant="outlined" color="primary" style={{minWidth:32,marginRight:18}}
+                          onClick={() => this.handleClickEdit(viewItem, compId)}
+                        ><LoginResetIcon /></Button>
+                        <Button size="small"
+                          variant="outlined" color="primary" style={{minWidth:32}}
+                          onClick={() => this.handleClickEdit(viewItem, compId)}
+                        ><SettingsApplicationsIcon /></Button>
+                      </div>
+      } else {
+        actionButton = <div style={{width:48,paddingTop:10}}>
+                        <Button size="small"
+                          variant="outlined" color="primary" style={{minWidth:32}}
+                          onClick={() => this.handleClickEdit(viewItem, compId)}
+                        ><SettingsApplicationsIcon /></Button>
+                      </div>
+      }
+    }
+ 
     return (
       <div style={{marginTop: 10}} >
       {(informOpen && viewItem) &&
@@ -157,14 +179,7 @@ class UserSpec extends Component {
           <CardHeader
             title={viewItem.get('userNm')}
             subheader={userSubinfo}
-            action={
-              <div style={{width:48,paddingTop:10}}>
-                <Button size="small"
-                  variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.handleClickEdit(viewItem, compId)}
-                ><SettingsApplicationsIcon /></Button>
-              </div>
-            }
+            action={actionButton}
           />
           <Divider />
           <CardContent style={{padding:10}}>
