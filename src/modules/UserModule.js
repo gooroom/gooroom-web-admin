@@ -31,6 +31,7 @@ const CHG_LISTPARAM_DATA = 'user/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'user/CHG_COMPDATA_VALUE';
 
 const CHG_STORE_DATA = 'user/CHG_STORE_DATA';
+const CHG_LOGINTRIAL_RESET = 'user/CHG_LOGINTRIAL_RESET';
 
 // ...
 const initialState = commonHandleActions.getCommonInitialState('chUserNm', 'asc', 
@@ -154,6 +155,33 @@ export const changeStoreData = (param) => dispatch => {
         type: CHG_STORE_DATA,
         name: param.name,
         value: param.value
+    });
+};
+
+export const resetLoginTrailCount = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateUserLoginTrialCount', {
+        userId: param.userId
+    }).then(
+        (response) => {
+            try {
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: CHG_LOGINTRIAL_RESET
+                        });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
+                    return response.data;
+                }
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -316,7 +344,10 @@ export default handleActions({
         return newState;
     },
     [DELETE_USER_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action, 'userId');
+        return state;
+    },
+    [CHG_LOGINTRIAL_RESET]: (state, action) => {
+
     },
     [SHOW_USERRULE_DIALOG]: (state, action) => {
         return state.merge({
