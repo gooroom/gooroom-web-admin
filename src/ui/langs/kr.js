@@ -542,6 +542,8 @@ export default {
   "lbPasswordExpireDate": "Password 만료일",
   "lbUseUserExpire": "사용자 만료일 사용여부",
   "lbUserExpireDate": "사용자 만료일",
+  "ttResetLoginTrial": "로그인 시도 가능수 초기화",
+  "msgEditLoginTrialCount": "로그인 시도 가능수를 초기화 하시겠습니까?",
 
   // 테마관리
   "lbDeleteTheme": "테마 삭제",

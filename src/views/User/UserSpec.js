@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -10,6 +7,8 @@ import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
@@ -29,6 +28,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -123,9 +123,41 @@ class UserSpec extends Component {
   };
   // ===================================================================
 
+  handleResetTrialCount = (viewItem, compId) => {
+    const { UserProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+
+    GRConfirmActions.showConfirm({
+        confirmTitle: t("lbEditUserInfo"),
+        confirmMsg: t("msgEditLoginTrialCount"),
+        handleConfirmResult: (confirmValue, paramObject) => {
+          if(confirmValue) {
+            const { UserProps, UserActions, compId } = this.props;
+            if(paramObject !== undefined) {
+              UserActions.resetLoginTrailCount({
+                  userId: paramObject.get('userId')
+              }).then((res) => {
+                  if(res.status && res.status && res.status.message) {
+                    this.props.GRAlertActions.showAlert({
+                      alertTitle: t("dtSystemNotice"),
+                      alertMsg: res.status.message
+                    });
+                  }
+                  UserActions.readUserListPaged(UserProps, compId);
+                  this.handleClose();
+              });
+            }
+          }
+        },
+        confirmObject: viewItem
+    });
+  }
+  // ===================================================================
+
   render() {
     const { classes } = this.props;
     const { UserProps, compId } = this.props;
+    const { t, i18n } = this.props;
 
     const informOpen = UserProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = UserProps.getIn(['viewItems', compId, 'viewItem']);
@@ -153,10 +185,12 @@ class UserSpec extends Component {
 
       if(viewItem.get('loginTrial') === '0') {
         actionButton = <div style={{width:98,paddingTop:10,display:'flex'}}>
-                        <Button size="small"
-                          variant="outlined" color="primary" style={{minWidth:32,marginRight:18}}
-                          onClick={() => this.handleClickEdit(viewItem, compId)}
-                        ><LoginResetIcon /></Button>
+                        <Tooltip title={t("ttResetLoginTrial")}>
+                          <Button size="small"
+                            variant="outlined" color="primary" style={{minWidth:32,marginRight:18}}
+                            onClick={() => this.handleResetTrialCount(viewItem, compId)}
+                          ><LoginResetIcon /></Button>
+                        </Tooltip>
                         <Button size="small"
                           variant="outlined" color="primary" style={{minWidth:32}}
                           onClick={() => this.handleClickEdit(viewItem, compId)}
@@ -244,6 +278,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+  GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
   
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
