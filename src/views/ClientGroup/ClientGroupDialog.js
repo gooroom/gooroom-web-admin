@@ -150,12 +150,12 @@ class ClientGroupDialog extends Component {
         const { ClientGroupProps, compId } = this.props;
         const { t, i18n } = this.props;
 
+        const dialogType = ClientGroupProps.get('dialogType');
+        const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem') : null;
+
         if(!(ClientGroupProps.get('dialogOpen') && editingItem)) {
             return (<React.Fragment></React.Fragment>);
         }
-
-        const dialogType = ClientGroupProps.get('dialogType');
-        const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem') : null;
 
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
