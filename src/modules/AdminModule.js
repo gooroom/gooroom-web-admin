@@ -27,6 +27,7 @@ const SET_REDIRECT_PAGE_VALUE = 'admin/SET_REDIRECT_PAGE_VALUE';
 const initialState = commonHandleActions.getCommonInitialState('', '', {
     adminId: '',
     adminName: '',
+    adminTp: '',
     email: '',
     isEnableAlarm: '',
     pollingCycle: 0
@@ -162,12 +163,14 @@ export default handleActions({
             return state.merge({
                 adminId: adminInfo.adminId,
                 adminName: adminInfo.adminNm,
+                adminTp: adminInfo.adminTp,
                 pollingCycle: adminInfo.pollingCycle
             });
         } else {
             return state.merge({
                 adminId: '',
                 adminName: '',
+                adminTp: '',
                 pollingCycle: ''
             });
         }

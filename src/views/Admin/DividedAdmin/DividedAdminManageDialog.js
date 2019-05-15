@@ -342,11 +342,9 @@ class DividedAdminManageDialog extends Component {
                                 </CardContent>
                             </Card>
                         </Grid>
-{/*
                         <Grid item xs={12} >
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
-*/}
                     </Grid>
 {/* 
 
@@ -367,7 +365,6 @@ class DividedAdminManageDialog extends Component {
                     />
 */}
 
-{/* 
                     <Grid container spacing={0} style={{marginTop:10}}>
                         <Grid item xs={6} style={{paddingRight:5}}>
                             <TreeMultiSelector compId={compId} title={"관리대상 조직"} 
@@ -386,7 +383,7 @@ class DividedAdminManageDialog extends Component {
                                 onSelectItem={this.handleSelectGroup} />
                         </Grid>
                     </Grid>
-*/}
+
                     <Grid container spacing={0} style={{marginTop:10}}>
                         <Grid item xs={6} style={{paddingRight:5}}>
                         {/* 
