@@ -146,15 +146,6 @@ class DividedAdminManageRuleSelector extends Component {
                     <List disablePadding={true} >
                       <ListItem >
                         <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">단말 신규 등록</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('clientAdd')}
-                            checked={(editingItem) ? editingItem.get('clientAdd') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
                         <ListItemText primary={<Typography variant="subtitle2">단말이동, 그룹에서 제거</Typography>} />
                         <ListItemSecondaryAction>
                           <Switch color='primary' onChange={this.handleToggle('clientMove')}
@@ -162,10 +153,6 @@ class DividedAdminManageRuleSelector extends Component {
                           />
                         </ListItemSecondaryAction>
                       </ListItem>
-                    </List>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
                       <ListItem >
                         <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
                         <ListItemText primary={<Typography variant="subtitle2">단말 폐기</Typography>} />
@@ -175,6 +162,21 @@ class DividedAdminManageRuleSelector extends Component {
                           />
                         </ListItemSecondaryAction>
                       </ListItem>
+                    </List>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <List disablePadding={true} >
+                      {/* 
+                      <ListItem >
+                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
+                        <ListItemText primary={<Typography variant="subtitle2">단말 신규 등록</Typography>} />
+                        <ListItemSecondaryAction>
+                          <Switch color='primary' onChange={this.handleToggle('clientAdd')}
+                            checked={(editingItem) ? editingItem.get('clientAdd') == 1 : false}
+                          />
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                      */}
                       <ListItem >
                         <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
                         <ListItemText primary={<Typography variant="subtitle2">단말정책 적용</Typography>} />

@@ -64,13 +64,14 @@ class DividedAdminManageSpec extends Component {
             }
           />
           <CardContent style={{padding:10,width:'100%'}}>
-{/*          
             <Grid container spacing={0}>
               {(selectedItem.get('isClientAdmin') === '1') && 
                 <React.Fragment>
                   <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"단말관리 권한정보"} ]</Grid>
+                  {/* 
                   <Grid item xs={4} className={classes.specTitle}>{bull} {"단말 신규 등록"}</Grid>
                   <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('clientAdd') === '1') ? '가능' : '불가능'}</Grid>
+                  */}
                   <Grid item xs={4} className={classes.specTitle}>{bull} {"단말 폐기"}</Grid>
                   <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('clientDelete') === '1') ? '가능' : '불가능'}</Grid>
                   <Grid item xs={4} className={classes.specTitle}>{bull} {"단말 이동 (단말그룹에서 제거및 이동)"}</Grid>
@@ -174,7 +175,6 @@ class DividedAdminManageSpec extends Component {
                 <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{"관리대상 단말그룹정보"}</strike> ]</Grid>
               }
             </Grid>
-*/}            
             <Grid container spacing={0}>
               {(selectedItem.get('connIps') && selectedItem.get('connIps').size > 0) &&
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"접속가능 아이피"} ]</Grid>
