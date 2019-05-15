@@ -50,6 +50,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+
+import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -285,15 +287,17 @@ class DividedAdminManageDialog extends Component {
                                     />
                                 </Grid>
                                 <Grid item xs={6} style={{paddingRight:5}}>
-                                    <InputLabel>{t("lbAdminType")}</InputLabel>
-                                    <Select
-                                        value={'SUPER'} style={{width:'100%'}}
-                                        onChange={this.handleValueChange('adminTp')}
-                                    >
-                                    <MenuItem value='SUPER' key='SUPER'>전체관리자</MenuItem>
-                                    <MenuItem value='ADMIN' key='ADMIN'>중간관리자</MenuItem>
-                                    <MenuItem value='PART' key='PART'>기능관리자</MenuItem>
-                                    </Select>
+                                    <FormControl style={{width:'100%'}}>
+                                        <InputLabel>{t("lbAdminType")}</InputLabel>
+                                        <Select
+                                            value={'SUPER'} style={{width:'100%'}}
+                                            onChange={this.handleValueChange('adminTp')}
+                                        >
+                                        <MenuItem value='SUPER' key='SUPER'>전체관리자</MenuItem>
+                                        <MenuItem value='ADMIN' key='ADMIN'>중간관리자</MenuItem>
+                                        <MenuItem value='PART' key='PART'>기능관리자</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </Grid>
                                 <Grid item xs={6} style={{paddingRight:5}}>
                                     <TextValidator
