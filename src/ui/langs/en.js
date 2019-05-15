@@ -646,6 +646,7 @@ export default {
   "msgAdminUserName": "Please enter an administrator name.",
   "lbAdminPassowrd": "Password",
   "msgAdminPassword": "Please enter a password.",
+  "lbAdminType": "Administrator Type",
   "lbAdminConnIp": "Administrator accessable ip",
   "msgAdminConnIp": "Please enter IP or domain.",
   "msgValidAdminConnIp": "Alphabet, number, '.' Please enter only characters.",

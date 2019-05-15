@@ -104,7 +104,8 @@ class DividedAdminManage extends Component {
         deptInfoList: List([]), 
         userInfoList: List([]), 
         grpInfoList: List([]), 
-        clientInfoList: List([])
+        clientInfoList: List([]),
+        connIps: List(['*'])
       }),
       dialogType: DividedAdminManageDialog.TYPE_ADD
     });

@@ -646,6 +646,7 @@ export default {
   "msgAdminUserName": "관리자이름을 입력하세요.",
   "lbAdminPassowrd": "Password",
   "msgAdminPassword": "password를 입력하세요.",
+  "lbAdminType": "관리자타입",
   "lbAdminConnIp": "관리자 접속 가능 아이피",
   "msgAdminConnIp": "아이피 또는 도메인을 입력하세요.",
   "msgValidAdminConnIp": "알파벳,숫자,'.' 문자만 입력하세요.",

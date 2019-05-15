@@ -50,6 +50,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -272,41 +275,60 @@ class DividedAdminManageDialog extends Component {
                     <Grid container spacing={0} style={{marginTop:10}}>
                         <Grid item xs={6} style={{paddingRight:5}}>
 
-                            <TextValidator
-                                label={t("lbAdminUserId")} value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
-                                name="adminId" validators={['required', 'matchRegexp:^[a-zA-Z0-9]*$']}
-                                errorMessages={[t("msgAdminUserId"), t("msgValidAdminUserId")]}
-                                onChange={this.handleValueChange("adminId")}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                disabled={(dialogType == DividedAdminManageDialog.TYPE_EDIT) ? true : false}
-                            />
-                            <TextValidator
-                                label={t("lbAdminPassowrd")}
-                                type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
-                                value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
-                                name="userPasswd" validators={[]} errorMessages={[t("msgAdminPassword")]}
-                                onChange={this.handleValueChange('adminPw')}
-                                InputProps={{
-                                    endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                        aria-label="Toggle password visibility"
-                                        onClick={this.handleClickShowPassword}
-                                        onMouseDown={this.handleMouseDownPassword}
-                                        >
-                                        {(editingItem && editingItem.get('showPasswd')) ? <Visibility /> : <VisibilityOff />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                )
-                                }}
-                                className={classes.fullWidth}
-                            />
-                            <TextValidator
-                                label={t("lbAdminUserName")} value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
-                                name="adminNm" validators={['required']} errorMessages={[t("msgAdminUserName")]}
-                                onChange={this.handleValueChange("adminNm")}
-                                className={classes.fullWidth}
-                            />
+                            <Grid container spacing={0} style={{marginTop:0}}>
+                                <Grid item xs={6} style={{paddingRight:5}}>
+                                    <TextValidator
+                                        label={t("lbAdminUserName")} value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
+                                        name="adminNm" validators={['required']} errorMessages={[t("msgAdminUserName")]}
+                                        onChange={this.handleValueChange("adminNm")}
+                                        className={classes.fullWidth}
+                                    />
+                                </Grid>
+                                <Grid item xs={6} style={{paddingRight:5}}>
+                                    <InputLabel>{t("lbAdminType")}</InputLabel>
+                                    <Select
+                                        value={'SUPER'} style={{width:'100%'}}
+                                        onChange={this.handleValueChange('adminTp')}
+                                    >
+                                    <MenuItem value='SUPER' key='SUPER'>전체관리자</MenuItem>
+                                    <MenuItem value='ADMIN' key='ADMIN'>중간관리자</MenuItem>
+                                    <MenuItem value='PART' key='PART'>기능관리자</MenuItem>
+                                    </Select>
+                                </Grid>
+                                <Grid item xs={6} style={{paddingRight:5}}>
+                                    <TextValidator
+                                        label={t("lbAdminUserId")} value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
+                                        name="adminId" validators={['required', 'matchRegexp:^[a-zA-Z0-9]*$']}
+                                        errorMessages={[t("msgAdminUserId"), t("msgValidAdminUserId")]}
+                                        onChange={this.handleValueChange("adminId")}
+                                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                                        disabled={(dialogType == DividedAdminManageDialog.TYPE_EDIT) ? true : false}
+                                    />
+                                </Grid>
+                                <Grid item xs={6} style={{paddingRight:5}}>
+                                    <TextValidator
+                                        label={t("lbAdminPassowrd")}
+                                        type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
+                                        value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
+                                        name="userPasswd" validators={[]} errorMessages={[t("msgAdminPassword")]}
+                                        onChange={this.handleValueChange('adminPw')}
+                                        InputProps={{
+                                            endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                aria-label="Toggle password visibility"
+                                                onClick={this.handleClickShowPassword}
+                                                onMouseDown={this.handleMouseDownPassword}
+                                                >
+                                                {(editingItem && editingItem.get('showPasswd')) ? <Visibility /> : <VisibilityOff />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                        }}
+                                        className={classes.fullWidth}
+                                    />
+                                </Grid>
+                            </Grid>
 
                         </Grid>
                         <Grid item xs={6} style={{paddingLeft:5}}>
