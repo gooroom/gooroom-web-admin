@@ -1,11 +1,6 @@
 export default {
   items: [
     {
-      name: 'menuDashboard',
-      id: 'dashboard',
-      url: '/dashboard/GRM0901/menuDashboard',
-      level: 1
-    }, {
       name: 'menuClient',
       id: 'clients',
       url: '/clients',
@@ -17,12 +12,6 @@ export default {
           url: '/clients/clientmastermanage/GRM0101/menuClientManage',
           level: 2,
         }, {
-          name: 'menuClientRegKey',
-          id: 'GRM0104',
-          url: '/clientconfig/regkey/GRM0104/menuClientRegKey',
-          level: 2,
-        },
-        {
           name: 'menuClientRule',
           id: 'clientconfig',
           url: '/clientconfig',
@@ -33,37 +22,8 @@ export default {
               id: 'GRM0703',
               url: '/clientconfig/setting/GRM0703/menuClientSetup',
               level: 3,
-            }, {
-              name: 'menuClientHosts',
-              id: 'GRM0702',
-              url: '/clientconfig/host/GRM0702/menuClientHosts',
-              level: 3,
-            }, {
-              name: 'menuClientUpdateServer',
-              id: 'GRM0701',
-              url: '/clientconfig/update/GRM0701/menuClientUpdateServer',
-              level: 3,
             }
           ]
-        }
-      ]
-    }, {
-      name: 'menuSoftware',
-      id: 'package',
-      url: '/package',
-      level: 1,
-      children: [
-        {
-          name: 'menuPackageManage',
-          id: 'GRM0201',
-          url: '/package/packagemanage/GRM0201/menuPackageManage',
-          level: 2,
-        },
-        {
-          name: 'menuProfileManage',
-          id: 'GRM0202',
-          url: '/clientconfig/profileset/GRM0202/menuProfileManage',
-          level: 2,
         }
       ]
     }, {
@@ -121,25 +81,22 @@ export default {
           id: 'GRM0501',
           url: '/desktopconfig/desktopconf/GRM0501/menuDesktopManage',
           level: 2,
-        },
-        {
+        }, {
           name: 'menuDesktopAppManage',
           id: 'GRM0502',
           url: '/desktopconfig/desktopapp/GRM0502/menuDesktopAppManage',
           level: 2,
-        },
-        {
+        }, {
           name: 'menuCloudServiceManage',
           id: 'GRM0503',
           url: '/system/cloudservicemng/GRM0503/menuCloudServiceManage',
           level: 2,
-        },
-        {
+        }, {
           name: 'menuThemeManage',
           id: 'GRM0504',
           url: '/system/thememng/GRM0504/menuThemeManage',
           level: 2,
-        },
+        }
       ]
     }, {
       name: 'menuJob',

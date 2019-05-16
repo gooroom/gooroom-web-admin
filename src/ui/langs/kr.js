@@ -653,6 +653,9 @@ export default {
   "lbSaveAdminConnIp": "접속가능 아이피 저장",
   "msgSaveAdminConnIp": "접속가능 아이피 정보를 저장하시겠습니까?",
   "dtAdminJobHist": "관리자({{adminId}}) 작업 이력",
+  "lbTotalAdmin": "전체관리자",
+  "lbSiteAdmin": "중간관리자",
+  "lbPartAdmin": "기능관리자",
 
   // 호스트정보 관리
   "lbHosts": "Hosts정보",

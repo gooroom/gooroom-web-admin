@@ -653,6 +653,9 @@ export default {
   "lbSaveAdminConnIp": "Save connectable IP",
   "msgSaveAdminConnIp": "Do you want to save accessibility information?",
   "dtAdminJobHist": "Administrator ({{adminId}}) History",
+  "lbTotalAdmin": "TotalAdmin",
+  "lbSiteAdmin": "SiteAdmin",
+  "lbPartAdmin": "PartAdmin",
 
   // 호스트정보 관리
   "lbHosts": "Hosts",

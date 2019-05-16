@@ -77,7 +77,7 @@ class GRHeader extends Component {
             <Button onClick={this.props.onAdminClick}>
               <AccountCircle />{t("adminMenu")}
             </Button>
-            {(window.gpmsain === Constants.SUPER_RULECODE) && 
+            {(window.gpmsain !== Constants.PART_RULECODE) && 
             <Button 
               buttonRef={node => {
                 this.anchorEl = node;
@@ -97,7 +97,9 @@ class GRHeader extends Component {
                   <Paper>
                     <ClickAwayListener onClickAway={this.handleClose}>
                       <MenuList>
+                      {(window.gpmsain === Constants.SUPER_RULECODE) && 
                         <MenuItem component={Link} to={'/system/siteconfig/GRM9901/menuSiteConfig'}>{t("menuSiteConfig")}</MenuItem>
+                      }
                         <MenuItem component={Link} to={'/system/adminusermng/GRM9902/menuAdminUserMng'}>{t("menuAdminUserMng")}</MenuItem>
                         <MenuItem component={Link} to={'/system/deptuserreg/GRM9903/menuDeptAndUser'}>{t("menuDeptAndUser")}</MenuItem>
                       </MenuList>
