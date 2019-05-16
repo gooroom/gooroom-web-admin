@@ -115,6 +115,7 @@ const makeParameter = (po) => {
         adminId: po.get('adminId'),
         adminPw: (po.get('adminPw') !== '') ? sha256(po.get('adminId') + sha256(po.get('adminPw'))) : '',
         adminNm: po.get('adminNm'),
+        adminTp: po.get('adminTp'),
 
         isClientAdmin: (po.get('isClientAdmin') !== undefined) ? po.get('isClientAdmin') : '0',
         clientAdd: (po.get('clientAdd') !== undefined) ? po.get('clientAdd') : '0',

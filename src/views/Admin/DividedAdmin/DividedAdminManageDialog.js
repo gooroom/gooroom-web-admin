@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Map, List as GRIMTList } from 'immutable';
 
-import PropTypes from "prop-types";
+import * as Constants from "components/GRComponents/GRConstants";
 import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
@@ -14,7 +14,7 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 import DividedAdminManageRuleSelector from './DividedAdminManageRuleSelector';
 
 import TreeMultiSelector from 'components/GROptions/TreeMultiSelector';
-
+import Typography from '@material-ui/core/Typography';
 import DeptAndUserMultiSelector from 'components/GROptions/DeptAndUserMultiSelector';
 import GroupAndClientMultiSelector from 'components/GROptions/GroupAndClientMultiSelector';
 
@@ -290,12 +290,16 @@ class DividedAdminManageDialog extends Component {
                                     <FormControl style={{width:'100%'}}>
                                         <InputLabel>{t("lbAdminType")}</InputLabel>
                                         <Select
-                                            value={'SUPER'} style={{width:'100%'}}
+                                            value={(editingItem.get('adminTp')) ? editingItem.get('adminTp') : ''} style={{width:'100%'}}
                                             onChange={this.handleValueChange('adminTp')}
                                         >
-                                        <MenuItem value='SUPER' key='SUPER'>전체관리자</MenuItem>
-                                        <MenuItem value='ADMIN' key='ADMIN'>중간관리자</MenuItem>
-                                        <MenuItem value='PART' key='PART'>기능관리자</MenuItem>
+                                        {(window.gpmsain === Constants.SUPER_RULECODE) &&
+                                        <MenuItem value='S' key='SUPER'>{t("lbTotalAdmin")}</MenuItem>
+                                        }
+                                        {(window.gpmsain === Constants.SUPER_RULECODE) &&
+                                        <MenuItem value='A' key='ADMIN'>{t("lbSiteAdmin")}</MenuItem>
+                                        }
+                                        <MenuItem value='P' key='PART'>{t("lbPartAdmin")}</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </Grid>
@@ -391,25 +395,36 @@ class DividedAdminManageDialog extends Component {
                     />
 */}
 
-                    <Grid container spacing={0} style={{marginTop:10}}>
-                        <Grid item xs={6} style={{paddingRight:5}}>
-                            <TreeMultiSelector compId={compId} title={"관리대상 조직"} 
-                                url='readChildrenDeptList'
-                                paramKeyName='deptCd'
-                                isCheckMasterOnly={true}
-                                selectedItem={selectedDept} 
-                                onSelectItem={this.handleSelectDept} />
-                        </Grid>
-                        <Grid item xs={6} style={{paddingLeft:5}}>
-                            <TreeMultiSelector compId={compId} title={"관리대상 단말그룹"} 
-                                url='readChildrenClientGroupList'
-                                paramKeyName='grpId'
-                                isCheckMasterOnly={false}
-                                selectedItem={selectedGroup} 
-                                onSelectItem={this.handleSelectGroup} />
-                        </Grid>
-                    </Grid>
-
+                    <Card style={{marginTop:12}}>
+                        <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={"관리대상"}></CardHeader>
+                        {(editingItem.get('adminTp') === Constants.SUPER_TYPECODE) &&
+                        <CardContent style={{padding:0}}>
+                            <Typography variant="body1" style={{textAlign:'center',padding:30}} >전체관리자는 관리대상 설정이 필요 없습니다.</Typography>
+                        </CardContent>
+                        }
+                        {(editingItem.get('adminTp') === Constants.PART_TYPECODE || editingItem.get('adminTp') === Constants.ADMIN_TYPECODE) &&
+                        <CardContent style={{padding:0}}>
+                            <Grid container spacing={0} style={{marginTop:0}}>
+                                <Grid item xs={6} style={{paddingRight:5}}>
+                                    <TreeMultiSelector compId={compId} title={"조직"} 
+                                        url='readChildrenDeptList'
+                                        paramKeyName='deptCd'
+                                        isCheckMasterOnly={true}
+                                        selectedItem={selectedDept} 
+                                        onSelectItem={this.handleSelectDept} />
+                                </Grid>
+                                <Grid item xs={6} style={{paddingLeft:5}}>
+                                    <TreeMultiSelector compId={compId} title={"단말그룹"} 
+                                        url='readChildrenClientGroupList'
+                                        paramKeyName='grpId'
+                                        isCheckMasterOnly={false}
+                                        selectedItem={selectedGroup} 
+                                        onSelectItem={this.handleSelectGroup} />
+                                </Grid>
+                            </Grid>
+                        </CardContent>
+                        }
+                    </Card>
                     <Grid container spacing={0} style={{marginTop:10}}>
                         <Grid item xs={6} style={{paddingRight:5}}>
                         {/* 

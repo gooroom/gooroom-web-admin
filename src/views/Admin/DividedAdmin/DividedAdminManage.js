@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List, Iterable } from 'immutable';
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -98,14 +99,14 @@ class DividedAdminManage extends Component {
 
   // create dialog
   handleCreateButton = () => {
-    const { AdminUserProps, AdminUserActions } = this.props;
-    AdminUserActions.showDialog({
+    this.props.AdminUserActions.showDialog({
       viewItem: Map({
         deptInfoList: List([]), 
         userInfoList: List([]), 
         grpInfoList: List([]), 
         clientInfoList: List([]),
-        connIps: List(['*'])
+        connIps: List(['*']),
+        adminTp: (window.gpmsain === Constants.SUPER_RULECODE) ? 'A' : 'P'
       }),
       dialogType: DividedAdminManageDialog.TYPE_ADD
     });
@@ -165,6 +166,7 @@ class DividedAdminManage extends Component {
     const columnHeaders = [
       { id: 'ch1', isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
       { id: 'ch2', isOrder: true, numeric: false, disablePadding: true, label: "이름" },
+      { id: 'ch200', isOrder: false, numeric: false, disablePadding: true, label: "타입" },
       { id: 'ch201', isOrder: false, numeric: false, disablePadding: true, label: "상태" },
       { id: 'ch101', isOrder: false, numeric: false, disablePadding: true, label: "대상조직" },
       { id: 'ch102', isOrder: false, numeric: false, disablePadding: true, label: "대상단말그룹" },
@@ -231,7 +233,10 @@ class DividedAdminManage extends Component {
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{
+                        (n.get('adminTp') === Constants.SUPER_TYPECODE) ? t("lbTotalAdmin") : ((n.get('adminTp') === Constants.ADMIN_TYPECODE) ? t("lbSiteAdmin") : ((n.get('adminTp') === Constants.PART_TYPECODE) ? t("lbPartAdmin") : ''))
+                      }</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{
                         (n.get('deptInfoList').size > 0) ? ((n.get('deptInfoList').size > 1) ? n.getIn(['deptInfoList', 0, 'name']) + '+' : n.getIn(['deptInfoList', 0, 'name'])) : '-'
                       }</TableCell>
