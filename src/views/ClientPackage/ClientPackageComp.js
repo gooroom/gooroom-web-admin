@@ -349,7 +349,7 @@ class ClientPackageComp extends Component {
           />
         }
         <ClientPackageDialog compId={compId} />
-        <GRAlert />
+        {/*<GRAlert /> */}
       </div>
     );
   }

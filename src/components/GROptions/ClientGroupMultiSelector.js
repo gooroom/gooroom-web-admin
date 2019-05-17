@@ -434,7 +434,7 @@ class ClientGroupMultiSelector extends Component {
                 </DialogActions>
                 </ValidatorForm>
             </Dialog>
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

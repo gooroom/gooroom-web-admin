@@ -444,7 +444,7 @@ class ServerSiteConfig extends Component {
 
         </GRPane>
         <GRConfirm />
-        <GRAlert />
+        {/*<GRAlert /> */}
       </React.Fragment>
     );
   }

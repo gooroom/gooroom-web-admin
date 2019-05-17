@@ -592,7 +592,7 @@ class ClientConfSettingDialog extends Component {
                 <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

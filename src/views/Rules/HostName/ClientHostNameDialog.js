@@ -231,7 +231,7 @@ class ClientHostNameDialog extends Component {
                 <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

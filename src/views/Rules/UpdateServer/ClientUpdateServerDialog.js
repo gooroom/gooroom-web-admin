@@ -238,7 +238,7 @@ class ClientUpdateServerDialog extends Component {
                 <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

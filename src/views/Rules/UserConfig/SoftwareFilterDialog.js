@@ -327,7 +327,7 @@ class SoftwareFilterDialog extends Component {
                 <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

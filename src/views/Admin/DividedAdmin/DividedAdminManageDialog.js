@@ -540,7 +540,7 @@ class DividedAdminManageDialog extends Component {
                 </ValidatorForm>
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

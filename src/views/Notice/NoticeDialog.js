@@ -247,7 +247,7 @@ class NoticeDialog extends Component {
                     </div>
                 </Modal>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
         </div>
         );
     }

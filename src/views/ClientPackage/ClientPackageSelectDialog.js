@@ -116,7 +116,7 @@ class ClientPackageSelectDialog extends Component {
                     <GRConfirm />
                 </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </React.Fragment>
         );
     }
