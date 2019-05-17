@@ -313,7 +313,7 @@ class ClientListForViolated extends Component {
         />
       }
       <GRConfirm />
-      <GRAlert />
+      {/*<GRAlert /> */}
       </div>
     );
 

@@ -137,7 +137,7 @@ class DesktopAppSelector extends Component {
           </Grid>
         </div>
 
-      <GRAlert />
+      {/*<GRAlert /> */}
       </React.Fragment>
     );
   }

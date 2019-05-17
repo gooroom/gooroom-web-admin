@@ -417,7 +417,7 @@ class UserDialog extends Component {
                     </DialogActions>
                     </ValidatorForm>
                     <GRConfirm />
-                    <GRAlert />
+                    {/*<GRAlert /> */}
                 </Dialog>
             }
 

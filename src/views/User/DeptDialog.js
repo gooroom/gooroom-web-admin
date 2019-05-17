@@ -74,16 +74,19 @@ class DeptDialog extends Component {
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                         }).then((res) => {
 
-                            this.props.GRAlertActions.showAlert({
-                                alertTitle: t("dtSystemNotice"),
-                                alertMsg: res.status.message
-                            });
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh
+                                const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['editingItem', 'deptCd'])));
+                                resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
+                                this.handleClose();
+                            }
 
-                            // DeptActions.readDeptListPaged(DeptProps, compId);
-                            // tree refresh
-                            const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd'])));
-                            resetCallback(listItem);
-                            this.handleClose();
                         }).catch((err) => {
                             console.log('handleCreateData - err :::: ', err);
                         });
@@ -126,10 +129,19 @@ class DeptDialog extends Component {
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                         }).then((res) => {
-                            // tree refresh
-                            const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['editingItem', 'deptCd'])));
-                            resetCallback(listItem);
-                            this.handleClose();
+
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh
+                                const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd'])));
+                                resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
+                                this.handleClose();
+                            }
                         });
                     }
                 },

@@ -345,7 +345,7 @@ class DeptUserReg extends Component {
 
         </GRPane>
         <GRConfirm />
-        <GRAlert />
+        {/*<GRAlert /> */}
       </React.Fragment>
     );
   }

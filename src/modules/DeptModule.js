@@ -296,16 +296,20 @@ export const createDeptInfo = (param) => dispatch => {
     return requestPostAPI('createDeptInfo', makeParameter(param)).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
-                    dispatch({
-                        type: CREATE_DEPT_SUCCESS
-                    });
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: CREATE_DEPT_SUCCESS,
+                            response: response
+                        });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
                     return response.data;
-                } else {
-                    return response.data;
-                }    
+                }
             } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
@@ -318,21 +322,28 @@ export const editDeptInfo = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptInfo', makeParameter(param)).then(
         (response) => {
-            if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // change selected object
-                requestPostAPI('readDeptData', {'deptCd': param.deptCd}).then(
-                    (response) => {
-                        dispatch({
-                            type: EDIT_DEPT_SUCCESS,
-                            objId: param.objId,
-                            response: response
+            try {
+                if(response && response.data) {
+                    if(response && response.data && response.data.status && response.data.status.result == 'success') {
+                        requestPostAPI('readDeptData', {'deptCd': param.deptCd}).then(
+                            (response) => {
+                                dispatch({
+                                    type: EDIT_DEPT_SUCCESS,
+                                    objId: param.objId,
+                                    response: response
+                                });
+                            }
+                        ).catch(error => {
+                            dispatch({ type: COMMON_FAILURE, error: error });
                         });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: error });
                     }
-                ).catch(error => {
-                    dispatch({ type: COMMON_FAILURE, error: error });
-                });
-            } else {
+                    return response.data;
+                }
+            } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {

@@ -8,8 +8,10 @@ import { getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import GRAlert from 'components/GRComponents/GRAlert';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -78,10 +80,18 @@ class ClientGroupDialog extends Component {
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             
                         }).then((res) => {
-                            // tree refresh
-                            const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                            resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
-                            this.handleClose();
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh
+                                const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
+                                resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
+                                this.handleClose();
+                            }
                         }).catch((err) => {
                             console.log('handleCreateData - err :::: ', err);
                         });
@@ -128,10 +138,20 @@ class ClientGroupDialog extends Component {
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                             
                         }).then((res) => {
-                            // tree refresh
-                            const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                            resetCallback(listItem.get('parentIndex'));
-                            this.handleClose();
+
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh
+                                const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
+                                resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
+                                this.handleClose();
+                            }
+                            
                         });
                     }
                 }
@@ -173,7 +193,7 @@ class ClientGroupDialog extends Component {
         }
 
         return (
-            <div>
+            <React.Fragment>
             {(ClientGroupProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientGroupProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <ValidatorForm ref="form">
@@ -220,7 +240,8 @@ class ClientGroupDialog extends Component {
                 </ValidatorForm>
             </Dialog>
             }
-            </div>
+            {/*<GRAlert /> */}
+            </React.Fragment>
         );
     }
 }
@@ -242,6 +263,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
 
