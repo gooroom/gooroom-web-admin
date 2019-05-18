@@ -51,7 +51,7 @@ class DividedAdminManageSpec extends Component {
     return (
       <React.Fragment>
       {selectedItem &&
-        <Card>
+        <Card elevation={4} className={classes.ruleViewerCard}>
           <GRRuleCardHeader
             category={"관리자 정보 - 권한"} title={selectedItem.get('adminNm')} 
             subheader={selectedItem.get('adminId')}

@@ -289,13 +289,13 @@ class DividedAdminManage extends Component {
             />
             </div>
           }
-        </GRPane>
-        {/* dialog(popup) component area */}
-        <DividedAdminManageDialog compId={compId} />
         <DividedAdminManageSpec compId={compId} specType="inform"
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           onClickEdit={(event, id) => this.handleEditClick(event, id)}
         />
+        </GRPane>
+        {/* dialog(popup) component area */}
+        <DividedAdminManageDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>
     );
