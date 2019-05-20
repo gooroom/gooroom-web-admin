@@ -417,7 +417,7 @@ class DividedAdminManageDialog extends Component {
                                     <TreeMultiSelector compId={compId} title={"단말그룹"} 
                                         url='readChildrenClientGroupList'
                                         paramKeyName='grpId'
-                                        isCheckMasterOnly={false}
+                                        isCheckMasterOnly={true}
                                         selectedItem={selectedGroup} 
                                         onSelectItem={this.handleSelectGroup} />
                                 </Grid>
