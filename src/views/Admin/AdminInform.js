@@ -22,6 +22,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
 import Button from '@material-ui/core/Button';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -83,16 +87,19 @@ class AdminInform extends Component {
     const { t, i18n } = this.props;
 
     const bull = <span className={classes.bullet}>•</span>;
+    const adminTypeName = (AdminProps.get('adminTp') === 'S') ? t('lbTotalAdmin') : 
+      (AdminProps.get('adminTp') === 'A') ? t('lbSiteAdmin') : 
+      (AdminProps.get('adminTp') === 'P') ? t('lbPartAdmin') : '';
 
     return (
       <div>
         <Card style={{width:242}}>
           <CardHeader
             title={t("lbAdminTitle")}
+            subheader={adminTypeName}
             action={
-              <IconButton style={{marginTop:10}} onClick={event => this.handleShowAdminEdit(event)}>
-                <SettingsApplicationsIcon />
-              </IconButton>
+              <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" 
+                onClick={() => this.handleClickLogout()} >logout</Button>
             }
           />
           <CardContent style={{paddingLeft:12,paddingRight:12}}>
@@ -101,22 +108,48 @@ class AdminInform extends Component {
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} {t("lbAdminTitleName")}</TableCell>
-                  <TableCell >{AdminProps.get('adminName')}</TableCell>
+                  <TableCell colSpan={2}>{AdminProps.get('adminName')}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} {t("lbAdminTitleId")}</TableCell>
-                  <TableCell >{AdminProps.get('adminId')}</TableCell>
+                  <TableCell colSpan={2} >{AdminProps.get('adminId')}</TableCell>
                 </TableRow>
+                { (AdminProps.get('adminTp') === 'A' || AdminProps.get('adminTp') === 'P') && 
+                <TableRow>
+                  <TableCell colSpan={3} >
+                    {bull} 관리대상-조직<br /><br />
+                    <List dense={false}>
+                    {AdminProps.get('deptInfoList').map(n => (
+                      <ListItem>
+                        <ListItemText primary={n.name} secondary={''} />
+                      </ListItem>                    
+                    ))}
+                    </List>
+                  </TableCell>
+                </TableRow>
+                }
+                { (AdminProps.get('adminTp') === 'A' || AdminProps.get('adminTp') === 'P') && 
+                <TableRow>
+
+                  <TableCell colSpan={3} >
+                    {bull} 관리대상-단말그룹<br /><br />
+                    <List dense={false}>
+                    {AdminProps.get('grpInfoList').map(n => (
+                      <ListItem>
+                        <ListItemText primary={n.name} secondary={''} />
+                      </ListItem>                    
+                    ))}
+                    </List>
+                    </TableCell>
+                </TableRow>
+                }
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} {t("lbAdminCycleTime")}</TableCell>
                   <TableCell >{AdminProps.get('pollingCycle')}</TableCell>
-                </TableRow>
-
-                <TableRow>
-                  <TableCell colSpan={2} style={{textAlign:'right'}}>
-                    <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleClickLogout()} >
-                    logout
-                    </Button>
+                  <TableCell >
+                    <IconButton style={{marginTop:10}} onClick={event => this.handleShowAdminEdit(event)}>
+                      <SettingsApplicationsIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
 

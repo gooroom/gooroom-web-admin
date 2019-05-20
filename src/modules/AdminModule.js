@@ -28,6 +28,8 @@ const initialState = commonHandleActions.getCommonInitialState('', '', {
     adminId: '',
     adminName: '',
     adminTp: '',
+    deptInfoList: [],
+    grpInfoList: [],                
     email: '',
     isEnableAlarm: '',
     pollingCycle: 0
@@ -164,6 +166,8 @@ export default handleActions({
                 adminId: adminInfo.adminId,
                 adminName: adminInfo.adminNm,
                 adminTp: adminInfo.adminTp,
+                deptInfoList: adminInfo.deptInfoList,
+                grpInfoList: adminInfo.grpInfoList,
                 pollingCycle: adminInfo.pollingCycle
             });
         } else {
@@ -171,6 +175,8 @@ export default handleActions({
                 adminId: '',
                 adminName: '',
                 adminTp: '',
+                deptInfoList: [],
+                grpInfoList: [],
                 pollingCycle: ''
             });
         }
