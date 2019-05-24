@@ -191,6 +191,7 @@ export default {
   "dtSystemNotice": "System Notice",
   "dtEditOK": "Edit Success",
   "selBasic": "Basic",
+  "selStandard": "Standard",
   "selOrdinary": "Ordinary",
   "msgInputName": "Please enter name.",
   "selDelete": "Delete",

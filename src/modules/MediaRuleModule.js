@@ -57,7 +57,8 @@ export const showInform = (param) => dispatch => {
         type: SHOW_MEDIACONTROL_INFORM,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('objId') : '',
-        viewItem: param.viewItem
+        viewItem: param.viewItem,
+        isEditable: param.isEditable
     });
 };
 
@@ -243,6 +244,7 @@ const makeParameter = (param) => {
         objId: param.get('objId'),
         objName: param.get('objNm'),
         objComment: param.get('comment'),
+        adminType: param.get('adminType'),
         
         usb_memory: (param.get('usbMemory') == 'allow') ? ((usbReadonly == 'allow') ? 'read_only' : 'allow') : 'disallow',
         cd_dvd: (param.get('cdAndDvd') == 'allow') ? 'allow' : 'disallow',

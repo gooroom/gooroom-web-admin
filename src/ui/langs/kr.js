@@ -191,6 +191,7 @@ export default {
   "dtSystemNotice": "시스템알림",
   "dtEditOK": "수정 완료",
   "selBasic": "기본",
+  "selStandard": "표준",
   "selOrdinary": "일반",
   "msgInputName": "이름을 입력하세요.",
   "selDelete": "삭제함",
