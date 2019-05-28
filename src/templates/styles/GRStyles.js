@@ -409,6 +409,13 @@ export const GRCommonStyle = theme => ({
         backgroundColor: theme.palette.secondary.light + " !important"
     },
 
+    grDefaultRuleRow: {
+        backgroundColor: "#f6c9a3"
+    },
+    grStandardRuleRow: {
+        backgroundColor: "#f6eea3"
+    },
+
     // root: {
     //     background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
     //     borderRadius: 3,

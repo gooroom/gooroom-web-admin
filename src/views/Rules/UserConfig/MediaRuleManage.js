@@ -269,6 +269,7 @@ class MediaRuleManage extends Component {
                       onClick={event => this.handleSelectRow(event, n.get('objId'), isEditable)}
                       tabIndex={-1}
                       key={n.get('objId')}
+                      className={(n.get('objId').endsWith('DEFAULT')) ? classes.grDefaultRuleRow : ((n.get('objId').endsWith('STD')) ? classes.grStandardRuleRow : "")}
                     >
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? t("selBasic") : (n.get('objId').endsWith('STD') ? t("selStandard") : t("selOrdinary"))}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
