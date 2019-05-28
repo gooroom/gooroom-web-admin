@@ -34,6 +34,7 @@ import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
+import CheckIcon from '@material-ui/icons/CheckCircleTwoTone';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -172,7 +173,6 @@ class DividedAdminManage extends Component {
       { id: 'ch102', isOrder: false, numeric: false, disablePadding: true, label: "대상단말그룹" },
       { id: 'ch3', isOrder: false, numeric: false, disablePadding: true, label: "단말관리" },
       { id: 'ch4', isOrder: false, numeric: false, disablePadding: true, label: "사용자관리" },
-      { id: 'ch5', isOrder: false, numeric: false, disablePadding: true, label: "정책관리" },
       { id: 'ch6', isOrder: false, numeric: false, disablePadding: true, label: "데스크톱환경관리" },
       { id: 'ch7', isOrder: false, numeric: false, disablePadding: true, label: "공지관리" },
       { id: 'ch99', isOrder: false, numeric: false, disablePadding: true, label: "수정/삭제" },
@@ -243,11 +243,10 @@ class DividedAdminManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{
                         (n.get('grpInfoList').size > 0) ? ((n.get('grpInfoList').size > 1) ? n.getIn(['grpInfoList', 0, 'name']) + '+' : n.getIn(['grpInfoList', 0, 'name'])) : '-'
                       }</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isClientAdmin')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isUserAdmin')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isRuleAdmin')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isDesktopAdmin')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isNoticeAdmin')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isClientAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isUserAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isDesktopAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isNoticeAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('adminId'))}>
