@@ -156,7 +156,7 @@ export default {
   "menuUser": "User",
   "menuUserManage": "UserMng",
 
-  "menuUseRule": "ClientUseRule",
+  "menuUseRule": "RuleManage",
   "menuMediaRuleManage": "MediaRule",
   "menuBrowserRuleManage": "BrowserRule",
   "menuSecurityRuleManage": "SecurityRule",
@@ -398,6 +398,7 @@ export default {
 
   // 단말정책설정
   "lbClientConf": "ClientRule",
+  "lbClientSetup": "ClientSetup",
   "dtAddClientConf": "Registration of client rule setting",
   "msgAddClientConf": "Do you want to register client rule settings?",
   "dtEditClientConf": "Edit client rule settings",
