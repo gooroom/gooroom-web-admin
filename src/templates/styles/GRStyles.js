@@ -410,10 +410,10 @@ export const GRCommonStyle = theme => ({
     },
 
     grDefaultRuleRow: {
-        backgroundColor: "#f6c9a3"
+        backgroundColor: "#fae9dc"
     },
     grStandardRuleRow: {
-        backgroundColor: "#f6eea3"
+        backgroundColor: "#faf8e4"
     },
 
     // root: {
