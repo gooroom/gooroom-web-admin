@@ -117,7 +117,16 @@ class MediaRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditMediaRule"),
                 confirmMsg: t("msgEditMediaRule"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { MediaRuleProps, MediaRuleActions } = this.props;
+                        MediaRuleActions.editMediaRuleData(MediaRuleProps.get('editingItem'), this.props.compId)
+                            .then((res) => {
+                                refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: MediaRuleProps.get('editingItem')
             });
         } else {
@@ -126,16 +135,6 @@ class MediaRuleDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { MediaRuleProps, MediaRuleActions } = this.props;
-            MediaRuleActions.editMediaRuleData(MediaRuleProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -223,7 +222,7 @@ class MediaRuleDialog extends Component {
 
         let title = "";
         if(dialogType === MediaRuleDialog.TYPE_ADD) {
-            title = t("dtAddMediaRule")
+            title = t("dtAddMediaRule");
             if(window.gpmsain === Constants.SUPER_RULECODE) {
                 title += " - " + t("selStandard");
             }
