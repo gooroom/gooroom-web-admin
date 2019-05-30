@@ -49,12 +49,12 @@ class MediaRuleSpec extends Component {
                     onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><EditIcon /></Button>
                   }
-                  {(this.props.onClickCopy) &&
+                  {(this.props.onClickCopy && isEditable) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
-                  {(this.props.inherit && !(viewItem.get('isDefault'))) && 
+                  {(this.props.inherit && isEditable && !(viewItem.get('isDefault'))) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>
