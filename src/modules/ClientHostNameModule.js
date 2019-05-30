@@ -48,7 +48,8 @@ export const showInform = (param) => dispatch => {
         type: SHOW_HOSTNAME_INFORM,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('objId') : '',
-        viewItem: param.viewItem
+        viewItem: param.viewItem,
+        isEditable: param.isEditable
     });
 };
 
@@ -195,6 +196,8 @@ const makeParameter = (itemObj) => {
         objId: itemObj.get('objId'),
         objName: itemObj.get('objNm'),
         objComment: itemObj.get('comment'),
+        adminType: param.get('adminType'),
+        
         HOSTS: itemObj.get('hosts')
     };
 }

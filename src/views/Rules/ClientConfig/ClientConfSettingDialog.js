@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import * as Constants from "components/GRComponents/GRConstants";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -240,6 +242,9 @@ class ClientConfSettingDialog extends Component {
         let title = "";
         if(dialogType === ClientConfSettingDialog.TYPE_ADD) {
             title = t("dtAddClientConf");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === ClientConfSettingDialog.TYPE_VIEW) {
             title = t("dtViewClientConf");
         } else if(dialogType === ClientConfSettingDialog.TYPE_EDIT) {
