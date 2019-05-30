@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import * as Constants from "components/GRComponents/GRConstants";
+
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -196,16 +196,21 @@ class ClientProfileSet extends Component {
     const { ClientProfileSetProps } = this.props;
     const { t, i18n } = this.props;
 
-    const columnHeaders = [
+    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
+
+    let columnHeaders = [
       { id: 'chProfileSetNo', isOrder: true, numeric: false, disablePadding: true, label: t("colNumber") },
       { id: 'chProfileSetName', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
       { id: 'chClientId', isOrder: true, numeric: false, disablePadding: true, label: t("colRefClientId") },
       { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chPackages', isOrder: false, numeric: false, disablePadding: true, label: t("colPackageInfo") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
-      { id: 'chProfile', isOrder: false, numeric: false, disablePadding: true, label: t("colProfile") },
-      { id: 'chPackages', isOrder: false, numeric: false, disablePadding: true, label: t("colPackageInfo") }
+      { id: 'chProfile', isOrder: false, numeric: false, disablePadding: true, label: t("colProfile") }
     ];
+    if(!isEditable) {
+      columnHeaders.splice(-2, 2);
+    }
 
     const compId = this.props.match.params.grMenuId;
     
@@ -237,9 +242,11 @@ class ClientProfileSet extends Component {
               </Grid>
             </Grid>
             <Grid item xs={6} style={{textAlign:'right'}}>
+            {isEditable &&
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />{t("btnRegist")}
               </Button>
+            }
             </Grid>
           </Grid>
 
@@ -271,16 +278,25 @@ class ClientProfileSet extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
+                          onClick={event => this.handleClickPackageShow(event, n.get('profileNo'))}>
+                          <AssignmentIcon />
+                        </Button>                        
+                      </TableCell>
+                      {isEditable &&
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('profileNo'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('profileNo'))}>
                           <DeleteIcon />
                         </Button>                        
                       </TableCell>
+                      }
+                      {isEditable &&
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
@@ -288,13 +304,7 @@ class ClientProfileSet extends Component {
                           <ArchiveIcon />
                         </Button>                        
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        <Button color="secondary" size="small" 
-                          className={classes.buttonInTableRow}
-                          onClick={event => this.handleClickPackageShow(event, n.get('profileNo'))}>
-                          <AssignmentIcon />
-                        </Button>                        
-                      </TableCell>
+                      }
                     </TableRow>
                   );
                 })}
