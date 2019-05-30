@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -439,12 +440,15 @@ class ClientMasterManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.state.compId;
 
+    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
+
     return (
       <React.Fragment>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef',minWidth:320}}>
+              {isEditable &&              
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
               <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
                 <Grid item>
@@ -483,16 +487,18 @@ class ClientMasterManage extends Component {
                 </Grid>
               </Grid>
               </Toolbar>
+              }
               <ClientGroupTreeComp compId={compId} 
-                selectorType='multiple' 
+                selectorType='multiple'
                 onCheck={this.handleCheckedClientGroup} 
                 onSelect={this.handleSelectClientGroup}
                 onEdit={this.handleEditClientGroup}
-                isEnableEdit={true}
+                isEnableEdit={isEditable}
                 isActivable={true} 
               />
             </Grid>
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
+              {isEditable &&
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
@@ -515,13 +521,15 @@ class ClientMasterManage extends Component {
                   </Grid>
                 </Grid>
               </Toolbar>
+              }
               <ClientManageComp compId={compId} selectorType='multiple'
                 onSelect={this.handleSelectClient}
+                selectorType={(isEditable) ? 'multiple' : 'single'}
               />
             </Grid>
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef', padding: 0, marginTop: 20}}>
               <ClientManageSpec compId={compId} />
-              <ClientGroupSpec compId={compId} />
+              <ClientGroupSpec compId={compId} isEditable={isEditable} />
             </Grid>
           </Grid>
         </GRPane>

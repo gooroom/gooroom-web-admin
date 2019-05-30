@@ -214,7 +214,7 @@ class ClientGroupSpec extends Component {
   // ===================================================================
 
   render() {
-    const { compId, ClientGroupProps } = this.props;
+    const { compId, ClientGroupProps, isEditable } = this.props;
 
     const informOpen = ClientGroupProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = ClientGroupProps.getIn(['viewItems', compId, 'viewItem']);
@@ -249,13 +249,13 @@ class ClientGroupSpec extends Component {
           <CardHeader
             title={(viewItem.get('grpNm')) ? viewItem.get('grpNm') : ''}
             subheader={groupInfo}
-            action={
+            action={ (isEditable) ?
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
                   onClick={() => this.handleClickEdit(viewItem)}
                 ><SettingsApplicationsIcon /></Button>
-              </div>
+              </div> : <div></div>
             }
           ></CardHeader>
           <Divider />
@@ -270,6 +270,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientHostName}
                   onClickInherit={this.handleClickInheritForClientHostName}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -280,6 +281,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientUpdateServer}
                   onClickInherit={this.handleClickInheritForClientUpdateServer}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6}>
@@ -290,6 +292,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientConfSetting}
                   onClickInherit={this.handleClickInheritForClientConfSetting}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -300,6 +303,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForMediaRule}
                   onClickInherit={this.handleClickInheritForMediaRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6}>
@@ -310,6 +314,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForBrowserRule}
                   onClickInherit={this.handleClickInheritForBrowserRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -320,6 +325,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForSecurityRule}
                   onClickInherit={this.handleClickInheritForSecurityRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -330,6 +336,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForSoftwareFilter}
                   onClickInherit={this.handleClickInheritForSoftwareFilter}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -340,6 +347,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForDesktopConf}
                   onClickInherit={this.handleClickInheritForDesktopConf}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={isEditable}
                 />
               </Grid>
             </Grid>
