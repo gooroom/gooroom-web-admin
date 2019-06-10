@@ -455,6 +455,7 @@ class GRExtendedTreeList extends Component {
             style={Object.assign({}, listItem._styles.root)}
             isShowCheck={this.state.isShowCheck}
             isShowDetail={false}
+            isShowMemberCnt={true}
             isEnableEdit={this.state.isEnableEdit}
             isCheckMasterOnly={this.state.isCheckMasterOnly}
             checked={this.state.checked}
