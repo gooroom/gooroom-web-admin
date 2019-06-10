@@ -49,7 +49,7 @@ class DesktopConfSpec extends Component {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle, isEditable } = this.props;
     const { t, i18n } = this.props;
 
     let viewItem = null;
@@ -72,7 +72,7 @@ class DesktopConfSpec extends Component {
             <GRRuleCardHeader avatar={RuleAvartar}
               category={t("lbDesktopConf")} title={viewItem.get('confNm')}
               subheader={viewItem.get('confId')}
-              action={
+              action={(isEditable) ? 
                 <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, targetType)}
@@ -87,7 +87,7 @@ class DesktopConfSpec extends Component {
                     onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
-                </div>
+                </div> : <div></div>
               }
             />
             }

@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -61,7 +59,30 @@ class GcspDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddCloudService"),
                 confirmMsg: t("msgAddCloudService"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { GcspManageProps, GcspManageActions, compId } = this.props;
+                        GcspManageActions.createGcspData({
+                            gcspId: paramObject.get('gcspId'),
+                            gcspNm: paramObject.get('gcspNm'),
+                            comment: paramObject.get('comment'),
+                            ipRanges: paramObject.get('ipRanges'),
+                            url: paramObject.get('url'),
+                            certGubun: paramObject.get('certGubun'),
+                            gcspCsr: paramObject.get('gcspCsr')
+                        }).then((reData) => {
+                            if(reData && reData.status && reData.status.result === 'fail') {
+                                this.props.GRAlertActions.showAlert({
+                                    alertTitle: this.props.t("dtSystemError"),
+                                    alertMsg: reData.status.message
+                                });
+                            } else {
+                                GcspManageActions.readGcspListPaged(GcspManageProps, compId);
+                                this.handleClose();
+                            }
+                        });
+                    }
+                },
                 confirmObject: GcspManageProps.get('editingItem')
             });
         } else {
@@ -71,30 +92,6 @@ class GcspDialog extends Component {
                 });
             }
         }        
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { GcspManageProps, GcspManageActions, compId } = this.props;
-            GcspManageActions.createGcspData({
-                gcspId: paramObject.get('gcspId'),
-                gcspNm: paramObject.get('gcspNm'),
-                comment: paramObject.get('comment'),
-                ipRanges: paramObject.get('ipRanges'),
-                url: paramObject.get('url'),
-                certGubun: paramObject.get('certGubun'),
-                gcspCsr: paramObject.get('gcspCsr')
-            }).then((reData) => {
-                if(reData && reData.status && reData.status.result === 'fail') {
-                    this.props.GRAlertActions.showAlert({
-                        alertTitle: this.props.t("dtSystemError"),
-                        alertMsg: reData.status.message
-                    });
-                } else {
-                    GcspManageActions.readGcspListPaged(GcspManageProps, compId);
-                    this.handleClose();
-                }
-            });
-        }
     }
 
     // 수정
@@ -106,7 +103,21 @@ class GcspDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditCloudService"),
                 confirmMsg: t("msgEditCloudService"),
-                handleConfirmResult: this.handleEditDataConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { GcspManageProps, GcspManageActions, compId } = this.props;
+                        GcspManageActions.editGcspData({
+                            gcspId: paramObject.get('gcspId'),
+                            gcspNm: paramObject.get('gcspNm'),
+                            comment: paramObject.get('comment'),
+                            ipRanges: paramObject.get('ipRanges'),
+                            url: paramObject.get('url')
+                        }).then((res) => {
+                            GcspManageActions.readGcspListPaged(GcspManageProps, compId);
+                            this.handleClose();
+                        });
+                    }
+                },
                 confirmObject: GcspManageProps.get('editingItem')
             });
         } else {
@@ -116,21 +127,6 @@ class GcspDialog extends Component {
                 });
             }
         }        
-    }
-    handleEditDataConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { GcspManageProps, GcspManageActions, compId } = this.props;
-            GcspManageActions.editGcspData({
-                gcspId: paramObject.get('gcspId'),
-                gcspNm: paramObject.get('gcspNm'),
-                comment: paramObject.get('comment'),
-                ipRanges: paramObject.get('ipRanges'),
-                url: paramObject.get('url')
-            }).then((res) => {
-                GcspManageActions.readGcspListPaged(GcspManageProps, compId);
-                this.handleClose();
-            });
-        }
     }
 
     handleMouseDownPassword = event => {
