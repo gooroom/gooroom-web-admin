@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Map, List, Iterable } from 'immutable';
 import * as Constants from "components/GRComponents/GRConstants";
 
 
@@ -128,7 +129,11 @@ class ClientProfileSet extends Component {
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
     const viewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     ClientProfileSetActions.showDialog({
-      viewItem: viewItem.merge({isRemoval: 'false'}),
+      viewItem: viewItem.merge({
+        isRemoval: 'false',
+        grpInfoList: List([]), 
+        clientInfoList: List([])
+      }),
       dialogType: ClientProfileSetDialog.TYPE_PROFILE
     });
   };
