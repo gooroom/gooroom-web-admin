@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -13,7 +11,6 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
-import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
 import DesktopAppViewer from './DesktopAppViewer';
@@ -74,7 +71,16 @@ class DesktopAppDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtAddDesktopApp"),
                 confirmMsg: t("msgAddDesktopApp"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { DesktopAppProps, DesktopAppActions } = this.props;
+                        DesktopAppActions.createDesktopAppData(DesktopAppProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: DesktopAppProps.get('editingItem')
             });
         } else {
@@ -84,16 +90,6 @@ class DesktopAppDialog extends Component {
                 });
             }
         }        
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { DesktopAppProps, DesktopAppActions } = this.props;
-            DesktopAppActions.createDesktopAppData(DesktopAppProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
-                    this.handleClose();
-                });
-        }
     }
 
     handleEditData = (event, id) => {
@@ -103,7 +99,39 @@ class DesktopAppDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtEditDesktopApp"),
                 confirmMsg: t("msgEditDesktopApp"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { DesktopAppProps, DesktopAppActions, DesktopConfProps, DesktopConfActions } = this.props;
+                        if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INAPP || 
+                            DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
+            
+                            DesktopAppActions.editDesktopAppData(DesktopAppProps.get('editingItem'), this.props.compId)
+                            .then((res) => {
+            
+                                if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INAPP) {
+            
+                                    refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
+                                    
+                                } else if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
+                                    // 변경이 필요한 데이타를 위해 액션 리스트를 사용함.
+                                    // OLD
+                                    // DesktopConfActions.changedDesktopApp(DesktopConfProps, [
+                                    //     DesktopConfActions.readDesktopConfListPaged, 
+                                    //     DesktopConfActions.changeDesktopConfForEditing,
+                                    //     DesktopConfActions.changeDesktopConfForViewItem
+                                    // ], {}, {isCloseInform:true});
+            
+                                    // 선택된 App 리스트 처리
+                                    //DesktopConfActions.changedDesktopConfForEdit(DesktopConfProps, DesktopConfActions);
+                                    // 전체 APP 리스트 조회 (변경된 데이타로 주입)
+                                    DesktopAppActions.readDesktopAppAllList();
+                                }
+                                this.handleClose();
+                            });
+            
+                        }
+                    }
+                },
                 confirmObject: DesktopAppProps.get('editingItem')
             });
         } else {
@@ -113,39 +141,6 @@ class DesktopAppDialog extends Component {
                 });
             }
         }        
-    }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { DesktopAppProps, DesktopAppActions, DesktopConfProps, DesktopConfActions } = this.props;
-            if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INAPP || 
-                DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
-
-                DesktopAppActions.editDesktopAppData(DesktopAppProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-
-                    if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INAPP) {
-
-                        refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
-                        
-                    } else if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
-                        // 변경이 필요한 데이타를 위해 액션 리스트를 사용함.
-                        // OLD
-                        // DesktopConfActions.changedDesktopApp(DesktopConfProps, [
-                        //     DesktopConfActions.readDesktopConfListPaged, 
-                        //     DesktopConfActions.changeDesktopConfForEditing,
-                        //     DesktopConfActions.changeDesktopConfForViewItem
-                        // ], {}, {isCloseInform:true});
-
-                        // 선택된 App 리스트 처리
-                        //DesktopConfActions.changedDesktopConfForEdit(DesktopConfProps, DesktopConfActions);
-                        // 전체 APP 리스트 조회 (변경된 데이타로 주입)
-                        DesktopAppActions.readDesktopAppAllList();
-                    }
-                    this.handleClose();
-                });
-
-            }
-        }
     }
 
     handleCopyCreateData = (event, id) => {

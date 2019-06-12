@@ -17,6 +17,7 @@ import TreeMultiSelector from 'components/GROptions/TreeMultiSelector';
 import Typography from '@material-ui/core/Typography';
 import DeptAndUserMultiSelector from 'components/GROptions/DeptAndUserMultiSelector';
 import GroupAndClientMultiSelector from 'components/GROptions/GroupAndClientMultiSelector';
+import ClientSingleSelectDialog from 'components/GROptions/ClientSingleSelectDialog';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import GRAlert from 'components/GRComponents/GRAlert';
@@ -376,7 +377,6 @@ class DividedAdminManageDialog extends Component {
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
                     </Grid>
-{/* 
 
                     <GroupAndClientMultiSelector compId={compId} title={"관리대상 단말그룹"} 
                         isCheckMasterOnly={false}
@@ -385,7 +385,7 @@ class DividedAdminManageDialog extends Component {
                         selectedClient={selectedClient} 
                         onSelectClient={this.handleSelectClient}
                     />
-
+{/* 
                     <DeptAndUserMultiSelector compId={compId} title={"관리대상 조직"} 
                         isCheckMasterOnly={true}
                         selectedDept={selectedDept} 
@@ -395,6 +395,7 @@ class DividedAdminManageDialog extends Component {
                     />
 */}
 
+{/**
                     <Card style={{marginTop:12}}>
                         <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={"관리대상"}></CardHeader>
                         {(editingItem.get('adminTp') === Constants.SUPER_TYPECODE) &&
@@ -417,7 +418,7 @@ class DividedAdminManageDialog extends Component {
                                     <TreeMultiSelector compId={compId} title={"단말그룹"} 
                                         url='readChildrenClientGroupList'
                                         paramKeyName='grpId'
-                                        isCheckMasterOnly={false}
+                                        isCheckMasterOnly={true}
                                         selectedItem={selectedGroup} 
                                         onSelectItem={this.handleSelectGroup} />
                                 </Grid>
@@ -425,6 +426,8 @@ class DividedAdminManageDialog extends Component {
                         </CardContent>
                         }
                     </Card>
+ */}
+
                     <Grid container spacing={0} style={{marginTop:10}}>
                         <Grid item xs={6} style={{paddingRight:5}}>
                         {/* 

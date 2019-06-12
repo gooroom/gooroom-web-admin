@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { Map, List } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
@@ -77,7 +74,16 @@ class DesktopConfDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtAddDesktopConf"),
                 confirmMsg: t("msgAddDesktopConf"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { DesktopConfProps, DesktopConfActions } = this.props;
+                        DesktopConfActions.createDesktopConfData(DesktopConfProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: DesktopConfProps.get('editingItem')
             });
         } else {
@@ -86,16 +92,6 @@ class DesktopConfDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { DesktopConfProps, DesktopConfActions } = this.props;
-            DesktopConfActions.createDesktopConfData(DesktopConfProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -106,7 +102,16 @@ class DesktopConfDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtEditDesktopConf"),
                 confirmMsg: t("msgEditDesktopConf"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { DesktopConfProps, DesktopConfActions } = this.props;
+                        DesktopConfActions.editDesktopConfData(DesktopConfProps.get('editingItem'), this.props.compId)
+                            .then((res) => {
+                                refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: DesktopConfProps.get('editingItem')
             });
         } else {
@@ -116,16 +121,6 @@ class DesktopConfDialog extends Component {
                 });
             }
         }        
-    }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { DesktopConfProps, DesktopConfActions } = this.props;
-            DesktopConfActions.editDesktopConfData(DesktopConfProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(DesktopConfProps, DesktopConfActions.readDesktopConfListPaged);
-                    this.handleClose();
-                });
-        }
     }
 
     handleInheritSaveDataForDept = (event, id) => {
