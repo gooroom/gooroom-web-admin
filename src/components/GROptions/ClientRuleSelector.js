@@ -133,7 +133,7 @@ class ClientRuleSelector extends Component {
                         textColor="primary"
                         onChange={this.handleChangeTabs}
                     >
-                        <Tab label={t("lbClientConf")} value={0}/>
+                        <Tab label={t("lbClientSetup")} value={0}/>
                         <Tab label={t("lbHosts")} value={1} />
                         <Tab label={t("lbUpdateServer")} value={2} />
                         <Tab label={t("lbBrowserRule")} value={3} />

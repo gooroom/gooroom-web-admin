@@ -28,6 +28,7 @@ import { translate, Trans } from "react-i18next";
 
 
 class ClientListForSelectByGroup extends Component {
+  _isMounted = false;
 
   constructor(props) {
     super(props);
@@ -60,6 +61,10 @@ class ClientListForSelectByGroup extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   handleGetClientList = (newListParam) => {
     requestPostAPI('readClientListPaged', {
       clientType: newListParam.get('clientType'),
@@ -74,24 +79,27 @@ class ClientListForSelectByGroup extends Component {
       (response) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = response.data;
         const { stateData } = this.state;
-        this.setState({
-          stateData: stateData
-            .set('listData', List(data.map((e) => {return Map(e)})))
-            .set('listParam', newListParam.merge({
-              rowsFiltered: parseInt(recordsFiltered, 10),
-              rowsTotal: parseInt(recordsTotal, 10),
-              page: parseInt(draw, 10),
-              rowsPerPage: parseInt(rowLength, 10),
-              orderColumn: orderColumn,
-              orderDir: orderDir
-            }))
-        });
+        if (this._isMounted) {
+          this.setState({
+            stateData: stateData
+              .set('listData', List(data.map((e) => {return Map(e)})))
+              .set('listParam', newListParam.merge({
+                rowsFiltered: parseInt(recordsFiltered, 10),
+                rowsTotal: parseInt(recordsTotal, 10),
+                page: parseInt(draw, 10),
+                rowsPerPage: parseInt(rowLength, 10),
+                orderColumn: orderColumn,
+                orderDir: orderDir
+              }))
+          });
+        }
       }
     ).catch(error => {
     });
   }
 
   componentDidMount() {
+    this._isMounted = true;
     this.handleSelectBtnClick();
   }
 
@@ -129,8 +137,23 @@ class ClientListForSelectByGroup extends Component {
       });
 
       const selectedClient = (viewItem) ? fromJS(viewItem.toJS()) : null;
+      if(selectedClient && this.props.onSelectClient) {
+        this.props.onSelectClient(selectedClient);
+      }
+    } 
+  };
+
+  handleCheckRow = (event, id) => {
+    event.stopPropagation();
+    const { stateData } = this.state;
+    if(stateData.get('listData')) {
+      const viewItem = stateData.get('listData').find((element) => {
+          return element.get('clientId') == id;
+      });
+
+      const selectedClient = (viewItem) ? fromJS(viewItem.toJS()) : null;
       if(selectedClient) {
-        this.props.onSelectClient(event.target.checked, {
+        this.props.onCheckClient(event.target.checked, {
           clientId: selectedClient.get('clientId'),
           clientNm: selectedClient.get('clientName'),
           groupId: selectedClient.get('clientGroupId'),
@@ -139,7 +162,7 @@ class ClientListForSelectByGroup extends Component {
       }
     } 
   };
-    
+
   handleClickAllCheck = (event, checked) => {
     const { stateData } = this.state;
     let newCheckedIds = List([]);
@@ -150,7 +173,7 @@ class ClientListForSelectByGroup extends Component {
       });
     }
 
-    this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
+    // this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
     this.props.onSelectClient(newCheckedIds);
   };
 
@@ -159,9 +182,9 @@ class ClientListForSelectByGroup extends Component {
     const newListParam = (stateData.get('listParam')).merge({
       keyword: value, page: 0
     });
-    this.setState({
-      stateData: stateData.set('listParam', newListParam)
-    });
+    // this.setState({
+    //   stateData: stateData.set('listParam', newListParam)
+    // });
     // 아래 커멘트 제거시, 타이프 칠때마다 조회
     //this.handleGetClientList(newListParam);
   }
@@ -242,10 +265,11 @@ class ClientListForSelectByGroup extends Component {
                   aria-checked={isChecked}
                   key={n.get('clientId')}
                   selected={isChecked}
+                  onClick={event => this.handleSelectRow(event, n.get('clientId'))}
                 >
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                     <Checkbox color="primary" checked={isChecked} className={classes.grObjInCell} 
-                      onClick={event => this.handleSelectRow(event, n.get('clientId'))}
+                      onClick={event => this.handleCheckRow(event, n.get('clientId'))}
                     />
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>

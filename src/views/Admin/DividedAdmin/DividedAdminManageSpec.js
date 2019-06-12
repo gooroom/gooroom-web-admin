@@ -65,88 +65,31 @@ class DividedAdminManageSpec extends Component {
           />
           <CardContent style={{padding:10,width:'100%'}}>
             <Grid container spacing={0}>
-              {(selectedItem.get('isClientAdmin') === '1') && 
-                <React.Fragment>
-                  <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"단말관리 권한정보"} ]</Grid>
-                  {/* 
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"단말 신규 등록"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('clientAdd') === '1') ? '가능' : '불가능'}</Grid>
-                  */}
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"단말 폐기"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('clientDelete') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"단말 이동 (단말그룹에서 제거및 이동)"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('clientMove') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"단말정책 적용"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('clientRule') === '1') ? '가능' : '불가능'}</Grid>
-                </React.Fragment>
-              }
-              {(selectedItem.get('isClientAdmin') === '0') && 
-                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{"단말관리 권한정보"}</strike> ]</Grid>
-              }
+              <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
+                [ {"단말관리 권한"} -
+                {(selectedItem.get('isClientAdmin') === '1') && <span> 있음 ]</span>} 
+                {(selectedItem.get('isClientAdmin') !== '1') && <span> 없음 ]</span>}
+              </Grid>
 
-              {(selectedItem.get('isUserAdmin') === '1') && 
-                <React.Fragment>
-                  <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"사용자관리 권한정보"} ]</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"사용자 등록"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('userAdd') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"사용자 제거"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('userDelete') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"사용자 이동 및 조직에서 제거"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('userMove') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"사용자 대상 사용 정책 적용"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('userRule') === '1') ? '가능' : '불가능'}</Grid>
-                </React.Fragment>
-              }
-              {(selectedItem.get('isUserAdmin') === '0') && 
-                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{"사용자관리 권한정보"}</strike> ]</Grid>
-              }
+              <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
+                [ {"사용자관리 권한"} -
+                {(selectedItem.get('isUserAdmin') === '1') && <span> 있음 ]</span>}
+                {(selectedItem.get('isUserAdmin') !== '1') && <span> 없음 ]</span>}
+              </Grid>
 
-              {(selectedItem.get('isRuleAdmin') === '1') && 
-                <React.Fragment>
-                  <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"정책관리 권한정보"} ]</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"단말 사용정책 등록,수정,삭제"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('ruleEdit') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"사용자 대상 정책 적용"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('ruleUser') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"단말대상 정책 적용"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('ruleClient') === '1') ? '가능' : '불가능'}</Grid>
-                </React.Fragment>
-              }
-              {(selectedItem.get('isRuleAdmin') === '0') && 
-                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{"정책관리 권한정보"}</strike> ]</Grid>
-              }
+              <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
+                [ {"데스크톱환경관리 권한"} -
+                {(selectedItem.get('isDesktopAdmin') === '1') && <span> 있음 ]</span>}
+                {(selectedItem.get('isDesktopAdmin') !== '1') && <span> 없음 ]</span>}
+              </Grid>
 
-              {(selectedItem.get('isDesktopAdmin') === '1') && 
-                <React.Fragment>
-                  <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"데스크톱환경관리 권한정보"} ]</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"데스크톱환경 등록,수정,삭제"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('desktopEdit') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"사용자 대상 데스크톱환경 적용"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('desktopUser') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"단말대상 데스크톱환경 적용"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('desktopClient') === '1') ? '가능' : '불가능'}</Grid>
-                </React.Fragment>
-              }
-              {(selectedItem.get('isDesktopAdmin') === '0') && 
-                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{"데스크톱환경관리 권한정보"}</strike> ]</Grid>
-              }
+              <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
+                [ {"공지관리 권한"} -
+                {(selectedItem.get('isNoticeAdmin') === '1') && <span> 있음 ]</span>}
+                {(selectedItem.get('isNoticeAdmin') !== '1') && <span> 없음 ]</span>}
+              </Grid>
 
-              {(selectedItem.get('isNoticeAdmin') === '1') && 
-                <React.Fragment>
-                  <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"공지관리 권한정보"} ]</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"공지사항 등록,수정,삭제"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('noticeEdit') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"사용자 대상 공지 게시"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('noticeUser') === '1') ? '가능' : '불가능'}</Grid>
-                  <Grid item xs={4} className={classes.specTitle}>{bull} {"단말대상 공지 게시"}</Grid>
-                  <Grid item xs={2} className={classes.specContent}>{(selectedItem.get('noticeClient') === '1') ? '가능' : '불가능'}</Grid>
-                </React.Fragment>
-              }
-              {(selectedItem.get('isNoticeAdmin') === '0') && 
-                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{"공지관리 권한정보"}</strike> ]</Grid>
-              }
             </Grid>
-            <Divider style={{marginTop:20}} />
             <Grid container spacing={0}>
               {(selectedItem.get('deptInfoList') && selectedItem.get('deptInfoList').size > 0) &&
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"관리대상 조직정보"} - {"대상수"} : {selectedItem.get('deptInfoList').size} ea ]</Grid>

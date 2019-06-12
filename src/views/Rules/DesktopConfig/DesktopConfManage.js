@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
-
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -86,7 +84,7 @@ class DesktopConfManage extends Component {
     });
   }
 
-  handleSelectRow = (event, id) => {
+  handleSelectRow = (event, id, isEditable) => {
     const { DesktopConfActions, DesktopConfProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -103,19 +101,24 @@ class DesktopConfManage extends Component {
     // 2. view detail content
     DesktopConfActions.showInform({
       compId: compId,
-      viewItem: viewItem
+      viewItem: viewItem,
+      isEditable: isEditable
     });
   };
 
   handleCreateButton = () => {
-    const compId = this.props.match.params.grMenuId;
-
+    let adminType = 'A';
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      adminType = 'S';
+    }
     // desktop app list for select
     //this.props.DesktopAppActions.readDesktopAppList(compId);
     // theme list for select option
     //this.props.DesktopConfActions.readThemeInfoList();
     this.props.DesktopConfActions.showDialog({
-      viewItem: Map(),
+      viewItem: Map({
+        adminType: adminType
+      }),
       dialogType: DesktopConfDialog.TYPE_ADD
     });
   }
@@ -179,7 +182,9 @@ class DesktopConfManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const columnHeaders = [
+    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
+
+    let columnHeaders = [
       { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: t("colDivision") },
       { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
@@ -190,6 +195,9 @@ class DesktopConfManage extends Component {
       { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
+    if(!isEditable) {
+      columnHeaders.splice(-1, 1);
+    }
 
     const listObj = DesktopConfProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -220,10 +228,12 @@ class DesktopConfManage extends Component {
             </Grid>
 
             <Grid item xs={6} style={{textAlign:'right'}}>
+            {isEditable &&
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" 
                 onClick={() => { this.handleCreateButton(); } } >
                 <AddIcon />{t("btnRegist")}
               </Button>
+            }
             </Grid>
           </Grid>            
 
@@ -244,11 +254,12 @@ class DesktopConfManage extends Component {
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('confId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('confId'), isEditable)}
                       tabIndex={-1}
                       key={n.get('confId')}
+                      className={(n.get('confId').endsWith('DEFAULT')) ? classes.grDefaultRuleRow : ((n.get('confId').endsWith('STD')) ? classes.grStandardRuleRow : "")}
                     >
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('confId').endsWith('DEFAULT') ? t("selBasic") : t("selOrdinary")}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('confId').endsWith('DEFAULT') ? t("selBasic") : (n.get('confId').endsWith('STD') ? t("selStandard") : t("selOrdinary"))}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('confId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('confNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('themeNm')}</TableCell>
@@ -256,21 +267,20 @@ class DesktopConfManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                      {isEditable &&
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditListClick(event, n.get('confId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('confId'))}>
                           <DeleteIcon />
                         </Button>                        
-
                       </TableCell>
+                      }
                     </TableRow>
                   );
                 })}
@@ -305,6 +315,7 @@ class DesktopConfManage extends Component {
         {/* dialog(popup) component area */}
         <DesktopConfSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
+          isEditable={(listObj) ? listObj.get('isEditable') : null}
           hasAction={true}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}

@@ -300,6 +300,7 @@ export const handleShowInformAction = (state, action) => {
     return state
         .setIn(['viewItems', action.compId, 'viewItem'], action.viewItem)
         .setIn(['viewItems', action.compId, 'selectId'], action.selectId)
+        .setIn(['viewItems', action.compId, 'isEditable'], (action.isEditable !== undefined) ? action.isEditable : '')
         .setIn(['viewItems', action.compId, 'informOpen'], true);
 }
 

@@ -125,272 +125,38 @@ class DividedAdminManageRuleSelector extends Component {
           }
           {(editingItem.get('adminTp') === Constants.PART_TYPECODE) &&
           <CardContent style={{padding:0}}>
-            <AppBar elevation={0} position="static" color="default">
-              <Tabs style={{minHeight:24}} disabled={true}
-                value={selectedTab}
-                onChange={this.handleChangeTabs}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="scrollable"
-                scrollButtons="auto"
-              >
-                <Tab label='단말관리' style={{minHeight:24}} />
-                <Tab label='사용자관리' style={{minHeight:24}} />
-                <Tab label='정책관리' style={{minHeight:24}} />
-                <Tab label='데스크톱환경관리' style={{minHeight:24}} />
-                <Tab label='공지관리' style={{minHeight:24}} />
-              </Tabs>
-            </AppBar>
-            {selectedTab === 0 && <Card >
-              <CardContent>
-                <Typography variant="body1" style={{fontWeight:'bold',textAlign:'center'}} >단말관리 권한정보
-                  <Checkbox checked={(editingItem) ? editingItem.get('isClientAdmin') == 1 : false}
-                    onChange={this.handleToggle('isClientAdmin')} value="isClientAdmin"
-                  />
-                </Typography>
-                <Grid container spacing={0} style={{border:'1px solid lightGray'}}>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">단말이동, 그룹에서 제거</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('clientMove')}
-                            checked={(editingItem) ? editingItem.get('clientMove') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">단말 폐기</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('clientDelete')}
-                            checked={(editingItem) ? editingItem.get('clientDelete') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
-                      {/* 
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">단말 신규 등록</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('clientAdd')}
-                            checked={(editingItem) ? editingItem.get('clientAdd') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      */}
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">단말정책 적용</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('clientRule')}
-                            checked={(editingItem) ? editingItem.get('clientRule') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>}
-            {selectedTab === 1 && <Card >
-              <CardContent>
-                <Typography variant="body1" style={{fontWeight:'bold',textAlign:'center'}} >사용자관리 권한정보
-                  <Checkbox checked={(editingItem) ? editingItem.get('isUserAdmin') == 1 : false}
-                    onChange={this.handleToggle('isUserAdmin')} value="isUserAdmin"
-                  />
-                </Typography>
-                <Grid container spacing={0} style={{border:'1px solid lightGray'}}>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">사용자 등록</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('userAdd')}
-                            checked={(editingItem) ? editingItem.get('userAdd') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">사용자이동, 조직에서 제거</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('userMove')}
-                            checked={(editingItem) ? editingItem.get('userMove') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">사용자 제거</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('userDelete')}
-                            checked={(editingItem) ? editingItem.get('userDelete') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">사용자대상 사용정책 적용</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('userRule')}
-                            checked={(editingItem) ? editingItem.get('userRule') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>}
-            {selectedTab === 2 && <Card >
-              <CardContent>
-                <Typography variant="body1" style={{fontWeight:'bold',textAlign:'center'}} >정책관리 권한정보
-                  <Checkbox checked={(editingItem) ? editingItem.get('isRuleAdmin') == 1 : false}
-                    onChange={this.handleToggle('isRuleAdmin')} value="isRuleAdmin"
-                  />
-                </Typography>
-                <Grid container spacing={0} style={{border:'1px solid lightGray'}}>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">단말 사용정책 등록,수정,삭제</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('ruleEdit')}
-                            checked={(editingItem) ? editingItem.get('ruleEdit') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">단말대상 정책 적용</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('ruleClient')}
-                            checked={(editingItem) ? editingItem.get('ruleClient') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">사용자대상 정책 적용</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('ruleUser')}
-                            checked={(editingItem) ? editingItem.get('ruleUser') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>}
-            {selectedTab === 3 && <Card >
-              <CardContent>
-                <Typography variant="body1" style={{fontWeight:'bold',textAlign:'center'}} >데스크톱환경관리 권한정보
-                  <Checkbox checked={(editingItem) ? editingItem.get('isDesktopAdmin') == 1 : false}
-                    onChange={this.handleToggle('isDesktopAdmin')} value="isDesktopAdmin"
-                  />
-                </Typography>
-                <Grid container spacing={0} style={{border:'1px solid lightGray'}}>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">데스크톱환경 등록,수정,삭제</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('desktopEdit')}
-                            checked={(editingItem) ? editingItem.get('desktopEdit') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">단말대상 데스크톱환경 적용</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('desktopClient')}
-                            checked={(editingItem) ? editingItem.get('desktopClient') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">사용자대상 데스크톱환경 적용</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('desktopUser')}
-                            checked={(editingItem) ? editingItem.get('desktopUser') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>}
-            {selectedTab === 4 && <Card >
-              <CardContent>
-                <Typography variant="body1" style={{fontWeight:'bold',textAlign:'center'}} >공지관리 권한정보
-                  <Checkbox checked={(editingItem) ? editingItem.get('isNoticeAdmin') == 1 : false}
-                    onChange={this.handleToggle('isNoticeAdmin')} value="isNoticeAdmin"
-                  />
-                </Typography>
-                <Grid container spacing={0} style={{border:'1px solid lightGray'}}>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">공지사항 등록,수정,삭제</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('noticeEdit')}
-                            checked={(editingItem) ? editingItem.get('noticeEdit') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">단말대상 공지 게시</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('noticeClient')}
-                            checked={(editingItem) ? editingItem.get('noticeClient') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <List disablePadding={true} >
-                      <ListItem >
-                        <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
-                        <ListItemText primary={<Typography variant="subtitle2">사용자대상 공지 게시</Typography>} />
-                        <ListItemSecondaryAction>
-                          <Switch color='primary' onChange={this.handleToggle('noticeUser')}
-                            checked={(editingItem) ? editingItem.get('noticeUser') == 1 : false}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    </List>
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>}
+
+          <Grid container spacing={0} style={{padding:'10px 20px 10px 20px'}}>
+            <Grid item xs={3} className={classes.specCategory} style={{padding:0}}>
+              <Typography variant="body1" style={{fontWeight:'bold'}} >단말관리 권한
+                <Checkbox checked={(editingItem) ? editingItem.get('isClientAdmin') == 1 : false}
+                  onChange={this.handleToggle('isClientAdmin')} value="isClientAdmin"
+                />
+              </Typography>
+            </Grid>
+            <Grid item xs={3} className={classes.specCategory} style={{padding:0}}>
+              <Typography variant="body1" style={{fontWeight:'bold'}} >사용자관리 권한
+                <Checkbox checked={(editingItem) ? editingItem.get('isUserAdmin') == 1 : false}
+                  onChange={this.handleToggle('isUserAdmin')} value="isUserAdmin"
+                />
+              </Typography>
+            </Grid>
+            <Grid item xs={3} className={classes.specCategory} style={{padding:0}}>
+              <Typography variant="body1" style={{fontWeight:'bold'}} >데스크톱환경관리 권한
+                <Checkbox checked={(editingItem) ? editingItem.get('isDesktopAdmin') == 1 : false}
+                  onChange={this.handleToggle('isDesktopAdmin')} value="isDesktopAdmin"
+                />
+              </Typography>
+            </Grid>
+            <Grid item xs={3} className={classes.specCategory} style={{padding:0}}>
+              <Typography variant="body1" style={{fontWeight:'bold'}} >공지관리
+                <Checkbox checked={(editingItem) ? editingItem.get('isNoticeAdmin') == 1 : false}
+                  onChange={this.handleToggle('isNoticeAdmin')} value="isNoticeAdmin"
+                />
+              </Typography>
+            </Grid>
+          </Grid>
+  
           </CardContent>
           }
           </Card>

@@ -32,7 +32,7 @@ class ThemeSpec extends Component {
   render() {
 
     const { classes } = this.props;
-    const { compId, selectedItem } = this.props;
+    const { compId, selectedItem, isEditable } = this.props;
 
     let viewItem = null;
     if(selectedItem) {
@@ -47,13 +47,13 @@ class ThemeSpec extends Component {
             <CardHeader
               title={viewItem.get('themeNm')}
               subheader={viewItem.get('themeCmt')}
-              action={
+              action={(isEditable) ?
                 <div style={{width:48,paddingTop:10}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(viewItem)}
                   ><SettingsApplicationsIcon /></Button>
-                </div>
+                </div> : <div></div>
               }
             ></CardHeader>
             <CardContent>

@@ -12,18 +12,10 @@ export default {
           url: '/clients/clientmastermanage/GRM0101/menuClientManage',
           level: 2,
         }, {
-          name: 'menuClientRule',
-          id: 'clientconfig',
-          url: '/clientconfig',
+          name: 'menuClientSetup',
+          id: 'GRM0703',
+          url: '/clientconfig/setting/GRM0703/menuClientSetup',
           level: 2,
-          children: [
-            {
-              name: 'menuClientSetup',
-              id: 'GRM0703',
-              url: '/clientconfig/setting/GRM0703/menuClientSetup',
-              level: 3,
-            }
-          ]
         }
       ]
     }, {
@@ -96,6 +88,19 @@ export default {
           id: 'GRM0504',
           url: '/system/thememng/GRM0504/menuThemeManage',
           level: 2,
+        }
+      ]
+    }, {
+      name: 'menuNotice',
+      id: 'notices',
+      url: '/notices',
+      level: 1,
+      children: [
+        {
+          name: 'menuNoticeManage',
+          id: 'GRM0801',
+          url: '/notices/noticemanage/GRM0801/menuNoticeManage',
+          level: 2
         }
       ]
     }, {

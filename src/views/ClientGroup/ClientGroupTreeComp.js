@@ -350,6 +350,7 @@ class ClientGroupTreeComp extends Component {
             compId={compId}
             hasSelectChild={false}
             hasSelectParent={false}
+            isShowCheck={(selectorType && selectorType === 'multiple')}
             isEnableEdit={this.props.isEnableEdit}
             isActivable={this.props.isActivable}
             isShowMemberCnt={true}

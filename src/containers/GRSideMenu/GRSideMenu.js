@@ -1,4 +1,5 @@
 import React from "react";
+import { Map, fromJS } from 'immutable';
 
 import * as Constants from "components/GRComponents/GRConstants";
 
@@ -148,7 +149,24 @@ class GRSideMenu extends React.Component {
     } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
       sideMenuList = menuList(menuItemsAdmin.items, 0);
     } else if(window.gpmsain === Constants.PART_RULECODE) {
-      sideMenuList = menuList(menuItemsPart.items, 0);
+      let menus = fromJS(menuItemsPart);
+      if(window.roleClientAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuClient'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      if(window.roleUserAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuUser'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      if(window.roleDesktopAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuDesktop'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      if(window.roleNoticeAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuNotice'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      sideMenuList = menuList(menus.get('items').toJS(), 0);
     }
 
     return (
