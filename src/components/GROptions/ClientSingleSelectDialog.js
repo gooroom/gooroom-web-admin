@@ -77,6 +77,7 @@ class ClientSingleSelectDialog extends Component {
                                 <Grid item xs={6} style={{padding:0,height:310,overflowY:'scroll',marginBottom:0,border:'1px solid lightgray'}}>
                                     <ClientListForSelectByGroup 
                                         groupId={this.state.selectedGroupId}
+                                        isSingle={true}
                                         checkedClient={selectedClient}
                                         onSelectClient={this.handleClientCheck}
                                     />
