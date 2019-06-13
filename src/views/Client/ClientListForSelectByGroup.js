@@ -167,14 +167,17 @@ class ClientListForSelectByGroup extends Component {
     const { stateData } = this.state;
     let newCheckedIds = List([]);
 
-    if(checked) {
-      stateData.get('listData').map(n => {
-        newCheckedIds = newCheckedIds.push(n.get('clientId'));
+    stateData.get('listData').map(n => {
+      newCheckedIds = newCheckedIds.push({
+        clientId: n.get('clientId'),
+        clientNm: n.get('clientName'),
+        groupId: n.get('clientGroupId'),
+        grpNm: n.get('clientGroupName')
       });
-    }
+    });
 
     // this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
-    this.props.onSelectClient(newCheckedIds);
+    this.props.onCheckMultiClient(checked, newCheckedIds);
   };
 
   handleKeywordChange = (name, value) => {
