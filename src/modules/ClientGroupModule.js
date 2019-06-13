@@ -464,8 +464,8 @@ export default handleActions({
                     regDate: x.regDt,
                     modDate: x.modDt,
                     comment: x.comment,
-                    clientCount: x.clientCount,
-                    clientTotalCount: x.clientTotalCount,
+                    itemCount: x.itemCount,
+                    itemTotalCount: x.itemTotalCount,
                     _shouldRender: true
                 };
                 if (index !== undefined) {
@@ -605,8 +605,8 @@ export default handleActions({
             const index = treeData.findIndex((e => (e.get('key') === data[0].grpId)));
             return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
                 regDate: data[0].regDate,
-                clientCount: data[0].clientCount,
-                clientTotalCount: data[0].clientTotalCount,
+                itemCount: data[0].itemCount,
+                itemTotalCount: data[0].itemTotalCount,
                 modDate: data[0].modDate,
                 grpNm: data[0].grpNm,
                 comment: data[0].comment
@@ -625,8 +625,8 @@ export default handleActions({
                 const index = treeData.findIndex((e => (e.get('key') === data[i].grpId)));
                 newState = newState.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
                     regDate: data[i].regDate,
-                    clientCount: data[i].clientCount,
-                    clientTotalCount: data[i].clientTotalCount,
+                    itemCount: data[i].itemCount,
+                    itemTotalCount: data[i].itemTotalCount,
                     modDate: data[i].modDate,
                     grpNm: data[i].grpNm,
                     title: data[i].grpNm,

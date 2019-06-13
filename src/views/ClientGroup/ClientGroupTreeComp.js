@@ -299,7 +299,7 @@ class ClientGroupTreeComp extends Component {
                     </TableCell>
                   }
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientCount')}/{n.get('clientTotalCount')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('itemCount')}/{n.get('itemTotalCount')}</TableCell>
                   {(hasEdit) && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       <Button color='secondary' size="small" 

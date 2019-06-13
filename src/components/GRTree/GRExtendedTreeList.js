@@ -91,6 +91,8 @@ class GRExtendedTreeList extends Component {
           regDate: x.regDt,
           modDate: x.modDt,
           comment: x.comment,
+          itemCount: x.itemCount,
+          itemTotalCount: x.itemTotalCount,
           _shouldRender: true
         };
         if (index !== undefined) {
@@ -473,6 +475,7 @@ class GRExtendedTreeList extends Component {
             onCheckNode={() => this.handleCheckNode(event, listItem, i)}
             onEditNode={() => this.handleEditClickNode(listItem, i)}
             onFoldingNode={() => this.handleClickFoldingNode(listItem, i)}
+            memberCntValue={listItem.itemCount + '/' + listItem.itemTotalCount}
           />
         );
       } else {

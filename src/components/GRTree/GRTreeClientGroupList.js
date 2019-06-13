@@ -373,7 +373,7 @@ class GRTreeClientGroupList extends Component {
                 onEditNode={() => this.handleEditClickNode(listItem, i)}
                 onFoldingNode={() => this.handleClickFoldingNode(event, listItem, i)}
                 isShowMemberCnt={(this.props.isShowMemberCnt) ? this.props.isShowMemberCnt : false}
-                memberCntValue={listItem.get('clientCount') + '/' + listItem.get('clientTotalCount')}
+                memberCntValue={listItem.get('itemCount') + '/' + listItem.get('itemTotalCount')}
               />
             );
           } else {
