@@ -127,7 +127,7 @@ export default handleActions({
                 },
                 loginStatus: {
                     loginCount: statusInfo.loginCount,
-                    userCnt: statusInfo.userCnt,
+                    userCount: statusInfo.userCount
                 },
                 updateStatus: {
                     mainUpdateCount: statusInfo.mainUpdateCount,
