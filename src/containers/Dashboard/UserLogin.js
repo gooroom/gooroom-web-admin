@@ -12,7 +12,7 @@ class UserLogin extends Component {
     }
 
     render() {
-        const {loginCount, userCnt} = this.props;
+        const {loginCount, userCount} = this.props;
         const colors = ['hsl(257, 70%, 50%)', 'hsl(7, 70%, 50%)'];
         const data = [
             {
@@ -24,7 +24,7 @@ class UserLogin extends Component {
             {
               "id": "logout",
               "label": "Logout",
-              "value": Number(userCnt - loginCount),
+              "value": Number(userCount - loginCount),
               "color": colors[1]
             }
         ];
