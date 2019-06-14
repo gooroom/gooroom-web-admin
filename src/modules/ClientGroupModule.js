@@ -123,6 +123,7 @@ export const readChildrenClientGroupList = (compId, grpId, index) => dispatch =>
                 index: index,
                 response: response
             });
+            return index;
         }
     ).catch(error => {
         console.log('error : ', error);

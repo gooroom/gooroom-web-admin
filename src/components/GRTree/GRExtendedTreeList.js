@@ -74,8 +74,6 @@ class GRExtendedTreeList extends Component {
     param[this.state.paramKeyName] = keyValue;
 
     grRequestPromise(this.state.url, param).then(res => {
-      let indexCount = 0;
-
       const resData = res.map(x => {
         let children = null;
         if (x.hasChildren) {
@@ -104,24 +102,9 @@ class GRExtendedTreeList extends Component {
       if (this.state.treeData.length > 0) {
         // set children data for stop refetch.
         let parents = this.state.treeData;
-        const oldChildrenLength = (parents[index].children) ? parents[index].children.length : 0;
-
         parents[index].children = resData.map(d => {
           return d.key;
         });
-
-        // check child if parent checked
-        // if(this.state.checked.includes(parents[index].key)) {
-        //   // add checked data, by default checked.
-        //   const newChecked = [...this.state.checked];
-        //   resData.map(d => {
-        //     newChecked.push(d.key);  
-        //     return d;
-        //   });
-        //   this.setState({
-        //     checked: newChecked  
-        //   });
-        // }
         
         // data merge.
         // 1. delete children
@@ -410,7 +393,6 @@ class GRExtendedTreeList extends Component {
     const contentKey = "title";
 
     const startingDepth = this.state.startingDepth;
-    const listHeight = this.props.listHeight ? this.props.listHeight : "24px";
     const activeListItem = this.props.activeListItem
       ? this.props.activeListItem
       : this.state.activeListItem;
