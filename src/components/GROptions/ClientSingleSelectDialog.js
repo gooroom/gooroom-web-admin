@@ -49,42 +49,38 @@ class ClientSingleSelectDialog extends Component {
 
         return (
             <Dialog open={isSelectorOpen} scroll="paper" fullWidth={true} maxWidth="md">
-                <DialogTitle >{'단말선택'}</DialogTitle>
+                <DialogTitle >{t('lbClientSelect')}</DialogTitle>
                 <DialogContent>
-                    <Card >
-                        <CardContent >
-                            <Grid container spacing={0}>
-                                <Grid item xs={6} style={{padding:0,height:310,overflowY:'scroll',marginBottom:0,border:'1px solid lightgray'}}>
-                                    <GRExtendedTreeList
-                                        compId={compId}
-                                        useFolderIcons={true}
-                                        listHeight='24px'
-                                        url='readChildrenClientGroupList'
-                                        paramKeyName='grpId'
-                                        rootKeyValue='0'
-                                        keyName='key'
-                                        title='title'
-                                        startingDepth='1'
-                                        hasSelectChild={false}
-                                        hasSelectParent={false}
-                                        isShowCheck={false}
-                                        isCheckMasterOnly={isCheckMasterOnly}
-                                        isEnableEdit={false}
-                                        onSelectNode={(param) => {this.handleGroupNodeSelect(param);}}
-                                        checkedNodes={selectedGroup}
-                                    />
-                                </Grid>
-                                <Grid item xs={6} style={{padding:0,height:310,overflowY:'scroll',marginBottom:0,border:'1px solid lightgray'}}>
-                                    <ClientListForSelectByGroup 
-                                        groupId={this.state.selectedGroupId}
-                                        isSingle={true}
-                                        checkedClient={selectedClient}
-                                        onSelectClient={this.handleClientCheck}
-                                    />
-                                </Grid>
-                            </Grid>
-                        </CardContent>
-                    </Card>
+                    <Grid container spacing={0}>
+                        <Grid item xs={6} style={{padding:0,height:310,overflowY:'scroll',marginBottom:0,border:'1px solid lightgray'}}>
+                            <GRExtendedTreeList
+                                compId={compId}
+                                useFolderIcons={true}
+                                listHeight='24px'
+                                url='readChildrenClientGroupList'
+                                paramKeyName='grpId'
+                                rootKeyValue='0'
+                                keyName='key'
+                                title='title'
+                                startingDepth='1'
+                                hasSelectChild={false}
+                                hasSelectParent={false}
+                                isShowCheck={false}
+                                isCheckMasterOnly={isCheckMasterOnly}
+                                isEnableEdit={false}
+                                onSelectNode={(param) => {this.handleGroupNodeSelect(param);}}
+                                checkedNodes={selectedGroup}
+                            />
+                        </Grid>
+                        <Grid item xs={6} style={{padding:0,height:310,overflowY:'scroll',marginBottom:0,border:'1px solid lightgray'}}>
+                            <ClientListForSelectByGroup 
+                                groupId={this.state.selectedGroupId}
+                                isSingle={true}
+                                checkedClient={selectedClient}
+                                onSelectClient={this.handleClientCheck}
+                            />
+                        </Grid>
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={onHandleClose} variant='contained' color="primary">{t("btnClose")}</Button>
