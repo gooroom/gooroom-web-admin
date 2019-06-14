@@ -494,7 +494,7 @@ export default handleActions({
                     modDate: x.modDt,
                     comment: x.comment,
                     itemCount: x.itemCount,
-                    itmeTotalCount: x.itemTotalCount,
+                    itemTotalCount: x.itemTotalCount,
                     _shouldRender: true
                 };
                 if (index !== undefined) {

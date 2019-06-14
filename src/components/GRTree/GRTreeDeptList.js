@@ -37,9 +37,16 @@ class GRTreeDeptList extends Component {
       this.props.onInitTreeData();
     }
     this.props.DeptActions.readChildrenDeptList(this.props.compId, this.state.rootKeyValue, undefined)
-  }
-
-  componentWillUnmount() {
+    .then((index) => {
+      // action for first tree children
+      if(index === undefined) {
+        const { DeptProps, compId } = this.props;
+        const treeData = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']);
+        if(treeData && treeData.size > 0) {
+          this.handleClickNode(treeData.get(0), 0);
+        }
+      }
+    });
   }
 
   handleClickNode(listItem, index) {
@@ -99,79 +106,12 @@ class GRTreeDeptList extends Component {
     const { DeptProps, compId } = this.props;
     const treeData = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']);
 
-    // const targetNode = treeData.filter(obj => obj.key === nodeKey)[0];
-    // let isCheckList = null;
-    // if(targetNode.parentIndex !== undefined) {
-
-    //     isCheckList = treeData[targetNode.parentIndex].children.map(obj => {
-    //         return (newChecked.includes(obj) && !(newImperfect.includes(obj)));
-    //     });
-    //     // test one more for newImperfect
-    //     const isImperfect = treeData[targetNode.parentIndex].children.map(obj => {
-    //       return (newImperfect.includes(obj));
-    //     });
-
-    //     const pIndex = treeData.filter(obj => obj.key === nodeKey)[0].parentIndex;
-    //     if(isImperfect.includes(true)) {
-    //         // parted checked
-    //         newChecked = this.updateCheckStatus(treeData[pIndex].key, newChecked, true);
-    //         newImperfect = this.updateCheckStatus(treeData[pIndex].key, newImperfect, true);
-    //     } else {
-    //       if(isCheckList.every(obj => {if(obj) return obj;})) {
-    //           // all checked.
-    //           newChecked = this.updateCheckStatus(treeData[pIndex].key, newChecked, true);
-    //           newImperfect = this.updateCheckStatus(treeData[pIndex].key, newImperfect, false);
-    //       } else if(isCheckList.every(obj => {if(!obj) return !obj;})) {
-    //           // all unchecked.
-    //           newChecked = this.updateCheckStatus(treeData[pIndex].key, newChecked, false);
-    //           newImperfect = this.updateCheckStatus(treeData[pIndex].key, newImperfect, false);
-    //       } else {
-    //           // parted checked
-    //           newChecked = this.updateCheckStatus(treeData[pIndex].key, newChecked, true);
-    //           newImperfect = this.updateCheckStatus(treeData[pIndex].key, newImperfect, true);
-    //       }
-    //     }
-
-    //     if(pIndex >= 0) {
-    //         const newStatus = this.updateParentNode(treeData[pIndex].key, isChecked, newChecked, newImperfect);
-    //         newChecked = newStatus.newChecked;
-    //         newImperfect = newStatus.newImperfect;
-    //     }
-    // }
-
-    // return {
-    //     newChecked: newChecked,
-    //     newImperfect: newImperfect
-    // };
   }
 
   updateChildrenNode = (subNodes, isChecked, newChecked, newImperfect) => {
     const { DeptProps, compId } = this.props;
     const treeData = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']);
     
-    // if(subNodes && subNodes.length > 0) {
-    //   for(var i = 0; i < subNodes.length; i++) {
-    //     if(isChecked) {
-    //       newChecked = this.updateCheckStatus(subNodes[i], newChecked, true);
-    //       newImperfect = this.updateCheckStatus(subNodes[i], newImperfect, false);
-    //     } else {
-    //       newChecked = this.updateCheckStatus(subNodes[i], newChecked, false);
-    //       newImperfect = this.updateCheckStatus(subNodes[i], newImperfect, false);
-    //     }
-
-    //     const children = treeData.filter(obj => obj.key === subNodes[i])[0].children;
-    //     if(children) {
-    //       const newStatus = this.updateChildrenNode(children, isChecked, newChecked, newImperfect);
-    //       newChecked = newStatus.newChecked;
-    //       newImperfect = newStatus.newImperfect;
-    //     }
-    //   }
-    // }
-
-    // return {
-    //   newChecked: newChecked,
-    //   newImperfect: newImperfect
-    // };
   }
 
   handleCheckNode = (event, listItem, index) => {
