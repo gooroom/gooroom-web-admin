@@ -207,6 +207,7 @@ export default {
   "lbClientGroupRule": "단말그룹정책",
   "lbDeptRule": "조직정책",
   "lbUserRule": "사용자정책",
+  "lbClientSelect": "단말선택",
 
   // options
   "stBeforeJob": "작업전",
@@ -336,8 +337,8 @@ export default {
   "lbProfileEtcHandle": "기타 패키지 처리방식",
   "lbReferenceClient": "레퍼런스 단말",
   "msgSelectRefClient": "레퍼런스 단말을 선택하세요.",
-  "msgSelectClientInBelow": "아래 목록에서 단말을 선택하세요.",
-  "lbTargetClient": "대상 단말",
+  "msgSelectClientInRight": "우측 버튼을 이용하여 단말을 선택하세요.",
+  "lbTargetClient": "프로파일대상 선택",
   "lbPackageInfo": "패키지 정보",
   
   // 패키지관리

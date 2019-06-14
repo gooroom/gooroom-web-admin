@@ -285,20 +285,17 @@ class ClientProfileSetDialog extends Component {
                                 <TextValidator label={t("lbReferenceClient")} className={classes.fullWidth}
                                     name="clientId" validators={['required']} errorMessages={[t("msgSelectRefClient")]}
                                     value={(editingItem.get('clientId') && editingItem.get('clientId') != '') ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
-                                    placeholder={t("msgSelectClientInBelow")}
+                                    placeholder={t("msgSelectClientInRight")}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={8} lg={8} >
-                                <Button onClick={this.openClientSelectDialog} variant='contained' color="secondary">{t("btnRegist")}</Button>
+                                <Button onClick={this.openClientSelectDialog} variant='contained' color="secondary">{t('lbClientSelect')}</Button>
                             </Grid>
                         </Grid>
                     }
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                        <div>
-                            <div className={classes.profileLabel}>
-                                <InputLabel >{t("lbTargetClient")}</InputLabel>
-                            </div>
-                            <GroupAndClientMultiSelector compId={compId} title={"프로파일대상 선택"} 
+                        <div style={{paddingTop:20}}>
+                            <GroupAndClientMultiSelector compId={compId} title={t('lbTargetClient')} 
                                 isCheckMasterOnly={false}
                                 selectedGroup={selectedGroup} 
                                 onSelectGroup={this.handleSelectGroup}
