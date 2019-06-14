@@ -185,9 +185,9 @@ class ClientListForSelectByGroup extends Component {
     const newListParam = (stateData.get('listParam')).merge({
       keyword: value, page: 0
     });
-    // this.setState({
-    //   stateData: stateData.set('listParam', newListParam)
-    // });
+    this.setState({
+      stateData: stateData.set('listParam', newListParam)
+    });
     // 아래 커멘트 제거시, 타이프 칠때마다 조회
     //this.handleGetClientList(newListParam);
   }
