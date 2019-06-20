@@ -207,6 +207,7 @@ export default {
   "lbClientGroupRule": "Client Group Rule",
   "lbDeptRule": "Dept. Rule",
   "lbUserRule": "User Rule",
+  "lbClientSelect": "Select Client",
 
   // options
   "stBeforeJob": "Before",
@@ -336,8 +337,8 @@ export default {
   "lbProfileEtcHandle": "Other package handling methods",
   "lbReferenceClient": "Reference client",
   "msgSelectRefClient": "Select a reference client.",
-  "msgSelectClientInBelow": "Please select a client from the list below.",
-  "lbTargetClient": "Target client",
+  "msgSelectClientInRight": "Select the terminal using the right button.",
+  "lbTargetClient": "Target for Profiling",
   "lbPackageInfo": "Package Information",
   
   // 패키지관리
