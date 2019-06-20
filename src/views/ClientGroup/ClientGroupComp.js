@@ -240,7 +240,7 @@ class ClientGroupComp extends Component {
                   </TableCell>
                 }
                 <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
-                <TableCell className={classes.grSmallAndClickAndNumericCell}>{n.get('clientCount')}</TableCell>
+                <TableCell className={classes.grSmallAndClickAndNumericCell}>{n.get('itemCount')}</TableCell>
                 {(hasEdit) && 
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>
                     <Button color='secondary' size="small" 

@@ -305,7 +305,7 @@ class DeptTreeComp extends Component {
                     </TableCell>
                   }
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('userCnt')}/{n.get('userTotalCnt')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('itemCount')}/{n.get('itemTotalCount')}</TableCell>
                   {(hasEdit) && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       <Button color='secondary' size="small" 

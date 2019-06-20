@@ -167,14 +167,17 @@ class ClientListForSelectByGroup extends Component {
     const { stateData } = this.state;
     let newCheckedIds = List([]);
 
-    if(checked) {
-      stateData.get('listData').map(n => {
-        newCheckedIds = newCheckedIds.push(n.get('clientId'));
+    stateData.get('listData').map(n => {
+      newCheckedIds = newCheckedIds.push({
+        clientId: n.get('clientId'),
+        clientNm: n.get('clientName'),
+        groupId: n.get('clientGroupId'),
+        grpNm: n.get('clientGroupName')
       });
-    }
+    });
 
     // this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
-    this.props.onSelectClient(newCheckedIds);
+    this.props.onCheckMultiClient(checked, newCheckedIds);
   };
 
   handleKeywordChange = (name, value) => {
@@ -182,9 +185,9 @@ class ClientListForSelectByGroup extends Component {
     const newListParam = (stateData.get('listParam')).merge({
       keyword: value, page: 0
     });
-    // this.setState({
-    //   stateData: stateData.set('listParam', newListParam)
-    // });
+    this.setState({
+      stateData: stateData.set('listParam', newListParam)
+    });
     // 아래 커멘트 제거시, 타이프 칠때마다 조회
     //this.handleGetClientList(newListParam);
   }
@@ -206,15 +209,23 @@ class ClientListForSelectByGroup extends Component {
   }
 
   render() {
-    const { classes, checkedClient } = this.props;
+    const { classes, checkedClient, isSingle } = this.props;
     const { t, i18n } = this.props;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: 'checkbox', isCheckbox: true},
       { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
       { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
       { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: t("colClientGroup")}
     ];
+
+    if(isSingle !== undefined && isSingle === true) {
+      columnHeaders = [
+        { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
+        { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+        { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: t("colClientGroup")}
+      ]; 
+    }
     
     const listObj = this.state.stateData;
     let emptyRows = 0; 
@@ -250,7 +261,7 @@ class ClientListForSelectByGroup extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            onClickAllCheck={this.handleClickAllCheck}
+            onClickAllCheck={(isSingle) ? null : this.handleClickAllCheck}
             checkedIds={checkedIds}
             listData={listObj.get('listData')}
             columnData={columnHeaders}
@@ -267,11 +278,13 @@ class ClientListForSelectByGroup extends Component {
                   selected={isChecked}
                   onClick={event => this.handleSelectRow(event, n.get('clientId'))}
                 >
+                  {!isSingle && 
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                     <Checkbox color="primary" checked={isChecked} className={classes.grObjInCell} 
                       onClick={event => this.handleCheckRow(event, n.get('clientId'))}
                     />
                   </TableCell>
+                  }
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
