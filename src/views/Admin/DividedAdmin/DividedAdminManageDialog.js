@@ -15,8 +15,8 @@ import DividedAdminManageRuleSelector from './DividedAdminManageRuleSelector';
 
 import TreeMultiSelector from 'components/GROptions/TreeMultiSelector';
 import Typography from '@material-ui/core/Typography';
-import DeptAndUserMultiSelector from 'components/GROptions/DeptAndUserMultiSelector';
-import GroupAndClientMultiSelector from 'components/GROptions/GroupAndClientMultiSelector';
+import DeptMultiSelector from 'components/GROptions/DeptMultiSelector';
+import GroupMultiSelector from 'components/GROptions/GroupMultiSelector';
 import ClientSingleSelectDialog from 'components/GROptions/ClientSingleSelectDialog';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -377,14 +377,24 @@ class DividedAdminManageDialog extends Component {
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
                     </Grid>
+                    {(editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
+                        <GroupMultiSelector compId={compId} title={"관리대상 단말그룹"} 
+                            isCheckMasterOnly={false}
+                            selectedGroup={selectedGroup} 
+                            onSelectGroup={this.handleSelectGroup}
+                        />
+                    }
 
-                    <GroupAndClientMultiSelector compId={compId} title={"관리대상 단말그룹"} 
-                        isCheckMasterOnly={false}
-                        selectedGroup={selectedGroup} 
-                        onSelectGroup={this.handleSelectGroup}
-                        selectedClient={selectedClient} 
-                        onSelectClient={this.handleSelectClient}
-                    />
+                    {(editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
+                        <DeptMultiSelector compId={compId} title={"관리대상 조직"} 
+                            isCheckMasterOnly={true}
+                            selectedDept={selectedDept} 
+                            onSelectDept={this.handleSelectDept}
+                            selectedUser={selectedUser} 
+                            onSelectUser={this.handleSelectUser}
+                        />
+                    }
+
 {/* 
                     <DeptAndUserMultiSelector compId={compId} title={"관리대상 조직"} 
                         isCheckMasterOnly={true}

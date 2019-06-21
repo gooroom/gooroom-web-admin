@@ -3,6 +3,7 @@ import { Map, List as GRIMTList } from 'immutable';
 
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import clsx from 'clsx';
+
 import TableCell from '@material-ui/core/TableCell';
 
 import GRExtendedTreeList from 'components/GRTree/GRExtendedTreeList';
@@ -10,7 +11,17 @@ import GRExtendedTreeList from 'components/GRTree/GRExtendedTreeList';
 import ClientListForSelectByGroup from 'views/Client/ClientListForSelectByGroup';
 
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -62,7 +73,7 @@ class MuiVirtualizedTable extends React.PureComponent {
 
     if (param.dataKey === 'isInheritCheck') {
       return (
-        <TableCell component="div" variant="body"
+        <TableCell component="div" variant="body" 
           className={clsx(classes.tableCell, classes.flexContainer)}
           style={{ height: rowHeight }}>
           <Checkbox color="primary"
@@ -74,10 +85,10 @@ class MuiVirtualizedTable extends React.PureComponent {
       );
     } else if (param.dataKey === 'deleteBtn') {
       return (
-        <TableCell component="div" variant="body"
+        <TableCell component="div" variant="body" 
           className={clsx(classes.tableCell, classes.flexContainer)}
           style={{ height: rowHeight }}>
-          <Button size="small" color="primary" className={classes.buttonInTableRow}
+          <Button size="small" color="primary" className={classes.buttonInTableRow} 
             onClick={() => onHandleClickDelete(param.rowData.value)}>
             <DeleteIcon />
           </Button>
@@ -152,7 +163,9 @@ class MuiVirtualizedTable extends React.PureComponent {
 }
 
 
-class GroupAndClientMultiSelector extends Component {
+
+
+class GroupMultiSelector extends Component {
 
   constructor(props) {
     super(props);
@@ -194,49 +207,10 @@ class GroupAndClientMultiSelector extends Component {
     onSelectGroup(GRIMTList(newInfoList));
   }
 
-  handleClientCheck = (isChecked, param) => {
-    const { selectedClient, onSelectClient } = this.props;
-    let newInfoList = [];
-    if (isChecked) {
-      // add
-      newInfoList = selectedClient.push(Map({ name: param.clientNm, value: param.clientId }));
-    } else {
-      // delete
-      newInfoList = selectedClient.filter(n => (n.get('value') != param.clientId));
-    }
-    onSelectClient(GRIMTList(newInfoList));
-  }
-
-  handleClientMultiCheck = (isChecked, params) => {
-    const { selectedClient, onSelectClient } = this.props;
-    let newInfoList = [];
-    if (isChecked) {
-      // add
-      newInfoList = selectedClient;
-      params.forEach(n => {
-        newInfoList = newInfoList.push(Map({ name: n.clientNm, value: n.clientId }));
-      });
-    } else {
-      // delete
-      newInfoList = selectedClient;
-      params.forEach(n => {
-        newInfoList = newInfoList.push(Map({ name: n.clientNm, value: n.clientId }));
-        newInfoList = newInfoList.filter(e => (e.get('value') != n.clientId));
-      });
-    }
-    onSelectClient(GRIMTList(newInfoList));
-  }
-
-  handleClientDeleteItem = (param) => {
-    const { selectedClient, onSelectClient } = this.props;
-    // delete
-    const newInfoList = selectedClient.filter(n => (n.get('value') != param));
-    onSelectClient(GRIMTList(newInfoList));
-  }
-
   render() {
     const { classes, compId } = this.props;
-    const { title, selectedGroup, isCheckMasterOnly, selectedClient } = this.props;
+    const { title, selectedGroup, isCheckMasterOnly } = this.props;
+
     const VirtualizedTable = withStyles(subStyles)(MuiVirtualizedTable);
 
     return (
@@ -285,30 +259,6 @@ class GroupAndClientMultiSelector extends Component {
                 />
               </div>
             </Grid>
-            <Grid item xs={6} style={{ paddingTop: 10, height: 310, overflowY: 'scroll', marginBottom: 10, border: '1px solid lightgray' }}>
-              <ClientListForSelectByGroup
-                groupId={this.state.selectedGroupId}
-                checkedClient={selectedClient}
-                onCheckClient={this.handleClientCheck}
-                onCheckMultiClient={this.handleClientMultiCheck}
-              />
-            </Grid>
-            <Grid item xs={6} style={{ padding: 0, height: 310, marginBottom: 0, border: '1px solid lightgray' }}>
-              <div style={{ padding: 0, height: '100%', width: '100%' }}>
-                <VirtualizedTable
-                  rowCount={(selectedClient) ? (selectedClient.size) : 0}
-                  rowGetter={({ index }) => (selectedClient.get(index).toJS())}
-                  rowHeight={32}
-                  headerHeight={32}
-                  onHandleClickDelete={this.handleClientDeleteItem}
-                  columns={[
-                    { width: 160, label: '이름', dataKey: 'name' },
-                    { width: 160, label: '아이디', dataKey: 'value' },
-                    { width: 120, label: '삭제', dataKey: 'deleteBtn' },
-                  ]}
-                />
-              </div>
-            </Grid>
           </Grid>
         </CardContent>
       </Card>
@@ -316,4 +266,4 @@ class GroupAndClientMultiSelector extends Component {
   }
 }
 
-export default translate("translations")(withStyles(GRCommonStyle)(GroupAndClientMultiSelector));
+export default translate("translations")(withStyles(GRCommonStyle)(GroupMultiSelector));
