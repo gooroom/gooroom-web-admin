@@ -62,10 +62,12 @@ class GRExtendedTreeList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(!(this.props.checkedNodes.equals(nextProps.checkedNodes))) {
-      this.setState({
-        checked: (nextProps.checkedNodes && nextProps.checkedNodes.size > 0) ? (nextProps.checkedNodes.map(n => n.get('value'))) : []  
-      });
+    if(this.props.checkedNodes) {
+      if(!(this.props.checkedNodes.equals(nextProps.checkedNodes))) {
+        this.setState({
+          checked: (nextProps.checkedNodes && nextProps.checkedNodes.size > 0) ? (nextProps.checkedNodes.map(n => n.get('value'))) : []  
+        });
+      }
     }
   }
   
