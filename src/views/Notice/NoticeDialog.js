@@ -40,11 +40,13 @@ class NoticeDialog extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const editingItem = (nextProps.NoticeProps.get('editingItem')) ? nextProps.NoticeProps.get('editingItem') : null;
-        if (editingItem) {
-            const title = (editingItem.get('title')) ? editingItem.get('title') : '';
-            const content = (editingItem.get('content')) ? editingItem.get('content') : '';
-            this.setState({ title: title, content: content });
+        if(!(this.props.NoticeProps.equals(nextProps.NoticeProps))) {
+            const editingItem = (nextProps.NoticeProps.get('editingItem')) ? nextProps.NoticeProps.get('editingItem') : null;
+            if (editingItem) {
+                const title = (editingItem.get('title')) ? editingItem.get('title') : '';
+                const content = (editingItem.get('content')) ? editingItem.get('content') : '';
+                this.setState({ title: title, content: content });
+            }
         }
     }
 

@@ -52,12 +52,14 @@ class ClientListForSelectByGroup extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.groupId) {
-      const { stateData } = this.state;
-      const newListParam = (stateData.get('listParam')).merge({
-        groupId: nextProps.groupId
-      });
-      this.handleGetClientList(newListParam);
+    if(this.props.groupId !== nextProps.groupId) {
+      if(nextProps.groupId) {
+        const { stateData } = this.state;
+        const newListParam = (stateData.get('listParam')).merge({
+          groupId: nextProps.groupId
+        });
+        this.handleGetClientList(newListParam);
+      }
     }
   }
 
