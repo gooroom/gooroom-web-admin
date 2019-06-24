@@ -117,11 +117,11 @@ class AdminInform extends Component {
                 { (AdminProps.get('adminTp') === 'A' || AdminProps.get('adminTp') === 'P') && 
                 <TableRow>
                   <TableCell colSpan={3} >
-                    {bull} 관리대상-조직<br /><br />
-                    <List dense={false}>
+                    {bull} 관리대상-조직<br />
+                    <List dense={true}>
                     {AdminProps.get('deptInfoList').map(n => (
                       <ListItem>
-                        <ListItemText primary={n.name} secondary={''} />
+                        <ListItemText primary={'- ' + n.get('name')} secondary={''} />
                       </ListItem>                    
                     ))}
                     </List>
@@ -132,11 +132,11 @@ class AdminInform extends Component {
                 <TableRow>
 
                   <TableCell colSpan={3} >
-                    {bull} 관리대상-단말그룹<br /><br />
-                    <List dense={false}>
+                    {bull} 관리대상-단말그룹<br />
+                    <List dense={true}>
                     {AdminProps.get('grpInfoList').map(n => (
                       <ListItem>
-                        <ListItemText primary={n.name} secondary={''} />
+                        <ListItemText primary={'- ' + n.get('name')} secondary={''} />
                       </ListItem>                    
                     ))}
                     </List>
