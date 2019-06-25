@@ -192,6 +192,8 @@ class MediaRuleManage extends Component {
       { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colRuleId") },
       { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: t("colModUser") },
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: t("colRegUser") },
+      { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
     
@@ -243,24 +245,11 @@ class MediaRuleManage extends Component {
               <TableBody>
                 {listObj.get('listData').map(n => {
 
-                  let isEditable = true;
-                  let isDeletable = true;
-                  if(n.get('objId').endsWith('DEFAULT') || n.get('objId').endsWith('STD')) {
-                    isEditable = false;
-                    isDeletable = false;
-                    if(window.gpmsain === Constants.SUPER_RULECODE) {
-                      isEditable = true;
-                      if(n.get('objId').endsWith('DEFAULT')) {
-                        isDeletable = false;
-                      } else {
-                        isDeletable = true;
-                      }
-                    }
-                  } else {
-                    if(window.gpmsain === Constants.SUPER_RULECODE) {
-                      isEditable = false;
-                      isDeletable = false;
-                    }
+                  let isEditable = false;
+                  let isDeletable = false;
+                  if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
+                    isEditable = true;
+                    isDeletable = true;
                   }
                   
                   return (
@@ -276,6 +265,8 @@ class MediaRuleManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       {isEditable &&
                         <Button color="secondary" size="small" 
@@ -341,7 +332,8 @@ class MediaRuleManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  MediaRuleProps: state.MediaRuleModule
+  MediaRuleProps: state.MediaRuleModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
