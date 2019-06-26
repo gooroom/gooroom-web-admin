@@ -245,13 +245,34 @@ class MediaRuleManage extends Component {
               <TableBody>
                 {listObj.get('listData').map(n => {
 
-                  let isEditable = false;
-                  let isDeletable = false;
-                  if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
-                    isEditable = true;
-                    isDeletable = true;
+                  let isEditable = true;
+                  let isDeletable = true;
+
+                  if(n.get('objId').endsWith('DEFAULT')) {
+                    isDeletable = false;
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                    } else {
+                      isEditable = false;
+                    }
+                  } else if(n.get('objId').endsWith('STD')) {
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      isDeletable = false;
+                    }
+                  } else {
+                    if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      isDeletable = false;
+                    }
                   }
-                  
+
                   return (
                     <TableRow 
                       hover
