@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import * as GlobalActions from 'modules/GlobalModule';
 import * as DeptActions from 'modules/DeptModule';
@@ -420,6 +421,8 @@ class UserMasterManage extends Component {
  
   handleCreateUserButton = value => {
     const { UserActions } = this.props;
+    const initDate = moment().add(7, 'days');
+
     UserActions.showDialog({
       ruleSelectedViewItem: {
         userId: '',
@@ -427,6 +430,7 @@ class UserMasterManage extends Component {
         userPasswd: '',
         showPasswd: false,
         userEmail: '',
+        expireDate: initDate.toJSON().slice(0,10)
       },
       ruleDialogType: UserDialog.TYPE_ADD
     }, true);

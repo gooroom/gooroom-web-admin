@@ -77,7 +77,10 @@ class UserSpec extends Component {
         userNm: viewItem.get('userNm'),
         deptCd: viewItem.get('deptCd'),
         deptNm: viewItem.get('deptNm'),
+        isUseExpire: viewItem.get('isUseExpire'),
         expireDate: viewItem.get('expireDate'),
+        isUsePasswordExpire: viewItem.get('isUsePasswordExpire'),
+        passwordExpireDate: viewItem.get('passwordExpireDate'),        
         loginTrial: viewItem.get('loginTrial'),
         userEmail: viewItem.get('userEmail')
       },
