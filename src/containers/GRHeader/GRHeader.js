@@ -73,11 +73,13 @@ class GRHeader extends Component {
               <Button onClick={() => changeLanguage("kr")}>kr</Button>
               <Button onClick={() => changeLanguage("en")}>en</Button>
             </div>
+          {(window.gpmsain !== Constants.PART_RULECODE) && 
             <GRAlarmInform />
+          }
             <Button onClick={this.props.onAdminClick}>
               <AccountCircle />{t("adminMenu")}
             </Button>
-            {(window.gpmsain !== Constants.PART_RULECODE) && 
+          {(window.gpmsain !== Constants.PART_RULECODE) && 
             <Button 
               buttonRef={node => {
                 this.anchorEl = node;
@@ -86,7 +88,7 @@ class GRHeader extends Component {
             >
               <SettingsApplications />Server
             </Button>
-            }
+          }
             <Popper open={this.state.popMenu} anchorEl={this.anchorEl} transition disablePortal>
               {({ TransitionProps, placement }) => (
                 <Grow
