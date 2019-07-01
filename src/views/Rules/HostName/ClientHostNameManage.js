@@ -184,6 +184,8 @@ class ClientHostNameManage extends Component {
       { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colRuleId") },
       { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: t("colModUser") },
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: t("colRegUser") },
+      { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
 
@@ -237,19 +239,27 @@ class ClientHostNameManage extends Component {
 
                   let isEditable = true;
                   let isDeletable = true;
-                  if(n.get('objId').endsWith('DEFAULT') || n.get('objId').endsWith('STD')) {
-                    isEditable = false;
+
+                  if(n.get('objId').endsWith('DEFAULT')) {
                     isDeletable = false;
                     if(window.gpmsain === Constants.SUPER_RULECODE) {
                       isEditable = true;
-                      if(n.get('objId').endsWith('DEFAULT')) {
-                        isDeletable = false;
-                      } else {
-                        isDeletable = true;
-                      }
+                    } else {
+                      isEditable = false;
+                    }
+                  } else if(n.get('objId').endsWith('STD')) {
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      isDeletable = false;
                     }
                   } else {
-                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                    if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
                       isEditable = false;
                       isDeletable = false;
                     }
@@ -267,6 +277,8 @@ class ClientHostNameManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       {isEditable &&
                         <Button color='secondary' size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditListClick(event, n.get('objId'))}>
@@ -327,7 +339,8 @@ class ClientHostNameManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientHostNameProps: state.ClientHostNameModule
+  ClientHostNameProps: state.ClientHostNameModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
