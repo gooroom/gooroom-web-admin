@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Map, fromJS } from 'immutable';
+import { Map, List as GRIMTList, fromJS } from 'immutable';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -244,9 +244,10 @@ class GRTreeClientGroupList extends Component {
     if(treeData) {
       let parentItem = null;
       let beforeItem = null;
+
+      let newTreeData = GRIMTList([]);
       const listItemsJSX = treeData.map (
         (listItem, i) => {
-
           if(beforeItem === null) {
             listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
                                 .set('_shouldRender', (listItem.get('depth') >= startingDepth))
@@ -260,7 +261,7 @@ class GRTreeClientGroupList extends Component {
                                   .set('_primaryText', listItem.get('title'));
             } else if(beforeItem.get('depth') > listItem.get('depth')) {
               // upper - another parent
-              parentItem = treeData.get(listItem.get('parentIndex'));
+              parentItem = newTreeData.get(listItem.get('parentIndex'));
               listItem = listItem.set('_styles', this.applyStyle(listItem, (activeListItem === i)))
                                   .set('_shouldRender', (expandedListItems.indexOf(listItem.get('parentIndex')) > -1) ? (parentItem && parentItem.get('_shouldRender')) : false)
                                   .set('_primaryText', listItem.get('title'));
@@ -272,6 +273,7 @@ class GRTreeClientGroupList extends Component {
             }
           }
           beforeItem = listItem;
+          newTreeData = newTreeData.push(listItem);
 
           // create treeItem
           if (listItem.get('_shouldRender')) {
