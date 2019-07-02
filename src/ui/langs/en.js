@@ -437,7 +437,7 @@ export default {
   "selNoPermit": "No allow",
   "dtSetupLogLevel": "Set log level",
   "dtIsUseDeleteFunc": "Whether delete function is used",
-  "lbSetupClient": "Client setting",
+  "lbSetupClient": "Agent setting",
   "msgValidOnlyUpperZero": "Only numbers greater than 0 can be entered.",
 
   // 데스크톱앱관리
