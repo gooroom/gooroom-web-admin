@@ -256,8 +256,10 @@ class DividedAdminManageDialog extends Component {
         const selectedClient = (editingItem && editingItem.get('clientInfoList')) ? editingItem.get('clientInfoList') : null;
 
         let title = "";
+        let passwordCheck = [];
         if(dialogType === DividedAdminManageDialog.TYPE_ADD) {
             title = t("dtAddAdminUser");
+            passwordCheck = ['required'];
         } else if(dialogType === DividedAdminManageDialog.TYPE_VIEW) {
             title = t("dtViewAdminUser");
         } else if(dialogType === DividedAdminManageDialog.TYPE_EDIT) {
@@ -319,7 +321,7 @@ class DividedAdminManageDialog extends Component {
                                         label={t("lbAdminPassowrd")}
                                         type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
                                         value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
-                                        name="userPasswd" validators={[]} errorMessages={[t("msgAdminPassword")]}
+                                        name="userPasswd" validators={passwordCheck} errorMessages={[t("msgAdminPassword")]}
                                         onChange={this.handleValueChange('adminPw')}
                                         InputProps={{
                                             endAdornment: (
