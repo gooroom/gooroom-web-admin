@@ -274,6 +274,7 @@ export const changeTreeDataVariable = (param) => dispatch => {
 const makeParameter = (param) => {
     return {
         deptCd: param.deptCd,
+        deptCds: param.deptCds,
         deptNm: param.deptNm,
         uprDeptCd: param.uprDeptCd,
         

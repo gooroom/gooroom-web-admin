@@ -251,6 +251,7 @@ export const changeTreeDataVariable = (param) => dispatch => {
 const makeParameter = (param) => {
     return {
         groupId: param.groupId,
+        grpIds: param.grpIds,
         groupName: param.groupName,
         groupComment: param.groupComment,
         uprGrpId: param.uprGrpId,
