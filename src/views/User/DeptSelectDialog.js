@@ -71,7 +71,7 @@ class DeptSelectDialog extends Component {
                             rootKeyValue='0'
                             keyName='key'
                             title='title'
-                            startingDepth='2'
+                            startingDepth='1'
                             isShowCheck={isShowCheck}
                             hasSelectChild={false}
                             hasSelectParent={false}
