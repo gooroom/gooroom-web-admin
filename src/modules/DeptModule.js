@@ -443,7 +443,7 @@ export const deleteUsersInDept = (itemObj) => dispatch => {
 // edit multi dept rule once.
 export const editMultiDeptRule = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateRuleForDepts', param).then(
+    return requestPostAPI('updateRuleForDepts', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 dispatch({

@@ -419,7 +419,7 @@ export const removeClientsInGroup = (itemObj) => dispatch => {
 // edit multi group rule once.
 export const editMultiGroupRule = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateRuleForGroups', param).then(
+    return requestPostAPI('updateRuleForGroups', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
                 dispatch({
