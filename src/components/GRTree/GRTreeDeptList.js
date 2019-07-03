@@ -66,10 +66,17 @@ class GRTreeDeptList extends Component {
           value: expandedListItems.concat([index])
         });
       } else {
-        DeptActions.changeTreeDataVariable({
-          compId: compId, name: 'expandedListItems',
-          value: (expandedListItems) ? expandedListItems : [index]
-        });
+        if(expandedListItems === undefined || expandedListItems.length < 1) {
+          DeptActions.changeTreeDataVariable({
+            compId: compId, name: 'expandedListItems',
+            value: [index]
+          });
+        } else {
+          DeptActions.changeTreeDataVariable({
+            compId: compId, name: 'expandedListItems',
+            value: expandedListItems
+          });
+        }
       }
     }
   }

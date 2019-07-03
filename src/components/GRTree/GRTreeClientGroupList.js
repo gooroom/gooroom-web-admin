@@ -50,7 +50,7 @@ class GRTreeClientGroupList extends Component {
 
   handleClickNode(listItem, index) {
     const { ClientGroupProps, ClientGroupActions, compId } = this.props;
-
+    
     if (listItem.get('children')) {
       // fetch children data
       // request to server if children array is empty.
@@ -65,10 +65,17 @@ class GRTreeClientGroupList extends Component {
           value: expandedListItems.concat([index])
         });
       } else {
-        ClientGroupActions.changeTreeDataVariable({
-          compId: compId, name: 'expandedListItems',
-          value: (expandedListItems) ? expandedListItems : [index]
-        });
+        if(expandedListItems === undefined || expandedListItems.length < 1) {
+          ClientGroupActions.changeTreeDataVariable({
+            compId: compId, name: 'expandedListItems',
+            value: [index]
+          });
+        } else {
+          ClientGroupActions.changeTreeDataVariable({
+            compId: compId, name: 'expandedListItems',
+            value: expandedListItems
+          });
+        }
       }
     }
   }
