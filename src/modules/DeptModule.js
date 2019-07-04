@@ -77,9 +77,10 @@ export const showMultiDialog = (param) => dispatch => {
     });
 };
 
-export const closeMultiDialog = () => dispatch => {
+export const closeMultiDialog = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_MULTIDEPT_DIALOG
+        type: CLOSE_MULTIDEPT_DIALOG,
+        compId: param.compId
     });
 };
 
@@ -688,7 +689,9 @@ export default handleActions({
         });
     },
     [CLOSE_MULTIDEPT_DIALOG]: (state, action) => {
-        return state.delete('editingItem').merge({
+        return state
+            .deleteIn(['viewItems', action.compId])
+            .delete('editingItem').merge({
             multiDialogOpen: false
         });
     },
@@ -747,7 +750,6 @@ export default handleActions({
     [DELETE_DEPT_SUCCESS]: (state, action) => {
         const newState = commonHandleActions.handleDeleteSuccessAction(state, action, 'deptCd');
         return newState.deleteIn(['viewItems', action.compId, 'treeComp', 'activeListItem'])
-                    .deleteIn(['viewItems', action.compId, 'checkedDeptCd'])
                     .deleteIn(['viewItems', action.compId, 'treeComp', 'checked'])
                     .deleteIn(['viewItems', action.compId, 'informOpen'])
                     .deleteIn(['viewItems', action.compId, 'viewItem']);

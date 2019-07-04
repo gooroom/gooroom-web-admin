@@ -48,14 +48,17 @@ class UserSelectDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { isOpen, compId } = this.props;
+        const { isOpen, compId, DeptProps } = this.props;
         const { t, i18n } = this.props;
 
-        let checkedDeptCd = getDataObjectVariableInComp(this.props.DeptProps, compId, 'checkedDeptCd');
+        const checkedDeptCd = DeptProps.getIn(['viewItems', compId, 'treeComp', 'checked']);
+
         let deptNm = '';
-        if(checkedDeptCd && checkedDeptCd.size > 0) {
-            const selectedDeptCd = checkedDeptCd.get(0);
-            deptNm = this.props.DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === selectedDeptCd)).get('title');
+        if(checkedDeptCd && checkedDeptCd.length > 0) {
+            const selectedItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedDeptCd[0]));
+            if(selectedItem) {
+                deptNm = selectedItem.get('title');
+            }
         }
 
         return (

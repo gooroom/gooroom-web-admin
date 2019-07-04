@@ -30,7 +30,8 @@ class ClientGroupMultiRuleDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.ClientGroupActions.closeMultiDialog();
+        const { ClientGroupActions, compId } = this.props;
+        ClientGroupActions.closeMultiDialog({ compId: `${compId}_MRDIALOG` });
     }
 
     handleValueChange = name => event => {
@@ -44,19 +45,16 @@ class ClientGroupMultiRuleDialog extends Component {
     handleCheckedClientGroup = (checked, imperfect) => {
         // Check selectedDeptCd
         const { ClientGroupActions, compId } = this.props;
-        ClientGroupActions.changeCompVariableObject({
-            compId: compId,
-            valueObj: {checkedGrpId: checked}
-        });
+        ClientGroupActions.changeTreeDataVariable({ compId: `${compId}_MRDIALOG`, name: 'checked', value: checked });
     }
 
     handleEditData = (event) => {
         const { ClientGroupProps, GRConfirmActions, compId } = this.props;
         const { t, i18n } = this.props;
 
-        const checkedGrpId = ClientGroupProps.getIn(['viewItems', compId, 'checkedGrpId']);
-
-        if(checkedGrpId && checkedGrpId.size > 0) {
+        const checkedGrpId = ClientGroupProps.getIn(['viewItems', `${compId}_MRDIALOG`, 'treeComp', 'checked']);
+        
+        if(checkedGrpId && checkedGrpId.length > 0) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("ttChangMultiDeptRule"),
                 confirmMsg: t("msgChangeDeptRuleSelected"),
@@ -110,7 +108,7 @@ class ClientGroupMultiRuleDialog extends Component {
                             <Grid item xs={4}>
                                 <GRTreeClientGroupList
                                     listHeight='24px'
-                                    compId={compId+'_MRDIALOG'}
+                                    compId={`${compId}_MRDIALOG`}
                                     hasSelectChild={false}
                                     hasSelectParent={false}
                                     isEnableEdit={false}
