@@ -397,16 +397,16 @@ export default {
   "dtCancelJob": "작업 취소",
   "msgCancelJob": "작업대상 단말중 '작업전' 상태 단말의 작업을 취소하시겠습니까?",
 
-  // 단말정책설정
-  "lbClientConf": "단말정책",
+  // 에이전트설정
+  "lbClientConf": "에이전트설정",
   "lbClientSetup": "에이전트설정",
-  "dtAddClientConf": "단말정책설정 등록",
-  "msgAddClientConf": "단말정책설정를 등록하시겠습니까?",
-  "dtEditClientConf": "단말정책설정 수정",
-  "msgEditClientConf": "단말정책설정를 수정하시겠습니까?",
-  "dtCopyClientConf": "단말정책설정 복사",
-  "msgCopyClientConf": "단말정책설정를 복사하였습니다.",
-  "dtViewClientConf": "단말정책설정 정보",
+  "dtAddClientConf": "에이전트설정 등록",
+  "msgAddClientConf": "에이전트설정를 등록하시겠습니까?",
+  "dtEditClientConf": "에이전트설정 수정",
+  "msgEditClientConf": "에이전트설정를 수정하시겠습니까?",
+  "dtCopyClientConf": "에이전트설정 복사",
+  "msgCopyClientConf": "에이전트설정를 복사하였습니다.",
+  "dtViewClientConf": "에이전트설정 정보",
   "dtOSProtect": "운영체제보호",
   "dtInitHomeFolder": "홈폴더 초기화",
   "dtTrustedBoot": "신뢰부팅",
@@ -910,9 +910,9 @@ export default {
   "msgSelectParentGroup": "상위단말그룹을 선택하세요.",
   "ttChangMultiGroupRule": "단말그룹정책 일괄변경",
 
-  "dtInheritClientConf": "단말정책설정 상속",
-  "msgInheritClientConf": "단말정책설정을 상속하시겠습니까?",
-  "msgApplyClientConfChild": "단말정책설정이 하위 그룹에 적용되었습니다.",
+  "dtInheritClientConf": "에이전트설정 상속",
+  "msgInheritClientConf": "에이전트설정을 상속하시겠습니까?",
+  "msgApplyClientConfChild": "에이전트설정이 하위 그룹에 적용되었습니다.",
 
   "dtInheritHosts": "Hosts 정보 상속",
   "msgInheritHosts": "Hosts 정보를 상속하시겠습니까?",
