@@ -302,20 +302,13 @@ export const editClientGroupData = (param) => dispatch => {
         (response) => {
             try {
                 if(response && response.data) {
-                    if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                        requestPostAPI('readClientGroupData', {'groupId': param.groupId}).then(
-                            (response) => {
-                                dispatch({
-                                    type: EDIT_CLIENTGROUP_SUCCESS,
-                                    grpId: param.groupId,
-                                    response: response
-                                });
-                            }
-                        ).catch(error => {
-                            dispatch({ type: COMMON_FAILURE, error: error });
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: EDIT_CLIENTGROUP_SUCCESS,
+                            response: response
                         });
                     } else {
-                        dispatch({ type: COMMON_FAILURE, error: error });
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
                     }
                     return response.data;
                 }
@@ -355,15 +348,17 @@ export const deleteSelectedClientGroupData = (param) => dispatch => {
     }).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
-                    dispatch({
-                        type: DELETE_CLIENTGROUP_SUCCESS,
-                        compId: param.compId,
-                        grpId: param.grpId
-                    });
-                    return response.data;
-                } else {
-                    dispatch({ type: COMMON_FAILURE, error: response.data });
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: DELETE_CLIENTGROUP_SUCCESS,
+                            compId: param.compId,
+                            grpId: param.grpId
+                        });
+                        
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
                     return response.data;
                 }
             } catch(error) {

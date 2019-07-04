@@ -326,20 +326,13 @@ export const editDeptInfo = (param) => dispatch => {
         (response) => {
             try {
                 if(response && response.data) {
-                    if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                        requestPostAPI('readDeptData', {'deptCd': param.deptCd}).then(
-                            (response) => {
-                                dispatch({
-                                    type: EDIT_DEPT_SUCCESS,
-                                    objId: param.objId,
-                                    response: response
-                                });
-                            }
-                        ).catch(error => {
-                            dispatch({ type: COMMON_FAILURE, error: error });
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: EDIT_CLIENTGROUP_SUCCESS,
+                            response: response
                         });
                     } else {
-                        dispatch({ type: COMMON_FAILURE, error: error });
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
                     }
                     return response.data;
                 }
@@ -379,15 +372,17 @@ export const deleteSelectedDeptData = (param) => dispatch => {
     }).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
-                    dispatch({
-                        type: DELETE_DEPT_SUCCESS,
-                        compId: param.compId,
-                        grpId: param.grpId
-                    });
-                    return response.data;
-                } else {
-                    dispatch({ type: COMMON_FAILURE, error: response.data });
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: DELETE_DEPT_SUCCESS,
+                            compId: param.compId,
+                            grpId: param.grpId
+                        });
+                        return response.data;
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
                     return response.data;
                 }
             } catch(error) {

@@ -87,9 +87,9 @@ class ClientGroupDialog extends Component {
                                 });
                             }
                             if(res.status && res.status && res.status.result === 'success') {
-                                // tree refresh
-                                const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                                resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
+                                // tree refresh for create
+                                const index = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).findIndex(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
+                                resetCallback(index);
                                 this.handleClose();
                             }
                         }).catch((err) => {
@@ -146,7 +146,7 @@ class ClientGroupDialog extends Component {
                                 });
                             }
                             if(res.status && res.status && res.status.result === 'success') {
-                                // tree refresh
+                                // tree refresh for edit
                                 const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
                                 resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
                                 this.handleClose();

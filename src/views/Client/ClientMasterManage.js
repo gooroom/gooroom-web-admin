@@ -250,39 +250,12 @@ class ClientMasterManage extends Component {
               }).then((reData) => {
 
                 // get parent index
-                // const grpIds = checkedGrpId.toArray();
-                const treeData = ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData'])
-                const parentIndexList = checkedGrpId.map(e => {
-                  const treeItem = treeData.find(function(item) {
-                    return e === item.get('key');
-                  });
-                  return treeItem.get('parentIndex');
-                }).sort().reverse();
-
-                const uniqueParentIndexList = [...new Set(parentIndexList.toJS())];
-                if(uniqueParentIndexList.length > 0) {
-                  uniqueParentIndexList.forEach(e => {
-                    this.handleResetTreeForDelete(e);
-                  });
-                }
-
+                // NEED LOGIC UPGRADE FOR REFRESH TREE ~!!!!!!!
+                this.handleResetTreeForDelete();
                 // show client list in group.
                 ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
                   groupId: [], page:0
                 }, {isResetSelect:true});
-
-                
-                // ClientGroupActions.changeCompVariableObject({
-                //   compId: this.state.compId,
-                //   valueObj: {checkedGrpId: []}
-                // });
-
-                // ClientGroupActions.changeTreeDataVariable({
-                //   compId: this.state.compId, 
-                //   name: 'checked', 
-                //   value: []
-                // });
-
               });
             }
           }
