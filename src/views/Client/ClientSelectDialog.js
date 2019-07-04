@@ -54,18 +54,21 @@ class ClientSelectDialog extends Component {
     
     render() {
         const { classes } = this.props;
-        const { isOpen, compId } = this.props;
+        const { isOpen, compId, ClientGroupProps } = this.props;
         const { t, i18n } = this.props;
 
         if(!isOpen) {
             return (<React.Fragment></React.Fragment>);
         }
 
-        let checkedGrpId = getDataObjectVariableInComp(this.props.ClientGroupProps, compId, 'checkedGrpId');
+        const checkedGrpId = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'checked']);
+
         let selectedGrpNm = '';
-        if(checkedGrpId && checkedGrpId.size > 0) {
-            const selectedGrpId = checkedGrpId.get(0);
-            selectedGrpNm = this.props.ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === selectedGrpId)).get('title');
+        if(checkedGrpId && checkedGrpId.length > 0) {
+            const selectedItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedGrpId[0]));
+            if(selectedItem) {
+                selectedGrpNm = selectedItem.get('title');
+            }
         }
 
         return (

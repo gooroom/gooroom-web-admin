@@ -186,10 +186,13 @@ class ClientGroupDialog extends Component {
             title = t("dtEditGroup");
         }
 
-        let checkedGrpId = getDataObjectVariableInComp(this.props.ClientGroupProps, compId, 'checkedGrpId');
+        const checkedGrpId = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'checked']);
         let upperGroupInfo = '';
-        if(checkedGrpId != undefined && checkedGrpId.size > 0) {
-            upperGroupInfo = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedGrpId.get(0))).get('title') + ' (' + checkedGrpId.get(0) + ')';
+        if(checkedGrpId !== undefined && checkedGrpId.length > 0) {
+            const upperItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedGrpId[0]));
+            if(upperItem) {
+                upperGroupInfo = `${upperItem.get('title')} (${checkedGrpId[0]})`;
+            }
         }
 
         return (

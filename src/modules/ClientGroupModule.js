@@ -76,9 +76,10 @@ export const showMultiDialog = (param) => dispatch => {
     });
 };
 
-export const closeMultiDialog = () => dispatch => {
+export const closeMultiDialog = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_GROUPRULE_DIALOG
+        type: CLOSE_GROUPRULE_DIALOG,
+        compId: param.compId
     });
 };
 
@@ -674,7 +675,9 @@ export default handleActions({
         });
     },
     [CLOSE_GROUPRULE_DIALOG]: (state, action) => {
-        return state.delete('editingItem').merge({
+        return state
+            .deleteIn(['viewItems', action.compId])
+            .delete('editingItem').merge({
             multiDialogOpen: false
         });
     },
@@ -726,7 +729,6 @@ export default handleActions({
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
         const newState = commonHandleActions.handleDeleteSuccessAction(state, action, 'grpId');
         return newState.deleteIn(['viewItems', action.compId, 'treeComp', 'activeListItem'])
-                    .deleteIn(['viewItems', action.compId, 'checkedGrpId'])
                     .deleteIn(['viewItems', action.compId, 'treeComp', 'checked'])
                     .deleteIn(['viewItems', action.compId, 'informOpen'])
                     .deleteIn(['viewItems', action.compId, 'viewItem']);

@@ -176,10 +176,13 @@ class DeptDialog extends Component {
             editObject = DeptProps.get('editingItem').toJS();
         }
 
-        let checkedDeptCd = getDataObjectVariableInComp(DeptProps, compId, 'checkedDeptCd');
+        const checkedDeptCd = DeptProps.getIn(['viewItems', compId, 'treeComp', 'checked']);
         let upperDeptInfo = '';
-        if(checkedDeptCd != undefined && checkedDeptCd.size > 0) {
-            upperDeptInfo = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedDeptCd.get(0))).get('title') + ' (' + checkedDeptCd.get(0) + ')';
+        if(checkedDeptCd !== undefined && checkedDeptCd.length > 0) {
+            const upperItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedDeptCd[0]));
+            if(upperItem) {
+                upperDeptInfo = `${upperItem.get('title')} (${checkedDeptCd[0]})`;
+            }
         }
     
         return (
