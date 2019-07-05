@@ -328,7 +328,7 @@ export const editDeptInfo = (param) => dispatch => {
                 if(response && response.data) {
                     if(response.data.status && response.data.status.result === 'success') {
                         dispatch({
-                            type: EDIT_CLIENTGROUP_SUCCESS,
+                            type: EDIT_DEPT_SUCCESS,
                             response: response
                         });
                     } else {
@@ -442,13 +442,21 @@ export const editMultiDeptRule = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateRuleForDepts', makeParameter(param)).then(
         (response) => {
-            if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                dispatch({
-                    type: EDIT_DEPT_SUCCESS,
-                    response: response
-                });
-            } else {
+            try {
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: EDIT_DEPT_SUCCESS,
+                            response: response
+                        });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
+                    return response.data;
+                }
+            } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
