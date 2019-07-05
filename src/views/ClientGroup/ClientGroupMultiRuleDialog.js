@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import * as GlobalActions from 'modules/GlobalModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientRuleSelector from 'components/GROptions/ClientRuleSelector';
@@ -80,6 +81,12 @@ class ClientGroupMultiRuleDialog extends Component {
                             // ClientGroupActions.readDeptListPaged(ClientGroupProps, compId);
                             // tree refresh
                             // resetCallback(ClientGroupProps.getIn(['editingItem', 'grpId']));
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
                             this.handleClose();
                         });
                     }
@@ -152,7 +159,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     GlobalActions: bindActionCreators(GlobalActions, dispatch),
     ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupMultiRuleDialog)));

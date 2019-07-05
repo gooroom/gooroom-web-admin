@@ -8,6 +8,7 @@ import * as GlobalActions from 'modules/GlobalModule';
 import * as DeptActions from 'modules/DeptModule';
 import * as UserActions from 'modules/UserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import * as TotalRuleActions from 'modules/TotalRuleModule';
 
@@ -166,6 +167,7 @@ class UserMasterManage extends Component {
     if(checkedDept !== undefined) {
       this.props.DeptActions.showDialog({
         viewItem: {
+          parentDeptCd: checkedDept.get('key'),
           deptCd: '',
           deptNm: '',
         },
@@ -291,6 +293,14 @@ class UserMasterManage extends Component {
                 deptCd: paramObject.selectedDeptCd,
                 users: paramObject.checkedUserIds.join(',')
             }).then((res) => {
+              
+              if(res.status && res.status && res.status.message) {
+                this.props.GRAlertActions.showAlert({
+                  alertTitle: t("dtSystemNotice"),
+                  alertMsg: res.status.message
+                });
+              }
+
               if(res && res.status && res.status.result === 'success') {
                 // change dept node info as user count
                 this.handleResetTreeForEdit();
@@ -359,19 +369,6 @@ class UserMasterManage extends Component {
     this.setState({
       isOpenDeptSelect: false
     })
-  }
-
-  handleResetDeptTree = (listItem) => {
-    const compId = this.state.compId;
-    const { DeptProps, DeptActions } = this.props;
-
-    // changed dept - re-select parentId of deptCd
-    if(listItem.get('parentIndex') !== undefined) {
-      const parentListItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData', listItem.get('parentIndex')]);
-      DeptActions.readChildrenDeptList(compId, parentListItem.get('key'), listItem.get('parentIndex'));
-    } else {
-      DeptActions.readChildrenDeptList(compId, 0, undefined);
-    }
   }
 
   handleResetTreeForEdit = (index) => {
@@ -515,7 +512,7 @@ class UserMasterManage extends Component {
         <UserDialog compId={compId} />
         <UserBasicDialog compId={compId} />
 
-        <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
+        <DeptDialog compId={compId} resetCallback={this.handleResetTreeForEdit} />
         <DeptMultiDialog compId={compId} />
         
         <UserSelectDialog isOpen={this.state.isOpenUserSelect}
@@ -557,7 +554,8 @@ const mapDispatchToProps = (dispatch) => ({
   DeptActions: bindActionCreators(DeptActions, dispatch),
   UserActions: bindActionCreators(UserActions, dispatch),
 
-  TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch)
+  TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch),
+  GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserMasterManage)));

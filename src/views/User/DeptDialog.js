@@ -81,7 +81,7 @@ class DeptDialog extends Component {
                             }
                             if(res.status && res.status && res.status.result === 'success') {
                                 // tree refresh
-                                const index = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).findIndex(n => (n.get('key') === DeptProps.getIn(['editingItem', 'deptCd'])));
+                                const index = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).findIndex(n => (n.get('key') === DeptProps.getIn(['editingItem', 'parentDeptCd'])));
                                 resetCallback(index);
                                 this.handleClose();
                             }

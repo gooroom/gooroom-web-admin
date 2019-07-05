@@ -3,8 +3,10 @@ import React, { Component } from "react";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import * as GlobalActions from 'modules/GlobalModule';
 import * as DeptActions from 'modules/DeptModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import UserRuleSelector from 'components/GROptions/UserRuleSelector';
@@ -74,6 +76,12 @@ class DeptMultiDialog extends Component {
                             // DeptActions.readDeptListPaged(DeptProps, compId);
                             // tree refresh
                             // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
                             this.handleClose();
                         });
                     }
@@ -140,8 +148,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+    GlobalActions: bindActionCreators(GlobalActions, dispatch),
     DeptActions: bindActionCreators(DeptActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptMultiDialog)));
