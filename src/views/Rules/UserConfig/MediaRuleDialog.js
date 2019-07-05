@@ -263,7 +263,7 @@ class MediaRuleDialog extends Component {
                     {(dialogType === MediaRuleDialog.TYPE_EDIT || dialogType === MediaRuleDialog.TYPE_ADD) &&
                         <div>
                         <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={3}>
+                            <Grid item xs={4}>
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('cdAndDvd')} 
                                         checked={this.checkAllow(editingItem.get('cdAndDvd'))}
@@ -271,7 +271,7 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('cdAndDvd') == 'allow') ? t("selCdDvdOn") : t("selCdDvdOff")}
                                 />
                             </Grid>
-                            <Grid item xs={3} >
+                            <Grid item xs={4} >
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('printer')} 
                                         checked={this.checkAllow(editingItem.get('printer'))}
@@ -279,7 +279,7 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('printer') == 'allow') ? t("selPrinterOn") : t("selPrinterOff")}
                                 />
                             </Grid>
-                            <Grid item xs={3} >
+                            <Grid item xs={4} >
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('camera')} 
                                         checked={this.checkAllow(editingItem.get('camera'))}
@@ -289,15 +289,7 @@ class MediaRuleDialog extends Component {
                             </Grid>
                         </Grid>
                         <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={3}>
-                                <FormControlLabel style={{heigth:32}}
-                                    control={<Switch onChange={this.handleValueChange('sound')} 
-                                        checked={this.checkAllow(editingItem.get('sound'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('sound') == 'allow') ? t("selSoundOn") : t("selSoundOff")}
-                                />
-                            </Grid>
-                            <Grid item xs={3} >
+                            <Grid item xs={4} >
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('wireless')} 
                                         checked={this.checkAllow(editingItem.get('wireless'))}
@@ -305,7 +297,33 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('wireless') == 'allow') ? t("selWifiOn") : t("selWifiOff")}
                                 />
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item xs={4}>
+                                <FormControlLabel style={{heigth:32}}
+                                    control={<Switch onChange={this.handleValueChange('sound')} 
+                                        checked={this.checkAllow(editingItem.get('sound'))}
+                                        color="primary" />}
+                                    label={(editingItem.get('sound') == 'allow') ? t("selSoundOn") : t("selSoundOff")}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControlLabel style={{heigth:32}}
+                                    control={<Switch onChange={this.handleValueChange('microphone')} 
+                                        checked={this.checkAllow(editingItem.get('microphone'))}
+                                        color="primary" />}
+                                    label={(editingItem.get('microphone') == 'allow') ? t("selMicrophoneOn") : t("selMicrophoneOff")}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container alignItems="center" direction="row" justify="space-between" >
+                            <Grid item xs={4}>
+                                <FormControlLabel style={{heigth:32}}
+                                    control={<Switch onChange={this.handleValueChange('screenCapture')} 
+                                        checked={this.checkAllow(editingItem.get('screenCapture'))}
+                                        color="primary" />}
+                                    label={(editingItem.get('screenCapture') == 'allow') ? t("selScreenCaptureOn") : t("selScreenCaptureOff")}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('keyboard')} 
                                         checked={this.checkAllow(editingItem.get('keyboard'))}
@@ -313,7 +331,7 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('keyboard') == 'allow') ? t("selUsbKeyboardOn") : t("selUsbKeyboardOff")}
                                 />
                             </Grid>
-                            <Grid item xs={3} >
+                            <Grid item xs={4} >
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('mouse')} 
                                         checked={this.checkAllow(editingItem.get('mouse'))}

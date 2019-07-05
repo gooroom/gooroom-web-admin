@@ -120,6 +120,8 @@ class MediaRuleManage extends Component {
         usbMemory: 'allow',
         keyboard: 'allow',
         sound: 'allow',
+        microphone: 'allow',
+        screenCapture: 'allow',
         printer: 'allow',
         wireless: 'allow'
       }),

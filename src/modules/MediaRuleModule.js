@@ -251,6 +251,8 @@ const makeParameter = (param) => {
         printer: (param.get('printer') == 'allow') ? 'allow' : 'disallow',
         camera: (param.get('camera') == 'allow') ? 'allow' : 'disallow',
         sound: (param.get('sound') == 'allow') ? 'allow' : 'disallow',
+        microphone: (param.get('microphone') == 'allow') ? 'allow' : 'disallow',
+        screen_capture: (param.get('screenCapture') == 'allow') ? 'allow' : 'disallow',
         keyboard: (param.get('keyboard') == 'allow') ? 'allow' : 'disallow',
         mouse: (param.get('mouse') == 'allow') ? 'allow' : 'disallow',
         wireless: (param.get('wireless') == 'allow') ? 'allow' : 'disallow',
