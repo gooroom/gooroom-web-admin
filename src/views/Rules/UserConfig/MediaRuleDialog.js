@@ -340,6 +340,18 @@ class MediaRuleDialog extends Component {
                                 />
                             </Grid>
                         </Grid>
+                        <Grid container alignItems="center" direction="row" justify="space-between" >
+                            <Grid item xs={4}>
+                                <FormControlLabel style={{heigth:32}}
+                                    control={<Switch onChange={this.handleValueChange('clipboard')} 
+                                        checked={this.checkAllow(editingItem.get('clipboard'))}
+                                        color="primary" />}
+                                    label={(editingItem.get('clipboard') == 'allow') ? t("selClipboardOn") : t("selClipboardOff")}
+                                />
+                            </Grid>
+                            <Grid item xs={8}>
+                            </Grid>
+                        </Grid>
                         <Grid container alignItems="flex-start" direction="row" justify="space-between" >
                             <Grid item xs={6}>
                                 <FormControlLabel

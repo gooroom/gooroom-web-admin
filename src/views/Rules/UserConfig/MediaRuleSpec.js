@@ -102,6 +102,10 @@ class MediaRuleSpec extends Component {
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbMouse")}</Grid>
                 <Grid item xs={1} className={classes.specContent}>{viewItem.get('mouse')}</Grid>
 
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtClipboard")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('clipboard')}</Grid>
+                <Grid item xs={8}></Grid>
+
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbMemory")}</Grid>
                 <Grid item xs={1} className={classes.specContent}>{viewItem.get('usbMemory')}</Grid>
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbSerial")}</Grid>
@@ -143,6 +147,7 @@ export const generateMediaRuleObject = (param, isForViewer) => {
     let sound = '';
     let microphone = '';
     let screenCapture = '';
+    let clipboard = '';
     let keyboard = '';
     let mouse = '';
     let macAddress = [];
@@ -165,8 +170,10 @@ export const generateMediaRuleObject = (param, isForViewer) => {
         sound = evalue;
       } else if(ename == 'microphone') {
         microphone = evalue;
-      } else if(ename == 'screen_capture') {
+      } else if(ename == 'screencapture') {
         screenCapture = evalue;
+      } else if(ename == 'clipboard') {
+        clipboard = evalue;
       } else if(ename == 'camera') {
         camera = evalue;
       } else if(ename == 'keyboard') {
@@ -197,6 +204,7 @@ export const generateMediaRuleObject = (param, isForViewer) => {
       sound: sound,
       microphone: microphone,
       screenCapture: screenCapture,
+      clipboard: clipboard,
       camera: camera,
       keyboard: keyboard,
       mouse: mouse,
