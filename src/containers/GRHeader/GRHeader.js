@@ -69,7 +69,6 @@ class GRHeader extends Component {
               <MenuIcon />
             </IconButton>
             <div style={{flex: "1 1 auto"}}>
-              {window.gpmsain}
               <Button onClick={() => changeLanguage("kr")}>kr</Button>
               <Button onClick={() => changeLanguage("en")}>en</Button>
             </div>
