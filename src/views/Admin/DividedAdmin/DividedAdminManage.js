@@ -225,6 +225,12 @@ class DividedAdminManage extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+
+                  let isEditable = true;
+                  if(window.gpmsain !== Constants.SUPER_RULECODE && n.get('adminTp') !== Constants.PART_TYPECODE) {
+                    isEditable = false;
+                  }
+
                   return (
                     <TableRow
                       hover
@@ -248,14 +254,18 @@ class DividedAdminManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isDesktopAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isNoticeAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('adminId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isEditable && 
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleDeleteClick(event, n.get('adminId'))}>
                           <DeleteIcon />
                         </Button>
+                      }
                       </TableCell>
                     </TableRow>
                   );
