@@ -45,7 +45,7 @@ class DesktopConfDialog extends Component {
     static TYPE_COPY = 'COPY';
 
     componentDidMount() {
-        //this.props.DesktopConfActions.readThemeInfoList();
+        this.props.DesktopConfActions.readThemeInfoList();
     }
 
     handleClose = (event) => {
