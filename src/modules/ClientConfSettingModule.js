@@ -224,7 +224,6 @@ const makeParameter = (param) => {
         show_media: param.get('show_media'),
         show_agent: param.get('show_agent'),
 
-        USEHYPERVISOR: param.get('useHypervisor'),
         USEHOMERESET: param.get('useHomeReset'),
         WHITEIPALL: param.get('whiteIpAll'),
         WHITEIPS: (param.get('whiteIp')) ? param.get('whiteIp').toArray() : []
