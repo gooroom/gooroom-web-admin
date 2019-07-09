@@ -102,8 +102,10 @@ class GRHeader extends Component {
                         <MenuItem component={Link} to={'/system/siteconfig/GRM9901/menuSiteConfig'}>{t("menuSiteConfig")}</MenuItem>
                       }
                         <MenuItem component={Link} to={'/system/adminusermng/GRM9902/menuAdminUserMng'}>{t("menuAdminUserMng")}</MenuItem>
-                        <MenuItem component={Link} to={'/system/deptuserreg/GRM9903/menuDeptAndUser'}>{t("menuDeptAndUser")}</MenuItem>
-                      </MenuList>
+                        {(window.gpmsain === Constants.ADMIN_RULECODE || (window.gpmsain === Constants.PART_RULECODE && window.roleUserAdmin === 1)) && 
+                          <MenuItem component={Link} to={'/system/deptuserreg/GRM9903/menuDeptAndUser'}>{t("menuDeptAndUser")}</MenuItem>
+                        }
+                        </MenuList>
                     </ClickAwayListener>
                   </Paper>
                 </Grow>
