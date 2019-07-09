@@ -282,18 +282,6 @@ class ClientConfSettingDialog extends Component {
                         <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'0 0 8 0'}}>
                             <Grid item xs={6}>
                                 <div style={{marginTop:"10px"}}>
-                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtOSProtect")}</FormLabel>
-                                    <FormControlLabel
-                                        control={
-                                        <Switch onChange={this.handleValueChange('useHypervisor')} color="primary"
-                                            checked={(editingItem.get('useHypervisor')) ? editingItem.get('useHypervisor') : false} />
-                                        }
-                                        label={(editingItem.get('useHypervisor')) ? t("selRun") : t("selStop")}
-                                    />
-                                </div>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <div style={{marginTop:"10px"}}>
                                     <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtInitHomeFolder")}</FormLabel>
                                     <FormControlLabel
                                         control={
@@ -304,6 +292,7 @@ class ClientConfSettingDialog extends Component {
                                     />
                                 </div>
                             </Grid>
+                            <Grid item xs={6}></Grid>
                         </Grid>
                         <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <div style={{margin:'8 0 32 0'}}>

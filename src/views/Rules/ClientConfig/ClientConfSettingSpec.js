@@ -89,10 +89,9 @@ class ClientConfSettingSpec extends Component {
             </Grid>
             }
             <Grid container spacing={0}>
-              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtOSProtect")}</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHypervisor')) ? t("selRun") : t("selStop")}</Grid>
               <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtInitHomeFolder")}</Grid>
               <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHomeReset')) ? t("selExecute") : t("selStop")}</Grid>
+              <Grid item xs={6}></Grid>
               <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtSetupConnectableIp")}</Grid>
               <Grid item xs={3} className={classes.specContent}>
               {viewItem.get('whiteIp').map(function(prop, index) {
@@ -236,7 +235,6 @@ export const convertLogLevelNo = (param) => {
 export const generateClientConfSettingObject = (param, isForViewer, t) => {
 
   if(param) {
-    let useHypervisor = false;
     let useHomeReset = false;
     let whiteIpAll = false;
     let whiteIps = [];
@@ -275,9 +273,7 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       const ename = e.get('propNm');
       const evalue = e.get('propValue');
       
-      if(ename == 'USEHYPERVISOR') {
-        useHypervisor = (evalue == "true");
-      } else if(ename == 'USEHOMERESET') {
+      if(ename == 'USEHOMERESET') {
         useHomeReset = (evalue == "true");
       } else if(ename == 'WHITEIPALL') {
         whiteIpAll = (evalue == "true");
@@ -341,7 +337,6 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       objNm: param.get('objNm'),
       comment: param.get('comment'),
       modDate: param.get('modDate'),
-      useHypervisor: useHypervisor,
       useHomeReset: useHomeReset,
       whiteIpAll: whiteIpAll,
       whiteIp: List(whiteIps),
