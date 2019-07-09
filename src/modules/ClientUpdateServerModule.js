@@ -196,7 +196,7 @@ const makeParameter = (itemObj) => {
         objId: itemObj.get('objId'),
         objName: itemObj.get('objNm'),
         objComment: itemObj.get('comment'),
-        adminType: param.get('adminType'),
+        adminType: itemObj.get('adminType'),
         
         MAINOS: itemObj.get('mainos'),
         EXTOS: itemObj.get('extos'),
