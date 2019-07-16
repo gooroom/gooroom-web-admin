@@ -497,7 +497,6 @@ export default handleActions({
                     children: (x.hasChildren) ? [] : null,
                     regDate: x.regDt,
                     modDate: x.modDt,
-                    comment: x.comment,
                     itemCount: x.itemCount,
                     itemTotalCount: x.itemTotalCount,
                     _shouldRender: true
@@ -565,7 +564,6 @@ export default handleActions({
                 } else {
                     // root node
                     return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', 0], {
-                        comment: resData.getIn([0, 'comment']),
                         modDate: resData.getIn([0, 'modDate']),
                         regDate: resData.getIn([0, 'regDate']),
                         title: resData.getIn([0, 'title'])
@@ -641,8 +639,7 @@ export default handleActions({
                 itemCount: data[0].itemCount,
                 itemTotalCount: data[0].itemTotalCount,
                 modDate: data[0].modDate,
-                deptNm: data[0].deptNm,
-                comment: data[0].comment
+                deptNm: data[0].deptNm
             }));
         } else  {
             return state;
@@ -662,8 +659,7 @@ export default handleActions({
                     itemTotalCount: data[i].itemTotalCount,
                     modDate: data[i].modDate,
                     deptNm: data[i].deptNm,
-                    title: data[i].deptNm,
-                    comment: data[i].comment
+                    title: data[i].deptNm
                 }));
             }
             return newState;

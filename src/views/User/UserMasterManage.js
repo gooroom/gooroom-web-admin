@@ -376,14 +376,15 @@ class UserMasterManage extends Component {
     this.props.DeptActions.getDeptNodeList({
       deptCds: this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData']).map(e => (e.get('key'))).toJS(),
       compId: this.state.compId
+    }).then(() => {
+      if(index !== undefined) {
+        const parentListItem = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
+        this.props.DeptActions.readChildrenDeptList(this.state.compId, parentListItem.get('key'), index);
+      } else {
+        this.props.DeptActions.readChildrenDeptList(this.state.compId, 'DEPTDEFAULT', 0);
+      }
     });
 
-    if(index !== undefined) {
-      const parentListItem = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
-      this.props.DeptActions.readChildrenDeptList(this.state.compId, parentListItem.get('key'), index);
-    } else {
-      this.props.DeptActions.readChildrenDeptList(this.state.compId, 'DEPTDEFAULT', 0);
-    }
   }
 
   handleResetTreeForDelete = (index) => {

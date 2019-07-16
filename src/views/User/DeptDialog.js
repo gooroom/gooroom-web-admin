@@ -65,7 +65,7 @@ class DeptDialog extends Component {
                         DeptActions.createDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                             deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-                            uprDeptCd: DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']),
+                            uprDeptCd: DeptProps.getIn(['editingItem', 'parentDeptCd']),
             
                             browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                             mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),

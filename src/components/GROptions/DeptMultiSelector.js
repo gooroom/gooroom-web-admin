@@ -3,12 +3,9 @@ import { Map, List as GRIMTList } from 'immutable';
 
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import clsx from 'clsx';
-import TableCell from '@material-ui/core/TableCell';
-
 import GRExtendedTreeList from "components/GRTree/GRExtendedTreeList";
 
-import UserListForSelectByDept from 'views/User/UserListForSelectByDept';
-
+import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -76,10 +73,12 @@ class MuiVirtualizedTable extends React.PureComponent {
                 <TableCell component="div" variant="body"
                     className={clsx(classes.tableCell, classes.flexContainer)}
                     style={{ height: rowHeight }}>
+                    {(param.rowData.value !== 'DEPTDEFAULT') && 
                     <Button size="small" color="primary" className={classes.buttonInTableRow}
                         onClick={() => onHandleClickDelete(param.rowData.value)}>
                         <DeleteIcon />
                     </Button>
+                    }
                 </TableCell>
             );
 
@@ -238,7 +237,6 @@ class DeptMultiSelector extends Component {
                                     columns={[
                                         { width: 160, label: '이름', dataKey: 'name' },
                                         { width: 120, label: '아이디', dataKey: 'value' },
-                                        { width: 120, label: '상속여부', dataKey: 'isInheritCheck' },
                                         { width: 120, label: '삭제', dataKey: 'deleteBtn' },
                                     ]}
                                 />

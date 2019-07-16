@@ -394,14 +394,15 @@ class ClientMasterManage extends Component {
     this.props.ClientGroupActions.getClientGroupNodeList({
       groupIds: this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData']).map(e => (e.get('key'))).toJS(),
       compId: this.state.compId
+    }).then(() => {
+      if(index !== undefined) {
+        const parentListItem = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
+        this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, parentListItem.get('key'), index);
+      } else {
+        this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, 'CGRPDEFAULT', 0);
+      }
     });
 
-    if(index !== undefined) {
-      const parentListItem = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
-      this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, parentListItem.get('key'), index);
-    } else {
-      this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, 'CGRPDEFAULT', 0);
-    }
   }
 
   handleResetTreeForDelete = (index) => {

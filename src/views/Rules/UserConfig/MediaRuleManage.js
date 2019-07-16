@@ -122,6 +122,7 @@ class MediaRuleManage extends Component {
         sound: 'allow',
         microphone: 'allow',
         screenCapture: 'allow',
+        clipboard: 'allow',
         printer: 'allow',
         wireless: 'allow'
       }),
