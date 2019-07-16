@@ -3,25 +3,11 @@ import { Map, List as GRIMTList } from 'immutable';
 
 import { AutoSizer, Column, Table } from 'react-virtualized';
 import clsx from 'clsx';
-
-import TableCell from '@material-ui/core/TableCell';
-
 import GRExtendedTreeList from 'components/GRTree/GRExtendedTreeList';
 
-import ClientListForSelectByGroup from 'views/Client/ClientListForSelectByGroup';
-
+import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import FolderIcon from '@material-ui/icons/Folder';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -88,10 +74,12 @@ class MuiVirtualizedTable extends React.PureComponent {
         <TableCell component="div" variant="body" 
           className={clsx(classes.tableCell, classes.flexContainer)}
           style={{ height: rowHeight }}>
+          {(param.rowData.value !== 'CGRPDEFAULT') && 
           <Button size="small" color="primary" className={classes.buttonInTableRow} 
             onClick={() => onHandleClickDelete(param.rowData.value)}>
             <DeleteIcon />
           </Button>
+          }
         </TableCell>
       );
 
@@ -253,7 +241,6 @@ class GroupMultiSelector extends Component {
                   columns={[
                     { width: 160, label: '이름', dataKey: 'name' },
                     { width: 120, label: '아이디', dataKey: 'value' },
-                    { width: 120, label: '상속여부', dataKey: 'isInheritCheck' },
                     { width: 120, label: '삭제', dataKey: 'deleteBtn' },
                   ]}
                 />
