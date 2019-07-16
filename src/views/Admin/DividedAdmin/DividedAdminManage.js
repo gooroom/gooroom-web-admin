@@ -17,6 +17,7 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import DividedAdminManageDialog from './DividedAdminManageDialog';
+import DividedAdminHistDialog from './DividedAdminHistDialog';
 import DividedAdminManageSpec from './DividedAdminManageSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -24,12 +25,9 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
@@ -38,7 +36,7 @@ import CheckIcon from '@material-ui/icons/CheckCircleTwoTone';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ListIcon from '@material-ui/icons/List';
+import HistoryIcon from '@material-ui/icons/Assignment';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -148,6 +146,15 @@ class DividedAdminManage extends Component {
       }
     });
   };
+  
+  // show adming action history
+  handleHistoryClick = (event, adminId) => {
+    const { AdminUserProps, AdminUserActions } = this.props;
+    const viewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, adminId, 'adminId');
+    AdminUserActions.showHistDialog({
+      viewItem: viewItem
+    });
+  };
 
   // .................................................
   handleKeywordChange = (name, value) => {
@@ -165,17 +172,18 @@ class DividedAdminManage extends Component {
     const compId = this.props.match.params.grMenuId;
 
     const columnHeaders = [
-      { id: 'ch1', isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
-      { id: 'ch2', isOrder: true, numeric: false, disablePadding: true, label: "이름" },
-      { id: 'ch200', isOrder: false, numeric: false, disablePadding: true, label: "타입" },
-      { id: 'ch201', isOrder: false, numeric: false, disablePadding: true, label: "상태" },
-      { id: 'ch101', isOrder: false, numeric: false, disablePadding: true, label: "대상조직" },
-      { id: 'ch102', isOrder: false, numeric: false, disablePadding: true, label: "대상단말그룹" },
-      { id: 'ch3', isOrder: false, numeric: false, disablePadding: true, label: "단말관리" },
-      { id: 'ch4', isOrder: false, numeric: false, disablePadding: true, label: "사용자관리" },
-      { id: 'ch6', isOrder: false, numeric: false, disablePadding: true, label: "데스크톱환경관리" },
-      { id: 'ch7', isOrder: false, numeric: false, disablePadding: true, label: "공지관리" },
-      { id: 'ch99', isOrder: false, numeric: false, disablePadding: true, label: "수정/삭제" },
+      { id: 'ch1', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'ch2', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
+      { id: 'ch200', isOrder: false, numeric: false, disablePadding: true, label: t("colType") },
+      { id: 'ch201', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'ch101', isOrder: false, numeric: false, disablePadding: true, label: t("colTargetDept") },
+      { id: 'ch102', isOrder: false, numeric: false, disablePadding: true, label: t("colTargetGroup") },
+      { id: 'ch3', isOrder: false, numeric: false, disablePadding: true, label: t("colMngClient") },
+      { id: 'ch4', isOrder: false, numeric: false, disablePadding: true, label: t("colMngUser") },
+      { id: 'ch6', isOrder: false, numeric: false, disablePadding: true, label: t("colMngDesktop") },
+      { id: 'ch7', isOrder: false, numeric: false, disablePadding: true, label: t("colMngNotify") },
+      { id: 'ch99', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
+      { id: 'ch90', isOrder: false, numeric: false, disablePadding: true, label: t("colActHistory") },
     ];
 
     const listObj = AdminUserProps.getIn(['viewItems', compId]);
@@ -199,14 +207,14 @@ class DividedAdminManage extends Component {
                 </Grid>
                 <Grid item xs={6} >
                   <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                    <Search />조회
+                    <Search />{t("btnSearch")}
                   </Button>
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={6} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-                <AddIcon />등록
+                <AddIcon />{t("btnRegist")}
               </Button>
             </Grid>
           </Grid>
@@ -267,6 +275,12 @@ class DividedAdminManage extends Component {
                         </Button>
                       }
                       </TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                        <Button size="small" color="secondary" className={classes.buttonInTableRow} 
+                          onClick={event => this.handleHistoryClick(event, n.get('adminId'))}>
+                          <HistoryIcon />
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -305,6 +319,7 @@ class DividedAdminManage extends Component {
         </GRPane>
         {/* dialog(popup) component area */}
         <DividedAdminManageDialog compId={compId} />
+        <DividedAdminHistDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>
     );

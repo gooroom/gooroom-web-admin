@@ -281,7 +281,6 @@ export const handleGetObjectActionForDesktopConf = (state, compId, data, extend,
 }
 
 export const handleShowDialogAction = (state, action) => {
-
     return state.merge({
         editingItem: action.viewItem,
         dialogOpen: true,

@@ -100,6 +100,22 @@ export default {
   "colContent": "내용",
   "colRegUserId": "생성 Admin",
 
+  "colType": "타입",
+  "colTargetDept": "대상조직",
+  "colTargetGroup": "대상단말그룹",
+  "colMngClient": "단말관리",
+  "colMngUser": "사용자관리",
+  "colMngDesktop": "데스크톱환경관리",
+  "colMngNotify": "공지관리",
+  "colActHistory": "사용이력",
+
+  "colLogNo": "로그번호",
+  "colLogDate": "로그날짜",
+  "colLogType": "로그타입",
+  "colAccessIp": "접속아이피",
+  "colLogItem": "로그아이템",
+  "colLogData": "로그정보",
+
   // options
   "optDate": "날짜",
   "searchStartDate": "조회시작일",
@@ -929,6 +945,8 @@ export default {
 
   "dtInheritUpdateServer": "업데이트서버정보 상속",
   "msgInheritUpdateServer": "업데이트서버정보를 상속하시겠습니까?",
-  "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다."
+  "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다.",
+
+  "lbAdminActHistory": "관리자 작업 이력"
   
 };
