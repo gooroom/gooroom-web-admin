@@ -100,6 +100,22 @@ export default {
   "colContent": "Content",
   "colRegUserId": "Created Admin",
 
+  "colType": "Type",
+  "colTargetDept": "Dept",
+  "colTargetGroup": "Group",
+  "colMngClient": "MngClient",
+  "colMngUser": "MngUser",
+  "colMngDesktop": "MngDesktop",
+  "colMngNotify": "MngNotify",
+  "colActHistory": "History",
+
+  "colLogNo": "LogNo",
+  "colLogDate": "LogDate",
+  "colLogType": "LogType",
+  "colAccessIp": "AccessIp",
+  "colLogItem": "LogItem",
+  "colLogData": "LogData",
+
   // options
   "optDate": "Date",
   "searchStartDate": "From-Date",
@@ -929,6 +945,8 @@ export default {
 
   "dtInheritUpdateServer": "Inherit update server information",
   "msgInheritUpdateServer": "Are you sure you want to inherit update server information?",
-  "msgApplyUpdateServerChild": "The update server information has been applied to the subgroup."
+  "msgApplyUpdateServerChild": "The update server information has been applied to the subgroup.",
+
+  "lbAdminActHistory": "Admin Action History"
 
 };
