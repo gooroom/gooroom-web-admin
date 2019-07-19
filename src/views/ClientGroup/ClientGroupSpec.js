@@ -19,6 +19,8 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { getAvatarExplainForGroup, getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
@@ -31,6 +33,7 @@ import BrowserRuleSpec, { generateBrowserRuleObject } from 'views/Rules/UserConf
 import MediaRuleSpec, { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleSpec, { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
 import SoftwareFilterSpec, { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import CtrlCenterItemSpec, { generateCtrlCenterItemObject } from 'views/Rules/UserConfig/CtrlCenterItemSpec';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import Grid from '@material-ui/core/Grid';
@@ -51,6 +54,7 @@ import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
 import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
+import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -146,6 +150,13 @@ class ClientGroupSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
+  handleClickEditForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: generateCtrlCenterItemObject(viewItem, false),
+      dialogType: CtrlCenterItemDialog.TYPE_EDIT
+    });
+  };
   handleClickEditForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -204,6 +215,13 @@ class ClientGroupSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_INHERIT_GROUP
     });
   };
+  handleClickInheritForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: viewItem,
+      dialogType: CtrlCenterItemDialog.TYPE_INHERIT_GROUP
+    });
+  };
   handleClickInheritForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -227,6 +245,7 @@ class ClientGroupSpec extends Component {
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'GROUP']);
+    const selectedCtrlCenterItem = this.props.CtrlCenterItemProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'GROUP']);
 
     let groupInfo = '';
@@ -340,6 +359,17 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
+                <CtrlCenterItemSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('viewItem') : null}
+                  ruleGrade={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForCtrlCenterItem}
+                  onClickInherit={this.handleClickInheritForCtrlCenterItem}
+                  inherit={viewItem.get('hasChildren')}
+                  isEditable={isEditable}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfSpec compId={compId} specType="inform" targetType="GROUP" 
                   hasAction={true} inherit={false}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
@@ -373,6 +403,8 @@ const mapStateToProps = (state) => ({
   BrowserRuleProps: state.BrowserRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
+  CtrlCenterItemProps: state.CtrlCenterItemModule,
+
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -388,6 +420,7 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+  CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 

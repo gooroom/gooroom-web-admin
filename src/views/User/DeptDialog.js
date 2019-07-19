@@ -60,7 +60,7 @@ class DeptDialog extends Component {
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
                         const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
                         DeptActions.createDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
@@ -71,6 +71,7 @@ class DeptDialog extends Component {
                             mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                             securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selecteObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                         }).then((res) => {
                             if(res.status && res.status && res.status.message) {
@@ -113,7 +114,7 @@ class DeptDialog extends Component {
                     if(confirmValue) {
                         const isInherit = isChecked;
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
                         const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
                         DeptActions.editDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
@@ -125,6 +126,7 @@ class DeptDialog extends Component {
                             mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                             securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selecteObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                         }).then((res) => {
 
@@ -249,6 +251,7 @@ const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
+    CtrlCenterItemProps: state.CtrlCenterItemModule,
     DesktopConfProps: state.DesktopConfModule
 });
 

@@ -1,40 +1,13 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
 
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
-import Divider from '@material-ui/core/Divider';
 
 import Button from '@material-ui/core/Button';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Paper from '@material-ui/core/Paper';
-
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
-import GRItemIcon from '@material-ui/icons/Adjust';
-
-import ListSubheader from '@material-ui/core/ListSubheader';
-import Switch from '@material-ui/core/Switch';
-import WifiIcon from '@material-ui/icons/Wifi';
-import BluetoothIcon from '@material-ui/icons/Bluetooth';
-
 import EditIcon from '@material-ui/icons/Edit';
-import Radio from '@material-ui/core/Radio';
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import RadioButtonCheckedIcon from '@material-ui/icons/RadioButtonChecked';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -46,7 +19,7 @@ class DividedAdminManageSpec extends Component {
 
     const { classes, selectedItem } = this.props;
     const { t, i18n } = this.props;
-    const bull = <span className={classes.bullet}>•</span>;
+    const isPart = (selectedItem && selectedItem.get('adminTp') === 'P') ? true : false;
 
     return (
       <React.Fragment>
@@ -64,32 +37,30 @@ class DividedAdminManageSpec extends Component {
             }
           />
           <CardContent style={{padding:10,width:'100%'}}>
+            {isPart && 
             <Grid container spacing={0}>
               <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
                 [ {"단말관리 권한"} -
                 {(selectedItem.get('isClientAdmin') === '1') && <span> 있음 ]</span>} 
                 {(selectedItem.get('isClientAdmin') !== '1') && <span> 없음 ]</span>}
               </Grid>
-
               <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
                 [ {"사용자관리 권한"} -
                 {(selectedItem.get('isUserAdmin') === '1') && <span> 있음 ]</span>}
                 {(selectedItem.get('isUserAdmin') !== '1') && <span> 없음 ]</span>}
               </Grid>
-
               <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
                 [ {"데스크톱환경관리 권한"} -
                 {(selectedItem.get('isDesktopAdmin') === '1') && <span> 있음 ]</span>}
                 {(selectedItem.get('isDesktopAdmin') !== '1') && <span> 없음 ]</span>}
               </Grid>
-
               <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
                 [ {"공지관리 권한"} -
                 {(selectedItem.get('isNoticeAdmin') === '1') && <span> 있음 ]</span>}
                 {(selectedItem.get('isNoticeAdmin') !== '1') && <span> 없음 ]</span>}
               </Grid>
-
             </Grid>
+            }
             <Grid container spacing={0}>
               {(selectedItem.get('deptInfoList') && selectedItem.get('deptInfoList').size > 0) &&
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"관리대상 조직정보"} - {"대상수"} : {selectedItem.get('deptInfoList').size} ea ]</Grid>

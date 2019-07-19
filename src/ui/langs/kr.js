@@ -177,6 +177,7 @@ export default {
   "menuBrowserRuleManage": "브라우저제어정책",
   "menuSecurityRuleManage": "단말보안정책",
   "menuSoftwareRuleManage": "소프트웨어제한정책",
+  "menuCtrlCenterItemRuleManage": "제어센터항목정책",
   
   "menuDesktop": "데스크톱",
   "menuDesktopManage": "데스크톱정보",
@@ -860,6 +861,25 @@ export default {
   "msgSelectSWItem": "실행금지로 지정할 소프트웨어를 선택하세요.",
   "msStopRunRedSW": "Red 색상의 소프트웨어는 실행을 금지합니다.",
   "lbSWRule": "소프트웨어제한정책",
+
+  // 제어판 항목 관리
+  "lbDeleteCTIRule": "제어센터항목정책 삭제",
+  "msgDeleteCTIRule": "제어센터항목정책({{objId}})을 삭제하시겠습니까?",
+  "lbAddCTIRule": "제어센터항목정책정보 등록",
+  "msgAddCTIRule": "제어센터항목정책정보를 등록하시겠습니까?",
+  "lbEditCTIRule": "제어센터항목정책정보 수정",
+  "msgEditCTIRule": "제어센터항목정책정보를 수정하시겠습니까?",
+  "msgApplyCTIRuleChild": "제어센터항목정책이 하위 조직에 적용되었습니다.",
+  "msgCopyCTIRule": "제어센터항목정책을 복사하였습니다.",
+  "dtAddCTIRule": "제어센터항목정책 등록",
+  "dtViewCTIRule": "제어센터항목정책 정보",
+  "dtEditCTIRule": "제어센터항목정책 수정",
+  "dtInheritCTIRule": "제어센터항목정책 상속",
+  "dtCopyCTIRule": "제어센터항목정책 복사",
+  "dtCategoryCTIRule": "제어센터항목 정책",
+  "msgSelectCTIItem": "제어센터에 표시할 항목을 선택하세요.",
+  "msStopRunRedCTI": "파란색상의 항목이 제어센터 항목으로 표시됩니다.",
+  "lbCTIRule": "제어센터항목정책",
 
   // 관리자 개인 설정
   "lbAdminTitle": "관리자",

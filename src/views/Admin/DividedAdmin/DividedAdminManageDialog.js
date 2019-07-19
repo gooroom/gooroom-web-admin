@@ -381,7 +381,7 @@ class DividedAdminManageDialog extends Component {
                     </Grid>
                     {(editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
                         <GroupMultiSelector compId={compId} title={"관리대상 단말그룹"} 
-                            isCheckMasterOnly={false}
+                            isCheckMasterOnly={true}
                             selectedGroup={selectedGroup} 
                             onSelectGroup={this.handleSelectGroup}
                         />

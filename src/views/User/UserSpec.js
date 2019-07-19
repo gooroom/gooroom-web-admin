@@ -14,12 +14,15 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { generateBrowserRuleObject } from 'views/Rules/UserConfig/BrowserRuleSpec';
 import { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
 import { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
 import { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import { generateCtrlCenterItemObject } from 'views/Rules/UserConfig/CtrlCenterItemSpec';
 
 import UserDialog from './UserDialog';
 
@@ -42,6 +45,8 @@ import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
+import CtrlCenterItemSpec from 'views/Rules/UserConfig/CtrlCenterItemSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
@@ -66,6 +71,9 @@ class UserSpec extends Component {
     });
     this.props.SoftwareFilterActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
       value: getValueInSelectedObjectInComp(this.props.SoftwareFilterProps, compId, 'USER', 'objId')      
+    });
+    this.props.CtrlCenterItemActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
+      value: getValueInSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, 'USER', 'objId')      
     });
     this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
       value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'USER', 'confId')      
@@ -117,6 +125,13 @@ class UserSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
+  handleClickEditForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: generateCtrlCenterItemObject(viewItem, false),
+      dialogType: CtrlCenterItemDialog.TYPE_EDIT
+    });
+  };
   handleClickEditForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -159,7 +174,7 @@ class UserSpec extends Component {
 
   render() {
     const { classes } = this.props;
-    const { UserProps, compId } = this.props;
+    const { UserProps, compId, isEditable } = this.props;
     const { t, i18n } = this.props;
 
     const informOpen = UserProps.getIn(['viewItems', compId, 'informOpen']);
@@ -169,6 +184,7 @@ class UserSpec extends Component {
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'USER']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'USER']);
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'USER']);
+    const selectedCtrlCenterItem = this.props.CtrlCenterItemProps.getIn(['viewItems', compId, 'USER']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'USER']);
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
@@ -216,7 +232,7 @@ class UserSpec extends Component {
           <CardHeader
             title={viewItem.get('userNm')}
             subheader={userSubinfo}
-            action={actionButton}
+            action={ (isEditable) ? actionButton : <div></div> }
           />
           <Divider />
           <CardContent style={{padding:10}}>
@@ -227,6 +243,7 @@ class UserSpec extends Component {
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForBrowserRule} inherit={false}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -234,6 +251,7 @@ class UserSpec extends Component {
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForMediaRule}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -241,6 +259,7 @@ class UserSpec extends Component {
                   selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSecurityRule} inherit={false}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -248,6 +267,15 @@ class UserSpec extends Component {
                   selectedItem={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('viewItem') : null}
                   ruleGrade={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSoftwareFilter} inherit={false}
+                  isEditable={isEditable}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
+                <CtrlCenterItemSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
+                  selectedItem={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('viewItem') : null}
+                  ruleGrade={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForCtrlCenterItem} inherit={false}
+                  isEditable={isEditable}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -255,6 +283,7 @@ class UserSpec extends Component {
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
                   ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForDesktopConf} inherit={false}
+                  isEditable={isEditable}
                 />
               </Grid>
 
@@ -276,6 +305,7 @@ const mapStateToProps = (state) => ({
   BrowserRuleProps: state.BrowserRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
+  CtrlCenterItemProps: state.CtrlCenterItemModule,
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -288,6 +318,7 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+  CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 

@@ -98,7 +98,7 @@ class UserDialog extends Component {
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         const { UserProps, UserActions, compId } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
                         const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
                         const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
                         if(editingItem !== undefined) {
@@ -126,7 +126,8 @@ class UserDialog extends Component {
                                 browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
                                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                                 securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectebjectIdName),
+                                ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selecteObjectIdName),
                                 desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                             }).then((reData) => {
                                 if(reData && reData.status && reData.status.result === 'fail') {
@@ -163,7 +164,7 @@ class UserDialog extends Component {
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         const { UserProps, UserActions, compId } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
                         const selecteObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
                         if(editingItem !== undefined) {
                             // user expire date
@@ -191,6 +192,7 @@ class UserDialog extends Component {
                                 mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                                 securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
                                 filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                                ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selecteObjectIdName),
                                 desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                             }).then((res) => {
                                 UserActions.readUserListPaged(UserProps, compId);
@@ -437,6 +439,7 @@ const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
+    CtrlCenterItemProps: state.CtrlCenterItemModule,
     DesktopConfProps: state.DesktopConfModule
 });
 

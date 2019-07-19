@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -25,6 +26,7 @@ import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
+import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
 import DesktopConfDialog from "views/Rules/DesktopConfig/DesktopConfDialog";
 import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
@@ -421,6 +423,7 @@ class UserMasterManage extends Component {
     const compId = this.state.compId;
 
     const selectedDept = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'selectedDept']);
+    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
 
     return (
       <React.Fragment>
@@ -428,6 +431,7 @@ class UserMasterManage extends Component {
         <GRPane>
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef',minWidth:320}}>
+              {isEditable &&          
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
               <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
                 <Grid item>
@@ -466,6 +470,7 @@ class UserMasterManage extends Component {
                 </Grid>
               </Grid>
               </Toolbar>
+              }
               <DeptTreeComp compId={compId} 
                 selectorType='multiple' 
                 onCheck={this.handleCheckedDept} 
@@ -476,6 +481,7 @@ class UserMasterManage extends Component {
               />
             </Grid>
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
+              {isEditable &&
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
@@ -498,14 +504,15 @@ class UserMasterManage extends Component {
                   </Grid>
                 </Grid>
               </Toolbar>
+              }
               <UserListComp name='UserListComp' compId={compId} deptCd='' 
                 onSelect={this.handleSelectUser}
                 onMoveUserToDept={this.handleMoveUserToDept}
               />
             </Grid>
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef'}} >
-              <UserSpec compId={compId} />
-              <DeptSpec compId={compId} />
+              <UserSpec compId={compId} isEditable={isEditable} />
+              <DeptSpec compId={compId} isEditable={isEditable} />
             </Grid>
           </Grid>
         </GRPane>
@@ -531,6 +538,7 @@ class UserMasterManage extends Component {
         <SecurityRuleDialog compId={compId} />
         <MediaRuleDialog compId={compId} />
         <SoftwareFilterDialog compId={compId} />
+        <CtrlCenterItemDialog compId={compId} />
         <DesktopConfDialog compId={compId} isEnableDelete={false} />
         <DesktopAppDialog compId={compId} />
 
