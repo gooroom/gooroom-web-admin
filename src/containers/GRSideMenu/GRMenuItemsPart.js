@@ -61,6 +61,12 @@ export default {
           url: '/userconfig/swfilter/GRM0404/menuSoftwareRuleManage',
           level: 2,
         },
+        {
+          name: 'menuCtrlCenterItemRuleManage',
+          id: 'GRM0405',
+          url: '/userconfig/ctrlcenteritem/GRM0404/menuCtrlCenterItemRuleManage',
+          level: 2,
+        },
       ]
     }, {
       name: 'menuDesktop',

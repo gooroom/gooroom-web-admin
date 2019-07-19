@@ -177,6 +177,7 @@ export default {
   "menuBrowserRuleManage": "BrowserRule",
   "menuSecurityRuleManage": "SecurityRule",
   "menuSoftwareRuleManage": "SoftwareRule",
+  "menuCtrlCenterItemRuleManage": "ControlCenterItemRule",
   
   "menuDesktop": "Desktop",
   "menuDesktopManage": "DesktopMng",
@@ -860,6 +861,25 @@ export default {
   "msgSelectSWItem": "Select the software you want to disable.",
   "msStopRunRedSW": "Red colored software is prohibited from running.",
   "lbSWRule": "SoftwarePolicy",
+
+  // 제어판 항목 관리
+  "lbDeleteCTIRule": "Delete a control center item rule",
+  "msgDeleteCTIRule": "Are you sure you want to delete the control center item rule {{objId}}?",
+  "lbAddCTIRule": "control center item rule information registration",
+  "msgAddCTIRule": "Do you want to register control center item rule information?",
+  "lbEditCTIRule": "Modify control center item rule information",
+  "msgEditCTIRule": "Are you sure you want to modify control center item rule information?",
+  "msgApplyCTIRuleChild": "The control center item rule has been applied to suborganizations.",
+  "msgCopyCTIRule": "You have copied the control center item rule.",
+  "dtAddCTIRule": "control center item rule registration",
+  "dtViewCTIRule": "About control center item rule",
+  "dtEditCTIRule": "Modifying control center item rule",
+  "dtInheritCTIRule": "control center item rule inheritance",
+  "dtCopyCTIRule": "Copy control center item rule",
+  "dtCategoryCTIRule": "control center item rule",
+  "msgSelectCTIItem": "Select the control center item you want to disable.",
+  "msStopRunRedCTI": "Red colored control center item is prohibited from running.",
+  "lbCTIRule": "ControlCenterItemRule",
 
   // 관리자 개인 설정
   "lbAdminTitle": "Manager",
