@@ -566,7 +566,7 @@ export default {
   "ttResetLoginTrial": "Reset Login Attempts Count",
   "msgEditLoginTrialCount": "Reset login attempts count?",
 
-  // 테마관리
+  // 테마조회
   "lbDeleteTheme": "Remove theme",
   "msgDeleteTheme": "Are you sure you want to delete the theme ('{{themeNm}}')?",
   "lbAddTheme": "Theme registration",
