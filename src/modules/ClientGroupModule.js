@@ -255,6 +255,7 @@ const makeParameter = (param) => {
         grpIds: param.grpIds,
         groupName: param.groupName,
         groupComment: param.groupComment,
+        regClientIp: param.regClientIp,
         uprGrpId: param.uprGrpId,
         
         clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
@@ -471,6 +472,7 @@ export default handleActions({
                     regDate: x.regDt,
                     modDate: x.modDt,
                     comment: x.comment,
+                    regClientIp: x.regClientIp,
                     itemCount: x.itemCount,
                     itemTotalCount: x.itemTotalCount,
                     _shouldRender: true
@@ -616,7 +618,8 @@ export default handleActions({
                 itemTotalCount: data[0].itemTotalCount,
                 modDate: data[0].modDate,
                 grpNm: data[0].grpNm,
-                comment: data[0].comment
+                comment: data[0].comment,
+                regClientIp: data[0].regClientIp
             }));
         } else  {
             return state;
@@ -637,7 +640,8 @@ export default handleActions({
                     modDate: data[i].modDate,
                     grpNm: data[i].grpNm,
                     title: data[i].grpNm,
-                    comment: data[i].comment
+                    comment: data[i].comment,
+                    regClientIp: data[i].regClientIp
                 }));
             }
             return newState;

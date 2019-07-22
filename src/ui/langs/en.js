@@ -281,6 +281,7 @@ export default {
   "spClientStatus": "Client Status",
   "spClientGroupName": "Group Name",
   "spClientGroupDesc": "Group Desc",
+  "spClientRegIp": "Regist Ip",
   "spIsOnline": "Is Online",
   "spHomeSizeRate": "Home Use Rate",
   "spInstalledPkgCnt": "Installed Package Cnt",

@@ -281,6 +281,7 @@ export default {
   "spClientStatus": "단말상태",
   "spClientGroupName": "단말그룹이름",
   "spClientGroupDesc": "단말그룹설명",
+  "spClientRegIp": "자동등록아이피",
   "spIsOnline": "온라인여부",
   "spHomeSizeRate": "홈폴더 사용률",
   "spInstalledPkgCnt": "설치패키지수",

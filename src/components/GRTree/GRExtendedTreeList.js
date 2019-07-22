@@ -93,6 +93,7 @@ class GRExtendedTreeList extends Component {
           regDate: x.regDt,
           modDate: x.modDt,
           comment: x.comment,
+          regClientIp: x.regClientIp,
           itemCount: x.itemCount,
           itemTotalCount: x.itemTotalCount,
           _shouldRender: true

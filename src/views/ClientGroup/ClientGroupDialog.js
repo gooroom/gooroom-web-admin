@@ -67,6 +67,7 @@ class ClientGroupDialog extends Component {
                         ClientGroupActions.createClientGroupData({
                             groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                             groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
+                            regClientIp: ClientGroupProps.getIn(['editingItem', 'regClientIp']),
                             uprGrpId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                             isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
                             
@@ -127,6 +128,7 @@ class ClientGroupDialog extends Component {
                             groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                             groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                             groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
+                            regClientIp: ClientGroupProps.getIn(['editingItem', 'regClientIp']),
                             isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
             
                             clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
@@ -221,10 +223,16 @@ class ClientGroupDialog extends Component {
                                 onChange={this.handleValueChange('grpNm')}
                             />
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={4}>
                             <TextField label={t("spClientGroupDesc")} className={classes.fullWidth}
                                 value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                                 onChange={this.handleValueChange('comment')}
+                            />
+                        </Grid>
+                        <Grid item xs={5}>
+                            <TextField label={t("spClientRegIp")} className={classes.fullWidth}
+                                value={(editingItem.get('regClientIp')) ? editingItem.get('regClientIp') : ''}
+                                onChange={this.handleValueChange('regClientIp')}
                             />
                         </Grid>
                     </Grid>
