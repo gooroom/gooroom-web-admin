@@ -724,7 +724,7 @@ export default {
   "msgGooroomPrefInfo": "Please enter information for gooroom.pref.",
   "msgShowDetailUpdateServer": "When you select the update server information, the details are displayed.",
 
-  // 브라우져제어정책 관리
+  // 브라우저제어정책 관리
   "lbBrowserRule": "BrowserRule",
   "lbDeleteBrowserRule": "Delete browser control rule",
   "msgDeleteBrowserRule": "Are you sure you want to delete the browser control rule {{objId}}?",
