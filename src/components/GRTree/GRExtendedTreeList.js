@@ -34,7 +34,7 @@ class GRExtendedTreeList extends Component {
 
       treeData: [],
 
-      checked: (props.checkedNodes && props.checkedNodes.size > 0) ? (props.checkedNodes.map(n => n.get(props.paramKeyName))) : [],
+      checked: (props.checkedNodes && props.checkedNodes.size > 0) ? (props.checkedNodes.map(n => n.get('value'))) : [],
       imperfect: []
     };
 
