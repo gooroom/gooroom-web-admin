@@ -252,7 +252,7 @@ class DividedAdminManageDialog extends Component {
     }
 
     handleSelectGroup = (selectedItems) => {
-
+        
         this.props.AdminUserActions.setEditingItemValue({ name: 'grpInfoList', value: selectedItems });
     }
 
@@ -281,7 +281,7 @@ class DividedAdminManageDialog extends Component {
         //     return Map({grpId: n.get('value'), grpNm: n.get('name')});
         // }) : null;
         const selectedGroup = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList') : null;
-        const selectedClient = (editingItem && editingItem.get('clientInfoList')) ? editingItem.get('clientInfoList') : null;
+        // const selectedClient = (editingItem && editingItem.get('clientInfoList')) ? editingItem.get('clientInfoList') : null;
 
         let title = "";
         let passwordCheck = [];
