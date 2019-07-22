@@ -176,6 +176,7 @@ class DividedAdminManage extends Component {
       { id: 'ch2', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
       { id: 'ch200', isOrder: false, numeric: false, disablePadding: true, label: t("colType") },
       { id: 'ch201', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'createUser', isOrder: false, numeric: false, disablePadding: true, label: t("colCreateUser") },
       { id: 'ch101', isOrder: false, numeric: false, disablePadding: true, label: t("colTargetDept") },
       { id: 'ch102', isOrder: false, numeric: false, disablePadding: true, label: t("colTargetGroup") },
       { id: 'ch3', isOrder: false, numeric: false, disablePadding: true, label: t("colMngClient") },
@@ -251,6 +252,7 @@ class DividedAdminManage extends Component {
                         (n.get('adminTp') === Constants.SUPER_TYPECODE) ? t("lbTotalAdmin") : ((n.get('adminTp') === Constants.ADMIN_TYPECODE) ? t("lbSiteAdmin") : ((n.get('adminTp') === Constants.PART_TYPECODE) ? t("lbPartAdmin") : ''))
                       }</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{
                         (n.get('deptInfoList').size > 0) ? ((n.get('deptInfoList').size > 1) ? n.getIn(['deptInfoList', 0, 'name']) + '+' : n.getIn(['deptInfoList', 0, 'name'])) : '-'
                       }</TableCell>

@@ -39,6 +39,7 @@ export default {
   "colStatus": "Status",
   "colEdit": "Edit",
   "colEditDelete": "Edit/Del",
+  "colCreateUser": "Creator",
 
   "colId": "ID",
   "colLastLoginDate": "LastLoginDate",

@@ -39,6 +39,7 @@ export default {
   "colStatus": "상태",
   "colEdit": "수정",
   "colEditDelete": "수정/삭제",
+  "colCreateUser": "생성자",
 
   "colId": "아이디",
   "colLastLoginDate": "최종접속일",
