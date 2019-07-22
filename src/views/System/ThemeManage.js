@@ -187,9 +187,10 @@ class ThemeManage extends Component {
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
-    if(!isEditable) {
+    //if(!isEditable) {
+      // 테마는 수정이 안되도록 조치
       columnHeaders.splice(-1, 1);
-    }
+    //}
 
     const listObj = ThemeManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -218,7 +219,7 @@ class ThemeManage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={2} style={{textAlign:'right'}}>
-            {isEditable &&
+            {(isEditable && false) && 
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />{t("btnRegist")}
               </Button>
@@ -250,20 +251,22 @@ class ThemeManage extends Component {
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeId')}</TableCell>
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeCmt')}</TableCell>
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
-                    {isEditable &&
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                    {(isEditable && false) && 
                       <Button size="small" color="secondary" 
                         className={classes.buttonInTableRow} 
                         onClick={event => this.handleEditClick(event, n.get('themeId'))}>
                         <SettingsApplicationsIcon />
                       </Button>
+                    }
+                    {(isEditable && false) && 
                       <Button size="small" color="secondary" 
                         className={classes.buttonInTableRow} 
                         onClick={event => this.handleDeleteClick(event, n.get('themeId'))}>
                         <DeleteIcon />
                       </Button>
-                    </TableCell>
                     }
+                    </TableCell>
                   </TableRow>
                   );
                 })}

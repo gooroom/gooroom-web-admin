@@ -184,7 +184,7 @@ export default {
   "menuDesktopManage": "데스크톱정보",
   "menuDesktopAppManage": "데스크톱앱관리",
   "menuCloudServiceManage": "클라우드서비스연동",
-  "menuThemeManage": "테마관리",
+  "menuThemeManage": "테마조회",
 
   "menuJob": "작업",
   "menuJobManage": "작업정보",
@@ -566,7 +566,7 @@ export default {
   "ttResetLoginTrial": "로그인 시도 가능수 초기화",
   "msgEditLoginTrialCount": "로그인 시도 가능수를 초기화 하시겠습니까?",
 
-  // 테마관리
+  // 테마조회
   "lbDeleteTheme": "테마 삭제",
   "msgDeleteTheme": "테마('{{themeNm}}')를 삭제하시겠습니까?",
   "lbAddTheme": "테마 등록",
