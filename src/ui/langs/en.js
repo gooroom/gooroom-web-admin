@@ -676,6 +676,12 @@ export default {
   "lbTotalAdmin": "TotalAdmin",
   "lbSiteAdmin": "SiteAdmin",
   "lbPartAdmin": "PartAdmin",
+  "msgNoNeedPart": "Full administrators and intermediate administrators do not need detailed settings.",
+  "lbClientPart": "ClientMng Role",
+  "lbUserPart": "UserMng Role",
+  "lbDesktopPart": "DesktopMng Role",
+  "lbNoticePart": "Notice Role",
+  "msgNeedPartItem": "You need to select at least one of the administrator rights.",
 
   // 호스트정보 관리
   "lbHosts": "Hosts",

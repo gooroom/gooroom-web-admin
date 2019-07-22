@@ -676,7 +676,13 @@ export default {
   "lbTotalAdmin": "전체관리자",
   "lbSiteAdmin": "중간관리자",
   "lbPartAdmin": "기능관리자",
-
+  "msgNoNeedPart": "전체관리자와 중간관리자는 세부설정이 필요 없습니다.",
+  "lbClientPart": "단말관리 권한",
+  "lbUserPart": "사용자관리 권한",
+  "lbDesktopPart": "데스크톱환경관리 권한",
+  "lbNoticePart": "공지관리 권한",
+  "msgNeedPartItem": "관리자 권한중 하나 이상 선택이 필요합니다.",
+  
   // 호스트정보 관리
   "lbHosts": "Hosts정보",
   "lbAddHosts": "Hosts 정보 등록",
