@@ -88,35 +88,55 @@ class DividedAdminManageDialog extends Component {
         AdminUserActions.setEditingItemValue({ name: 'connIps', value: oldIps });
     }
 
+    isSelectedPart = () => {
+        const editObj = this.props.AdminUserProps.get('editingItem');
+        if(editObj.get('isClientAdmin') !== undefined && editObj.get('isClientAdmin') === '1') {
+            return true;
+        } else if(editObj.get('isUserAdmin') !== undefined && editObj.get('isUserAdmin') === '1') {
+            return true;
+        } else if(editObj.get('isDesktopAdmin') !== undefined && editObj.get('isDesktopAdmin') === '1') {
+            return true;
+        } else if(editObj.get('isNoticeAdmin') !== undefined && editObj.get('isNoticeAdmin') === '1') {
+            return true;
+        }
+        return false;
+    }
+
     handleCreateData = (event) => {
-        const { AdminUserProps, GRConfirmActions } = this.props;
-        const { t, i18n } = this.props;
+        const { AdminUserProps, GRConfirmActions, t } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
-            GRConfirmActions.showConfirm({
-                confirmTitle: t("lbAddAdminUser"),
-                confirmMsg: t("msgAddAdminUser"),
-                confirmObject: AdminUserProps.get('editingItem'),
-                handleConfirmResult: (confirmValue, paramObject) => {
-                    if(confirmValue) {
-                        const { AdminUserProps, AdminUserActions, compId } = this.props;
-                        AdminUserActions.createAdminUserData({
-                            itemObj: paramObject,
-                            compId: this.props.compId
-                        }).then((reData) => {
-                            if(reData && reData.status && reData.status.result === 'fail') {
-                                this.props.GRAlertActions.showAlert({
-                                    alertTitle: this.props.t("dtSystemError"),
-                                    alertMsg: reData.status.message
-                                });
-                            } else {
-                                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
-                                this.handleClose();
-                            }
-                        });
-                    }
-                },
-                
-            });
+            const isOk = this.isSelectedPart();
+            if(isOk) {
+                GRConfirmActions.showConfirm({
+                    confirmTitle: t("lbAddAdminUser"),
+                    confirmMsg: t("msgAddAdminUser"),
+                    confirmObject: AdminUserProps.get('editingItem'),
+                    handleConfirmResult: (confirmValue, paramObject) => {
+                        if(confirmValue) {
+                            const { AdminUserProps, AdminUserActions, compId } = this.props;
+                            AdminUserActions.createAdminUserData({
+                                itemObj: paramObject,
+                                compId: this.props.compId
+                            }).then((reData) => {
+                                if(reData && reData.status && reData.status.result === 'fail') {
+                                    this.props.GRAlertActions.showAlert({
+                                        alertTitle: this.props.t("dtSystemError"),
+                                        alertMsg: reData.status.message
+                                    });
+                                } else {
+                                    AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
+                                    this.handleClose();
+                                }
+                            });
+                        }
+                    },
+                });
+            } else {
+                this.props.GRAlertActions.showAlert({
+                    alertTitle: t("dtSystemNotice"),
+                    alertMsg: t("msgNeedPartItem")
+                });
+            }
         } else {
             if(this.refs.form && this.refs.form.childs) {
                 this.refs.form.childs.map(c => {
@@ -129,23 +149,31 @@ class DividedAdminManageDialog extends Component {
     handleEditData = (event) => {
         const { AdminUserProps, GRConfirmActions, t } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
-            GRConfirmActions.showConfirm({
-                confirmTitle: t("lbEditAdminUser"),
-                confirmMsg: t("msgEditAdminUser"),
-                confirmObject: AdminUserProps.get('editingItem'),
-                handleConfirmResult: (confirmValue, paramObject) => {
-                    if(confirmValue) {
-                        const { AdminUserProps, AdminUserActions, compId } = this.props;
-                        AdminUserActions.editAdminUserData({
-                            itemObj: paramObject,
-                            compId: this.props.compId
-                        }).then((res) => {
-                            AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
-                            this.handleClose();
-                        });
+            const isOk = this.isSelectedPart();
+            if(isOk) {
+                GRConfirmActions.showConfirm({
+                    confirmTitle: t("lbEditAdminUser"),
+                    confirmMsg: t("msgEditAdminUser"),
+                    confirmObject: AdminUserProps.get('editingItem'),
+                    handleConfirmResult: (confirmValue, paramObject) => {
+                        if(confirmValue) {
+                            const { AdminUserProps, AdminUserActions, compId } = this.props;
+                            AdminUserActions.editAdminUserData({
+                                itemObj: paramObject,
+                                compId: this.props.compId
+                            }).then((res) => {
+                                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
+                                this.handleClose();
+                            });
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                this.props.GRAlertActions.showAlert({
+                    alertTitle: t("dtSystemNotice"),
+                    alertMsg: t("msgNeedPartItem")
+                });
+            }
         } else {
             if(this.refs.form && this.refs.form.childs) {
                 this.refs.form.childs.map(c => {
