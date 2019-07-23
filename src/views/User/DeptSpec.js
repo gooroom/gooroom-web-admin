@@ -184,7 +184,7 @@ class DeptSpec extends Component {
 
   // .................................................
   render() {
-    const { DeptProps, compId, isEditable } = this.props;
+    const { DeptProps, compId, AdminProps, isEditable } = this.props;
 
     const informOpen = DeptProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = DeptProps.getIn(['viewItems', compId, 'viewItem']);
@@ -225,7 +225,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForBrowserRule}
                   onClickInherit={this.handleClickInheritForBrowserRule}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedBrowserRuleItem && AdminProps.get('adminId') === selectedBrowserRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -235,7 +235,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForMediaRule}
                   onClickInherit={this.handleClickInheritForMediaRule}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedMediaRuleItem && AdminProps.get('adminId') === selectedMediaRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -245,7 +245,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForSecurityRule}
                   onClickInherit={this.handleClickInheritForSecurityRule}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedSecurityRuleItem && AdminProps.get('adminId') === selectedSecurityRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -255,7 +255,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForSoftwareFilter}
                   onClickInherit={this.handleClickInheritForSoftwareFilter}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedSoftwareFilterItem && AdminProps.get('adminId') === selectedSoftwareFilterItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -265,7 +265,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForCtrlCenterItem}
                   onClickInherit={this.handleClickInheritForCtrlCenterItem}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedCtrlCenterItem && AdminProps.get('adminId') === selectedCtrlCenterItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -275,7 +275,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForDesktopConf}
                   onClickInherit={this.handleClickInheritForDesktopConf}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedDesktopConfItem && AdminProps.get('adminId') === selectedDesktopConfItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
             </Grid>
@@ -291,6 +291,7 @@ class DeptSpec extends Component {
 const mapStateToProps = (state) => ({
   UserProps: state.UserModule,
   DeptProps: state.DeptModule,
+  AdminProps: state.AdminModule,
 
   MediaRuleProps: state.MediaRuleModule,
   BrowserRuleProps: state.BrowserRuleModule,
