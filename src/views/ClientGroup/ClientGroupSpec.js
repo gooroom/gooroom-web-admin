@@ -232,7 +232,7 @@ class ClientGroupSpec extends Component {
   // ===================================================================
 
   render() {
-    const { compId, ClientGroupProps, isEditable } = this.props;
+    const { compId, ClientGroupProps, AdminProps, isEditable } = this.props;
 
     const informOpen = ClientGroupProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = ClientGroupProps.getIn(['viewItems', compId, 'viewItem']);
@@ -258,7 +258,7 @@ class ClientGroupSpec extends Component {
         groupInfo += ', ' + viewItem.get('comment');
       }
     }
-
+    
     const avatarRef = getAvatarExplainForGroup(this.props.t);
 
     return (
@@ -289,7 +289,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientHostName}
                   onClickInherit={this.handleClickInheritForClientHostName}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedClientHostNameItem && AdminProps.get('adminId') === selectedClientHostNameItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -300,7 +300,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientUpdateServer}
                   onClickInherit={this.handleClickInheritForClientUpdateServer}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedClientUpdateServerItem && AdminProps.get('adminId') === selectedClientUpdateServerItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6}>
@@ -311,7 +311,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientConfSetting}
                   onClickInherit={this.handleClickInheritForClientConfSetting}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedClientConfSettingItem && AdminProps.get('adminId') === selectedClientConfSettingItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -322,7 +322,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForMediaRule}
                   onClickInherit={this.handleClickInheritForMediaRule}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedMediaRuleItem && AdminProps.get('adminId') === selectedMediaRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6}>
@@ -333,7 +333,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForBrowserRule}
                   onClickInherit={this.handleClickInheritForBrowserRule}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedBrowserRuleItem && AdminProps.get('adminId') === selectedBrowserRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -344,7 +344,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForSecurityRule}
                   onClickInherit={this.handleClickInheritForSecurityRule}
                   inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedSecurityRuleItem && AdminProps.get('adminId') === selectedSecurityRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -354,8 +354,7 @@ class ClientGroupSpec extends Component {
                   ruleGrade={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSoftwareFilter}
                   onClickInherit={this.handleClickInheritForSoftwareFilter}
-                  inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedSoftwareFilterItem && AdminProps.get('adminId') === selectedSoftwareFilterItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -365,8 +364,7 @@ class ClientGroupSpec extends Component {
                   ruleGrade={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForCtrlCenterItem}
                   onClickInherit={this.handleClickInheritForCtrlCenterItem}
-                  inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedCtrlCenterItem && AdminProps.get('adminId') === selectedCtrlCenterItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -376,8 +374,7 @@ class ClientGroupSpec extends Component {
                   ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForDesktopConf}
                   onClickInherit={this.handleClickInheritForDesktopConf}
-                  inherit={viewItem.get('hasChildren')}
-                  isEditable={isEditable}
+                  isEditable={selectedDesktopConfItem && AdminProps.get('adminId') === selectedDesktopConfItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
             </Grid>
@@ -394,6 +391,7 @@ class ClientGroupSpec extends Component {
 
 const mapStateToProps = (state) => ({
   ClientGroupProps: state.ClientGroupModule,
+  AdminProps: state.AdminModule,
 
   ClientConfSettingProps: state.ClientConfSettingModule,
   ClientHostNameProps: state.ClientHostNameModule,
