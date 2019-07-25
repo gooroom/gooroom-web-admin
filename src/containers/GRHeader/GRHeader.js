@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { Link } from 'react-router-dom';
 
@@ -63,7 +63,7 @@ class GRHeader extends Component {
       <AppBar className={classes.headerRoot}>
         <Toolbar className={classes.headerToolbar}>
             <Typography type="title" className={classes.headerBrandLogo}>
-              GPMS v1.3.0424
+              GPMS v1.3.0724
             </Typography>
             <IconButton onClick={this.props.toggleDrawer}>
               <MenuIcon />
@@ -72,10 +72,13 @@ class GRHeader extends Component {
               <Button onClick={() => changeLanguage("kr")}>kr</Button>
               <Button onClick={() => changeLanguage("en")}>en</Button>
             </div>
+          {(window.gpmsain !== Constants.PART_RULECODE) && 
             <GRAlarmInform />
+          }
             <Button onClick={this.props.onAdminClick}>
               <AccountCircle />{t("adminMenu")}
             </Button>
+          {(window.gpmsain !== Constants.PART_RULECODE) && 
             <Button 
               buttonRef={node => {
                 this.anchorEl = node;
@@ -84,6 +87,7 @@ class GRHeader extends Component {
             >
               <SettingsApplications />Server
             </Button>
+          }
             <Popper open={this.state.popMenu} anchorEl={this.anchorEl} transition disablePortal>
               {({ TransitionProps, placement }) => (
                 <Grow
@@ -94,12 +98,14 @@ class GRHeader extends Component {
                   <Paper>
                     <ClickAwayListener onClickAway={this.handleClose}>
                       <MenuList>
+                      {(window.gpmsain === Constants.SUPER_RULECODE) && 
                         <MenuItem component={Link} to={'/system/siteconfig/GRM9901/menuSiteConfig'}>{t("menuSiteConfig")}</MenuItem>
+                      }
                         <MenuItem component={Link} to={'/system/adminusermng/GRM9902/menuAdminUserMng'}>{t("menuAdminUserMng")}</MenuItem>
-                        {/**
-                        <MenuItem component={Link} to={'/system/deptuserreg/GRM9903/menuDeptAndUser'}>{t("menuDeptAndUser")}</MenuItem>
-                        */}                        
-                      </MenuList>
+                        {(window.gpmsain === Constants.ADMIN_RULECODE || (window.gpmsain === Constants.PART_RULECODE && window.roleUserAdmin === 1)) && 
+                          <MenuItem component={Link} to={'/system/deptuserreg/GRM9903/menuDeptAndUser'}>{t("menuDeptAndUser")}</MenuItem>
+                        }
+                        </MenuList>
                     </ClickAwayListener>
                   </Paper>
                 </Grow>

@@ -28,6 +28,7 @@ import { translate, Trans } from "react-i18next";
 
 
 class ClientListForSelectByGroup extends Component {
+  _isMounted = false;
 
   constructor(props) {
     super(props);
@@ -51,13 +52,19 @@ class ClientListForSelectByGroup extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.groupId) {
-      const { stateData } = this.state;
-      const newListParam = (stateData.get('listParam')).merge({
-        groupId: nextProps.groupId
-      });
-      this.handleGetClientList(newListParam);
+    if(this.props.groupId !== nextProps.groupId) {
+      if(nextProps.groupId) {
+        const { stateData } = this.state;
+        const newListParam = (stateData.get('listParam')).merge({
+          groupId: nextProps.groupId
+        });
+        this.handleGetClientList(newListParam);
+      }
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleGetClientList = (newListParam) => {
@@ -74,24 +81,27 @@ class ClientListForSelectByGroup extends Component {
       (response) => {
         const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = response.data;
         const { stateData } = this.state;
-        this.setState({
-          stateData: stateData
-            .set('listData', List(data.map((e) => {return Map(e)})))
-            .set('listParam', newListParam.merge({
-              rowsFiltered: parseInt(recordsFiltered, 10),
-              rowsTotal: parseInt(recordsTotal, 10),
-              page: parseInt(draw, 10),
-              rowsPerPage: parseInt(rowLength, 10),
-              orderColumn: orderColumn,
-              orderDir: orderDir
-            }))
-        });
+        if (this._isMounted) {
+          this.setState({
+            stateData: stateData
+              .set('listData', List(data.map((e) => {return Map(e)})))
+              .set('listParam', newListParam.merge({
+                rowsFiltered: parseInt(recordsFiltered, 10),
+                rowsTotal: parseInt(recordsTotal, 10),
+                page: parseInt(draw, 10),
+                rowsPerPage: parseInt(rowLength, 10),
+                orderColumn: orderColumn,
+                orderDir: orderDir
+              }))
+          });
+        }
       }
     ).catch(error => {
     });
   }
 
   componentDidMount() {
+    this._isMounted = true;
     this.handleSelectBtnClick();
   }
 
@@ -129,8 +139,23 @@ class ClientListForSelectByGroup extends Component {
       });
 
       const selectedClient = (viewItem) ? fromJS(viewItem.toJS()) : null;
+      if(selectedClient && this.props.onSelectClient) {
+        this.props.onSelectClient(selectedClient);
+      }
+    } 
+  };
+
+  handleCheckRow = (event, id) => {
+    event.stopPropagation();
+    const { stateData } = this.state;
+    if(stateData.get('listData')) {
+      const viewItem = stateData.get('listData').find((element) => {
+          return element.get('clientId') == id;
+      });
+
+      const selectedClient = (viewItem) ? fromJS(viewItem.toJS()) : null;
       if(selectedClient) {
-        this.props.onSelectClient(event.target.checked, {
+        this.props.onCheckClient(event.target.checked, {
           clientId: selectedClient.get('clientId'),
           clientNm: selectedClient.get('clientName'),
           groupId: selectedClient.get('clientGroupId'),
@@ -139,19 +164,22 @@ class ClientListForSelectByGroup extends Component {
       }
     } 
   };
-    
+
   handleClickAllCheck = (event, checked) => {
     const { stateData } = this.state;
     let newCheckedIds = List([]);
 
-    if(checked) {
-      stateData.get('listData').map(n => {
-        newCheckedIds = newCheckedIds.push(n.get('clientId'));
+    stateData.get('listData').map(n => {
+      newCheckedIds = newCheckedIds.push({
+        clientId: n.get('clientId'),
+        clientNm: n.get('clientName'),
+        groupId: n.get('clientGroupId'),
+        grpNm: n.get('clientGroupName')
       });
-    }
+    });
 
-    this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
-    this.props.onSelectClient(newCheckedIds);
+    // this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
+    this.props.onCheckMultiClient(checked, newCheckedIds);
   };
 
   handleKeywordChange = (name, value) => {
@@ -183,15 +211,23 @@ class ClientListForSelectByGroup extends Component {
   }
 
   render() {
-    const { classes, checkedClient } = this.props;
+    const { classes, checkedClient, isSingle } = this.props;
     const { t, i18n } = this.props;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: 'checkbox', isCheckbox: true},
       { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
       { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
       { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: t("colClientGroup")}
     ];
+
+    if(isSingle !== undefined && isSingle === true) {
+      columnHeaders = [
+        { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
+        { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+        { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: t("colClientGroup")}
+      ]; 
+    }
     
     const listObj = this.state.stateData;
     let emptyRows = 0; 
@@ -227,7 +263,7 @@ class ClientListForSelectByGroup extends Component {
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            onClickAllCheck={this.handleClickAllCheck}
+            onClickAllCheck={(isSingle) ? null : this.handleClickAllCheck}
             checkedIds={checkedIds}
             listData={listObj.get('listData')}
             columnData={columnHeaders}
@@ -242,12 +278,15 @@ class ClientListForSelectByGroup extends Component {
                   aria-checked={isChecked}
                   key={n.get('clientId')}
                   selected={isChecked}
+                  onClick={event => this.handleSelectRow(event, n.get('clientId'))}
                 >
+                  {!isSingle && 
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                     <Checkbox color="primary" checked={isChecked} className={classes.grObjInCell} 
-                      onClick={event => this.handleSelectRow(event, n.get('clientId'))}
+                      onClick={event => this.handleCheckRow(event, n.get('clientId'))}
                     />
                   </TableCell>
+                  }
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>

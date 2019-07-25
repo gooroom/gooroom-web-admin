@@ -443,7 +443,7 @@ class DividedAdminManageTestDialog extends Component {
                 </DialogActions>
                 </ValidatorForm>
             </Dialog>
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

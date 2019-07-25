@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -81,19 +80,25 @@ class GcspManage extends Component {
     GcspManageActions.readGcspListPaged(GcspManageProps, this.props.match.params.grMenuId, {page: 0});
   };
   
-  handleSelectRow = (event, id) => {
+  handleSelectRow = (event, id, isEditable) => {
     const { GcspManageProps, GcspManageActions } = this.props;
     const viewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
     GcspManageActions.showDialog({
       viewItem: viewItem,
-      dialogType: GcspDialog.TYPE_VIEW
+      dialogType: GcspDialog.TYPE_VIEW,
+      isEditable: isEditable
     });
   };
       
   // create dialog
   handleCreateButton = () => {
+    let adminType = 'A';
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      adminType = 'S';
+    }
     this.props.GcspManageActions.showDialog({
       viewItem: {
+        adminType: adminType,
         gcspId: '',
         certGubun: 'cert1'
       },
@@ -153,13 +158,18 @@ class GcspManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const columnHeaders = [
+    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
+
+    let columnHeaders = [
       { id: 'chGcspNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
       { id: 'chGcspId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chRegDt', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: t("colRegUser") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
+    if(!isEditable) {
+      columnHeaders.splice(-1, 1);
+    }
 
     const listObj = GcspManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -193,9 +203,11 @@ class GcspManage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={2} style={{textAlign:'right'}}>
+            {isEditable &&
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />{t("btnRegist")}
               </Button>
+            }
             </Grid>
           </Grid>
 
@@ -216,13 +228,14 @@ class GcspManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('gcspId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('gcspId'), isEditable)}
                       key={n.get('gcspId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
+                      {isEditable &&
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
@@ -235,6 +248,7 @@ class GcspManage extends Component {
                           <DeleteIcon />
                         </Button>
                       </TableCell>
+                      }
                     </TableRow>
                   );
                 })}

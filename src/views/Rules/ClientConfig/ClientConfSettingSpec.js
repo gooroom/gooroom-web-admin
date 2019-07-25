@@ -29,7 +29,7 @@ class ClientConfSettingSpec extends Component {
   render() {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle, isEditable } = this.props;
     const { t, i18n } = this.props;
 
     let viewItem = null;
@@ -51,17 +51,19 @@ class ClientConfSettingSpec extends Component {
             subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
             action={
               <div style={{paddingTop:16,paddingRight:24}}>
+                {isEditable &&
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
                   onClick={() => this.props.onClickEdit(compId, targetType)}
                 ><EditIcon /></Button>
-                {(this.props.onClickCopy) &&
+                }
+                {(this.props.onClickCopy && isEditable) &&
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                   onClick={() => this.props.onClickCopy(compId, targetType)}
                 ><CopyIcon /></Button>
                 }
-                {(this.props.inherit && !(viewItem.get('isDefault'))) && 
+                {(this.props.inherit && isEditable && !(viewItem.get('isDefault'))) && 
                 <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                   onClick={() => this.props.onClickInherit(compId, targetType)}
                 ><ArrowDropDownCircleIcon /></Button>
@@ -87,10 +89,9 @@ class ClientConfSettingSpec extends Component {
             </Grid>
             }
             <Grid container spacing={0}>
-              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtOSProtect")}</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHypervisor')) ? t("selRun") : t("selStop")}</Grid>
               <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtInitHomeFolder")}</Grid>
               <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHomeReset')) ? t("selExecute") : t("selStop")}</Grid>
+              <Grid item xs={6}></Grid>
               <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtSetupConnectableIp")}</Grid>
               <Grid item xs={3} className={classes.specContent}>
               {viewItem.get('whiteIp').map(function(prop, index) {
@@ -234,7 +235,6 @@ export const convertLogLevelNo = (param) => {
 export const generateClientConfSettingObject = (param, isForViewer, t) => {
 
   if(param) {
-    let useHypervisor = false;
     let useHomeReset = false;
     let whiteIpAll = false;
     let whiteIps = [];
@@ -273,9 +273,7 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       const ename = e.get('propNm');
       const evalue = e.get('propValue');
       
-      if(ename == 'USEHYPERVISOR') {
-        useHypervisor = (evalue == "true");
-      } else if(ename == 'USEHOMERESET') {
+      if(ename == 'USEHOMERESET') {
         useHomeReset = (evalue == "true");
       } else if(ename == 'WHITEIPALL') {
         whiteIpAll = (evalue == "true");
@@ -339,7 +337,6 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       objNm: param.get('objNm'),
       comment: param.get('comment'),
       modDate: param.get('modDate'),
-      useHypervisor: useHypervisor,
       useHomeReset: useHomeReset,
       whiteIpAll: whiteIpAll,
       whiteIp: List(whiteIps),

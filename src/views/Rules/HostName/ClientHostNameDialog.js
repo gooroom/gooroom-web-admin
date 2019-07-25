@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as Constants from "components/GRComponents/GRConstants";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -157,6 +158,9 @@ class ClientHostNameDialog extends Component {
         let title = "";
         if(dialogType === ClientHostNameDialog.TYPE_ADD) {
             title = t("dtAddHosts");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === ClientHostNameDialog.TYPE_VIEW) {
             title = t("dtViewHosts");
         } else if(dialogType === ClientHostNameDialog.TYPE_EDIT) {
@@ -231,7 +235,7 @@ class ClientHostNameDialog extends Component {
                 <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

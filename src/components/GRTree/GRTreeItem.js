@@ -47,7 +47,7 @@ class GRTreeItem extends Component {
 
         return (
             <ListItem button style={Object.assign({}, styles.root, style)} >
-                {(isShowCheck && (isEnableEdit || (depth > startingDepth))) &&
+                {(isShowCheck) &&
                 <Checkbox color="primary"
                     onClick={this.onClickCheckbox}
                     onChange={onCheckNode}

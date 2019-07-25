@@ -27,6 +27,7 @@ import MediaRuleModule from './MediaRuleModule';
 import BrowserRuleModule from './BrowserRuleModule';
 import SecurityRuleModule from './SecurityRuleModule';
 import SoftwareFilterModule from './SoftwareFilterModule';
+import CtrlCenterItemModule from './CtrlCenterItemModule';
 
 import ClientMasterManageModule from './ClientMasterManageModule';
 
@@ -67,6 +68,7 @@ export default combineReducers({
     BrowserRuleModule,
     SecurityRuleModule,
     SoftwareFilterModule,
+    CtrlCenterItemModule,
 
     ClientMasterManageModule,
     

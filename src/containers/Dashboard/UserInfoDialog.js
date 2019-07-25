@@ -97,6 +97,11 @@ class UserInfoDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={12} md={12} >
+                                <SoftwareFilterSpec specType="inform" targetType="" simpleTitle={true}
+                                    selectedItem={DashboardProps.getIn(['ruleData', 'ctrlCenterItemRuleMap'])}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={12} >
                                 <DesktopConfSpec specType="inform" targetType="" simpleTitle={true}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'desktopConfMap'])}
                                 />

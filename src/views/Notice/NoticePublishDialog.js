@@ -305,7 +305,7 @@ class NoticePublishDialog extends Component {
                     </ValidatorForm>
                 </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
         </div>
         );
     }

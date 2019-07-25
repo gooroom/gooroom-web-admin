@@ -1,9 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
+import { Map, fromJS } from 'immutable';
+
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { Link } from 'react-router-dom';
-
 import { grLayout } from "templates/default/GRLayout";
 
 import Drawer from "@material-ui/core/Drawer";
@@ -39,6 +39,10 @@ import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
 import menuItems from "./GRMenuItems";
+
+import menuItemsSuper from "containers/GRSideMenu/GRMenuItemsSuper";
+import menuItemsAdmin from "containers/GRSideMenu/GRMenuItemsAdmin";
+import menuItemsPart from "containers/GRSideMenu/GRMenuItemsPart";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -139,6 +143,32 @@ class GRSideMenu extends React.Component {
       return items.map((item, index) => menuType(item, index));
     };
 
+    let sideMenuList = null;
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      sideMenuList = menuList(menuItemsSuper.items, 0);
+    } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
+      sideMenuList = menuList(menuItemsAdmin.items, 0);
+    } else if(window.gpmsain === Constants.PART_RULECODE) {
+      let menus = fromJS(menuItemsPart);
+      if(window.roleClientAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuClient'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      if(window.roleUserAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuUser'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      if(window.roleDesktopAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuDesktop'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      if(window.roleNoticeAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuNotice'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      sideMenuList = menuList(menus.get('items').toJS(), 0);
+    }
+
     return (
       <Drawer
         classes={{ paper: classes.menuContainerClass }}
@@ -155,7 +185,7 @@ class GRSideMenu extends React.Component {
             </Toolbar>
           </AppBar>
           <List component="nav" className={classes.root}>
-          {menuList(menuItems.items, 0)}
+          {sideMenuList}
           </List>
         </div>
         <AppBar position="static" style={{backgroundColor:"gray"}}>

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as Constants from "components/GRComponents/GRConstants";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -105,7 +106,16 @@ class SoftwareFilterDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddSWRule"),
                 confirmMsg: t("msgAddSWRule"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { SoftwareFilterProps, SoftwareFilterActions } = this.props;
+                        SoftwareFilterActions.createSoftwareFilterData(SoftwareFilterProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: SoftwareFilterProps.get('editingItem')
             });
         } else {
@@ -114,16 +124,6 @@ class SoftwareFilterDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { SoftwareFilterProps, SoftwareFilterActions } = this.props;
-            SoftwareFilterActions.createSoftwareFilterData(SoftwareFilterProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -135,7 +135,16 @@ class SoftwareFilterDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditSWRule"),
                 confirmMsg: t("msgEditSWRule"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { SoftwareFilterProps, SoftwareFilterActions } = this.props;
+                        SoftwareFilterActions.editSoftwareFilterData(SoftwareFilterProps.get('editingItem'), this.props.compId)
+                            .then((res) => {
+                                refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: SoftwareFilterProps.get('editingItem')
             });
         } else {
@@ -144,16 +153,6 @@ class SoftwareFilterDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { SoftwareFilterProps, SoftwareFilterActions } = this.props;
-            SoftwareFilterActions.editSoftwareFilterData(SoftwareFilterProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -232,6 +231,9 @@ class SoftwareFilterDialog extends Component {
         let title = "";
         if(dialogType === SoftwareFilterDialog.TYPE_ADD) {
             title = t("dtAddSWRule");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === SoftwareFilterDialog.TYPE_VIEW) {
             title = t("dtViewSWRule");
         } else if(dialogType === SoftwareFilterDialog.TYPE_EDIT) {
@@ -327,7 +329,7 @@ class SoftwareFilterDialog extends Component {
                 <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

@@ -50,12 +50,14 @@ class UserListForSelectByDept extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.deptCd) {
-      const { stateData } = this.state;
-      const newListParam = (stateData.get('listParam')).merge({
-        deptCd: nextProps.deptCd
-      });
-      this.handleGetUserList(newListParam);
+    if(this.props.deptCd !== nextProps.deptCd) {
+      if(nextProps.deptCd) {
+        const { stateData } = this.state;
+        const newListParam = (stateData.get('listParam')).merge({
+          deptCd: nextProps.deptCd
+        });
+        this.handleGetUserList(newListParam);
+      }
     }
   }
 

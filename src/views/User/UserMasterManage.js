@@ -1,12 +1,15 @@
 import React, { Component } from "react";
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import * as GlobalActions from 'modules/GlobalModule';
 import * as DeptActions from 'modules/DeptModule';
 import * as UserActions from 'modules/UserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import * as TotalRuleActions from 'modules/TotalRuleModule';
 
@@ -23,6 +26,7 @@ import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
+import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
 import DesktopConfDialog from "views/Rules/DesktopConfig/DesktopConfDialog";
 import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
@@ -78,11 +82,9 @@ class UserMasterManage extends Component {
   // click dept checkbox (in tree)
   handleCheckedDept = (checkedDeptCdArray, imperfect) => {
     const { UserProps, UserActions } = this.props;
-    // set checkedDeptCd
-    this.props.DeptActions.changeCompVariableObject({
-      compId: this.state.compId,
-      valueObj: {checkedDeptCd: checkedDeptCdArray}
-    });
+
+    // SET checked
+    this.props.DeptActions.changeTreeDataVariable({ compId: this.state.compId, name: 'checked', value: checkedDeptCdArray });
 
     // show user list in dept.
     UserActions.readUserListPaged(UserProps, this.state.compId, {
@@ -135,16 +137,24 @@ class UserMasterManage extends Component {
 
   // edit dept in tree
   handleEditDept = (treeNode) => { 
-    this.props.DeptActions.showDialog({
-      viewItem: treeNode,
-      dialogType: DeptDialog.TYPE_EDIT
-    });
+    const { TotalRuleActions } = this.props;
+    if(treeNode && treeNode.get('deptCd')) {
+      TotalRuleActions.getAllClientUseRuleByDeptCd({ compId: this.state.compId, deptCd: treeNode.get('deptCd') })
+      .then((e) => {
+        this.props.DeptActions.showDialog({
+          viewItem: treeNode,
+          dialogType: DeptDialog.TYPE_EDIT
+        });
+      })
+      .catch((e) => {
+      });
+    }
   };
 
   getSingleCheckedDept = () => {
-    const checkedDeptCds = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'checkedDeptCd']);
-    if(checkedDeptCds && checkedDeptCds.size > 0) {
-      const deptCd = checkedDeptCds.get(0);
+    const checkedDeptCds = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'checked']);
+    if(checkedDeptCds && checkedDeptCds.length > 0) {
+      const deptCd = checkedDeptCds[0];
       if(deptCd !== undefined && deptCd !== '') {
         return this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData']).find(e => (e.get('key') === deptCd));
       }
@@ -159,6 +169,7 @@ class UserMasterManage extends Component {
     if(checkedDept !== undefined) {
       this.props.DeptActions.showDialog({
         viewItem: {
+          parentDeptCd: checkedDept.get('key'),
           deptCd: '',
           deptNm: '',
         },
@@ -171,20 +182,20 @@ class UserMasterManage extends Component {
 
   // check has group for delete
   isDeptRemovable = () => {
-    let checkedDeptCd = getDataObjectVariableInComp(this.props.DeptProps, this.state.compId, 'checkedDeptCd');
-    if(checkedDeptCd && checkedDeptCd.size > 0) {
+    let checkedDeptCd = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'checked']);
+    if(checkedDeptCd && checkedDeptCd.length > 0) {
       // except default item
       checkedDeptCd = checkedDeptCd.filter(e => (e !== 'DEPTDEFAULT'));
-      return !(checkedDeptCd && checkedDeptCd.size > 0);
+      return !(checkedDeptCd && checkedDeptCd.length > 0);
     } else {
       return true;
     }
   }
 
   isDeptOneSelect = () => {
-    let checkedDeptCd = getDataObjectVariableInComp(this.props.DeptProps, this.state.compId, 'checkedDeptCd');
-    if(checkedDeptCd && checkedDeptCd.size > 0) {
-      return !(checkedDeptCd && checkedDeptCd.size === 1);
+    let checkedDeptCd = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'checked']);
+    if(checkedDeptCd && checkedDeptCd.length > 0) {
+      return !(checkedDeptCd && checkedDeptCd.length === 1);
     } else {
       return true;
     }
@@ -192,60 +203,35 @@ class UserMasterManage extends Component {
 
   handleDeleteButtonForDept = () => {
     const { t, i18n } = this.props;
-    let checkedDeptCd = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'checkedDeptCd']);
-    if(checkedDeptCd && checkedDeptCd.size > 0) {
+    let checkedDeptCd = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'checked']);  
+    if(checkedDeptCd && checkedDeptCd.length > 0) {
 
       // except default item
       checkedDeptCd = checkedDeptCd.filter(e => (e !== 'DEPTDEFAULT'));
 
       this.props.GRConfirmActions.showCheckConfirm({
         confirmTitle: t("dtDeleteDept"),
-        confirmMsg: t("msgDeletedDept", {deptCnt: checkedDeptCd.size}),
+        confirmMsg: t("msgDeletedDept", {deptCnt: checkedDeptCd.length}),
         confirmCheckMsg: t("lbDeleteInUser"),
         handleConfirmResult: (confirmValue, confirmObject, isChecked) => {
           if(confirmValue) {
             const { DeptProps, DeptActions, UserProps, UserActions } = this.props;
-            const checkedDeptCd = getDataObjectVariableInComp(DeptProps, this.state.compId, 'checkedDeptCd');
+            const checkedDeptCd = DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'checked']);
 
-            if(checkedDeptCd && checkedDeptCd.size > 0) {
+            if(checkedDeptCd && checkedDeptCd.length > 0) {
               DeptActions.deleteSelectedDeptData({
-                deptCds: checkedDeptCd.toArray(),
+                deptCds: checkedDeptCd,
                 compId: this.state.compId,
                 isDeleteUser: isChecked
               }).then((reData) => {
 
                 // get parent index
-                const treeData = DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData'])
-                const parentIndexList = checkedDeptCd.map(e => {
-                  const treeItem = treeData.find(function(item) {
-                    return e === item.get('key');
-                  });
-                  return treeItem.get('parentIndex');
-                }).sort().reverse();
-
-                const uniqueParentIndexList = [...new Set(parentIndexList.toJS())];
-                if(uniqueParentIndexList.length > 0) {
-                  uniqueParentIndexList.forEach(e => {
-                    this.handleResetTreeForDelete(e);
-                  });
-                }
-
+                // NEED LOGIC UPGRADE FOR REFRESH TREE ~!!!!!!!
+                this.handleResetTreeForDelete();
                 // show client list in group.
                 UserActions.readUserListPaged(UserProps, this.state.compId, {
                   deptCd: [], page:0
                 }, {isResetSelect:true});
-                
-                // DeptActions.changeCompVariableObject({
-                //   compId: this.state.compId,
-                //   valueObj: {checkedDeptCd: []}
-                // });
-
-                // DeptActions.changeTreeDataVariable({
-                //   compId: this.state.compId, 
-                //   name: 'checked', 
-                //   value: []
-                // });
-
               });
             }
           }
@@ -309,12 +295,20 @@ class UserMasterManage extends Component {
                 deptCd: paramObject.selectedDeptCd,
                 users: paramObject.checkedUserIds.join(',')
             }).then((res) => {
+              
+              if(res.status && res.status && res.status.message) {
+                this.props.GRAlertActions.showAlert({
+                  alertTitle: t("dtSystemNotice"),
+                  alertMsg: res.status.message
+                });
+              }
+
               if(res && res.status && res.status.result === 'success') {
                 // change dept node info as user count
                 this.handleResetTreeForEdit();
                 // show users list in dept
                 UserActions.readUserListPaged(UserProps, this.state.compId, {
-                  groupId: DeptProps.getIn(['viewItems', this.state.compId, 'checkedDeptCd']), 
+                  deptCd: DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'checked']), 
                   page:0
                 }, {isResetSelect:true});
                 // close dialog
@@ -351,7 +345,7 @@ class UserMasterManage extends Component {
                 this.handleResetTreeForEdit();
                 // show user list in dept.
                 UserActions.readUserListPaged(UserProps, this.state.compId, {
-                  deptCd: DeptProps.getIn(['viewItems', this.state.compId, 'checkedDeptCd']),
+                  deptCd: DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'checked']),                  
                   page:0
                 });
               }
@@ -379,32 +373,20 @@ class UserMasterManage extends Component {
     })
   }
 
-  handleResetDeptTree = (listItem) => {
-    const compId = this.state.compId;
-    const { DeptProps, DeptActions } = this.props;
-
-    // changed dept - re-select parentId of deptCd
-    if(listItem.get('parentIndex') !== undefined) {
-      const parentListItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData', listItem.get('parentIndex')]);
-      DeptActions.readChildrenDeptList(compId, parentListItem.get('key'), listItem.get('parentIndex'));
-    } else {
-      DeptActions.readChildrenDeptList(compId, 0, undefined);
-    }
-  }
-
   handleResetTreeForEdit = (index) => {
     // change group node info as client count
     this.props.DeptActions.getDeptNodeList({
       deptCds: this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData']).map(e => (e.get('key'))).toJS(),
       compId: this.state.compId
+    }).then(() => {
+      if(index !== undefined) {
+        const parentListItem = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
+        this.props.DeptActions.readChildrenDeptList(this.state.compId, parentListItem.get('key'), index);
+      } else {
+        this.props.DeptActions.readChildrenDeptList(this.state.compId, 'DEPTDEFAULT', 0);
+      }
     });
 
-    if(index !== undefined) {
-      const parentListItem = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
-      this.props.DeptActions.readChildrenDeptList(this.state.compId, parentListItem.get('key'), index);
-    } else {
-      this.props.DeptActions.readChildrenDeptList(this.state.compId, 'DEPTDEFAULT', 0);
-    }
   }
 
   handleResetTreeForDelete = (index) => {
@@ -420,6 +402,8 @@ class UserMasterManage extends Component {
  
   handleCreateUserButton = value => {
     const { UserActions } = this.props;
+    const initDate = moment().add(7, 'days');
+
     UserActions.showDialog({
       ruleSelectedViewItem: {
         userId: '',
@@ -427,6 +411,7 @@ class UserMasterManage extends Component {
         userPasswd: '',
         showPasswd: false,
         userEmail: '',
+        expireDate: initDate.toJSON().slice(0,10)
       },
       ruleDialogType: UserDialog.TYPE_ADD
     }, true);
@@ -438,6 +423,7 @@ class UserMasterManage extends Component {
     const compId = this.state.compId;
 
     const selectedDept = this.props.DeptProps.getIn(['viewItems', this.state.compId, 'treeComp', 'selectedDept']);
+    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
 
     return (
       <React.Fragment>
@@ -445,6 +431,7 @@ class UserMasterManage extends Component {
         <GRPane>
           <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
             <Grid item xs={12} sm={4} lg={4} style={{border: '1px solid #efefef',minWidth:320}}>
+              {isEditable &&          
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
               <Grid container spacing={0} alignItems="center" direction="row" justify="space-between">
                 <Grid item>
@@ -483,6 +470,7 @@ class UserMasterManage extends Component {
                 </Grid>
               </Grid>
               </Toolbar>
+              }
               <DeptTreeComp compId={compId} 
                 selectorType='multiple' 
                 onCheck={this.handleCheckedDept} 
@@ -493,6 +481,7 @@ class UserMasterManage extends Component {
               />
             </Grid>
             <Grid item xs={12} sm={8} lg={8} style={{border: '1px solid #efefef'}}>
+              {isEditable &&
               <Toolbar elevation={0} style={{minHeight:0,padding:0}}>
                 <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
                   <Grid item xs={12} sm={6} lg={6} >
@@ -515,14 +504,15 @@ class UserMasterManage extends Component {
                   </Grid>
                 </Grid>
               </Toolbar>
+              }
               <UserListComp name='UserListComp' compId={compId} deptCd='' 
                 onSelect={this.handleSelectUser}
                 onMoveUserToDept={this.handleMoveUserToDept}
               />
             </Grid>
             <Grid item xs={12} sm={12} lg={12} style={{border: '1px solid #efefef'}} >
-              <UserSpec compId={compId} />
-              <DeptSpec compId={compId} />
+              <UserSpec compId={compId} isEditable={isEditable} />
+              <DeptSpec compId={compId} isEditable={isEditable} />
             </Grid>
           </Grid>
         </GRPane>
@@ -530,7 +520,7 @@ class UserMasterManage extends Component {
         <UserDialog compId={compId} />
         <UserBasicDialog compId={compId} />
 
-        <DeptDialog compId={compId} resetCallback={this.handleResetDeptTree} />
+        <DeptDialog compId={compId} resetCallback={this.handleResetTreeForEdit} />
         <DeptMultiDialog compId={compId} />
         
         <UserSelectDialog isOpen={this.state.isOpenUserSelect}
@@ -548,6 +538,7 @@ class UserMasterManage extends Component {
         <SecurityRuleDialog compId={compId} />
         <MediaRuleDialog compId={compId} />
         <SoftwareFilterDialog compId={compId} />
+        <CtrlCenterItemDialog compId={compId} />
         <DesktopConfDialog compId={compId} isEnableDelete={false} />
         <DesktopAppDialog compId={compId} />
 
@@ -572,7 +563,8 @@ const mapDispatchToProps = (dispatch) => ({
   DeptActions: bindActionCreators(DeptActions, dispatch),
   UserActions: bindActionCreators(UserActions, dispatch),
 
-  TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch)
+  TotalRuleActions: bindActionCreators(TotalRuleActions, dispatch),
+  GRAlertActions: bindActionCreators(GRAlertActions, dispatch)
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserMasterManage)));

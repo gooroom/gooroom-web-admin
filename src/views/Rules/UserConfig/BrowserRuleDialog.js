@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import * as Constants from "components/GRComponents/GRConstants";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -100,7 +102,16 @@ class BrowserRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddBrowserRule"),
                 confirmMsg: t("msgAddBrowserRule"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { BrowserRuleProps, BrowserRuleActions } = this.props;
+                        BrowserRuleActions.createBrowserRuleData(BrowserRuleProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: BrowserRuleProps.get('editingItem')
             });
         } else {
@@ -110,16 +121,6 @@ class BrowserRuleDialog extends Component {
                 });
             }
         }        
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { BrowserRuleProps, BrowserRuleActions } = this.props;
-            BrowserRuleActions.createBrowserRuleData(BrowserRuleProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
-                    this.handleClose();
-                });
-        }
     }
 
     handleEditData = (event, id) => {
@@ -244,6 +245,9 @@ class BrowserRuleDialog extends Component {
         let title = "";
         if(dialogType === BrowserRuleDialog.TYPE_ADD) {
             title = t("dtAddBrowserRule");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === BrowserRuleDialog.TYPE_VIEW) {
             title = t("dtViewBrowserRule");
         } else if(dialogType === BrowserRuleDialog.TYPE_EDIT) {
@@ -540,7 +544,7 @@ class BrowserRuleDialog extends Component {
                 <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import * as GlobalActions from 'modules/GlobalModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientRuleSelector from 'components/GROptions/ClientRuleSelector';
@@ -30,7 +31,8 @@ class ClientGroupMultiRuleDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.ClientGroupActions.closeMultiDialog();
+        const { ClientGroupActions, compId } = this.props;
+        ClientGroupActions.closeMultiDialog({ compId: `${compId}_MRDIALOG` });
     }
 
     handleValueChange = name => event => {
@@ -44,19 +46,16 @@ class ClientGroupMultiRuleDialog extends Component {
     handleCheckedClientGroup = (checked, imperfect) => {
         // Check selectedDeptCd
         const { ClientGroupActions, compId } = this.props;
-        ClientGroupActions.changeCompVariableObject({
-            compId: compId,
-            valueObj: {checkedGrpId: checked}
-        });
+        ClientGroupActions.changeTreeDataVariable({ compId: `${compId}_MRDIALOG`, name: 'checked', value: checked });
     }
 
     handleEditData = (event) => {
         const { ClientGroupProps, GRConfirmActions, compId } = this.props;
         const { t, i18n } = this.props;
 
-        const checkedGrpId = ClientGroupProps.getIn(['viewItems', compId, 'checkedGrpId']);
-
-        if(checkedGrpId && checkedGrpId.size > 0) {
+        const checkedGrpId = ClientGroupProps.getIn(['viewItems', `${compId}_MRDIALOG`, 'treeComp', 'checked']);
+        
+        if(checkedGrpId && checkedGrpId.length > 0) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("ttChangMultiDeptRule"),
                 confirmMsg: t("msgChangeDeptRuleSelected"),
@@ -64,7 +63,7 @@ class ClientGroupMultiRuleDialog extends Component {
                     if(confirmValue) {
                         const { ClientGroupActions, compId } = this.props;
                         const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
                         const checkedGrpId = paramObject.checkedGrpId;
                         ClientGroupActions.editMultiGroupRule({
                             grpIds: (checkedGrpId) ? checkedGrpId.join(',') : '',
@@ -77,11 +76,18 @@ class ClientGroupMultiRuleDialog extends Component {
                             mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId']),
                             securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId']),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId']),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId']),
                             desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId'])
                         }).then((res) => {
                             // ClientGroupActions.readDeptListPaged(ClientGroupProps, compId);
                             // tree refresh
                             // resetCallback(ClientGroupProps.getIn(['editingItem', 'grpId']));
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
                             this.handleClose();
                         });
                     }
@@ -110,7 +116,7 @@ class ClientGroupMultiRuleDialog extends Component {
                             <Grid item xs={4}>
                                 <GRTreeClientGroupList
                                     listHeight='24px'
-                                    compId={compId+'_MRDIALOG'}
+                                    compId={`${compId}_MRDIALOG`}
                                     hasSelectChild={false}
                                     hasSelectParent={false}
                                     isEnableEdit={false}
@@ -148,13 +154,15 @@ const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
+    CtrlCenterItemProps: state.CtrlCenterItemModule,
     DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
     GlobalActions: bindActionCreators(GlobalActions, dispatch),
     ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupMultiRuleDialog)));

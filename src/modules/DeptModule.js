@@ -77,9 +77,10 @@ export const showMultiDialog = (param) => dispatch => {
     });
 };
 
-export const closeMultiDialog = () => dispatch => {
+export const closeMultiDialog = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_MULTIDEPT_DIALOG
+        type: CLOSE_MULTIDEPT_DIALOG,
+        compId: param.compId
     });
 };
 
@@ -274,6 +275,7 @@ export const changeTreeDataVariable = (param) => dispatch => {
 const makeParameter = (param) => {
     return {
         deptCd: param.deptCd,
+        deptCds: param.deptCds,
         deptNm: param.deptNm,
         uprDeptCd: param.uprDeptCd,
         
@@ -284,6 +286,7 @@ const makeParameter = (param) => {
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
         securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
         filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
+        ctrlCenterItemRuleId: (param.ctrlCenterItemRuleId == '-') ? '' : param.ctrlCenterItemRuleId,
         desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId,
 
         paramIsInherit: (param.paramIsInherit) ? param.paramIsInherit : false
@@ -296,16 +299,20 @@ export const createDeptInfo = (param) => dispatch => {
     return requestPostAPI('createDeptInfo', makeParameter(param)).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
-                    dispatch({
-                        type: CREATE_DEPT_SUCCESS
-                    });
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: CREATE_DEPT_SUCCESS,
+                            response: response
+                        });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
                     return response.data;
-                } else {
-                    return response.data;
-                }    
+                }
             } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
@@ -318,21 +325,21 @@ export const editDeptInfo = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptInfo', makeParameter(param)).then(
         (response) => {
-            if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // change selected object
-                requestPostAPI('readDeptData', {'deptCd': param.deptCd}).then(
-                    (response) => {
+            try {
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
                         dispatch({
                             type: EDIT_DEPT_SUCCESS,
-                            objId: param.objId,
                             response: response
                         });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
                     }
-                ).catch(error => {
-                    dispatch({ type: COMMON_FAILURE, error: error });
-                });
-            } else {
+                    return response.data;
+                }
+            } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
@@ -366,15 +373,17 @@ export const deleteSelectedDeptData = (param) => dispatch => {
     }).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
-                    dispatch({
-                        type: DELETE_DEPT_SUCCESS,
-                        compId: param.compId,
-                        grpId: param.grpId
-                    });
-                    return response.data;
-                } else {
-                    dispatch({ type: COMMON_FAILURE, error: response.data });
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: DELETE_DEPT_SUCCESS,
+                            compId: param.compId,
+                            grpId: param.grpId
+                        });
+                        return response.data;
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
                     return response.data;
                 }
             } catch(error) {
@@ -432,15 +441,23 @@ export const deleteUsersInDept = (itemObj) => dispatch => {
 // edit multi dept rule once.
 export const editMultiDeptRule = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateRuleForDepts', param).then(
+    return requestPostAPI('updateRuleForDepts', makeParameter(param)).then(
         (response) => {
-            if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                dispatch({
-                    type: EDIT_DEPT_SUCCESS,
-                    response: response
-                });
-            } else {
+            try {
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: EDIT_DEPT_SUCCESS,
+                            response: response
+                        });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
+                    return response.data;
+                }
+            } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
@@ -481,9 +498,8 @@ export default handleActions({
                     children: (x.hasChildren) ? [] : null,
                     regDate: x.regDt,
                     modDate: x.modDt,
-                    comment: x.comment,
-                    userCnt: x.userCnt,
-                    userTotalCnt: x.userTotalCnt,
+                    itemCount: x.itemCount,
+                    itemTotalCount: x.itemTotalCount,
                     _shouldRender: true
                 };
                 if (index !== undefined) {
@@ -549,7 +565,6 @@ export default handleActions({
                 } else {
                     // root node
                     return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', 0], {
-                        comment: resData.getIn([0, 'comment']),
                         modDate: resData.getIn([0, 'modDate']),
                         regDate: resData.getIn([0, 'regDate']),
                         title: resData.getIn([0, 'title'])
@@ -622,11 +637,10 @@ export default handleActions({
             const index = treeData.findIndex((e => (e.get('key') === data[0].deptCd)));
             return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
                 regDate: data[0].regDate,
-                userCnt: data[0].userCnt,
-                userTotalCnt: data[0].userTotalCnt,
+                itemCount: data[0].itemCount,
+                itemTotalCount: data[0].itemTotalCount,
                 modDate: data[0].modDate,
-                deptNm: data[0].deptNm,
-                comment: data[0].comment
+                deptNm: data[0].deptNm
             }));
         } else  {
             return state;
@@ -642,12 +656,11 @@ export default handleActions({
                 const index = treeData.findIndex((e => (e.get('key') === data[i].deptCd)));
                 newState = newState.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
                     regDate: data[i].regDate,
-                    userCnt: data[i].userCnt,
-                    userTotalCnt: data[i].userTotalCnt,
+                    itemCount: data[i].itemCount,
+                    itemTotalCount: data[i].itemTotalCount,
                     modDate: data[i].modDate,
                     deptNm: data[i].deptNm,
-                    title: data[i].deptNm,
-                    comment: data[i].comment
+                    title: data[i].deptNm
                 }));
             }
             return newState;
@@ -676,7 +689,9 @@ export default handleActions({
         });
     },
     [CLOSE_MULTIDEPT_DIALOG]: (state, action) => {
-        return state.delete('editingItem').merge({
+        return state
+            .deleteIn(['viewItems', action.compId])
+            .delete('editingItem').merge({
             multiDialogOpen: false
         });
     },
@@ -735,7 +750,6 @@ export default handleActions({
     [DELETE_DEPT_SUCCESS]: (state, action) => {
         const newState = commonHandleActions.handleDeleteSuccessAction(state, action, 'deptCd');
         return newState.deleteIn(['viewItems', action.compId, 'treeComp', 'activeListItem'])
-                    .deleteIn(['viewItems', action.compId, 'checkedDeptCd'])
                     .deleteIn(['viewItems', action.compId, 'treeComp', 'checked'])
                     .deleteIn(['viewItems', action.compId, 'informOpen'])
                     .deleteIn(['viewItems', action.compId, 'viewItem']);

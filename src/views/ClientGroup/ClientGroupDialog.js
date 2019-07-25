@@ -8,8 +8,10 @@ import { getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import GRAlert from 'components/GRComponents/GRAlert';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -59,12 +61,13 @@ class ClientGroupDialog extends Component {
                     if(confirmValue) {
                         const { ClientGroupProps, ClientGroupActions, compId, resetCallback } = this.props;
                         const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
             
                         const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
                         ClientGroupActions.createClientGroupData({
                             groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                             groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
+                            regClientIp: ClientGroupProps.getIn(['editingItem', 'regClientIp']),
                             uprGrpId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                             isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
                             
@@ -75,13 +78,22 @@ class ClientGroupDialog extends Component {
                             mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                             securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selecteObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
             
                         }).then((res) => {
-                            // tree refresh
-                            const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                            resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
-                            this.handleClose();
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh for create
+                                const index = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).findIndex(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
+                                resetCallback(index);
+                                this.handleClose();
+                            }
                         }).catch((err) => {
                             console.log('handleCreateData - err :::: ', err);
                         });
@@ -109,13 +121,14 @@ class ClientGroupDialog extends Component {
                     if(confirmValue) {
                         const { ClientGroupProps, ClientGroupActions, compId, resetCallback } = this.props;
                         const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
             
                         const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
                         ClientGroupActions.editClientGroupData({
                             groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                             groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                             groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
+                            regClientIp: ClientGroupProps.getIn(['editingItem', 'regClientIp']),
                             isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
             
                             clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
@@ -125,13 +138,24 @@ class ClientGroupDialog extends Component {
                             mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
                             securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selecteObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
                             
                         }).then((res) => {
-                            // tree refresh
-                            const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                            resetCallback(listItem.get('parentIndex'));
-                            this.handleClose();
+
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh for edit
+                                const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
+                                resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
+                                this.handleClose();
+                            }
+                            
                         });
                     }
                 }
@@ -166,14 +190,17 @@ class ClientGroupDialog extends Component {
             title = t("dtEditGroup");
         }
 
-        let checkedGrpId = getDataObjectVariableInComp(this.props.ClientGroupProps, compId, 'checkedGrpId');
+        const checkedGrpId = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'checked']);
         let upperGroupInfo = '';
-        if(checkedGrpId != undefined && checkedGrpId.size > 0) {
-            upperGroupInfo = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedGrpId.get(0))).get('title') + ' (' + checkedGrpId.get(0) + ')';
+        if(checkedGrpId !== undefined && checkedGrpId.length > 0) {
+            const upperItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedGrpId[0]));
+            if(upperItem) {
+                upperGroupInfo = `${upperItem.get('title')} (${checkedGrpId[0]})`;
+            }
         }
 
         return (
-            <div>
+            <React.Fragment>
             {(ClientGroupProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientGroupProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <ValidatorForm ref="form">
@@ -196,10 +223,16 @@ class ClientGroupDialog extends Component {
                                 onChange={this.handleValueChange('grpNm')}
                             />
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={4}>
                             <TextField label={t("spClientGroupDesc")} className={classes.fullWidth}
                                 value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                                 onChange={this.handleValueChange('comment')}
+                            />
+                        </Grid>
+                        <Grid item xs={5}>
+                            <TextField label={t("spClientRegIp")} className={classes.fullWidth}
+                                value={(editingItem.get('regClientIp')) ? editingItem.get('regClientIp') : ''}
+                                onChange={this.handleValueChange('regClientIp')}
                             />
                         </Grid>
                     </Grid>
@@ -220,7 +253,8 @@ class ClientGroupDialog extends Component {
                 </ValidatorForm>
             </Dialog>
             }
-            </div>
+            {/*<GRAlert /> */}
+            </React.Fragment>
         );
     }
 }
@@ -236,12 +270,14 @@ const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
+    CtrlCenterItemProps: state.CtrlCenterItemModule,
     DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
     ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
 

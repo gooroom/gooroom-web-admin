@@ -131,7 +131,7 @@ class Dashboard extends Component {
         const clientRevoke = (DashboardProps.getIn(['clientStatus', 'clientRevokeCount'])) ?  DashboardProps.getIn(['clientStatus', 'clientRevokeCount']) : 0;
 
         const loginCount = (DashboardProps.getIn(['loginStatus', 'loginCount'])) ?  DashboardProps.getIn(['loginStatus', 'loginCount']) : 0;
-        const userCnt = (DashboardProps.getIn(['loginStatus', 'userCnt'])) ?  DashboardProps.getIn(['loginStatus', 'userCnt']) : 0;
+        const userCount = (DashboardProps.getIn(['loginStatus', 'userCount'])) ?  DashboardProps.getIn(['loginStatus', 'userCount']) : 0;
 
         const noUpdateCount = (DashboardProps.getIn(['updateStatus', 'noUpdateCount'])) ?  DashboardProps.getIn(['updateStatus', 'noUpdateCount']) : 0;
         const updateCount = (DashboardProps.getIn(['updateStatus', 'updateCount'])) ?  DashboardProps.getIn(['updateStatus', 'updateCount']) : 0;
@@ -156,7 +156,7 @@ class Dashboard extends Component {
                     </Grid>
                     <Grid item xs={6} sm={4}>
                         <Paper className={classes.paper}>
-                            <UserLogin loginCount={loginCount} userCnt={userCnt} onLinkClick={this.handleClickLink} />
+                            <UserLogin loginCount={loginCount} userCount={userCount} onLinkClick={this.handleClickLink} />
                         </Paper>
                     </Grid>
                   </Grid>
