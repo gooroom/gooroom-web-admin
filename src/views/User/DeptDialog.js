@@ -60,19 +60,20 @@ class DeptDialog extends Component {
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
-                        const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitProps, DesktopConfProps } = this.props;
+                        const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
                         DeptActions.createDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                             deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
                             uprDeptCd: DeptProps.getIn(['editingItem', 'parentDeptCd']),
             
-                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selecteObjectIdName),
-                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitProps.getIn(selectedObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                         }).then((res) => {
                             if(res.status && res.status && res.status.message) {
                                 this.props.GRAlertActions.showAlert({
@@ -114,20 +115,21 @@ class DeptDialog extends Component {
                     if(confirmValue) {
                         const isInherit = isChecked;
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
-                        const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitProps, DesktopConfProps } = this.props;
+                        const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
                         DeptActions.editDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                             deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
                 
                             paramIsInherit: (isInherit) ? 'Y' : 'N',
                 
-                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selecteObjectIdName),
-                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitProps.getIn(selectedObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                         }).then((res) => {
 
                             if(res.status && res.status && res.status.message) {
@@ -252,6 +254,7 @@ const mapStateToProps = (state) => ({
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
     CtrlCenterItemProps: state.CtrlCenterItemModule,
+    PolicyKitProps: state.PolicyKitRuleModule,
     DesktopConfProps: state.DesktopConfModule
 });
 

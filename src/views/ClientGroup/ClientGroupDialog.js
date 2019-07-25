@@ -61,9 +61,9 @@ class ClientGroupDialog extends Component {
                     if(confirmValue) {
                         const { ClientGroupProps, ClientGroupActions, compId, resetCallback } = this.props;
                         const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitProps, DesktopConfProps } = this.props;
             
-                        const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
+                        const selectedObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
                         ClientGroupActions.createClientGroupData({
                             groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                             groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
@@ -71,15 +71,16 @@ class ClientGroupDialog extends Component {
                             uprGrpId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                             isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
                             
-                            clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
-                            hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
-                            updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
-                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selecteObjectIdName),
-                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            clientConfigId: ClientConfSettingProps.getIn(selectedObjectIdName),
+                            hostNameConfigId: ClientHostNameProps.getIn(selectedObjectIdName),
+                            updateServerConfigId: ClientUpdateServerProps.getIn(selectedObjectIdName),
+                            browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitProps.getIn(selectedObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
             
                         }).then((res) => {
                             if(res.status && res.status && res.status.message) {
@@ -121,9 +122,9 @@ class ClientGroupDialog extends Component {
                     if(confirmValue) {
                         const { ClientGroupProps, ClientGroupActions, compId, resetCallback } = this.props;
                         const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitProps, DesktopConfProps } = this.props;
             
-                        const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
+                        const selectedObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
                         ClientGroupActions.editClientGroupData({
                             groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                             groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
@@ -131,15 +132,16 @@ class ClientGroupDialog extends Component {
                             regClientIp: ClientGroupProps.getIn(['editingItem', 'regClientIp']),
                             isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
             
-                            clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
-                            hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
-                            updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
-                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selecteObjectIdName),
-                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            clientConfigId: ClientConfSettingProps.getIn(selectedObjectIdName),
+                            hostNameConfigId: ClientHostNameProps.getIn(selectedObjectIdName),
+                            updateServerConfigId: ClientUpdateServerProps.getIn(selectedObjectIdName),
+                            browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitProps.getIn(selectedObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                             
                         }).then((res) => {
 
@@ -271,6 +273,7 @@ const mapStateToProps = (state) => ({
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
     CtrlCenterItemProps: state.CtrlCenterItemModule,
+    PolicyKitProps: state.PolicyKitRuleModule,
     DesktopConfProps: state.DesktopConfModule
 });
 

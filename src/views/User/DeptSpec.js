@@ -16,6 +16,7 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+import * as PolicyKitActions from 'modules/PolicyKitRuleModule';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
@@ -24,6 +25,7 @@ import { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
 import { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
 import { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import { generateCtrlCenterItemObject } from 'views/Rules/UserConfig/CtrlCenterItemSpec';
+import { generatePolicyKitObject } from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 
 import DeptDialog from './DeptDialog';
 
@@ -47,6 +49,8 @@ import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
 import CtrlCenterItemSpec from 'views/Rules/UserConfig/CtrlCenterItemSpec';
+import PolicyKitRuleDialog from 'views/Rules/UserConfig/PolicyKitRuleDialog';
+import PolicyKitRuleSpec from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
@@ -80,6 +84,9 @@ class DeptSpec extends Component {
     });
     this.props.CtrlCenterItemActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
       value: getValueInSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, 'DEPT', 'objId')      
+    });
+    this.props.PolicyKitActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
+      value: getValueInSelectedObjectInComp(this.props.PolicyKitProps, compId, 'DEPT', 'objId')      
     });
     this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
       value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'DEPT', 'confId')      
@@ -130,6 +137,13 @@ class DeptSpec extends Component {
       dialogType: CtrlCenterItemDialog.TYPE_EDIT
     });
   };
+  handleClickEditForPolicyKit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitProps, compId, targetType);
+    this.props.PolicyKitActions.showDialog({
+      viewItem: generatePolicyKitObject(viewItem, false),
+      dialogType: PolicyKitRuleDialog.TYPE_EDIT
+    });
+  };
   handleClickEditForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -173,6 +187,13 @@ class DeptSpec extends Component {
       dialogType: CtrlCenterItemDialog.TYPE_INHERIT_DEPT
     });
   };
+  handleClickInheritForPolicyKit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitProps, compId, targetType);
+    this.props.PolicyKitActions.showDialog({
+      viewItem: viewItem,
+      dialogType: PolicyKitRuleDialog.TYPE_INHERIT_DEPT
+    });
+  };
   handleClickInheritForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -194,6 +215,7 @@ class DeptSpec extends Component {
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedCtrlCenterItem = this.props.CtrlCenterItemProps.getIn(['viewItems', compId, 'DEPT']);
+    const selectedPolicyKit = this.props.PolicyKitProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'DEPT']);
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
@@ -269,6 +291,16 @@ class DeptSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
+                <PolicyKitRuleSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
+                  selectedItem={(selectedPolicyKit) ? selectedPolicyKit.get('viewItem') : null}
+                  ruleGrade={(selectedPolicyKit) ? selectedPolicyKit.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForPolicyKit}
+                  onClickInherit={this.handleClickInheritForPolicyKit}
+                  inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedPolicyKit && AdminProps.get('adminId') === selectedPolicyKit.getIn(['viewItem', 'regUserId'])}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
                   ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
@@ -298,6 +330,7 @@ const mapStateToProps = (state) => ({
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
   CtrlCenterItemProps: state.CtrlCenterItemModule,
+  PolicyKitProps: state.PolicyKitRuleModule,
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -310,6 +343,7 @@ const mapDispatchToProps = (dispatch) => ({
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
+  PolicyKitActions: bindActionCreators(PolicyKitActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 
