@@ -27,6 +27,7 @@ import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
+import PolicyKitRuleDialog from 'views/Rules/UserConfig/PolicyKitRuleDialog';
 import DesktopConfDialog from "views/Rules/DesktopConfig/DesktopConfDialog";
 import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
@@ -539,6 +540,7 @@ class UserMasterManage extends Component {
         <MediaRuleDialog compId={compId} />
         <SoftwareFilterDialog compId={compId} />
         <CtrlCenterItemDialog compId={compId} />
+        <PolicyKitRuleDialog compId={compId} />
         <DesktopConfDialog compId={compId} isEnableDelete={false} />
         <DesktopAppDialog compId={compId} />
 

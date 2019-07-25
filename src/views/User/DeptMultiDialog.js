@@ -62,7 +62,7 @@ class DeptMultiDialog extends Component {
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         const { DeptActions, compId } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitProps, DesktopConfProps } = this.props;
                         const checkedDeptCd = paramObject.checkedDeptCd;
                         DeptActions.editMultiDeptRule({
                             deptCds: (checkedDeptCd) ? checkedDeptCd.join(',') : '',
@@ -72,6 +72,7 @@ class DeptMultiDialog extends Component {
                             securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
                             ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                            policyKitRuleId: PolicyKitProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
                             desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
                         }).then((res) => {
                             // DeptActions.readDeptListPaged(DeptProps, compId);
@@ -146,6 +147,7 @@ const mapStateToProps = (state) => ({
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
     CtrlCenterItemProps: state.CtrlCenterItemModule,
+    PolicyKitProps: state.PolicyKitRuleModule,
     DesktopConfProps: state.DesktopConfModule
 });
 
