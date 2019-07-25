@@ -18,6 +18,7 @@ import MediaRuleManage from "views/Rules/UserConfig/MediaRuleManage";
 import BrowserRuleManage from "views/Rules/UserConfig/BrowserRuleManage";
 import SecurityRuleManage from "views/Rules/UserConfig/SecurityRuleManage";
 import SoftwareFilterManage from "views/Rules/UserConfig/SoftwareFilterManage";
+import CtrlCenterItemManage from "views/Rules/UserConfig/CtrlCenterItemManage";
 
 import JobManage from "views/Job/JobManage";
 import PackageManage from 'views/ClientPackage/ClientPackageManage';
@@ -74,6 +75,7 @@ class GRRouters extends Component {
           <Route path="/userconfig/browser/:grMenuId/:grMenuName" component={BrowserRuleManage} />
           <Route path="/userconfig/security/:grMenuId/:grMenuName" component={SecurityRuleManage} />
           <Route path="/userconfig/swfilter/:grMenuId/:grMenuName" component={SoftwareFilterManage} />
+          <Route path="/userconfig/ctrlcenteritem/:grMenuId/:grMenuName" component={CtrlCenterItemManage} />
           
           <Route path="/jobs/jobmanage/:grMenuId/:grMenuName" component={JobManage} />
           <Route path="/package/packagemanage/:grMenuId/:grMenuName" component={PackageManage} />

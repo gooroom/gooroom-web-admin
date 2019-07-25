@@ -61,7 +61,7 @@ class ClientProfilePackageShowDialog extends Component {
                     <GRConfirm />
                 </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </React.Fragment>
         );
     }

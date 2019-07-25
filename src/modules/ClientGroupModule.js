@@ -76,9 +76,10 @@ export const showMultiDialog = (param) => dispatch => {
     });
 };
 
-export const closeMultiDialog = () => dispatch => {
+export const closeMultiDialog = (param) => dispatch => {
     return dispatch({
-        type: CLOSE_GROUPRULE_DIALOG
+        type: CLOSE_GROUPRULE_DIALOG,
+        compId: param.compId
     });
 };
 
@@ -123,6 +124,7 @@ export const readChildrenClientGroupList = (compId, grpId, index) => dispatch =>
                 index: index,
                 response: response
             });
+            return index;
         }
     ).catch(error => {
         console.log('error : ', error);
@@ -250,8 +252,10 @@ export const changeTreeDataVariable = (param) => dispatch => {
 const makeParameter = (param) => {
     return {
         groupId: param.groupId,
+        grpIds: param.grpIds,
         groupName: param.groupName,
         groupComment: param.groupComment,
+        regClientIp: param.regClientIp,
         uprGrpId: param.uprGrpId,
         
         clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
@@ -261,6 +265,7 @@ const makeParameter = (param) => {
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
         securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
         filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
+        ctrlCenterItemRuleId: (param.ctrlCenterItemRuleId == '-') ? '' : param.ctrlCenterItemRuleId,
         desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId
     };
 }
@@ -271,14 +276,20 @@ export const createClientGroupData = (param) => dispatch => {
     return requestPostAPI('createClientGroup', makeParameter(param)).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
-                    dispatch({
-                        type: CREATE_CLIENTGROUP_SUCCESS,
-                        response: response
-                    });
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: CREATE_CLIENTGROUP_SUCCESS,
+                            response: response
+                        });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
+                    return response.data;
                 }
             } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
@@ -291,21 +302,21 @@ export const editClientGroupData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateClientGroup', makeParameter(param)).then(
         (response) => {
-            if(response && response.data && response.data.status && response.data.status.result == 'success') {
-
-                requestPostAPI('readClientGroupData', {'groupId': param.groupId}).then(
-                    (response) => {
+            try {
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
                         dispatch({
                             type: EDIT_CLIENTGROUP_SUCCESS,
-                            grpId: param.groupId,
                             response: response
                         });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
                     }
-                ).catch(error => {
-                    dispatch({ type: COMMON_FAILURE, error: error });
-                });
-            } else {
+                    return response.data;
+                }
+            } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
@@ -339,15 +350,17 @@ export const deleteSelectedClientGroupData = (param) => dispatch => {
     }).then(
         (response) => {
             try {
-                if(response.data.status && response.data.status.result === 'success') {
-                    dispatch({
-                        type: DELETE_CLIENTGROUP_SUCCESS,
-                        compId: param.compId,
-                        grpId: param.grpId
-                    });
-                    return response.data;
-                } else {
-                    dispatch({ type: COMMON_FAILURE, error: response.data });
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: DELETE_CLIENTGROUP_SUCCESS,
+                            compId: param.compId,
+                            grpId: param.grpId
+                        });
+                        
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
                     return response.data;
                 }
             } catch(error) {
@@ -405,15 +418,23 @@ export const removeClientsInGroup = (itemObj) => dispatch => {
 // edit multi group rule once.
 export const editMultiGroupRule = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateRuleForGroups', param).then(
+    return requestPostAPI('updateRuleForGroups', makeParameter(param)).then(
         (response) => {
-            if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                dispatch({
-                    type: EDIT_CLIENTGROUP_SUCCESS,
-                    response: response
-                });
-            } else {
+            try {
+                if(response && response.data) {
+                    if(response.data.status && response.data.status.result === 'success') {
+                        dispatch({
+                            type: EDIT_CLIENTGROUP_SUCCESS,
+                            response: response
+                        });
+                    } else {
+                        dispatch({ type: COMMON_FAILURE, error: response.data });
+                    }
+                    return response.data;
+                }
+            } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
             }
         }
     ).catch(error => {
@@ -451,8 +472,9 @@ export default handleActions({
                     regDate: x.regDt,
                     modDate: x.modDt,
                     comment: x.comment,
-                    clientCount: x.clientCount,
-                    clientTotalCount: x.clientTotalCount,
+                    regClientIp: x.regClientIp,
+                    itemCount: x.itemCount,
+                    itemTotalCount: x.itemTotalCount,
                     _shouldRender: true
                 };
                 if (index !== undefined) {
@@ -592,11 +614,12 @@ export default handleActions({
             const index = treeData.findIndex((e => (e.get('key') === data[0].grpId)));
             return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
                 regDate: data[0].regDate,
-                clientCount: data[0].clientCount,
-                clientTotalCount: data[0].clientTotalCount,
+                itemCount: data[0].itemCount,
+                itemTotalCount: data[0].itemTotalCount,
                 modDate: data[0].modDate,
                 grpNm: data[0].grpNm,
-                comment: data[0].comment
+                comment: data[0].comment,
+                regClientIp: data[0].regClientIp
             }));
         } else  {
             return state;
@@ -612,12 +635,13 @@ export default handleActions({
                 const index = treeData.findIndex((e => (e.get('key') === data[i].grpId)));
                 newState = newState.mergeIn(['viewItems', compId, 'treeComp', 'treeData', index], Map({
                     regDate: data[i].regDate,
-                    clientCount: data[i].clientCount,
-                    clientTotalCount: data[i].clientTotalCount,
+                    itemCount: data[i].itemCount,
+                    itemTotalCount: data[i].itemTotalCount,
                     modDate: data[i].modDate,
                     grpNm: data[i].grpNm,
                     title: data[i].grpNm,
-                    comment: data[i].comment
+                    comment: data[i].comment,
+                    regClientIp: data[i].regClientIp
                 }));
             }
             return newState;
@@ -659,7 +683,9 @@ export default handleActions({
         });
     },
     [CLOSE_GROUPRULE_DIALOG]: (state, action) => {
-        return state.delete('editingItem').merge({
+        return state
+            .deleteIn(['viewItems', action.compId])
+            .delete('editingItem').merge({
             multiDialogOpen: false
         });
     },
@@ -711,7 +737,6 @@ export default handleActions({
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
         const newState = commonHandleActions.handleDeleteSuccessAction(state, action, 'grpId');
         return newState.deleteIn(['viewItems', action.compId, 'treeComp', 'activeListItem'])
-                    .deleteIn(['viewItems', action.compId, 'checkedGrpId'])
                     .deleteIn(['viewItems', action.compId, 'treeComp', 'checked'])
                     .deleteIn(['viewItems', action.compId, 'informOpen'])
                     .deleteIn(['viewItems', action.compId, 'viewItem']);

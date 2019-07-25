@@ -117,6 +117,7 @@ class ClientGroupTreeComp extends Component {
         grpId: selectRowObject.get('grpId'),
         grpNm: selectRowObject.get('grpNm'),
         comment: selectRowObject.get('comment'),
+        regClientIp: selectRowObject.get('regClientIp'),
         regDate: selectRowObject.get('regDate'),
         hasChildren: selectRowObject.get('hasChildren')
       }));
@@ -189,6 +190,7 @@ class ClientGroupTreeComp extends Component {
         grpId: listItem.get('key'),
         grpNm: listItem.get('title'),
         comment: listItem.get('comment'),
+        regClientIp: listItem.get('regClientIp'),
         regDate: listItem.get('regDate'),
         hasChildren: listItem.get('hasChildren')
       }));
@@ -202,6 +204,7 @@ class ClientGroupTreeComp extends Component {
         grpId: listItem.get('key'),
         grpNm: listItem.get('title'),
         comment: listItem.get('comment'),
+        regClientIp: listItem.get('regClientIp'),
         regDate: listItem.get('regDate'),
         hasChildren: listItem.get('hasChildren')
       }));
@@ -299,7 +302,7 @@ class ClientGroupTreeComp extends Component {
                     </TableCell>
                   }
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientCount')}/{n.get('clientTotalCount')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('itemCount')}/{n.get('itemTotalCount')}</TableCell>
                   {(hasEdit) && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       <Button color='secondary' size="small" 
@@ -350,6 +353,7 @@ class ClientGroupTreeComp extends Component {
             compId={compId}
             hasSelectChild={false}
             hasSelectParent={false}
+            isShowCheck={(selectorType && selectorType === 'multiple')}
             isEnableEdit={this.props.isEnableEdit}
             isActivable={this.props.isActivable}
             isShowMemberCnt={true}

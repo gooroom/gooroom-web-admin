@@ -10,6 +10,9 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import GRClientSelector from 'components/GRComponents/GRClientSelector';
+import ClientSingleSelectDialog from 'components/GROptions/ClientSingleSelectDialog';
+import GroupAndClientMultiSelector from 'components/GROptions/GroupAndClientMultiSelector';
+
 import { getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
 
 import RadioGroup from "@material-ui/core/RadioGroup";
@@ -39,6 +42,26 @@ class ClientProfileSetDialog extends Component {
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
     static TYPE_PROFILE = 'PROFILE';
+
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+            isSelectorOpen: false
+        };
+    }
+
+    closeClientSelectDialog = (event) => {
+        this.setState({
+            isSelectorOpen: false
+        });
+    }
+
+    openClientSelectDialog = (event) => {
+        this.setState({
+            isSelectorOpen: true
+        });
+    }
     
     handleClose = (event) => {
         this.props.ClientProfileSetActions.closeDialog(this.props.compId);
@@ -115,27 +138,26 @@ class ClientProfileSetDialog extends Component {
         GRConfirmActions.showConfirm({
             confirmTitle: t("dtExecuteClientProfile"),
             confirmMsg: t("msgExecuteClientProfile"),
-            handleConfirmResult: this.handleProfileJobConfirmResult,
+            handleConfirmResult: (confirmValue, paramObject) => {
+                if(confirmValue) {
+                    const { ClientProfileSetProps, ClientProfileSetActions, compId } = this.props;
+                    const { ClientGroupProps, ClientManageProps } = this.props;
+                    const selectedClientGroupIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
+                    const checkedClientIds = getDataObjectVariableInComp(ClientManageProps, compId, 'checkedIds');
+        
+                    ClientProfileSetActions.createClientProfileSetJob({
+                        profileNo: paramObject.get('profileNo'),
+                        targetClientIds: (checkedClientIds) ? checkedClientIds.join() : '',
+                        targetClientGroupIds: (selectedClientGroupIds) ? selectedClientGroupIds.join() : '',
+                        isRemoval: (paramObject.get('isRemoval') && paramObject.get('isRemoval') == 'true') ? 'true' : 'false'
+                    }).then((res) => {
+                        ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, compId);
+                        this.handleClose();
+                    });
+                }
+            },
             confirmObject: ClientProfileSetProps.get('editingItem')
         });
-    }
-    handleProfileJobConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { ClientProfileSetProps, ClientProfileSetActions, compId } = this.props;
-            const { ClientGroupProps, ClientManageProps } = this.props;
-            const selectedClientGroupIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
-            const checkedClientIds = getDataObjectVariableInComp(ClientManageProps, compId, 'checkedIds');
-
-            ClientProfileSetActions.createClientProfileSetJob({
-                profileNo: paramObject.get('profileNo'),
-                targetClientIds: (checkedClientIds) ? checkedClientIds.join() : '',
-                targetClientGroupIds: (selectedClientGroupIds) ? selectedClientGroupIds.join() : '',
-                isRemoval: (paramObject.get('isRemoval') && paramObject.get('isRemoval') == 'true') ? 'true' : 'false'
-            }).then((res) => {
-                ClientProfileSetActions.readClientProfileSetListPaged(ClientProfileSetProps, compId);
-                this.handleClose();
-            });
-        }
     }
 
     handleValueChange = name => event => {
@@ -145,9 +167,13 @@ class ClientProfileSetDialog extends Component {
         });
     }
 
-    handleSelectClient = (clientObj) => {
+    handleSelectRefClient = (clientObj) => {
         this.props.ClientProfileSetActions.setEditingItemValue({ name: 'clientId', value: clientObj.get('clientId') });
         this.props.ClientProfileSetActions.setEditingItemValue({ name: 'clientNm', value: clientObj.get('clientName') });
+    }
+
+    handleSelectClient = (selectedItems) => {
+        this.props.ClientProfileSetActions.setEditingItemValue({ name: 'clientInfoList', value: selectedItems });
     }
 
     handleSelectClientArray = (selectedObj, checkedIds) => {
@@ -155,6 +181,11 @@ class ClientProfileSetDialog extends Component {
         //   name: 'targetClientIdArray',
         //   value: checkedIds
         // });
+    }
+
+    handleSelectGroup = (selectedItems) => {
+
+        this.props.ClientProfileSetActions.setEditingItemValue({ name: 'grpInfoList', value: selectedItems });
     }
 
     handleSelectGroupArray = (selectedObj, checkedIds) => {
@@ -191,75 +222,86 @@ class ClientProfileSetDialog extends Component {
             title = t("dtExecuteClientProfile");
         }
 
+        const selectedGroup = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList') : null;
+        const selectedClient = (editingItem && editingItem.get('clientInfoList')) ? editingItem.get('clientInfoList') : null;
+
         return (
-            <div>
+            <React.Fragment>
             {(ClientProfileSetProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientProfileSetProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <ValidatorForm ref="form">
                 <DialogTitle >{title}</DialogTitle>
                 <DialogContent>
-                    <TextValidator label={t("lbProfileName")} className={classes.fullWidth}
-                        value={(editingItem.get('profileNm')) ? editingItem.get('profileNm') : ''}
-                        name="profileNm" validators={['required']} errorMessages={[t("msgInputProfileName")]}
-                        onChange={([ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)) ? null : this.handleValueChange("profileNm")}
-                    />
-                    <TextField label={t("lbProfileDesc")} className={classes.fullWidth}
-                        value={(editingItem.get('profileCmt')) ? editingItem.get('profileCmt') : ''}
-                        onChange={([ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)) ? null : this.handleValueChange("profileCmt")}
-                    />
+
                     <Grid container spacing={16} alignItems="center" direction="row" justify="space-between" >
-                        <Grid item xs={12} sm={6} lg={6} >
-                        <div className={classes.fullWidth}>
-                        {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                            <div>
-                                <FormLabel>{t("lbProfileEtcHandle")}</FormLabel>
-                                <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={(editingItem.get('isRemoval') == 'true') ? 'true': 'false'} row>
-                                    <FormControlLabel value="true" control={<Radio />} label={t("selDelete")} />
-                                    <FormControlLabel value="false" control={<Radio />} label={t("selNoDelete")} />
-                                </RadioGroup>
-                            </div>
-                        }
-                        {(dialogType === ClientProfileSetDialog.TYPE_VIEW) &&
-                            <TextValidator label={t("lbReferenceClient")} className={classes.fullWidth}
-                                name="clientNm" validators={['required']} errorMessages={[t("msgSelectRefClient")]}
-                                value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
+                        <Grid item xs={12} sm={4} lg={4} >
+                            <TextValidator label={t("lbProfileName")} className={classes.fullWidth}
+                                value={(editingItem.get('profileNm')) ? editingItem.get('profileNm') : ''}
+                                name="profileNm" validators={['required']} errorMessages={[t("msgInputProfileName")]}
+                                onChange={([ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)) ? null : this.handleValueChange("profileNm")}
                             />
-                        }
-                        </div>
                         </Grid>
-                        <Grid item xs={12} sm={6} lg={6} >
-                        {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                            <TextField label={t("lbReferenceClient")} className={classes.fullWidth}
-                                value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
+                        <Grid item xs={12} sm={8} lg={8} >
+                            <TextField label={t("lbProfileDesc")} className={classes.fullWidth}
+                                value={(editingItem.get('profileCmt')) ? editingItem.get('profileCmt') : ''}
+                                onChange={([ClientProfileSetDialog.TYPE_VIEW, ClientProfileSetDialog.TYPE_PROFILE].includes(dialogType)) ? null : this.handleValueChange("profileCmt")}
                             />
-                        }
                         </Grid>
                     </Grid>
-                    {(dialogType === ClientProfileSetDialog.TYPE_ADD || dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
-                        <div>
-                            <TextValidator label={t("lbReferenceClient")} className={classes.fullWidth}
-                                name="clientId" validators={['required']} errorMessages={[t("msgSelectRefClient")]}
-                                value={(editingItem.get('clientId') && editingItem.get('clientId') != '') ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
-                                placeholder={t("msgSelectClientInBelow")}
-                            />
-                            <div className={classes.profileItemRow}>
-                                <GRClientSelector compId={compId}
-                                    selectorType='single' 
-                                    handleClientSelect={this.handleSelectClient} 
-                                    height='220' />
+
+                    {(dialogType === ClientProfileSetDialog.TYPE_PROFILE || dialogType === ClientProfileSetDialog.TYPE_VIEW) &&
+                    <Grid container spacing={16} alignItems="center" direction="row" justify="space-between" >
+                        <Grid item xs={12} sm={4} lg={4} >
+                            <div className={classes.fullWidth}>
+                            {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
+                                <div>
+                                    <FormLabel>{t("lbProfileEtcHandle")}</FormLabel>
+                                    <RadioGroup name="is_removal" onChange={this.handleChangeRemoval('isRemoval')} value={(editingItem.get('isRemoval') == 'true') ? 'true': 'false'} row>
+                                        <FormControlLabel value="true" control={<Radio />} label={t("selDelete")} />
+                                        <FormControlLabel value="false" control={<Radio />} label={t("selNoDelete")} />
+                                    </RadioGroup>
+                                </div>
+                            }
+                            {(dialogType === ClientProfileSetDialog.TYPE_VIEW) &&
+                                <TextValidator label={t("lbReferenceClient")} className={classes.fullWidth}
+                                    name="clientNm" validators={['required']} errorMessages={[t("msgSelectRefClient")]}
+                                    value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
+                                />
+                            }
                             </div>
-                        </div>
+                        </Grid>
+                        <Grid item xs={12} sm={8} lg={8} >
+                            {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
+                                <TextField label={t("lbReferenceClient")} className={classes.fullWidth}
+                                    value={(editingItem.get('clientNm')) ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
+                                />
+                            }
+                        </Grid>
+                    </Grid>
+                    }
+                    {(dialogType === ClientProfileSetDialog.TYPE_ADD || dialogType === ClientProfileSetDialog.TYPE_EDIT) &&
+                        <Grid container spacing={16} alignItems="center" direction="row" justify="space-between" >
+                            <Grid item xs={12} sm={4} lg={4} >
+                                <TextValidator label={t("lbReferenceClient")} className={classes.fullWidth}
+                                    name="clientId" validators={['required']} errorMessages={[t("msgSelectRefClient")]}
+                                    value={(editingItem.get('clientId') && editingItem.get('clientId') != '') ? editingItem.get('clientNm') + ' (' + editingItem.get('clientId') + ')' : ''}
+                                    placeholder={t("msgSelectClientInRight")}
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={8} lg={8} >
+                                <Button onClick={this.openClientSelectDialog} variant='contained' color="secondary">{t('lbClientSelect')}</Button>
+                            </Grid>
+                        </Grid>
                     }
                     {(dialogType === ClientProfileSetDialog.TYPE_PROFILE) &&
-                        <div>
-                            <div className={classes.profileLabel}>
-                                <InputLabel >{t("lbTargetClient")}</InputLabel>
-                            </div>
-                            <GRClientSelector compId={compId}
-                                selectorType='multiple' 
-                                handleClientSelect={this.handleSelectClientArray} 
-                                handleGroupSelect={this.handleSelectGroupArray} 
-                                height='220' />
+                        <div style={{paddingTop:20}}>
+                            <GroupAndClientMultiSelector compId={compId} title={t('lbTargetClient')} 
+                                isCheckMasterOnly={false}
+                                selectedGroup={selectedGroup} 
+                                onSelectGroup={this.handleSelectGroup}
+                                selectedClient={selectedClient} 
+                                onSelectClient={this.handleSelectClient}
+                            />
                         </div>
                     }
                 </DialogContent>
@@ -279,7 +321,12 @@ class ClientProfileSetDialog extends Component {
                 </ValidatorForm>
             </Dialog>
             }
-            </div>
+            <ClientSingleSelectDialog compId={compId} 
+                isSelectorOpen={this.state.isSelectorOpen} 
+                onHandleClose={this.closeClientSelectDialog}
+                onSelectClient={this.handleSelectRefClient}
+            />
+            </React.Fragment>
         );
     }
 }

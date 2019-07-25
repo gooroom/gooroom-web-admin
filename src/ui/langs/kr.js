@@ -39,6 +39,7 @@ export default {
   "colStatus": "상태",
   "colEdit": "수정",
   "colEditDelete": "수정/삭제",
+  "colCreateUser": "생성자",
 
   "colId": "아이디",
   "colLastLoginDate": "최종접속일",
@@ -100,6 +101,22 @@ export default {
   "colContent": "내용",
   "colRegUserId": "생성 Admin",
 
+  "colType": "타입",
+  "colTargetDept": "대상조직",
+  "colTargetGroup": "대상단말그룹",
+  "colMngClient": "단말관리",
+  "colMngUser": "사용자관리",
+  "colMngDesktop": "데스크톱환경관리",
+  "colMngNotify": "공지관리",
+  "colActHistory": "사용이력",
+
+  "colLogNo": "로그번호",
+  "colLogDate": "로그날짜",
+  "colLogType": "로그타입",
+  "colAccessIp": "접속아이피",
+  "colLogItem": "로그아이템",
+  "colLogData": "로그정보",
+
   // options
   "optDate": "날짜",
   "searchStartDate": "조회시작일",
@@ -145,9 +162,9 @@ export default {
   "menuClientManage": "단말관리",
   "menuClientRegKey": "단말등록키",
   "menuClientRule": "단말정책",
-  "menuClientSetup": "단말설정",
-  "menuClientHosts": "HOSTS",
-  "menuClientUpdateServer": "업데이트서버",
+  "menuClientSetup": "에이전트설정",
+  "menuClientHosts": "HOSTS설정",
+  "menuClientUpdateServer": "업데이트서버설정",
 
   "menuSoftware": "소프트웨어",
   "menuPackageManage": "패키지관리",
@@ -156,17 +173,18 @@ export default {
   "menuUser": "사용자",
   "menuUserManage": "사용자관리",
 
-  "menuUseRule": "단말사용정책",
+  "menuUseRule": "정책관리",
   "menuMediaRuleManage": "매체제어정책",
   "menuBrowserRuleManage": "브라우저제어정책",
   "menuSecurityRuleManage": "단말보안정책",
   "menuSoftwareRuleManage": "소프트웨어제한정책",
+  "menuCtrlCenterItemRuleManage": "제어센터항목정책",
   
   "menuDesktop": "데스크톱",
   "menuDesktopManage": "데스크톱정보",
   "menuDesktopAppManage": "데스크톱앱관리",
   "menuCloudServiceManage": "클라우드서비스연동",
-  "menuThemeManage": "테마관리",
+  "menuThemeManage": "테마조회",
 
   "menuJob": "작업",
   "menuJobManage": "작업정보",
@@ -191,6 +209,7 @@ export default {
   "dtSystemNotice": "시스템알림",
   "dtEditOK": "수정 완료",
   "selBasic": "기본",
+  "selStandard": "표준",
   "selOrdinary": "일반",
   "msgInputName": "이름을 입력하세요.",
   "selDelete": "삭제함",
@@ -206,6 +225,7 @@ export default {
   "lbClientGroupRule": "단말그룹정책",
   "lbDeptRule": "조직정책",
   "lbUserRule": "사용자정책",
+  "lbClientSelect": "단말선택",
 
   // options
   "stBeforeJob": "작업전",
@@ -261,6 +281,7 @@ export default {
   "spClientStatus": "단말상태",
   "spClientGroupName": "단말그룹이름",
   "spClientGroupDesc": "단말그룹설명",
+  "spClientRegIp": "자동등록아이피",
   "spIsOnline": "온라인여부",
   "spHomeSizeRate": "홈폴더 사용률",
   "spInstalledPkgCnt": "설치패키지수",
@@ -335,8 +356,8 @@ export default {
   "lbProfileEtcHandle": "기타 패키지 처리방식",
   "lbReferenceClient": "레퍼런스 단말",
   "msgSelectRefClient": "레퍼런스 단말을 선택하세요.",
-  "msgSelectClientInBelow": "아래 목록에서 단말을 선택하세요.",
-  "lbTargetClient": "대상 단말",
+  "msgSelectClientInRight": "우측 버튼을 이용하여 단말을 선택하세요.",
+  "lbTargetClient": "프로파일대상 선택",
   "lbPackageInfo": "패키지 정보",
   
   // 패키지관리
@@ -395,15 +416,16 @@ export default {
   "dtCancelJob": "작업 취소",
   "msgCancelJob": "작업대상 단말중 '작업전' 상태 단말의 작업을 취소하시겠습니까?",
 
-  // 단말정책설정
-  "lbClientConf": "단말정책",
-  "dtAddClientConf": "단말정책설정 등록",
-  "msgAddClientConf": "단말정책설정를 등록하시겠습니까?",
-  "dtEditClientConf": "단말정책설정 수정",
-  "msgEditClientConf": "단말정책설정를 수정하시겠습니까?",
-  "dtCopyClientConf": "단말정책설정 복사",
-  "msgCopyClientConf": "단말정책설정를 복사하였습니다.",
-  "dtViewClientConf": "단말정책설정 정보",
+  // 에이전트설정
+  "lbClientConf": "에이전트설정",
+  "lbClientSetup": "에이전트설정",
+  "dtAddClientConf": "에이전트설정 등록",
+  "msgAddClientConf": "에이전트설정를 등록하시겠습니까?",
+  "dtEditClientConf": "에이전트설정 수정",
+  "msgEditClientConf": "에이전트설정를 수정하시겠습니까?",
+  "dtCopyClientConf": "에이전트설정 복사",
+  "msgCopyClientConf": "에이전트설정를 복사하였습니다.",
+  "dtViewClientConf": "에이전트설정 정보",
   "dtOSProtect": "운영체제보호",
   "dtInitHomeFolder": "홈폴더 초기화",
   "dtTrustedBoot": "신뢰부팅",
@@ -434,7 +456,7 @@ export default {
   "selNoPermit": "허용안함",
   "dtSetupLogLevel": "로그레벨 설정",
   "dtIsUseDeleteFunc": "삭제기능 사용여부",
-  "lbSetupClient": "단말 설정",
+  "lbSetupClient": "에이전트 설정",
   "msgValidOnlyUpperZero": "0보다 큰 숫자만 입력할 수 있습니다.",
 
   // 데스크톱앱관리
@@ -545,7 +567,7 @@ export default {
   "ttResetLoginTrial": "로그인 시도 가능수 초기화",
   "msgEditLoginTrialCount": "로그인 시도 가능수를 초기화 하시겠습니까?",
 
-  // 테마관리
+  // 테마조회
   "lbDeleteTheme": "테마 삭제",
   "msgDeleteTheme": "테마('{{themeNm}}')를 삭제하시겠습니까?",
   "lbAddTheme": "테마 등록",
@@ -597,8 +619,8 @@ export default {
   "lbPwIncludeSpecial": "특수문자 포함 여부",
   "lbPwDiffBefore": "이전 비밀번호와 문자 차이 갯수",
   "lbPwDiffZero": "일치하지 않음",
-  "lbPwDiffSmall": "조금 다름",
-  "lbPwDiffMany": "많이 다름",
+  "lbPwDiffSmall": "조금 다름(2개이상)",
+  "lbPwDiffMany": "많이 다름(5개이상)",
 
   // 클라우드서비스 관리
   "lbDeleteCloudService": "클라우드서비스 삭제",
@@ -646,13 +668,23 @@ export default {
   "msgAdminUserName": "관리자이름을 입력하세요.",
   "lbAdminPassowrd": "Password",
   "msgAdminPassword": "password를 입력하세요.",
+  "lbAdminType": "관리자타입",
   "lbAdminConnIp": "관리자 접속 가능 아이피",
   "msgAdminConnIp": "아이피 또는 도메인을 입력하세요.",
   "msgValidAdminConnIp": "알파벳,숫자,'.' 문자만 입력하세요.",
   "lbSaveAdminConnIp": "접속가능 아이피 저장",
   "msgSaveAdminConnIp": "접속가능 아이피 정보를 저장하시겠습니까?",
   "dtAdminJobHist": "관리자({{adminId}}) 작업 이력",
-
+  "lbTotalAdmin": "전체관리자",
+  "lbSiteAdmin": "중간관리자",
+  "lbPartAdmin": "기능관리자",
+  "msgNoNeedPart": "전체관리자와 중간관리자는 세부설정이 필요 없습니다.",
+  "lbClientPart": "단말관리 권한",
+  "lbUserPart": "사용자관리 권한",
+  "lbDesktopPart": "데스크톱환경관리 권한",
+  "lbNoticePart": "공지관리 권한",
+  "msgNeedPartItem": "관리자 권한중 하나 이상 선택이 필요합니다.",
+  
   // 호스트정보 관리
   "lbHosts": "Hosts정보",
   "lbAddHosts": "Hosts 정보 등록",
@@ -660,10 +692,10 @@ export default {
   "lbEditHosts": "Hosts 정보 수정",
   "msgEditHosts": "Hosts 정보를 수정하시겠습니까?",
   "msgCopyHosts": "Hosts 정보를 복사하였습니다.",
-  "dtAddHosts": "Hosts정책 등록",
-  "dtViewHosts": "Hosts정책 정보",
-  "dtEditHosts": "Hosts정책 수정",
-  "dtCopyHosts": "Hosts정책 복사",
+  "dtAddHosts": "Hosts설정 등록",
+  "dtViewHosts": "Hosts설정 정보",
+  "dtEditHosts": "Hosts설정 수정",
+  "dtCopyHosts": "Hosts설정 복사",
   "lbHostsInfo": "Hosts 정보",
   "lbHostsCategoty": "HOSTS 정보",
   "msgHostsInfo": "호스트정보를 입력하세요.",
@@ -693,22 +725,22 @@ export default {
   "msgGooroomPrefInfo": "gooroom.pref 정보를 입력하세요.",
   "msgShowDetailUpdateServer": "업데이트서버 정보를 선택하면 상세 내용이 표시됩니다.",
 
-  // 브라우져제어정책 관리
-  "lbBrowserRule": "브라우져정책",
-  "lbDeleteBrowserRule": "브라우져제어정책 삭제",
-  "msgDeleteBrowserRule": "브라우져제어정책({{objId}})을 삭제하시겠습니까?",
+  // 브라우저제어정책 관리
+  "lbBrowserRule": "브라우저정책",
+  "lbDeleteBrowserRule": "브라우저제어정책 삭제",
+  "msgDeleteBrowserRule": "브라우저제어정책({{objId}})을 삭제하시겠습니까?",
   "lbAddBrowserRule": "브라우저제어정책 등록",
   "msgAddBrowserRule": "브라우저제어정책을 등록하시겠습니까?",
   "lbEditBrowserRule": "브라우저제어정책 수정",
   "msgEditBrowserRule": "브라우저제어정책을 수정하시겠습니까?",
   "msgApplyBrowserRuleChild": "브라우저제어정책이 하위 조직에 적용되었습니다.",
   "msgCopyBrowserRule": "브라우저제어정책을 복사하였습니다.",
-  "dtAddBrowserRule": "브라우져제어정책 등록",
-  "dtViewBrowserRule": "브라우져제어정책 정보",
-  "dtEditBrowserRule": "브라우져제어정책 수정",
-  "dtInheritBrowserRule": "브라우져제어정책 상속",
-  "dtCopyBrowserRule": "브라우져제어정책 복사",
-  "dtCategoryBrowserRule": "브라우져제어 정책",
+  "dtAddBrowserRule": "브라우저제어정책 등록",
+  "dtViewBrowserRule": "브라우저제어정책 정보",
+  "dtEditBrowserRule": "브라우저제어정책 수정",
+  "dtInheritBrowserRule": "브라우저제어정책 상속",
+  "dtCopyBrowserRule": "브라우저제어정책 복사",
+  "dtCategoryBrowserRule": "브라우저제어 정책",
   "lbUseWebSocket": "Web Socket 사용",
   "lbUseWebWorker": "Web Worker 사용",
   "selPermitRule": "허용",
@@ -752,8 +784,14 @@ export default {
   "selPrinterOff": "프린터 금지",
   "selCameraOn": "카메라 허가",
   "selCameraOff": "카메라 금지",
-  "selSoundOn": "사운드(소리, 마이크) 허가",
-  "selSoundOff": "사운드(소리, 마이크) 금지",
+  "selSoundOn": "사운드 허가",
+  "selSoundOff": "사운드 금지",
+  "selMicrophoneOn": "녹음 허가",
+  "selMicrophoneOff": "녹음 금지",
+  "selScreenCaptureOn": "화면캡쳐 허가",
+  "selScreenCaptureOff": "화면캡쳐 금지",
+  "selClipboardOn": "클립보드 허가",
+  "selClipboardOff": "클립보드 금지",
   "selWifiOn": "무선랜 허가",
   "selWifiOff": "무선랜 금지",
   "selUsbKeyboardOn": "USB키보드 허가",
@@ -769,7 +807,10 @@ export default {
   "dtWifi": "무선랜",
   "dtCdDvd": "CD/DVD",
   "dtPrinter": "프린터",
-  "dtSound": "사운드(소리, 마이크)",
+  "dtSound": "사운드",
+  "dtMicrophone": "녹음",
+  "dtScreenCapture": "화면캡쳐",
+  "dtClipboard": "클립보드",
   "dtCamera": "카메라",
   "dtUsbKeyboard": "USB키보드",
   "dtUsbMouse": "USB마우스",
@@ -828,6 +869,25 @@ export default {
   "msgSelectSWItem": "실행금지로 지정할 소프트웨어를 선택하세요.",
   "msStopRunRedSW": "Red 색상의 소프트웨어는 실행을 금지합니다.",
   "lbSWRule": "소프트웨어제한정책",
+
+  // 제어판 항목 관리
+  "lbDeleteCTIRule": "제어센터항목정책 삭제",
+  "msgDeleteCTIRule": "제어센터항목정책({{objId}})을 삭제하시겠습니까?",
+  "lbAddCTIRule": "제어센터항목정책정보 등록",
+  "msgAddCTIRule": "제어센터항목정책정보를 등록하시겠습니까?",
+  "lbEditCTIRule": "제어센터항목정책정보 수정",
+  "msgEditCTIRule": "제어센터항목정책정보를 수정하시겠습니까?",
+  "msgApplyCTIRuleChild": "제어센터항목정책이 하위 조직에 적용되었습니다.",
+  "msgCopyCTIRule": "제어센터항목정책을 복사하였습니다.",
+  "dtAddCTIRule": "제어센터항목정책 등록",
+  "dtViewCTIRule": "제어센터항목정책 정보",
+  "dtEditCTIRule": "제어센터항목정책 수정",
+  "dtInheritCTIRule": "제어센터항목정책 상속",
+  "dtCopyCTIRule": "제어센터항목정책 복사",
+  "dtCategoryCTIRule": "제어센터항목 정책",
+  "msgSelectCTIItem": "제어센터에 표시할 항목을 선택하세요.",
+  "msStopRunRedCTI": "파란색상의 항목이 제어센터 항목으로 표시됩니다.",
+  "lbCTIRule": "제어센터항목정책",
 
   // 관리자 개인 설정
   "lbAdminTitle": "관리자",
@@ -903,9 +963,9 @@ export default {
   "msgSelectParentGroup": "상위단말그룹을 선택하세요.",
   "ttChangMultiGroupRule": "단말그룹정책 일괄변경",
 
-  "dtInheritClientConf": "단말정책설정 상속",
-  "msgInheritClientConf": "단말정책설정을 상속하시겠습니까?",
-  "msgApplyClientConfChild": "단말정책설정이 하위 그룹에 적용되었습니다.",
+  "dtInheritClientConf": "에이전트설정 상속",
+  "msgInheritClientConf": "에이전트설정을 상속하시겠습니까?",
+  "msgApplyClientConfChild": "에이전트설정이 하위 그룹에 적용되었습니다.",
 
   "dtInheritHosts": "Hosts 정보 상속",
   "msgInheritHosts": "Hosts 정보를 상속하시겠습니까?",
@@ -913,6 +973,8 @@ export default {
 
   "dtInheritUpdateServer": "업데이트서버정보 상속",
   "msgInheritUpdateServer": "업데이트서버정보를 상속하시겠습니까?",
-  "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다."
+  "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다.",
+
+  "lbAdminActHistory": "관리자 작업 이력"
   
 };

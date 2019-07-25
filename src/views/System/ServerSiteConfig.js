@@ -340,9 +340,8 @@ class ServerSiteConfig extends Component {
                     <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
                     <ListItemText primary={t("lbPwDiffBefore")} style={{padding:0}} />
                   </ListItem>
-                  <ListItem style={{marginTop:10}}>
-                    <ListItemSecondaryAction>
-                      <RadioGroup row aria-label="diff-radio" name="diff"
+                  <ListItem style={{paddingLeft:230}}>
+                      <RadioGroup aria-label="diff-radio" name="diff"
                         value={stateData.get('pwDiffBefore')} onChange={this.handlePwRuleChange('pwDiffBefore')}
                       >
                         <FormControlLabel value="0"
@@ -358,7 +357,6 @@ class ServerSiteConfig extends Component {
                           label={t("lbPwDiffMany")} labelPlacement="end"
                         />
                       </RadioGroup>
-                    </ListItemSecondaryAction>
                   </ListItem>
                 </List>
               </CardContent>
@@ -444,7 +442,7 @@ class ServerSiteConfig extends Component {
 
         </GRPane>
         <GRConfirm />
-        <GRAlert />
+        {/*<GRAlert /> */}
       </React.Fragment>
     );
   }

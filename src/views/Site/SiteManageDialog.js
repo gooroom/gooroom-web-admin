@@ -242,7 +242,7 @@ class SiteManageDialog extends Component {
                 </ValidatorForm>
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

@@ -14,6 +14,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import GRAlert from 'components/GRComponents/GRAlert';
 
 import GRHeader from "containers/GRHeader/";
 import GRFooter from "containers/GRFooter/";
@@ -103,6 +104,7 @@ class GRFull extends Component {
               <div style={{overflowX:'auto'}}>
                 <GRBreadcrumb pathname={(this.props.location.pathname) ? this.props.location.pathname : ''}/>
                 <GRRouters />
+                <GRAlert />
               </div>
               <GRFooter />
             </div>

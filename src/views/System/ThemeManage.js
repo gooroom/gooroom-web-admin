@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -92,21 +91,27 @@ class ThemeManage extends Component {
     });
   }
 
-  handleSelectRow = (event, id) => {
+  handleSelectRow = (event, id, isEditable) => {
     const { ThemeManageProps, ThemeManageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     const viewItem = getRowObjectById(ThemeManageProps, compId, id, 'themeId');
     ThemeManageActions.showInform({
       compId: compId,
-      viewItem: viewItem
+      viewItem: viewItem,
+      isEditable: isEditable
     });
   };
 
   // create dialog
   handleCreateButton = () => {
+    let adminType = 'A';
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      adminType = 'S';
+    }
     this.props.ThemeManageActions.showDialog({
       viewItem: {
+        adminType: adminType,
         themeId: ''
       },
       dialogType: ThemeDialog.TYPE_ADD
@@ -173,13 +178,19 @@ class ThemeManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const columnHeaders = [
+    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
+
+    let columnHeaders = [
       { id: 'chThemeNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
       { id: 'chThemeId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chThemeCmt', isOrder: false, numeric: false, disablePadding: true, label: t("colInfo") },
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
+    //if(!isEditable) {
+      // 테마는 수정이 안되도록 조치
+      columnHeaders.splice(-1, 1);
+    //}
 
     const listObj = ThemeManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -208,9 +219,11 @@ class ThemeManage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={2} style={{textAlign:'right'}}>
+            {(isEditable && false) && 
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />{t("btnRegist")}
               </Button>
+            }
             </Grid>
           </Grid>
 
@@ -231,7 +244,7 @@ class ThemeManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('themeId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('themeId'), isEditable)}
                       key={n.get('themeId')}
                     >
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeNm')}</TableCell>
@@ -239,18 +252,22 @@ class ThemeManage extends Component {
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeCmt')}</TableCell>
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                    {(isEditable && false) && 
                       <Button size="small" color="secondary" 
                         className={classes.buttonInTableRow} 
                         onClick={event => this.handleEditClick(event, n.get('themeId'))}>
                         <SettingsApplicationsIcon />
                       </Button>
+                    }
+                    {(isEditable && false) && 
                       <Button size="small" color="secondary" 
                         className={classes.buttonInTableRow} 
                         onClick={event => this.handleDeleteClick(event, n.get('themeId'))}>
                         <DeleteIcon />
                       </Button>
+                    }
                     </TableCell>
-                    </TableRow>
+                  </TableRow>
                   );
                 })}
 
@@ -287,6 +304,7 @@ class ThemeManage extends Component {
         <ThemeSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
+          isEditable={(listObj) ? listObj.get('isEditable') : null}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />

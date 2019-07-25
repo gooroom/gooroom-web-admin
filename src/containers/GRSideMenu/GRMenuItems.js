@@ -50,30 +50,21 @@ export default {
           id: 'GRM0104',
           url: '/clientconfig/regkey/GRM0104/menuClientRegKey',
           level: 2,
-        },
-        {
-          name: 'menuClientRule',
-          id: 'clientconfig',
-          url: '/clientconfig',
+        }, {
+          name: 'menuClientSetup',
+          id: 'GRM0703',
+          url: '/clientconfig/setting/GRM0703/menuClientSetup',
           level: 2,
-          children: [
-            {
-              name: 'menuClientSetup',
-              id: 'GRM0703',
-              url: '/clientconfig/setting/GRM0703/menuClientSetup',
-              level: 3,
-            }, {
-              name: 'menuClientHosts',
-              id: 'GRM0702',
-              url: '/clientconfig/host/GRM0702/menuClientHosts',
-              level: 3,
-            }, {
-              name: 'menuClientUpdateServer',
-              id: 'GRM0701',
-              url: '/clientconfig/update/GRM0701/menuClientUpdateServer',
-              level: 3,
-            }
-          ]
+        }, {
+          name: 'menuClientHosts',
+          id: 'GRM0702',
+          url: '/clientconfig/host/GRM0702/menuClientHosts',
+          level: 2,
+        }, {
+          name: 'menuClientUpdateServer',
+          id: 'GRM0701',
+          url: '/clientconfig/update/GRM0701/menuClientUpdateServer',
+          level: 2
         }
       ]
     }, {
@@ -136,6 +127,12 @@ export default {
           name: 'menuSoftwareRuleManage',
           id: 'GRM0404',
           url: '/userconfig/swfilter/GRM0404/menuSoftwareRuleManage',
+          level: 2,
+        },
+        {
+          name: 'menuCtrlCenterItemRuleManage',
+          id: 'GRM0405',
+          url: '/userconfig/ctrlcenteritem/GRM0404/menuCtrlCenterItemRuleManage',
           level: 2,
         },
       ]

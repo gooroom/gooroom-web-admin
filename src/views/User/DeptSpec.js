@@ -15,12 +15,15 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { generateBrowserRuleObject } from 'views/Rules/UserConfig/BrowserRuleSpec';
 import { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
 import { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
 import { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import { generateCtrlCenterItemObject } from 'views/Rules/UserConfig/CtrlCenterItemSpec';
 
 import DeptDialog from './DeptDialog';
 
@@ -42,6 +45,8 @@ import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
+import CtrlCenterItemSpec from 'views/Rules/UserConfig/CtrlCenterItemSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
@@ -72,6 +77,9 @@ class DeptSpec extends Component {
     });
     this.props.SoftwareFilterActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
       value: getValueInSelectedObjectInComp(this.props.SoftwareFilterProps, compId, 'DEPT', 'objId')      
+    });
+    this.props.CtrlCenterItemActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
+      value: getValueInSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, 'DEPT', 'objId')      
     });
     this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
       value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'DEPT', 'confId')      
@@ -115,6 +123,13 @@ class DeptSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
+  handleClickEditForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: generateCtrlCenterItemObject(viewItem, false),
+      dialogType: CtrlCenterItemDialog.TYPE_EDIT
+    });
+  };
   handleClickEditForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -151,6 +166,13 @@ class DeptSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_INHERIT_DEPT
     });
   };
+  handleClickInheritForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: viewItem,
+      dialogType: CtrlCenterItemDialog.TYPE_INHERIT_DEPT
+    });
+  };
   handleClickInheritForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -162,7 +184,7 @@ class DeptSpec extends Component {
 
   // .................................................
   render() {
-    const { DeptProps, compId } = this.props;
+    const { DeptProps, compId, AdminProps, isEditable } = this.props;
 
     const informOpen = DeptProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = DeptProps.getIn(['viewItems', compId, 'viewItem']);
@@ -171,6 +193,7 @@ class DeptSpec extends Component {
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT']);
+    const selectedCtrlCenterItem = this.props.CtrlCenterItemProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'DEPT']);
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
@@ -182,13 +205,13 @@ class DeptSpec extends Component {
           <CardHeader
             title={viewItem.get('deptNm')}
             subheader={viewItem.get('deptCd')}
-            action={
+            action={ (isEditable) ?
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
                   onClick={() => this.handleClickEdit(viewItem, compId)}
                 ><SettingsApplicationsIcon /></Button>
-              </div>
+              </div> : <div></div>
             }
           ></CardHeader>
           <Divider />
@@ -202,6 +225,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForBrowserRule}
                   onClickInherit={this.handleClickInheritForBrowserRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedBrowserRuleItem && AdminProps.get('adminId') === selectedBrowserRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -211,6 +235,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForMediaRule}
                   onClickInherit={this.handleClickInheritForMediaRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedMediaRuleItem && AdminProps.get('adminId') === selectedMediaRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -220,6 +245,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForSecurityRule}
                   onClickInherit={this.handleClickInheritForSecurityRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedSecurityRuleItem && AdminProps.get('adminId') === selectedSecurityRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -229,6 +255,17 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForSoftwareFilter}
                   onClickInherit={this.handleClickInheritForSoftwareFilter}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedSoftwareFilterItem && AdminProps.get('adminId') === selectedSoftwareFilterItem.getIn(['viewItem', 'regUserId'])}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
+                <CtrlCenterItemSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
+                  selectedItem={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('viewItem') : null}
+                  ruleGrade={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForCtrlCenterItem}
+                  onClickInherit={this.handleClickInheritForCtrlCenterItem}
+                  inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedCtrlCenterItem && AdminProps.get('adminId') === selectedCtrlCenterItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -238,6 +275,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForDesktopConf}
                   onClickInherit={this.handleClickInheritForDesktopConf}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedDesktopConfItem && AdminProps.get('adminId') === selectedDesktopConfItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
             </Grid>
@@ -253,11 +291,13 @@ class DeptSpec extends Component {
 const mapStateToProps = (state) => ({
   UserProps: state.UserModule,
   DeptProps: state.DeptModule,
+  AdminProps: state.AdminModule,
 
   MediaRuleProps: state.MediaRuleModule,
   BrowserRuleProps: state.BrowserRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
+  CtrlCenterItemProps: state.CtrlCenterItemModule,
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -269,6 +309,7 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+  CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 

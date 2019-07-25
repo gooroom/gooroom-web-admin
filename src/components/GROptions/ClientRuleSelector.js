@@ -17,6 +17,7 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import ClientConfSettingSelector from 'views/Rules/ClientConfig/ClientConfSettingSelector'
@@ -27,6 +28,7 @@ import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
 import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
 import SoftwareFilterSelector from 'views/Rules/UserConfig/SoftwareFilterSelector';
+import CtrlCenterItemSelector from 'views/Rules/UserConfig/CtrlCenterItemSelector';
 
 import DesktopConfSelector from 'views/Rules/DesktopConfig/DesktopConfSelector';
 
@@ -72,6 +74,9 @@ class ClientRuleSelector extends Component {
             this.props.SoftwareFilterActions.changeCompVariable({
                 compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
             });
+            this.props.CtrlCenterItemActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
+            });
             this.props.DesktopConfActions.changeCompVariable({
                 compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
             });
@@ -105,6 +110,10 @@ class ClientRuleSelector extends Component {
                 compId:compId, name:'selectedOptionItemId', targetType:targetType, 
                 value: this.props.SoftwareFilterProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
             });
+            this.props.CtrlCenterItemActions.changeCompVariable({
+                compId:compId, name:'selectedOptionItemId', targetType:targetType, 
+                value: this.props.CtrlCenterItemProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+            });
             this.props.DesktopConfActions.changeCompVariable({
                 compId:compId, name:'selectedOptionItemId', targetType:targetType, 
                 value: this.props.DesktopConfProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
@@ -133,14 +142,15 @@ class ClientRuleSelector extends Component {
                         textColor="primary"
                         onChange={this.handleChangeTabs}
                     >
-                        <Tab label={t("lbClientConf")} value={0}/>
+                        <Tab label={t("lbClientSetup")} value={0}/>
                         <Tab label={t("lbHosts")} value={1} />
                         <Tab label={t("lbUpdateServer")} value={2} />
                         <Tab label={t("lbBrowserRule")} value={3} />
                         <Tab label={t("lbMediaRule")} value={4} />
                         <Tab label={t("lbSecuRule")} value={5} />
                         <Tab label={t("lbSWRule")} value={6} />
-                        <Tab label={t("lbDesktopConf")} value={7} />
+                        <Tab label={t("lbCTIRule")} value={7} />
+                        <Tab label={t("lbDesktopConf")} value={8} />
                     </Tabs>
                 </AppBar>
                 <Paper elevation={0} style={{ maxHeight: 460, overflow: 'auto' }} >
@@ -151,7 +161,8 @@ class ClientRuleSelector extends Component {
                 {selectedTab === 4 && <MediaRuleSelector compId={compId} targetType={targetType} />}
                 {selectedTab === 5 && <SecurityRuleSelector compId={compId} targetType={targetType} />}
                 {selectedTab === 6 && <SoftwareFilterSelector compId={compId} targetType={targetType} />}
-                {selectedTab === 7 && <DesktopConfSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 7 && <CtrlCenterItemSelector compId={compId} targetType={targetType} />}
+                {selectedTab === 8 && <DesktopConfSelector compId={compId} targetType={targetType} />}
                 </Paper>
             
             </React.Fragment>
@@ -168,6 +179,8 @@ const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
+    CtrlCenterItemProps: state.CtrlCenterItemModule,
+
     DesktopConfProps: state.DesktopConfModule
 });
   
@@ -180,6 +193,8 @@ const mapDispatchToProps = (dispatch) => ({
     MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
     SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
     SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+    CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
+
     DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
 });
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -148,14 +147,18 @@ class ClientRegKey extends Component {
     const { ClientRegKeyProps } = this.props;
     const { t, i18n } = this.props;
 
-    const columnHeaders = [
+    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
+
+    let columnHeaders = [
       { id: 'chRegKey', isOrder: true, numeric: false, disablePadding: true, label: t("colClientRegKey") },
       { id: 'chValidDate', isOrder: true, numeric: false, disablePadding: true, label: t("colKeyValidDate") },
       { id: 'chExpireDate', isOrder: true, numeric: false, disablePadding: true, label: t("colCertExpireDate") },
-      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
     ];
-  
+    if(!isEditable) {
+      columnHeaders.splice(-1, 1);
+    }
 
     const compId = this.props.match.params.grMenuId;
 
@@ -186,9 +189,11 @@ class ClientRegKey extends Component {
               </Grid>
             </Grid>
             <Grid item xs={6} >
+            {isEditable &&
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />{t("btnRegist")}
               </Button>
+            }
             </Grid>
           </Grid>
 
@@ -216,6 +221,7 @@ class ClientRegKey extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('validDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('expireDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                      {isEditable &&
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button size="small" color="secondary" 
                           className={classes.buttonInTableRow} 
@@ -228,6 +234,7 @@ class ClientRegKey extends Component {
                           <DeleteIcon />
                         </Button>
                       </TableCell>
+                      }
                     </TableRow>
                   );
                 })}

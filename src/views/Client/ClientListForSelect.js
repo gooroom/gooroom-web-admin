@@ -94,14 +94,6 @@ class ClientListForSelect extends Component {
     this.handleSelectBtnClick();
   }
 
-  // componentWillReceiveProps(newProps) {
-  //   const { stateData } = this.state;
-  //   const newListParam = (stateData.get('listParam')).merge({
-  //     deptCd: newProps.deptCd
-  //   });
-  //   this.handleGetClientList(newListParam);
-  // }
-
   handleChangePage = (event, page) => {
     const { stateData } = this.state;
     const newListParam = (stateData.get('listParam')).merge({

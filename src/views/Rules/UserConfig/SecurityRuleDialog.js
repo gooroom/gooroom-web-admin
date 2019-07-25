@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import * as Constants from "components/GRComponents/GRConstants";
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -75,7 +77,17 @@ class SecurityRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddSecuRule"),
                 confirmMsg: t("msgAddSecuRule"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { SecurityRuleProps, SecurityRuleActions } = this.props;
+                        SecurityRuleActions.createSecurityRule(SecurityRuleProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
+                                this.handleClose();
+                            }, (res) => {
+                        })
+                    }
+                },
                 confirmObject: SecurityRuleProps.get('editingItem')
             });
         } else {
@@ -84,17 +96,6 @@ class SecurityRuleDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { SecurityRuleProps, SecurityRuleActions } = this.props;
-            SecurityRuleActions.createSecurityRule(SecurityRuleProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
-                    this.handleClose();
-                }, (res) => {
-            })
         }
     }
 
@@ -106,7 +107,16 @@ class SecurityRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditSecuRule"),
                 confirmMsg: t("msgEditSecuRule"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { SecurityRuleProps, SecurityRuleActions } = this.props;
+                        SecurityRuleActions.editSecurityRule(SecurityRuleProps.get('editingItem'), this.props.compId)
+                            .then((res) => {
+                                refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: SecurityRuleProps.get('editingItem')
             });
         } else {
@@ -115,16 +125,6 @@ class SecurityRuleDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { SecurityRuleProps, SecurityRuleActions } = this.props;
-            SecurityRuleActions.editSecurityRule(SecurityRuleProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -199,6 +199,9 @@ class SecurityRuleDialog extends Component {
         let title = "";
         if(dialogType === SecurityRuleDialog.TYPE_ADD) {
             title = t("dtAddSecuRule");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === SecurityRuleDialog.TYPE_VIEW) {
             title = t("dtViewSecuRule");
         } else if(dialogType === SecurityRuleDialog.TYPE_EDIT) {
@@ -317,7 +320,7 @@ class SecurityRuleDialog extends Component {
                 <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

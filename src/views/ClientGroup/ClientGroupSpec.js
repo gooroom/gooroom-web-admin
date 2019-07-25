@@ -19,6 +19,8 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { getAvatarExplainForGroup, getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
@@ -31,6 +33,7 @@ import BrowserRuleSpec, { generateBrowserRuleObject } from 'views/Rules/UserConf
 import MediaRuleSpec, { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleSpec, { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
 import SoftwareFilterSpec, { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import CtrlCenterItemSpec, { generateCtrlCenterItemObject } from 'views/Rules/UserConfig/CtrlCenterItemSpec';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import Grid from '@material-ui/core/Grid';
@@ -51,6 +54,7 @@ import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
 import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
+import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -146,6 +150,13 @@ class ClientGroupSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
+  handleClickEditForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: generateCtrlCenterItemObject(viewItem, false),
+      dialogType: CtrlCenterItemDialog.TYPE_EDIT
+    });
+  };
   handleClickEditForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -204,6 +215,13 @@ class ClientGroupSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_INHERIT_GROUP
     });
   };
+  handleClickInheritForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: viewItem,
+      dialogType: CtrlCenterItemDialog.TYPE_INHERIT_GROUP
+    });
+  };
   handleClickInheritForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -214,7 +232,7 @@ class ClientGroupSpec extends Component {
   // ===================================================================
 
   render() {
-    const { compId, ClientGroupProps } = this.props;
+    const { compId, ClientGroupProps, AdminProps, isEditable } = this.props;
 
     const informOpen = ClientGroupProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = ClientGroupProps.getIn(['viewItems', compId, 'viewItem']);
@@ -227,6 +245,7 @@ class ClientGroupSpec extends Component {
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'GROUP']);
+    const selectedCtrlCenterItem = this.props.CtrlCenterItemProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'GROUP']);
 
     let groupInfo = '';
@@ -239,7 +258,7 @@ class ClientGroupSpec extends Component {
         groupInfo += ', ' + viewItem.get('comment');
       }
     }
-
+    
     const avatarRef = getAvatarExplainForGroup(this.props.t);
 
     return (
@@ -249,13 +268,13 @@ class ClientGroupSpec extends Component {
           <CardHeader
             title={(viewItem.get('grpNm')) ? viewItem.get('grpNm') : ''}
             subheader={groupInfo}
-            action={
+            action={ (isEditable) ?
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
                   onClick={() => this.handleClickEdit(viewItem)}
                 ><SettingsApplicationsIcon /></Button>
-              </div>
+              </div> : <div></div>
             }
           ></CardHeader>
           <Divider />
@@ -270,6 +289,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientHostName}
                   onClickInherit={this.handleClickInheritForClientHostName}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedClientHostNameItem && AdminProps.get('adminId') === selectedClientHostNameItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -280,6 +300,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientUpdateServer}
                   onClickInherit={this.handleClickInheritForClientUpdateServer}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedClientUpdateServerItem && AdminProps.get('adminId') === selectedClientUpdateServerItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6}>
@@ -290,6 +311,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleEditClickForClientConfSetting}
                   onClickInherit={this.handleClickInheritForClientConfSetting}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedClientConfSettingItem && AdminProps.get('adminId') === selectedClientConfSettingItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -300,6 +322,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForMediaRule}
                   onClickInherit={this.handleClickInheritForMediaRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedMediaRuleItem && AdminProps.get('adminId') === selectedMediaRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6}>
@@ -310,6 +333,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForBrowserRule}
                   onClickInherit={this.handleClickInheritForBrowserRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedBrowserRuleItem && AdminProps.get('adminId') === selectedBrowserRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
@@ -320,6 +344,7 @@ class ClientGroupSpec extends Component {
                   onClickEdit={this.handleClickEditForSecurityRule}
                   onClickInherit={this.handleClickInheritForSecurityRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedSecurityRuleItem && AdminProps.get('adminId') === selectedSecurityRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -329,7 +354,17 @@ class ClientGroupSpec extends Component {
                   ruleGrade={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSoftwareFilter}
                   onClickInherit={this.handleClickInheritForSoftwareFilter}
-                  inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedSoftwareFilterItem && AdminProps.get('adminId') === selectedSoftwareFilterItem.getIn(['viewItem', 'regUserId'])}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
+                <CtrlCenterItemSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('viewItem') : null}
+                  ruleGrade={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForCtrlCenterItem}
+                  onClickInherit={this.handleClickInheritForCtrlCenterItem}
+                  isEditable={selectedCtrlCenterItem && AdminProps.get('adminId') === selectedCtrlCenterItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -339,7 +374,7 @@ class ClientGroupSpec extends Component {
                   ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForDesktopConf}
                   onClickInherit={this.handleClickInheritForDesktopConf}
-                  inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedDesktopConfItem && AdminProps.get('adminId') === selectedDesktopConfItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
             </Grid>
@@ -356,6 +391,7 @@ class ClientGroupSpec extends Component {
 
 const mapStateToProps = (state) => ({
   ClientGroupProps: state.ClientGroupModule,
+  AdminProps: state.AdminModule,
 
   ClientConfSettingProps: state.ClientConfSettingModule,
   ClientHostNameProps: state.ClientHostNameModule,
@@ -365,6 +401,8 @@ const mapStateToProps = (state) => ({
   BrowserRuleProps: state.BrowserRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
+  CtrlCenterItemProps: state.CtrlCenterItemModule,
+
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -380,6 +418,7 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+  CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 

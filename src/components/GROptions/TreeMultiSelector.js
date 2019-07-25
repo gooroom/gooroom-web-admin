@@ -57,8 +57,8 @@ class TreeMultiSelector extends Component {
         const { t, i18n } = this.props;
 
         return (
-            <Card >
-                <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={title}></CardHeader>
+            <Card square={true}>
+                <CardHeader style={{padding:3,backgroundColor:'#d0d2d3'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={title}></CardHeader>
                 <CardContent style={{padding:0,height:200,overflowY:'auto'}}>
                     <GRExtendedTreeList
                         compId={compId}

@@ -39,6 +39,7 @@ export default {
   "colStatus": "Status",
   "colEdit": "Edit",
   "colEditDelete": "Edit/Del",
+  "colCreateUser": "Creator",
 
   "colId": "ID",
   "colLastLoginDate": "LastLoginDate",
@@ -100,6 +101,22 @@ export default {
   "colContent": "Content",
   "colRegUserId": "Created Admin",
 
+  "colType": "Type",
+  "colTargetDept": "Dept",
+  "colTargetGroup": "Group",
+  "colMngClient": "MngClient",
+  "colMngUser": "MngUser",
+  "colMngDesktop": "MngDesktop",
+  "colMngNotify": "MngNotify",
+  "colActHistory": "History",
+
+  "colLogNo": "LogNo",
+  "colLogDate": "LogDate",
+  "colLogType": "LogType",
+  "colAccessIp": "AccessIp",
+  "colLogItem": "LogItem",
+  "colLogData": "LogData",
+
   // options
   "optDate": "Date",
   "searchStartDate": "From-Date",
@@ -156,11 +173,12 @@ export default {
   "menuUser": "User",
   "menuUserManage": "UserMng",
 
-  "menuUseRule": "ClientUseRule",
+  "menuUseRule": "RuleManage",
   "menuMediaRuleManage": "MediaRule",
   "menuBrowserRuleManage": "BrowserRule",
   "menuSecurityRuleManage": "SecurityRule",
   "menuSoftwareRuleManage": "SoftwareRule",
+  "menuCtrlCenterItemRuleManage": "ControlCenterItemRule",
   
   "menuDesktop": "Desktop",
   "menuDesktopManage": "DesktopMng",
@@ -191,6 +209,7 @@ export default {
   "dtSystemNotice": "System Notice",
   "dtEditOK": "Edit Success",
   "selBasic": "Basic",
+  "selStandard": "Standard",
   "selOrdinary": "Ordinary",
   "msgInputName": "Please enter name.",
   "selDelete": "Delete",
@@ -206,6 +225,7 @@ export default {
   "lbClientGroupRule": "Client Group Rule",
   "lbDeptRule": "Dept. Rule",
   "lbUserRule": "User Rule",
+  "lbClientSelect": "Select Client",
 
   // options
   "stBeforeJob": "Before",
@@ -261,6 +281,7 @@ export default {
   "spClientStatus": "Client Status",
   "spClientGroupName": "Group Name",
   "spClientGroupDesc": "Group Desc",
+  "spClientRegIp": "Regist Ip",
   "spIsOnline": "Is Online",
   "spHomeSizeRate": "Home Use Rate",
   "spInstalledPkgCnt": "Installed Package Cnt",
@@ -335,8 +356,8 @@ export default {
   "lbProfileEtcHandle": "Other package handling methods",
   "lbReferenceClient": "Reference client",
   "msgSelectRefClient": "Select a reference client.",
-  "msgSelectClientInBelow": "Please select a client from the list below.",
-  "lbTargetClient": "Target client",
+  "msgSelectClientInRight": "Select the terminal using the right button.",
+  "lbTargetClient": "Target for Profiling",
   "lbPackageInfo": "Package Information",
   
   // 패키지관리
@@ -395,15 +416,16 @@ export default {
   "dtCancelJob": "Cancel job",
   "msgCancelJob": "Are you sure you want to cancel the operation of the 'Before operation' status client?",
 
-  // 단말정책설정
-  "lbClientConf": "ClientRule",
-  "dtAddClientConf": "Registration of client rule setting",
-  "msgAddClientConf": "Do you want to register client rule settings?",
-  "dtEditClientConf": "Edit client rule settings",
-  "msgEditClientConf": "Are you sure you want to modify client rule settings?",
-  "dtCopyClientConf": "Copy client rule settings",
-  "msgCopyClientConf": "The client rule settings have been copied.",
-  "dtViewClientConf": "Client rule setting information",
+  // 에이전트설정
+  "lbClientConf": "AgentSetup",
+  "lbClientSetup": "AgentSetup",
+  "dtAddClientConf": "Registration of agent setting",
+  "msgAddClientConf": "Do you want to register agent settings?",
+  "dtEditClientConf": "Edit agent settings",
+  "msgEditClientConf": "Are you sure you want to modify agent settings?",
+  "dtCopyClientConf": "Copy agent settings",
+  "msgCopyClientConf": "The agent settings have been copied.",
+  "dtViewClientConf": "Agent setting information",
   "dtOSProtect": "Operating system protection",
   "dtInitHomeFolder": "Initialize home folder",
   "dtTrustedBoot": "Trusted Boot",
@@ -434,7 +456,7 @@ export default {
   "selNoPermit": "No allow",
   "dtSetupLogLevel": "Set log level",
   "dtIsUseDeleteFunc": "Whether delete function is used",
-  "lbSetupClient": "Client setting",
+  "lbSetupClient": "Agent setting",
   "msgValidOnlyUpperZero": "Only numbers greater than 0 can be entered.",
 
   // 데스크톱앱관리
@@ -545,7 +567,7 @@ export default {
   "ttResetLoginTrial": "Reset Login Attempts Count",
   "msgEditLoginTrialCount": "Reset login attempts count?",
 
-  // 테마관리
+  // 테마조회
   "lbDeleteTheme": "Remove theme",
   "msgDeleteTheme": "Are you sure you want to delete the theme ('{{themeNm}}')?",
   "lbAddTheme": "Theme registration",
@@ -597,8 +619,8 @@ export default {
   "lbPwIncludeSpecial": "Include special",
   "lbPwDiffBefore": "Number of previous passwords and character differences",
   "lbPwDiffZero": "Not match",
-  "lbPwDiffSmall": "Little",
-  "lbPwDiffMany": "Much",
+  "lbPwDiffSmall": "Little (more 2ea)",
+  "lbPwDiffMany": "Much (more 5ea)",
 
   // 클라우드서비스 관리
   "lbDeleteCloudService": "Delete cloud service",
@@ -646,12 +668,22 @@ export default {
   "msgAdminUserName": "Please enter an administrator name.",
   "lbAdminPassowrd": "Password",
   "msgAdminPassword": "Please enter a password.",
+  "lbAdminType": "Administrator Type",
   "lbAdminConnIp": "Administrator accessable ip",
   "msgAdminConnIp": "Please enter IP or domain.",
   "msgValidAdminConnIp": "Alphabet, number, '.' Please enter only characters.",
   "lbSaveAdminConnIp": "Save connectable IP",
   "msgSaveAdminConnIp": "Do you want to save accessibility information?",
   "dtAdminJobHist": "Administrator ({{adminId}}) History",
+  "lbTotalAdmin": "TotalAdmin",
+  "lbSiteAdmin": "SiteAdmin",
+  "lbPartAdmin": "PartAdmin",
+  "msgNoNeedPart": "Full administrators and intermediate administrators do not need detailed settings.",
+  "lbClientPart": "ClientMng Role",
+  "lbUserPart": "UserMng Role",
+  "lbDesktopPart": "DesktopMng Role",
+  "lbNoticePart": "Notice Role",
+  "msgNeedPartItem": "You need to select at least one of the administrator rights.",
 
   // 호스트정보 관리
   "lbHosts": "Hosts",
@@ -693,7 +725,7 @@ export default {
   "msgGooroomPrefInfo": "Please enter information for gooroom.pref.",
   "msgShowDetailUpdateServer": "When you select the update server information, the details are displayed.",
 
-  // 브라우져제어정책 관리
+  // 브라우저제어정책 관리
   "lbBrowserRule": "BrowserRule",
   "lbDeleteBrowserRule": "Delete browser control rule",
   "msgDeleteBrowserRule": "Are you sure you want to delete the browser control rule {{objId}}?",
@@ -752,8 +784,14 @@ export default {
   "selPrinterOff": "Prohibit printer",
   "selCameraOn": "Camera authorization",
   "selCameraOff": "Camera prohibited",
-  "selSoundOn": "Allow sound (microphone)",
-  "selSoundOff": "No sound (microphone)",
+  "selSoundOn": "Allow sound",
+  "selSoundOff": "No sound",
+  "selMicrophoneOn": "Allow microphone",
+  "selMicrophoneOff": "No microphone",
+  "selScreenCaptureOn": "Allow screen capture",
+  "selScreenCaptureOff": "No screen capture",
+  "selClipboardOn": "Allow clipboard",
+  "selClipboardOff": "No clipboard",
   "selWifiOn": "WLAN authorization",
   "selWifiOff": "Prohibit WLAN",
   "selUsbKeyboardOn": "USB Keyboard Authorization",
@@ -769,7 +807,10 @@ export default {
   "dtWifi": "Wireless LAN",
   "dtCdDvd": "CD/DVD",
   "dtPrinter": "Printer",
-  "dtSound": "Sound (microphone)",
+  "dtSound": "Sound",
+  "dtMicrophone": "Microphone",
+  "dtScreenCapture": "Screen Capture",
+  "dtClipboard": "Clipboard",
   "dtCamera": "Camera",
   "dtUsbKeyboard": "USB keyboard",
   "dtUsbMouse": "USB mouse",
@@ -828,6 +869,25 @@ export default {
   "msgSelectSWItem": "Select the software you want to disable.",
   "msStopRunRedSW": "Red colored software is prohibited from running.",
   "lbSWRule": "SoftwarePolicy",
+
+  // 제어판 항목 관리
+  "lbDeleteCTIRule": "Delete a control center item rule",
+  "msgDeleteCTIRule": "Are you sure you want to delete the control center item rule {{objId}}?",
+  "lbAddCTIRule": "control center item rule information registration",
+  "msgAddCTIRule": "Do you want to register control center item rule information?",
+  "lbEditCTIRule": "Modify control center item rule information",
+  "msgEditCTIRule": "Are you sure you want to modify control center item rule information?",
+  "msgApplyCTIRuleChild": "The control center item rule has been applied to suborganizations.",
+  "msgCopyCTIRule": "You have copied the control center item rule.",
+  "dtAddCTIRule": "control center item rule registration",
+  "dtViewCTIRule": "About control center item rule",
+  "dtEditCTIRule": "Modifying control center item rule",
+  "dtInheritCTIRule": "control center item rule inheritance",
+  "dtCopyCTIRule": "Copy control center item rule",
+  "dtCategoryCTIRule": "control center item rule",
+  "msgSelectCTIItem": "Select the control center item you want to disable.",
+  "msStopRunRedCTI": "Red colored control center item is prohibited from running.",
+  "lbCTIRule": "ControlCenterItemRule",
 
   // 관리자 개인 설정
   "lbAdminTitle": "Manager",
@@ -903,9 +963,9 @@ export default {
   "msgSelectParentGroup": "Please select a parent client group.",
   "ttChangMultiGroupRule": "Multiple changes to client group policies",
 
-  "dtInheritClientConf": "Inherit client rule settings",
-  "msgInheritClientConf": "Are you sure you want to inherit client rule settings?",
-  "msgApplyClientConfChild": "The client rule settings has been applied to the subgroup.",
+  "dtInheritClientConf": "Inherit agent settings",
+  "msgInheritClientConf": "Are you sure you want to inherit agent settings?",
+  "msgApplyClientConfChild": "The agent settings has been applied to the subgroup.",
 
   "dtInheritHosts": "Inherit hosts information",
   "msgInheritHosts": "Are you sure you want to inherit hosts information?",
@@ -913,6 +973,8 @@ export default {
 
   "dtInheritUpdateServer": "Inherit update server information",
   "msgInheritUpdateServer": "Are you sure you want to inherit update server information?",
-  "msgApplyUpdateServerChild": "The update server information has been applied to the subgroup."
+  "msgApplyUpdateServerChild": "The update server information has been applied to the subgroup.",
+
+  "lbAdminActHistory": "Admin Action History"
 
 };

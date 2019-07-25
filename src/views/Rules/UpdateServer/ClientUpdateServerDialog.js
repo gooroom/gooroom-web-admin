@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import * as Constants from "components/GRComponents/GRConstants";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -60,7 +61,16 @@ class ClientUpdateServerDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddUpdateServer"),
                 confirmMsg: t("msgAddUpdateServer"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+                        ClientUpdateServerActions.createClientUpdateServerData(ClientUpdateServerProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: ClientUpdateServerProps.get('editingItem')
             });
         } else {
@@ -69,16 +79,6 @@ class ClientUpdateServerDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
-            ClientUpdateServerActions.createClientUpdateServerData(ClientUpdateServerProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -90,7 +90,16 @@ class ClientUpdateServerDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditUpdateServer"),
                 confirmMsg: t("msgEditUpdateServer"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
+                        ClientUpdateServerActions.editClientUpdateServerData(ClientUpdateServerProps.get('editingItem'), this.props.compId)
+                            .then((res) => {
+                                refreshDataListInComps(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: ClientUpdateServerProps.get('editingItem')
             });
         } else {
@@ -99,16 +108,6 @@ class ClientUpdateServerDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
-            ClientUpdateServerActions.editClientUpdateServerData(ClientUpdateServerProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(ClientUpdateServerProps, ClientUpdateServerActions.readClientUpdateServerListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -159,6 +158,9 @@ class ClientUpdateServerDialog extends Component {
         let title = "";
         if(dialogType === ClientUpdateServerDialog.TYPE_ADD) {
             title = t("dtAddUpdateServer");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === ClientUpdateServerDialog.TYPE_VIEW) {
             title = t("dtViewUpdateServer");
         } else if(dialogType === ClientUpdateServerDialog.TYPE_EDIT) {
@@ -238,7 +240,7 @@ class ClientUpdateServerDialog extends Component {
                 <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }
