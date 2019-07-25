@@ -170,7 +170,7 @@ export const generateMediaRuleObject = (param, isForViewer) => {
         sound = evalue;
       } else if(ename == 'microphone') {
         microphone = evalue;
-      } else if(ename == 'screencapture') {
+      } else if(ename == 'screen_capture') {
         screenCapture = evalue;
       } else if(ename == 'clipboard') {
         clipboard = evalue;
