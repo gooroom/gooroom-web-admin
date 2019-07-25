@@ -252,7 +252,7 @@ const makeParameter = (param) => {
         camera: (param.get('camera') == 'allow') ? 'allow' : 'disallow',
         sound: (param.get('sound') == 'allow') ? 'allow' : 'disallow',
         microphone: (param.get('microphone') == 'allow') ? 'allow' : 'disallow',
-        screencapture: (param.get('screenCapture') == 'allow') ? 'allow' : 'disallow',
+        screen_capture: (param.get('screenCapture') == 'allow') ? 'allow' : 'disallow',
         clipboard: (param.get('clipboard') == 'allow') ? 'allow' : 'disallow',
         keyboard: (param.get('keyboard') == 'allow') ? 'allow' : 'disallow',
         mouse: (param.get('mouse') == 'allow') ? 'allow' : 'disallow',
