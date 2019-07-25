@@ -118,6 +118,7 @@ class MediaRuleManage extends Component {
         mouse: 'allow',
         camera: 'allow',
         usbMemory: 'allow',
+        usbReadonly: "disallow",
         keyboard: 'allow',
         sound: 'allow',
         microphone: 'allow',
