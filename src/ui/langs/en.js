@@ -249,15 +249,18 @@ export default {
   "stExeProctect": "Execute",
   "stBootProctect": "Booting",
   "stAgentProctect": "Agent",
-  "stNoUse": "",
   "stEmergLevel": "",
   "stAlertLevel": "",
   "stCritLevel": "",
   "stErrLevel": "",
   "stWarningLevel": "",
-  "stNoticeLevel": "",
   "stInfoLevel": "",
   "stDebugLevel": "",
+
+  "stNoUse": "Ignore",
+  "stNoticeLevel": "Alarm",
+  "stShowLevel": "Show",
+  "stTranmitLevel": "Transmit",
 
   // 일별접속통계
   "connectRequestCount": "ConnReqCnt",

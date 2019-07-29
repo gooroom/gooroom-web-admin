@@ -118,31 +118,31 @@ class ClientConfSettingManage extends Component {
         logMaxCount: 3,
         systemKeepFree: 10,
 
-        boot_minno: 4,
-        os_minno: 4,
-        exe_minno: 4,
-        media_minno: 3,
-        agent_minno: 3,
+        boot_minno: 0,
+        os_minno: 0,
+        exe_minno: 0,
+        media_minno: 0,
+        agent_minno: 0,
 
-        transmit_os: 'err',
-        notify_os: 'err',
-        show_os: 'info',
-        
-        transmit_exe: 'err',
-        notify_exe: 'err',
-        show_exe: 'info',
-        
-        transmit_boot: 'err',
         notify_boot: 'err',
         show_boot: 'info',
+        transmit_boot: 'info',
+
+        notify_os: 'err',
+        show_os: 'info',
+        transmit_os: 'info',
         
-        transmit_media: 'crit',
-        notify_media: 'crit',
+        notify_exe: 'notice',
+        show_exe: 'info',
+        transmit_exe: 'info',
+        
+        notify_media: 'err',
         show_media: 'info',
+        transmit_media: 'info',
         
-        transmit_agent: 'crit',
-        notify_agent: 'crit',
+        notify_agent: 'none',
         show_agent: 'info',
+        transmit_agent: 'none',
         
         whiteIpAll: true
       }),

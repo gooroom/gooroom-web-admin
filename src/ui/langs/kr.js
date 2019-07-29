@@ -249,15 +249,18 @@ export default {
   "stExeProctect": "실행보안",
   "stBootProctect": "부팅보안",
   "stAgentProctect": "에이전트",
-  "stNoUse": "(사용안함)",
   "stEmergLevel": "(긴급)",
   "stAlertLevel": "(경보)",
   "stCritLevel": "(위험)",
   "stErrLevel": "(오류)",
   "stWarningLevel": "(경고)",
-  "stNoticeLevel": "(알림)",
   "stInfoLevel": "(정보)",
   "stDebugLevel": "(디버깅)",
+
+  "stNoUse": "무시",
+  "stNoticeLevel": "알림",
+  "stShowLevel": "표시",
+  "stTranmitLevel": "전송",
   
   // 일별접속통계
   "connectRequestCount": "접속요청수",
