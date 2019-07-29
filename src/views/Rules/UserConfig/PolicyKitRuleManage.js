@@ -114,16 +114,17 @@ class PolicyKitRuleManage extends Component {
       viewItem: Map({
         adminType: adminType,
 
-        gooroomUpdate: 'yes',
-        gooroomAgent: 'yes',
-        gooroomRegister: 'yes',
-        gracEditor: 'yes',
+        gooroomUpdate: 'auth_self',
+        gooroomAgent: 'auth_admin',
+        gooroomRegister: 'auth_admin',
+        gracEditor: 'auth_admin',
         wireWireless: 'yes',
         networkConfig: 'yes',
-        printer: 'yes',
+        printer: 'auth_self',
         diskMount: 'yes',
         bluetooth: 'yes',
-        pkexec: 'yes'
+        pkexec: 'auth_admin',
+        packageManager: 'auth_admin'
       }),
       dialogType: PolicyKitRuleDialog.TYPE_ADD
     });

@@ -921,6 +921,7 @@ export default {
   "dtPkitBluetooth": "Bluetooth",
   "dtPkitSystem": "System",
   "dtPkitAdminExec": "Admin Execution (pkexec)",
+  "dtPkitPackageManager": "Package Manager",
   "dtPkitAllow": "Allow",
   "dtPkitUserAuth": "User Auth",
   "dtPkitUserAuthKeep": "User Auth (Retained)",

@@ -130,6 +130,8 @@ class PolicyKitRuleSpec extends Component {
                 <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("dtPkitSystem")} ]</Grid>
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtPkitAdminExec")}</Grid>
                 <Grid item xs={3} className={classes.specContent}>{this.chgValueToReadable(viewItem.get('pkexec'))}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtPkitPackageManager")}</Grid>
+                <Grid item xs={3} className={classes.specContent}>{this.chgValueToReadable(viewItem.get('packageManager'))}</Grid>
 
               </Grid>
             </CardContent>
@@ -155,6 +157,7 @@ export const generatePolicyKitRuleObject = (param, isForViewer) => {
     let diskMount = '';
     let bluetooth = '';
     let pkexec = '';
+    let packageManager = '';
 
     param.get('propList').forEach(function(e) {
       const ename = e.get('propNm');
@@ -179,6 +182,8 @@ export const generatePolicyKitRuleObject = (param, isForViewer) => {
         bluetooth = evalue;
       } else if(ename == 'pkexec') {
         pkexec = evalue;
+      } else if(ename == 'package_manager') {
+        packageManager = evalue;
       }
     });
   
@@ -197,7 +202,8 @@ export const generatePolicyKitRuleObject = (param, isForViewer) => {
       printer: printer,
       diskMount: diskMount,
       bluetooth: bluetooth,
-      pkexec: pkexec
+      pkexec: pkexec,
+      packageManager: packageManager
     });
   
   } else {
