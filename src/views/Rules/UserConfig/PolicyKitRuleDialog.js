@@ -360,6 +360,7 @@ class PolicyKitRuleDialog extends Component {
                         {selectedTab === 3 && 
                             <div style={{border:'1px solid lightGray',padding:'10px 20px 20px 20px'}}>
                                 {this.generateItem(editingItem, t("dtPkitAdminExec"), 'pkexec')}
+                                {this.generateItem(editingItem, t("dtPkitPackageManager"), 'packageManager')}
                             </div>
                         }
                         </Paper>
