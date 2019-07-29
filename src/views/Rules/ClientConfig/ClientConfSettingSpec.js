@@ -202,7 +202,7 @@ export const convertLogLevelString = (param, t) => {
   } else if(param == 'notice') {
     return 'Notice' + t('stNoticeLevel');
   } else if(param == 'info') {
-    return 'Informational' + t('stInfoLevel');
+    return 'Information' + t('stInfoLevel');
   } else if(param == 'debug') {
     return 'Debug' + t('stDebugLevel');
   } else {

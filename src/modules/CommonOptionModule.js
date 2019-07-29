@@ -58,7 +58,7 @@ const initialState = {
         { levelNo: "4", levelId: "Error", levelVal: "err", levelNm: "stErrLevel" },
         { levelNo: "5", levelId: "Warning", levelVal: "warning", levelNm: "stWarningLevel" },
         { levelNo: "6", levelId: "Notice", levelVal: "notice", levelNm: "stNoticeLevel" },
-        { levelNo: "7", levelId: "Informational", levelVal: "info", levelNm: "stInfoLevel" },
+        { levelNo: "7", levelId: "Information", levelVal: "info", levelNm: "stInfoLevel" },
         { levelNo: "8", levelId: "Debug", levelVal: "debug", levelNm: "stDebugLevel" }
     ],
     protectionTypeData: [
