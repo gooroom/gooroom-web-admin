@@ -50,16 +50,21 @@ const initialState = {
         statusIds: ["R", "D"]
     },
 
-    logLevelData: [
+    logLevelNotifyData: [
         { levelNo: "0", levelId: "None", levelVal: "none", levelNm: "stNoUse" },
-        { levelNo: "1", levelId: "Emergency", levelVal: "emerg", levelNm: "stEmergLevel" },
-        { levelNo: "2", levelId: "Alert", levelVal: "alert", levelNm: "stAlertLevel" },
-        { levelNo: "3", levelId: "Critical", levelVal: "crit", levelNm: "stCritLevel" },
-        { levelNo: "4", levelId: "Error", levelVal: "err", levelNm: "stErrLevel" },
-        { levelNo: "5", levelId: "Warning", levelVal: "warning", levelNm: "stWarningLevel" },
-        { levelNo: "6", levelId: "Notice", levelVal: "notice", levelNm: "stNoticeLevel" },
-        { levelNo: "7", levelId: "Information", levelVal: "info", levelNm: "stInfoLevel" },
-        { levelNo: "8", levelId: "Debug", levelVal: "debug", levelNm: "stDebugLevel" }
+        { levelNo: "4", levelId: "Error", levelVal: "err", levelNm: "stNoticeLevel" }
+    ],
+    logLevelNotifyExeData: [
+        { levelNo: "0", levelId: "None", levelVal: "none", levelNm: "stNoUse" },
+        { levelNo: "6", levelId: "Notice", levelVal: "notice", levelNm: "stNoticeLevel" }
+    ],
+    logLevelShowData: [
+        { levelNo: "0", levelId: "None", levelVal: "none", levelNm: "stNoUse" },
+        { levelNo: "7", levelId: "Information", levelVal: "info", levelNm: "stShowLevel" }
+    ],
+    logLevelTransmitData: [
+        { levelNo: "0", levelId: "None", levelVal: "none", levelNm: "stNoUse" },
+        { levelNo: "7", levelId: "Information", levelVal: "info", levelNm: "stTranmitLevel" }
     ],
     protectionTypeData: [
         { typeId: "ALL", typeVal: "ALL", typeNm: "stAll" },
