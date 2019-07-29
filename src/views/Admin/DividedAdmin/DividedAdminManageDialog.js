@@ -105,7 +105,10 @@ class DividedAdminManageDialog extends Component {
     handleCreateData = (event) => {
         const { AdminUserProps, GRConfirmActions, t } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
-            const isOk = this.isSelectedPart();
+            let isOk = true;
+            if(AdminUserProps.getIn(['editingItem', 'adminTp']) === 'P') {
+                isOk = this.isSelectedPart();
+            }
             if(isOk) {
                 GRConfirmActions.showConfirm({
                     confirmTitle: t("lbAddAdminUser"),
@@ -149,7 +152,10 @@ class DividedAdminManageDialog extends Component {
     handleEditData = (event) => {
         const { AdminUserProps, GRConfirmActions, t } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
-            const isOk = this.isSelectedPart();
+            let isOk = true;
+            if(AdminUserProps.getIn(['editingItem', 'adminTp']) === 'P') {
+                isOk = this.isSelectedPart();
+            }
             if(isOk) {
                 GRConfirmActions.showConfirm({
                     confirmTitle: t("lbEditAdminUser"),
