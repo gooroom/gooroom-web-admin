@@ -197,7 +197,7 @@ export const convertLogLevelString = (param, t) => {
     return 'Critical' + t('stCritLevel');
   } else if(param == 'err') {
     return 'Error' + t('stErrLevel');
-  } else if(param == 'warnning') {
+  } else if(param == 'warning') {
     return 'Warning' + t('stWarningLevel');
   } else if(param == 'notice') {
     return 'Notice' + t('stNoticeLevel');
@@ -219,7 +219,7 @@ export const convertLogLevelNo = (param) => {
     return 3;
   } else if(param == 'err') {
     return 4;
-  } else if(param == 'warnning') {
+  } else if(param == 'warning') {
     return 5;
   } else if(param == 'notice') {
     return 6;
