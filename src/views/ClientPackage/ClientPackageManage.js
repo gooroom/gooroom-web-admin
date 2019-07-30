@@ -22,7 +22,7 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
-import * as PolicyKitActions from 'modules/PolicyKitRuleModule';
+import * as PolicyKitRuleActions from 'modules/PolicyKitRuleModule';
 
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
@@ -111,7 +111,7 @@ class ClientPackageManage extends Component {
   resetClientGroupRules(compId, grpId) {
     const { ClientGroupProps } = this.props;
     const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, CtrlCenterItemActions, PolicyKitActions, DesktopConfActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, CtrlCenterItemActions, PolicyKitRuleActions, DesktopConfActions } = this.props;
 
     const selectedGroupObj = getRowObjectById(ClientGroupProps, compId, grpId, 'grpId');
     if(selectedGroupObj) {
@@ -130,7 +130,7 @@ class ClientPackageManage extends Component {
       // get control center item rule
       CtrlCenterItemActions.getCtrlCenterItemByGroupId({ compId: compId, groupId: grpId });   
       // get policy kit  rule
-      PolicyKitActions.getPolicyKitByGroupId({ compId: compId, groupId: grpId });   
+      PolicyKitRuleActions.getPolicyKitByGroupId({ compId: compId, groupId: grpId });   
       // get desktop conf info
       DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: grpId });   
 
@@ -435,7 +435,7 @@ const mapDispatchToProps = (dispatch) => ({
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
-  PolicyKitActions: bindActionCreators(PolicyKitActions, dispatch),
+  PolicyKitRuleActions: bindActionCreators(PolicyKitRuleActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
 });
 

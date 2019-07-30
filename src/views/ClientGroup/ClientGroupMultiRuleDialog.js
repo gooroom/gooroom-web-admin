@@ -63,7 +63,7 @@ class ClientGroupMultiRuleDialog extends Component {
                     if(confirmValue) {
                         const { ClientGroupActions, compId } = this.props;
                         const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
                         const checkedGrpId = paramObject.checkedGrpId;
                         ClientGroupActions.editMultiGroupRule({
                             grpIds: (checkedGrpId) ? checkedGrpId.join(',') : '',
@@ -77,7 +77,7 @@ class ClientGroupMultiRuleDialog extends Component {
                             securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId']),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId']),
                             ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId']),
-                            policyKitRuleId: PolicyKitProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId']),
+                            policyKitRuleId: PolicyKitRuleProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId']),
                             desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'GROUP', 'selectedOptionItemId'])
                         }).then((res) => {
                             // ClientGroupActions.readDeptListPaged(ClientGroupProps, compId);
@@ -156,7 +156,7 @@ const mapStateToProps = (state) => ({
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
     CtrlCenterItemProps: state.CtrlCenterItemModule,
-    PolicyKitProps: state.PolicyKitRuleModule,
+    PolicyKitRuleProps: state.PolicyKitRuleModule,
     DesktopConfProps: state.DesktopConfModule
 });
 
