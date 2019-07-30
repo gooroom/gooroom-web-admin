@@ -555,7 +555,12 @@ class ClientConfSettingDialog extends Component {
                                 <Grid container spacing={0} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
                                 {editingItem.get('whiteIp') && editingItem.get('whiteIp').size > 0 && editingItem.get('whiteIp').map((value, index) => (
                                     <Grid item xs={6} key={index}>
-                                        <Input value={value} onChange={this.handleWhiteIpValueChange(index)} style={{width:'80%'}} />
+                                        <TextValidator style={{width:'80%'}}
+                                            name="whiteIp" validators={['matchRegexp:^[0-9.*-]+$']}
+                                            errorMessages={[t("msgWrongIpString")]}
+                                            value={value}
+                                            onChange={this.handleWhiteIpValueChange(index)}
+                                        />
                                         <IconButton onClick={this.handleDeleteWhiteIp(index)} aria-label="WhiteIpDelete">
                                             <DeleteForeverIcon />
                                         </IconButton>

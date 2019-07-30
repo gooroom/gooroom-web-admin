@@ -229,6 +229,7 @@ export default {
   "lbUserRule": "사용자정책",
   "lbClientSelect": "단말선택",
   "msgTypeNumberOnly": "숫자를 입력하세요.",
+  "msgInvalidMacAddress": "맥주소가 정확하지 않습니다.",
 
   // options
   "stBeforeJob": "작업전",
