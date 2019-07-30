@@ -167,6 +167,7 @@ class UserDialog extends Component {
                         const { UserProps, UserActions, compId } = this.props;
                         const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
                         const selectedObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
+                        const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
                         if(editingItem !== undefined) {
                             // user expire date
                             let userExpireDate = '';
