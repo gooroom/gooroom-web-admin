@@ -206,6 +206,7 @@ export default {
   "lbName": "이름",
   "lbId": "아이디",
   "lbClientId": "단말아이디",
+  "lbClientName": "단말이름",
   "dtSystemError": "시스템오류",
   "dtSystemNotice": "시스템알림",
   "dtEditOK": "수정 완료",
@@ -688,6 +689,14 @@ export default {
   "lbDesktopPart": "데스크톱환경관리 권한",
   "lbNoticePart": "공지관리 권한",
   "msgNeedPartItem": "관리자 권한중 하나 이상 선택이 필요합니다.",
+  "lbManagedClientGroup": "관리대상 단말그룹",
+  "lbManagedDept": "관리대상 조직",
+  "lbManagedTargetCount": "대상수",
+  "lbConnectableIp": "접속가능 아이피",
+  "lbIp": "아이피",
+  "lbHaveIt": "있음",
+  "lbHaveNotIt": "없음",
+  "lbAdminSpecifiedRole": "관리자 정보 - 권한",
   
   // 호스트정보 관리
   "lbHosts": "Hosts정보",

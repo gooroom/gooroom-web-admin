@@ -13,14 +13,8 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 
 import DividedAdminManageRuleSelector from './DividedAdminManageRuleSelector';
 
-import TreeMultiSelector from 'components/GROptions/TreeMultiSelector';
-import Typography from '@material-ui/core/Typography';
 import DeptMultiSelector from 'components/GROptions/DeptMultiSelector';
 import GroupMultiSelector from 'components/GROptions/GroupMultiSelector';
-import ClientSingleSelectDialog from 'components/GROptions/ClientSingleSelectDialog';
-
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import GRAlert from 'components/GRComponents/GRAlert';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
@@ -380,7 +374,7 @@ class DividedAdminManageDialog extends Component {
                             <Card >
                                 <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} 
                                     titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'} }} 
-                                    title={"접속 가능 아이피"} 
+                                    title={t('lbAdminConnIp')} 
                                     action={
                                         <Button size="small" color="primary" onClick={event => this.handleAddConnectIp()} style={{marginTop:8}}>
                                             <GRAddIcon />
@@ -414,7 +408,7 @@ class DividedAdminManageDialog extends Component {
                         </Grid>
                     </Grid>
                     {(editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
-                        <GroupMultiSelector compId={compId} title={"관리대상 단말그룹"} 
+                        <GroupMultiSelector compId={compId} title={t('lbManagedClientGroup')} 
                             isCheckMasterOnly={true}
                             selectedGroup={selectedGroup} 
                             onSelectGroup={this.handleSelectGroup}
@@ -422,7 +416,7 @@ class DividedAdminManageDialog extends Component {
                     }
 
                     {(editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
-                        <DeptMultiSelector compId={compId} title={"관리대상 조직"} 
+                        <DeptMultiSelector compId={compId} title={t('lbManagedDept')} 
                             isCheckMasterOnly={true}
                             selectedDept={selectedDept} 
                             onSelectDept={this.handleSelectDept}
