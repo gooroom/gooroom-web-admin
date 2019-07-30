@@ -206,6 +206,7 @@ export default {
   "lbName": "Name",
   "lbId": "ID",
   "lbClientId": "ClientId",
+  "lbClientName": "ClientName",
   "dtSystemError": "System Error",
   "dtSystemNotice": "System Notice",
   "dtEditOK": "Edit Success",
@@ -688,6 +689,14 @@ export default {
   "lbDesktopPart": "DesktopMng Role",
   "lbNoticePart": "Notice Role",
   "msgNeedPartItem": "You need to select at least one of the administrator rights.",
+  "lbManagedClientGroup": "Managed Client Group",
+  "lbManagedDept": "Managed Dept.",
+  "lbManagedTargetCount": "Count",
+  "lbConnectableIp": "Connectable Ip",
+  "lbIp": "Ip",
+  "lbHaveIt": "Exist",
+  "lbHaveNotIt": "None",
+  "lbAdminSpecifiedRole": "Admin Info. - Role",
 
   // 호스트정보 관리
   "lbHosts": "Hosts",
