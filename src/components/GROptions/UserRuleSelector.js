@@ -14,7 +14,7 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
-import * as PolicyKitActions from 'modules/PolicyKitRuleModule';
+import * as PolicyKitRuleActions from 'modules/PolicyKitRuleModule';
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
@@ -60,7 +60,7 @@ class UserRuleSelector extends Component {
             this.props.CtrlCenterItemActions.changeCompVariable({
                 compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
             });
-            this.props.PolicyKitActions.changeCompVariable({
+            this.props.PolicyKitRuleActions.changeCompVariable({
                 compId:compId, name:'selectedOptionItemId', targetType:targetType, value: ''
             });
             this.props.DesktopConfActions.changeCompVariable({
@@ -88,9 +88,9 @@ class UserRuleSelector extends Component {
                 compId:compId, name:'selectedOptionItemId', targetType:targetType, 
                 value: this.props.CtrlCenterItemProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
             });
-            this.props.PolicyKitActions.changeCompVariable({
+            this.props.PolicyKitRuleActions.changeCompVariable({
                 compId:compId, name:'selectedOptionItemId', targetType:targetType, 
-                value: this.props.PolicyKitProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
+                value: this.props.PolicyKitRuleProps.getIn(['viewItems', compId, targetType, 'beforeSelectedItemId'])
             });
             this.props.DesktopConfActions.changeCompVariable({
                 compId:compId, name:'selectedOptionItemId', targetType:targetType, 
@@ -149,7 +149,7 @@ const mapStateToProps = (state) => ({
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
     CtrlCenterItemProps: state.CtrlCenterItemModule,
-    PolicyKitProps: state.PolicyKitRuleModule,
+    PolicyKitRuleProps: state.PolicyKitRuleModule,
 
     DesktopConfProps: state.DesktopConfModule
 });
@@ -160,7 +160,7 @@ const mapDispatchToProps = (dispatch) => ({
     SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
     SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
     CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
-    PolicyKitActions: bindActionCreators(PolicyKitActions, dispatch),
+    PolicyKitRuleActions: bindActionCreators(PolicyKitRuleActions, dispatch),
 
     DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
 });

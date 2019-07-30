@@ -60,7 +60,7 @@ class DeptDialog extends Component {
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
                         const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
                         DeptActions.createDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
@@ -72,7 +72,7 @@ class DeptDialog extends Component {
                             securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
                             ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
-                            policyKitRuleId: PolicyKitProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                         }).then((res) => {
                             if(res.status && res.status && res.status.message) {
@@ -115,7 +115,7 @@ class DeptDialog extends Component {
                     if(confirmValue) {
                         const isInherit = isChecked;
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
                         const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
                         DeptActions.editDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
@@ -128,7 +128,7 @@ class DeptDialog extends Component {
                             securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
                             ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
-                            policyKitRuleId: PolicyKitProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                         }).then((res) => {
 
@@ -254,7 +254,7 @@ const mapStateToProps = (state) => ({
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
     CtrlCenterItemProps: state.CtrlCenterItemModule,
-    PolicyKitProps: state.PolicyKitRuleModule,
+    PolicyKitRuleProps: state.PolicyKitRuleModule,
     DesktopConfProps: state.DesktopConfModule
 });
 

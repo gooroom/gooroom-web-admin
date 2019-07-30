@@ -16,7 +16,7 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
-import * as PolicyKitActions from 'modules/PolicyKitRuleModule';
+import * as PolicyKitRuleActions from 'modules/PolicyKitRuleModule';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
@@ -25,7 +25,7 @@ import { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
 import { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
 import { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import { generateCtrlCenterItemObject } from 'views/Rules/UserConfig/CtrlCenterItemSpec';
-import { generatePolicyKitObject } from 'views/Rules/UserConfig/PolicyKitRuleSpec';
+import { generatePolicyKitRuleObject } from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 
 import DeptDialog from './DeptDialog';
 
@@ -85,8 +85,8 @@ class DeptSpec extends Component {
     this.props.CtrlCenterItemActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
       value: getValueInSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, 'DEPT', 'objId')      
     });
-    this.props.PolicyKitActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
-      value: getValueInSelectedObjectInComp(this.props.PolicyKitProps, compId, 'DEPT', 'objId')      
+    this.props.PolicyKitRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
+      value: getValueInSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, 'DEPT', 'objId')      
     });
     this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
       value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'DEPT', 'confId')      
@@ -138,9 +138,9 @@ class DeptSpec extends Component {
     });
   };
   handleClickEditForPolicyKit = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.PolicyKitProps, compId, targetType);
-    this.props.PolicyKitActions.showDialog({
-      viewItem: generatePolicyKitObject(viewItem, false),
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
+      viewItem: generatePolicyKitRuleObject(viewItem, false),
       dialogType: PolicyKitRuleDialog.TYPE_EDIT
     });
   };
@@ -188,8 +188,8 @@ class DeptSpec extends Component {
     });
   };
   handleClickInheritForPolicyKit = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.PolicyKitProps, compId, targetType);
-    this.props.PolicyKitActions.showDialog({
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
       viewItem: viewItem,
       dialogType: PolicyKitRuleDialog.TYPE_INHERIT_DEPT
     });
@@ -215,7 +215,7 @@ class DeptSpec extends Component {
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedCtrlCenterItem = this.props.CtrlCenterItemProps.getIn(['viewItems', compId, 'DEPT']);
-    const selectedPolicyKit = this.props.PolicyKitProps.getIn(['viewItems', compId, 'DEPT']);
+    const selectedPolicyKit = this.props.PolicyKitRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'DEPT']);
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
@@ -330,7 +330,7 @@ const mapStateToProps = (state) => ({
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
   CtrlCenterItemProps: state.CtrlCenterItemModule,
-  PolicyKitProps: state.PolicyKitRuleModule,
+  PolicyKitRuleProps: state.PolicyKitRuleModule,
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -343,7 +343,7 @@ const mapDispatchToProps = (dispatch) => ({
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
-  PolicyKitActions: bindActionCreators(PolicyKitActions, dispatch),
+  PolicyKitRuleActions: bindActionCreators(PolicyKitRuleActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 
