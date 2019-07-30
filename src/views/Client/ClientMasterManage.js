@@ -450,7 +450,7 @@ class ClientMasterManage extends Component {
                   </Tooltip>
                 </Grid>
                 <Grid item>
-                  <Tooltip title={t("ttChangMultiGroupRule")}>
+                  <Tooltip title={t("ttChangeMultiGroupRule")}>
                     <span>
                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={this.handleApplyMultiGroup} >
                       <TuneIcon />

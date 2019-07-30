@@ -1004,7 +1004,7 @@ export default {
 
   "lbParentGroup": "상위단말그룹",
   "msgSelectParentGroup": "상위단말그룹을 선택하세요.",
-  "ttChangMultiGroupRule": "단말그룹정책 일괄변경",
+  "ttChangeMultiGroupRule": "단말그룹정책 일괄변경",
 
   "dtInheritClientConf": "에이전트설정 상속",
   "msgInheritClientConf": "에이전트설정을 상속하시겠습니까?",

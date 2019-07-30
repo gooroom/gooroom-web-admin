@@ -1004,7 +1004,7 @@ export default {
 
   "lbParentGroup": "Parent Client Group",
   "msgSelectParentGroup": "Please select a parent client group.",
-  "ttChangMultiGroupRule": "Multiple changes to client group policies",
+  "ttChangeMultiGroupRule": "Multiple changes to client group policies",
 
   "dtInheritClientConf": "Inherit agent settings",
   "msgInheritClientConf": "Are you sure you want to inherit agent settings?",
