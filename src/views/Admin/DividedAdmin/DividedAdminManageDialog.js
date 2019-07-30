@@ -387,8 +387,11 @@ class DividedAdminManageDialog extends Component {
                                         <ListItem key={index} style={{padding:'2px 32px 2px 16px'}}>
                                             <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
                                             <ListItemText primary={
-                                                <TextField className={classes.fullWidth} value={n} margin="none" 
+                                                <TextValidator value={n} name={`ip_${index}`}
+                                                    validators={['required', 'matchRegexp:^(?:[0-9,*]{1,3}\.){3}[0-9,*]{1,3}$']}
+                                                    errorMessages={[t("lbIp"), t("msgWrongIpString")]}
                                                     onChange={this.handleValueChangeForIp(index)}
+                                                    className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                                 />
                                             } />
                                             <ListItemSecondaryAction>

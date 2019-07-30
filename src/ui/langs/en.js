@@ -228,6 +228,7 @@ export default {
   "lbDeptRule": "Dept. Rule",
   "lbUserRule": "User Rule",
   "lbClientSelect": "Select Client",
+  "msgTypeNumberOnly": "Please enter only numbers.",
 
   // options
   "stBeforeJob": "Before",
@@ -694,6 +695,7 @@ export default {
   "lbManagedTargetCount": "Count",
   "lbConnectableIp": "Connectable Ip",
   "lbIp": "Ip",
+  "msgWrongIpString": "The IP information has been approved.",
   "lbHaveIt": "Exist",
   "lbHaveNotIt": "None",
   "lbAdminSpecifiedRole": "Admin Info. - Role",
