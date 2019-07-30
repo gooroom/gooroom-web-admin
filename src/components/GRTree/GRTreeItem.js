@@ -62,7 +62,7 @@ class GRTreeItem extends Component {
                 {(isShowDetail) &&
                     <IconButton style={{padding:0}} onClick={onClickDetailNode}>{(isActive) ? <ShowIconSelected style={{color:'#ef5350'}} /> : <ShowIcon />}</IconButton>
                 }
-                <ListItemText inset primary={nodeTitle} onClick={onClickNode} style={{paddingLeft:4}} />
+                <ListItemText inset primary={nodeTitle} onClick={onClickNode} style={{paddingLeft:4,wordBreak: 'break-all'}} />
                 {(isExtend == 'Y') && 
                     <IconButton style={{padding:0}} onClick={onClickNode}><OpenIcon /></IconButton>
                 }
