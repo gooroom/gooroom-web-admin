@@ -67,7 +67,7 @@ class DividedAdminManageSpec extends Component {
               }
               {(selectedItem.get('deptInfoList')) && selectedItem.get('deptInfoList').map((n, i) => (
                 <React.Fragment key={n.get('value')}>
-                  <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbDeptName') / t('lbDeptId')}`}</Grid>
+                  <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbDeptName')} / ${t('lbDeptId')}`}</Grid>
                   <Grid item xs={3} className={classes.specContent}>{n.get('name')} / {n.get('value')}</Grid>
                 </React.Fragment>
               ))}
@@ -81,7 +81,7 @@ class DividedAdminManageSpec extends Component {
               }
               {(selectedItem.get('grpInfoList')) && selectedItem.get('grpInfoList').map((n, i) => (
                 <React.Fragment key={n.get('name')}>
-                  <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbClientName') / t('lbClientId')}`}</Grid>
+                  <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbClientName')} / t{('lbClientId')}`}</Grid>
                   <Grid item xs={3} className={classes.specContent}>{n.get('name')} / {n.get('value')}</Grid>
                 </React.Fragment>
               ))}
