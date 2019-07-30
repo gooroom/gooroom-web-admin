@@ -229,6 +229,7 @@ export default {
   "lbUserRule": "User Rule",
   "lbClientSelect": "Select Client",
   "msgTypeNumberOnly": "Please enter only numbers.",
+  "msgInvalidMacAddress": "The MAC address is not correct.",
 
   // options
   "stBeforeJob": "Before",

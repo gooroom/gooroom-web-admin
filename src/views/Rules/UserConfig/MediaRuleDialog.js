@@ -370,7 +370,12 @@ class MediaRuleDialog extends Component {
                                     <List>
                                     {editingItem.get('macAddress') && editingItem.get('macAddress').size > 0 && editingItem.get('macAddress').map((value, index) => (
                                         <ListItem key={index} style={{padding:0}} >
-                                            <Input value={value} onChange={this.handleBluetoothMacValueChange(index)} fullWidth={true} style={{padding:0}} />
+                                            <TextValidator style={{padding:0}} fullWidth={true}
+                                                name="macAddr" validators={['matchRegexp:^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$']}
+                                                errorMessages={[t("msgInvalidMacAddress")]}
+                                                value={value}
+                                                onChange={this.handleBluetoothMacValueChange(index)}
+                                            />
                                             <IconButton onClick={this.handleDeleteBluetoothMac(index)}>
                                                 <DeleteForeverIcon />
                                             </IconButton>
