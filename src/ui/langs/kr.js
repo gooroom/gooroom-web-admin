@@ -228,6 +228,7 @@ export default {
   "lbDeptRule": "조직정책",
   "lbUserRule": "사용자정책",
   "lbClientSelect": "단말선택",
+  "msgTypeNumberOnly": "숫자를 입력하세요.",
 
   // options
   "stBeforeJob": "작업전",
@@ -694,6 +695,7 @@ export default {
   "lbManagedTargetCount": "대상수",
   "lbConnectableIp": "접속가능 아이피",
   "lbIp": "아이피",
+  "msgWrongIpString": "아이피정보가 잘못되었습니다.",
   "lbHaveIt": "있음",
   "lbHaveNotIt": "없음",
   "lbAdminSpecifiedRole": "관리자 정보 - 권한",
