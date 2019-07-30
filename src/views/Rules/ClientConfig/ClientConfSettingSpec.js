@@ -170,12 +170,12 @@ class ClientConfSettingSpec extends Component {
               <Grid item xs={1} className={classes.specContent}>{viewItem.get('logRemainDate')}</Grid>
 
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("dtClientLogSetup")} ]</Grid>
-              <Grid item xs={5} className={classes.specTitle}>{bull} {t("lbLogFileMax")}</Grid>
-              <Grid item xs={1} className={classes.specContent}>{viewItem.get('logMaxSize')}</Grid>
-              <Grid item xs={5} className={classes.specTitle}>{bull} {t("lbSavedLogFileCount")}</Grid>
-              <Grid item xs={1} className={classes.specContent}>{viewItem.get('logMaxCount')}</Grid>
-              <Grid item xs={5} className={classes.specTitle}>{bull} {t("lbMinimumDiskSizeRate")}</Grid>
-              <Grid item xs={1} className={classes.specContent}>{viewItem.get('systemKeepFree')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbLogFileMax")}</Grid>
+              <Grid item xs={2} className={classes.specContent} style={{wordBreak: 'break-all'}}>{viewItem.get('logMaxSize')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbSavedLogFileCount")}</Grid>
+              <Grid item xs={2} className={classes.specContent} style={{wordBreak: 'break-all'}}>{viewItem.get('logMaxCount')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbMinimumDiskSizeRate")}</Grid>
+              <Grid item xs={2} className={classes.specContent} style={{wordBreak: 'break-all'}}>{viewItem.get('systemKeepFree')}</Grid>
               <Grid item xs={6} className={classes.specContent}></Grid>
             </Grid>
           </CardContent>
