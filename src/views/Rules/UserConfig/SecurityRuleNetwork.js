@@ -290,8 +290,6 @@ class SecurityRuleNetwork extends Component {
         {(networkItems) &&
         <TableBody>
           {networkItems.map(n => {
-
-            console.log('n ::::: ', n.toJS());
               const isSelected = this.isSelected(n.get('no'));
               return (
                 <TableRow
@@ -332,7 +330,7 @@ class SecurityRuleNetwork extends Component {
                   <TableCell>
                     <TextValidator 
                       name='address'
-                      validators={['matchRegexp:^[a-zA-Z0-9.]*$']}
+                      validators={['matchRegexp:^[a-fA-F0-9.:]*$']}
                       errorMessages={[t("msgValidAdminUserId")]}
                       value={n.get('address')}
                       onChange={this.changeNetworkOption(n.get('no'))}
