@@ -866,6 +866,7 @@ export default {
   "selPackageStopOn": "켜짐",
   "selPackageStopOff": "꺼짐",
   "dtBasicNetwork": "기본네트워크허용여부",
+  "msgValidFirewallAddress": "알파벳(a~f) 또는 숫자를 입력하세요.",  
   
   // 소프트웨어정책 관리
   "lbDeleteSWRule": "소프트웨어제한정책 삭제",
