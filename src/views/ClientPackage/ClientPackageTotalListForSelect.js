@@ -80,6 +80,7 @@ class ClientPackageTotalListForSelect extends Component {
               orderColumn: orderColumn,
               orderDir: orderDir
             }))
+            .set('checkedIds', List([]))
         });
       }
     ).catch(error => {
@@ -129,6 +130,18 @@ class ClientPackageTotalListForSelect extends Component {
     } else {
       newCheckedIds = List([id]);
     }
+    this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
+    this.props.onSelectPackage(newCheckedIds);
+  };
+
+  handleClickAllCheck = (event, checked) => {
+    const { stateData } = this.state;
+    let newCheckedIds = List([]);
+    if(checked) {
+      const listData = stateData.get('listData');
+      newCheckedIds = (listData) ? listData.map((e) => (e.get('packageId'))) : List([]);
+    }
+
     this.setState({ stateData: stateData.set('checkedIds', newCheckedIds) });
     this.props.onSelectPackage(newCheckedIds);
   };
@@ -196,7 +209,7 @@ class ClientPackageTotalListForSelect extends Component {
         <Table>
           <GRCommonTableHead
             classes={classes}
-            keyId="userId"
+            keyId="packageId"
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
