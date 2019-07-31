@@ -117,7 +117,8 @@ class DesktopConfManage extends Component {
     //this.props.DesktopConfActions.readThemeInfoList();
     this.props.DesktopConfActions.showDialog({
       viewItem: Map({
-        adminType: adminType
+        adminType: adminType,
+        themeId: 1
       }),
       dialogType: DesktopConfDialog.TYPE_ADD
     });
