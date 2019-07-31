@@ -245,8 +245,7 @@ const makeParameter = (param) => {
         objName: param.get('objNm'),
         objComment: param.get('comment'),
         adminType: param.get('adminType'),
-        
-        usb_memory: (param.get('usbMemory') == 'allow') ? ((usbReadonly == 'allow') ? 'read_only' : 'allow') : 'disallow',
+        usb_memory: (param.get('usbMemory') == 'allow' || param.get('usbMemory') == 'read_only') ? ((usbReadonly == 'allow') ? 'read_only' : 'allow') : 'disallow',
         cd_dvd: (param.get('cdAndDvd') == 'allow') ? 'allow' : 'disallow',
         printer: (param.get('printer') == 'allow') ? 'allow' : 'disallow',
         camera: (param.get('camera') == 'allow') ? 'allow' : 'disallow',
