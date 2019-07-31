@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -33,16 +31,11 @@ import TableRow from '@material-ui/core/TableRow';
 import FormControl from '@material-ui/core/FormControl';
 
 import Checkbox from "@material-ui/core/Checkbox";
-import Tooltip from '@material-ui/core/Tooltip';
 
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
-import AddIcon from "@material-ui/icons/Add";
-import MoveIcon from '@material-ui/icons/Redo';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AccountIcon from '@material-ui/icons/AccountBox';
-import DeptIcon from '@material-ui/icons/WebAsset';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -208,10 +201,10 @@ class UserListComp extends Component {
   render() {
 
     const { classes } = this.props;
-    const { UserProps, compId } = this.props;
+    const { UserProps, compId, isEnableEdit } = this.props;
     const { t, i18n } = this.props;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: "chCheckbox", isCheckbox: true},
       { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: t("colUserNm") },
@@ -221,6 +214,9 @@ class UserListComp extends Component {
       { id: "chLastClientId", isOrder: true, numeric: false, disablePadding: true, label: t("colLoginClient") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
+    if(!isEnableEdit) {
+      columnHeaders.pop();
+    }
 
     const listObj = UserProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -304,7 +300,7 @@ class UserListComp extends Component {
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                    {(n.get('statusCd') !== 'STAT020') &&
+                    {(n.get('statusCd') !== 'STAT020' && isEnableEdit) &&
                       <React.Fragment>
                     <Button color="secondary" size="small" 
                       className={classes.buttonInTableRow}

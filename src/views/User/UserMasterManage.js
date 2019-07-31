@@ -477,7 +477,7 @@ class UserMasterManage extends Component {
                 onCheck={this.handleCheckedDept} 
                 onSelect={this.handleSelectDept}
                 onEdit={this.handleEditDept}
-                isEnableEdit={true}
+                isEnableEdit={isEditable}
                 isActivable={true} 
               />
             </Grid>
@@ -508,6 +508,7 @@ class UserMasterManage extends Component {
               }
               <UserListComp name='UserListComp' compId={compId} deptCd='' 
                 onSelect={this.handleSelectUser}
+                isEnableEdit={isEditable}
                 onMoveUserToDept={this.handleMoveUserToDept}
               />
             </Grid>
