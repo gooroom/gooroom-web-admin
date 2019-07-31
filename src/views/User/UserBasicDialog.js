@@ -68,41 +68,6 @@ class UserBasicDialog extends Component {
         });
     };
 
-    // 데이타 생성
-    handleCreateData = (event) => {
-        const { UserProps, GRConfirmActions } = this.props;
-        const { t, i18n } = this.props;
-
-        if(this.refs.form && this.refs.form.isFormValid()) {
-            GRConfirmActions.showConfirm({
-                confirmTitle: t("lbAddUserInfo"),
-                confirmMsg: t("msgAddUserInfo"),
-                handleConfirmResult: (confirmValue, paramObject) => {
-                    if(confirmValue) {
-                        const { UserProps, UserActions, compId } = this.props;
-                        UserActions.createUserData({
-                            userId: UserProps.getIn(['editingItem', 'userId']),
-                            userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                            userNm: UserProps.getIn(['editingItem', 'userNm']),
-                            expireDate: UserProps.getIn(['editingItem', 'useUserExpireDate']),
-                            passwordExpireDate: UserProps.getIn(['editingItem', 'usePasswordExpireDate'])
-                        }).then((res) => {
-                            UserActions.readUserListPaged(UserProps, compId);
-                            this.handleClose();
-                        });
-                    }
-                },
-                confirmObject: UserProps.get('editingItem')
-            });
-        } else {
-            if(this.refs.form && this.refs.form.childs) {
-                this.refs.form.childs.map(c => {
-                    this.refs.form.validate(c);
-                });
-            }
-        }
-    }
-
     handleEditData = (event) => {
         const { UserProps, GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
@@ -131,6 +96,7 @@ class UserBasicDialog extends Component {
                                 userId: UserProps.getIn(['editingItem', 'userId']),
                                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                                 userNm: UserProps.getIn(['editingItem', 'userNm']),
+                                userEmail: UserProps.getIn(['editingItem', 'userEmail']),
                                 expireDate: userExpireDate,
                                 passwordExpireDate: passwordExpireDate
                             }).then((res) => {
@@ -292,11 +258,18 @@ class UserBasicDialog extends Component {
                             </Grid>
                         </Grid>
 
+                        <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
+                            <TextValidator
+                                label={t("lbEmail")}
+                                value={(editingItem.get('userEmail')) ? editingItem.get('userEmail') : ''}
+                                name="userEmail" validators={['required', 'isEmail']} errorMessages={[t("msgEnterEmail")]}
+                                onChange={this.handleValueChange('userEmail')}
+                                className={classes.fullWidth}
+                            />
+                        </FormControl>
+
                     </DialogContent>
                     <DialogActions>
-                        {(dialogType === UserBasicDialog.TYPE_ADD) &&
-                            <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
-                        }
                         {(dialogType === UserBasicDialog.TYPE_EDIT) &&
                             <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                         }

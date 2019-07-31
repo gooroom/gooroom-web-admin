@@ -158,6 +158,11 @@ class GRSideMenu extends React.Component {
         const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuUser'));
         menus = menus.deleteIn(['items', index]);
       }
+      if(window.roleClientAdmin === 0 && window.roleUserAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuUseRule'));
+        menus = menus.deleteIn(['items', index]);
+      }
+
       if(window.roleDesktopAdmin === 0) {
         const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuDesktop'));
         menus = menus.deleteIn(['items', index]);

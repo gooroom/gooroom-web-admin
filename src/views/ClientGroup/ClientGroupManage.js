@@ -18,6 +18,7 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+import * as PolicyKitRuleActions from 'modules/PolicyKitRuleModule';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -336,6 +337,7 @@ const mapDispatchToProps = (dispatch) => ({
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
+  PolicyKitRuleActions: bindActionCreators(PolicyKitRuleActions, dispatch),
   
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
   

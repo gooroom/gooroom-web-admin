@@ -179,7 +179,8 @@ export default {
   "menuSecurityRuleManage": "SecurityRule",
   "menuSoftwareRuleManage": "SoftwareRule",
   "menuCtrlCenterItemRuleManage": "ControlCenterItemRule",
-  
+  "menuPolicyKitRuleManage": "PolicyKitRule",
+
   "menuDesktop": "Desktop",
   "menuDesktopManage": "DesktopMng",
   "menuDesktopAppManage": "DesktopAppMng",
@@ -205,6 +206,7 @@ export default {
   "lbName": "Name",
   "lbId": "ID",
   "lbClientId": "ClientId",
+  "lbClientName": "ClientName",
   "dtSystemError": "System Error",
   "dtSystemNotice": "System Notice",
   "dtEditOK": "Edit Success",
@@ -226,6 +228,8 @@ export default {
   "lbDeptRule": "Dept. Rule",
   "lbUserRule": "User Rule",
   "lbClientSelect": "Select Client",
+  "msgTypeNumberOnly": "Please enter only numbers.",
+  "msgInvalidMacAddress": "The MAC address is not correct.",
 
   // options
   "stBeforeJob": "Before",
@@ -248,15 +252,18 @@ export default {
   "stExeProctect": "Execute",
   "stBootProctect": "Booting",
   "stAgentProctect": "Agent",
-  "stNoUse": "",
   "stEmergLevel": "",
   "stAlertLevel": "",
   "stCritLevel": "",
   "stErrLevel": "",
   "stWarningLevel": "",
-  "stNoticeLevel": "",
   "stInfoLevel": "",
   "stDebugLevel": "",
+
+  "stNoUse": "Ignore",
+  "stNoticeLevel": "Alarm",
+  "stShowLevel": "Show",
+  "stTranmitLevel": "Transmit",
 
   // 일별접속통계
   "connectRequestCount": "ConnReqCnt",
@@ -684,6 +691,15 @@ export default {
   "lbDesktopPart": "DesktopMng Role",
   "lbNoticePart": "Notice Role",
   "msgNeedPartItem": "You need to select at least one of the administrator rights.",
+  "lbManagedClientGroup": "Managed Client Group",
+  "lbManagedDept": "Managed Dept.",
+  "lbManagedTargetCount": "Count",
+  "lbConnectableIp": "Connectable Ip",
+  "lbIp": "Ip",
+  "msgWrongIpString": "The IP information has been approved.",
+  "lbHaveIt": "Exist",
+  "lbHaveNotIt": "None",
+  "lbAdminSpecifiedRole": "Admin Info. - Role",
 
   // 호스트정보 관리
   "lbHosts": "Hosts",
@@ -850,7 +866,8 @@ export default {
   "selPackageStopOn": "On",
   "selPackageStopOff": "Off",
   "dtBasicNetwork": "Default Network Allowed",
-  
+  "msgValidFirewallAddress": "Please enter only alphabet(A~F) or numeric characters.",
+
   // 소프트웨어정책 관리
   "lbDeleteSWRule": "Delete a software restriction rule",
   "msgDeleteSWRule": "Are you sure you want to delete the software restriction rule {{objId}}?",
@@ -888,6 +905,45 @@ export default {
   "msgSelectCTIItem": "Select the control center item you want to disable.",
   "msStopRunRedCTI": "Red colored control center item is prohibited from running.",
   "lbCTIRule": "ControlCenterItemRule",
+
+  // Policy Kit 관리
+  "lbPolicyKitRule": "PolicyKitRule",
+  "lbDeletePolicyKitRule": "Delete policy kit rule",
+  "msgDeletePolicyKitRule": "Are you sure you want to delete the policy kit rule {{objId}}?",
+  "lbAddPolicyKitRule": "Policy kit rule information registration",
+  "msgAddPolicyKitRule": "Do you want to register the policy kit rule information?",
+  "lbEditPolicyKitRule": "Modifying Policy Kit Rule Information",
+  "msgEditPolicyKitRule": "Are you sure you want to modify the policy kit rule information?",
+  "msgApplyPolicyKitRuleChild": "The policy kit rule has been applied to the suborganization.",
+  "msgCopyPolicyKitRule": "Copied policy kit rule.",
+  "dtAddPolicyKitRule": "Policy Kit Rule Registration",
+  "dtViewPolicyKitRule": "About media control policies",
+  "dtEditPolicyKitRule": "Modifying Policy Kit Rule",
+  "dtInheritPolicyKitRule": "Inheriting Policy Kit Rule",
+  "dtCopyPolicyKitRule": "Copy Policy Kit Rule",
+  "dtCategoryPolicyKitRule": "Policy Kit Rule",
+  
+  "dtPkitGooroom": "Gooroom App",
+  "dtPkitUpdate": "Gooroom Update",
+  "dtPkitAgent": "Gooroom Agent",
+  "dtPkitRegister": "Gooroom Agent",
+  "dtPkitGracEdit": "Grac Editor",
+  "dtPkitNetwork": "Network",
+  "dtPkitWireless": "Wire/Wireless",
+  "dtPkitNetworkConfig": "Network Configuration",
+  "dtPkitDevice": "Device",
+  "dtPkitPrinter": "Printer",
+  "dtPkitMount": "Disk Mount",
+  "dtPkitBluetooth": "Bluetooth",
+  "dtPkitSystem": "System",
+  "dtPkitAdminExec": "Admin Execution (pkexec)",
+  "dtPkitPackageManager": "Package Manager",
+  "dtPkitAllow": "Allow",
+  "dtPkitUserAuth": "User Auth",
+  "dtPkitUserAuthKeep": "User Auth (Retained)",
+  "dtPkitAdminAuth": "Admin Auth",
+  "dtPkitAdminAuthKeep": "Admin Auth (Retained)",
+  "dtPkitDisallow": "Disallow",
 
   // 관리자 개인 설정
   "lbAdminTitle": "Manager",
@@ -961,7 +1017,7 @@ export default {
 
   "lbParentGroup": "Parent Client Group",
   "msgSelectParentGroup": "Please select a parent client group.",
-  "ttChangMultiGroupRule": "Multiple changes to client group policies",
+  "ttChangeMultiGroupRule": "Multiple changes to client group policies",
 
   "dtInheritClientConf": "Inherit agent settings",
   "msgInheritClientConf": "Are you sure you want to inherit agent settings?",

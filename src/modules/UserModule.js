@@ -205,6 +205,7 @@ const makeParameter = (param) => {
         securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
         filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
         ctrlCenterItemRuleId: (param.ctrlCenterItemRuleId == '-') ? '' : param.ctrlCenterItemRuleId,
+        policyKitRuleId: (param.policyKitRuleId == '-') ? '' : param.policyKitRuleId,
         desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId
     };
 }

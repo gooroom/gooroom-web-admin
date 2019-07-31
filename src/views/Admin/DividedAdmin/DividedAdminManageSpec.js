@@ -26,7 +26,7 @@ class DividedAdminManageSpec extends Component {
       {selectedItem &&
         <Card elevation={4} className={classes.ruleViewerCard}>
           <GRRuleCardHeader
-            category={"관리자 정보 - 권한"} title={selectedItem.get('adminNm')} 
+            category={t('lbAdminSpecifiedRole')} title={selectedItem.get('adminNm')} 
             subheader={selectedItem.get('adminId')}
             action={
               <div style={{paddingTop:16,paddingRight:24}}>
@@ -40,67 +40,67 @@ class DividedAdminManageSpec extends Component {
             {isPart && 
             <Grid container spacing={0}>
               <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
-                [ {"단말관리 권한"} -
-                {(selectedItem.get('isClientAdmin') === '1') && <span> 있음 ]</span>} 
-                {(selectedItem.get('isClientAdmin') !== '1') && <span> 없음 ]</span>}
+                [ {t('lbClientPart')} -
+                {(selectedItem.get('isClientAdmin') === '1') && <span> {t('lbHaveIt')} ]</span>} 
+                {(selectedItem.get('isClientAdmin') !== '1') && <span> {t('lbHaveNotIt')} ]</span>}
               </Grid>
               <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
-                [ {"사용자관리 권한"} -
-                {(selectedItem.get('isUserAdmin') === '1') && <span> 있음 ]</span>}
-                {(selectedItem.get('isUserAdmin') !== '1') && <span> 없음 ]</span>}
+                [ {t('lbUserPart')} -
+                {(selectedItem.get('isUserAdmin') === '1') && <span> {t('lbHaveIt')} ]</span>}
+                {(selectedItem.get('isUserAdmin') !== '1') && <span> {t('lbHaveNotIt')} ]</span>}
               </Grid>
               <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
-                [ {"데스크톱환경관리 권한"} -
-                {(selectedItem.get('isDesktopAdmin') === '1') && <span> 있음 ]</span>}
-                {(selectedItem.get('isDesktopAdmin') !== '1') && <span> 없음 ]</span>}
+                [ {t('lbDesktopPart')} -
+                {(selectedItem.get('isDesktopAdmin') === '1') && <span> {t('lbHaveIt')} ]</span>}
+                {(selectedItem.get('isDesktopAdmin') !== '1') && <span> {t('lbHaveNotIt')} ]</span>}
               </Grid>
               <Grid item xs={6} className={classes.specCategory} style={{paddingTop:16}}>
-                [ {"공지관리 권한"} -
-                {(selectedItem.get('isNoticeAdmin') === '1') && <span> 있음 ]</span>}
-                {(selectedItem.get('isNoticeAdmin') !== '1') && <span> 없음 ]</span>}
+                [ {t('lbNoticePart')} -
+                {(selectedItem.get('isNoticeAdmin') === '1') && <span> {t('lbHaveIt')} ]</span>}
+                {(selectedItem.get('isNoticeAdmin') !== '1') && <span> {t('lbHaveNotIt')} ]</span>}
               </Grid>
             </Grid>
             }
             <Grid container spacing={0}>
               {(selectedItem.get('deptInfoList') && selectedItem.get('deptInfoList').size > 0) &&
-              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"관리대상 조직정보"} - {"대상수"} : {selectedItem.get('deptInfoList').size} ea ]</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t('lbManagedDept')} - {t('lbManagedTargetCount')} : {selectedItem.get('deptInfoList').size} ea ]</Grid>
               }
               {(selectedItem.get('deptInfoList')) && selectedItem.get('deptInfoList').map((n, i) => (
                 <React.Fragment key={n.get('value')}>
-                  <Grid item xs={3} className={classes.specTitle}>( {(i + 1)} ) {"조직이름 / 조직아이디"}</Grid>
+                  <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbDeptName')} / ${t('lbDeptId')}`}</Grid>
                   <Grid item xs={3} className={classes.specContent}>{n.get('name')} / {n.get('value')}</Grid>
                 </React.Fragment>
               ))}
               {(selectedItem.get('deptInfoList') == null || selectedItem.get('deptInfoList').size < 1) &&
-                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{"관리대상 조직정보"}</strike> ]</Grid>
+                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{t('lbManagedDept')}</strike> ]</Grid>
               }
             </Grid>
             <Grid container spacing={0}>
               {(selectedItem.get('grpInfoList') && selectedItem.get('grpInfoList').size > 0) &&
-              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"관리대상 단말그룹정보"} - {"대상수"} : {selectedItem.get('grpInfoList').size} ea ]</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t('lbManagedClientGroup')} - {t('lbManagedTargetCount')} : {selectedItem.get('grpInfoList').size} ea ]</Grid>
               }
               {(selectedItem.get('grpInfoList')) && selectedItem.get('grpInfoList').map((n, i) => (
                 <React.Fragment key={n.get('name')}>
-                  <Grid item xs={3} className={classes.specTitle}>( {(i + 1)} ) {"단말이름 / 단말아이디"}</Grid>
+                  <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbClientName')} / t{('lbClientId')}`}</Grid>
                   <Grid item xs={3} className={classes.specContent}>{n.get('name')} / {n.get('value')}</Grid>
                 </React.Fragment>
               ))}
               {(selectedItem.get('grpInfoList') == null || selectedItem.get('grpInfoList').size < 1) &&
-                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{"관리대상 단말그룹정보"}</strike> ]</Grid>
+                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{t('lbManagedClientGroup')}</strike> ]</Grid>
               }
             </Grid>
             <Grid container spacing={0}>
               {(selectedItem.get('connIps') && selectedItem.get('connIps').size > 0) &&
-              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {"접속가능 아이피"} ]</Grid>
+              <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>{`[ ${t('lbConnectableIp')} ]`}</Grid>
               }
               {(selectedItem.get('connIps')) && selectedItem.get('connIps').map((n, i) => (
                 <React.Fragment key={n}>
-                  <Grid item xs={3} className={classes.specTitle}>( {(i + 1)} ) {"아이피(IP)"}</Grid>
+                  <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbIp')}`}</Grid>
                   <Grid item xs={3} className={classes.specContent}>{n}</Grid>
                 </React.Fragment>
               ))}
               {(selectedItem.get('connIps') == null || selectedItem.get('connIps').size < 1) &&
-                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{"접속가능 아이피"}</strike> ]</Grid>
+                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{`[ ${t('lbConnectableIp')} ]`}</strike> ]</Grid>
               }
             </Grid>
           </CardContent>

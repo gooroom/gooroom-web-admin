@@ -64,7 +64,13 @@ export default {
         {
           name: 'menuCtrlCenterItemRuleManage',
           id: 'GRM0405',
-          url: '/userconfig/ctrlcenteritem/GRM0404/menuCtrlCenterItemRuleManage',
+          url: '/userconfig/ctrlcenteritem/GRM0405/menuCtrlCenterItemRuleManage',
+          level: 2,
+        },
+        {
+          name: 'menuPolicyKitRuleManage',
+          id: 'GRM0406',
+          url: '/userconfig/policykit/GRM0406/menuPolicyKitRuleManage',
           level: 2,
         },
       ]
