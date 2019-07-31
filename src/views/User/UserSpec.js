@@ -15,6 +15,7 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+import * as PolicyKitRuleActions from 'modules/PolicyKitRuleModule';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
@@ -23,6 +24,7 @@ import { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
 import { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
 import { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import { generateCtrlCenterItemObject } from 'views/Rules/UserConfig/CtrlCenterItemSpec';
+import { generatePolicyKitRuleObject } from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 
 import UserDialog from './UserDialog';
 
@@ -47,6 +49,8 @@ import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
 import CtrlCenterItemSpec from 'views/Rules/UserConfig/CtrlCenterItemSpec';
+import PolicyKitRuleDialog from 'views/Rules/UserConfig/PolicyKitRuleDialog';
+import PolicyKitRuleSpec from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
@@ -74,6 +78,9 @@ class UserSpec extends Component {
     });
     this.props.CtrlCenterItemActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
       value: getValueInSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, 'USER', 'objId')      
+    });
+    this.props.PolicyKitRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
+      value: getValueInSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, 'USER', 'objId')      
     });
     this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'USER',
       value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'USER', 'confId')      
@@ -132,6 +139,13 @@ class UserSpec extends Component {
       dialogType: CtrlCenterItemDialog.TYPE_EDIT
     });
   };
+  handleClickEditForPolicyKit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
+      viewItem: generatePolicyKitRuleObject(viewItem, false),
+      dialogType: PolicyKitRuleDialog.TYPE_EDIT
+    });
+  };
   handleClickEditForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -185,6 +199,7 @@ class UserSpec extends Component {
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'USER']);
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'USER']);
     const selectedCtrlCenterItem = this.props.CtrlCenterItemProps.getIn(['viewItems', compId, 'USER']);
+    const selectedPolicyKit = this.props.PolicyKitRuleProps.getIn(['viewItems', compId, 'USER']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'USER']);
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
@@ -279,6 +294,14 @@ class UserSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
+                <PolicyKitRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
+                  selectedItem={(selectedPolicyKit) ? selectedPolicyKit.get('viewItem') : null}
+                  ruleGrade={(selectedPolicyKit) ? selectedPolicyKit.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForPolicyKit} inherit={false}
+                  isEditable={selectedPolicyKit && AdminProps.get('adminId') === selectedPolicyKit.getIn(['viewItem', 'regUserId'])}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
                   ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
@@ -307,6 +330,7 @@ const mapStateToProps = (state) => ({
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
   CtrlCenterItemProps: state.CtrlCenterItemModule,
+  PolicyKitRuleProps: state.PolicyKitRuleModule,
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -320,6 +344,7 @@ const mapDispatchToProps = (dispatch) => ({
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
+  PolicyKitRuleActions: bindActionCreators(PolicyKitRuleActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 

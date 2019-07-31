@@ -179,6 +179,7 @@ export default {
   "menuSecurityRuleManage": "단말보안정책",
   "menuSoftwareRuleManage": "소프트웨어제한정책",
   "menuCtrlCenterItemRuleManage": "제어센터항목정책",
+  "menuPolicyKitRuleManage": "PolicyKit정책",
   
   "menuDesktop": "데스크톱",
   "menuDesktopManage": "데스크톱정보",
@@ -205,6 +206,7 @@ export default {
   "lbName": "이름",
   "lbId": "아이디",
   "lbClientId": "단말아이디",
+  "lbClientName": "단말이름",
   "dtSystemError": "시스템오류",
   "dtSystemNotice": "시스템알림",
   "dtEditOK": "수정 완료",
@@ -226,6 +228,8 @@ export default {
   "lbDeptRule": "조직정책",
   "lbUserRule": "사용자정책",
   "lbClientSelect": "단말선택",
+  "msgTypeNumberOnly": "숫자를 입력하세요.",
+  "msgInvalidMacAddress": "맥주소가 정확하지 않습니다.",
 
   // options
   "stBeforeJob": "작업전",
@@ -248,15 +252,18 @@ export default {
   "stExeProctect": "실행보안",
   "stBootProctect": "부팅보안",
   "stAgentProctect": "에이전트",
-  "stNoUse": "(사용안함)",
   "stEmergLevel": "(긴급)",
   "stAlertLevel": "(경보)",
   "stCritLevel": "(위험)",
   "stErrLevel": "(오류)",
   "stWarningLevel": "(경고)",
-  "stNoticeLevel": "(알림)",
   "stInfoLevel": "(정보)",
   "stDebugLevel": "(디버깅)",
+
+  "stNoUse": "무시",
+  "stNoticeLevel": "알림",
+  "stShowLevel": "표시",
+  "stTranmitLevel": "전송",
   
   // 일별접속통계
   "connectRequestCount": "접속요청수",
@@ -684,6 +691,15 @@ export default {
   "lbDesktopPart": "데스크톱환경관리 권한",
   "lbNoticePart": "공지관리 권한",
   "msgNeedPartItem": "관리자 권한중 하나 이상 선택이 필요합니다.",
+  "lbManagedClientGroup": "관리대상 단말그룹",
+  "lbManagedDept": "관리대상 조직",
+  "lbManagedTargetCount": "대상수",
+  "lbConnectableIp": "접속가능 아이피",
+  "lbIp": "아이피",
+  "msgWrongIpString": "아이피정보가 잘못되었습니다.",
+  "lbHaveIt": "있음",
+  "lbHaveNotIt": "없음",
+  "lbAdminSpecifiedRole": "관리자 정보 - 권한",
   
   // 호스트정보 관리
   "lbHosts": "Hosts정보",
@@ -850,6 +866,7 @@ export default {
   "selPackageStopOn": "켜짐",
   "selPackageStopOff": "꺼짐",
   "dtBasicNetwork": "기본네트워크허용여부",
+  "msgValidFirewallAddress": "알파벳(a~f) 또는 숫자를 입력하세요.",  
   
   // 소프트웨어정책 관리
   "lbDeleteSWRule": "소프트웨어제한정책 삭제",
@@ -889,6 +906,45 @@ export default {
   "msStopRunRedCTI": "파란색상의 항목이 제어센터 항목으로 표시됩니다.",
   "lbCTIRule": "제어센터항목정책",
 
+  // Policy Kit 관리
+  "lbPolicyKitRule": "PolicyKit정책",
+  "lbDeletePolicyKitRule": "PolicyKit정책 삭제",
+  "msgDeletePolicyKitRule": "PolicyKit정책({{objId}})을 삭제하시겠습니까?",
+  "lbAddPolicyKitRule": "PolicyKit정책정보 등록",
+  "msgAddPolicyKitRule": "PolicyKit정책정보를 등록하시겠습니까?",
+  "lbEditPolicyKitRule": "PolicyKit정책정보 수정",
+  "msgEditPolicyKitRule": "PolicyKit정책정보를 수정하시겠습니까?",
+  "msgApplyPolicyKitRuleChild": "PolicyKit정책이 하위 조직에 적용되었습니다.",
+  "msgCopyPolicyKitRule": "PolicyKit정책을 복사하였습니다.",
+  "dtAddPolicyKitRule": "PolicyKit정책 등록",
+  "dtViewPolicyKitRule": "PolicyKit정책 정보",
+  "dtEditPolicyKitRule": "PolicyKit정책 수정",
+  "dtInheritPolicyKitRule": "PolicyKit정책 상속",
+  "dtCopyPolicyKitRule": "PolicyKit정책 복사",
+  "dtCategoryPolicyKitRule": "PolicyKit 정책",
+
+  "dtPkitGooroom": "구름 앱",
+  "dtPkitUpdate": "구름 업데이트",
+  "dtPkitAgent": "구름 에이전트",
+  "dtPkitRegister": "구름 등록기",
+  "dtPkitGracEdit": "매체제어 편집기",
+  "dtPkitNetwork": "네트워크",
+  "dtPkitWireless": "유선/무선",
+  "dtPkitNetworkConfig": "네트워크 설정",
+  "dtPkitDevice": "장치",
+  "dtPkitPrinter": "프린터 추가/설정",
+  "dtPkitMount": "디스크 마운트",
+  "dtPkitBluetooth": "블루투스",
+  "dtPkitSystem": "시스템",
+  "dtPkitAdminExec": "관리자권한 실행",
+  "dtPkitPackageManager": "패키지 관리자",
+  "dtPkitAllow": "허용",
+  "dtPkitUserAuth": "사용자인증",
+  "dtPkitUserAuthKeep": "사용자인증(유지)",
+  "dtPkitAdminAuth": "관리자인증",
+  "dtPkitAdminAuthKeep": "관리자인증(유지)",
+  "dtPkitDisallow": "불허",
+  
   // 관리자 개인 설정
   "lbAdminTitle": "관리자",
   "lbAdminTitleName": "이름",
@@ -961,7 +1017,7 @@ export default {
 
   "lbParentGroup": "상위단말그룹",
   "msgSelectParentGroup": "상위단말그룹을 선택하세요.",
-  "ttChangMultiGroupRule": "단말그룹정책 일괄변경",
+  "ttChangeMultiGroupRule": "단말그룹정책 일괄변경",
 
   "dtInheritClientConf": "에이전트설정 상속",
   "msgInheritClientConf": "에이전트설정을 상속하시겠습니까?",

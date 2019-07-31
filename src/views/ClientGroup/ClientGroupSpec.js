@@ -20,6 +20,7 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+import * as PolicyKitRuleActions from 'modules/PolicyKitRuleModule';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
@@ -34,6 +35,7 @@ import MediaRuleSpec, { generateMediaRuleObject } from 'views/Rules/UserConfig/M
 import SecurityRuleSpec, { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
 import SoftwareFilterSpec, { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import CtrlCenterItemSpec, { generateCtrlCenterItemObject } from 'views/Rules/UserConfig/CtrlCenterItemSpec';
+import PolicyKitRuleSpec, { generatePolicyKitRuleObject } from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import Grid from '@material-ui/core/Grid';
@@ -55,6 +57,7 @@ import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
+import PolicyKitRuleDialog from 'views/Rules/UserConfig/PolicyKitRuleDialog';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -157,6 +160,13 @@ class ClientGroupSpec extends Component {
       dialogType: CtrlCenterItemDialog.TYPE_EDIT
     });
   };
+  handleClickEditForPolicyKit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
+      viewItem: generatePolicyKitRuleObject(viewItem, false),
+      dialogType: PolicyKitRuleDialog.TYPE_EDIT
+    });
+  };
   handleClickEditForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -222,6 +232,13 @@ class ClientGroupSpec extends Component {
       dialogType: CtrlCenterItemDialog.TYPE_INHERIT_GROUP
     });
   };
+  handleClickInheritForPolicyKit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
+      viewItem: viewItem,
+      dialogType: PolicyKitRuleDialog.TYPE_INHERIT_GROUP
+    });
+  };
   handleClickInheritForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -246,6 +263,7 @@ class ClientGroupSpec extends Component {
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedCtrlCenterItem = this.props.CtrlCenterItemProps.getIn(['viewItems', compId, 'GROUP']);
+    const selectedPolicyKit = this.props.PolicyKitRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'GROUP']);
 
     let groupInfo = '';
@@ -368,6 +386,16 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
+                <PolicyKitRuleSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true} inherit={false}
+                  selectedItem={(selectedPolicyKit) ? selectedPolicyKit.get('viewItem') : null}
+                  ruleGrade={(selectedPolicyKit) ? selectedPolicyKit.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForPolicyKit}
+                  onClickInherit={this.handleClickInheritForPolicyKit}
+                  isEditable={selectedPolicyKit && AdminProps.get('adminId') === selectedPolicyKit.getIn(['viewItem', 'regUserId'])}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfSpec compId={compId} specType="inform" targetType="GROUP" 
                   hasAction={true} inherit={false}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
@@ -402,6 +430,7 @@ const mapStateToProps = (state) => ({
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
   CtrlCenterItemProps: state.CtrlCenterItemModule,
+  PolicyKitRuleProps: state.PolicyKitRuleModule,
 
   DesktopConfProps: state.DesktopConfModule
 });
@@ -419,6 +448,7 @@ const mapDispatchToProps = (dispatch) => ({
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
   CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
+  PolicyKitRuleActions: bindActionCreators(PolicyKitRuleActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 

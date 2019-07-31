@@ -14,7 +14,8 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
-import GRAlert from 'components/GRComponents/GRAlert';
+
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import GRPane from 'containers/GRContent/GRPane';
 import Grid from '@material-ui/core/Grid';
@@ -119,57 +120,67 @@ class ServerSiteConfig extends Component {
   handleSaveData = (event) => {
     const { GRConfirmActions } = this.props;
     const { t } = this.props;
-    
-    GRConfirmActions.showConfirm({
-        confirmTitle: t("lbSaveServerConfig"),
-        confirmMsg: t("msgSaveServerConfig"),
-        handleConfirmResult: (confirmValue) => {
-          const { t } = this.props;
-          if(confirmValue) {
-              const { stateData } = this.state;
-              // create password rule to json format
-              const newPasswordRule = JSON.stringify({
-                "minlen": stateData.get('pwMinLength'), 
-                "dcredit": stateData.get('pwIncludeNumber'), 
-                "ucredit": stateData.get('pwIncludeUpper'), 
-                "lcredit": stateData.get('pwIncludeLower'), 
-                "ocredit": stateData.get('pwIncludeSpecial'), 
-                "difok":stateData.get('pwDiffBefore')
-              });
 
-              const dupValue = (stateData.get('enableDuplicateLogin')) ? stateData.get('duplicateLoginNotiType') : stateData.get('duplicateLoginNotiType') * -1;
-              
-              requestPostAPI('createMgServerConf', {
-                pmUrl: stateData.get('gpmsDomain'),
-                lmUrl: stateData.get('glmDomain'),
-                rmUrl: stateData.get('grmDomain'),
-                pollingTime: stateData.get('pollingTime'),
-                trialCount: stateData.get('trialCount'),
-                lockTime: stateData.get('lockTime'),
-                passwordRule: newPasswordRule,
-                enableDuplicateLogin: dupValue
-              }).then(
-                (response) => {
-                  if(response && response.data && response.data.status && response.data.status.result === 'success') {
-                    this.props.GRAlertActions.showAlert({
-                      alertTitle: t("dtEditOK"),
-                      alertMsg: t("msgEditOkServerConfig")
-                    });
-                    this.getSeverUrlInfo();
-                  } else {
-                    this.props.GRAlertActions.showAlert({
-                      alertTitle: t("dtSystemError"),
-                      alertMsg: t("msgEditErrorServerConfig")
-                    });
-                    this.getSeverUrlInfo();
+    if(this.refs.form && this.refs.form.isFormValid()) {
+    
+      GRConfirmActions.showConfirm({
+          confirmTitle: t("lbSaveServerConfig"),
+          confirmMsg: t("msgSaveServerConfig"),
+          handleConfirmResult: (confirmValue) => {
+            const { t } = this.props;
+            if(confirmValue) {
+                const { stateData } = this.state;
+                // create password rule to json format
+                const newPasswordRule = JSON.stringify({
+                  "minlen": stateData.get('pwMinLength'), 
+                  "dcredit": stateData.get('pwIncludeNumber'), 
+                  "ucredit": stateData.get('pwIncludeUpper'), 
+                  "lcredit": stateData.get('pwIncludeLower'), 
+                  "ocredit": stateData.get('pwIncludeSpecial'), 
+                  "difok":stateData.get('pwDiffBefore')
+                });
+
+                const dupValue = (stateData.get('enableDuplicateLogin')) ? stateData.get('duplicateLoginNotiType') : stateData.get('duplicateLoginNotiType') * -1;
+                
+                requestPostAPI('createMgServerConf', {
+                  pmUrl: stateData.get('gpmsDomain'),
+                  lmUrl: stateData.get('glmDomain'),
+                  rmUrl: stateData.get('grmDomain'),
+                  pollingTime: stateData.get('pollingTime'),
+                  trialCount: stateData.get('trialCount'),
+                  lockTime: stateData.get('lockTime'),
+                  passwordRule: newPasswordRule,
+                  enableDuplicateLogin: dupValue
+                }).then(
+                  (response) => {
+                    if(response && response.data && response.data.status && response.data.status.result === 'success') {
+                      this.props.GRAlertActions.showAlert({
+                        alertTitle: t("dtEditOK"),
+                        alertMsg: t("msgEditOkServerConfig")
+                      });
+                      this.getSeverUrlInfo();
+                    } else {
+                      this.props.GRAlertActions.showAlert({
+                        alertTitle: t("dtSystemError"),
+                        alertMsg: t("msgEditErrorServerConfig")
+                      });
+                      this.getSeverUrlInfo();
+                    }
                   }
-                }
-              );
-          } else {
-            this.getSeverUrlInfo();
+                );
+            } else {
+              this.getSeverUrlInfo();
+            }
           }
-        }
-    });
+      });
+
+    } else {
+      if(this.refs.form && this.refs.form.childs) {
+          this.refs.form.childs.map(c => {
+              this.refs.form.validate(c);
+          });
+      }
+    }
   }
 
   handleValueChange = name => event => {
@@ -214,7 +225,7 @@ class ServerSiteConfig extends Component {
       <React.Fragment>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
-
+        <ValidatorForm ref="form">
         <AppBar position="static" elevation={0} color="default">
           <Toolbar variant="dense">
             <div style={{flexGrow: 1}} />
@@ -258,10 +269,11 @@ class ServerSiteConfig extends Component {
                 title={t("lbAgentPollingTime")}
                 subheader={t("msgAgentPollingTime")}
               />
-              <CardContent style={{paddingTop: 0}}>
-                <TextField label="Polling Seconds"
-                  style={{ marginLeft: 8 }}
-                  margin="normal"
+              <CardContent style={{paddingBottom: 20}}>
+                <TextValidator label="Polling Seconds"
+                  name="pollingSecond"
+                  validators={['required', 'matchRegexp:^[0-9]+$']}
+                  errorMessages={[t("msgTypeNumberOnly")]}
                   variant="outlined"
                   value={stateData.get('pollingTime')}
                   onChange={this.handleValueChange("pollingTime")}
@@ -368,16 +380,20 @@ class ServerSiteConfig extends Component {
                 title={t("lbLoginTrialCount")}
                 subheader={subLogin}
               />
-              <CardContent style={{paddingTop: 0}}>
-                <TextField label="Login Trial Count"
-                  style={{ marginLeft: 8 }}
-                  margin="normal" variant="outlined"
+              <CardContent style={{paddingBottom: 20}}>
+                <TextValidator label="Login Trial Count" 
+                  name="trialCount" style={{ marginLeft: 8 }}
+                  validators={['required', 'matchRegexp:^[0-9]+$']}
+                  errorMessages={[t("msgTypeNumberOnly")]}
+                  variant="outlined"
                   value={stateData.get('trialCount')}
                   onChange={this.handleValueChange("trialCount")}
                 />
-                <TextField label="Account lockout time"
-                  style={{ marginLeft:8,width:223 }}
-                  margin="normal" variant="outlined"
+                <TextValidator label="Account lockout time"
+                  name="lockoutTime" style={{ marginLeft:8,width:223 }}
+                  validators={['required', 'matchRegexp:^[0-9]+$']}
+                  errorMessages={[t("msgTypeNumberOnly")]}
+                  variant="outlined"
                   InputProps={{
                     endAdornment: <InputAdornment position="start">Minutes</InputAdornment>,
                   }}
@@ -440,6 +456,7 @@ class ServerSiteConfig extends Component {
           </Grid>
         </Grid>
 
+        </ValidatorForm>
         </GRPane>
         <GRConfirm />
         {/*<GRAlert /> */}

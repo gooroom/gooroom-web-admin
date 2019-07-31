@@ -18,6 +18,8 @@ import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
 import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import CtrlCenterItemSpec from 'views/Rules/UserConfig/CtrlCenterItemSpec';
+import PolicyKitRuleSpec from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -97,8 +99,13 @@ class UserInfoDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={12} md={12} >
-                                <SoftwareFilterSpec specType="inform" targetType="" simpleTitle={true}
+                                <CtrlCenterItemSpec specType="inform" targetType="" simpleTitle={true}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'ctrlCenterItemRuleMap'])}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={12} >
+                                <PolicyKitRuleSpec specType="inform" targetType="" simpleTitle={true}
+                                    selectedItem={DashboardProps.getIn(['ruleData', 'policyKitRuleMap'])}
                                 />
                             </Grid>
                             <Grid item xs={12} md={12} >

@@ -4,7 +4,7 @@ import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import * as PolicyKitRuleActions from 'modules/PolicyKitRuleModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -16,9 +16,9 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
-import ClientConfSettingDialog from './ClientConfSettingDialog';
-import ClientConfSettingSpec from './ClientConfSettingSpec';
-import { generateClientConfSettingObject } from './ClientConfSettingSpec';
+import PolicyKitRuleDialog from './PolicyKitRuleDialog';
+import PolicyKitRuleSpec from './PolicyKitRuleSpec';
+import { generatePolicyKitRuleObject } from './PolicyKitRuleSpec';
 
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -42,66 +42,67 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
 
 
-class ClientConfSettingManage extends Component {
+class PolicyKitRuleManage extends Component {
 
   componentDidMount() {
     this.handleSelectBtnClick();
   }
 
   handleChangePage = (event, page) => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId, {
+    const { PolicyKitRuleActions, PolicyKitRuleProps } = this.props;
+    PolicyKitRuleActions.readPolicyKitRuleListPaged(PolicyKitRuleProps, this.props.match.params.grMenuId, {
       page: page
     });
   };
 
   handleChangeRowsPerPage = event => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId, {
+    const { PolicyKitRuleActions, PolicyKitRuleProps } = this.props;
+    PolicyKitRuleActions.readPolicyKitRuleListPaged(PolicyKitRuleProps, this.props.match.params.grMenuId, {
       rowsPerPage: event.target.value, page: 0
     });
   };
   
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId, {
+    const { PolicyKitRuleActions, PolicyKitRuleProps } = this.props;
+    PolicyKitRuleActions.readPolicyKitRuleListPaged(PolicyKitRuleProps, this.props.match.params.grMenuId, {
       orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
+  // .................................................
   handleSelectBtnClick = () => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
-    ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps, this.props.match.params.grMenuId, {page: 0});
+    const { PolicyKitRuleActions, PolicyKitRuleProps } = this.props;
+    PolicyKitRuleActions.readPolicyKitRuleListPaged(PolicyKitRuleProps, this.props.match.params.grMenuId, {page: 0});
   };
-
+  
   handleKeywordChange = (name, value) => {
-    this.props.ClientConfSettingActions.changeListParamData({
+    this.props.PolicyKitRuleActions.changeListParamData({
       name: name, 
       value: value,
       compId: this.props.match.params.grMenuId
     });
   }
-  
+
   handleSelectRow = (event, id, isEditable) => {
-    const { ClientConfSettingActions, ClientConfSettingProps } = this.props;
+    const { PolicyKitRuleActions, PolicyKitRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const viewItem = getRowObjectById(ClientConfSettingProps, compId, id, 'objId');
+
+    const viewItem = getRowObjectById(PolicyKitRuleProps, compId, id, 'objId');
 
     // choice one from two views.
 
     // 1. popup dialog
-    // ClientConfSettingActions.showDialog({
+    // PolicyKitRuleActions.showDialog({
     //   viewItem: viewObject,
-    //   dialogType: ClientConfSettingDialog.TYPE_VIEW,
+    //   dialogType: PolicyKitRuleDialog.TYPE_VIEW,
     // });
 
     // 2. view detail content
-    ClientConfSettingActions.showInform({
+    PolicyKitRuleActions.showInform({
       compId: compId,
       viewItem: viewItem,
       isEditable: isEditable
     });
-    
   };
 
   handleCreateButton = () => {
@@ -109,104 +110,83 @@ class ClientConfSettingManage extends Component {
     if(window.gpmsain === Constants.SUPER_RULECODE) {
       adminType = 'S';
     }
-    this.props.ClientConfSettingActions.showDialog({
+    this.props.PolicyKitRuleActions.showDialog({
       viewItem: Map({
         adminType: adminType,
-        isDeleteLog: false,
-        logRemainDate: '1',
-        logMaxSize: 10000,
-        logMaxCount: 3,
-        systemKeepFree: 10,
 
-        boot_minno: 0,
-        os_minno: 0,
-        exe_minno: 0,
-        media_minno: 0,
-        agent_minno: 0,
-
-        notify_boot: 'err',
-        show_boot: 'info',
-        transmit_boot: 'info',
-
-        notify_os: 'err',
-        show_os: 'info',
-        transmit_os: 'info',
-        
-        notify_exe: 'notice',
-        show_exe: 'info',
-        transmit_exe: 'info',
-        
-        notify_media: 'err',
-        show_media: 'info',
-        transmit_media: 'info',
-        
-        notify_agent: 'none',
-        show_agent: 'info',
-        transmit_agent: 'none',
-        
-        whiteIpAll: true
+        gooroomUpdate: 'auth_self',
+        gooroomAgent: 'auth_admin',
+        gooroomRegister: 'auth_admin',
+        gracEditor: 'auth_admin',
+        wireWireless: 'yes',
+        networkConfig: 'yes',
+        printer: 'auth_self',
+        diskMount: 'yes',
+        bluetooth: 'yes',
+        pkexec: 'auth_admin',
+        packageManager: 'auth_admin'
       }),
-      dialogType: ClientConfSettingDialog.TYPE_ADD
+      dialogType: PolicyKitRuleDialog.TYPE_ADD
     });
   }
+  
+  handleEditListClick = (event, id) => {
+    const { PolicyKitRuleActions, PolicyKitRuleProps } = this.props;
+    const viewItem = getRowObjectById(PolicyKitRuleProps, this.props.match.params.grMenuId, id, 'objId');
 
-  handleEditListClick = (event, id) => { 
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-    const viewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
-
-    ClientConfSettingActions.showDialog({
-      viewItem: generateClientConfSettingObject(viewItem, false, this.props.t),
-      dialogType: ClientConfSettingDialog.TYPE_EDIT
+    PolicyKitRuleActions.showDialog({
+      viewItem: generatePolicyKitRuleObject(viewItem, false),
+      dialogType: PolicyKitRuleDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { ClientConfSettingProps, GRConfirmActions } = this.props;
-    const viewItem = getRowObjectById(ClientConfSettingProps, this.props.match.params.grMenuId, id, 'objId');
+    const { PolicyKitRuleProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+    const viewItem = getRowObjectById(PolicyKitRuleProps, this.props.match.params.grMenuId, id, 'objId');
     GRConfirmActions.showConfirm({
-      confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + viewItem.get('objId') + ')를 삭제하시겠습니까?',
+      confirmTitle: t("lbDeletePolicyKitRule"),
+      confirmMsg: t("msgDeletePolicyKitRule", {objId: viewItem.get('objId')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
       confirmObject: viewItem
     });
   };
-  handleDeleteConfirmResult = (confirmValue, confirmObject) => {
+  handleDeleteConfirmResult = (confirmValue, paramObject) => {
     if(confirmValue) {
-      const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-      ClientConfSettingActions.deleteClientConfSettingData({
-        objId: confirmObject.get('objId'),
+      const { PolicyKitRuleActions, PolicyKitRuleProps } = this.props;
+
+      PolicyKitRuleActions.deletePolicyKitRuleData({
+        objId: paramObject.get('objId'),
         compId: this.props.match.params.grMenuId
       }).then((res) => {
-        refreshDataListInComps(ClientConfSettingProps, ClientConfSettingActions.readClientConfSettingListPaged);
+        refreshDataListInComps(PolicyKitRuleProps, PolicyKitRuleActions.readPolicyKitRuleListPaged);
       });
     }
   };
 
   // ===================================================================
   handleClickCopy = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.ClientConfSettingProps, compId, targetType);
-    this.props.ClientConfSettingActions.showDialog({
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
       viewItem: viewItem,
-      dialogType: ClientConfSettingDialog.TYPE_COPY
+      dialogType: PolicyKitRuleDialog.TYPE_COPY
     });
   };
 
   handleClickEdit = (compId, targetType) => {
-    const viewItem = getSelectedObjectInComp(this.props.ClientConfSettingProps, compId, targetType);
-    this.props.ClientConfSettingActions.showDialog({
-      viewItem: generateClientConfSettingObject(viewItem, false, this.props.t),
-      dialogType: ClientConfSettingDialog.TYPE_EDIT
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
+      viewItem: generatePolicyKitRuleObject(viewItem, false),
+      dialogType: PolicyKitRuleDialog.TYPE_EDIT
     });
   };
   // ===================================================================
-  
-  // .................................................
+
   render() {
     const { classes } = this.props;
-    const { ClientConfSettingProps } = this.props;
+    const { PolicyKitRuleProps } = this.props;
     const { t, i18n } = this.props;
-
     const compId = this.props.match.params.grMenuId;
 
     const columnHeaders = [
@@ -219,15 +199,15 @@ class ClientConfSettingManage extends Component {
       { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
-
-    const listObj = ClientConfSettingProps.getIn(['viewItems', compId]);
+    
+    const listObj = PolicyKitRuleProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
     if(listObj && listObj.get('listData')) {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
- 
+
     return (
-      <React.Fragment>
+      <div>
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           {/* data option area */}
@@ -254,7 +234,7 @@ class ClientConfSettingManage extends Component {
           </Grid>            
 
           {/* data area */}
-          {(listObj) && 
+          {(listObj) &&
           <div>
             <Table>
               <GRCommonTableHead
@@ -300,6 +280,7 @@ class ClientConfSettingManage extends Component {
                     <TableRow 
                       hover
                       onClick={event => this.handleSelectRow(event, n.get('objId'), isEditable)}
+                      tabIndex={-1}
                       key={n.get('objId')}
                       className={(n.get('objId').endsWith('DEFAULT')) ? classes.grDefaultRuleRow : ((n.get('objId').endsWith('STD')) ? classes.grStandardRuleRow : "")}
                     >
@@ -312,14 +293,18 @@ class ClientConfSettingManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       {isEditable &&
-                        <Button color="secondary" size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditListClick(event, n.get('objId'))}>
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleEditListClick(event, n.get('objId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
                       }
                       {isDeletable &&
-                        <Button color="secondary" size="small" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
+                          onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
                           <DeleteIcon />
-                        </Button>
+                        </Button>                        
                       }
                       </TableCell>
                     </TableRow>
@@ -351,10 +336,10 @@ class ClientConfSettingManage extends Component {
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
-            </div>
-          }
+          </div>
+        }
         {/* dialog(popup) component area */}
-        <ClientConfSettingSpec compId={compId} specType="inform" 
+        <PolicyKitRuleSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           isEditable={(listObj) ? listObj.get('isEditable') : null}
           hasAction={true}
@@ -362,24 +347,25 @@ class ClientConfSettingManage extends Component {
           onClickEdit={this.handleClickEdit}
         />
         </GRPane>
-        <ClientConfSettingDialog compId={compId} />
+        <PolicyKitRuleDialog compId={compId} />
         <GRConfirm />
-      </React.Fragment>
+        
+      </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  ClientConfSettingProps: state.ClientConfSettingModule,
+  PolicyKitRuleProps: state.PolicyKitRuleModule,
   AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
+  PolicyKitRuleActions: bindActionCreators(PolicyKitRuleActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingManage)));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(PolicyKitRuleManage)));
 
 
 

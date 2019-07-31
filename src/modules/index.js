@@ -28,6 +28,7 @@ import BrowserRuleModule from './BrowserRuleModule';
 import SecurityRuleModule from './SecurityRuleModule';
 import SoftwareFilterModule from './SoftwareFilterModule';
 import CtrlCenterItemModule from './CtrlCenterItemModule';
+import PolicyKitRuleModule from './PolicyKitRuleModule';
 
 import ClientMasterManageModule from './ClientMasterManageModule';
 
@@ -69,6 +70,7 @@ export default combineReducers({
     SecurityRuleModule,
     SoftwareFilterModule,
     CtrlCenterItemModule,
+    PolicyKitRuleModule,
 
     ClientMasterManageModule,
     

@@ -45,7 +45,12 @@ import { translate, Trans } from "react-i18next";
 class ClientManageComp extends Component {
 
   componentDidMount() {
-    this.props.ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {}, {isResetSelect:false, isInitParam:true});
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
+    if(ClientManageProps.getIn(['viewItems', compId, 'listParam']) === undefined) {
+      ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {}, {isResetSelect:false, isInitParam:true});
+    } else {
+      ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {});
+    }
   }
 
   handleChangePage = (event, page) => {
