@@ -287,25 +287,23 @@ class UserDialog extends Component {
                                 />
                             </Grid>
                             <Grid item xs={4}>
-                                <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
-                                    <InputLabel htmlFor="adornment-password">Password</InputLabel>
-                                    <Input
-                                        type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
-                                        value={(editingItem.get('userPasswd')) ? editingItem.get('userPasswd') : ''}
-                                        onChange={this.handleValueChange('userPasswd')}
-                                        endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                            aria-label="Toggle password visibility"
-                                            onClick={this.handleClickShowPassword}
-                                            onMouseDown={this.handleMouseDownPassword}
-                                            >
-                                            {(editingItem && editingItem.get('showPasswd')) ? <Visibility /> : <VisibilityOff />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                        }
-                                    />
-                                </FormControl>                            
+                                <TextValidator
+                                    label="Password"
+                                    onChange={this.handleValueChange('userPasswd')}
+                                    name="password"
+                                    type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
+                                    validators={(ruleDialogType === UserDialog.TYPE_ADD) ? ['required'] : []}
+                                    errorMessages={[t('msgEnterPassword')]}
+                                    value={(editingItem.get('userPasswd')) ? editingItem.get('userPasswd') : ''}
+                                />
+                                <IconButton
+                                    aria-label="Toggle password visibility"
+                                    onClick={this.handleClickShowPassword}
+                                    onMouseDown={this.handleMouseDownPassword}
+                                    style={{paddingTop:24}}
+                                >
+                                {(editingItem && editingItem.get('showPasswd')) ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
                             </Grid>
                         </Grid>
 
