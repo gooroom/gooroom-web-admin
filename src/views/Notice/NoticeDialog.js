@@ -180,8 +180,8 @@ class NoticeDialog extends Component {
             resize: false,
             branding: false,
             statusbar: false,
-            plugins: 'link code, image',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | link image code',
+            plugins: 'image',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | image',
             image_advtab: true,
             file_picker_types: 'image',
             file_picker_callback: function (callback, value, meta) {
