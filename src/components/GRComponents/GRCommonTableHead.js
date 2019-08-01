@@ -31,6 +31,7 @@ class GRCommonTableHead extends Component {
   render() {
     const { classes, columnData, keyId } = this.props;
     const { 
+      isDisableAllCheck,
       onClickAllCheck,
       orderDir,
       orderColumn,
@@ -47,22 +48,30 @@ class GRCommonTableHead extends Component {
       <TableHead>
         <TableRow>
           {columnData.map(column => {
-
             if(column.isCheckbox) {
-              return (
+              if(isDisableAllCheck === undefined || !isDisableAllCheck) {
+                return (
+                  <TableCell padding="checkbox" 
+                    className={classes.grSmallAndHeaderCell} 
+                    key={column.id}
+                  >
+                  {this.decorateTooltip(
+                    <Checkbox color="primary"
+                      indeterminate={checkSelection === 50}
+                      checked={checkSelection === 100}
+                      onChange={onClickAllCheck}
+                    />, column.tooltip
+                  )}
+                  </TableCell>
+                );
+              } else {
+                return (
                 <TableCell padding="checkbox" 
                   className={classes.grSmallAndHeaderCell} 
                   key={column.id}
-                >
-                {this.decorateTooltip(
-                  <Checkbox color="primary"
-                    indeterminate={checkSelection === 50}
-                    checked={checkSelection === 100}
-                    onChange={onClickAllCheck}
-                  />, column.tooltip
-                )}
-                </TableCell>
-              );
+                ></TableCell>
+                );
+              }
             } else {
               return (
                 <TableCell

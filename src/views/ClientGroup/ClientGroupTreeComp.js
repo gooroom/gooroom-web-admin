@@ -264,6 +264,7 @@ class ClientGroupTreeComp extends Component {
             <GRCommonTableHead
               classes={classes}
               keyId="grpId"
+              isDisableAllCheck={true}
               orderDir={listObj.getIn(['listParam', 'orderDir'])}
               orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
               onRequestSort={this.handleChangeSort}
