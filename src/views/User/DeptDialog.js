@@ -104,7 +104,7 @@ class DeptDialog extends Component {
     }
 
     handleEditData = (event) => {
-        const { DeptProps, GRConfirmActions } = this.props;
+        const { GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showCheckConfirm({
@@ -140,7 +140,7 @@ class DeptDialog extends Component {
                             }
                             if(res.status && res.status && res.status.result === 'success') {
                                 // tree refresh for edit
-                                const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd'])));
+                                const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['editingItem', 'deptCd'])));
                                 resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
                                 this.handleClose();
                             }
