@@ -17,18 +17,18 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-class NoticeInstantAlarmListComp extends Component {
+class NoticeInstantNoticeListComp extends Component {
     componentDidMount() {
     }
 
     handleChangePage = (event, page) => {
-        this.props.NoticePublishExtensionActions.readNoticeInstantAlarmListPaged(this.props.NoticePublishExtensionProps, this.props.compId, {
+        this.props.NoticePublishExtensionActions.readNoticeInstantNoticeListPaged(this.props.NoticePublishExtensionProps, this.props.compId, {
           page: page
         });
     }
     
     handleChangeRowsPerPage = event => {
-        this.props.NoticePublishExtensionActions.readNoticeInstantAlarmListPaged(this.props.NoticePublishExtensionProps, this.props.compId, {
+        this.props.NoticePublishExtensionActions.readNoticeInstantNoticeListPaged(this.props.NoticePublishExtensionProps, this.props.compId, {
           rowsPerPage: event.target.value, page: 0
         });
     }
@@ -39,8 +39,8 @@ class NoticeInstantAlarmListComp extends Component {
         const { t, i18n } = this.props;
 
         const columnHeaders = [
-            { id: 'chRegDt', isOrder: false, numeric: false, disablePadding: true, label: t('colRegDate') },
-            { id: 'chRegUserId', isOrder: false,GRCommonTableHeadnumeric: false, disablePadding: true, label: t('colRegUserId') }
+            { id: 'chRegDt', isOrder: false, numeric: false, disablePadding: true, label: t('colInstantNoticeDate') },
+            { id: 'chRegUserId', isOrder: false,GRCommonTableHeadnumeric: false, disablePadding: true, label: t('colCreateUser') }
         ];
 
         const listObj = NoticePublishExtensionProps.getIn(['viewItems', compId]);
@@ -106,4 +106,4 @@ const mapDispatchToProps = (dispatch) => ({
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
   
-export default translate('translations')(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(NoticeInstantAlarmListComp)));
+export default translate('translations')(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(NoticeInstantNoticeListComp)));
