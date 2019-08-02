@@ -359,12 +359,12 @@ class NoticeMasterManage extends Component {
                                         {t('btnInstantAlarm')}
                                     </Button>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{paddingLeft: '3px'}}>
                                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleChangeStatus('INACTIVE') }} disabled={this.isNoticePublishChecked()}>
                                         {t('btnInactive')}
                                     </Button>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{paddingLeft: '3px'}}>
                                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => this.handleCreateNewNoticePublish(noticeId)}>
                                         {t('btnNewPublish')}
                                     </Button>
