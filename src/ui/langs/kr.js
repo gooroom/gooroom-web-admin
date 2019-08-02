@@ -971,6 +971,8 @@ export default {
   "msgAddNotice": "공지글을 등록하시겠습니까?",
   "dtEditNotice": "공지글 수정",
   "msgEditNotice": "공지글을 수정하시겠습니까?",
+  "dtDeleteNotice": "공지글 삭제",
+  "msgDeleteNotice": "공지글을 삭제하시겠습니까?",
   "dtInstantNotice": "즉시 알림",
   "msgInstantNotice": "즉시 알림을 하시겠습니까?",
   "dtInactive": "비활성화",

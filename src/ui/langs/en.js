@@ -971,6 +971,8 @@ export default {
   "msgAddNotice": "Do you want to register the notice?",
   "dtEditNotice": "Edit Notice",
   "msgEditNotice": "Do you want to edit the notice?",
+  "dtDeleteNotice": "Delete Notice",
+  "msgDeleteNotice": "Do you want to delete the notice?",
   "dtInstantNotice": "Instant Notice",
   "msgInstantNotice": "Do you want to send the instant notice?",
   "dtInactive": "Inactive",
