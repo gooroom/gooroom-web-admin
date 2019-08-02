@@ -382,10 +382,10 @@ class NoticeMasterManage extends Component {
                     </Grid>
                     { informOpenNoticePublishExtension &&
                     <Grid container alignItems="flex-start" direction="row" justify="space-between">
-                        <Grid item xs={12} sm={6} style={{border: '0px solid #efefef'}}>
+                        <Grid item xs={12} sm={6} style={{border: '0px solid #efefef', paddingRight: '5px'}}>
                             <NoticePublishTargetListComp compId={compId}/>
                         </Grid>
-                        <Grid item xs={12} sm={6} style={{border: '0px solid #efefef'}}>
+                        <Grid item xs={12} sm={6} style={{border: '0px solid #efefef', paddingLeft: '5px'}}>
                             <NoticeInstantAlarmListComp compId={compId}/>
                         </Grid>
                     </Grid>
