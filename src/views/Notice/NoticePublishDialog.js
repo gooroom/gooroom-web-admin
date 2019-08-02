@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import * as NoticeActions from 'modules/NoticeModule';
 import * as NoticePublishActions from 'modules/NoticePublishModule';
 import * as NoticePublishExtensionActions from 'modules/NoticePublishExtensionModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -129,6 +130,7 @@ class NoticePublishDialog extends Component {
                             noticePublishId: noticePublishId
                         }).then();
                     }
+                    this.refreshNoticeList(noticeId);                    
                     this.refreshNoticePublishList(noticePublishId);
                 });
             });
@@ -174,6 +176,12 @@ class NoticePublishDialog extends Component {
                 this.refreshNoticePublishList(noticePublishId);
             });
         }
+    }
+
+    refreshNoticeList = (noticeId) => {
+        const { NoticeActions, NoticeProps, compId } = this.props;
+
+        NoticeActions.readNoticeListPaged(NoticeProps, compId, {});
     }
 
     refreshNoticePublishList = (noticePublishId) => {
@@ -312,10 +320,12 @@ class NoticePublishDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
+    NoticeProps: state.NoticeModule,
     NoticePublishProps: state.NoticePublishModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
+    NoticeActions: bindActionCreators(NoticeActions, dispatch),
     NoticePublishActions: bindActionCreators(NoticePublishActions, dispatch),
     NoticePublishExtensionActions: bindActionCreators(NoticePublishExtensionActions, dispatch),
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
