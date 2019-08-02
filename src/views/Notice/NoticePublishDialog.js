@@ -107,7 +107,7 @@ class NoticePublishDialog extends Component {
             const clientIds = paramObject.get('clientInfoList').map(x => x.get('value')).toArray();
             const deptInfos = paramObject.get('deptInfoList').map(x => (x.get('value') + ':' + (x.get('isCheck') ? 1 : 0))).toArray();
             const userIds = paramObject.get('userInfoList').map(x => x.get('value')).toArray();
-            const openDt = (!paramObject.get('isInstantAlarm') ? new Date(paramObject.get('openDate')) : new Date()).toISOString().replace('Z' , '+0000');
+            const openDt = (!paramObject.get('isInstantNotice') ? new Date(paramObject.get('openDate')) : new Date()).toISOString().replace('Z' , '+0000');
             const closeDt = !paramObject.get('isUnlimited') ? new Date(paramObject.get('closeDate')).toISOString().replace('Z' , '+0000') : undefined;
             const viewType = paramObject.get('viewType');
 
@@ -125,8 +125,8 @@ class NoticePublishDialog extends Component {
                     deptInfos: deptInfos,
                     userIds: userIds
                 }).then((res) => {
-                    if (paramObject.get('isInstantAlarm')) {
-                        NoticePublishExtensionActions.createNoticeInstantAlarm({
+                    if (paramObject.get('isInstantNotice')) {
+                        NoticePublishExtensionActions.createNoticeInstantNotice({
                             noticePublishId: noticePublishId
                         }).then();
                     }
@@ -213,7 +213,7 @@ class NoticePublishDialog extends Component {
             title = t('dtAddNoticePublish');
             if (editingItem) {
                 minOpenDate = formatDateToSimple(new Date(), 'YYYY-MM-DD HH:mm');
-                isOpenDateDisabled = editingItem.get('isInstantAlarm');
+                isOpenDateDisabled = editingItem.get('isInstantNotice');
                 isCloseDateDisabled = editingItem.get('isUnlimited');
             }
         } else if(dialogType === NoticePublishDialog.TYPE_EDIT) {
@@ -270,11 +270,11 @@ class NoticePublishDialog extends Component {
                                                 <FormControlLabel
                                                     control={
                                                         <Checkbox color='primary'
-                                                            checked={editingItem.get('isInstantAlarm')}
-                                                            onChange={this.handleValueChange('isInstantAlarm')}
+                                                            checked={editingItem.get('isInstantNotice')}
+                                                            onChange={this.handleValueChange('isInstantNotice')}
                                                             className={classes.grObjInCell}/>
                                                     }
-                                                    label={t('lbInstantAlarm')} />
+                                                    label={t('lbInstantNotice')} />
                                             }
                                             <FormControlLabel
                                                 control={

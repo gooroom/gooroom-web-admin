@@ -92,9 +92,9 @@ export const readNoticePublishTargetList = (extParam) => dispatch => {
     });
 };
 
-export const createNoticeInstantAlarm = (param) => dispatch => {
+export const createNoticeInstantNotice = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createNoticeInstantAlarm', param).then(
+    return requestPostAPI('createNoticeInstantNotice', param).then(
         (response) => {
             try {
                 if(response.data.status.result === 'success') {
@@ -112,13 +112,13 @@ export const createNoticeInstantAlarm = (param) => dispatch => {
     });
 };
 
-export const readNoticeInstantAlarmListPaged = (module, compId, extParam) => dispatch => {
+export const readNoticeInstantNoticeListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId, 'listParam_NIA'])) ? 
     module.getIn(['viewItems', compId, 'listParam_NIA']).merge(extParam) : 
     module.get('defaultListParam').merge(extParam);
 
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readNoticeInstantAlarmListPaged', {
+    return requestPostAPI('readNoticeInstantNoticeListPaged', {
         noticePublishId: newListParam.get('noticePublishId'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),
