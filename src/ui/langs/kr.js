@@ -1009,6 +1009,7 @@ export default {
   "lbInstantNotice": "즉시 알림",
   "lbIndefiniteAlarm": "무기한 알람",
   "lbViewType": "보임 방식",
+  "colInstantNoticeDate": '즉시 알림일',
 
   // 1.3
   "menuSite": "SITE",

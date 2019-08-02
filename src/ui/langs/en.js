@@ -1009,6 +1009,7 @@ export default {
   "lbInstantNotice": "Instant notice",
   "lbIndefiniteAlarm": "Indefinite alram",
   "lbViewType": "Veiwing type",
+  "colInstantNoticeDate": 'Instant Notice Date',
 
   // 1.3
   "menuSite": "site",

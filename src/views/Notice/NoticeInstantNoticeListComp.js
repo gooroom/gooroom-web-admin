@@ -39,8 +39,8 @@ class NoticeInstantNoticeListComp extends Component {
         const { t, i18n } = this.props;
 
         const columnHeaders = [
-            { id: 'chRegDt', isOrder: false, numeric: false, disablePadding: true, label: t('colRegDate') },
-            { id: 'chRegUserId', isOrder: false,GRCommonTableHeadnumeric: false, disablePadding: true, label: t('colRegUserId') }
+            { id: 'chRegDt', isOrder: false, numeric: false, disablePadding: true, label: t('colInstantNoticeDate') },
+            { id: 'chRegUserId', isOrder: false,GRCommonTableHeadnumeric: false, disablePadding: true, label: t('colCreateUser') }
         ];
 
         const listObj = NoticePublishExtensionProps.getIn(['viewItems', compId]);
