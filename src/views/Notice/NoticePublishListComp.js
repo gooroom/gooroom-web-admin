@@ -162,7 +162,7 @@ class NoticePublishListComp extends Component {
             { id: 'chCloseDt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishCloseDt') },
             { id: 'chViewType', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishViewType') },
             { id: 'chViewCnt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishViewCnt') },
-            { id: 'chInstantAlarmCnt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishInstantAlarmCnt') },
+            { id: 'chInstantNoticeCnt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishInstantNoticeCnt') },
             { id: 'chRegUserId', isOrder: true, numeric: false, disablePadding: true, label: t('colRegUserId') },
             { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t('colEdit') },
         ];
@@ -221,7 +221,7 @@ class NoticePublishListComp extends Component {
                                     {(n.get('openedUserCnt') !== undefined ? n.get('openedUserCnt') : '0') }
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                                    {(n.get('instantAlarmCnt') !== undefined ? n.get('instantAlarmCnt') : '0') }
+                                    {(n.get('InstantNoticeCnt') !== undefined ? n.get('InstantNoticeCnt') : '0') }
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>

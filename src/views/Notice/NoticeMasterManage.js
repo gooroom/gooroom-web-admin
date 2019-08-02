@@ -23,7 +23,7 @@ import NoticeListComp from 'views/Notice/NoticeListComp';
 import NoticeContentComp from 'views/Notice/NoticeContentComp';
 import NoticePublishListComp from 'views/Notice/NoticePublishListComp';
 import NoticePublishTargetListComp from 'views/Notice/NoticePublishTargetListComp';
-import NoticeInstantAlarmListComp from 'views/Notice/NoticeInstantAlarmListComp';
+import NoticeInstantNoticeListComp from 'views/Notice/NoticeInstantNoticeListComp';
 
 import Grid from '@material-ui/core/Grid';
 import FormControl from '@material-ui/core/FormControl';
@@ -114,7 +114,7 @@ class NoticeMasterManage extends Component {
                 noticePublishId: noticePublishId, page:0
             });
             // read notice publish alarm list
-            NoticePublishExtensionActions.readNoticeInstantAlarmListPaged(NoticePublishExtensionProps, compId, {
+            NoticePublishExtensionActions.readNoticeInstantNoticeListPaged(NoticePublishExtensionProps, compId, {
                 noticePublishId: noticePublishId, page:0
             });
             // show notice publish extension info
@@ -129,7 +129,7 @@ class NoticeMasterManage extends Component {
         return !(checkedIds && checkedIds.size > 0);
     }
 
-    handleInstantAlarm = () => {
+    handleInstantNotice = () => {
         const { NoticePublishProps, GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
 
@@ -137,28 +137,28 @@ class NoticeMasterManage extends Component {
         if(checkedIds && checkedIds.size > 0) {
             GRConfirmActions.showConfirm({
               confirmTitle: t("dtInstantNotice"),
-              confirmMsg: t("msgInstantNotice", {instantAlarmCnt: checkedIds.size}),
-              handleConfirmResult: this.handleInstantAlarmConfirmResult,
+              confirmMsg: t("msgInstantNotice", {InstantNoticeCnt: checkedIds.size}),
+              handleConfirmResult: this.handleInstantNoticeConfirmResult,
               confirmObject: {checkedIds: checkedIds}
             });
         }
     }
 
-    handleInstantAlarmConfirmResult = (confirmValue, confirmObject) => {
+    handleInstantNoticeConfirmResult = (confirmValue, confirmObject) => {
         if(confirmValue) {
             const { NoticePublishExtensionActions, NoticeProps } = this.props;
             const checkedIds = confirmObject.checkedIds;
             if(checkedIds && checkedIds.size > 0) {
                 const promises = [];
                 for (const noticePublishId of checkedIds) {
-                    const promiseCreateNoticeInstantAlarm = new Promise((resolve, reject) => {
+                    const promiseCreateNoticeInstantNotice = new Promise((resolve, reject) => {
                         this.getPromiseOpenDtCheck(noticePublishId).then(() => {
-                            NoticePublishExtensionActions.createNoticeInstantAlarm({
+                            NoticePublishExtensionActions.createNoticeInstantNotice({
                                 noticePublishId: noticePublishId
                             }).then(() => resolve());
                         });
                     });
-                    promises.push(promiseCreateNoticeInstantAlarm);
+                    promises.push(promiseCreateNoticeInstantNotice);
                 }
                 Promise.all(promises).then(() => {
                     const compId = this.props.match.params.grMenuId;
@@ -292,7 +292,7 @@ class NoticeMasterManage extends Component {
                 clientInfoList: List([]),
                 openDate: (new Date()).setMonth((new Date()).getMonth()),
                 closeDate: (new Date()).setMonth((new Date()).getMonth() + 1),
-                isInstantAlarm: false,
+                isInstantNotice: false,
                 isUnlimited: false,
                 viewType: '0'
             }),
@@ -355,16 +355,16 @@ class NoticeMasterManage extends Component {
                         <Grid item xs={6} style={{textAlign:'right'}}>
                             <Grid container alignItems="flex-end" direction="row" justify="flex-end" >
                                 <Grid item>
-                                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleInstantAlarm() }} disabled={this.isNoticePublishChecked()}>
-                                        {t('btnInstantAlarm')}
+                                    <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleInstantNotice() }} disabled={this.isNoticePublishChecked()}>
+                                        {t('btnInstantNotice')}
                                     </Button>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{paddingLeft: '3px'}}>
                                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleChangeStatus('INACTIVE') }} disabled={this.isNoticePublishChecked()}>
                                         {t('btnInactive')}
                                     </Button>
                                 </Grid>
-                                <Grid item>
+                                <Grid item style={{paddingLeft: '3px'}}>
                                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => this.handleCreateNewNoticePublish(noticeId)}>
                                         {t('btnNewPublish')}
                                     </Button>
@@ -382,11 +382,11 @@ class NoticeMasterManage extends Component {
                     </Grid>
                     { informOpenNoticePublishExtension &&
                     <Grid container alignItems="flex-start" direction="row" justify="space-between">
-                        <Grid item xs={12} sm={6} style={{border: '0px solid #efefef'}}>
+                        <Grid item xs={12} sm={6} style={{border: '0px solid #efefef', paddingRight: '5px'}}>
                             <NoticePublishTargetListComp compId={compId}/>
                         </Grid>
-                        <Grid item xs={12} sm={6} style={{border: '0px solid #efefef'}}>
-                            <NoticeInstantAlarmListComp compId={compId}/>
+                        <Grid item xs={12} sm={6} style={{border: '0px solid #efefef', paddingLeft: '5px'}}>
+                            <NoticeInstantNoticeListComp compId={compId}/>
                         </Grid>
                     </Grid>
                     }
