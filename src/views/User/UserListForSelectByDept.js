@@ -145,12 +145,16 @@ class UserListForSelectByDept extends Component {
     const { stateData } = this.state;
     let newCheckedIds = List([]);
 
-    if(checked) {
-      stateData.get('listData').map(n => {
-        newCheckedIds = newCheckedIds.push(n.get('userId'));
+    stateData.get('listData').map(n => {
+      newCheckedIds = newCheckedIds.push({
+        userId: n.get('userId'),
+        userNm: n.get('userNm'),
+        deptCd: n.get('deptCd'),
+        deptNm: n.get('deptNm')
       });
-    }
-    this.props.onSelectUser(newCheckedIds);
+    });
+
+    this.props.onCheckMultiUser(checked, newCheckedIds);
   };
 
   handleKeywordChange = (name, value) => {
