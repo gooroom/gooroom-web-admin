@@ -48,16 +48,6 @@ class NoticePublishDialog extends Component {
         this.props.NoticePublishActions.closeNoticePublishDialog(this.props.compId);
     }
 
-    handleSubmit = (event) => {
-        const dialogType = this.props.NoticePublishProps.get('dialogType');
-
-        if(dialogType === NoticePublishDialog.TYPE_ADD) {
-            this.handleCreateData(event);
-        } else if(dialogType === NoticePublishDialog.TYPE_EDIT) {
-            this.handleEditData(event);
-        }
-    }
-
     handleDateChange = (date, name) => {
         this.props.NoticePublishActions.setEditingItemValue({
             name: name, 
@@ -235,7 +225,7 @@ class NoticePublishDialog extends Component {
         <div>
             {(NoticePublishProps.get('dialogOpen') && editingItem) &&
                 <Dialog open={NoticePublishProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
-                    <ValidatorForm ref="form" onSubmit={this.handleSubmit}>
+                    <ValidatorForm ref="form">
                         <DialogTitle>{title}</DialogTitle>
                         <DialogContent>
                             <Grid container spacing={0}>
@@ -303,10 +293,10 @@ class NoticePublishDialog extends Component {
                         </DialogContent>
                         <DialogActions>
                             {(dialogType === NoticePublishDialog.TYPE_ADD) &&
-                                <Button type="submit" variant="contained" color="secondary">{t('btnRegist')}</Button>
+                                <Button onClick={this.handleCreateData} variant="contained" color="secondary">{t('btnRegist')}</Button>
                             }
                             {(dialogType === NoticePublishDialog.TYPE_EDIT) &&
-                                <Button type="submit" variant="contained" color="secondary">{t('btnSave')}</Button>
+                                <Button onClick={this.handleEditData} variant="contained" color="secondary">{t('btnSave')}</Button>
                             }
                             <Button onClick={this.handleClose} variant="contained" color="primary">{t('btnClose')}</Button>
                         </DialogActions>
