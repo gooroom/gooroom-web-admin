@@ -330,7 +330,7 @@ class SecurityRuleNetwork extends Component {
                   <TableCell>
                     <TextValidator 
                       name='address'
-                      validators={['matchRegexp:^[a-fA-F0-9.:]*$']}
+                      validators={['matchRegexp:^[a-fA-F0-9./]*$']}
                       errorMessages={[t("msgValidFirewallAddress")]}
                       value={n.get('address')}
                       onChange={this.changeNetworkOption(n.get('no'))}
@@ -339,7 +339,7 @@ class SecurityRuleNetwork extends Component {
                   <TableCell>
                     <TextValidator 
                       name='srcport'
-                      validators={['matchRegexp:^[0-9]*$']}
+                      validators={['matchRegexp:^[0-9,-]*$']}
                       errorMessages={[t("msgTypeNumberOnly")]}
                       value={n.get('srcport')}
                       onChange={this.changeNetworkOption(n.get('no'))}
@@ -348,7 +348,7 @@ class SecurityRuleNetwork extends Component {
                   <TableCell>
                     <TextValidator 
                       name='dstport'
-                      validators={['matchRegexp:^[0-9]*$']}
+                      validators={['matchRegexp:^[0-9,-]*$']}
                       errorMessages={[t("msgTypeNumberOnly")]}
                       value={n.get('dstport')}
                       onChange={this.changeNetworkOption(n.get('no'))}
