@@ -19,6 +19,7 @@ class DividedAdminManageSpec extends Component {
 
     const { classes, selectedItem } = this.props;
     const { t, i18n } = this.props;
+    const isSuper = (selectedItem && selectedItem.get('adminTp') === 'S') ? true : false;
     const isPart = (selectedItem && selectedItem.get('adminTp') === 'P') ? true : false;
 
     return (
@@ -62,31 +63,37 @@ class DividedAdminManageSpec extends Component {
             </Grid>
             }
             <Grid container spacing={0}>
-              {(selectedItem.get('deptInfoList') && selectedItem.get('deptInfoList').size > 0) &&
+              {(!isSuper && selectedItem.get('deptInfoList') && selectedItem.get('deptInfoList').size > 0) &&
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t('lbManagedDept')} - {t('lbManagedTargetCount')} : {selectedItem.get('deptInfoList').size} ea ]</Grid>
               }
-              {(selectedItem.get('deptInfoList')) && selectedItem.get('deptInfoList').map((n, i) => (
+              {(!isSuper && selectedItem.get('deptInfoList')) && selectedItem.get('deptInfoList').map((n, i) => (
                 <React.Fragment key={n.get('value')}>
                   <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbDeptName')} / ${t('lbDeptId')}`}</Grid>
                   <Grid item xs={3} className={classes.specContent}>{n.get('name')} / {n.get('value')}</Grid>
                 </React.Fragment>
               ))}
-              {(selectedItem.get('deptInfoList') == null || selectedItem.get('deptInfoList').size < 1) &&
+              {(!isSuper && selectedItem.get('deptInfoList') == null || selectedItem.get('deptInfoList').size < 1) &&
                 <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{t('lbManagedDept')}</strike> ]</Grid>
+              }
+              {(isSuper) &&
+                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t('lbManagedDept')} - {t('stAll')}]</Grid>
               }
             </Grid>
             <Grid container spacing={0}>
-              {(selectedItem.get('grpInfoList') && selectedItem.get('grpInfoList').size > 0) &&
+              {(!isSuper && selectedItem.get('grpInfoList') && selectedItem.get('grpInfoList').size > 0) &&
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t('lbManagedClientGroup')} - {t('lbManagedTargetCount')} : {selectedItem.get('grpInfoList').size} ea ]</Grid>
               }
-              {(selectedItem.get('grpInfoList')) && selectedItem.get('grpInfoList').map((n, i) => (
+              {(!isSuper && selectedItem.get('grpInfoList')) && selectedItem.get('grpInfoList').map((n, i) => (
                 <React.Fragment key={n.get('name')}>
                   <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbClientName')} / t{('lbClientId')}`}</Grid>
                   <Grid item xs={3} className={classes.specContent}>{n.get('name')} / {n.get('value')}</Grid>
                 </React.Fragment>
               ))}
-              {(selectedItem.get('grpInfoList') == null || selectedItem.get('grpInfoList').size < 1) &&
+              {(!isSuper && selectedItem.get('grpInfoList') == null || selectedItem.get('grpInfoList').size < 1) &&
                 <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16,color:'lightGray'}}>[ <strike>{t('lbManagedClientGroup')}</strike> ]</Grid>
+              }
+              {(isSuper) &&
+                <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t('lbManagedClientGroup')} - {t('stAll')}]</Grid>
               }
             </Grid>
             <Grid container spacing={0}>
