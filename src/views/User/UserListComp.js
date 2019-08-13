@@ -103,26 +103,7 @@ class UserListComp extends Component {
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { UserProps, GRConfirmActions, compId } = this.props;
-    const { t, i18n } = this.props;
-
-    const viewItem = getRowObjectById(UserProps, compId, id, 'userId');
-    GRConfirmActions.showConfirm({
-      confirmTitle: t("lbDeleteUserInfo"),
-      confirmMsg: t("msgDeleteUserInfo", {userNm: viewItem.get('userNm')}),
-      handleConfirmResult: (confirmValue, confirmObject) => {
-        if(confirmValue) {
-          const { UserProps, UserActions, compId } = this.props;
-          UserActions.deleteUserData({
-            compId: compId,
-            userId: confirmObject.get('userId')
-          }).then(() => {
-            UserActions.readUserListPaged(UserProps, compId);
-          });
-        }
-      },
-      confirmObject: viewItem
-    });
+    this.props.onDeleteHandle(id);
   };
 
   handleClickAllCheck = (event, checked) => {

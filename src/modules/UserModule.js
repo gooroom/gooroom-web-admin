@@ -214,7 +214,6 @@ const makeParameter = (param) => {
 // create (add)
 export const createUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-
     return requestPostAPI('createUserWithRule', makeParameter(param)).then(
         (response) => {
             try {
@@ -223,10 +222,8 @@ export const createUserData = (param) => dispatch => {
                         type: CREATE_USER_SUCCESS,
                         response: response
                     });
-                } else {
-                    dispatch({ type: COMMON_FAILURE, error: response.data });
-                    return response.data;
                 }
+                return response.data;
             } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
                 return error;
@@ -261,11 +258,19 @@ export const deleteUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteUserData', {'userId': param.userId}).then(
         (response) => {
-            dispatch({
-                type: DELETE_USER_SUCCESS,
-                compId: param.compId,
-                userId: param.userId
-            });
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: DELETE_USER_SUCCESS,
+                        compId: param.compId,
+                        userId: param.userId
+                    });
+                }
+                return response.data;
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
+            }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });

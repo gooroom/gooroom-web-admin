@@ -92,60 +92,7 @@ class UserDialog extends Component {
         const { t, i18n } = this.props;
 
         if(this.refs.form && this.refs.form.isFormValid()) {
-            GRConfirmActions.showConfirm({
-                confirmTitle: t("lbAddUserInfo"),
-                confirmMsg: t("msgAddUserInfo"),
-                handleConfirmResult: (confirmValue, paramObject) => {
-                    if(confirmValue) {
-                        const { UserProps, UserActions, compId } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
-                        const selectedObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
-                        const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
-                        if(editingItem !== undefined) {
-
-                            // user expire date
-                            let userExpireDate = '';
-                            if(editingItem.get("isUseExpire") !== undefined && editingItem.get("isUseExpire") === '1') {
-                                userExpireDate = editingItem.get('expireDate')
-                            }
-                            // password expire date
-                            let passwordExpireDate = '';
-                            if(editingItem.get("isUsePasswordExpire") !== undefined && editingItem.get("isUsePasswordExpire") === '1') {
-                                passwordExpireDate = editingItem.get('passwordExpireDate')
-                            }
-
-                            UserActions.createUserData({
-                                userId: UserProps.getIn(['editingItem', 'userId']),
-                                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                                userNm: UserProps.getIn(['editingItem', 'userNm']),
-                                userEmail: UserProps.getIn(['editingItem', 'userEmail']),
-                                deptCd: UserProps.getIn(['editingItem', 'deptCd']),
-                                expireDate: userExpireDate,
-                                passwordExpireDate: passwordExpireDate,
-                
-                                browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
-                                mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
-                                securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
-                                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
-                                ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
-                                policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
-                                desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
-                            }).then((reData) => {
-                                if(reData && reData.status && reData.status.result === 'fail') {
-                                    this.props.GRAlertActions.showAlert({
-                                        alertTitle: this.props.t("dtSystemError"),
-                                        alertMsg: reData.status.message
-                                    });
-                                } else {
-                                    UserActions.readUserListPaged(UserProps, compId);
-                                    this.handleClose();
-                                }
-                            });
-                        }
-                    }
-                },
-                confirmObject: UserProps.get('editingItem')
-            });
+            this.props.onCreateHandle();
         } else {
             if(this.refs.form && this.refs.form.childs) {
                 this.refs.form.childs.map(c => {
