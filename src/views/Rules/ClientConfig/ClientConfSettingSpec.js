@@ -93,8 +93,8 @@ class ClientConfSettingSpec extends Component {
               <Grid item xs={2} className={classes.specContent}>{(viewItem.get('useHomeReset')) ? t("selExecute") : t("selStop")}</Grid>
               <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtRootAllow")}</Grid>
               <Grid item xs={2} className={classes.specContent}>{(viewItem.get('rootAllow')) ? t("selActive") : t("selInActive")}</Grid>
-              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtSudoerAllow")}</Grid>
-              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('sudoerAllow')) ? t("selActive") : t("selInActive")}</Grid>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtSudoAllow")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('sudoAllow')) ? t("selActive") : t("selInActive")}</Grid>
               <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtSetupConnectableIp")}</Grid>
               <Grid item xs={3} className={classes.specContent}>
               {viewItem.get('whiteIp').map(function(prop, index) {
@@ -233,7 +233,7 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
   if(param) {
     let useHomeReset = false;
     let rootAllow = false;
-    let sudoerAllow = false;
+    let sudoAllow = false;
     let whiteIpAll = false;
     let whiteIps = [];
 
@@ -275,8 +275,8 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
         useHomeReset = (evalue == "true");
       } else if(ename == 'ROOTALLOW') {
         rootAllow = (evalue == "true");
-      } else if(ename == 'SUDOERALLOW') {
-        sudoerAllow = (evalue == "true");
+      } else if(ename == 'SUDOALLOW') {
+        sudoAllow = (evalue == "true");
       } else if(ename == 'WHITEIPALL') {
         whiteIpAll = (evalue == "true");
       } else if(ename == 'WHITEIPS') {
@@ -341,7 +341,7 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       modDate: param.get('modDate'),
       useHomeReset: useHomeReset,
       rootAllow: rootAllow,
-      sudoerAllow: sudoerAllow,
+      sudoAllow: sudoAllow,
       whiteIpAll: whiteIpAll,
       whiteIp: List(whiteIps),
 

@@ -311,13 +311,13 @@ class ClientConfSettingDialog extends Component {
                             </Grid>
                             <Grid item xs={4}>
                                 <div style={{marginTop:"10px"}}>
-                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtSudoerAllow")}</FormLabel>
+                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtSudoAllow")}</FormLabel>
                                     <FormControlLabel
                                         control={
-                                        <Switch onChange={this.handleValueChange('sudoerAllow')} color="primary"
-                                            checked={(editingItem.get('sudoerAllow')) ? editingItem.get('sudoerAllow') : false} />
+                                        <Switch onChange={this.handleValueChange('sudoAllow')} color="primary"
+                                            checked={(editingItem.get('sudoAllow')) ? editingItem.get('sudoAllow') : false} />
                                         }
-                                        label={(editingItem.get('sudoerAllow')) ? t("selActive") : t("selInActive")}
+                                        label={(editingItem.get('sudoAllow')) ? t("selActive") : t("selInActive")}
                                     />
                                 </div>
                             </Grid>
