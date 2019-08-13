@@ -89,9 +89,12 @@ class ClientConfSettingSpec extends Component {
             </Grid>
             }
             <Grid container spacing={0}>
-              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtInitHomeFolder")}</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHomeReset')) ? t("selExecute") : t("selStop")}</Grid>
-              <Grid item xs={6}></Grid>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtInitHomeFolder")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('useHomeReset')) ? t("selExecute") : t("selStop")}</Grid>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtRootAllow")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('rootAllow')) ? t("selActive") : t("selInActive")}</Grid>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtSudoerAllow")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('sudoerAllow')) ? t("selActive") : t("selInActive")}</Grid>
               <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtSetupConnectableIp")}</Grid>
               <Grid item xs={3} className={classes.specContent}>
               {viewItem.get('whiteIp').map(function(prop, index) {
@@ -229,6 +232,8 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
 
   if(param) {
     let useHomeReset = false;
+    let rootAllow = false;
+    let sudoerAllow = false;
     let whiteIpAll = false;
     let whiteIps = [];
 
@@ -268,6 +273,10 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       
       if(ename == 'USEHOMERESET') {
         useHomeReset = (evalue == "true");
+      } else if(ename == 'ROOTALLOW') {
+        rootAllow = (evalue == "true");
+      } else if(ename == 'SUDOERALLOW') {
+        sudoerAllow = (evalue == "true");
       } else if(ename == 'WHITEIPALL') {
         whiteIpAll = (evalue == "true");
       } else if(ename == 'WHITEIPS') {
@@ -331,6 +340,8 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       comment: param.get('comment'),
       modDate: param.get('modDate'),
       useHomeReset: useHomeReset,
+      rootAllow: rootAllow,
+      sudoerAllow: sudoerAllow,
       whiteIpAll: whiteIpAll,
       whiteIp: List(whiteIps),
 
