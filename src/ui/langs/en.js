@@ -436,7 +436,7 @@ export default {
   "dtOSProtect": "Operating system protection",
   "dtInitHomeFolder": "Initialize home folder",
   "dtRootAllow": "root Account",
-  "dtSudoerAllow": "sudo Account",
+  "dtSudoAllow": "sudo Account",
   "dtTrustedBoot": "Trusted Boot",
   "dtExeProtect": "Protect executable files",
   "dtMediaProtect": "Media control",

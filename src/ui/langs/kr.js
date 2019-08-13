@@ -436,7 +436,7 @@ export default {
   "dtOSProtect": "운영체제보호",
   "dtInitHomeFolder": "홈폴더 초기화",
   "dtRootAllow": "root 계정",
-  "dtSudoerAllow": "sudo 계정",
+  "dtSudoAllow": "sudo 계정",
   "dtTrustedBoot": "신뢰부팅",
   "dtExeProtect": "실행파일보호",
   "dtMediaProtect": "매체제어",
