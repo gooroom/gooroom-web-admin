@@ -368,7 +368,6 @@ class ClientMasterManage extends Component {
   handleDeleteClient = () => {
     const { ClientManageProps } = this.props;
     const { t, i18n } = this.props;
-
     const checkedClientIds = ClientManageProps.getIn(['viewItems', this.state.compId, 'checkedIds']);
     if(checkedClientIds && checkedClientIds.size > 0) {
       this.props.GRConfirmActions.showConfirm({
@@ -379,10 +378,21 @@ class ClientMasterManage extends Component {
             const { ClientManageProps, ClientManageActions } = this.props;
             ClientManageActions.deleteClientData({
               clientIds: confirmObject.checkedClientIds.join(',')
-            }).then(() => {
-              ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
-                page:0
-              }, {isResetSelect:true});
+            }).then(res => {
+              if (res && res.status && res.status.result === "fail") {
+                this.props.GRAlertActions.showAlert({
+                  alertTitle: this.props.t("dtSystemError"),
+                  alertMsg: res.status.message
+                });
+              }
+              if (res && res.status && res.status.result === "success") {
+                // change group node info as client count
+                this.handleResetTreeForEdit();
+                // show clients list in group
+                ClientManageActions.readClientListPaged(ClientManageProps, this.state.compId, {
+                  page:0
+                }, {isResetSelect:true});
+              }
             });
           }
         },
@@ -413,7 +423,7 @@ class ClientMasterManage extends Component {
       const parentListItem = this.props.ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'treeData', index]);
       this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, parentListItem.get('key'), index);
     } else {
-      this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, 'CGRPDEFAULT', 0);
+      this.props.ClientGroupActions.readChildrenClientGroupList(this.state.compId, 'CGRPDEFAULT', -1);
     }
   }
 

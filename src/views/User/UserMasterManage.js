@@ -689,7 +689,7 @@ class UserMasterManage extends Component {
       this.props.DeptActions.readChildrenDeptList(
         this.state.compId,
         "DEPTDEFAULT",
-        0
+        -1
       );
     }
   };

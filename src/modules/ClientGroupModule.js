@@ -115,7 +115,8 @@ export const readClientGroupListPaged = (module, compId, extParam) => dispatch =
 export const readChildrenClientGroupList = (compId, grpId, index) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readChildrenClientGroupList', {
-        grpId: grpId
+        grpId: grpId,
+        hasWithRoot: (index < 0) ? 'Y' : 'N'
     }).then(
         (response) => {
             dispatch({
@@ -459,7 +460,8 @@ export default handleActions({
     },
     [GET_CLIENTGROUP_TREECHILD_SUCCESS]: (state, action) => {
         const compId = action.compId;
-        const index = action.index;
+        const realIndex = action.index;
+        const index = (realIndex === undefined || realIndex < 0) ? 0 : realIndex;
         const data = action.response.data;
         if(data && data.length > 0) {
 
@@ -478,7 +480,7 @@ export default handleActions({
                     itemTotalCount: x.itemTotalCount,
                     _shouldRender: true
                 };
-                if (index !== undefined) {
+                if (index !== undefined && index > -1) {
                     node["parentIndex"] = index;
                 }
                 return node;
@@ -493,6 +495,11 @@ export default handleActions({
                     if(index === 0) {
                         // root
                         newTreeData = newTreeData.filter((e, i) => (i === 0));
+                        if(realIndex < 0 && data.length > 0) {
+                            newTreeData = newTreeData
+                                .setIn([0, 'itemCount'], data[0].rootItemCount)
+                                .setIn([0, 'itemTotalCount'], data[0].rootItemTotalCount);
+                        }
                     } else {
                         // 1. delete children
                         const parentIndex = newTreeData.getIn([index, 'parentIndex']);
@@ -544,6 +551,8 @@ export default handleActions({
                         comment: resData.getIn([0, 'comment']),
                         modDate: resData.getIn([0, 'modDate']),
                         regDate: resData.getIn([0, 'regDate']),
+                        itemCount: resData.getIn([0, 'itemCount']),
+                        itemTotalCount: resData.getIn([0, 'itemTotalCount']),
                         title: resData.getIn([0, 'title'])
                     });
                 }
