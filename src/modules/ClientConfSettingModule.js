@@ -225,6 +225,8 @@ const makeParameter = (param) => {
         show_agent: param.get('show_agent'),
 
         USEHOMERESET: param.get('useHomeReset'),
+        ROOTALLOW: param.get('rootAllow'),
+        SUDOERALLOW: param.get('sudoerAllow'),
         WHITEIPALL: param.get('whiteIpAll'),
         WHITEIPS: (param.get('whiteIp')) ? param.get('whiteIp').toArray() : []
     };

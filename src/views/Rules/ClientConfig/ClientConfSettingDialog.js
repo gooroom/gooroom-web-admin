@@ -285,7 +285,7 @@ class ClientConfSettingDialog extends Component {
                             </Grid>
                         </Grid>
                         <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'0 0 8 0'}}>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
                                 <div style={{marginTop:"10px"}}>
                                     <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtInitHomeFolder")}</FormLabel>
                                     <FormControlLabel
@@ -294,6 +294,30 @@ class ClientConfSettingDialog extends Component {
                                             checked={(editingItem.get('useHomeReset')) ? editingItem.get('useHomeReset') : false} />
                                         }
                                         label={(editingItem.get('useHomeReset')) ? t("selExecute") : t("selStop")}
+                                    />
+                                </div>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <div style={{marginTop:"10px"}}>
+                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtRootAllow")}</FormLabel>
+                                    <FormControlLabel
+                                        control={
+                                        <Switch onChange={this.handleValueChange('rootAllow')} color="primary"
+                                            checked={(editingItem.get('rootAllow')) ? editingItem.get('rootAllow') : false} />
+                                        }
+                                        label={(editingItem.get('rootAllow')) ? t("selActive") : t("selInActive")}
+                                    />
+                                </div>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <div style={{marginTop:"10px"}}>
+                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtSudoerAllow")}</FormLabel>
+                                    <FormControlLabel
+                                        control={
+                                        <Switch onChange={this.handleValueChange('sudoerAllow')} color="primary"
+                                            checked={(editingItem.get('sudoerAllow')) ? editingItem.get('sudoerAllow') : false} />
+                                        }
+                                        label={(editingItem.get('sudoerAllow')) ? t("selActive") : t("selInActive")}
                                     />
                                 </div>
                             </Grid>
