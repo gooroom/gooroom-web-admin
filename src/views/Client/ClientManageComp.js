@@ -8,54 +8,44 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientManageActions from 'modules/ClientManageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject, arrayContainsArray } from 'components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { formatBytes, getClientStatusIcon } from 'components/GRUtils/GRCommonUtils';
+import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
-import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
+import ClientStatusSelect from 'views/Options/ClientStatusSelect';
+import KeywordOption from "views/Options/KeywordOption";
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import Grid from '@material-ui/core/Grid';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
+import FormControl from '@material-ui/core/FormControl';
+import Button from '@material-ui/core/Button';
 import Checkbox from "@material-ui/core/Checkbox";
+import InputLabel from "@material-ui/core/InputLabel";
+import Tooltip from "@material-ui/core/Tooltip";
+import Typography from "@material-ui/core/Typography";
+
+import Search from '@material-ui/icons/Search'; 
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
-
+import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientManageComp extends Component {
 
-  columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
-    { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'loginId', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
-    { id: 'clientGroupName', isOrder: true, numeric: false, disablePadding: true, label: '단말그룹' },
-    { id: 'regDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' }
-  ];
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
-
   componentDidMount() {
-    const { ClientManageActions, ClientManageProps, compId } = this.props;
-    ClientManageActions.readClientListPaged(ClientManageProps, compId);
+    this.props.ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {}, {isResetSelect:false, isInitParam:true});
   }
 
   handleChangePage = (event, page) => {
@@ -68,148 +58,227 @@ class ClientManageComp extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      rowsPerPage: event.target.value, 
-      page:0
+      rowsPerPage: event.target.value, page:0
     });
   };
 
   // .................................................
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
     ClientManageActions.readClientListPaged(ClientManageProps, compId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
-  handleSelectAllClick = (event, checked) => {
+  handleClickAllCheck = (event, checked) => {
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-    
-    const newSelectedIds = setAllSelectedIdsInComp(ClientManageProps, compId, 'clientId', checked);
+    const newCheckedIds = getDataPropertyInCompByParam(ClientManageProps, compId, 'clientId', checked);
 
     ClientManageActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
   };
 
-  handleRowClick = (event, id) => {
+  handleCheckClick = (event, id) => {
+    event.stopPropagation();
     const { ClientManageActions, ClientManageProps, compId } = this.props;
-
-    const clickedRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
-    const newSelectedIds = setSelectedIdsInComp(ClientManageProps, compId, id);
+    const newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);  
 
     ClientManageActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
+
+  }
+
+  handleSelectRow = (event, id) => {
+    event.stopPropagation();
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
+    const selectRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
+    // let newCheckedIds = '';
+    // if(this.props.selectorType && this.props.selectorType == 'multiple') {
+    //   newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);  
+    //   ClientManageActions.changeCompVariable({
+    //     name: 'checkedIds',
+    //     value: newCheckedIds,
+    //     compId: compId
+    //   });
+    // } else {
+    //   newCheckedIds = id;
+    // }
 
     if(this.props.onSelect) {
-      this.props.onSelect(clickedRowObject, newSelectedIds);
+      this.props.onSelect(selectRowObject);
     }
     
     // rest actions..
     
   };
 
-  isSelected = id => {
+  isChecked = id => {
     const { ClientManageProps, compId } = this.props;
-    const selectedIds = getDataObjectVariableInComp(ClientManageProps, compId, 'selectedIds');
-
-    if(selectedIds) {
-      return selectedIds.includes(id);
+    const checkedIds = getDataObjectVariableInComp(ClientManageProps, compId, 'checkedIds');
+    if(checkedIds) {
+      return checkedIds.includes(id);
     } else {
       return false;
-    }    
+    }
   }
 
-  // handleKeywordChange = name => event => {
-  //   const { ClientManageActions, ClientManageProps, compId } = this.props;
-  //   const { [compId + '__listParam'] : compListParam } = ClientManageProps;
+  isSelected = id => {
+    const { ClientManageProps, compId } = this.props;
+    const selectId = getDataObjectVariableInComp(ClientManageProps, compId, 'selectId');
+    return (selectId == id);
+  }
 
-  //   const newParam = getMergedObject(compListParam, {
-  //     keyword: event.target.value,
-  //     page:0,
-  //     compId: this.props.compId
-  //   });
-  //   ClientManageActions.changeStoreData({
-  //     name: compId + '__listParam',
-  //     value: newParam
-  //   });
-  // };
+  // .................................................
+  handleChangeClientStatusSelect = (event, property) => {
+    const { ClientManageProps, ClientManageActions, compId } = this.props;
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {
+      clientType: property, page:0
+    });
+
+  };
+
+  handleKeywordChange =(name, value) => {
+    this.props.ClientManageActions.changeListParamData({
+      name: name, 
+      value: value,
+      compId: this.props.compId
+    });
+  };
+
+  handleSelectBtnClick = () => {
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
+    ClientManageActions.readClientListPaged(ClientManageProps, compId, {page: 0});
+  };
 
   render() {
     const { classes } = this.props;
     const { ClientManageProps, compId } = this.props;
-    const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
+    const { t, i18n } = this.props;
+
+    const columnHeaders = [
+      { id: 'STATUS_CD', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'LOGIN_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colLoginId") },
+      { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
+      { id: 'LAST_LOGIN_TIME', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginDate") },
+      { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginIp") },
+      { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: t("colUseRate") },
+      { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageCnt") }
+    ];
+    if(this.props.selectorType && this.props.selectorType == 'multiple') {
+      columnHeaders.unshift({ id: "chCheckbox", isCheckbox: true });
+    }
+
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
 
       <div>
+        {/* data option area */}
+        <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
+          <Grid item xs={4} >
+            <FormControl fullWidth={true}>
+              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={4} >
+            <FormControl fullWidth={true}>
+              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+            </FormControl>
+          </Grid>
+          <Grid item xs={4} >
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+              <Search />{t("btnSearch")}
+            </Button>
+          </Grid>
+        </Grid>
+
+        {/* data area */}
         {listObj &&
         <Table>
-          <GrCommonTableHead
+          {(this.props.selectorType && this.props.selectorType == 'multiple') && 
+          <GRCommonTableHead
             classes={classes}
             keyId="clientId"
             orderDir={listObj.getIn(['listParam', 'orderDir'])}
             orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
             onRequestSort={this.handleChangeSort}
-            onSelectAllClick={this.handleSelectAllClick}
-            selectedIds={listObj.get('selectedIds')}
+            onClickAllCheck={this.handleClickAllCheck}
+            checkedIds={listObj.get('checkedIds')}
             listData={listObj.get('listData')}
-            columnData={this.columnHeaders}
+            columnData={columnHeaders}
           />
+          }
+          {(!this.props.selectorType || this.props.selectorType == 'single') && 
+          <GRCommonTableHead
+            classes={classes}
+            keyId="clientId"
+            orderDir={listObj.getIn(['listParam', 'orderDir'])}
+            orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+            onRequestSort={this.handleChangeSort}
+            columnData={columnHeaders}
+          />
+          }
           <TableBody>
-            {listObj.get('listData').map(n => {
-                const isSelected = this.isSelected(n.get('clientId'));
-                return (
-                  <TableRow
-                    className={classes.grNormalTableRow}
-                    hover
-                    onClick={event => this.handleRowClick(event, n.get('clientId'))}
-                    role="checkbox"
-                    aria-checked={isSelected}
-                    tabIndex={-1}
-                    key={n.get('clientId')}
-                    selected={isSelected}
-                  >
-                    <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                      <Checkbox checked={isSelected} className={classes.grObjInCell} />
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.get('clientStatus')}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.get('clientName')}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.get('loginId')}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.get('clientGroupName')}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+            {listObj.get('listData') && listObj.get('listData').map(n => {
+              const isChecked = this.isChecked(n.get('clientId'));
+              const isSelected = this.isSelected(n.get('clientId'));
 
-            {emptyRows > 0 && (
-              <TableRow >
+              let storageRate = '';
+              let storageInfo = '';
+              if(n.get('strgSize') && n.get('strgSize') > 0 && n.get('strgUse') && n.get('strgUse') > 0) {
+                storageRate = ((n.get('strgUse') * 100) / n.get('strgSize')).toFixed(2) + '%';
+                storageInfo = formatBytes(n.get('strgUse'), 1) + '/' + formatBytes(n.get('strgSize'), 1);
+              }
+
+              return (
+                <TableRow
+                  hover
+                  className={(isSelected) ? classes.grSelectedRow : ''}
+                  onClick={event => this.handleSelectRow(event, n.get('clientId'))}
+                  role="checkbox"
+                  key={n.get('clientId')}
+                >
+                {(this.props.selectorType && this.props.selectorType == 'multiple') && 
+                  <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
+                    <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('clientId'))}/>
+                  </TableCell>
+                }
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{(n.get('isOn') == '1') ? ((n.get('loginId') && n.get('loginId').startsWith('+')) ? n.get('loginId').substring(1) + " [LU]" : n.get('loginId')) : ''}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('clientGroupName')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YY/MM/DD HH:mm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell} >
+                  <Tooltip title={storageInfo}>
+                    <Typography>{storageRate}</Typography>
+                  </Tooltip>
+                  </TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('totalCnt')}</TableCell>
+                </TableRow>
+              );
+            })}
+            {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+              <TableRow key={e}>
                 <TableCell
-                  colSpan={this.columnHeaders.length + 1}
+                  colSpan={columnHeaders.length + 1}
                   className={classes.grSmallAndClickCell}
                 />
               </TableRow>
-            )}
+            )}))}
           </TableBody>
         </Table>
         }
@@ -220,7 +289,6 @@ class ClientManageComp extends Component {
           rowsPerPage={listObj.getIn(['listParam', 'rowsPerPage'])}
           rowsPerPageOptions={listObj.getIn(['listParam', 'rowsPerPageOptions']).toJS()}
           page={listObj.getIn(['listParam', 'page'])}
-          labelDisplayedRows={() => {return ''}}
           backIconButtonProps={{
             'aria-label': 'Previous Page'
           }}
@@ -240,11 +308,10 @@ const mapStateToProps = (state) => ({
   ClientManageProps: state.ClientManageModule
 });
 
-
 const mapDispatchToProps = (dispatch) => ({
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientManageComp));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManageComp)));
 

@@ -4,10 +4,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { Map, List } from "immutable";
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class UserStatusSelect extends Component {
   constructor(props) {
     super(props);
@@ -15,9 +14,9 @@ class UserStatusSelect extends Component {
     this.state = {
       data: Map({
         userStatusData: List([
-          Map({ statusId: 'NORMAL', statusVal: 'STAT010', statusTxt: '정상' }),
-          Map({ statusId: 'DELETE', statusVal: 'STAT020', statusTxt: '삭제' }),
-          Map({ statusId: 'ALL', statusVal: 'ALL', statusTxt: '전체' })
+          Map({ statusId: 'NORMAL', statusVal: 'STAT010', statusTxt: 'stNormal' }),
+          Map({ statusId: 'DELETE', statusVal: 'STAT020', statusTxt: 'stDelete' }),
+          Map({ statusId: 'ALL', statusVal: 'ALL', statusTxt: 'stAll' })
         ]),
         selectedUserStatusValue: 'STAT010'
       })
@@ -34,6 +33,8 @@ class UserStatusSelect extends Component {
   };
 
   render() {
+    const { t, i18n } = this.props;
+
     return (
       <React.Fragment>
       <InputLabel htmlFor="user-status">사용자상태</InputLabel>
@@ -43,7 +44,7 @@ class UserStatusSelect extends Component {
       >
         {this.state.data.get('userStatusData').map(x => (
           <MenuItem value={x.get('statusVal')} key={x.get('statusId')}>
-            {x.get('statusTxt')}
+            {t(x.get('statusTxt'))}
           </MenuItem>
         ))}
       </Select>
@@ -52,6 +53,6 @@ class UserStatusSelect extends Component {
   }
 }
 
-export default UserStatusSelect;
+export default translate("translations")(UserStatusSelect);
 
 

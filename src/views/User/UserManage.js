@@ -6,25 +6,31 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as UserActions from 'modules/UserModule';
-import * as BrowserRuleSettingActions from 'modules/BrowserRuleSettingModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
-
-import { getMergedObject, arrayContainsArray, getListParam, getListData, getViewItem, getMergedArray } from 'components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import UserStatusSelect from "views/Options/UserStatusSelect";
 import KeywordOption from "views/Options/KeywordOption";
 
-import GrPageHeader from "containers/GrContent/GrPageHeader";
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from "containers/GRContent/GRPageHeader";
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import UserManageDialog from "views/User/UserManageDialog";
-import UserManageInform from "views/User/UserManageInform";
-import GrPane from "containers/GrContent/GrPane";
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import UserBasicDialog from "views/User/UserBasicDialog";
+import UserDialog from "views/User/UserDialog";
+
+import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
+import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
+import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
+
+import UserSpec from "views/User/UserSpec";
+import GRPane from "containers/GRContent/GRPane";
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
 
@@ -43,182 +49,124 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
 import AddIcon from "@material-ui/icons/Add";
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class UserManage extends Component {
-
-  columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
-    { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
-    { id: "chUserName", isOrder: true, numeric: false, disablePadding: true, label: "사용자이름" },
-    { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: "상태" },
-    { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: "최근로그인날짜" },
-    { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
-    { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' }
-  ];
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    }
-  }
 
   componentDidMount() {
     this.handleSelectBtnClick();
   }
 
-  // .................................................
   handleChangePage = (event, page) => {
-    const { UserActions, UserProps } = this.props;
-    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {
-      page: page
-    });
+    this.props.UserActions.readUserListPaged(this.props.UserProps, this.props.match.params.grMenuId, {page: page});
   };
 
   handleChangeRowsPerPage = event => {
-    const { UserActions, UserProps } = this.props;
-    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value, 
-      page:0
+    this.props.UserActions.readUserListPaged(this.props.UserProps, this.props.match.params.grMenuId, {
+      rowsPerPage: event.target.value, page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
-    const { UserActions, UserProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
-    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {
-      orderColumn: property, 
-      orderDir: orderDir
+    this.props.UserActions.readUserListPaged(this.props.UserProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
-  handleRowClick = (event, id) => {
-    console.log('handleRowClick ......................... ');
+  handleSelectRow = (event, id) => {
     const { UserProps, UserActions } = this.props;
-    const { BrowserRuleSettingActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const clickedRowObject = getRowObjectById(UserProps, compId, id, 'userId');
-    const newSelectedIds = setSelectedIdsInComp(UserProps, compId, id);
+    const selectRowObject = getRowObjectById(UserProps, compId, id, 'userId');
+    const userId = selectRowObject.get('userId');
+    const newCheckedIds = setCheckedIdsInComp(UserProps, compId, id);
 
     // check select box
     UserActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
-
+    
     // get browser rule info
-    BrowserRuleSettingActions.getBrowserRuleSettingByUserId({
-      compId: compId,
-      userId: clickedRowObject.get('userId')
-    });   
-
+    BrowserRuleActions.getBrowserRuleByUserId({ compId: compId, userId: userId });
+    // get media control setting info
+    MediaRuleActions.getMediaRuleByUserId({ compId: compId, userId: userId });
+    // get client secu info
+    SecurityRuleActions.getSecurityRuleByUserId({ compId: compId, userId: userId });
+    
     // show user inform pane.
-    UserActions.showInform({
-      compId: compId,
-      selectedViewItem: clickedRowObject,
-    });
+    UserActions.showInform({ compId: compId, viewItem: selectRowObject });
   };
 
   handleSelectBtnClick = () => {
     const { UserActions, UserProps } = this.props;
-    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId);
+    UserActions.readUserListPaged(UserProps, this.props.match.params.grMenuId, {page: 0});
   };
-
-
-
 
 
   handleCreateButton = value => {
     const { UserActions } = this.props;
     UserActions.showDialog({
-      selectedViewItem: {
+      viewItem: {
         userId: '',
         userNm: '',
-        userPassword: '',
-        showPassword: false
+        userPasswd: '',
+        showPasswd: false
       },
-      dialogType: UserManageDialog.TYPE_ADD
-    });
+      dialogType: UserBasicDialog.TYPE_ADD
+    }, false);
   };
   
-  handleSelectAllClick = (event, checked) => {
+  handleClickAllCheck = (event, checked) => {
     const { UserActions, UserProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const newSelectedIds = setAllSelectedIdsInComp(UserProps, compId, 'userId', checked);
+    const newCheckedIds = getDataPropertyInCompByParam(UserProps, compId, 'userId', checked);
 
     UserActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
   };
-  
-  
-  isSelected = id => {
+    
+  isChecked = id => {
     const { UserProps } = this.props;
-    const selectedIds = getDataObjectVariableInComp(UserProps, this.props.match.params.grMenuId, 'selectedIds');
-
-    if(selectedIds) {
-      return selectedIds.includes(id);
+    const checkedIds = getDataObjectVariableInComp(UserProps, this.props.match.params.grMenuId, 'checkedIds');
+    if(checkedIds) {
+      return checkedIds.includes(id);
     } else {
       return false;
-    }    
+    }
   }
   
   handleEditClick = (event, id) => { 
     const { UserProps, UserActions } = this.props;
-    const selectedViewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
+    const viewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
     UserActions.showDialog({
-      selectedViewItem: selectedViewItem,
-      dialogType: UserManageDialog.TYPE_EDIT
-    });
-
-
-
-    // const { UserProps, UserActions } = this.props;
-    // const compId = this.props.match.params.grMenuId;
-
-    // const listData = getListData({ props: UserProps, compId: compId });
-    // const selectedViewItem = listData.find(function(element) {
-    //   return element.userId == id;
-    // });
-
-    // UserActions.showDialog({
-    //   compId: compId,
-    //   selectedViewItem: {
-    //     userId: selectedViewItem.userId,
-    //     userName: selectedViewItem.userNm,
-    //     userPassword: selectedViewItem.userPasswd
-    //   },
-    //   dialogType: UserManageDialog.TYPE_EDIT,
-    // });
+      viewItem: viewItem,
+      dialogType: UserBasicDialog.TYPE_EDIT
+    }, false);
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { UserProps, GrConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
-    GrConfirmActions.showConfirm({
-      confirmTitle: '사용자정보 삭제',
-      confirmMsg: '사용자정보(' + selectedViewItem.get('userNm') + ')을 삭제하시겠습니까?',
+    const { UserProps, GRConfirmActions } = this.props;
+    const { t, i18n } = this.props;
+    const viewItem = getRowObjectById(UserProps, this.props.match.params.grMenuId, id, 'userId');
+    GRConfirmActions.showConfirm({
+      confirmTitle: t("lbDeleteUserInfo"),
+      confirmMsg: t("msgDeleteUserInfo", {userNm: viewItem.get('userNm')}),
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -233,7 +181,6 @@ class UserManage extends Component {
       });
     }
   };
-
 
   // .................................................
   handleKeywordChange = (name, value) => {
@@ -255,44 +202,54 @@ class UserManage extends Component {
   render() {
     const { classes } = this.props;
     const { UserProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;//UserProps.listParam.rowsPerPage - UserProps.listData.length;
+
+    const columnHeaders = [
+      { id: "chCheckbox", isCheckbox: true},
+      { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: t("colUserNm") },
+      { id: "chDeptName", isOrder: true, numeric: false, disablePadding: true, label: t("colDeptNm") },
+      { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: t("colLoginDate") },
+      { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
+      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
+    ];
+    
     const listObj = UserProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-            
-              <Grid item xs={4} >
-                <FormControl fullWidth={true}>
-                  <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <FormControl fullWidth={true}>
-                  <KeywordOption handleKeywordChange={this.handleKeywordChange} />
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />
-                  조회
-                </Button>
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10} >
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                <Grid item xs={4} >
+                  <FormControl fullWidth={true}>
+                    <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <FormControl fullWidth={true}>
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
+                    <Search />{t("btnSearch")}
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-
-            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end" >
-              <Button size="small" variant="contained" color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+            <Grid item xs={2} >
+              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
+                <AddIcon />{t("btnRegist")}
               </Button>
             </Grid>
           </Grid>
@@ -301,64 +258,66 @@ class UserManage extends Component {
           {(listObj) && 
           <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="userId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                onSelectAllClick={this.handleSelectAllClick}
-                selectedIds={listObj.get('selectedIds')}
+                onClickAllCheck={this.handleClickAllCheck}
+                checkedIds={listObj.get('checkedIds')}
                 listData={listObj.get('listData')}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
-                  const isSelected = this.isSelected(n.get('userId'));
+                  const isChecked = this.isChecked(n.get('userId'));
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('userId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('userId'))}
                       role="checkbox"
-                      aria-checked={isSelected}
+                      aria-checked={isChecked}
                       key={n.get('userId')}
-                      selected={isSelected}
+                      selected={isChecked}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
-                        <Checkbox checked={isSelected} className={classes.grObjInCell} />
+                        <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} />
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>
-
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YYYY-MM-DD')}{(n.get('clientId') && n.get('clientId') != '') ? ', ' + n.get('clientId') : ''}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {(n.get('statusCd') !== 'STAT020') &&
+                      <React.Fragment>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('userId'))}>
-                          <BuildIcon />
+                          <SettingsApplicationsIcon />
                         </Button>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('userId'))}>
                           <DeleteIcon />
                         </Button>
-
+                        </React.Fragment>
+                      }
                       </TableCell>
                     </TableRow>
                   );
                 })}
 
-                {emptyRows > 0 && (
-                  <TableRow >
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
                     <TableCell
-                      colSpan={this.columnHeaders.length + 1}
+                      colSpan={columnHeaders.length + 1}
                       className={classes.grSmallAndClickCell}
                     />
                   </TableRow>
-                )}
+                )}))}
               </TableBody>
             </Table>
             <TablePagination
@@ -379,10 +338,16 @@ class UserManage extends Component {
             />
           </div>
           }
-        </GrPane>
-        <UserManageInform compId={compId} />
-        <UserManageDialog compId={compId} />
-        <GrConfirm />
+        </GRPane>
+        <UserSpec compId={compId} />
+        <UserBasicDialog compId={compId} />
+        <UserDialog compId={compId} />
+
+        <BrowserRuleDialog compId={compId} />
+        <SecurityRuleDialog compId={compId} />
+        <MediaRuleDialog compId={compId} />
+
+        <GRConfirm />
       </React.Fragment>
     );
   }
@@ -394,9 +359,11 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
-  BrowserRuleSettingActions: bindActionCreators(BrowserRuleSettingActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(UserManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserManage)));
 

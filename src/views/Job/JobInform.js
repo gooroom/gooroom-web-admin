@@ -5,16 +5,15 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getJobStatusToString } from 'components/GRUtils/GRCommonUtils';
 
 import * as JobManageActions from 'modules/JobManageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
+
+import JobTargetComp from './JobTargetComp';
 
 import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import Table from '@material-ui/core/Table';
@@ -22,152 +21,126 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
-
-//
-//  ## Header ########## ########## ########## ########## ########## 
-//
-class JobTargetListHead extends Component {
-
-  createSortHandler = property => event => {
-    this.props.onRequestSort(event, property);
-  };
-
-  static columnData = [
-    { id: "chClientId", isOrder: true, numeric: false, disablePadding: true, label: "단말아이디" },
-    { id: "chJobStatus", isOrder: true, numeric: false, disablePadding: true, label: "작업상태" },
-    { id: "chGroupNm", isOrder: true, numeric: false, disablePadding: true, label: "단말그룹" },
-    { id: "chClientStatus", isOrder: true, numeric: false, disablePadding: true, label: "단말상태" }
-  ];
-
-  render() {
-    const { classes } = this.props;
-    const {
-      orderDir,
-      orderColumn,
-    } = this.props;
-
-    return (
-      <TableHead>
-        <TableRow>
-          {JobTargetListHead.columnData.map(column => {
-            return (
-              <TableCell
-                className={classes.grSmallAndHeaderCell}
-                key={column.id}
-                numeric={column.numeric}
-                padding={column.disablePadding ? "none" : "default"}
-                sortDirection={orderColumn === column.id ? orderDir : false}
-              >
-              {(column.isOrder) &&
-                <TableSortLabel
-                  active={orderColumn === column.id}
-                  direction={orderDir}
-                  onClick={this.createSortHandler(column.id)}
-                >
-                  {column.label}
-                </TableSortLabel>
-              }
-              {(!column.isOrder) &&
-                <p>{column.label}</p>
-              }
-              </TableCell>
-            );
-          }, this)}
-        </TableRow>
-      </TableHead>
-    );
-  }
-}
+import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class JobInform extends Component {
 
-  // .................................................
-  handleRequestSort = (event, property) => {
+  handleClickTargetSelect = (selectedTargetObj) => {
+    const { ClientGroupActions, ClientManageActions } = this.props;
+    const compId = this.props.match.params.grMenuId; 
 
-    const { jobManageModule, JobManageActions } = this.props;
-    let orderDir = "desc";
-    if (jobManageModule.listParam.orderColumn === property && jobManageModule.listParam.orderDir === "desc") {
-      orderDir = "asc";
+    // show client group info.
+    if(selectedGroupObj) {
+      // close client inform
+      ClientManageActions.closeClientManageInform({compId: compId});
+      // show client group inform
+      ClientGroupActions.showClientGroupInform({
+        compId: compId, viewItem: selectedGroupObj, selectId: selectedGroupObj.get('grpId')
+      });
+      this.resetClientGroupRules(compId, selectedGroupObj.get('grpId'));
     }
-    JobManageActions.readJobTargetList(getMergedObject(jobManageModule.targetListParam, {orderColumn: property, orderDir: orderDir}));
   };
 
   render() {
-    const { classes } = this.props;
-    const { jobManageModule } = this.props;
+    const { classes, compId, JobManageProps } = this.props;
+    const { t, i18n } = this.props;
 
-    const emptyRows = jobManageModule.targetListParam.rowsPerPage - jobManageModule.targetListData.length;
-
+    const bull = <span className={classes.bullet}>•</span>;
+    
+    const informOpen = JobManageProps.getIn(['viewItems', compId, 'informOpen']);
+    const viewItem = JobManageProps.getIn(['viewItems', compId, 'viewItem']);
+    const selectTargetObj = JobManageProps.getIn(['viewItems', compId, 'selectTargetObj']);
+    
+    // json parse.
+    let targetModuleList = <Typography variant="button" gutterBottom>{t("msgNoResult")}</Typography>;
+    if(selectTargetObj && selectTargetObj.get('resultData') && viewItem && selectTargetObj.get('jobNo') == viewItem.get('jobNo')) {
+      const result = JSON.parse(selectTargetObj.get('resultData'));
+      if(result && result.length > 0) {
+        targetModuleList = (
+          <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>{t("dtJobModule")}</TableCell>
+              <TableCell>{t("dtJobTask")}</TableCell>
+              <TableCell>{t("dtJobMessage")}</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+          {
+            result.map(n => {
+              return (
+                <TableRow key={n.module.task.task_name}>
+                  <TableCell >{n.module.module_name}</TableCell>
+                  <TableCell >{n.module.task.task_name}</TableCell>
+                  <TableCell >{n.module.task.out.message}</TableCell>
+                </TableRow>
+              );
+            })
+          }
+          </TableBody>
+          </Table>
+        );
+      }
+    } else {
+      targetModuleList = (<div></div>);
+    }
+    
     return (
       <div>
-        <Card >
-          <CardHeader
-            title={jobManageModule.selectedViewItem.jobName}
-            subheader={jobManageModule.selectedViewItem.jobNo + ', ' + formatDateToSimple(jobManageModule.selectedViewItem.regDate, 'YYYY-MM-DD')}
-          />
-          <Grid container spacing={24}>
-          <Grid item xs={12} sm={5}>
-            <CardContent>
-              <Typography component="pre">
-                {jobManageModule.selectedViewItem.jobData}
-              </Typography>
-            </CardContent>
-          </Grid>
-          <Grid item xs={12} sm={7}>
-          <CardContent>
-          <Table >
-            <JobTargetListHead
-              classes={classes}
-              orderDir={jobManageModule.targetListParam.orderDir}
-              orderColumn={jobManageModule.targetListParam.orderColumn}
-              onRequestSort={this.handleRequestSort}
-            />
-            <TableBody>
-              {jobManageModule.targetListData.map(n => {
-                return (
-                  <TableRow
-                    className={classes.grNormalTableRow}
-                    hover
-                    key={n.clientId}
-                  >
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.clientId}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.jobStat}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.grpNm}
-                    </TableCell>
-                    <TableCell className={classes.grSmallAndClickCell}>
-                      {n.isOn}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+      {(informOpen && viewItem) &&
 
-              {emptyRows > 0 && (
-                <TableRow >
-                  <TableCell
-                    colSpan={JobTargetListHead.columnData.length + 1}
-                    className={classes.grSmallAndClickCell}
-                  />
+        <Grid container spacing={16} direction="row" justify="space-between" alignItems="stretch" >
+          <Grid item xs={6}>
+            <JobTargetComp compId={compId} 
+              onSelect={this.handleClickTargetSelect} 
+            />
+          </Grid>
+          <Grid item xs={6}>
+            {(selectTargetObj) &&
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ {t("dtJobInfo")} ]</TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-          </CardContent>
+                <TableRow>
+                  <TableCell component="th" scope="row" >{bull} {t("dtJobNo")}</TableCell>
+                  <TableCell >{viewItem.get('jobNo')}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" >{bull} {t("dtJobName")}</TableCell>
+                  <TableCell >{viewItem.get('jobName')}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" >{bull} {t("dtJobRegDate")}</TableCell>
+                  <TableCell >{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ {t("dtJobTargetResult")} ]</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" >{bull} {t("lbClientId")}</TableCell>
+                  <TableCell >{selectTargetObj.get('clientId')}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row" >{bull} {t("dtJobResultStatus")}</TableCell>
+                  <TableCell >{getJobStatusToString(selectTargetObj.get('jobStat'), t)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={2} component="td" scope="row" style={{fontWeight:'bold',verticalAlign:'bottom',border:0}}>[ {t("dtJobModuleInfo")} ]</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell colSpan={2} >{targetModuleList}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            }
           </Grid>
-          </Grid>
-        </Card>
+        </Grid>
+      }
       </div>
     );
 
@@ -176,19 +149,13 @@ class JobInform extends Component {
 
 
 const mapStateToProps = (state) => ({
-
-  jobManageModule: state.JobManageModule,
-  grConfirmModule: state.GrConfirmModule,
-
+  JobManageProps: state.JobManageModule
 });
-
 
 const mapDispatchToProps = (dispatch) => ({
-
   JobManageActions: bindActionCreators(JobManageActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
-
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(JobInform));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(JobInform)));
 

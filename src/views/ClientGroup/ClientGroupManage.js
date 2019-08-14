@@ -8,21 +8,28 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
+
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
 import * as ClientHostNameActions from 'modules/ClientHostNameModule';
 import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
-import * as ClientDesktopConfigActions from 'modules/ClientDesktopConfigModule';
 
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as BrowserRuleActions from 'modules/BrowserRuleModule';
+import * as MediaRuleActions from 'modules/MediaRuleModule';
+import * as SecurityRuleActions from 'modules/SecurityRuleModule';
+import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getRowObjectById } from 'components/GrUtils/GrTableListUtils';
+import * as DesktopConfActions from 'modules/DesktopConfModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrPane from 'containers/GrContent/GrPane';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRPane from 'containers/GRContent/GRPane';
+import GRConfirm from 'components/GRComponents/GRConfirm';
+
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
 
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
@@ -38,14 +45,15 @@ import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search'; 
 import AddIcon from '@material-ui/icons/Add';
-import BuildIcon from '@material-ui/icons/Build';
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import ClientGroupDialog from './ClientGroupDialog';
-import ClientGroupInform from './ClientGroupInform';
+import ClientGroupSpec from './ClientGroupSpec';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
 
 class ClientGroupManage extends Component {
@@ -58,14 +66,6 @@ class ClientGroupManage extends Component {
     { id: "chRegDate", isOrder: true, numeric: false, disablePadding: true, label: "등록일" },
     { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: '수정/삭제' },
   ];
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
 
   componentDidMount() {
     this.handleSelectBtnClick();
@@ -82,89 +82,96 @@ class ClientGroupManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
     ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value,
-      page: 0
+      rowsPerPage: event.target.value, page: 0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { ClientGroupActions, ClientGroupProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
     ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {
-      orderColumn: columnId,
-      orderDir: orderDir
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectBtnClick = () => {
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId, {page: 0});
+  };
+
+  handleSelectRow = (event, id) => {
     const { ClientGroupProps } = this.props;
-    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions, ClientDesktopConfigActions } = this.props;
+    const { ClientGroupActions, ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const clickedRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
+    const selectRowObject = getRowObjectById(ClientGroupProps, compId, id, 'grpId');
 
     ClientGroupActions.showClientGroupInform({
       compId: compId,
-      selectedViewItem: clickedRowObject,
+      viewItem: selectRowObject,
     });
     
-    // '단말정책설정' : 정책 정보 변경
-    ClientConfSettingActions.getClientConfSetting({
-      compId: compId,
-      objId: clickedRowObject.get('clientConfigId')
+    // 정책 조회
+    ClientConfSettingActions.getClientConfByGroupId({
+      compId: compId, groupId: id
+    });   
+    ClientHostNameActions.getClientHostNameByGroupId({
+      compId: compId, groupId: id
+    });   
+    ClientUpdateServerActions.getClientUpdateServerByGroupId({
+      compId: compId, groupId: id
     });   
 
-    // 'Hosts설정' : 정책 정보 변경
-    ClientHostNameActions.getClientHostName({
-      compId: compId,
-      objId: clickedRowObject.get('hostNameConfigId')
-    });   
-
-    // '업데이트서버설정' : 정책 정보 변경
-    ClientUpdateServerActions.getClientUpdateServer({
-      compId: compId,
-      objId: clickedRowObject.get('updateServerConfigId')
-    });   
-
-    // '데스크톱 정보설정' : 정책 정보 변경
-    ClientDesktopConfigActions.getClientDesktopConfig({
-      compId: compId,
-      desktopConfId: clickedRowObject.get('desktopConfigId')
-    });   
+    // get browser rule info
+    BrowserRuleActions.getBrowserRuleByGroupId({
+      compId: compId, groupId: id
+    });
+    // get media control setting info
+    MediaRuleActions.getMediaRuleByGroupId({
+      compId: compId, groupId: id
+    });
+    // get client secu info
+    SecurityRuleActions.getSecurityRuleByGroupId({
+      compId: compId, groupId: id
+    });
+    // get filtered software rule
+    SoftwareFilterActions.getSoftwareFilterByGroupId({ 
+      compId: compId, groupId: grpId 
+    });
+    // get desktop conf info
+    DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: grpId });   
   };
   // .................................................
 
   // add
   handleCreateButton = () => {
     this.props.ClientGroupActions.showDialog({
-      selectedViewItem: Map(),
+      viewItem: Map(),
       dialogType: ClientGroupDialog.TYPE_ADD
     });
   }
 
   // edit
   handleEditClick = (event, id) => {
+    event.stopPropagation();
     const { ClientGroupProps, ClientGroupActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
+    const viewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
     ClientGroupActions.showDialog({
-      selectedViewItem: selectedViewItem,
+      viewItem: viewItem,
       dialogType: ClientGroupDialog.TYPE_EDIT
     });
   };
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { ClientGroupProps, GrConfirmActions } = this.props;
-    const selectedViewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
-    GrConfirmActions.showConfirm({
+    event.stopPropagation();
+    const { ClientGroupProps, GRConfirmActions } = this.props;
+    const viewItem = getRowObjectById(ClientGroupProps, this.props.match.params.grMenuId, id, 'grpId');
+    GRConfirmActions.showConfirm({
       confirmTitle: '단말그룹 삭제',
-      confirmMsg: '단말그룹(' + selectedViewItem.get('grpNm') + ')을 삭제하시겠습니까?',
+      confirmMsg: '단말그룹(' + viewItem.get('grpNm') + ')을 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true,
-      confirmObject: selectedViewItem
+      confirmObject: viewItem
     });
   };
   handleDeleteConfirmResult = (confirmValue, confirmObject) => {
@@ -181,15 +188,10 @@ class ClientGroupManage extends Component {
   };
 
   // .................................................
-  handleSelectBtnClick = () => {
-    const { ClientGroupActions, ClientGroupProps } = this.props;
-    ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.match.params.grMenuId);
-  };
-  
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.ClientGroupActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   }
@@ -197,44 +199,40 @@ class ClientGroupManage extends Component {
   render() {
     const { classes } = this.props;
     const { ClientGroupProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;// = ClientGroupProps.listParam.rowsPerPage - ClientGroupProps.listData.length;
-
+    
     const listObj = ClientGroupProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
 
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
 
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={6} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
-
-              <Grid item xs={6} >
-                <FormControl fullWidth={true}>
-                  <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={6} >
-                <Button size="small" variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />
-                  조회
-                </Button>
-
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={6}>
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
+                <Grid item xs={6} >
+                  <FormControl fullWidth={true}>
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                  </FormControl>
+                </Grid>
+                <Grid item xs={6} >
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                    <Search />{t("btnSearch")}
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-
-            <Grid item xs={6} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button size="small" variant="contained" color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+            <Grid item xs={6}>
+              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
+                <AddIcon />{t("btnRegist")}
               </Button>
             </Grid>
           </Grid>
@@ -243,7 +241,7 @@ class ClientGroupManage extends Component {
           {(listObj) && 
             <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="grpId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
@@ -255,9 +253,8 @@ class ClientGroupManage extends Component {
                 {listObj.get('listData').map(n => {
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('grpId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('grpId'))}
                       key={n.get('grpId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
@@ -269,7 +266,7 @@ class ClientGroupManage extends Component {
                         <Button color='secondary' size="small" 
                           className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('grpId'))}>
-                          <BuildIcon />
+                          <SettingsApplicationsIcon />
                         </Button>
                         <Button color='secondary' size="small"
                           className={classes.buttonInTableRow} 
@@ -281,14 +278,14 @@ class ClientGroupManage extends Component {
                   );
                 })}
 
-                {emptyRows > 0 && (
-                <TableRow >
-                  <TableCell
-                    colSpan={this.columnHeaders.length + 1}
-                    className={classes.grSmallAndClickCell}
-                  />
-                </TableRow>
-                )}
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={this.columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
+                  </TableRow>
+                )}))}
               </TableBody>
             </Table>
             <TablePagination
@@ -309,12 +306,11 @@ class ClientGroupManage extends Component {
             </div>
           }
 
-        </GrPane>
-        <ClientGroupInform compId={compId} />
+        </GRPane>
+        <ClientGroupSpec compId={compId} />
         <ClientGroupDialog compId={compId} />
-        <GrConfirm />
+        <GRConfirm />
       </React.Fragment>
-
 
     );
   }
@@ -324,8 +320,7 @@ const mapStateToProps = (state) => ({
   ClientGroupProps: state.ClientGroupModule,
   ClientConfSettingProps: state.ClientConfSettingModule,
   ClientHostNameProps: state.ClientHostNameModule,
-  ClientUpdateServerProps: state.ClientUpdateServerModule,
-  ClientDesktopConfigProps: state.ClientDesktopConfigModule
+  ClientUpdateServerProps: state.ClientUpdateServerModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -334,11 +329,16 @@ const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
   ClientHostNameActions: bindActionCreators(ClientHostNameActions, dispatch),
   ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch),
-  ClientDesktopConfigActions: bindActionCreators(ClientDesktopConfigActions, dispatch),
 
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
+  MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
+  SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
+  SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+  DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch),
+  
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientGroupManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupManage)));
 
 

@@ -1,315 +1,194 @@
 import { handleActions } from 'redux-actions';
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
 
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
+import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
-const GET_PROFILESET_LIST_PENDING = 'clientProfileSet/GET_LIST_PENDING';
-const GET_PROFILESET_LIST_SUCCESS = 'clientProfileSet/GET_LIST_SUCCESS';
-const GET_PROFILESET_LIST_FAILURE = 'clientProfileSet/GET_LIST_FAILURE';
+const COMMON_PENDING = 'clientProfileSet/COMMON_PENDING';
+const COMMON_FAILURE = 'clientProfileSet/COMMON_FAILURE';
 
-const CREATE_PROFILESET_DATA_PENDING = 'clientProfileSet/CREATE_DATA_PENDING';
+const CHG_LISTPARAM_DATA = 'adminUser/CHG_LISTPARAM_DATA';
+const GET_PROFILESET_LISTPAGED_SUCCESS = 'clientProfileSet/GET_LIST_SUCCESS';
+
 const CREATE_PROFILESET_DATA_SUCCESS = 'clientProfileSet/CREATE_DATA_SUCCESS';
-const CREATE_PROFILESET_DATA_FAILURE = 'clientProfileSet/CREATE_DATA_FAILURE';
-
-const EDIT_PROFILESET_DATA_PENDING = 'clientProfileSet/EDIT_DATA_PENDING';
 const EDIT_PROFILESET_DATA_SUCCESS = 'clientProfileSet/EDIT_DATA_SUCCESS';
-const EDIT_PROFILESET_DATA_FAILURE = 'clientProfileSet/EDIT_DATA_FAILURE';
-
-const DELETE_PROFILESET_DATA_PENDING = 'clientProfileSet/DELETE_DATA_PENDING';
 const DELETE_PROFILESET_DATA_SUCCESS = 'clientProfileSet/DELETE_DATA_SUCCESS';
-const DELETE_PROFILESET_DATA_FAILURE = 'clientProfileSet/DELETE_DATA_FAILURE';
 
-const CREATE_PROFILESET_JOB_PENDING = 'clientProfileSet/CREATE_JOB_PENDING';
 const CREATE_PROFILESET_JOB_SUCCESS = 'clientProfileSet/CREATE_JOB_SUCCESS';
-const CREATE_PROFILESET_JOB_FAILURE = 'clientProfileSet/CREATE_JOB_FAILURE';
 
 const SHOW_PROFILESET_DIALOG = 'clientProfileSet/SHOW_PROFILESET_DIALOG';
 const CLOSE_PROFILESET_DIALOG = 'clientProfileSet/CLOSE_PROFILESET_DIALOG';
-const CHG_PROFILESET_PARAM = 'clientProfileSet/CHG_PROFILESET_PARAM';
-const SET_PROFILESET_SELECTED = 'clientProfileSet/SET_PROFILESET_SELECTED';
 
+const SET_EDITING_ITEM_VALUE = 'clientProfileSet/SET_EDITING_ITEM_VALUE';
 
 
 // ...
-const initialState = {
-    pending: false,
-    error: false,
-    resultMsg: '',
+const initialState = commonHandleActions.getCommonInitialState('chProfileSetNo', 'desc');
 
-    listData: [],
-    listParam: {
-        keyword: '',
-        orderDir: 'desc',
-        orderColumn: 'chProfileSetNo',
-        page: 0,
-        rowsPerPage: 10,
-        // rowsPerPageOptions: [5, 10, 25],
-        rowsTotal: 0,
-        rowsFiltered: 0
-    },
+export const showDialog = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_PROFILESET_DIALOG,
+        viewItem: param.viewItem,
+        dialogType: param.dialogType
+    });
+};
 
-    selectedViewItem: {
-        profileNo: '',
-        profileNm: '',
-        profileCmt: '',
-        clientId: '',
-        clientNm: '',
-        targetClientIds: '',
-        targetClientIdArray: [],
-        targetGroupIds: '',
-        targetGroupIdArray: [],
-        isRemoval: 'false'
-    },
-
-    dialogOpen: false,
-    dialogType: '',
-
+export const closeDialog = () => dispatch => {
+    return dispatch({
+        type: CLOSE_PROFILESET_DIALOG
+    });
 };
 
 
 // ...
-export const readClientProfileSetList = (param) => dispatch => {
+export const readClientProfileSetListPaged = (module, compId, extParam) => dispatch => {
+    const newListParam = (module.getIn(['viewItems', compId])) ? 
+        module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
+        module.get('defaultListParam');
 
-    const resetParam = {
-        keyword: param.keyword,
-        page: param.page,
-        start: param.page * param.rowsPerPage,
-        length: param.rowsPerPage,
-        orderColumn: param.orderColumn,
-        orderDir: param.orderDir
-    };
-
-    dispatch({type: GET_PROFILESET_LIST_PENDING});
-    return requestPostAPI('readProfileSetListPaged', resetParam).then(
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('readProfileSetListPaged', {
+        keyword: newListParam.get('keyword'),
+        page: newListParam.get('page'),
+        start: newListParam.get('page') * newListParam.get('rowsPerPage'),
+        length: newListParam.get('rowsPerPage'),
+        orderColumn: newListParam.get('orderColumn'),
+        orderDir: newListParam.get('orderDir')
+    }).then(
         (response) => {
             dispatch({
-                type: GET_PROFILESET_LIST_SUCCESS,
-                payload: response
+                type: GET_PROFILESET_LISTPAGED_SUCCESS,
+                compId: compId,
+                listParam: newListParam,
+                response: response
             });
         }
     ).catch(error => {
-        dispatch({
-            type: GET_PROFILESET_LIST_FAILURE,
-            payload: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+export const setEditingItemValue = (param) => dispatch => {
+    return dispatch({
+        type: SET_EDITING_ITEM_VALUE,
+        name: param.name,
+        value: param.value
+    });
+};
+
+export const changeListParamData = (param) => dispatch => {
+    return dispatch({
+        type: CHG_LISTPARAM_DATA,
+        compId: param.compId,
+        name: param.name,
+        value: param.value
     });
 };
 
 // create (add)
 export const createClientProfileSetData = (param) => dispatch => {
-    dispatch({type: CREATE_PROFILESET_DATA_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('createProfileSet', param).then(
         (response) => {
             try {
                 if(response.data.status.result === 'success') {
                     dispatch({
                         type: CREATE_PROFILESET_DATA_SUCCESS,
-                        payload: response
+                        response: response
                     });
                 }
-            } catch(ex) {
-                dispatch({
-                    type: CREATE_PROFILESET_DATA_FAILURE,
-                    payload: response
-                });
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: CREATE_PROFILESET_DATA_FAILURE,
-            payload: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
 // edit
 export const editClientProfileSetData = (param) => dispatch => {
-    dispatch({type: EDIT_PROFILESET_DATA_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('editProfileSetData', param).then(
         (response) => {
             dispatch({
                 type: EDIT_PROFILESET_DATA_SUCCESS,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
-        dispatch({
-            type: EDIT_PROFILESET_DATA_FAILURE,
-            payload: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
 // delete
 export const deleteClientProfileSetData = (param) => dispatch => {
-    dispatch({type: DELETE_PROFILESET_DATA_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteProfileSetData', param).then(
         (response) => {
             dispatch({
                 type: DELETE_PROFILESET_DATA_SUCCESS,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
-        dispatch({
-            type: DELETE_PROFILESET_DATA_FAILURE,
-            payload: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
 // create profile job
 export const createClientProfileSetJob = (param) => dispatch => {
-    dispatch({type: CREATE_PROFILESET_JOB_PENDING});
+    dispatch({type: COMMON_PENDING});
     return requestPostAPI('createProfileJob', param).then(
         (response) => {
             dispatch({
                 type: CREATE_PROFILESET_JOB_SUCCESS,
-                payload: response
+                response: response
             });
         }
     ).catch(error => {
-        dispatch({
-            type: CREATE_PROFILESET_JOB_FAILURE,
-            payload: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
-
-
-export const setSelectedItem = (param) => dispatch => {
-    return dispatch({
-        type: SET_PROFILESET_SELECTED,
-        payload: param
-    });
-};
-
-export const showDialog = (param) => dispatch => {
-    return dispatch({
-        type: SHOW_PROFILESET_DIALOG,
-        payload: param
-    });
-};
-
-export const closeDialog = (param) => dispatch => {
-    return dispatch({
-        type: CLOSE_PROFILESET_DIALOG,
-        payload: param
-    });
-};
-
-export const changeParamValue = (param) => dispatch => {
-    return dispatch({
-        type: CHG_PROFILESET_PARAM,
-        payload: param
-    });
-};
-
 
 export default handleActions({
 
-    [GET_PROFILESET_LIST_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
+    [COMMON_PENDING]: (state, action) => {
+        return state.merge({ pending: true, error: false });
     },
-    [GET_PROFILESET_LIST_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, orderDir, orderColumn, rowLength } = action.payload.data;
-
-        let tempListParam = state.listParam;
-        Object.assign(tempListParam, {
-            rowsFiltered: parseInt(recordsFiltered, 10),
-            rowsTotal: parseInt(recordsTotal, 10),
-            page: parseInt(draw, 10),
-            rowsPerPage: parseInt(rowLength, 10)
+    [COMMON_FAILURE]: (state, action) => {
+        return state.merge({ pending: false, error: true,
+            resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
+            errorObj: (action.error) ? action.error : ''
         });
+    },
 
-        return {
-            ...state,
-            pending: false,
-            error: false,
-            listData: data,
-            listParam: tempListParam
-        };
+    [GET_PROFILESET_LISTPAGED_SUCCESS]: (state, action) => {
+        return commonHandleActions.handleListPagedAction(state, action);
     },
-    [GET_PROFILESET_LIST_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true
-        };
-    },
-    [CREATE_PROFILESET_DATA_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
+    [CHG_LISTPARAM_DATA]: (state, action) => {
+        return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
     [CREATE_PROFILESET_DATA_SUCCESS]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: false,
-        };
-    },
-    [CREATE_PROFILESET_DATA_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true,
-            resultMsg: action.payload.data.status.message
-        };
+        return state.merge({
+            pending: false, error: false
+        });
     },
     [SHOW_PROFILESET_DIALOG]: (state, action) => {
-        return {
-            ...state,
-            selectedViewItem: action.payload.selectedViewItem,
-            dialogOpen: action.payload.dialogOpen,
-            dialogType: action.payload.dialogType,
-        };
+        return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_PROFILESET_DIALOG]: (state, action) => {
-        return {
-            ...state,
-            dialogOpen: action.payload.dialogOpen
-        }
+        return commonHandleActions.handleCloseDialogAction(state.set('dialogTabValue', 0), action);
     },
-    [CHG_PROFILESET_PARAM]: (state, action) => {
-        const newSelectedItem = getMergedObject(state.selectedViewItem, {[action.payload.name]: action.payload.value});
-        return {
-            ...state,
-            selectedViewItem: newSelectedItem
-        }
-    },
-    [SET_PROFILESET_SELECTED]: (state, action) => {
-        return {
-            ...state,
-            selectedViewItem: action.payload.selectedViewItem
-        }
-    },
-    [CREATE_PROFILESET_JOB_PENDING]: (state, action) => {
-        return {
-            ...state,
-            pending: true,
-            error: false
-        };
+    [SET_EDITING_ITEM_VALUE]: (state, action) => {
+        return state.merge({
+            editingItem: state.get('editingItem').merge({[action.name]: action.value})
+        });
     },
     [CREATE_PROFILESET_JOB_SUCCESS]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: false,
-        };
-    },
-    [CREATE_PROFILESET_JOB_FAILURE]: (state, action) => {
-        return {
-            ...state,
-            pending: false,
-            error: true
-        };
+        return state.merge({
+            pending: true, 
+            error: false
+        });
     },
 
 }, initialState);
