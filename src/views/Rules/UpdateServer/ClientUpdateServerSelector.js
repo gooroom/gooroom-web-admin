@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -6,10 +7,12 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { generateUpdateServerObject } from './ClientUpdateServerSpec';
 
-import ClientUpdateServerComp from './ClientUpdateServerComp';
-import { getDataObjectInComp, getSelectedObjectInComp } from 'components/GrUtils/GrTableListUtils';
+import * as ClientUpdateServerActions from 'modules/ClientUpdateServerModule';
+import ClientUpdateServerSpec from './ClientUpdateServerSpec';
+import ClientUpdateServerDialog from './ClientUpdateServerDialog';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -22,70 +25,80 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientUpdateServerSelector extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true
-    };
-  }
 
   componentDidMount() {
-    this.props.ClientUpdateServerActions.readClientUpdateServerList(this.props.ClientUpdateServerProps, this.props.compId);
-    this.props.ClientUpdateServerActions.changeCompVariable({
-      compId: this.props.compId,
-      name: 'selectedOptionItemId',
-      value: this.props.initId
-    });
+    const { ClientUpdateServerProps, ClientUpdateServerActions, compId, targetType } = this.props;
+    //
+    ClientUpdateServerActions.readClientUpdateServerList(ClientUpdateServerProps, compId, targetType);
+    //
   }
 
   handleChange = (event, value) => {
-    this.props.ClientUpdateServerActions.changeCompVariable({
+    const { ClientUpdateServerActions, compId, targetType } = this.props;
+    ClientUpdateServerActions.changeCompVariable({
       compId: this.props.compId,
       name: 'selectedOptionItemId',
-      value: event.target.value
+      value: event.target.value,
+      targetType: targetType
     });
   };
+
+  // ===================================================================
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientUpdateServerProps, compId, targetType);
+    this.props.ClientUpdateServerActions.showDialog({
+      viewItem: generateUpdateServerObject(viewItem, false),
+      dialogType: ClientUpdateServerDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
 
   // .................................................
   render() {
     const { classes } = this.props;
-    const { ClientUpdateServerProps, compId } = this.props;
+    const { ClientUpdateServerProps, compId, targetType } = this.props;
+    const { t, i18n } = this.props;
+    
+    const selectedObj = (targetType && targetType != '') ? ClientUpdateServerProps.getIn(['viewItems', compId, targetType]) : ClientUpdateServerProps.getIn(['viewItems', compId]);
 
-    const selectedViewItem = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = ClientUpdateServerProps.getIn(['viewItems', compId, 'listAllData']);
-    let selectedOptionItemId = ClientUpdateServerProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    let selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
-      selectedOptionItemId = listAllData.getIn([0, 'objId']);
+      selectedOptionItemId = '-';
     }
+
+    let selectedData = null;
+    if(listAllData && listAllData.size > 0) {
+      selectedData = listAllData.find((element) => {
+        return element.get('objId') == selectedOptionItemId;
+      });
+    };
 
     return (
       <Card className={classes.card}>
-        <CardContent>
+        <CardContent style={{padding: 0}}>
         {listAllData && 
-        <FormControl className={classes.formControl} style={{width: '100%'}}>
-          <InputLabel htmlFor="cfg-helper"></InputLabel>
-          <Select value={selectedOptionItemId}
-            onChange={this.handleChange}
-          >
-          {listAllData.map(item => (
-            <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
-          ))}
-          </Select>
-          <FormHelperText>업데이트서버 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
-        </FormControl>
+          <div style={{width:'100%',textAlign:'center'}}>
+            <FormControl className={classes.formControl} style={{marginBottom: 10, marginTop: 26, padding: '0px 20px 0px 20px'}}>
+              <Select value={selectedOptionItemId} style={{backgroundColor:'#f9eaea'}} onChange={this.handleChange} >
+                <MenuItem key={'-'} value={'-'}>{t("selNoSelected")}</MenuItem>
+                {listAllData.map(item => (
+                  <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>{t("msgShowDetailUpdateServer")}</FormHelperText>
+            </FormControl>
+          </div>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientUpdateServerComp
-            compId={compId}
-            objId={selectedOptionItemId}
-            compType="VIEW"
+          <ClientUpdateServerSpec compId={compId} specType="inform" hasAction={false}
+            targetType={targetType} selectedItem={selectedData}
+            onClickEdit={this.handleClickEdit}
           />
         }
         </CardContent>
@@ -104,6 +117,6 @@ const mapDispatchToProps = (dispatch) => ({
   ClientUpdateServerActions: bindActionCreators(ClientUpdateServerActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientUpdateServerSelector));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientUpdateServerSelector)));
 
 

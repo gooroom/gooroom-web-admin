@@ -1,55 +1,36 @@
 import { handleActions } from 'redux-actions';
-import { Map, List, fromJS } from 'immutable';
 
-import { requestPostAPI } from 'components/GrUtils/GrRequester';
+import { requestPostAPI } from 'components/GRUtils/GRRequester';
+import * as commonHandleActions from 'modules/commons/commonHandleActions';
 
-const COMMON_PENDING = 'groupComp/COMMON_PENDING';
-const COMMON_FAILURE = 'groupComp/COMMON_FAILURE';
+const COMMON_PENDING = 'clientGroup/COMMON_PENDING';
+const COMMON_FAILURE = 'clientGroup/COMMON_FAILURE';
 
-const GET_GROUP_LIST_SUCCESS = 'groupComp/GET_GROUP_LIST_SUCCESS';
-const GET_GROUP_LISTPAGED_SUCCESS = 'groupComp/GET_GROUP_LISTPAGED_SUCCESS';
+const GET_GROUP_LISTPAGED_SUCCESS = 'clientGroup/GET_GROUP_LISTPAGED_SUCCESS';
 
-const CREATE_CLIENTGROUP_SUCCESS = 'groupComp/CREATE_CLIENTGROUP_SUCCESS';
-const EDIT_CLIENTGROUP_SUCCESS = 'groupComp/EDIT_CLIENTGROUP_SUCCESS';
-const DELETE_CLIENTGROUP_SUCCESS = 'groupComp/DELETE_CLIENTGROUP_SUCCESS';
+const CREATE_CLIENTGROUP_SUCCESS = 'clientGroup/CREATE_CLIENTGROUP_SUCCESS';
+const EDIT_CLIENTGROUP_SUCCESS = 'clientGroup/EDIT_CLIENTGROUP_SUCCESS';
+const DELETE_CLIENTGROUP_SUCCESS = 'clientGroup/DELETE_CLIENTGROUP_SUCCESS';
 
-const SHOW_CLIENTGROUP_INFORM = 'groupComp/SHOW_CLIENTGROUP_INFORM';
-const CLOSE_CLIENTGROUP_INFORM = 'groupComp/CLOSE_CLIENTGROUP_INFORM';
-const SHOW_CLIENTGROUP_DIALOG = 'groupComp/SHOW_CLIENTGROUP_DIALOG';
-const CLOSE_CLIENTGROUP_DIALOG = 'groupComp/CLOSE_CLIENTGROUP_DIALOG';
+const SHOW_CLIENTGROUP_INFORM = 'clientGroup/SHOW_CLIENTGROUP_INFORM';
+const CLOSE_CLIENTGROUP_INFORM = 'clientGroup/CLOSE_CLIENTGROUP_INFORM';
+const SHOW_CLIENTGROUP_DIALOG = 'clientGroup/SHOW_CLIENTGROUP_DIALOG';
+const CLOSE_CLIENTGROUP_DIALOG = 'clientGroup/CLOSE_CLIENTGROUP_DIALOG';
 
-const SET_EDITING_ITEM_VALUE = 'groupComp/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_ITEM_VALUE = 'clientGroup/SET_EDITING_ITEM_VALUE';
 
-const CHG_LISTPARAM_DATA = 'groupComp/CHG_LISTPARAM_DATA';
-const CHG_COMPVARIABLE_DATA = 'groupComp/CHG_COMPVARIABLE_DATA';
-const CHG_STORE_DATA = 'groupComp/CHG_STORE_DATA';
+const CHG_LISTPARAM_DATA = 'clientGroup/CHG_LISTPARAM_DATA';
+const CHG_COMPDATA_VALUE = 'clientGroup/CHG_COMPDATA_VALUE';
+const ADD_CLIENTINGROUP_SUCCESS = 'clientGroup/ADD_CLIENTINGROUP_SUCCESS';
+const REMOVE_CLIENTINGROUP_SUCCESS = 'clientGroup/REMOVE_CLIENTINGROUP_SUCCESS';
 
 // ...
-const initialState = Map({
-    pending: false,
-    error: false,
-    resultMsg: '',
-
-    defaultListParam: Map({
-        keyword: '',
-        orderDir: 'desc',
-        orderColumn: 'chGrpNm',
-        page: 0,
-        rowsPerPage: 10,
-        rowsPerPageOptions: List([5, 10, 25]),
-        rowsTotal: 0,
-        rowsFiltered: 0
-    }),
-
-    dialogOpen: false,
-    dialogType: '',
-    dialogTabValue: 0
-});
+const initialState = commonHandleActions.getCommonInitialState('chGrpNm', 'asc', {dialogTabValue: 0});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTGROUP_DIALOG,
-        selectedViewItem: param.selectedViewItem,
+        viewItem: param.viewItem,
         dialogType: param.dialogType
     });
 };
@@ -64,7 +45,8 @@ export const showClientGroupInform = (param) => dispatch => {
     return dispatch({
         type: SHOW_CLIENTGROUP_INFORM,
         compId: param.compId,
-        selectedViewItem: param.selectedViewItem
+        selectId: param.selectId,
+        viewItem: param.viewItem
     });
 };
 
@@ -76,7 +58,6 @@ export const closeClientGroupInform = (param) => dispatch => {
 };
 
 export const readClientGroupListPaged = (module, compId, extParam) => dispatch => {
-
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
@@ -99,10 +80,7 @@ export const readClientGroupListPaged = (module, compId, extParam) => dispatch =
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -125,31 +103,35 @@ export const changeListParamData = (param) => dispatch => {
 
 export const changeCompVariable = (param) => dispatch => {
     return dispatch({
-        type: CHG_COMPVARIABLE_DATA,
+        type: CHG_COMPDATA_VALUE,
         compId: param.compId,
         name: param.name,
-        value: param.value
+        value: param.value,
+        targetType: param.targetType
     });
 };
 
-export const changeStoreData = (param) => dispatch => {
-    return dispatch({
-        type: CHG_STORE_DATA,
-        name: param.name,
-        value: param.value
-    });
-};
+const makeParameter = (param) => {
+    return {
+        groupId: param.groupId,
+        groupName: param.groupName,
+        groupComment: param.groupComment,
+        
+        clientConfigId: (param.clientConfigId == '-') ? '' : param.clientConfigId,
+        hostNameConfigId: (param.hostNameConfigId == '-') ? '' : param.hostNameConfigId,
+        updateServerConfigId: (param.updateServerConfigId == '-') ? '' : param.updateServerConfigId,
+        browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
+        mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
+        securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
+        filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
+        desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId
+    };
+}
 
 // create (add)
 export const createClientGroupData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('createClientGroup', {
-        groupName: param.groupName,
-        groupComment: param.groupComment,
-        clientConfigId: param.clientConfigId,
-        hostNameConfigId: param.hostNameConfigId,
-        updateServerConfigId: param.updateServerConfigId
-    }).then(
+    return requestPostAPI('createClientGroup', makeParameter(param)).then(
         (response) => {
             try {
                 if(response.data.status && response.data.status.result === 'success') {
@@ -158,59 +140,39 @@ export const createClientGroupData = (param) => dispatch => {
                         response: response
                     });
                 }
-            } catch(ex) {
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: null,
-                    ex: ex
-                });
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
 // edit
 export const editClientGroupData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateClientGroup', {
-        groupId: param.groupId,
-        groupName: param.groupName,
-        groupComment: param.groupComment,
-        clientConfigId: param.clientConfigId,
-        hostNameConfigId: param.hostNameConfigId,
-        updateServerConfigId: param.updateServerConfigId
-    }).then(
+    return requestPostAPI('updateClientGroup', makeParameter(param)).then(
         (response) => {
             if(response && response.data && response.data.status && response.data.status.result == 'success') {
-                // alarm ... success
-                requestPostAPI('readClientGroupData', {'groupId': item.get('grpId')}).then(
+
+                requestPostAPI('readClientGroupData', {'groupId': param.groupId}).then(
                     (response) => {
                         dispatch({
                             type: EDIT_CLIENTGROUP_SUCCESS,
-                            grpId: item.get('grpId'),
+                            grpId: param.groupId,
                             response: response
                         });
                     }
                 ).catch(error => {
+                    dispatch({ type: COMMON_FAILURE, error: error });
                 });
             } else {
-                // alarm ... fail
-                dispatch({
-                    type: COMMON_FAILURE,
-                    error: error
-                });
+                dispatch({ type: COMMON_FAILURE, error: error });
             }
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -226,10 +188,7 @@ export const deleteClientGroupData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -245,10 +204,48 @@ export const deleteSelectedClientGroupData = (param) => dispatch => {
             });
         }
     ).catch(error => {
-        dispatch({
-            type: COMMON_FAILURE,
-            error: error
-        });
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+
+// add clients in group
+export const addClientsInGroup = (itemObj) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('addClientsInGroup', itemObj).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: ADD_CLIENTINGROUP_SUCCESS
+                    });
+                }    
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// delete clients in group
+export const removeClientsInGroup = (itemObj) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('removeClientsInGroup', itemObj).then(
+        (response) => {
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: REMOVE_CLIENTINGROUP_SUCCESS
+                    });
+                }    
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+            }
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
 
@@ -256,56 +253,29 @@ export const deleteSelectedClientGroupData = (param) => dispatch => {
 export default handleActions({
 
     [COMMON_PENDING]: (state, action) => {
-        return state.merge({
-            pending: true, 
-            error: false
-        });
+        return state.merge({ pending: true, error: false });
     },
     [COMMON_FAILURE]: (state, action) => {
-        return state.merge({
-            pending: false, 
-            error: true,
+        return state.merge({ pending: false, error: true,
             resultMsg: (action.error && action.error.status) ? action.error.status.message : '',
-            ex:  (action.ex) ? action.ex : ''
+            errorObj: (action.error) ? action.error : ''
         });
     },
 
     [GET_GROUP_LISTPAGED_SUCCESS]: (state, action) => {
-        const { data, recordsFiltered, recordsTotal, draw, rowLength, orderColumn, orderDir } = action.response.data;
-        return state.setIn(['viewItems', action.compId], Map({
-            'listData': List(data.map((e) => {return Map(e)})),
-            'listParam': state.get('defaultListParam').merge({
-                rowsFiltered: parseInt(recordsFiltered, 10),
-                rowsTotal: parseInt(recordsTotal, 10),
-                page: parseInt(draw, 10),
-                rowsPerPage: parseInt(rowLength, 10),
-                orderColumn: orderColumn,
-                orderDir: orderDir
-            })
-        }));
+        return commonHandleActions.handleListPagedAction(state, action);
     },
     [SHOW_CLIENTGROUP_DIALOG]: (state, action) => {
-        return state.merge({
-            editingItem: action.selectedViewItem,
-            dialogOpen: true,
-            dialogType: action.dialogType,
-        });
+        return commonHandleActions.handleShowDialogAction(state, action);
     },
     [CLOSE_CLIENTGROUP_DIALOG]: (state, action) => {
-        return state.merge({
-            dialogOpen: false,
-            dialogType: ''
-        });
+        return commonHandleActions.handleCloseDialogAction(state.set('dialogTabValue', 0), action);
     },
     [SHOW_CLIENTGROUP_INFORM]: (state, action) => {
-        return state
-                .setIn(['viewItems', action.compId, 'selectedViewItem'], action.selectedViewItem)
-                .setIn(['viewItems', action.compId, 'informOpen'], true);
+        return commonHandleActions.handleShowInformAction(state, action);
     },
     [CLOSE_CLIENTGROUP_INFORM]: (state, action) => {
-        return state
-                .setIn(['viewItems', action.compId, 'informOpen'], false)
-                .deleteIn(['viewItems', action.compId, 'selectedViewItem']);
+        return commonHandleActions.handleCloseInformAction(state, action);
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({
@@ -315,58 +285,48 @@ export default handleActions({
     [CHG_LISTPARAM_DATA]: (state, action) => {
         return state.setIn(['viewItems', action.compId, 'listParam', action.name], action.value);
     },
-    [CHG_COMPVARIABLE_DATA]: (state, action) => {
-        return state.setIn(['viewItems', action.compId, action.name], action.value);
-    },
-    [CHG_STORE_DATA]: (state, action) => {
-        return state.merge({
-            [action.name]: action.value
-        });
+    [CHG_COMPDATA_VALUE]: (state, action) => {
+        return commonHandleActions.handleChangeCompValue(state, action);
     },
     [CREATE_CLIENTGROUP_SUCCESS]: (state, action) => {
         return state.merge({
-            pending: false,
-            error: false
+            pending: false, error: false
         });
     },
     [EDIT_CLIENTGROUP_SUCCESS]: (state, action) => {
         let newState = state;
         if(newState.get('viewItems')) {
             newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'grpId']) == action.grpId) {
-                        // replace
-                        newState = newState.setIn(['viewItems', i, 'selectedViewItem'], fromJS(action.response.data.data[0]));
-                    }
-                }
+                newState = newState
+                        .deleteIn(['viewItems', i, 'viewItem'])
+                        .setIn(['viewItems', i, 'informOpen'], false)
+                        .delete('editingItem')
+                        .merge({
+                            pending: false,
+                            error: false,
+                            dialogOpen: false,
+                            dialogType: ''
+                        });
             });
         }
-        return state.merge(newState).merge({
-            pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
-        });
+
+        return newState;
     },
     [DELETE_CLIENTGROUP_SUCCESS]: (state, action) => {
-        let newState = state;
-        if(newState.get('viewItems')) {
-            newState.get('viewItems').forEach((e, i) => {
-                if(e.get('selectedViewItem')) {
-                    if(e.getIn(['selectedViewItem', 'grpId']) == action.grpId) {
-                        // replace
-                        newState = newState.deleteIn(['viewItems', i, 'selectedViewItem']);
-                    }
-                }
-            });
-        }
-        return state.merge(newState).merge({
+        return commonHandleActions.handleDeleteSuccessAction(state, action, 'grpId');
+    },
+    [ADD_CLIENTINGROUP_SUCCESS]: (state, action) => {
+        return state.merge({
             pending: false,
-            error: false,
-            dialogOpen: false,
-            dialogType: ''
+            error: false
         });
     },
+    [REMOVE_CLIENTINGROUP_SUCCESS]: (state, action) => {
+        return state.merge({
+            pending: false,
+            error: false
+        });
+    }
 
 }, initialState);
 

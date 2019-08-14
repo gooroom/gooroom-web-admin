@@ -1,0 +1,15 @@
+
+1. node_modules\react-form-validator-core\lib\ValidatorForm.js
+
+    onSubmit 을 옵션으로 변경
+    194: onSubmit: _propTypes2.default.func.isRequired,
+    ->
+    194: //onSubmit: _propTypes2.default.func.isRequired,
+
+2. node_modules\@nivo\bar\cjs\nivo-bar.js
+
+    리젠드에 제로값 표시 안되는 문제 처리
+    131 : if (barWidth > 0 && barHeight > 0) {
+    ->
+    131 : if (barWidth >= 0 && barHeight >= 0) {
+

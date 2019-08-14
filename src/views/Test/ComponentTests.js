@@ -5,14 +5,14 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { getMergedObject } from 'components/GrUtils/GrCommonUtils';
+import { getMergedObject } from 'components/GRUtils/GRCommonUtils';
 
-import GrPageHeader from 'containers/GrContent/GrPageHeader';
-import GrConfirm from 'components/GrComponents/GrConfirm';
+import GRPageHeader from 'containers/GRContent/GRPageHeader';
+import GRConfirm from 'components/GRComponents/GRConfirm';
 
-import GrPane from 'containers/GrContent/GrPane';
+import GRPane from 'containers/GRContent/GRPane';
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -21,7 +21,7 @@ import ClientGroupComp from 'views/ClientGroup/ClientGroupComp'
 import ClientManageComp from 'views/Client/ClientManageComp'
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 
 //
@@ -47,7 +47,7 @@ class ComponentTests extends Component {
 
   }
   
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     
   };
 
@@ -59,28 +59,26 @@ class ComponentTests extends Component {
   // delete
   handleDeleteClick = (event, id) => {
     event.stopPropagation();
-    const { ClientConfSettingProps, ClientConfSettingActions, GrConfirmActions } = this.props;
+    const { ClientConfSettingProps, ClientConfSettingActions, GRConfirmActions } = this.props;
 
-    const selectedViewItem = ClientConfSettingProps.listData.find(function(element) {
+    const viewItem = ClientConfSettingProps.listData.find(function(element) {
       return element.objId == id;
     });
 
     ClientConfSettingActions.setSelectedItemObj({
-      selectedViewItem: Object.assign(ClientConfSettingProps.selectedViewItem, selectedViewItem)
+      viewItem: Object.assign(ClientConfSettingProps.viewItem, viewItem)
     });
-    const re = GrConfirmActions.showConfirm({
+    const re = GRConfirmActions.showConfirm({
       confirmTitle: '단말정책정보 삭제',
-      confirmMsg: '단말정책정보(' + selectedViewItem.objId + ')를 삭제하시겠습니까?',
+      confirmMsg: '단말정책정보(' + viewItem.objId + ')를 삭제하시겠습니까?',
       handleConfirmResult: this.handleDeleteConfirmResult,
-      confirmOpen: true
     });
   };
   handleDeleteConfirmResult = (confirmValue) => {
-    const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
-
     if(confirmValue) {
+      const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
       ClientConfSettingActions.deleteClientConfSettingData({
-        objId: ClientConfSettingProps.selectedViewItem.objId
+        objId: ClientConfSettingProps.viewItem.objId
       }).then(() => {
         ClientConfSettingActions.readClientConfSettingListPaged(ClientConfSettingProps.listParam);
         }, () => {
@@ -123,21 +121,21 @@ class ComponentTests extends Component {
 
 
 
-  handleChangeGroupSelected_first = (newSelected, selectedViewItem) => {
+  handleChangeGroupSelected_first = (newSelected, viewItem) => {
 
   }
 
 
-  handleChangeGroupSelected_second = (newSelected, selectedViewItem) => {
+  handleChangeGroupSelected_second = (newSelected, viewItem) => {
 
   }
 
-  handleChangeClientSelected_first = (newSelected, selectedViewItem) => {
+  handleChangeClientSelected_first = (newSelected, viewItem) => {
 
   }
 
 
-  handleChangeClientSelected_second = (newSelected, selectedViewItem) => {
+  handleChangeClientSelected_second = (newSelected, viewItem) => {
 
   }
 
@@ -148,8 +146,8 @@ class ComponentTests extends Component {
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
           <div>
 
               컴포넌트 테스트.
@@ -185,8 +183,8 @@ class ComponentTests extends Component {
               
           </div>
 
-        </GrPane>
-        <GrConfirm />
+        </GRPane>
+        <GRConfirm />
       </React.Fragment>
     );
   }
@@ -198,7 +196,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ComponentTests));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ComponentTests));

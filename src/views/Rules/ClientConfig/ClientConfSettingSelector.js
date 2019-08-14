@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Map, List, fromJS } from 'immutable';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -6,7 +7,12 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { generateClientConfSettingObject } from './ClientConfSettingSpec';
+
 import * as ClientConfSettingActions from 'modules/ClientConfSettingModule';
+import ClientConfSettingSpec from './ClientConfSettingSpec';
+import ClientConfSettingDialog from './ClientConfSettingDialog';
 
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -17,77 +23,83 @@ import Select from '@material-ui/core/Select';
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-import ClientConfSettingComp from 'views/Rules/ClientConfig/ClientConfSettingComp';
 
-
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
 class ClientConfSettingSelector extends Component {
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true
-    };
-  }
-
   componentDidMount() {
-    this.props.ClientConfSettingActions.readClientConfSettingList(this.props.ClientConfSettingProps, this.props.compId);
-    this.props.ClientConfSettingActions.changeCompVariable({
-      compId: this.props.compId,
-      name: 'selectedOptionItemId',
-      value: this.props.initId
-    });
+    const { ClientConfSettingProps, ClientConfSettingActions, compId, targetType } = this.props;
+    //
+    ClientConfSettingActions.readClientConfSettingList(ClientConfSettingProps, compId, targetType);
+    //
   }
 
   handleChange = (event, value) => {
-    this.props.ClientConfSettingActions.changeCompVariable({
-      compId: this.props.compId,
+    const { ClientConfSettingActions, compId, targetType } = this.props;
+    ClientConfSettingActions.changeCompVariable({
+      compId: compId,
       name: 'selectedOptionItemId',
-      value: event.target.value
+      value: event.target.value,
+      targetType: targetType
     });
   };
 
+  // ===================================================================
+  handleClickEdit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.ClientConfSettingProps, compId, targetType);
+    this.props.ClientConfSettingActions.showDialog({
+      viewItem: generateClientConfSettingObject(viewItem, false, this.props.t),
+      dialogType: ClientConfSettingDialog.TYPE_EDIT
+    });
+  };
+  // ===================================================================
+  
   // .................................................
   render() {
     const { classes } = this.props;
-    const { ClientConfSettingProps, compId } = this.props;
+    const { ClientConfSettingProps, compId, targetType } = this.props;
+    const { t, i18n } = this.props;
+    
+    const selectedObj = (targetType && targetType != '') ? ClientConfSettingProps.getIn(['viewItems', compId, targetType]) : ClientConfSettingProps.getIn(['viewItems', compId]);
 
-    const selectedViewItem = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedViewItem']);
-    const listAllData = ClientConfSettingProps.getIn(['viewItems', compId, 'listAllData']);
-    let selectedOptionItemId = ClientConfSettingProps.getIn(['viewItems', compId, 'selectedOptionItemId']);
+    const listAllData = (selectedObj) ? selectedObj.get('listAllData') : null;
+    let selectedOptionItemId = (selectedObj) ? selectedObj.get('selectedOptionItemId') : null;
     if(!selectedOptionItemId && listAllData && listAllData.size > 0) {
-      selectedOptionItemId = listAllData.getIn([0, 'objId']);
+      selectedOptionItemId = '-';
     }
+
+    let selectedData = null;
+    if(listAllData && listAllData.size > 0) {
+      selectedData = listAllData.find((element) => {
+        return element.get('objId') == selectedOptionItemId;
+      });
+    };
+
 
     return (
       <Card className={classes.card}>
-        <CardContent>
+        <CardContent style={{padding: 0}}>
         {listAllData && 
-        <FormControl className={classes.formControl} style={{width: '100%'}}>
-          <InputLabel htmlFor="cfg-helper"></InputLabel>
-          <Select value={selectedOptionItemId}
-            onChange={this.handleChange}
-          >
-          {listAllData.map(item => (
-            <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
-          ))}
-          </Select>
-          <FormHelperText>정책 정보를 선택하면 상세 내용이 표시됩니다.</FormHelperText>
-        </FormControl>
+          <div style={{width:'100%',textAlign:'center'}}>
+            <FormControl className={classes.formControl} style={{marginBottom: 10, marginTop: 26, padding: '0px 20px 0px 20px'}}>
+              <Select value={selectedOptionItemId} style={{backgroundColor:'#f9eaea'}} onChange={this.handleChange} >
+                <MenuItem key={'-'} value={'-'}>{t("selNoSelected")}</MenuItem>
+                {listAllData.map(item => (
+                  <MenuItem key={item.get('objId')} value={item.get('objId')}>{item.get('objNm')}</MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>{t("msgShowSpecAsSelectRule")}</FormHelperText>
+            </FormControl>
+          </div>
         }
         {selectedOptionItemId && selectedOptionItemId != '' &&
-          <ClientConfSettingComp
-            compId={compId}
-            objId={selectedOptionItemId}
-            compType="VIEW"
+          <ClientConfSettingSpec compId={compId} specType="inform" hasAction={false}
+            targetType={targetType} selectedItem={selectedData}
+            onClickEdit={this.handleClickEdit}
           />
         }
         </CardContent>
@@ -104,6 +116,6 @@ const mapDispatchToProps = (dispatch) => ({
   ClientConfSettingActions: bindActionCreators(ClientConfSettingActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientConfSettingSelector));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientConfSettingSelector)));
 
 
