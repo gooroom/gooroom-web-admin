@@ -1,56 +1,92 @@
 import { combineReducers } from 'redux';
 
+import GlobalModule from './GlobalModule';
+import GRConfirmModule from './GRConfirmModule';
+import GRAlertModule from './GRAlertModule';
+
 import ClientRegKeyModule from './ClientRegKeyModule';
 import ClientProfileSetModule from './ClientProfileSetModule';
 
 import ClientGroupModule from './ClientGroupModule';
+import ClientPackageModule from './ClientPackageModule';
 import UserModule from './UserModule';
+import DeptModule from './DeptModule';
 
 import ClientManageModule from './ClientManageModule';
 
 import JobManageModule from './JobManageModule';
-import GrConfirmModule from './GrConfirmModule';
 import CommonOptionModule from './CommonOptionModule';
 
 import ClientConfSettingModule from './ClientConfSettingModule';
-import ClientDesktopConfigModule from './ClientDesktopConfigModule';
 import ClientHostNameModule from './ClientHostNameModule';
 import ClientUpdateServerModule from './ClientUpdateServerModule';
 
-import MediaControlSettingModule from './MediaControlSettingModule';
-import BrowserRuleSettingModule from './BrowserRuleSettingModule';
-import ClientSecuSettingModule from './ClientSecuSettingModule';
+import MediaRuleModule from './MediaRuleModule';
+import BrowserRuleModule from './BrowserRuleModule';
+import SecurityRuleModule from './SecurityRuleModule';
+import SoftwareFilterModule from './SoftwareFilterModule';
 
 import ClientMasterManageModule from './ClientMasterManageModule';
 
+import DesktopAppModule from './DesktopAppModule';
+import DesktopConfModule from './DesktopConfModule';
+import AdminUserModule from './AdminUserModule';
+import GcspManageModule from './GcspManageModule';
+import ThemeManageModule from './ThemeManageModule';
+
 import AdminModule from './AdminModule';
+import SecurityLogModule from './SecurityLogModule';
+import GeneralLogModule from './GeneralLogModule';
+import DailyViolatedModule from './DailyViolatedModule';
+import DailyLoginCountModule from './DailyLoginCountModule';
+import DailyClientCountModule from './DailyClientCountModule';
+
+import DashboardModule from './DashboardModule';
 
 
 export default combineReducers({
 
+    GlobalModule,
+    
     ClientRegKeyModule, 
     ClientProfileSetModule,
 
     ClientConfSettingModule,
-    ClientDesktopConfigModule,
     ClientHostNameModule,
     ClientUpdateServerModule,
 
-    MediaControlSettingModule,
-    BrowserRuleSettingModule,
-    ClientSecuSettingModule,
+    MediaRuleModule,
+    BrowserRuleModule,
+    SecurityRuleModule,
+    SoftwareFilterModule,
 
     ClientMasterManageModule,
     
     ClientManageModule,
     ClientGroupModule,
+    ClientPackageModule,
     UserModule,
+    DeptModule,
 
     JobManageModule, 
     
-    GrConfirmModule,
+    GRConfirmModule,
+    GRAlertModule,
     CommonOptionModule,
 
-    AdminModule
+    DesktopAppModule,
+    DesktopConfModule,
+    AdminUserModule,
+    GcspManageModule,
+    ThemeManageModule,
+
+    AdminModule,
+    SecurityLogModule,
+    GeneralLogModule,
+    DailyViolatedModule,
+    DailyLoginCountModule,
+    DailyClientCountModule,
+
+    DashboardModule
 
 });

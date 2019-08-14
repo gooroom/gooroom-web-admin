@@ -8,61 +8,49 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientManageActions from 'modules/ClientManageModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { formatDateToSimple } from 'components/GrUtils/GrDates';
-import { getDataObjectInComp, getRowObjectById, getDataObjectVariableInComp, setSelectedIdsInComp, setAllSelectedIdsInComp } from 'components/GrUtils/GrTableListUtils';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
-import GrPageHeader from "containers/GrContent/GrPageHeader";
-import GrPane from 'containers/GrContent/GrPane';
+import GRPageHeader from "containers/GRContent/GRPageHeader";
+import GRPane from 'containers/GRContent/GRPane';
 
-import GrCommonTableHead from 'components/GrComponents/GrCommonTableHead';
+import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
+import KeywordOption from "views/Options/KeywordOption";
+
+import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
+import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
+import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
 
 import Grid from '@material-ui/core/Grid';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
-import DescIcon from '@material-ui/icons/Description';
 import Search from '@material-ui/icons/Search';
-import AddIcon from '@material-ui/icons/Add';
 
 import Checkbox from "@material-ui/core/Checkbox";
 import InputLabel from "@material-ui/core/InputLabel";
 
-import ClientDialog from "./ClientDialog";
-import ClientManageInform from "./ClientManageInform";
+import ClientManageSpec from "./ClientManageSpec";
 // option components
 import ClientGroupSelect from 'views/Options/ClientGroupSelect';
 import ClientStatusSelect from 'views/Options/ClientStatusSelect';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-//
-//  ## Content ########## ########## ########## ########## ########## 
-//
+
 class ClientManage extends Component {
 
-  columnHeaders = [
-    { id: "chCheckbox", isCheckbox: true},
-    { id: 'clientStatus', isOrder: true, numeric: false, disablePadding: true, label: '상태' },
-    { id: 'clientId', isOrder: true, numeric: false, disablePadding: true, label: '단말아이디' },
-    { id: 'clientName', isOrder: true, numeric: false, disablePadding: true, label: '단말이름' },
-    { id: 'loginId', isOrder: true, numeric: false, disablePadding: true, label: '접속자' },
-    { id: 'clientGroupName', isOrder: true, numeric: false,disablePadding: true,label: '단말그룹'},
-    { id: 'regDate', isOrder: true, numeric: false, disablePadding: true, label: '등록일' }
-  ];
-  
   constructor(props) {
     super(props);
 
@@ -86,51 +74,45 @@ class ClientManage extends Component {
   handleChangeRowsPerPage = event => {
     const { ClientManageActions, ClientManageProps } = this.props;
     ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId, {
-      rowsPerPage: event.target.value, 
-      page:0
+      rowsPerPage: event.target.value, page:0
     });
   };
 
   handleChangeSort = (event, columnId, currOrderDir) => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    let orderDir = "desc";
-    if (currOrderDir === "desc") {
-      orderDir = "asc";
-    }
-    ClientManageActions.readClientListPaged(ClientManagePropsget, this.props.match.params.grMenuId, {
-      orderColumn: property, 
-      orderDir: orderDir
+    ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId, {
+      orderColumn: columnId, orderDir: (currOrderDir === 'desc') ? 'asc' : 'desc'
     });
   };
 
-  handleRowClick = (event, id) => {
+  handleSelectRow = (event, id) => {
     const { ClientManageActions, ClientManageProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const clickedRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
-    const newSelectedIds = setSelectedIdsInComp(ClientManageProps, compId, id);
+    const selectRowObject = getRowObjectById(ClientManageProps, compId, id, 'clientId');
+    const newCheckedIds = setCheckedIdsInComp(ClientManageProps, compId, id);
 
     ClientManageActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
 
     ClientManageActions.showClientManageInform({
       compId: compId,
-      selectedViewItem: clickedRowObject,
+      viewItem: selectRowObject,
     });
   };
 
   handleSelectBtnClick = () => {
     const { ClientManageActions, ClientManageProps } = this.props;
-    ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId);
+    ClientManageActions.readClientListPaged(ClientManageProps, this.props.match.params.grMenuId, {page: 0});
   };
 
-  handleKeywordChange = name => event => {
+  handleKeywordChange = (name, value) => {
     this.props.ClientManageActions.changeListParamData({
-      name: 'keyword', 
-      value: event.target.value,
+      name: name, 
+      value: value,
       compId: this.props.match.params.grMenuId
     });
   };
@@ -151,55 +133,31 @@ class ClientManage extends Component {
     });
   };
 
-
-  isSelected = id => {
+  isChecked = id => {
     const { ClientManageProps } = this.props;
-    const selectedIds = getDataObjectVariableInComp(ClientManageProps, this.props.match.params.grMenuId, 'selectedIds');
-
-    if(selectedIds) {
-      return selectedIds.includes(id);
+    const checkedIds = getDataObjectVariableInComp(ClientManageProps, this.props.match.params.grMenuId, 'checkedIds');
+    if(checkedIds) {
+      return checkedIds.includes(id);
     } else {
       return false;
-    }    
-  }
+    }
+  };
 
 
   handleCreateButton = () => {
-    console.log('handleCreateButton...............');
-  }
+    //console.log('handleCreateButton...............');
+  };
 
-  // // .................................................
-  // handleClientDialogClose = value => {
-  //   this.setState({ 
-  //     clientInfos: value, 
-  //     clientDialogOpen: false 
-  //   });
-  // };
 
-  // handleInfoClick = (event, clientId, clientGroupId) => {
-  //   event.stopPropagation();
-  //   const { ClientManageActions, ClientManageProps } = this.props;
-  //   const selectedViewItem = ClientManageProps.listData.find(function(element) {
-  //     return element.clientId == clientId;
-  //   });
-
-  //   ClientManageActions.showDialog({
-  //     selectedViewItem: Object.assign({}, selectedViewItem),
-  //     dialogType: ClientDialog.TYPE_VIEW,
-  //     dialogOpen: true,
-  //     compId: ''
-  //   });
-  // };
-
-  handleSelectAllClick = (event, checked) => {
+  handleClickAllCheck = (event, checked) => {
     const { ClientManageActions, ClientManageProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const newSelectedIds = setAllSelectedIdsInComp(ClientManageProps, compId, 'clientId', checked);
+    const newCheckedIds = getDataPropertyInCompByParam(ClientManageProps, compId, 'clientId', checked);
 
     ClientManageActions.changeCompVariable({
-      name: 'selectedIds',
-      value: newSelectedIds,
+      name: 'checkedIds',
+      value: newCheckedIds,
       compId: compId
     });
   };
@@ -208,108 +166,126 @@ class ClientManage extends Component {
   render() {
     const { classes } = this.props;
     const { ClientManageProps } = this.props;
+    const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const emptyRows = 0;// = ClientManageProps.listParam.rowsPerPage - ClientManageProps.listData.length;
+
+    const columnHeaders = [
+      { id: "checkbox", isCheckbox: true},
+      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'LOGIN_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colLoginId") },
+      { id: 'GROUP_NAME', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
+      { id: 'LAST_LOGIN_TIME', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginDate") },
+      { id: 'CLIENT_IP', isOrder: true, numeric: false, disablePadding: true, label: t("colLastLoginIp") },
+      { id: 'STRG_SIZE', isOrder: false, numeric: false, disablePadding: true, label: t("colUseRate") },
+      { id: 'TOTAL_CNT', isOrder: true, numeric: false, disablePadding: true, label: t("colPackageCnt") }
+    ];
+    
     const listObj = ClientManageProps.getIn(['viewItems', compId]);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
 
     return (
       <React.Fragment>
-        <GrPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
-        <GrPane>
+        <GRPageHeader path={this.props.location.pathname} name={this.props.match.params.grMenuName} />
+        <GRPane>
 
           {/* data option area */}
-          <Grid item xs={12} container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} spacing={24} container alignItems="flex-end" direction="row" justify="flex-start" >
+          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+            <Grid item xs={10}>
+              <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
 
-              <Grid item xs={3} >
-                <FormControl fullWidth={true}>
-                  <InputLabel htmlFor="client-status">단말상태</InputLabel>
-                  <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
-                </FormControl>
-              </Grid>
+                <Grid item xs={3} >
+                  <FormControl fullWidth={true}>
+                    <InputLabel htmlFor="client-status">{t("spClientStatus")}</InputLabel>
+                    <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+                  </FormControl>
+                </Grid>
 
-              <Grid item xs={3} >
-                <FormControl fullWidth={true}>
-                  <InputLabel htmlFor="client-status">단말그룹</InputLabel>
-                  <ClientGroupSelect onChangeSelect={this.handleChangeGroupSelect} />
-                </FormControl>
-              </Grid>
+                <Grid item xs={3} >
+                  <FormControl fullWidth={true}>
+                    <InputLabel htmlFor="client-status">{t("spClientGroup")}</InputLabel>
+                    <ClientGroupSelect onChangeSelect={this.handleChangeGroupSelect} />
+                  </FormControl>
+                </Grid>
 
-              <Grid item xs={3} >
-                <FormControl fullWidth={true}>
-                <TextField id='keyword' label='검색어' onChange={this.handleKeywordChange('keyword')} />
-                </FormControl>
-              </Grid>
+                <Grid item xs={3} >
+                  <FormControl fullWidth={true}>
+                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                  </FormControl>
+                </Grid>
 
-              <Grid item xs={3} >
-                <Button size="small" variant="outlined" color="secondary" onClick={ () => this.handleSelectBtnClick() } >
-                  <Search />
-                  조회
-                </Button>
+                <Grid item xs={3} >
+                  <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+                    <Search />{t("btnSearch")}
+                  </Button>
+                </Grid>
 
               </Grid>
             </Grid>
 
-            <Grid item xs={2} container alignItems="flex-end" direction="row" justify="flex-end">
-              <Button size="small" variant="contained" color="primary"
-                onClick={() => {
-                  this.handleCreateButton();
-                }}
-              >
-                <AddIcon />
-                등록
+            <Grid item xs={2}>
+            {/*
+              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
+                <AddIcon />{t("btnRegist")}
               </Button>
+            */}
             </Grid>
           </Grid>
           {/* data area */}
           {(listObj) && 
             <div>
             <Table>
-              <GrCommonTableHead
+              <GRCommonTableHead
                 classes={classes}
                 keyId="clientId"
                 orderDir={listObj.getIn(['listParam', 'orderDir'])}
                 orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                 onRequestSort={this.handleChangeSort}
-                onSelectAllClick={this.handleSelectAllClick}
-                selectedIds={listObj.get('selectedIds')}
+                onClickAllCheck={this.handleClickAllCheck}
+                checkedIds={listObj.get('checkedIds')}
                 listData={listObj.get('listData')}
-                columnData={this.columnHeaders}
+                columnData={columnHeaders}
               />
               <TableBody>
               {listObj.get('listData').map(n => {
-                  const isSelected = this.isSelected(n.get('clientId'));
+                  const isChecked = this.isChecked(n.get('clientId'));
                   return (
                     <TableRow
-                      className={classes.grNormalTableRow}
                       hover
-                      onClick={event => this.handleRowClick(event, n.get('clientId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('clientId'))}
                       role="checkbox"
-                      aria-checked={isSelected}
+                      aria-checked={isChecked}
                       key={n.get('clientId')}
-                      selected={isSelected}
+                      selected={isChecked}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                        <Checkbox checked={isSelected} className={classes.grObjInCell} />
+                        <Checkbox color="primary" checked={isChecked} className={classes.grObjInCell} />
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickCell} >{n.get('clientStatus')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell} >{n.get('viewStatus')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell} >{n.get('loginId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{(n.get('isOn') == '1') ? ((n.get('loginId') && n.get('loginId').startsWith('+')) ? n.get('loginId').substring(1) + " [LU]" : n.get('loginId')) : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell} >{n.get('strgSize')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell} >{n.get('totalCnt')}</TableCell>
                     </TableRow>
                   );
                 })}
 
-              {emptyRows > 0 && (
-                <TableRow >
-                  <TableCell
-                    colSpan={this.columnHeaders.length + 1}
-                    className={classes.grSmallAndClickCell}
-                  />
-                </TableRow>
-              )}
+                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                  <TableRow key={e}>
+                    <TableCell
+                      colSpan={columnHeaders.length + 1}
+                      className={classes.grSmallAndClickCell}
+                    />
+                  </TableRow>
+                )}))}
             </TableBody>
           </Table>
           <TablePagination
@@ -331,8 +307,12 @@ class ClientManage extends Component {
           </div>
           }
 
-        </GrPane>
-        <ClientManageInform compId={compId} />
+        </GRPane>
+        <ClientManageSpec compId={compId} />
+
+        <BrowserRuleDialog compId={compId} />
+        <SecurityRuleDialog compId={compId} />
+        <MediaRuleDialog compId={compId} />
 
       </React.Fragment>
       
@@ -348,8 +328,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ClientManageActions: bindActionCreators(ClientManageActions, dispatch),
-  GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientManage));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientManage)));
 

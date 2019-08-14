@@ -7,23 +7,22 @@ import * as CommonOptionActions from 'modules/CommonOptionModule';
 
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
+import { translate, Trans } from "react-i18next";
 
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
 class ClientStatusSelect extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-    };
-  }
 
   componentDidMount() {
-
-    // const { CommonOptionActions, CommonOptionProps } = this.props;
-    // CommonOptionActions.readClientStatusList(CommonOptionProps.listParam);
+    this.props.CommonOptionActions.changeSelectValue({
+      name: 'selectedClientStatus',
+      value: {
+        statusId: '',
+        statusNm: ''
+      }
+    });
   }
 
   // Events...
@@ -40,11 +39,12 @@ class ClientStatusSelect extends Component {
   };
 
   render() {
-
     const { CommonOptionProps } = this.props;
+    const { t, i18n } = this.props;
 
     return (
-
+      <React.Fragment>
+      <InputLabel htmlFor="client-status">{t("optClientStatus")}</InputLabel>
       <Select
         value={CommonOptionProps.selectedClientStatus.statusId}
         onChange={this.handleChangeSelect}
@@ -52,11 +52,11 @@ class ClientStatusSelect extends Component {
       >
         {CommonOptionProps.clientStatusData.map(x => (
           <MenuItem value={x.statusId} key={x.statusId}>
-            {x.statusNm}
+            {t(x.statusNm)}
           </MenuItem>
         ))}
       </Select>
-
+      </React.Fragment>
     );
   }
 }
@@ -69,6 +69,6 @@ const mapDispatchToProps = (dispatch) => ({
   CommonOptionActions: bindActionCreators(CommonOptionActions, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ClientStatusSelect);
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(ClientStatusSelect));
 
 

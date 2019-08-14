@@ -6,11 +6,11 @@
   "NODE_PATH": "./src",
   "scripts": {
     "build": "webpack -p --progress",
-    "start": "webpack-dev-server --progress --color --inline --env.dev",
+    "start": "webpack-dev-server --progress --color --inline --watch-content-base --env.dev",
     "clean": "rimraf ./build"
   },
   "devDependencies": {
-    "@babel/runtime": "7.0.0-beta.55",
+    "@babel/runtime": "7.1.2",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-polyfill": "^6.26.0",
@@ -32,19 +32,31 @@
     "webpack-dev-server": "2.11.1"
   },
   "dependencies": {
-    "@material-ui/core": "^1.3.1",
-    "@material-ui/icons": "^1.1.0",
+    "@date-io/moment": "^1.1.0",
+    "@material-ui/core": "^3.6.0",
+    "@material-ui/icons": "latest",
     "axios": "^0.18.0",
+    "d3-hierarchy": "^1.1.8",
+    "d3-scale-chromatic": "^1.3.3",
+    "i18next": "^13.1.0",
+    "i18next-browser-languagedetector": "^2.2.4",
     "immutable": "^3.8.2",
+    "material-ui-pickers": "^2.2.1",
     "moment": "^2.22.1",
     "qs": "^6.5.1",
     "react": "^16.2.0",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.2.0",
+    "react-i18next": "9.0.2",
+    "react-measure": "^2.2.3",
+    "react-motion": "^0.5.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-table": "^6.8.0",
+    "recharts": "^1.3.5",
     "redux": "^4.0.0",
     "redux-actions": "^2.4.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "sha-256-js": "^1.0.3"
   }
 }

@@ -7,47 +7,28 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as ClientGroupActions from 'modules/ClientGroupModule';
-import * as GrConfirmActions from 'modules/GrConfirmModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
 
-import { getConfigIdsInComp } from 'components/GrUtils/GrTableListUtils';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
-
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 
 import Divider from '@material-ui/core/Divider';
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 import { withStyles } from '@material-ui/core/styles';
-import { GrCommonStyle } from 'templates/styles/GrStyles';
+import { GRCommonStyle } from 'templates/styles/GRStyles';
+import { translate, Trans } from "react-i18next";
 
-import ClientConfSettingSelector from 'views/Rules/ClientConfig/ClientConfSettingSelector'
-import ClientHostNameSelector from 'views/Rules/HostName/ClientHostNameSelector'
-import ClientUpdateServerSelector from 'views/Rules/UpdateServer/ClientUpdateServerSelector'
-
+import ClientRuleSelector from 'components/GROptions/ClientRuleSelector';
 
 
-function TabContainer(props) {
-    return (
-      <Typography component="div" style={{ padding: 8 * 3 }}>
-        {props.children}
-      </Typography>
-    );
-  }
-
-//
-//  ## Dialog ########## ########## ########## ########## ##########
-//
 class ClientGroupDialog extends Component {
     
     static TYPE_ADD = 'ADD';
@@ -59,36 +40,53 @@ class ClientGroupDialog extends Component {
     }
 
     handleValueChange = name => event => {
+        const value = (event.target.type === 'checkbox') ? event.target.checked : event.target.value;
         this.props.ClientGroupActions.setEditingItemValue({
             name: name,
-            value: event.target.value
+            value: value
         });
     }
 
     handleCreateData = (event) => {
-        const { ClientGroupProps, GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
-            confirmTitle: '단말그룹 등록',
-            confirmMsg: '단말그룹을 등록하시겠습니까?',
-            handleConfirmResult: this.handleCreateConfirmResult,
-            confirmOpen: true,
-            confirmObject: ClientGroupProps.get('editingItem')
-        });
+        const { ClientGroupProps, GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: t("dtAddGroup"),
+                confirmMsg: t("msgAddGroup"),
+                handleConfirmResult: this.handleCreateDataConfirmResult,
+                confirmObject: ClientGroupProps.get('editingItem')
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
+    handleCreateDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
             const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
 
-            const configIds = getConfigIdsInComp(ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, compId);
+            const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
             ClientGroupActions.createClientGroupData({
                 groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                 groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
-                clientConfigId: ClientGroupProps.getIn(['editingItem', 'clientConfigId']),
                 isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
-                clientConfigId: configIds.clientConfigId,
-                hostNameConfigId: configIds.hostNameConfigId,
-                updateServerConfigId: configIds.updateServerConfigId
+                
+                clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
+                hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
+                updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
+                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+
             }).then((res) => {
                 ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
                 this.handleClose();
@@ -97,29 +95,44 @@ class ClientGroupDialog extends Component {
     }
     
     handleEditData = (event) => {
-        const { GrConfirmActions } = this.props;
-        GrConfirmActions.showConfirm({
-            confirmTitle: '단말그룹 수정',
-            confirmMsg: '단말그룹을 수정하시겠습니까?',
-            confirmOpen: true,
-            handleConfirmResult: this.handleEditConfirmResult
-        });
+        const { GRConfirmActions } = this.props;
+        const { t, i18n } = this.props;
+        if(this.refs.form && this.refs.form.isFormValid()) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: t("dtEditGroup"),
+                confirmMsg: t("msgEditGroup"),
+                handleConfirmResult: this.handleEditConfirmResult
+            });
+        } else {
+            if(this.refs.form && this.refs.form.childs) {
+                this.refs.form.childs.map(c => {
+                    this.refs.form.validate(c);
+                });
+            }
+        }
     }
     handleEditConfirmResult = (confirmValue) => {
         if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, compId } = this.props;
             const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-            const configIds = getConfigIdsInComp(ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps, compId);
+            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
 
+            const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
             ClientGroupActions.editClientGroupData({
                 groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                 groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                 groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
-                clientConfigId: ClientGroupProps.getIn(['editingItem', 'clientConfigId']),
                 isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
-                clientConfigId: configIds.clientConfigId,
-                hostNameConfigId: configIds.hostNameConfigId,
-                updateServerConfigId: configIds.updateServerConfigId
+
+                clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
+                hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
+                updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
+                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                
             }).then((res) => {
                 ClientGroupActions.readClientGroupListPaged(ClientGroupProps, compId);
                 this.handleClose();
@@ -127,79 +140,62 @@ class ClientGroupDialog extends Component {
         }
     }
 
-    handleChangeTabs = (event, value) => {
-        this.props.ClientGroupActions.changeStoreData({
-            name: 'dialogTabValue',
-            value: value
-        });
-          };
-
     render() {
         const { classes } = this.props;
         const { ClientGroupProps, compId } = this.props;
-        
+        const { t, i18n } = this.props;
+
         const dialogType = ClientGroupProps.get('dialogType');
         const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem') : null;
 
-        const tabValue = ClientGroupProps.get('dialogTabValue');
-
-        const tempLabel = <div><InputLabel>단말정책</InputLabel><Divider /><InputLabel>'없음'</InputLabel></div>;
-
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
-            title = "단말 그룹 등록";
+            title = t("dtAddGroup");
         } else if(dialogType === ClientGroupDialog.TYPE_VIEW) {
-            title = "단말 그룹 정보";
+            title = t("dtViewGroup");
         } else if(dialogType === ClientGroupDialog.TYPE_EDIT) {
-            title = "단말 그룹 수정";
+            title = t("dtEditGroup");
         } 
 
         return (
             <div>
             {(ClientGroupProps.get('dialogOpen') && editingItem) &&
-            <Dialog open={ClientGroupProps.get('dialogOpen')} >
+            <Dialog open={ClientGroupProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
+                <ValidatorForm ref="form">
                 <DialogTitle >{title}</DialogTitle>
+                <DialogContent style={{minHeight:567}}>
+                    <Grid container spacing={24}>
+                        <Grid item xs={3}>
+                            <TextValidator label={t("spClientGroupName")} className={classes.fullWidth}
+                                name="grpNm"
+                                validators={['required']}
+                                errorMessages={[t("msgInputGroupName")]}
+                                value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
+                                onChange={this.handleValueChange('grpNm')}
+                            />
+                        </Grid>
+                        <Grid item xs={9}>
+                            <TextField label={t("spClientGroupDesc")} className={classes.fullWidth}
+                                value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                                onChange={this.handleValueChange('comment')}
+                            />
+                        </Grid>
+                    </Grid>
+                    <Divider style={{marginBottom: 10}} />
+                    
+                    <ClientRuleSelector compId={compId} module={(dialogType === ClientGroupDialog.TYPE_ADD) ? 'new' : 'edit'} targetType="GROUP" />
 
-                <form noValidate autoComplete="off" className={classes.dialogContainer}>
-                
-                    <TextField
-                        id="grpNm"
-                        label="단말그룹이름"
-                        value={(editingItem.get('grpNm')) ? editingItem.get('grpNm') : ''}
-                        onChange={this.handleValueChange('grpNm')}
-                        className={classes.fullWidth}
-                    />
-                    <TextField
-                        id="comment"
-                        label="단말그룹설명"
-                        value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                        onChange={this.handleValueChange('comment')}
-                        className={classes.fullWidth}
-                    />
-
-                    <Divider style={{marginBottom: 10}} />        
-                    <AppBar position="static" color="default">
-                        <Tabs value={tabValue} onChange={this.handleChangeTabs}>
-                            <Tab label={tempLabel} />
-                            <Tab label="Hosts정보" />
-                            <Tab label="업데이트서버정보" />
-                        </Tabs>
-                    </AppBar>
-                    {tabValue === 0 && <ClientConfSettingSelector compId={compId} initId={ClientGroupProps.getIn(['editingItem', 'clientConfigId'])} />}
-                    {tabValue === 1 && <ClientHostNameSelector compId={compId} initId={ClientGroupProps.getIn(['editingItem', 'hostNameConfigId'])} />}
-                    {tabValue === 2 && <ClientUpdateServerSelector compId={compId} initId={ClientGroupProps.getIn(['editingItem', 'updateServerConfigId'])} />}
-
-                </form>
-
+                </DialogContent>
                 <DialogActions>
-                {(dialogType === ClientGroupDialog.TYPE_ADD) &&
-                    <Button onClick={this.handleCreateData} variant='raised' color="secondary">등록</Button>
-                }
-                {(dialogType === ClientGroupDialog.TYPE_EDIT) &&
-                    <Button onClick={this.handleEditData} variant='raised' color="secondary">저장</Button>
-                }
-                <Button onClick={this.handleClose} variant='raised' color="primary">닫기</Button>
+                    {(dialogType === ClientGroupDialog.TYPE_ADD) &&
+                        <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
+                    }
+                    {(dialogType === ClientGroupDialog.TYPE_EDIT) &&
+                        <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
+                    }
+                    <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
+                </ValidatorForm>
             </Dialog>
             }
             </div>
@@ -209,17 +205,24 @@ class ClientGroupDialog extends Component {
 
 const mapStateToProps = (state) => ({
     ClientGroupProps: state.ClientGroupModule,
+    
     ClientConfSettingProps: state.ClientConfSettingModule,
     ClientHostNameProps: state.ClientHostNameModule,
-    ClientUpdateServerProps: state.ClientUpdateServerModule
+    ClientUpdateServerProps: state.ClientUpdateServerModule,
+    
+    BrowserRuleProps: state.BrowserRuleModule,
+    MediaRuleProps: state.MediaRuleModule,
+    SecurityRuleProps: state.SecurityRuleModule,
+    SoftwareFilterProps: state.SoftwareFilterModule,
+    DesktopConfProps: state.DesktopConfModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
     ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-    GrConfirmActions: bindActionCreators(GrConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
 });
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GrCommonStyle)(ClientGroupDialog));
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupDialog)));
 
 
