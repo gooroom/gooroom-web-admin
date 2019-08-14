@@ -229,7 +229,7 @@ class UserListComp extends Component {
     }
 
     return (
-      <div>
+      <React.Fragment>
       {/* data option area */}
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
           <Grid item xs={3} >
@@ -248,6 +248,7 @@ class UserListComp extends Component {
             </Button>
           </Grid>
           <Grid item xs={4} style={{textAlign:'right'}}>
+            {/**
             <Tooltip title={t("ttMoveDept")}>
               <span>
               <Button className={classes.GRIconSmallButton} variant="outlined" color="primary" onClick={this.props.onMoveUserToDept} disabled={this.isUserChecked()} >
@@ -260,6 +261,7 @@ class UserListComp extends Component {
                 <AddIcon /><AccountIcon />
               </Button>
             </Tooltip>
+             */}
           </Grid>
         </Grid>
 
@@ -292,7 +294,10 @@ class UserListComp extends Component {
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                     <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('userId'))}/>
                   </TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}
+                    style={(n.get('isExpire') === '1') ? {color:'red'} : {color:''}}
+                  
+                  >{n.get('userId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
@@ -301,16 +306,16 @@ class UserListComp extends Component {
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>
                     {(n.get('statusCd') !== 'STAT020') &&
                       <React.Fragment>
-                        <Button color="secondary" size="small" 
-                          className={classes.buttonInTableRow}
-                          onClick={event => this.handleEditClick(event, n.get('userId'))}>
-                          <EditIcon />
-                        </Button>
-                        <Button color="secondary" size="small" 
-                          className={classes.buttonInTableRow}
-                          onClick={event => this.handleDeleteClick(event, n.get('userId'))}>
-                          <DeleteIcon />
-                        </Button>
+                    <Button color="secondary" size="small" 
+                      className={classes.buttonInTableRow}
+                      onClick={event => this.handleEditClick(event, n.get('userId'))}>
+                      <EditIcon />
+                    </Button>
+                    <Button color="secondary" size="small" 
+                      className={classes.buttonInTableRow}
+                      onClick={event => this.handleDeleteClick(event, n.get('userId'))}>
+                      <DeleteIcon />
+                    </Button>
                       </React.Fragment>
                     }
                   </TableCell>
@@ -346,7 +351,7 @@ class UserListComp extends Component {
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
       }
-      </div>
+      </React.Fragment>
     );
 
   }

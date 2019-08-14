@@ -82,7 +82,7 @@ class DesktopAppSelector extends Component {
   render() {
 
     const { classes } = this.props;
-    const { DesktopAppProps, selectedApps } = this.props;
+    const { DesktopAppProps, selectedApps, themeId } = this.props;
     const { t, i18n } = this.props;
 
     let appAllDatas = (DesktopAppProps.get('listAllData')) ? DesktopAppProps.get('listAllData') : List([]);
@@ -100,7 +100,7 @@ class DesktopAppSelector extends Component {
                   <DesktopApp key={n.get('appId')} appObj={n}
                       hasAction={true}
                       type='select'
-                      themeId={(n.get('themeId')) ? n.get('themeId') : '1'}
+                      themeId={themeId}
                       onEditClick={this.handleEditAppClick}
                       onDeleteClick={this.handleDeleteSelected}
                       isSelected={true}
@@ -124,7 +124,7 @@ class DesktopAppSelector extends Component {
                   <DesktopApp key={n.get('appId')} appObj={n}
                       hasAction={true}
                       type='main'
-                      themeId={(n.get('themeId')) ? n.get('themeId') : '1'}
+                      themeId={themeId}
                       onAddClick={this.handleAddClick}
                       onEditClick={this.handleEditAppClick}
                       onDeleteClick={this.handleDeleteApp}

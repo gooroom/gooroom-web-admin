@@ -178,17 +178,12 @@ class ClientManageCompWithPackage extends Component {
         {/* data option area */}
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4} >
-            <FormControl fullWidth={true}>
-              <InputLabel htmlFor="client-status">{t("optClientStatus")}</InputLabel>
               <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
-            </FormControl>
           </Grid>
           <Grid item xs={4} >
-            <FormControl fullWidth={true}>
               <KeywordOption paramName="keyword" keywordValue={(listObj && listObj.get('listParam')) ? listObj.getIn(['listParam', 'keyword']) : ''}
                 handleKeywordChange={this.handleKeywordChange} 
                 handleSubmit={() => this.handleSelectBtnClick()} />
-            </FormControl>
           </Grid>
           <Grid item xs={4} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >

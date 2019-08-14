@@ -79,6 +79,8 @@ export const GRCommonStyle = theme => ({
             grLayout.breadcrumbHeight +
             " - " +
             grLayout.footerHeight +
+            " - " +
+            "20px" +
             ")",
     },
 
@@ -278,6 +280,41 @@ export const GRCommonStyle = theme => ({
         width: 30
     },
     
+    // notice manager
+    noticeContentCard: {
+        boxShadow: 'initial',
+        backgroundColor: 'initial'
+    },
+    noticeContentCardHeader: {
+        padding: '14.5px',
+        textAlign: 'center'
+    },
+    noticeContentCardHeaderTitle: {
+        fontSize: '0.75rem',
+        color: 'rgba(0, 0, 0, 0.54);'
+    },
+    noticeContentCardContent: {
+        overflow: 'auto',
+        borderTop: '1px solid rgba(224, 224, 224, 1)',
+        borderBottom: '1px solid rgba(224, 224, 224, 1)',
+        padding: '0 16px'
+    },
+    noticeDialogContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        outline: 'none'
+    },
+    noticeDialogHeader: {
+        padding: '24px 24px 20px'
+    },
+    noticeDialogContent: {
+        padding: '0 24px 24px'
+    },
+    noticeDialogActions: {
+        justifyContent: 'flex-end'
+    },
 
 
 
@@ -299,6 +336,11 @@ export const GRCommonStyle = theme => ({
     },
     smallIconButton: {
         minWidth: '34px'
+    },
+    GRSmallButton: {
+        padding: "0px 2px 0px 2px",
+        minWidth: "26px",
+        minHeight: "24px"
     },
     GRIconSmallButton: {
         padding: "0px 2px 0px 0px",
@@ -386,10 +428,9 @@ export const GRCommonStyle = theme => ({
         padding: '0px 2px 0px 2px',
         borderBottom: '1px solid rgba(224, 224, 224, 1)',
         verticalAlign: 'inherit',
-        color: 'orangered'
+        color: '#b69238'
     },
     specTitle: {
-        fontWeight: 'bold',
         fontSize: '0.75rem',
         padding: '0px 2px 0px 2px',
         borderBottom: '1px solid rgba(224, 224, 224, 1)',
@@ -397,7 +438,8 @@ export const GRCommonStyle = theme => ({
     },
     specContent: {
         fontSize: '0.75rem',
-        padding: '2px 2px 0px 2px',
+        fontWeight: 'bold',
+        padding: '2px 12px 0px 2px',
         textAlign: 'right',
         borderBottom: '1px solid rgba(224, 224, 224, 1)',
         verticalAlign: 'inherit'

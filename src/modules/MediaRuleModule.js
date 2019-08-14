@@ -121,7 +121,9 @@ export const getMediaRule = (param) => dispatch => {
                 dispatch({
                     type: GET_MEDIACONTROL_SUCCESS,
                     compId: compId,
-                    response: response
+                    data: (response.data.data) ? response.data.data : null,
+                    extend: (response.data.extend) ? response.data.extend : null,
+                    target: ''
                 });
             }
         ).catch(error => {
@@ -145,8 +147,9 @@ export const getMediaRuleByUserId = (param) => dispatch => {
             dispatch({
                 type: GET_MEDIACONTROL_SUCCESS,
                 compId: compId,
-                target: 'USER',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'USER'
             });
         }
     ).catch(error => {
@@ -162,8 +165,9 @@ export const getMediaRuleByDeptCd = (param) => dispatch => {
             dispatch({
                 type: GET_MEDIACONTROL_SUCCESS,
                 compId: compId,
-                target: 'DEPT',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'DEPT'
             });
         }
     ).catch(error => {
@@ -179,8 +183,9 @@ export const getMediaRuleByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_MEDIACONTROL_SUCCESS,
                 compId: compId,
-                target: 'GROUP',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'GROUP'
             });
         }
     ).catch(error => {
@@ -330,13 +335,33 @@ export const deleteMediaRuleData = (param) => dispatch => {
     });
 };
 
-// rule inherit
-export const inheritMediaRuleData = (param) => dispatch => {
+// rule inherit -dept
+export const inheritMediaRuleDataForDept = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptConfInherit', {
             'objId': param.objId,
             'confType': 'MEDIARULE',
             'deptCd': param.deptCd
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_MEDIACONTROL_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// rule inherit - group
+export const inheritMediaRuleDataForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateClientGroupConfInherit', {
+            'objId': param.objId,
+            'confType': 'MEDIARULE',
+            'grpId': param.grpId
         }).then(
         (response) => {
             dispatch({
@@ -429,7 +454,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_MEDIACONTROL_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'objId');
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.data, action.extend, action.target, 'objId');
     },
     [SHOW_MEDIACONTROL_DIALOG]: (state, action) => {
         return commonHandleActions.handleShowDialogAction(state, action);

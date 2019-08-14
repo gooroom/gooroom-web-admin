@@ -57,7 +57,32 @@ class DeptDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddDeptInfo"),
                 confirmMsg: t("msgAddDeptInfo"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { DeptProps, DeptActions, compId, resetCallback } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
+                        DeptActions.createDeptInfo({
+                            deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
+                            deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
+                            uprDeptCd: DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']),
+            
+                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                        }).then((res) => {
+                            // DeptActions.readDeptListPaged(DeptProps, compId);
+                            // tree refresh
+                            const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd'])));
+                            resetCallback(listItem);
+                            this.handleClose();
+                        }).catch((err) => {
+                            console.log('handleCreateData - err :::: ', err);
+                        });
+                    }
+                },
                 confirmObject: DeptProps.get('editingItem')
             });
         } else {
@@ -68,40 +93,41 @@ class DeptDialog extends Component {
             }
         }
     }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
-            const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
-            DeptActions.createDeptInfo({
-                deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
-                deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-                uprDeptCd: DeptProps.getIn(['editingItem', 'selectedDeptCd']),
-
-                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
-            }).then((res) => {
-                // DeptActions.readDeptListPaged(DeptProps, compId);
-                // tree refresh
-                resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
-                this.handleClose();
-            });
-        }
-    }
 
     handleEditData = (event) => {
         const { DeptProps, GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
-        
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showCheckConfirm({
                 confirmTitle: t("lbEditDeptInfo"),
                 confirmMsg: t("msgEditDeptInfo"),
                 confirmCheckMsg: t("lbEditChildDeptInfo"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, confirmObject, isChecked) => {
+                    if(confirmValue) {
+                        const isInherit = isChecked;
+                        const { DeptProps, DeptActions, compId, resetCallback } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
+                        DeptActions.editDeptInfo({
+                            deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
+                            deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
+                
+                            paramIsInherit: (isInherit) ? 'Y' : 'N',
+                
+                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                        }).then((res) => {
+                            // tree refresh
+                            const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['editingItem', 'deptCd'])));
+                            resetCallback(listItem);
+                            this.handleClose();
+                        });
+                    }
+                },
+                confirmObject: null
             });
         } else {
             if(this.refs.form && this.refs.form.childs) {
@@ -109,33 +135,6 @@ class DeptDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleEditConfirmResult = (confirmValue, confirmObject, isChecked) => {
-
-        if(confirmValue) {
-            const isInherit = isChecked;
-            const { DeptProps, DeptActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
-            const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
-            DeptActions.editDeptInfo({
-                deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
-                deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-    
-                paramIsInherit: (isInherit) ? 'Y' : 'N',
-    
-                browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                
-                desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
-            }).then((res) => {
-                // DeptActions.readDeptListPaged(DeptProps, compId);
-                // tree refresh
-                // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
-                this.handleClose();
-            });
         }
     }
 
@@ -159,8 +158,8 @@ class DeptDialog extends Component {
             editObject = DeptProps.get('editingItem').toJS();
         }
 
-        const upperDeptInfo = DeptProps.getIn(['viewItems', compId, 'selectedDeptNm']) +
-            ' (' + DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']) + ')';
+        const upperDeptInfo = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptNm']) +
+            ' (' + DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']) + ')';
 
         return (
             <div>

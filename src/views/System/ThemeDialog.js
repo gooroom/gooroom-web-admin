@@ -226,6 +226,7 @@ class ThemeDialog extends Component {
                     />
                     <div style={{marginTop:20}}></div>
                     <FormLabel>{t("lbIconSetting")}</FormLabel>
+                    <div style={{maxHeight:270,overflowY:'auto'}}>
                     <Table>
                         <TableBody>
                             {ThemeDialog.APP_LIST && ThemeDialog.APP_LIST.map(n => {
@@ -263,7 +264,7 @@ class ThemeDialog extends Component {
                             })}
                         </TableBody>
                     </Table>
-
+                    </div>
                 </DialogContent>
                 <DialogActions>
                 {(dialogType === ThemeDialog.TYPE_ADD) &&

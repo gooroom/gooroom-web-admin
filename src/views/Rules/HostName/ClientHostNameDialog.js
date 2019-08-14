@@ -36,6 +36,8 @@ class ClientHostNameDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+    static TYPE_INHERIT_DEPT = 'INHERIT_DEPT';
+    static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
     handleClose = (event) => {
@@ -58,7 +60,16 @@ class ClientHostNameDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddHosts"),
                 confirmMsg: t("msgAddHosts"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { ClientHostNameProps, ClientHostNameActions } = this.props;
+                        ClientHostNameActions.createClientHostNameData(paramObject)
+                            .then((res) => {
+                                refreshDataListInComps(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: ClientHostNameProps.get('editingItem')
             });
         } else {
@@ -67,16 +78,6 @@ class ClientHostNameDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { ClientHostNameProps, ClientHostNameActions } = this.props;
-            ClientHostNameActions.createClientHostNameData(ClientHostNameProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -88,7 +89,16 @@ class ClientHostNameDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditHosts"),
                 confirmMsg: t("msgEditHosts"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { ClientHostNameProps, ClientHostNameActions } = this.props;
+                        ClientHostNameActions.editClientHostNameData(paramObject, this.props.compId)
+                            .then((res) => {
+                                refreshDataListInComps(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: ClientHostNameProps.get('editingItem')
             });
         } else {
@@ -99,15 +109,25 @@ class ClientHostNameDialog extends Component {
             }
         }
     }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { ClientHostNameProps, ClientHostNameActions } = this.props;
-            ClientHostNameActions.editClientHostNameData(ClientHostNameProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(ClientHostNameProps, ClientHostNameActions.readClientHostNameListPaged);
-                    this.handleClose();
-                });
-        }
+
+    handleInheritSaveDataForDept = (event, id) => {
+    }
+
+    handleInheritSaveDataForGroup = (event, id) => {
+        const { ClientHostNameProps, ClientGroupProps, ClientHostNameActions, compId } = this.props;
+        const { t, i18n } = this.props;
+        const grpId = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']);
+
+        ClientHostNameActions.inheritClientHostNameDataForGroup({
+            'objId': ClientHostNameProps.getIn(['editingItem', 'objId']),
+            'grpId': grpId
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplyHostsChild")
+            });
+            this.handleClose();
+        });
     }
 
     handleCopyCreateData = (event, id) => {
@@ -126,7 +146,6 @@ class ClientHostNameDialog extends Component {
         });
     }
 
-
     render() {
         const { classes } = this.props;
         const { ClientHostNameProps } = this.props;
@@ -142,6 +161,8 @@ class ClientHostNameDialog extends Component {
             title = t("dtViewHosts");
         } else if(dialogType === ClientHostNameDialog.TYPE_EDIT) {
             title = t("dtEditHosts");
+        } else if(dialogType === ClientHostNameDialog.TYPE_INHERIT_DEPT || dialogType === ClientHostNameDialog.TYPE_INHERIT_GROUP) {
+            title = t("dtInheritHosts");
         } else if(dialogType === ClientHostNameDialog.TYPE_COPY) {
             title = t("dtCopyHosts");
         }
@@ -170,6 +191,14 @@ class ClientHostNameDialog extends Component {
                             onChange={this.handleValueChange("hosts")} />
                     </div>
                     }
+                    {(dialogType === ClientHostNameDialog.TYPE_INHERIT_DEPT || dialogType === ClientHostNameDialog.TYPE_INHERIT_GROUP) &&
+                        <div>
+                        <Typography variant="body1">
+                            {t("msgApplyRuleToChild")}
+                        </Typography>
+                        <ClientHostNameSpec selectedItem={editingItem} hasAction={false} />
+                        </div>
+                    }
                     {(dialogType === ClientHostNameDialog.TYPE_COPY) &&
                         <div>
                         <Typography variant="body1">
@@ -185,6 +214,12 @@ class ClientHostNameDialog extends Component {
                 }
                 {(dialogType === ClientHostNameDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
+                }
+                {(dialogType === ClientHostNameDialog.TYPE_INHERIT_DEPT) &&
+                    <Button onClick={this.handleInheritSaveDataForDept} variant='contained' color="secondary">{t("dtApply")}</Button>
+                }
+                {(dialogType === ClientHostNameDialog.TYPE_INHERIT_GROUP) &&
+                    <Button onClick={this.handleInheritSaveDataForGroup} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === ClientHostNameDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
@@ -204,7 +239,8 @@ class ClientHostNameDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientHostNameProps: state.ClientHostNameModule
+    ClientHostNameProps: state.ClientHostNameModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

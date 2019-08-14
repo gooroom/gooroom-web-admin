@@ -13,6 +13,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Grid from '@material-ui/core/Grid';
 
 import EditIcon from '@material-ui/icons/Edit';
+import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 import CopyIcon from '@material-ui/icons/FileCopy';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -56,7 +57,13 @@ class ClientHostNameSpec extends Component {
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, targetType)}
-                  ><CopyIcon /></Button>}
+                  ><CopyIcon /></Button>
+                  }
+                  {(this.props.inherit && !(viewItem.get('isDefault'))) && 
+                  <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
+                    onClick={() => this.props.onClickInherit(compId, targetType)}
+                  ><ArrowDropDownCircleIcon /></Button>
+                  }
                 </div>
               }
             />

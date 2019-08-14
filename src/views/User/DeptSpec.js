@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
 import * as DeptActions from 'modules/DeptModule';
@@ -29,6 +29,7 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
 
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
@@ -43,6 +44,12 @@ import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
+
+import Avatar from '@material-ui/core/Avatar';
+import DefaultIcon from '@material-ui/icons/Language';
+import DeptIcon from '@material-ui/icons/BusinessCenter';
+import UserIcon from '@material-ui/icons/Person';
+import GroupIcon from '@material-ui/icons/LaptopChromebook';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -72,8 +79,8 @@ class DeptSpec extends Component {
 
     this.props.DeptActions.showDialog({
       viewItem: {
-        deptCd: paramObj.get('selectedDeptCd'),
-        deptNm: paramObj.get('selectedDeptNm')
+        deptCd: paramObj.get('deptCd'),
+        deptNm: paramObj.get('deptNm')
       },
       dialogType: DeptDialog.TYPE_EDIT
     });
@@ -120,35 +127,35 @@ class DeptSpec extends Component {
     const viewItem = getSelectedObjectInComp(this.props.BrowserRuleProps, compId, targetType);
     this.props.BrowserRuleActions.showDialog({
       viewItem: viewItem,
-      dialogType: BrowserRuleDialog.TYPE_INHERIT
+      dialogType: BrowserRuleDialog.TYPE_INHERIT_DEPT
     });
   };
   handleClickInheritForMediaRule = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.MediaRuleProps, compId, targetType);
     this.props.MediaRuleActions.showDialog({
       viewItem: viewItem,
-      dialogType: MediaRuleDialog.TYPE_INHERIT
+      dialogType: MediaRuleDialog.TYPE_INHERIT_DEPT
     });
   };
   handleClickInheritForSecurityRule = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.SecurityRuleProps, compId, targetType);
     this.props.SecurityRuleActions.showDialog({
       viewItem: viewItem,
-      dialogType: SecurityRuleDialog.TYPE_INHERIT
+      dialogType: SecurityRuleDialog.TYPE_INHERIT_DEPT
     });
   };
   handleClickInheritForSoftwareFilter = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.SoftwareFilterProps, compId, targetType);
     this.props.SoftwareFilterActions.showDialog({
       viewItem: viewItem,
-      dialogType: SoftwareFilterDialog.TYPE_INHERIT
+      dialogType: SoftwareFilterDialog.TYPE_INHERIT_DEPT
     });
   };
   handleClickInheritForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
       viewItem: viewItem,
-      dialogType: DesktopConfDialog.TYPE_INHERIT
+      dialogType: DesktopConfDialog.TYPE_INHERIT_DEPT
     });
   };
   // ===================================================================
@@ -158,7 +165,7 @@ class DeptSpec extends Component {
     const { DeptProps, compId } = this.props;
 
     const informOpen = DeptProps.getIn(['viewItems', compId, 'informOpen']);
-    const viewItem = DeptProps.getIn(['viewItems', compId]);
+    const viewItem = DeptProps.getIn(['viewItems', compId, 'viewItem']);
 
     const selectedMediaRuleItem = this.props.MediaRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'DEPT']);
@@ -166,13 +173,15 @@ class DeptSpec extends Component {
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'DEPT']);
 
+    const avatarRef = getAvatarExplainForUser(this.props.t);
+
     return (
       <div style={{marginTop: 10}}>
       {(informOpen && viewItem) &&
         <Card>
           <CardHeader
-            title={viewItem.get('selectedDeptNm')}
-            subheader={viewItem.get('selectedDeptCd')}
+            title={viewItem.get('deptNm')}
+            subheader={viewItem.get('deptCd')}
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
@@ -184,6 +193,7 @@ class DeptSpec extends Component {
           ></CardHeader>
           <Divider />
           <CardContent style={{padding:10}}>
+            {avatarRef}
             <Grid container spacing={16}>
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}

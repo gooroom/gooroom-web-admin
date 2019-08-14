@@ -52,7 +52,8 @@ class BrowserRuleDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
-    static TYPE_INHERIT = 'INHERIT';
+    static TYPE_INHERIT_DEPT = 'INHERIT_DEPT';
+    static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
     constructor(props) {
@@ -69,6 +70,9 @@ class BrowserRuleDialog extends Component {
     }
 
     handleClose = (event) => {
+        this.setState({
+            selectedTab: 0
+        });
         this.props.BrowserRuleActions.closeDialog();
     }
 
@@ -126,7 +130,16 @@ class BrowserRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditBrowserRule"),
                 confirmMsg: t("msgEditBrowserRule"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { BrowserRuleProps, BrowserRuleActions, compId } = this.props;
+                        BrowserRuleActions.editBrowserRuleData(paramObject, compId)
+                            .then((res) => {
+                                refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: BrowserRuleProps.get('editingItem')
             });
         } else {
@@ -137,23 +150,13 @@ class BrowserRuleDialog extends Component {
             }
         }        
     }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { BrowserRuleProps, BrowserRuleActions } = this.props;
-            BrowserRuleActions.editBrowserRuleData(BrowserRuleProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
-                    this.handleClose();
-                });
-        }
-    }
 
-    handleInheritSaveData = (event, id) => {
+    handleInheritSaveDataForDept = (event, id) => {
         const { BrowserRuleProps, DeptProps, BrowserRuleActions, compId } = this.props;
         const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
-        BrowserRuleActions.inheritBrowserRuleData({
+        BrowserRuleActions.inheritBrowserRuleDataForDept({
             'objId': BrowserRuleProps.getIn(['editingItem', 'objId']),
             'deptCd': selectedDeptCd
         }).then((res) => {
@@ -164,6 +167,24 @@ class BrowserRuleDialog extends Component {
             this.handleClose();
         });
     }
+
+    handleInheritSaveDataForGroup = (event, id) => {
+        const { BrowserRuleProps, ClientGroupProps, BrowserRuleActions, compId } = this.props;
+        const { t, i18n } = this.props;
+        const grpId = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']);
+
+        BrowserRuleActions.inheritBrowserRuleDataForGroup({
+            'objId': BrowserRuleProps.getIn(['editingItem', 'objId']),
+            'grpId': grpId
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplyBrowserRuleChild")
+            });
+            this.handleClose();
+        });
+    }
+
 
     handleCopyCreateData = (event, id) => {
         const { BrowserRuleProps, BrowserRuleActions } = this.props;
@@ -227,7 +248,7 @@ class BrowserRuleDialog extends Component {
             title = t("dtViewBrowserRule");
         } else if(dialogType === BrowserRuleDialog.TYPE_EDIT) {
             title = t("dtEditBrowserRule");
-        } else if(dialogType === BrowserRuleDialog.TYPE_INHERIT) {
+        } else if(dialogType === BrowserRuleDialog.TYPE_INHERIT_DEPT || dialogType === BrowserRuleDialog.TYPE_INHERIT_GROUP) {
             title = t("dtInheritBrowserRule");
         } else if(dialogType === BrowserRuleDialog.TYPE_COPY) {
             title = t("dtCopyBrowserRule");
@@ -255,38 +276,6 @@ class BrowserRuleDialog extends Component {
                                 onChange={this.handleValueChange("comment")}
                                 className={classNames(classes.fullWidth, classes.dialogItemRow)}
                             />
-                            </Grid>
-                        </Grid>
-                        <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
-                            <Grid item xs={6}>
-                                <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
-                                    <Grid item xs={6}><FormLabel component="legend">{t("lbUseWebSocket")}</FormLabel></Grid>
-                                    <Grid item >
-                                        <FormControlLabel value="allow" control={
-                                            <Radio color="primary" value="allow" onChange={this.handleValueChange("webSocket")} checked={editingItem.get('webSocket') === 'allow'} />
-                                        } label={t("selPermitRule")} labelPlacement="end" />
-                                    </Grid>
-                                    <Grid item >
-                                        <FormControlLabel value="disallow" control={
-                                            <Radio color="primary" value="disallow" onChange={this.handleValueChange("webSocket")} checked={editingItem.get('webSocket') === 'disallow'} />
-                                        } label={t("selNoPermitRule")} labelPlacement="end" />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
-                                    <Grid item xs={6}><FormLabel component="legend">{t("lbUseWebWorker")}</FormLabel></Grid>
-                                    <Grid item >
-                                        <FormControlLabel value="allow" control={
-                                            <Radio color="primary" value="allow" onChange={this.handleValueChange("webWorker")} checked={editingItem.get('webWorker') === 'allow'} />
-                                        } label={t("selPermitRule")} labelPlacement="end" />
-                                    </Grid>
-                                    <Grid item >
-                                        <FormControlLabel value="disallow" control={
-                                            <Radio color="primary" value="disallow" onChange={this.handleValueChange("webWorker")} checked={editingItem.get('webWorker') === 'disallow'} />
-                                        } label={t("selNoPermitRule")} labelPlacement="end" />
-                                    </Grid>
-                                </Grid>
                             </Grid>
                         </Grid>
                         <AppBar elevation={0} position="static" color="default" style={{marginTop:20}} >
@@ -377,35 +366,72 @@ class BrowserRuleDialog extends Component {
                         }
                         {selectedTab === 1 && 
                             <div style={{border:'1px solid lightGray',padding:20}}>
+                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
+                                <Grid item xs={6}>
+                                    <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
+                                        <Grid item xs={6}><FormLabel component="legend">{t("lbUseWebSocket")}</FormLabel></Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="allow" control={
+                                                <Radio color="primary" value="allow" onChange={this.handleValueChange("webSocket")} checked={editingItem.get('webSocket') === 'allow'} />
+                                            } label={t("selPermitRule")} labelPlacement="end" />
+                                        </Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="disallow" control={
+                                                <Radio color="primary" value="disallow" onChange={this.handleValueChange("webSocket")} checked={editingItem.get('webSocket') === 'disallow'} />
+                                            } label={t("selNoPermitRule")} labelPlacement="end" />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
+                                        <Grid item xs={6}><FormLabel component="legend">{t("lbUseWebWorker")}</FormLabel></Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="allow" control={
+                                                <Radio color="primary" value="allow" onChange={this.handleValueChange("webWorker")} checked={editingItem.get('webWorker') === 'allow'} />
+                                            } label={t("selPermitRule")} labelPlacement="end" />
+                                        </Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="disallow" control={
+                                                <Radio color="primary" value="disallow" onChange={this.handleValueChange("webWorker")} checked={editingItem.get('webWorker') === 'disallow'} />
+                                            } label={t("selNoPermitRule")} labelPlacement="end" />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:0}}>
+                                <Grid item xs={6}>
+                                    <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                        <Grid item xs={12}><FormLabel component="legend">{t("lbDevToolUseStop")}</FormLabel></Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="1" control={
+                                                <Radio color="primary" value="1" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '1'} />
+                                            } label={t("selEnableDevTool")} labelPlacement="end" />
+                                        </Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="2" control={
+                                                <Radio color="primary" value="2" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '2'} />
+                                            } label={t("selDisableDevTool")} labelPlacement="end" />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{marginTop:10}}>
+                                        <Grid item xs={12}><FormLabel component="legend">{t("lbLimitDownload")}</FormLabel></Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="0" control={
+                                                <Radio color="primary" value="0" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '0'} />
+                                            } label={t("selNolimitDownload")} labelPlacement="end" />
+                                        </Grid>
+                                        <Grid item >
+                                            <FormControlLabel value="3" control={
+                                                <Radio color="primary" value="3" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '3'} />
+                                            } label={t("selLimitAllDownload")} labelPlacement="end" />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
                             
-                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                <Grid item xs={12}><FormLabel component="legend">{t("lbDevToolUseStop")}</FormLabel></Grid>
-                                <Grid item >
-                                    <FormControlLabel value="1" control={
-                                        <Radio color="primary" value="1" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '1'} />
-                                    } label={t("selEnableDevTool")} labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="2" control={
-                                        <Radio color="primary" value="2" onChange={this.handleValueChange("devToolRule__untrust")} checked={editingItem.get('devToolRule__untrust') === '2'} />
-                                    } label={t("selDisableDevTool")} labelPlacement="end" />
-                                </Grid>
-                            </Grid>
-
-                            <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{marginTop:10}}>
-                                <Grid item xs={12}><FormLabel component="legend">{t("lbLimitDownload")}</FormLabel></Grid>
-                                <Grid item >
-                                    <FormControlLabel value="0" control={
-                                        <Radio color="primary" value="0" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '0'} />
-                                    } label={t("selNolimitDownload")} labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="3" control={
-                                        <Radio color="primary" value="3" onChange={this.handleValueChange("downloadRule__untrust")} checked={editingItem.get('downloadRule__untrust') === '3'} />
-                                    } label={t("selLimitAllDownload")} labelPlacement="end" />
-                                </Grid>
-                            </Grid>
-
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
                                 <Grid item xs={6}>
                                     <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
@@ -475,7 +501,7 @@ class BrowserRuleDialog extends Component {
 
                     </div>
                     }
-                    {(dialogType === BrowserRuleDialog.TYPE_INHERIT) &&
+                    {(dialogType === BrowserRuleDialog.TYPE_INHERIT_DEPT || dialogType === BrowserRuleDialog.TYPE_INHERIT_GROUP) &&
                         <div>
                         <Typography variant="body1">
                             {t("msgApplyRuleToChild")}
@@ -499,8 +525,11 @@ class BrowserRuleDialog extends Component {
                 {(dialogType === BrowserRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
-                {(dialogType === BrowserRuleDialog.TYPE_INHERIT) &&
-                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">{t("dtApply")}</Button>
+                {(dialogType === BrowserRuleDialog.TYPE_INHERIT_DEPT) &&
+                    <Button onClick={this.handleInheritSaveDataForDept} variant='contained' color="secondary">{t("dtApply")}</Button>
+                }
+                {(dialogType === BrowserRuleDialog.TYPE_INHERIT_GROUP) &&
+                    <Button onClick={this.handleInheritSaveDataForGroup} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === BrowserRuleDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
@@ -520,7 +549,8 @@ class BrowserRuleDialog extends Component {
 
 const mapStateToProps = (state) => ({
     BrowserRuleProps: state.BrowserRuleModule,
-    DeptProps: state.DeptModule
+    DeptProps: state.DeptModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

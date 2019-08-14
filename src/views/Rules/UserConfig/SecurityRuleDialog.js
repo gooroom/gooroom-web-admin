@@ -28,6 +28,11 @@ import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
@@ -38,7 +43,8 @@ class SecurityRuleDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
-    static TYPE_INHERIT = 'INHERIT';
+    static TYPE_INHERIT_DEPT = 'INHERIT_DEPT';
+    static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
     handleClose = (event) => {
@@ -122,14 +128,31 @@ class SecurityRuleDialog extends Component {
         }
     }
 
-    handleInheritSaveData = (event, id) => {
+    handleInheritSaveDataForDept = (event, id) => {
         const { SecurityRuleProps, DeptProps, SecurityRuleActions, compId } = this.props;
         const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
-        SecurityRuleActions.inheritSecurityRuleData({
+        SecurityRuleActions.inheritSecurityRuleDataForDept({
             'objId': SecurityRuleProps.getIn(['editingItem', 'objId']),
             'deptCd': selectedDeptCd
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplySecuRuleChild")
+            });
+            this.handleClose();
+        });
+    }
+
+    handleInheritSaveDataForGroup = (event, id) => {
+        const { SecurityRuleProps, ClientGroupProps, SecurityRuleActions, compId } = this.props;
+        const { t, i18n } = this.props;
+        const grpId = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']);
+
+        SecurityRuleActions.inheritSecurityRuleDataForGroup({
+            'objId': SecurityRuleProps.getIn(['editingItem', 'objId']),
+            'grpId': grpId
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
@@ -159,6 +182,16 @@ class SecurityRuleDialog extends Component {
         const { classes } = this.props;
         const { t, i18n } = this.props;
 
+        const screenTimeListAll = [[1,'1' + t('optMinutes')], [2,'2' + t('optMinutes')], [3,'3' + t('optMinutes')], [5,'5' + t('optMinutes')], 
+        [10,'10' + t('optMinutes')], [15,'15' + t('optMinutes')], [20,'20' + t('optMinutes')], [25,'25' + t('optMinutes')], 
+        [30,'30' + t('optMinutes')], [45,'45' + t('optMinutes')], 
+        [60,'1' + t('optHours')], [120,'2' + t('optHours')], [180,'3' + t('optHours')], [240,'4' + t('optHours')], [300,'5' + t('optHours')]];
+
+        const screenTimeList = [[1,'1' + t('optMinutes')], [2,'2' + t('optMinutes')], [3,'3' + t('optMinutes')], [5,'5' + t('optMinutes')], 
+        [10,'10' + t('optMinutes')], [15,'15' + t('optMinutes')], [20,'20' + t('optMinutes')], [25,'25' + t('optMinutes')], 
+        [30,'30' + t('optMinutes')], [45,'45' + t('optMinutes')], 
+        [60,'1' + t('optHours')]];
+
         const { SecurityRuleProps } = this.props;
         const dialogType = SecurityRuleProps.get('dialogType');
         const editingItem = (SecurityRuleProps.get('editingItem')) ? SecurityRuleProps.get('editingItem') : null;
@@ -170,7 +203,7 @@ class SecurityRuleDialog extends Component {
             title = t("dtViewSecuRule");
         } else if(dialogType === SecurityRuleDialog.TYPE_EDIT) {
             title = t("dtEditSecuRule");
-        } else if(dialogType === SecurityRuleDialog.TYPE_INHERIT) {
+        } else if(dialogType === SecurityRuleDialog.TYPE_INHERIT_DEPT || dialogType === SecurityRuleDialog.TYPE_INHERIT_GROUP) {
             title = t("dtInheritSecuRule");
         } else if(dialogType === SecurityRuleDialog.TYPE_COPY) {
             title = t("dtCopySecuRule");
@@ -204,13 +237,19 @@ class SecurityRuleDialog extends Component {
                         <div>
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                                 <Grid item xs={12} sm={4} md={4}>
-                                    <TextField
-                                        label={t("lbScreenSaverTime")}
-                                        multiline
+                                <FormControl style={{width:'100%'}} >
+                                    <InputLabel htmlFor="screenTime">{t("lbScreenSaverTime")}</InputLabel>
+                                    <Select 
                                         value={(editingItem.get('screenTime')) ? editingItem.get('screenTime') : ''}
+                                        inputProps={{
+                                            name: t("lbScreenSaverTime"),
+                                            id: 'screenTime',
+                                        }}
                                         onChange={this.handleValueChange("screenTime")}
-                                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                    />
+                                    >
+                                        {screenTimeList.map(n => (<MenuItem key={n[0]} value={n[0]}>{n[1]}</MenuItem>))}
+                                    </Select>
+                                </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4} md={4}>
                                     <TextField
@@ -238,7 +277,7 @@ class SecurityRuleDialog extends Component {
                     }
                     </div>
                     }
-                    {(dialogType === SecurityRuleDialog.TYPE_INHERIT) &&
+                    {(dialogType === SecurityRuleDialog.TYPE_INHERIT_DEPT || dialogType === SecurityRuleDialog.TYPE_INHERIT_GROUP) &&
                         <div>
                         <Typography variant="body1">
                             {t("msgApplyRuleToChild")}
@@ -263,8 +302,11 @@ class SecurityRuleDialog extends Component {
                 {(dialogType === SecurityRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
-                {(dialogType === SecurityRuleDialog.TYPE_INHERIT) &&
-                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">{t("dtApply")}</Button>
+                {(dialogType === SecurityRuleDialog.TYPE_INHERIT_DEPT) &&
+                    <Button onClick={this.handleInheritSaveDataForDept} variant='contained' color="secondary">{t("dtApply")}</Button>
+                }
+                {(dialogType === SecurityRuleDialog.TYPE_INHERIT_GROUP) &&
+                    <Button onClick={this.handleInheritSaveDataForGroup} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === SecurityRuleDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
@@ -284,7 +326,8 @@ class SecurityRuleDialog extends Component {
 
 const mapStateToProps = (state) => ({
     SecurityRuleProps: state.SecurityRuleModule,
-    DeptProps: state.DeptModule
+    DeptProps: state.DeptModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

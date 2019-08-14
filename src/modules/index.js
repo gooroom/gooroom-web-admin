@@ -21,6 +21,8 @@ import ClientConfSettingModule from './ClientConfSettingModule';
 import ClientHostNameModule from './ClientHostNameModule';
 import ClientUpdateServerModule from './ClientUpdateServerModule';
 
+import TotalRuleModule from './TotalRuleModule';
+
 import MediaRuleModule from './MediaRuleModule';
 import BrowserRuleModule from './BrowserRuleModule';
 import SecurityRuleModule from './SecurityRuleModule';
@@ -43,6 +45,10 @@ import DailyClientCountModule from './DailyClientCountModule';
 
 import DashboardModule from './DashboardModule';
 
+import SiteManageModule from './SiteManageModule';
+import NoticeModule from './NoticeModule';
+import NoticePublishModule from './NoticePublishModule';
+import NoticePublishExtensionModule from './NoticePublishExtensionModule';
 
 export default combineReducers({
 
@@ -55,6 +61,8 @@ export default combineReducers({
     ClientHostNameModule,
     ClientUpdateServerModule,
 
+    TotalRuleModule,
+    
     MediaRuleModule,
     BrowserRuleModule,
     SecurityRuleModule,
@@ -87,6 +95,11 @@ export default combineReducers({
     DailyLoginCountModule,
     DailyClientCountModule,
 
-    DashboardModule
+    DashboardModule,
+
+	SiteManageModule,
+    NoticeModule,
+    NoticePublishModule,
+    NoticePublishExtensionModule
 
 });

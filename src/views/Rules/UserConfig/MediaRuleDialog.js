@@ -49,7 +49,8 @@ class MediaRuleDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
-    static TYPE_INHERIT = 'INHERIT';
+    static TYPE_INHERIT_DEPT = 'INHERIT_DEPT';
+    static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
     handleClose = (event) => {
@@ -138,14 +139,31 @@ class MediaRuleDialog extends Component {
         }
     }
 
-    handleInheritSaveData = (event, id) => {
+    handleInheritSaveDataForDept = (event, id) => {
         const { MediaRuleProps, DeptProps, MediaRuleActions, compId } = this.props;
         const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
-        MediaRuleActions.inheritMediaRuleData({
+        MediaRuleActions.inheritMediaRuleDataForDept({
             'objId': MediaRuleProps.getIn(['editingItem', 'objId']),
             'deptCd': selectedDeptCd
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplyMediaRuleChild")
+            });
+            this.handleClose();
+        });
+    }
+
+    handleInheritSaveDataForGroup = (event, id) => {
+        const { MediaRuleProps, ClientGroupProps, MediaRuleActions, compId } = this.props;
+        const { t, i18n } = this.props;
+        const grpId = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']);
+
+        MediaRuleActions.inheritMediaRuleDataForGroup({
+            'objId': MediaRuleProps.getIn(['editingItem', 'objId']),
+            'grpId': grpId
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
@@ -192,7 +210,7 @@ class MediaRuleDialog extends Component {
     }
 
     checkAllow = value => {
-        return (value == 'allow');
+        return (value !== 'disallow');
     }
 
     render() {
@@ -210,7 +228,7 @@ class MediaRuleDialog extends Component {
             title = t("dtViewMediaRule");
         } else if(dialogType === MediaRuleDialog.TYPE_EDIT) {
             title = t("dtEditMediaRule");
-        } else if(dialogType === MediaRuleDialog.TYPE_INHERIT) {
+        } else if(dialogType === MediaRuleDialog.TYPE_INHERIT_DEPT || dialogType === MediaRuleDialog.TYPE_INHERIT_GROUP) {
             title = t("dtInheritMediaRule");
         } else if(dialogType === MediaRuleDialog.TYPE_COPY) {
             title = t("dtCopyMediaRule");
@@ -334,9 +352,9 @@ class MediaRuleDialog extends Component {
                                     control={<Switch onChange={this.handleValueChange('usbMemory')}
                                         checked={this.checkAllow(editingItem.get('usbMemory'))}
                                         color="primary" />}
-                                    label={(editingItem.get('usbMemory')) ? t("selUsbMemoryOn") : t("selUsbMemoryOff")}
+                                    label={(editingItem.get('usbMemory') !== 'disallow') ? t("selUsbMemoryOn") : t("selUsbMemoryOff")}
                                 />
-                                <FormControlLabel label="Readonly" disabled={!(editingItem.get('usbMemory'))} style={{heigth:32}}
+                                <FormControlLabel label="Readonly" disabled={!(editingItem.get('usbMemory') !== 'disallow')} style={{heigth:32}}
                                     control={<Checkbox onChange={this.handleValueChange('usbReadonly')} color="primary"
                                         checked={this.checkAllow(editingItem.get('usbReadonly'))}
                                     />}                                
@@ -367,7 +385,7 @@ class MediaRuleDialog extends Component {
                     }
                     </div>
                     }
-                    {(dialogType === MediaRuleDialog.TYPE_INHERIT) &&
+                    {(dialogType === MediaRuleDialog.TYPE_INHERIT_DEPT || dialogType === MediaRuleDialog.TYPE_INHERIT_GROUP) &&
                         <div>
                         <Typography variant="body1">
                             {t("msgApplyRuleToChild")}
@@ -392,8 +410,11 @@ class MediaRuleDialog extends Component {
                 {(dialogType === MediaRuleDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
-                {(dialogType === MediaRuleDialog.TYPE_INHERIT) &&
-                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">{t("dtApply")}</Button>
+                {(dialogType === MediaRuleDialog.TYPE_INHERIT_DEPT) &&
+                    <Button onClick={this.handleInheritSaveDataForDept} variant='contained' color="secondary">{t("dtApply")}</Button>
+                }
+                {(dialogType === MediaRuleDialog.TYPE_INHERIT_GROUP) &&
+                    <Button onClick={this.handleInheritSaveDataForGroup} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === MediaRuleDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
@@ -413,7 +434,8 @@ class MediaRuleDialog extends Component {
 
 const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
-    DeptProps: state.DeptModule
+    DeptProps: state.DeptModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

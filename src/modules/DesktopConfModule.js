@@ -20,6 +20,7 @@ const SHOW_DESKTOPCONF_DIALOG = 'desktopConf/SHOW_DESKTOPCONF_DIALOG';
 const CLOSE_DESKTOPCONF_DIALOG = 'desktopConf/CLOSE_DESKTOPCONF_DIALOG';
 
 const SET_EDITING_ITEM_VALUE = 'desktopConf/SET_EDITING_ITEM_VALUE';
+const SET_EDITING_APP_ITEM = 'desktopConf/SET_EDITING_APP_ITEM';
 
 const CHG_LISTPARAM_DATA = 'desktopConf/CHG_LISTPARAM_DATA';
 const CHG_COMPDATA_VALUE = 'desktopConf/CHG_COMPDATA_VALUE';
@@ -130,7 +131,9 @@ export const getDesktopConf = (param) => dispatch => {
                 dispatch({
                     type: GET_DESKTOPCONF_SUCCESS,
                     compId: compId,
-                    response: response
+                    data: (response.data.data) ? response.data.data : null,
+                    extend: (response.data.extend) ? response.data.extend : null,
+                    target: ''
                 });
             }
         ).catch(error => {
@@ -204,8 +207,9 @@ export const getDesktopConfByUserId = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
-                target: 'USER',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'USER'
             });
         }
     ).catch(error => {
@@ -221,8 +225,9 @@ export const getDesktopConfByDeptCd = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
-                target: 'DEPT',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'DEPT'
             });
         }
     ).catch(error => {
@@ -238,8 +243,9 @@ export const getDesktopConfByGroupId = (param) => dispatch => {
             dispatch({
                 type: GET_DESKTOPCONF_SUCCESS,
                 compId: compId,
-                target: 'GROUP',
-                response: response
+                data: (response.data.data) ? response.data.data : null,
+                extend: (response.data.extend) ? response.data.extend : null,
+                target: 'GROUP'
             });
         }
     ).catch(error => {
@@ -391,8 +397,8 @@ export const deleteDesktopConfData = (param) => dispatch => {
     });
 };
 
-// rule inherit
-export const inheritDesktopConfData = (param) => dispatch => {
+// rule inherit - dept
+export const inheritDesktopConfDataForDept = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('updateDeptConfInherit', {
             'objId': param.confId,
@@ -401,9 +407,29 @@ export const inheritDesktopConfData = (param) => dispatch => {
         }).then(
         (response) => {
             dispatch({
-                type: EDIT_SECURITYRULE_SUCCESS,
+                type: EDIT_DESKTOPCONF_SUCCESS,
                 compId: param.compId,
                 confId: param.confId
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+// rule inherit - group
+export const inheritDesktopConfDataForGroup = (param) => dispatch => {
+    dispatch({type: COMMON_PENDING});
+    return requestPostAPI('updateClientGroupConfInherit', {
+            'objId': param.confId,
+            'confType': 'DESKTOPCONF',
+            'grpId': param.grpId
+        }).then(
+        (response) => {
+            dispatch({
+                type: EDIT_DESKTOPCONF_SUCCESS,
+                compId: param.compId,
+                objId: param.objId
             });
         }
     ).catch(error => {
@@ -489,7 +515,7 @@ export default handleActions({
         return commonHandleActions.handleListPagedAction(state, action);
     }, 
     [GET_DESKTOPCONF_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleGetObjectAction(state, action.compId, action.response.data.data, action.response.data.extend, action.target, 'confId');
+        return commonHandleActions.handleGetObjectAction(state, action.compId, action.data, action.extend, action.target, 'confId');
     },
     [CHANGE_DESKTOPCONF_EDITING_SUCCESS]: (state, action) => {
         const data = action.response.data.data;
@@ -553,7 +579,21 @@ export default handleActions({
         if(data && data.length > 0) {
             return state.set('themeListData', List(data.map((e) => {return Map(e)})));
         };
-    }, 
+    },
+    [SET_EDITING_APP_ITEM]: (state, action) => {
+        let tempState = state;
+        if(action.response && action.response.data && action.response.data.data && action.response.data.data.length > 0) {
+            const appObj = action.response.data.data[0];
+            if(tempState.getIn(['editingItem', 'apps']) !== undefined) {
+                const appIndex = tempState.getIn(['editingItem', 'apps']).findIndex((e) => (e.get('appId') === appObj.appId));
+                if(appIndex > -1) {
+                    tempState = tempState.setIn(['editingItem', 'apps', appIndex], fromJS(appObj));
+                }
+            }
+        }
+
+        return tempState;
+    }
 
 }, initialState);
 

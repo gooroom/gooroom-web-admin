@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getSelectedObjectInComp, getValueInSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
 
@@ -75,7 +75,10 @@ class UserSpec extends Component {
         userId: viewItem.get('userId'),
         userNm: viewItem.get('userNm'),
         deptCd: viewItem.get('deptCd'),
-        deptNm: viewItem.get('deptNm')
+        deptNm: viewItem.get('deptNm'),
+        expireDate: viewItem.get('expireDate'),
+        loginTrial: viewItem.get('loginTrial'),
+        userEmail: viewItem.get('userEmail')
       },
       ruleDialogType: UserDialog.TYPE_EDIT
     }, true);
@@ -132,13 +135,18 @@ class UserSpec extends Component {
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'USER']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'USER']);
 
+    const avatarRef = getAvatarExplainForUser(this.props.t);
+
     return (
       <div style={{marginTop: 10}} >
       {(informOpen && viewItem) &&
         <Card>
           <CardHeader
             title={viewItem.get('userNm')}
-            subheader={viewItem.get('userId') + ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}
+            subheader={viewItem.get('userId') + 
+            ', ' + viewItem.get('userEmail') + 
+            ', [Registered:' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD') + 
+            '], [Expired:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}
             action={
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
@@ -150,6 +158,7 @@ class UserSpec extends Component {
           />
           <Divider />
           <CardContent style={{padding:10}}>
+            {avatarRef}
             <Grid container spacing={16}>
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <BrowserRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
