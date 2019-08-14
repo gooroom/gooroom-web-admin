@@ -103,6 +103,8 @@ class DailyClientCountManage extends Component {
     if(listObj && listObj.get('listAllData')) {
       data = listObj.get('listAllData').toJS().map((e) => {
         e.logDate = formatDateToSimple(e.logDate, 'MM/DD');
+        e.regCount = Number(e.regCount);
+        e.revokeCount = Number(e.revokeCount);
         return e;
       });
     }
