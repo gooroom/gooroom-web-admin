@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import classNames from "classnames";
 
 import { grRequestPromise } from "components/GRUtils/GRRequester";
 import GRTreeItem from "./GRTreeItem";
@@ -7,7 +6,6 @@ import GRTreeItem from "./GRTreeItem";
 import List from '@material-ui/core/List';
 import FolderIcon from "@material-ui/icons/Folder";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
-import FileIcon from "@material-ui/icons/InsertDriveFile";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -15,7 +13,8 @@ import { GRCommonStyle } from 'templates/styles/GRStyles';
 class GRTreeList extends Component {
   constructor(props) {
     super(props);
-
+    
+    this._isMounted = false;
     this.state = {
       expandedListItems: [],
       activeListItem: null,
@@ -30,6 +29,7 @@ class GRTreeList extends Component {
       
       isShowCheck: (props.isShowCheck !== undefined) ? props.isShowCheck : true,
       isEnableEdit: (props.isEnableEdit !== undefined) ? props.isEnableEdit : false,
+      isCheckMasterOnly: (props.isCheckMasterOnly !== undefined) ? props.isCheckMasterOnly : false,
 
       treeData: [],
 
@@ -42,6 +42,7 @@ class GRTreeList extends Component {
   }
 
   componentDidMount() {
+    this._isMounted = true;
     
     if(this.props.onRef) {
       this.props.onRef(this);
@@ -55,6 +56,7 @@ class GRTreeList extends Component {
   }
 
   componentWillUnmount() {
+    this._isMounted = false;
     if(this.props.onRef) {
       this.props.onRef(undefined)
     }
@@ -71,16 +73,19 @@ class GRTreeList extends Component {
 
       const resData = res.map(x => {
         let children = null;
-        if (x.lazy) {
+        if (x.hasChildren) {
           children = [];
         }
 
         let node = {
           key: x[keyName],
-          depth: (x.whleDeptCd.match(/;/g) || []).length,
+          depth: x.level,
           disabled: false,
           title: x[this.state.title],
           children: children,
+          regDate: x.regDt,
+          modDate: x.modDt,
+          comment: x.comment,
           _shouldRender: true
         };
         if (index !== undefined) {
@@ -92,24 +97,10 @@ class GRTreeList extends Component {
       if (this.state.treeData.length > 0) {
         // set children data for stop refetch.
         let parents = this.state.treeData;
-        const oldChildrenLength = (parents[index].children) ? parents[index].children.length : 0;
 
         parents[index].children = resData.map(d => {
           return d.key;
         });
-
-        // check child if parent checked
-        // if(this.state.checked.includes(parents[index].key)) {
-        //   // add checked data, by default checked.
-        //   const newChecked = [...this.state.checked];
-        //   resData.map(d => {
-        //     newChecked.push(d.key);  
-        //     return d;
-        //   });
-        //   this.setState({
-        //     checked: newChecked  
-        //   });
-        // }
         
         // data merge.
         // 1. delete children
@@ -137,25 +128,30 @@ class GRTreeList extends Component {
             }
         });
 
-        this.setState({
+        if(this._isMounted) {
+          this.setState({
             expandedListItems: newExpandedListItems,
             treeData: parents
-        });
+          });
+        }
 
       } else {
-        this.setState({
-          treeData: resData
-        });
+        if(this._isMounted) {
+          this.setState({
+            treeData: resData
+          });
 
-        // init tree and expand
-        if(isDoExpand) {
-          this.handleClickNode(resData[0], 0);
+          if(isDoExpand) {
+            this.handleClickNode(resData[0], 0);
+          }
         }
       }
 
-      if(onCallback) {
+      if(this._isMounted && onCallback) {
         onCallback((resData && resData.length > 0) ? true : false);
       }
+    }).catch(function (err) {
+      console.log(err); // Error: Request is failed
     });
   }
 
@@ -374,61 +370,87 @@ class GRTreeList extends Component {
     }
   }
 
-  render() {
-    const contentKey = "title";
+  applyStyle = (listItem, isActive) => {
+    return {
+      root: {
+        paddingLeft: (listItem.depth - this.state.startingDepth) * 8,
+        backgroundColor: isActive ? "rgba(0,0,0,0.2)" : null,
+        paddingTop: "0px",
+        paddingBottom: "0px",
+        alignItems: "start",
+        cursor: listItem.disabled ? "not-allowed" : "pointer",
+        color: listItem.disabled ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.87)",
+        overflow: "hidden",
+        transform: "translateZ(0)"
+      }
+    }
+  }
 
+  getListItemModified = () => {
+    const expandedListItems = this.state.expandedListItems;
+    const treeData = this.state.treeData;
     const startingDepth = this.state.startingDepth;
-    const listHeight = this.props.listHeight ? this.props.listHeight : "24px";
-    const activeListItem = this.props.activeListItem
-      ? this.props.activeListItem
-      : this.state.activeListItem;
-    const expandedListItems = this.props.expandedListItems
-      ? this.props.expandedListItems
-      : this.state.expandedListItems;
 
-    const datas = this.state.treeData;
-
-    let listItemsModified = this.state.treeData.map(
+    const modifiedList = treeData.map (
       (listItem, i, inputArray) => {
-        listItem._styles = {
-          root: {
-            paddingLeft: (listItem.depth - startingDepth) * 8,
-            backgroundColor: activeListItem === i ? "rgba(0,0,0,0.2)" : null,
-            paddingTop: "0px",
-            paddingBottom: "0px",
-            alignItems: "start",
-            cursor: listItem.disabled ? "not-allowed" : "pointer",
-            color: listItem.disabled ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.87)",
-            overflow: "hidden",
-            transform: "translateZ(0)"
-          }
-        };
-
+        listItem._styles = this.applyStyle(listItem, (this.state.activeListItem === i));
         listItem._shouldRender = // (listItem._shouldRender) ||
           (listItem.depth >= startingDepth && parentsAreExpanded(listItem));
-        listItem._primaryText = listItem[contentKey];
-
+        listItem._primaryText = listItem['title'];
         return listItem;
       }
     );
 
-    // JSX: array of listItems
-    const listItemsJSX = listItemsModified.map((listItem, i) => {
+    function parentsAreExpanded(listItem) {
+      if (listItem.depth > startingDepth) {
+        if (expandedListItems.indexOf(listItem.parentIndex) === -1) {
+          return false;
+        } else {
+          const parent = treeData.filter((_listItem, index) => {
+            return index === listItem.parentIndex;
+          })[0];
+          return parentsAreExpanded(parent);
+        }
+      } else {
+        return true;
+      }
+    }
 
+    return modifiedList;
+  }
+
+  getTreeItemList = () => {
+
+    function getLeftIcon(listItem, localProps) {
+      if (localProps.useFolderIcons) {
+        if (listItem.children) {
+          return <FolderOpenIcon className={localProps.classes.parentNodeClass} />;
+        } else {
+          return <FolderIcon className={localProps.classes.childNodeClass} />;
+        }
+      } else {
+        return listItem.icon;
+      }
+    }
+
+    const listItemsModified = this.getListItemModified();
+    const listItemsJSX = listItemsModified.map((listItem, i) => {
       if (listItem._shouldRender) {
         return (
           <GRTreeItem
             key={"treeListItem-" + i}
             nodeKey={listItem.key}
+            depth={listItem.depth}
             primaryText={listItem._primaryText}
             style={Object.assign({}, listItem._styles.root)}
             isShowCheck={this.state.isShowCheck}
             isEnableEdit={this.state.isEnableEdit}
+            isCheckMasterOnly={this.state.isCheckMasterOnly}
             checked={this.state.checked}
             imperfect={this.state.imperfect}
             leftIcon={getLeftIcon(listItem, this.props)}
             isExtend={
-              !listItem.children ? null : expandedListItems.indexOf(i) === -1 ? ('Y') : ('N')
+              !listItem.children ? null : this.state.expandedListItems.indexOf(i) === -1 ? ('Y') : ('N')
             }
             onClickNode={() => {
               if (listItem.disabled) {
@@ -446,39 +468,18 @@ class GRTreeList extends Component {
       }
     });
 
+    return listItemsJSX;
+  }
+
+  render() {
+    const listItemsJSX = this.getTreeItemList();
     return (
       <React.Fragment>
-        <List>{listItemsJSX}</List>
+        <List disablePadding={true}>{listItemsJSX}</List>
       </React.Fragment>
     );
-
-    function getLeftIcon(listItem, localProps) {
-      if (localProps.useFolderIcons) {
-        if (listItem.children) {
-          return <FolderOpenIcon className={localProps.classes.parentNodeClass} />;
-        } else {
-          return <FolderIcon className={localProps.classes.childNodeClass} />;
-        }
-      } else {
-        return listItem.icon;
-      }
-    }
-
-    function parentsAreExpanded(listItem) {
-      if (listItem.depth > startingDepth) {
-        if (expandedListItems.indexOf(listItem.parentIndex) === -1) {
-          return false;
-        } else {
-          const parent = datas.filter((_listItem, index) => {
-            return index === listItem.parentIndex;
-          })[0];
-          return parentsAreExpanded(parent);
-        }
-      } else {
-        return true;
-      }
-    }
   }
+  
 }
 
 export default withStyles(GRCommonStyle)(GRTreeList);

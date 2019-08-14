@@ -36,6 +36,8 @@ class ClientUpdateServerDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
+    static TYPE_INHERIT_DEPT = 'INHERIT_DEPT';
+    static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
     handleClose = (event) => {
@@ -110,6 +112,26 @@ class ClientUpdateServerDialog extends Component {
         }
     }
 
+    handleInheritSaveDataForDept = (event, id) => {
+    }
+
+    handleInheritSaveDataForGroup = (event, id) => {
+        const { ClientUpdateServerProps, ClientGroupProps, ClientUpdateServerActions, compId } = this.props;
+        const { t, i18n } = this.props;
+        const grpId = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']);
+
+        ClientUpdateServerActions.inheritClientUpdateServerDataForGroup({
+            'objId': ClientUpdateServerProps.getIn(['editingItem', 'objId']),
+            'grpId': grpId
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplyUpdateServerChild")
+            });
+            this.handleClose();
+        });
+    }
+
     handleCopyCreateData = (event, id) => {
         const { ClientUpdateServerProps, ClientUpdateServerActions } = this.props;
         const { t, i18n } = this.props;
@@ -141,6 +163,8 @@ class ClientUpdateServerDialog extends Component {
             title = t("dtViewUpdateServer");
         } else if(dialogType === ClientUpdateServerDialog.TYPE_EDIT) {
             title = t("dtEditUpdateServer");
+        } else if(dialogType === ClientUpdateServerDialog.TYPE_INHERIT_DEPT || dialogType === ClientUpdateServerDialog.TYPE_INHERIT_GROUP) {
+            title = t("dtInheritUpdateServer");
         } else if(dialogType === ClientUpdateServerDialog.TYPE_COPY) {
             title = t("dtCopyUpdateServer");
         }
@@ -175,6 +199,14 @@ class ClientUpdateServerDialog extends Component {
                             onChange={this.handleValueChange("priorities")} />
                     </div>
                     }
+                    {(dialogType === ClientUpdateServerDialog.TYPE_INHERIT_DEPT || dialogType === ClientUpdateServerDialog.TYPE_INHERIT_GROUP) &&
+                        <div>
+                        <Typography variant="body1">
+                            {t("msgApplyRuleToChild")}
+                        </Typography>
+                        <ClientUpdateServerSpec selectedItem={editingItem} hasAction={false} />
+                        </div>
+                    }
                     {(dialogType === ClientUpdateServerDialog.TYPE_COPY) &&
                         <div>
                         <Typography variant="body1">
@@ -190,6 +222,12 @@ class ClientUpdateServerDialog extends Component {
                 }
                 {(dialogType === ClientUpdateServerDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
+                }
+                {(dialogType === ClientUpdateServerDialog.TYPE_INHERIT_DEPT) &&
+                    <Button onClick={this.handleInheritSaveDataForDept} variant='contained' color="secondary">{t("dtApply")}</Button>
+                }
+                {(dialogType === ClientUpdateServerDialog.TYPE_INHERIT_GROUP) &&
+                    <Button onClick={this.handleInheritSaveDataForGroup} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === ClientUpdateServerDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
@@ -208,7 +246,8 @@ class ClientUpdateServerDialog extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientUpdateServerProps: state.ClientUpdateServerModule
+    ClientUpdateServerProps: state.ClientUpdateServerModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -292,7 +292,7 @@ class UserManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       {(n.get('statusCd') !== 'STAT020') &&
-                      <React.Fragment>
+                        <React.Fragment>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('userId'))}>

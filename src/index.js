@@ -24,7 +24,7 @@ ReactDOM.render(
   <MuiPickersUtilsProvider utils={LocalizedUtils}>
   
   <Provider store={store}>
-    <HashRouter basename={'gpms'}>
+    <HashRouter basename={'/'}>
       <App />
     </HashRouter>
   </Provider>

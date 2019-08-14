@@ -43,7 +43,8 @@ class DesktopConfDialog extends Component {
     static TYPE_VIEW = 'VIEW';
     static TYPE_ADD = 'ADD';
     static TYPE_EDIT = 'EDIT';
-    static TYPE_INHERIT = 'INHERIT';
+    static TYPE_INHERIT_DEPT = 'INHERIT_DEPT';
+    static TYPE_INHERIT_GROUP = 'INHERIT_GROUP';
     static TYPE_COPY = 'COPY';
 
     componentDidMount() {
@@ -127,14 +128,31 @@ class DesktopConfDialog extends Component {
         }
     }
 
-    handleInheritSaveData = (event, id) => {
+    handleInheritSaveDataForDept = (event, id) => {
         const { DesktopConfProps, DeptProps, DesktopConfActions, compId } = this.props;
         const { t, i18n } = this.props;
         const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
 
-        DesktopConfActions.inheritDesktopConfData({
+        DesktopConfActions.inheritDesktopConfDataForDept({
             'confId': DesktopConfProps.getIn(['editingItem', 'confId']),
             'deptCd': selectedDeptCd
+        }).then((res) => {
+            this.props.GRAlertActions.showAlert({
+                alertTitle: t("dtSystemNotice"),
+                alertMsg: t("msgApplyDesktopConfToChild")
+            });
+            this.handleClose();
+        });
+    }
+
+    handleInheritSaveDataForGroup = (event, id) => {
+        const { DesktopConfProps, ClientGroupProps, DesktopConfActions, compId } = this.props;
+        const { t, i18n } = this.props;
+        const grpId = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']);
+
+        DesktopConfActions.inheritDesktopConfDataForGroup({
+            'confId': DesktopConfProps.getIn(['editingItem', 'confId']),
+            'grpId': grpId
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
@@ -176,7 +194,7 @@ class DesktopConfDialog extends Component {
             title = t("dtViewDesktopConf");
         } else if(dialogType === DesktopConfDialog.TYPE_EDIT) {
             title = t("dtEditDesktopConf");
-        } else if(dialogType === DesktopConfDialog.TYPE_INHERIT) {
+        } else if(dialogType === DesktopConfDialog.TYPE_INHERIT_DEPT || dialogType === DesktopConfDialog.TYPE_INHERIT_GROUP) {
             title = t("dtInheritDesktopConf");
         } else if(dialogType === DesktopConfDialog.TYPE_COPY) {
             title = t("dtCopyDesktopConf");
@@ -217,12 +235,13 @@ class DesktopConfDialog extends Component {
                                 <DesktopAppSelector 
                                     selectedApps={editingItem.get('apps') ? editingItem.get('apps') : List([])}
                                     isEnableDelete={this.props.isEnableDelete}
+                                    themeId={selectedThemeId}
                                 />
                             </Grid>
                             
                         </Grid>
                     }
-                    {(dialogType === DesktopConfDialog.TYPE_INHERIT) &&
+                    {(dialogType === DesktopConfDialog.TYPE_INHERIT_DEPT || dialogType === DesktopConfDialog.TYPE_INHERIT_GROUP) &&
                         <div>
                         <Typography variant="body1">
                             {t("msgApplyRuleToChild")}
@@ -247,8 +266,11 @@ class DesktopConfDialog extends Component {
                 {(dialogType === DesktopConfDialog.TYPE_EDIT) &&
                     <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                 }
-                {(dialogType === DesktopConfDialog.TYPE_INHERIT) &&
-                    <Button onClick={this.handleInheritSaveData} variant='contained' color="secondary">{t("dtApply")}</Button>
+                {(dialogType === DesktopConfDialog.TYPE_INHERIT_DEPT) &&
+                    <Button onClick={this.handleInheritSaveDataForDept} variant='contained' color="secondary">{t("dtApply")}</Button>
+                }
+                {(dialogType === DesktopConfDialog.TYPE_INHERIT_GROUP) &&
+                    <Button onClick={this.handleInheritSaveDataForGroup} variant='contained' color="secondary">{t("dtApply")}</Button>
                 }
                 {(dialogType === DesktopConfDialog.TYPE_COPY) &&
                     <Button onClick={this.handleCopyCreateData} variant='contained' color="secondary">{t("dtCopy")}</Button>
@@ -269,7 +291,8 @@ class DesktopConfDialog extends Component {
 const mapStateToProps = (state) => ({
     DesktopConfProps: state.DesktopConfModule,
     DesktopAppProps: state.DesktopAppModule,
-    DeptProps: state.DeptModule
+    DeptProps: state.DeptModule,
+    ClientGroupProps: state.ClientGroupModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

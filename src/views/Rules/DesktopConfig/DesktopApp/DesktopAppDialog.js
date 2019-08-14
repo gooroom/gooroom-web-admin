@@ -137,7 +137,7 @@ class DesktopAppDialog extends Component {
                         // ], {}, {isCloseInform:true});
 
                         // 선택된 App 리스트 처리
-                        DesktopConfActions.changedDesktopConfForEdit(DesktopConfProps, DesktopConfActions);
+                        //DesktopConfActions.changedDesktopConfForEdit(DesktopConfProps, DesktopConfActions);
                         // 전체 APP 리스트 조회 (변경된 데이타로 주입)
                         DesktopAppActions.readDesktopAppAllList();
                     }

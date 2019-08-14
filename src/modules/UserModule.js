@@ -5,6 +5,7 @@ import sha256 from 'sha-256-js';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 const COMMON_PENDING = 'user/COMMON_PENDING';
 const COMMON_FAILURE = 'user/COMMON_FAILURE';
@@ -88,10 +89,12 @@ export const readUserListPaged = (module, compId, extParam) => dispatch => {
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
         module.get('defaultListParam');
 
+    const deptCdParam = (newListParam.get('deptCd') && List(newListParam.get('deptCd')).size > 0) ? List(newListParam.get('deptCd')).join() : '';
+
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readUserListPagedInDept', {
         status: newListParam.get('status'),
-        deptCd: newListParam.get('deptCd'),
+        deptCd: deptCdParam,
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),
@@ -155,21 +158,24 @@ export const changeStoreData = (param) => dispatch => {
 };
 
 const makeParameter = (param) => {
+
     const isChangePasswd = (param.userPasswd && param.userPasswd != '') ? 'Y' : 'N';
     return {
         userId: param.userId,
         userPasswd: (param.userPasswd && param.userPasswd !== '') ? sha256(param.userId + sha256(param.userPasswd)) : '',
 
         userNm: param.userNm,
+        userEmail: param.userEmail,
         deptCd: param.deptCd,
         isChangePasswd: isChangePasswd,
+        expireDate: formatDateToSimple(param.expireDate, 'YYYY-MM-DD'),
+        loginTrial: param.loginTrial,
 
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
         securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
         filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
         desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId
-
     };
 }
 
@@ -177,6 +183,7 @@ const makeParameter = (param) => {
 // create (add)
 export const createUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
+
     return requestPostAPI('createUserWithRule', makeParameter(param)).then(
         (response) => {
             try {

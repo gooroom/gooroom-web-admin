@@ -10,6 +10,7 @@ import * as UserActions from 'modules/UserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { InlineDatePicker } from 'material-ui-pickers';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
@@ -87,7 +88,8 @@ class UserBasicDialog extends Component {
             UserActions.createUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userNm'])
+                userNm: UserProps.getIn(['editingItem', 'userNm']),
+                expireDate: UserProps.getIn(['editingItem', 'expireDate'])
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
@@ -121,13 +123,21 @@ class UserBasicDialog extends Component {
             UserActions.editUserData({
                 userId: UserProps.getIn(['editingItem', 'userId']),
                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userNm'])
+                userNm: UserProps.getIn(['editingItem', 'userNm']),
+                expireDate: UserProps.getIn(['editingItem', 'expireDate'])
             }).then((res) => {
                 UserActions.readUserListPaged(UserProps, compId);
                 this.handleClose();
             });
         }
     }
+
+    handleDateChange = (date, name) => {
+        this.props.UserActions.setEditingItemValue({
+          name: name, 
+          value: date.format('YYYY-MM-DD')
+        });
+    };
 
     render() {
         const { classes } = this.props;
@@ -155,7 +165,7 @@ class UserBasicDialog extends Component {
                     <DialogContent>
                         <TextValidator
                             label={t("lbUserId")} value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
-                            name="userId" validators={['required', 'matchRegexp:^[a-zA-Z0-9]*$']}
+                            name="userId" validators={['required', 'matchRegexp:^[a-z][-a-z0-9_]*$']}
                             errorMessages={[t("msgEnterUserId"), t("msgUserIdValid")]}
                             onChange={this.handleValueChange("userId")}
                             className={classNames(classes.fullWidth, classes.dialogItemRow)}
@@ -172,7 +182,7 @@ class UserBasicDialog extends Component {
                                 label={t("lbPassword")}
                                 type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
                                 value={(editingItem.get('userPasswd')) ? editingItem.get('userPasswd') : ''}
-                                name="userPasswd" validators={['required']} errorMessages={[t("msgEnterPassword")]}
+                                name="userPasswd" validators={[]} errorMessages={[t("msgEnterPassword")]}
                                 onChange={this.handleValueChange('userPasswd')}
                                 InputProps={{
                                     endAdornment: (
@@ -182,13 +192,18 @@ class UserBasicDialog extends Component {
                                         onClick={this.handleClickShowPassword}
                                         onMouseDown={this.handleMouseDownPassword}
                                         >
-                                        {(editingItem && editingItem.get('showPasswd')) ? <VisibilityOff /> : <Visibility />}
+                                        {(editingItem && editingItem.get('showPasswd')) ? <Visibility /> : <VisibilityOff />}
                                         </IconButton>
                                     </InputAdornment>
                                 )
                                 }}
                             />
                         </FormControl>
+                        <InlineDatePicker label={t('expireDate')} format='YYYY-MM-DD'
+                            value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : '1999-01-01'}
+                            onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
+                            className={classes.fullWidth} />
+
                     </DialogContent>
                     <DialogActions>
                         {(dialogType === UserBasicDialog.TYPE_ADD) &&

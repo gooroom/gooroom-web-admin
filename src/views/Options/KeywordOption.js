@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import TextField from "@material-ui/core/TextField";
 import { translate, Trans } from "react-i18next";
 
+import FormControl from '@material-ui/core/FormControl';
+
 //
 //  ## Content ########## ########## ########## ########## ########## 
 //
@@ -26,10 +28,15 @@ class KeywordOption extends Component {
   };
 
   render() {
-    const { label } = this.props;
-    const { t, i18n } = this.props;
+    const { label, t } = this.props;
     return (
-      <TextField label={(label) ? label : t("optKeyword")} onChange={this.handleKeywordChange()} onKeyDown={this.handleKeyPress()} value={this.props.keywordValue} />
+      <React.Fragment>
+        <FormControl fullWidth={true}>
+          <TextField label={(label) ? label : t("optKeyword")} 
+            onChange={this.handleKeywordChange()} 
+            onKeyDown={this.handleKeyPress()} value={this.props.keywordValue} />
+        </FormControl>
+      </React.Fragment>
     );
   }
 }

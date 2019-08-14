@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 import { Map, List, fromJS } from 'immutable';
 
+import Paper from '@material-ui/core/Paper';
 import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+
 import DefaultIcon from '@material-ui/icons/Language';
 import DeptIcon from '@material-ui/icons/BusinessCenter';
 import UserIcon from '@material-ui/icons/Person';
@@ -165,11 +173,8 @@ export const getAvatarForRule = (targetType, isDefault, isDeptRole, isUserRole, 
 export const getAvatarForRuleGrade = (targetType, ruleGrade) => {
 
     if(targetType == "DESKTOP_APP") {
-
         return <Avatar aria-label="Recipe" style={{ backgroundColor: red[100] }}><StarsIcon /></Avatar>;
-
     } else {
-
         if(ruleGrade) {
             if(ruleGrade == 'DEFAULT') {
                 return <Avatar aria-label="Recipe" style={{ backgroundColor: red[400] }}><DefaultIcon /></Avatar>;
@@ -185,7 +190,40 @@ export const getAvatarForRuleGrade = (targetType, ruleGrade) => {
         } else {
             return <Avatar aria-label="Recipe" style={{ backgroundColor: red[100] }}><DefaultIcon /></Avatar>;
         }
-    
     }
-
 }
+
+export const getAvatarExplainForUser = (t) => {
+    return <Paper style={{padding: '6 20 6 20', marginBottom:10}}>
+        <Table>
+            <TableBody>
+                <TableRow>
+                <TableCell ></TableCell>
+                <TableCell style={{width:20,textAlign:'center',border:0}}><Avatar style={{ backgroundColor: red[400], width:16, height:16 }}><DefaultIcon style={{ fontSize: 12 }}/></Avatar></TableCell>
+                <TableCell style={{width:120,textAlign:'left',border:0}}><Typography variant="overline" gutterBottom style={{marginTop:2,marginBottom:0}}>{t("lbDefaultRule")}</Typography></TableCell>
+                <TableCell style={{width:20,textAlign:'center',border:0}}><Avatar style={{ backgroundColor: blue[400], width:16, height:16 }}><DeptIcon style={{ fontSize: 12 }}/></Avatar></TableCell>
+                <TableCell style={{width:120,textAlign:'left',border:0}}><Typography variant="overline" gutterBottom style={{marginTop:2,marginBottom:0}}>{t("lbDeptRule")}</Typography></TableCell>
+                <TableCell style={{width:20,textAlign:'center',border:0}}><Avatar style={{ backgroundColor: orange[400], width:16, height:16 }}><UserIcon style={{ fontSize: 12 }}/></Avatar></TableCell>
+                <TableCell style={{width:120,textAlign:'left',border:0}}><Typography variant="overline" gutterBottom style={{marginTop:2,marginBottom:0}}>{t("lbUserRule")}</Typography></TableCell>
+                </TableRow>
+            </TableBody>
+        </Table>
+    </Paper>;
+}
+
+export const getAvatarExplainForGroup = (t) => {
+    return <Paper style={{padding: '6 20 6 20', marginBottom:10}}>
+        <Table>
+            <TableBody>
+                <TableRow>
+                <TableCell ></TableCell>
+                <TableCell style={{width:20,textAlign:'center',border:0}}><Avatar style={{ backgroundColor: red[400], width:16, height:16 }}><DefaultIcon style={{ fontSize: 12 }}/></Avatar></TableCell>
+                <TableCell style={{width:120,textAlign:'left',border:0}}><Typography variant="overline" gutterBottom style={{marginTop:2,marginBottom:0}}>{t("lbDefaultRule")}</Typography></TableCell>
+                <TableCell style={{width:20,textAlign:'center',border:0}}><Avatar style={{ backgroundColor: green[400], width:16, height:16 }}><GroupIcon style={{ fontSize: 12 }}/></Avatar></TableCell>
+                <TableCell style={{width:150,textAlign:'left',border:0}}><Typography variant="overline" gutterBottom style={{marginTop:2,marginBottom:0}}>{t("lbClientGroupRule")}</Typography></TableCell>
+                </TableRow>
+            </TableBody>
+        </Table>
+    </Paper>;
+}
+
