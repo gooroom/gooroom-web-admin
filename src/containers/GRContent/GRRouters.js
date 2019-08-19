@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import { Switch, Route, Redirect } from "react-router-dom";
+import * as Constants from "components/GRComponents/GRConstants";
 
 import Dashboard from "containers/Dashboard/";
+import PartMain from "containers/PartMain/";
 // Client - client management
 import ClientMasterManage from "views/Client/ClientMasterManage";
 
@@ -53,14 +55,25 @@ class GRRouters extends Component {
     super(props);
   }
 
+  getBasename = () => {
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      return Dashboard;
+    } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
+        return Dashboard;
+    } else if(window.gpmsain === Constants.PART_RULECODE) {
+        return PartMain;
+    }
+  }
+
   render() {
     const { classes } = this.props;
+    const mainPage = this.getBasename();
 
     return (
       <div className={classes.menuRoot}>
         <Switch>
           
-          <Route exact path="/" name="Home" component={Dashboard} />
+          <Route exact path="/" name="Home" component={mainPage} />
           <Route path="/dashboard" name="Dashboard" component={Dashboard} />
           
           <Route path="/clients/clientmastermanage/:grMenuId/:grMenuName" component={ClientMasterManage} />
