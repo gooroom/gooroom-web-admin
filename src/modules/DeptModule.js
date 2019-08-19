@@ -512,7 +512,7 @@ export default handleActions({
             }));
 
             if(state.getIn(['viewItems', compId, 'treeComp', 'treeData'])) {
-                if(index !== undefined) {
+                if(realIndex !== undefined) {
                     let newTreeData = state.getIn(['viewItems', compId, 'treeComp', 'treeData']);
                     newTreeData = newTreeData.setIn([index, 'children'], resData.map(d => (d.get('key'))));
                    
