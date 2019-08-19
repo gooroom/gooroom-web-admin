@@ -285,6 +285,7 @@ class ClientGroupSpec extends Component {
         <Card >
           <CardHeader
             title={(viewItem.get('grpNm')) ? viewItem.get('grpNm') : ''}
+            style={{wordBreak:'break-all'}}
             subheader={groupInfo}
             action={ (isEditable) ?
               <div style={{width:48,paddingTop:10}}>

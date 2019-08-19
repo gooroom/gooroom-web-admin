@@ -226,6 +226,7 @@ class DeptSpec extends Component {
         <Card>
           <CardHeader
             title={viewItem.get('deptNm')}
+            style={{wordBreak:'break-all'}}
             subheader={viewItem.get('deptCd')}
             action={ (isEditable) ?
               <div style={{width:48,paddingTop:10}}>

@@ -387,9 +387,14 @@ export const GRCommonStyle = theme => ({
         padding: "0px",
         cursor: "pointer"
     },
+    grSmallAndClickCellAndBreak: {
+        padding: "0px",
+        cursor: "pointer",
+        wordBreak: "break-all"
+    },
     grSmallAndClickAndNumericCell: {
         padding: "0px 10px 0px 0px",
-        cursor: "pointer"
+        cursor: "pointer",
     },
     grSmallAndClickAndCenterCell: {
         padding: "0px 0px 0px 0px",
