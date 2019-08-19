@@ -83,10 +83,10 @@ class DailyClientCountSpec extends Component {
     const { t, i18n } = this.props;
 
     const columnHeaders = [
-      { id: 'CLIENT_ID', isOrder: false, numeric: false, disablePadding: true, label: t("colClientId") },
-      { id: 'CLIENT_NM', isOrder: false, numeric: false, disablePadding: true, label: t("colClientName") },
+      { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
       { id: 'GRP_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
-      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") }
+      { id: 'STATUS_CD', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") }
     ];
 
     const compId = this.props.compId;
