@@ -58,6 +58,7 @@ class ClientManageSpec extends Component {
         <Card style={{marginBottom: 20}}>
           <CardHeader
             title={(viewItem) ? viewItem.get('clientName') : ''}
+            style={{wordBreak:'break-all'}}
             subheader={viewItem.get('clientId') + ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}
           />
           <CardContent style={{paddingTop:0}}>

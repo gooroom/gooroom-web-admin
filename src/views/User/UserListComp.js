@@ -275,8 +275,8 @@ class UserListComp extends Component {
                     style={(n.get('isExpired') === '1') ? {color:'red'} : {color:''}}
                   
                   >{n.get('userId')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('userNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('deptNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
