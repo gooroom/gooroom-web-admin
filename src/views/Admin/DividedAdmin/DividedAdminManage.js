@@ -253,10 +253,10 @@ class DividedAdminManage extends Component {
                       }</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{
+                      <TableCell className={classes.grSmallAndClickAndCenterCellAndBreak}>{
                         (n.get('deptInfoList').size > 0) ? ((n.get('deptInfoList').size > 1) ? n.getIn(['deptInfoList', 0, 'name']) + '+' : n.getIn(['deptInfoList', 0, 'name'])) : '-'
                       }</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{
+                      <TableCell className={classes.grSmallAndClickAndCenterCellAndBreak}>{
                         (n.get('grpInfoList').size > 0) ? ((n.get('grpInfoList').size > 1) ? n.getIn(['grpInfoList', 0, 'name']) + '+' : n.getIn(['grpInfoList', 0, 'name'])) : '-'
                       }</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isClientAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
