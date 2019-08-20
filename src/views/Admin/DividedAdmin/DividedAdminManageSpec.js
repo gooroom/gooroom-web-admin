@@ -85,7 +85,7 @@ class DividedAdminManageSpec extends Component {
               }
               {(!isSuper && selectedItem.get('grpInfoList')) && selectedItem.get('grpInfoList').map((n, i) => (
                 <React.Fragment key={n.get('name')}>
-                  <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbClientName')} / t{('lbClientId')}`}</Grid>
+                  <Grid item xs={3} className={classes.specTitle}>{`( ${(i + 1)} ) ${t('lbClientName')} / ${t('lbClientId')}`}</Grid>
                   <Grid item xs={3} className={classes.specContent}>{n.get('name')} / {n.get('value')}</Grid>
                 </React.Fragment>
               ))}
