@@ -28,7 +28,7 @@ class ProtectionTypeSelect extends Component {
       >
         {CommonOptionProps.protectionTypeData.map(x => (
           <MenuItem value={x.typeVal} key={x.typeId}>
-            {t(x.typeId)}
+            {x.typeId}
           </MenuItem>
         ))}
       </Select>
