@@ -13,6 +13,8 @@ import KeywordOption from "views/Options/KeywordOption";
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
 
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -42,6 +44,7 @@ class ClientListForDashboard extends Component {
         listData: List([]),
         listParam: Map({
           clientType: 'ONLINE',
+          viewType: 'all',
           groupId: '',
           keyword: '',
           orderDir: 'asc',
@@ -61,6 +64,7 @@ class ClientListForDashboard extends Component {
 
     requestPostAPI('readClientListPaged', {
       clientType: 'ONLINE',
+      viewType: newListParam.get('viewType'),
       keyword: newListParam.get('keyword'),
       page: newListParam.get('page'),
       start: newListParam.get('page') * newListParam.get('rowsPerPage'),
@@ -76,6 +80,7 @@ class ClientListForDashboard extends Component {
           stateData: stateData
             .set('listData', List(data.map((e) => {return Map(e)})))
             .set('listParam', newListParam.merge({
+              viewType: newListParam.get('viewType'),
               rowsFiltered: parseInt(recordsFiltered, 10),
               rowsTotal: parseInt(recordsTotal, 10),
               page: parseInt(draw, 10),
@@ -160,6 +165,15 @@ class ClientListForDashboard extends Component {
   handleClickPackageInfo = (type, clientId) => {
     this.props.onClickShowPackageInfo(type, clientId);
   }
+
+  handleChangeListView = type => event => {
+    const { stateData } = this.state;
+    const newListParam = (stateData.get('listParam')).merge({
+      page: 0,
+      viewType: type
+    });
+    this.handleGetClientList(newListParam);
+  }
   
   render() {
     const { classes } = this.props;
@@ -179,6 +193,7 @@ class ClientListForDashboard extends Component {
     ];
 
     const listObj = this.state.stateData;
+    const listViewType = listObj.get('listParam').get('viewType');
     
     return (
       <div style={{paddingTop:10}}>
@@ -193,6 +208,17 @@ class ClientListForDashboard extends Component {
           variant="contained" color={"primary"} 
           onClick={this.handleClickRefresh} ><RefreshIcon /></Button>
         </Grid>
+        <Grid item xs={12} style={{textAlign:'right'}}>
+          <FormControlLabel value="2" control={
+            <Radio color="primary" value="2" onChange={this.handleChangeListView('all')} checked={listViewType === 'all'} />
+          } label={t("stAll")} labelPlacement="end" />
+          <FormControlLabel value="1" control={
+              <Radio color="primary" value="1" onChange={this.handleChangeListView('violated')} checked={listViewType === 'violated'} />
+          } label={t("stViolatedClient")} labelPlacement="end" />
+          <FormControlLabel value="0" control={
+              <Radio color="primary" value="0" onChange={this.handleChangeListView('normal')} checked={listViewType === 'normal'} />
+          } label={t("stNormalClient")} labelPlacement="end" />
+        </Grid>
       </Grid>
       {(listObj) &&
         <Table>
@@ -206,7 +232,6 @@ class ClientListForDashboard extends Component {
           />
           <TableBody>
             {listObj.get('listData').map(n => {
-
               let storageRate = '';
               let storageInfo = '';
               if(n.get('strgSize') && n.get('strgSize') > 0 && n.get('strgUse') && n.get('strgUse') > 0) {
