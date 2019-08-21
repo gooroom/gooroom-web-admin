@@ -193,7 +193,7 @@ class ClientListForDashboard extends Component {
     ];
 
     const listObj = this.state.stateData;
-    const listViewType = listObj.get('listParam').get('viewType');
+    const listViewType = listObj.getIn(['listParam', 'viewType']);
     
     return (
       <div style={{paddingTop:10}}>
