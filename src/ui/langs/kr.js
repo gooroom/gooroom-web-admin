@@ -273,8 +273,8 @@ export default {
   "connFailCount": "접속실패",
 
   // 단말등록통계
-  "regClientCount": "등록단말수",
-  "revokeClientCount": "폐기단말수",
+  "regClientCount": "등록수",
+  "revokeClientCount": "폐기수",
 
   // 단말관리
   "ttAddNewGroup": "신규 단말그룹 등록",

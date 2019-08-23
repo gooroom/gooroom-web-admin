@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 
 import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as DailyClientCountActions from 'modules/DailyClientCountModule';
@@ -25,7 +22,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
 
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
@@ -149,37 +146,36 @@ class DailyClientCountManage extends Component {
 
           {/* data area */}
           {(listObj) &&
-          <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
-            <Grid item xs={12} sm={4} lg={2} style={{border: '1px solid #efefef'}}>
-              <div style={{height:340,overflow:'auto'}}>
-                <Table>
-                  <GRCommonTableHead classes={classes} keyId="logDate"
-                    headFix={true} columnData={columnHeaders} />
-                  <TableBody>
-                    {listObj.get('listAllData').map(n => {
-                      return (
-                        <TableRow hover key={n.get('logDate')} style={{height:16}}>
-                          <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('logDate'), 'YYYY-MM-DD')}</TableCell>
-                          <TableCell 
-                            className={classes.grSmallAndClickAndCenterCell}
-                            onClick={event => this.handleSelectData(event, n.get('logDate'), 'create')}
-                          >{(n.get('regCount') === '0') ? '.' : n.get('regCount')}</TableCell>
-                          <TableCell 
-                            className={classes.grSmallAndClickAndCenterCell}
-                            onClick={event => this.handleSelectData(event, n.get('logDate'), 'revoke')}
-                          >{(n.get('revokeCount') === '0') ? '.' : n.get('revokeCount')}</TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
+            <Grid container spacing={8} alignItems="flex-start" direction="row" justify="space-between" >
+              <Grid item xs={4} style={{border: '1px solid #efefef'}}>
+                <Paper style={{padding:16,maxHeight:'400px',overflowY:'auto'}}>
+                  <Table>
+                    <GRCommonTableHead classes={classes} keyId="logDate"
+                      headFix={true} columnData={columnHeaders} />
+                    <TableBody>
+                      {listObj.get('listAllData').map(n => {
+                        return (
+                          <TableRow hover key={n.get('logDate')} style={{height:16}}>
+                            <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('logDate'), 'YYYY-MM-DD')}</TableCell>
+                            <TableCell 
+                              className={classes.grSmallAndClickAndCenterCell}
+                              onClick={event => this.handleSelectData(event, n.get('logDate'), 'CREATE')}
+                            >{(n.get('regCount') === '0') ? '.' : n.get('regCount')}</TableCell>
+                            <TableCell 
+                              className={classes.grSmallAndClickAndCenterCell}
+                              onClick={event => this.handleSelectData(event, n.get('logDate'), 'REVOKE')}
+                            >{(n.get('revokeCount') === '0') ? '.' : n.get('revokeCount')}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </Paper>
+              </Grid>
+              <Grid item xs={8} style={{border: '1px solid #efefef'}}>
+                <DailyClientCountSpec compId={compId} />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={8} lg={10} style={{border: '1px solid #efefef'}}>
-            <DailyClientCountSpec compId={compId} />
-            </Grid>
-          </Grid>
-
         }
         </GRPane>
         <GRConfirm />
