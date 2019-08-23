@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as DailyClientCountActions from 'modules/DailyClientCountModule';
@@ -99,60 +96,67 @@ class DailyClientCountSpec extends Component {
 
     return (
       <React.Fragment>
-      {(listObj && listObj.get('listData')) &&
       <Paper style={{padding:16}}>
-          {/* data option area */}
-          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={2} >
-            <FormControl fullWidth={true}>
-              <TextField label={t("optDate")} value={listObj.getIn(['listParam', 'logDate'])} disabled={true} />
-            </FormControl>
-            </Grid>
-            <Grid item xs={2} >
-              <KeywordOption paramName="keyword" keywordValue={listObj.getIn(['listParam', 'keyword'])}
-                handleKeywordChange={this.handleKeywordChange} 
-                handleSubmit={() => this.handleSelectBtnClick()} />
-            </Grid>
-            <Grid item xs={7} >
-              <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                <Search />{t("btnSearch")}
-              </Button>
-            </Grid>
-          </Grid>            
+        {/* data option area */}
+        <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+          <Grid item xs={2} >
+            <TextField  label={t("optDate")} value={(listObj.getIn(['listParam', 'logDate'])) ? listObj.getIn(['listParam', 'logDate']) : ''} disabled={true} />
+          </Grid>
+          <Grid item xs={1} ></Grid>
+          <Grid item xs={2} >
+          <FormControl fullWidth={true}>
+            <TextField label={t("optDivision")} value={(listObj.getIn(['listParam', 'searchType'])) ? ((listObj.getIn(['listParam', 'searchType']) === 'CREATE') ? t('regClientCount') : t('revokeClientCount')) : ''} disabled={true} />
+          </FormControl>
+          </Grid>
+          <Grid item xs={1} ></Grid>
+          <Grid item xs={2} >
+            <KeywordOption paramName="keyword" keywordValue={(listObj.getIn(['listParam', 'keyword'])) ? listObj.getIn(['listParam', 'keyword']) : ''}
+              handleKeywordChange={this.handleKeywordChange} 
+              handleSubmit={() => this.handleSelectBtnClick()} />
+          </Grid>
+          <Grid item xs={1} ></Grid>
+          <Grid item xs={3} >
+            <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
+              <Search />{t("btnSearch")}
+            </Button>
+          </Grid>
+        </Grid>            
 
-          {/* data area */}
-          <div>
-            <Table>
-              <GRCommonTableHead
-                classes={classes}
-                keyId="clientId"
-                orderDir={listObj.getIn(['listParam', 'orderDir'])}
-                orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
-                onRequestSort={this.handleChangeSort}
-                columnData={columnHeaders}
-              />
-              <TableBody>
-                {listObj.get('listData').map(n => {
-                  return (
-                    <TableRow hover key={n.get('clientId')} >
-                      <TableCell className={classes.grSmallAndClick}>{n.get('clientId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClick}>{n.get('clientName')}</TableCell>
-                      <TableCell className={classes.grSmallAndClick}>{n.get('clientGroupName')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
-                    </TableRow>
-                  );
-                })}
-
-                {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
-                  <TableRow key={e}>
-                    <TableCell
-                      colSpan={columnHeaders.length + 1}
-                      className={classes.grSmallAndClickCell}
-                    />
+        {/* data area */}
+        {listObj &&
+          <Table>
+            <GRCommonTableHead
+              classes={classes}
+              keyId="clientId"
+              orderDir={listObj.getIn(['listParam', 'orderDir'])}
+              orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
+              onRequestSort={this.handleChangeSort}
+              columnData={columnHeaders}
+            />
+            <TableBody>
+              {listObj.get('listData') && listObj.get('listData').map(n => {
+                return (
+                  <TableRow hover key={n.get('clientId')} >
+                    <TableCell className={classes.grSmallAndClick}>{n.get('clientId')}</TableCell>
+                    <TableCell className={classes.grSmallAndClick}>{n.get('clientName')}</TableCell>
+                    <TableCell className={classes.grSmallAndClick}>{n.get('clientGroupName')}</TableCell>
+                    <TableCell className={classes.grSmallAndClickAndCenterCell}>{getClientStatusIcon(n.get('viewStatus'))}</TableCell>
                   </TableRow>
-                )}))}
-              </TableBody>
-            </Table>
+                );
+              })}
+
+              {emptyRows > 0 && (( Array.from(Array(emptyRows).keys()) ).map(e => {return (
+                <TableRow key={e}>
+                  <TableCell
+                    colSpan={columnHeaders.length + 1}
+                    className={classes.grSmallAndClickCell}
+                  />
+                </TableRow>
+              )}))}
+            </TableBody>
+          </Table>
+          }
+          {listObj && listObj.get('listData') && listObj.get('listData').size > 0 &&
             <TablePagination
               component='div'
               count={listObj.getIn(['listParam', 'rowsFiltered'])}
@@ -168,10 +172,9 @@ class DailyClientCountSpec extends Component {
               onChangePage={this.handleChangePage}
               onChangeRowsPerPage={this.handleChangeRowsPerPage}
             />
-          </div>
+          }
         <GRConfirm />
       </Paper>
-      }
       </React.Fragment>
     );
   }
