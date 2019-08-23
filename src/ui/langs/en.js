@@ -273,8 +273,8 @@ export default {
   "connFailCount": "ConnFailCnt",
 
   // 단말등록통계
-  "regClientCount": "RegClientCnt",
-  "revokeClientCount": "RevokeClientCnt",
+  "regClientCount": "RegCnt",
+  "revokeClientCount": "RevokeCnt",
 
   // 단말관리
   "ttAddNewGroup": "Create New Group",
