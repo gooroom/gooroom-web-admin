@@ -194,6 +194,10 @@ class ClientListForDashboard extends Component {
 
     const listObj = this.state.stateData;
     const listViewType = listObj.getIn(['listParam', 'viewType']);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
     
     return (
       <div style={{paddingTop:10}}>
@@ -297,6 +301,14 @@ class ClientListForDashboard extends Component {
                 </TableRow>
               );
             })}
+            {emptyRows == listObj.getIn(['listParam', 'rowsPerPage']) &&
+              <TableRow>
+                <TableCell
+                  colSpan={columnHeaders.length + 1}
+                  className={classes.grSmallAndClickCell}
+                />
+              </TableRow>
+            }
           </TableBody>
         </Table>
       }
