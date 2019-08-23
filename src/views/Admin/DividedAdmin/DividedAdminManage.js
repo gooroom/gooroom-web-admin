@@ -61,12 +61,6 @@ class DividedAdminManage extends Component {
   
   componentDidMount() {
     this.handleSelectBtnClick();
-    // const { AdminUserActions, AdminUserProps, compId } = this.props;
-    // if(AdminUserProps.getIn(['viewItems', compId, 'listParam']) === undefined) {
-    //   AdminUserActions.readAdminUserListPaged(this.props.AdminUserProps, this.props.compId, {
-    //     adminType: 'ALL'
-    //   });
-    // }
   }
 
   // .................................................
