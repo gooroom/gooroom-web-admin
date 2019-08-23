@@ -41,6 +41,14 @@ const initialState = {
         statusVal: ''
     },
 
+    adminTypeData: [
+        { typeId: "S", typeVal: "S", typeNm: "lbTotalAdmin" },
+        { typeId: "A", typeVal: "A", typeNm: "lbSiteAdmin" },
+        { typeId: "P", typeVal: "P", typeNm: "lbPartAdmin" },
+        { typeId: "ALL", typeVal: "ALL", typeNm: "stAll" },
+    ],
+    selectedAdminType: { typeId: '', typeNm: '' },
+
     jobStatusData: [
         { statusId: "R", statusVal: "R", statusNm: "stBeforeJob" },
         { statusId: "D", statusVal: "D", statusNm: "stRunningJob" },
