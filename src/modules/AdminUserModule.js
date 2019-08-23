@@ -72,7 +72,8 @@ export const showInform = (param) => dispatch => {
         type: SHOW_ADMINUSER_INFORM,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('userId') : '',
-        viewItem: param.viewItem
+        viewItem: param.viewItem,
+        isEditable: param.isEditable
     });
 };
 

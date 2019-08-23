@@ -1,5 +1,9 @@
 import React, { Component } from "react";
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as AdminUserActions from 'modules/AdminUserModule';
+
 import GRRuleCardHeader from 'components/GRComponents/GRRuleCardHeader';
 
 import Grid from '@material-ui/core/Grid';
@@ -17,10 +21,14 @@ class DividedAdminManageSpec extends Component {
 
   render() {
 
-    const { classes, selectedItem } = this.props;
+    const { classes, selectedItem, compId } = this.props;
+    const { AdminUserProps } = this.props;
     const { t, i18n } = this.props;
+
     const isSuper = (selectedItem && selectedItem.get('adminTp') === 'S') ? true : false;
     const isPart = (selectedItem && selectedItem.get('adminTp') === 'P') ? true : false;
+
+    const isEditable = AdminUserProps.getIn(['viewItems', compId, 'isEditable']);
 
     return (
       <React.Fragment>
@@ -30,11 +38,13 @@ class DividedAdminManageSpec extends Component {
             category={t('lbAdminSpecifiedRole')} title={selectedItem.get('adminNm')} 
             subheader={selectedItem.get('adminId')}
             action={
+              (isEditable) ? 
               <div style={{paddingTop:16,paddingRight:24}}>
                 <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
                   onClick={(event) => this.props.onClickEdit(event, selectedItem.get('adminId'))}
                 ><EditIcon /></Button>
               </div>
+              : <div></div>
             }
           />
           <CardContent style={{padding:10,width:'100%'}}>
@@ -119,4 +129,12 @@ class DividedAdminManageSpec extends Component {
   }
 }
 
-export default translate("translations")(withStyles(GRCommonStyle)(DividedAdminManageSpec));
+const mapStateToProps = (state) => ({
+  AdminUserProps: state.AdminUserModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  AdminUserActions: bindActionCreators(AdminUserActions, dispatch),
+});
+
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DividedAdminManageSpec)));
