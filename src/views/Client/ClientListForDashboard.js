@@ -198,17 +198,21 @@ class ClientListForDashboard extends Component {
     return (
       <div style={{paddingTop:10}}>
       <Grid container spacing={0} >
+        <Grid item xs={6}>
+        <Grid container spacing={0} >
         <Grid item>
         <Typography style={{margin:'2px 8px',fontWeight:'bold'}}>
           Online Client List
         </Typography>
         </Grid>
-        <Grid item>
+        <Grid item xs={3}>
         <Button className={classes.GRIconSmallButton} style={{minWidth:25,marginRight:10}}
           variant="contained" color={"primary"} 
           onClick={this.handleClickRefresh} ><RefreshIcon /></Button>
         </Grid>
-        <Grid item xs={12} style={{textAlign:'right'}}>
+        </Grid>
+        </Grid>
+        <Grid item xs={6} style={{textAlign:'right'}}>
           <FormControlLabel value="2" control={
             <Radio color="primary" value="2" onChange={this.handleChangeListView('all')} checked={listViewType === 'all'} />
           } label={t("stAll")} labelPlacement="end" />
