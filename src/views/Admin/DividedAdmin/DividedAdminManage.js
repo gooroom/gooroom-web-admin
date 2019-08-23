@@ -87,7 +87,7 @@ class DividedAdminManage extends Component {
 
   handleSelectBtnClick = () => {
     const { AdminUserActions, AdminUserProps } = this.props;
-    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {page: 0, adminType: 'ALL'});
+    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {page: 0});
   };
   
   handleSelectRow = (event, id, isEditable) => {
