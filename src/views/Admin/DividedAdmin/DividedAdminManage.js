@@ -30,6 +30,8 @@ import TableRow from '@material-ui/core/TableRow';
 
 import FormControl from '@material-ui/core/FormControl';
 
+import InputLabel from "@material-ui/core/InputLabel";
+
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
 import CheckIcon from '@material-ui/icons/CheckCircleTwoTone';
@@ -37,6 +39,9 @@ import AddIcon from '@material-ui/icons/Add';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 import HistoryIcon from '@material-ui/icons/Assignment';
+
+// option components
+import AdminTypeSelect from 'views/Options/AdminTypeSelect';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -56,6 +61,12 @@ class DividedAdminManage extends Component {
   
   componentDidMount() {
     this.handleSelectBtnClick();
+    // const { AdminUserActions, AdminUserProps, compId } = this.props;
+    // if(AdminUserProps.getIn(['viewItems', compId, 'listParam']) === undefined) {
+    //   AdminUserActions.readAdminUserListPaged(this.props.AdminUserProps, this.props.compId, {
+    //     adminType: 'ALL'
+    //   });
+    // }
   }
 
   // .................................................
@@ -82,7 +93,7 @@ class DividedAdminManage extends Component {
 
   handleSelectBtnClick = () => {
     const { AdminUserActions, AdminUserProps } = this.props;
-    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {page: 0});
+    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {page: 0, adminType: 'ALL'});
   };
   
   handleSelectRow = (event, id) => {
@@ -165,6 +176,13 @@ class DividedAdminManage extends Component {
     });
   }
 
+  handleChangeAdminTypeSelect = (event, property) => {
+    const { AdminUserProps, AdminUserActions } = this.props;
+    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {
+      adminType: property, page:0
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const { AdminUserProps } = this.props;
@@ -198,7 +216,7 @@ class DividedAdminManage extends Component {
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           {/* data option area */}
-          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+          <Grid container spacing={24} alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} >
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={6} >
@@ -206,10 +224,15 @@ class DividedAdminManage extends Component {
                     <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                   </FormControl>
                 </Grid>
-                <Grid item xs={6} >
+                <Grid item xs={2} >
                   <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                     <Search />{t("btnSearch")}
                   </Button>
+                </Grid>
+                <Grid item xs={4} >
+                  <FormControl fullWidth={true}>
+                    <AdminTypeSelect onChangeSelect={this.handleChangeAdminTypeSelect} />
+                  </FormControl>
                 </Grid>
               </Grid>
             </Grid>
@@ -329,7 +352,8 @@ class DividedAdminManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  AdminUserProps: state.AdminUserModule
+  AdminUserProps: state.AdminUserModule,
+  CommonOptionProps: state.CommonOptionModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

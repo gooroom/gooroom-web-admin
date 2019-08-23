@@ -35,7 +35,10 @@ const ADD_ADMINCONN_IP_ITEM = 'adminUser/ADD_ADMINCONN_IP_ITEM';
 const DELETE_ADMINCONN_IP_ITEM = 'adminUser/DELETE_ADMINCONN_IP_ITEM';
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chAdminNm', 'asc', {}, {status: 'STAT010', keyword: ''});
+const initialState = commonHandleActions.getCommonInitialState('chAdminNm', 'asc', {}, {
+    adminType: 'ALL',
+    status: 'STAT010', 
+    keyword: ''});
 
 export const showHistDialog = (param) => dispatch => {
     return dispatch({
@@ -88,6 +91,7 @@ export const readAdminUserListPaged = (module, compId, extParam) => dispatch => 
 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readAdminUserListPaged', {
+        adminType: newListParam.get('adminType'),
         keyword: newListParam.get('keyword'),
         status: newListParam.get('status'),
         page: newListParam.get('page'),
