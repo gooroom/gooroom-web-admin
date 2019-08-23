@@ -242,11 +242,11 @@ class ClientUpdateServerManage extends Component {
                   let isDeletable = true;
 
                   if(n.get('objId').endsWith('DEFAULT')) {
+                    isEditable = false;
                     isDeletable = false;
                     if(window.gpmsain === Constants.SUPER_RULECODE) {
                       isEditable = true;
-                    } else {
-                      isEditable = false;
+                      isDeletable = true;
                     }
                   } else if(n.get('objId').endsWith('STD')) {
                     if(window.gpmsain === Constants.SUPER_RULECODE) {
@@ -262,7 +262,11 @@ class ClientUpdateServerManage extends Component {
                       isDeletable = true;
                     } else {
                       isEditable = false;
-                      isDeletable = false;
+                      if(window.gpmsain === Constants.SUPER_RULECODE) {
+                        isDeletable = true;
+                      } else {
+                        isDeletable = false;
+                      }
                     }
                   }
 
