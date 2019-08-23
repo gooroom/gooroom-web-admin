@@ -90,14 +90,15 @@ class DividedAdminManage extends Component {
     AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {page: 0, adminType: 'ALL'});
   };
   
-  handleSelectRow = (event, id) => {
+  handleSelectRow = (event, id, isEditable) => {
     const { AdminUserProps, AdminUserActions } = this.props;
     const compId = this.props.match.params.grMenuId;
     const viewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
 
     AdminUserActions.showInform({
       compId: compId,
-      viewItem: viewItem
+      viewItem: viewItem,
+      isEditable: isEditable
     });
   };
 
@@ -260,7 +261,7 @@ class DividedAdminManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('adminId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('adminId'), isEditable)}
                       key={n.get('adminId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminId')}</TableCell>
