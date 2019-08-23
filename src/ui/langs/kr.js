@@ -21,6 +21,7 @@ export default {
 
   "colRegCount": "등록수",
   "colRevokeCount": "폐기수",
+  "colWorkCount": "작업수",
 
   "colClientId": "단말아이디",
   "colClientName": "단말이름",

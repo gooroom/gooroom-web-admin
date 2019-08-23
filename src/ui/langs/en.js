@@ -21,6 +21,7 @@ export default {
 
   "colRegCount": "RegCnt",
   "colRevokeCount": "RevokeCnt",
+  "colWorkCount": "WorkCnt",
 
   "colClientId": " ClientId",
   "colClientName": "ClientName",
