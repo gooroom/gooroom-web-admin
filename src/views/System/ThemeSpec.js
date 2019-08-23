@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { Map, List } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -58,6 +55,13 @@ class ThemeSpec extends Component {
             ></CardHeader>
             <CardContent>
               <Grid container >
+
+                <Grid item xs={12}>
+                  <Card style={{ textAlign:'center', padding:'17px', backgroundColor:'#eaeaea', border:'10px solid #d3d3d3' }}>
+                    <img src={viewItem.get('wallpaperUrl')} width="500" style={{ border: '5px solid white' }} ></img>
+                  </Card>
+                </Grid>
+
                 {viewItem.get('themeIcons').map(n => {
                   const iconUrl = n.get('imgUrl') + n.get('fileName');
                   return (
