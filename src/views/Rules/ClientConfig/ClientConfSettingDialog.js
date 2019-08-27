@@ -541,7 +541,7 @@ class ClientConfSettingDialog extends Component {
                                     onChange={this.handleValueChange("logMaxSize")}
                                     className={classNames(classes.fullWidth)}
                                 />
-                                <Typography variant="caption">{t("msgLogMaxSizeMinMax")}</Typography>
+                                <Typography variant="caption">{t("msgInputRange") + ": 1 ~ 10000"}</Typography>
                                 <Typography variant="caption">{t("msgMegabateUnit")}</Typography>
                                 <Typography variant="caption">{t("msgCreateNewFileIfMax")}</Typography>
                                 </Grid>
@@ -553,7 +553,7 @@ class ClientConfSettingDialog extends Component {
                                     onChange={this.handleValueChange("logMaxCount")}
                                     className={classNames(classes.fullWidth)}
                                 />
-                                <Typography variant="caption">{t("msgLogMaxCountMinMax")}</Typography>
+                                <Typography variant="caption">{t("msgInputRange") + ": 1 ~ 5"}</Typography>
                                 <Typography variant="caption">{t("msgRemainFileSettingCount")}</Typography>
                                 <Typography variant="caption">{t("msgDeleteFileIfOverCount")}</Typography>
                                 </Grid>
@@ -565,7 +565,7 @@ class ClientConfSettingDialog extends Component {
                                     onChange={this.handleValueChange("systemKeepFree")}
                                     className={classNames(classes.fullWidth)}
                                 />
-                                <Typography variant="caption">{t("msgSystemKeepFreeMinMax")}</Typography>
+                                <Typography variant="caption">{t("msgInputRange") + ": 1 ~ 30"}</Typography>
                                 <Typography variant="caption">{t("msgHelpMinimumDiskSizeRate")}</Typography>
                                 <Typography variant="caption">{t("msgHelpDiskSizeData")}</Typography>
                                 </Grid>

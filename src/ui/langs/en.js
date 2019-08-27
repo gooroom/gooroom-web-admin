@@ -473,9 +473,7 @@ export default {
   "dtIsUseDeleteFunc": "Whether delete function is used",
   "lbSetupClient": "Agent setting",
   "msgValidOnlyUpperZero": "Only numbers greater than 0 can be entered.",
-  "msgLogMaxSizeMinMax": "MinValue:1, MaxValue:10000",
-  "msgLogMaxCountMinMax": "MinValue:1, MaxValue:5",
-  "msgSystemKeepFreeMinMax": "MinValue:1, MaxValue:30",
+  "msgValidNumberPeriod": "Input range",
 
   // 데스크톱앱관리
   "dtDeleteDesktopApp": "Remove desktop app",
