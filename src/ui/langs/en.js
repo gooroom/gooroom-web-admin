@@ -231,6 +231,8 @@ export default {
   "lbClientSelect": "Select Client",
   "msgTypeNumberOnly": "Please enter only numbers.",
   "msgInvalidMacAddress": "The MAC address is not correct.",
+  "msgInvalidNumber":"Please enter setting value.",
+  "msgInvalidValue": "Please enter a valid setting value.",
 
   // options
   "stBeforeJob": "Before",
@@ -452,6 +454,7 @@ export default {
   "lbServerLogLevel": "Log level to send to server (level)",
   "lbDeleteAfterSend": "Delete after transfer",
   "lbSaveDateAfterSend": "Days to keep logs after server transfer",
+  "msgRemainFileSettingCount": "Keep log files count as you set",
   "msgHelpNoDeleteIfZero": "If set to '0', do not delete",
   "dtClientLogSetup": "Setting JournalD Log",
   "lbLogFileMax": "Maximum log file size (MB)",
@@ -470,6 +473,9 @@ export default {
   "dtIsUseDeleteFunc": "Whether delete function is used",
   "lbSetupClient": "Agent setting",
   "msgValidOnlyUpperZero": "Only numbers greater than 0 can be entered.",
+  "msgLogMaxSizeMinMax": "MinValue:1, MaxValue:10000",
+  "msgLogMaxCountMinMax": "MinValue:1, MaxValue:5",
+  "msgSystemKeepFreeMinMax": "MinValue:1, MaxValue:30",
 
   // 데스크톱앱관리
   "dtDeleteDesktopApp": "Remove desktop app",

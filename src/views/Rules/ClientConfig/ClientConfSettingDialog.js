@@ -534,26 +534,38 @@ class ClientConfSettingDialog extends Component {
                         <Typography variant="body1">{bull} {t("dtClientLogSetup")}</Typography>
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
                                 <Grid item xs={12} sm={4} md={4}>
-                                <TextField label={t("lbLogFileMax")} value={(editingItem.get('logMaxSize')) ? editingItem.get('logMaxSize') : ''}
+                                <TextValidator name="logFileMax" label={t("lbLogFileMax")}
+                                    validators={['required', 'minNumber:1', 'maxNumber:10000', 'isNumber']}
+                                    errorMessages={[t("msgInvalidNumber"), t("msgInvalidValue"), t("msgInvalidValue"), t("msgTypeNumberOnly")]}
+                                    value={(editingItem.get('logMaxSize')) ? editingItem.get('logMaxSize') : ''}
                                     onChange={this.handleValueChange("logMaxSize")}
                                     className={classNames(classes.fullWidth)}
                                 />
-                                <Typography variant="caption">{t("msgCreateNewFileIfMax")}</Typography>
+                                <Typography variant="caption">{t("msgLogMaxSizeMinMax")}</Typography>
                                 <Typography variant="caption">{t("msgMegabateUnit")}</Typography>
+                                <Typography variant="caption">{t("msgCreateNewFileIfMax")}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={4} md={4}>
-                                <TextField label={t("lbSavedLogFileCount")} value={(editingItem.get('logMaxCount')) ? editingItem.get('logMaxCount') : ''}
+                                <TextValidator name="logFileCount" label={t("lbSavedLogFileCount")}
+                                    validators={['required', 'minNumber:1', 'maxNumber:5', 'isNumber']}
+                                    errorMessages={[t("msgInvalidNumber"), t("msgInvalidValue"), t("msgInvalidValue"), t("msgTypeNumberOnly")]}
+                                    value={(editingItem.get('logMaxCount')) ? editingItem.get('logMaxCount') : ''}
                                     onChange={this.handleValueChange("logMaxCount")}
                                     className={classNames(classes.fullWidth)}
                                 />
+                                <Typography variant="caption">{t("msgLogMaxCountMinMax")}</Typography>
+                                <Typography variant="caption">{t("msgRemainFileSettingCount")}</Typography>
                                 <Typography variant="caption">{t("msgDeleteFileIfOverCount")}</Typography>
-                                <Typography variant="caption">{t("msgHelpNoDeleteIfZero")}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={4} md={4}>
-                                <TextField label={t("lbMinimumDiskSizeRate")} value={(editingItem.get('systemKeepFree')) ? editingItem.get('systemKeepFree') : ''}
+                                <TextValidator name="diskSizeRate" label={t("lbMinimumDiskSizeRate")}
+                                    validators={['required', 'minNumber:1', 'maxNumber:30', 'isNumber']}
+                                    errorMessages={[t("msgInvalidNumber"), t("msgInvalidValue"), t("msgInvalidValue"), t("msgTypeNumberOnly")]}
+                                    value={(editingItem.get('systemKeepFree')) ? editingItem.get('systemKeepFree') : ''}
                                     onChange={this.handleValueChange("systemKeepFree")}
                                     className={classNames(classes.fullWidth)}
                                 />
+                                <Typography variant="caption">{t("msgSystemKeepFreeMinMax")}</Typography>
                                 <Typography variant="caption">{t("msgHelpMinimumDiskSizeRate")}</Typography>
                                 <Typography variant="caption">{t("msgHelpDiskSizeData")}</Typography>
                                 </Grid>
