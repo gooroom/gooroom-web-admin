@@ -231,6 +231,8 @@ export default {
   "lbClientSelect": "단말선택",
   "msgTypeNumberOnly": "숫자를 입력하세요.",
   "msgInvalidMacAddress": "맥주소가 정확하지 않습니다.",
+  "msgInvalidNumber": "설정값을 입력하세요.",
+  "msgInvalidValue": "유효한 설정값을 입력하세요.",
 
   // options
   "stBeforeJob": "작업전",
@@ -452,6 +454,7 @@ export default {
   "lbServerLogLevel": "서버로 전송하는 로그레벨(수준)",
   "lbDeleteAfterSend": "전송후 삭제여부",
   "lbSaveDateAfterSend": "서버전송후 로그보관일수",
+  "msgRemainFileSettingCount": "설정한 개수만큼 로그파일 유지",
   "msgHelpNoDeleteIfZero": "'0' 으로 설정시 삭제하지 않음",
   "dtClientLogSetup": "단말 로그 (JournalD Log) 설정",
   "lbLogFileMax": "로그파일 최대크기(MB)",
@@ -470,6 +473,9 @@ export default {
   "dtIsUseDeleteFunc": "삭제기능 사용여부",
   "lbSetupClient": "에이전트 설정",
   "msgValidOnlyUpperZero": "0보다 큰 숫자만 입력할 수 있습니다.",
+  "msgLogMaxSizeMinMax": "최소값:1, 최대값:10000",
+  "msgLogMaxCountMinMax": "최소값:1, 최대값:5",
+  "msgSystemKeepFreeMinMax": "최소값:1, 최대값:30",
 
   // 데스크톱앱관리
   "dtDeleteDesktopApp": "데스크톱앱 삭제",
