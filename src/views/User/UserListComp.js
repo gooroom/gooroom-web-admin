@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from "moment";
 
 import * as UserActions from 'modules/UserModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
@@ -94,7 +95,18 @@ class UserListComp extends Component {
   // edit
   handleEditClick = (event, id) => { 
     const { UserProps, UserActions, compId } = this.props;
-    const viewItem = getRowObjectById(UserProps, compId, id, 'userId');
+    let viewItem = getRowObjectById(UserProps, compId, id, 'userId');
+
+    // expireDate 와 passwordExpireDate 를 초기값 설정
+    if(viewItem.get('isUseExpire') === '0' || viewItem.get('expireDate') === undefined || viewItem.get('expireDate') === '') {
+      const initDate = moment().add(7, "days");
+      viewItem = viewItem.set('expireDate', initDate.toJSON().slice(0, 10));
+    }
+    if(viewItem.get('isUsePasswordExpire') === '0' || viewItem.get('passwordExpireDate') === undefined || viewItem.get('passwordExpireDate') === '') {
+      const initDate = moment().add(7, "days");
+      viewItem = viewItem.set('passwordExpireDate', initDate.toJSON().slice(0, 10));
+    }
+
     UserActions.showDialog({
       viewItem: viewItem,
       dialogType: UserBasicDialog.TYPE_EDIT
