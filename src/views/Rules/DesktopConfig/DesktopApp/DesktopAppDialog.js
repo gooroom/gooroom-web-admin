@@ -269,29 +269,30 @@ class DesktopAppDialog extends Component {
                             name="iconId" style={{marginTop: 'theme.spacing.unit * 2'}}
                         >
                             <MenuItem value=""><em>None</em></MenuItem>
-                            <MenuItem value="cloud_storage">cloud storage</MenuItem>
-                            <MenuItem value="web_office">web office</MenuItem>
-                            <MenuItem value="office_sns">office SNS</MenuItem>
-                            <MenuItem value="team">team</MenuItem>
-                            <MenuItem value="video_conferencing_system">video conferencing system</MenuItem>
-                            <MenuItem value="groupware">groupware</MenuItem>
+                            <MenuItem value="gooroom-cloud-storage">cloud storage</MenuItem>
+                            <MenuItem value="gooroom-web-office">web office</MenuItem>
+                            <MenuItem value="gooroom-sns">office SNS</MenuItem>
+                            <MenuItem value="gooroom-collaboration">team</MenuItem>
+                            <MenuItem value="gooroom-video-conference">video conferencing system</MenuItem>
+                            <MenuItem value="gooroom-groupware">groupware</MenuItem>
                             <MenuItem value="memo">memo</MenuItem>
-                            <MenuItem value="kms">KMS</MenuItem>
-                            <MenuItem value="erp">ERP</MenuItem>
-                            <MenuItem value="accounting_management">accounting management</MenuItem>
-                            <MenuItem value="personnel_management">personnel management</MenuItem>
-                            <MenuItem value="etc_applications">etc applications</MenuItem>
-                            <MenuItem value="security_status">security status</MenuItem>
-                            <MenuItem value="smartcard_register">smartcard register</MenuItem>
-                            <MenuItem value="gooroom_terminal_server">gooroom terminal server</MenuItem>
-                            <MenuItem value="package_management">package management</MenuItem>
-                            <MenuItem value="updater">updater</MenuItem>
-                            <MenuItem value="archiver">archiver</MenuItem>
-                            <MenuItem value="multimedia">multimedia</MenuItem>
-                            <MenuItem value="calculator">calculator</MenuItem>
-                            <MenuItem value="network_management">network management</MenuItem>
-                            <MenuItem value="file_manager">file manager</MenuItem>
-                            <MenuItem value="gooroom_browser">gooroom browser</MenuItem>
+                            <MenuItem value="gooroom-kms">KMS</MenuItem>
+                            <MenuItem value="gooroom-erp">ERP</MenuItem>
+                            <MenuItem value="gooroom-accounting-management">accounting management</MenuItem>
+                            <MenuItem value="gooroom-personnel-management">personnel management</MenuItem>
+                            <MenuItem value="gooroom-other-applications">etc applications</MenuItem>
+                            <MenuItem value="preferences-system-firewall">security status</MenuItem>
+                            <MenuItem value="applets-screenshooter">screenshot</MenuItem>
+                            <MenuItem value="gooroom-smartcard-register">smartcard register</MenuItem>
+                            <MenuItem value="gooroom-client-server-register">gooroom terminal server</MenuItem>
+                            <MenuItem value="synaptic">package management</MenuItem>
+                            <MenuItem value="gooroomupdater">updater</MenuItem>
+                            <MenuItem value="file-roller">archiver</MenuItem>
+                            <MenuItem value="io.github.GnomeMpv">multimedia</MenuItem>
+                            <MenuItem value="galculator">calculator</MenuItem>
+                            <MenuItem value="preferences-system-network">network management</MenuItem>
+                            <MenuItem value="org.gnome.Nautilus">file manager</MenuItem>
+                            <MenuItem value="gooroom-browser">gooroom browser</MenuItem>
                         </Select>
                     </FormControl>
                     }
