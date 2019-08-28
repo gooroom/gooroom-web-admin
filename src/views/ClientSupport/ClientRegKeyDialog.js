@@ -211,7 +211,7 @@ class ClientRegKeyDialog extends Component {
                         label={t("lbValidRegIp")} name="ipRange"
                         value={(editingItem.get('ipRange')) ? editingItem.get('ipRange') : ''}
                         onChange={this.handleValueChange("ipRange")}
-                        validators={['required', 'matchRegexp:^[0-9,.-*]+$']} errorMessages={[t("msgInputValidIp")]}
+                        validators={['required', 'matchRegexp:^[0-9,.-/*]+$']} errorMessages={[t("msgInputValidIp")]}
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                     />
