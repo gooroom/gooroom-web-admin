@@ -706,7 +706,8 @@ class UserMasterManage extends Component {
           userPasswd: "",
           showPasswd: false,
           userEmail: "",
-          expireDate: initDate.toJSON().slice(0, 10)
+          expireDate: initDate.toJSON().slice(0, 10),
+          passwordExpireDate: initDate.toJSON().slice(0, 10)
         },
         ruleDialogType: UserDialog.TYPE_ADD
       },

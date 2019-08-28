@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from "moment";
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
@@ -86,6 +87,20 @@ class UserSpec extends Component {
       value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'USER', 'confId')      
     });
 
+    // expireDate 와 passwordExpireDate 를 초기값 설정
+    // user expire date
+    let userExpireDate = viewItem.get('expireDate');
+    if(viewItem.get('isUseExpire') === '0' || viewItem.get('expireDate') === undefined || viewItem.get('expireDate') === '') {
+      const initDate = moment().add(7, "days");
+      userExpireDate = initDate.toJSON().slice(0, 10);
+    }
+    // password expire date
+    let passwordExpireDate = viewItem.get('passwordExpireDate');
+    if(viewItem.get('isUsePasswordExpire') === '0' || viewItem.get('passwordExpireDate') === undefined || viewItem.get('passwordExpireDate') === '') {
+      const initDate = moment().add(7, "days");
+      passwordExpireDate = initDate.toJSON().slice(0, 10);
+    }
+
     this.props.UserActions.showDialog({
       ruleSelectedViewItem: {
         userId: viewItem.get('userId'),
@@ -93,9 +108,9 @@ class UserSpec extends Component {
         deptCd: viewItem.get('deptCd'),
         deptNm: viewItem.get('deptNm'),
         isUseExpire: viewItem.get('isUseExpire'),
-        expireDate: viewItem.get('expireDate'),
+        expireDate: userExpireDate,
         isUsePasswordExpire: viewItem.get('isUsePasswordExpire'),
-        passwordExpireDate: viewItem.get('passwordExpireDate'),        
+        passwordExpireDate: passwordExpireDate,        
         loginTrial: viewItem.get('loginTrial'),
         userEmail: viewItem.get('userEmail')
       },
