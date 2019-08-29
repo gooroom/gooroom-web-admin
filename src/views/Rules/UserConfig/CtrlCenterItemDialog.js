@@ -69,9 +69,10 @@ class CtrlCenterItemDialog extends Component {
         {no:21, tag:'thunderbolt', name:'thunderbolt', name_kr:'썬더볼트'},
         {no:22, tag:'color', name:'color', name_kr:'색'},
         {no:23, tag:'info-overview', name:'info-overview', name_kr:'정보'},
-        {no:24, tag:'datetile', name:'datetile', name_kr:'날짜 및 시각'},
+        {no:24, tag:'datetime', name:'datetime', name_kr:'날짜 및 시각'},
         {no:25, tag:'user-accounts', name:'user-accounts', name_kr:'사용자'},
-        {no:26, tag:'default-apps', name:'default-apps', name_kr:'기본 프로그램'}
+        {no:26, tag:'default-apps', name:'default-apps', name_kr:'기본 프로그램'},
+        {no:27, tag:'themes', name:'themes', name_kr:'테마'}
     ];
 
     handleClose = (event) => {
