@@ -262,7 +262,7 @@ class UserSpec extends Component {
           <CardHeader
             title={viewItem.get('userNm')}
             subheader={userSubinfo}
-            action={ (isEditable) ? actionButton : <div></div> }
+            action={ (isEditable && viewItem.get('statusCd') !== 'STAT020') ? actionButton : <div></div> }
           />
           <Divider />
           <CardContent style={{padding:10}}>
