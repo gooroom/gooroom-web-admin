@@ -120,6 +120,7 @@ class ClientConfSettingManage extends Component {
 
         rootAllow: true,
         sudoAllow: true,
+        policykitUser: 'sudo',
 
         boot_minno: 0,
         os_minno: 0,
