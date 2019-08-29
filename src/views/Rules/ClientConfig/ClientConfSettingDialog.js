@@ -321,8 +321,26 @@ class ClientConfSettingDialog extends Component {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={6}></Grid>
                         </Grid>
+
+                        <div style={{marginBottom:"10px"}}>
+                            <Grid container spacing={16} direction="row" justify="flex-start" >
+                                <Grid item >
+                                    <FormLabel style={{marginRight:"22px"}}>{bull} {t("lbPolicykitUserMng")}</FormLabel>
+                                </Grid>
+                                <Grid item >
+                                    <FormControlLabel value="sudo" control={
+                                        <Radio color="primary" value="sudo" onChange={this.handleValueChange("policykitUser")} checked={editingItem.get('policykitUser') === 'sudo'} />
+                                    } label={t("lbPolicykitSudoGroup")} labelPlacement="end" />
+                                </Grid>
+                                <Grid item >
+                                    <FormControlLabel value="user" control={
+                                        <Radio color="primary" value="user" onChange={this.handleValueChange("policykitUser")} checked={editingItem.get('policykitUser') === 'user'} />
+                                    } label={t("lbPolicykitLocalUser")} labelPlacement="end" />
+                                </Grid>
+                            </Grid>
+                        </div>
+
                         <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <div style={{margin:'8 0 32 0'}}>
                             <FormLabel >{bull} {t("lbViolatedLogLebel")}</FormLabel>

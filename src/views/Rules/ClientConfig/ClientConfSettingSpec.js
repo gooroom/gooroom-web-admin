@@ -95,14 +95,16 @@ class ClientConfSettingSpec extends Component {
               <Grid item xs={2} className={classes.specContent}>{(viewItem.get('rootAllow')) ? t("selActive") : t("selInActive")}</Grid>
               <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtSudoAllow")}</Grid>
               <Grid item xs={2} className={classes.specContent}>{(viewItem.get('sudoAllow')) ? t("selActive") : t("selInActive")}</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtSetupConnectableIp")}</Grid>
-              <Grid item xs={3} className={classes.specContent}>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtSetupConnectableIp")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>
               {viewItem.get('whiteIp').map(function(prop, index) {
                 return <span key={index}>{prop}<br/></span>;
               })}
               </Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtPermitAllIp")}</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('whiteIpAll')) ? t("selPermit") : t("selNoPermit")}</Grid>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtPermitAllIp")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('whiteIpAll')) ? t("selPermit") : t("selNoPermit")}</Grid>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("lbPolicykitUserMng")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{viewItem.get('policykitUser')}</Grid>
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("dtSetupLogLevel")} ]</Grid>
               <Grid item xs={12} className={classes.specTitle}>{bull} {t("lbViolatedLogLebel")}</Grid>
               <Grid item xs={12} className={classes.specContent}>
@@ -234,6 +236,7 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
     let useHomeReset = false;
     let rootAllow = false;
     let sudoAllow = false;
+    let policykitUser = '';
     let whiteIpAll = false;
     let whiteIps = [];
 
@@ -277,6 +280,8 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
         rootAllow = (evalue == "true");
       } else if(ename == 'SUDOALLOW') {
         sudoAllow = (evalue == "true");
+      } else if(ename == 'policykitUser') {
+        policykitUser = evalue;
       } else if(ename == 'WHITEIPALL') {
         whiteIpAll = (evalue == "true");
       } else if(ename == 'WHITEIPS') {
@@ -342,6 +347,7 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       useHomeReset: useHomeReset,
       rootAllow: rootAllow,
       sudoAllow: sudoAllow,
+      policykitUser: policykitUser,
       whiteIpAll: whiteIpAll,
       whiteIp: List(whiteIps),
 
