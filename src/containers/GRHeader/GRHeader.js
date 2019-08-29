@@ -26,6 +26,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import { translate, Trans } from "react-i18next";
+import { VERSION } from "../../constants";
 
 class GRHeader extends Component {
   constructor(props) {
@@ -63,7 +64,7 @@ class GRHeader extends Component {
       <AppBar className={classes.headerRoot}>
         <Toolbar className={classes.headerToolbar}>
             <Typography type="title" className={classes.headerBrandLogo}>
-              GPMS v1.3.0828
+              GPMS {VERSION}
             </Typography>
             <IconButton onClick={this.props.toggleDrawer}>
               <MenuIcon />
