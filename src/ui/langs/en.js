@@ -946,7 +946,6 @@ export default {
   "dtPkitDevice": "Device",
   "dtPkitPrinter": "Printer",
   "dtPkitMount": "Disk Mount",
-  "dtPkitBluetooth": "Bluetooth",
   "dtPkitSystem": "System",
   "dtPkitAdminExec": "Admin Execution (pkexec)",
   "dtPkitPackageManager": "Package Manager",

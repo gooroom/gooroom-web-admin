@@ -123,9 +123,6 @@ class PolicyKitRuleSpec extends Component {
                 <Grid item xs={3} className={classes.specContent}>{this.chgValueToReadable(viewItem.get('printer'))}</Grid>
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtPkitMount")}</Grid>
                 <Grid item xs={3} className={classes.specContent}>{this.chgValueToReadable(viewItem.get('diskMount'))}</Grid>
-                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtPkitBluetooth")}</Grid>
-                <Grid item xs={3} className={classes.specContent}>{this.chgValueToReadable(viewItem.get('bluetooth'))}</Grid>
-                <Grid item xs={6} className={classes.specContent}></Grid>
 
                 <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("dtPkitSystem")} ]</Grid>
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtPkitAdminExec")}</Grid>

@@ -946,7 +946,6 @@ export default {
   "dtPkitDevice": "장치",
   "dtPkitPrinter": "프린터 추가/설정",
   "dtPkitMount": "디스크 마운트",
-  "dtPkitBluetooth": "블루투스",
   "dtPkitSystem": "시스템",
   "dtPkitAdminExec": "관리자권한 실행",
   "dtPkitPackageManager": "패키지 관리자",

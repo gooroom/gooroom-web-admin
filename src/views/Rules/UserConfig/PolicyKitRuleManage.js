@@ -122,7 +122,6 @@ class PolicyKitRuleManage extends Component {
         networkConfig: 'yes',
         printer: 'auth_self',
         diskMount: 'yes',
-        bluetooth: 'yes',
         pkexec: 'auth_admin',
         packageManager: 'auth_admin'
       }),

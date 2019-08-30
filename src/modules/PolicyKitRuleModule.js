@@ -254,7 +254,6 @@ const makeParameter = (param) => {
         network_config: (param.get('networkConfig')) ? param.get('networkConfig') : 'disallow',
         printer: (param.get('printer')) ? param.get('printer') : 'disallow',
         disk_mount: (param.get('diskMount')) ? param.get('diskMount') : 'disallow',
-        bluetooth: (param.get('bluetooth')) ? param.get('bluetooth') : 'disallow',
         pkexec: (param.get('pkexec')) ? param.get('pkexec') : 'disallow',
         package_manager: (param.get('packageManager')) ? param.get('packageManager') : 'disallow'
     };
