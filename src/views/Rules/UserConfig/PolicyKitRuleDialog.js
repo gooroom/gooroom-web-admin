@@ -83,20 +83,6 @@ class PolicyKitRuleDialog extends Component {
         });
     }
 
-    handleBluetoothMacValueChange = index => event => {
-        this.props.PolicyKitRuleActions.setBluetoothMac({
-            index: index,
-            value: event.target.value
-        });
-    }
-
-    handleSerialNoValueChange = index => event => {
-        this.props.PolicyKitRuleActions.setSerialNo({
-            index: index,
-            value: event.target.value
-        });
-    }
-
     handleCreateData = (event) => {
         const { PolicyKitRuleProps, GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
@@ -204,27 +190,6 @@ class PolicyKitRuleDialog extends Component {
             this.handleClose();
         });
     }
-
-    handleAddBluetoothMac = () => {
-        const { PolicyKitRuleActions } = this.props;
-        PolicyKitRuleActions.addBluetoothMac();
-    }
-
-    handleDeleteBluetoothMac = index => event => {
-        const { PolicyKitRuleActions } = this.props;
-        PolicyKitRuleActions.deleteBluetoothMac(index);
-    }
-
-    handleAddSerialNo = () => {
-        const { PolicyKitRuleActions } = this.props;
-        PolicyKitRuleActions.addSerialNo();
-    }
-
-    handleDeleteSerialNo = index => event => {
-        const { PolicyKitRuleActions } = this.props;
-        PolicyKitRuleActions.deleteSerialNo(index);
-    }
-
 
     generateItem = (editingItem, title, itemName) => {
         const { t, i18n } = this.props;
@@ -354,7 +319,6 @@ class PolicyKitRuleDialog extends Component {
                             <div style={{border:'1px solid lightGray',padding:'10px 20px 20px 20px'}}>
                                 {this.generateItem(editingItem, t("dtPkitPrinter"), 'printer')}
                                 {this.generateItem(editingItem, t("dtPkitMount"), 'diskMount')}
-                                {this.generateItem(editingItem, t("dtPkitBluetooth"), 'bluetooth')}
                             </div>
                         }
                         {selectedTab === 3 && 
