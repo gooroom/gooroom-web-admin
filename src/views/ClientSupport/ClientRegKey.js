@@ -146,8 +146,7 @@ class ClientRegKey extends Component {
     const { classes } = this.props;
     const { ClientRegKeyProps } = this.props;
     const { t, i18n } = this.props;
-
-    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
+    const compId = this.props.match.params.grMenuId;
 
     let columnHeaders = [
       { id: 'chRegKey', isOrder: true, numeric: false, disablePadding: true, label: t("colClientRegKey") },
@@ -156,11 +155,6 @@ class ClientRegKey extends Component {
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
     ];
-    if(!isEditable) {
-      columnHeaders.splice(-1, 1);
-    }
-
-    const compId = this.props.match.params.grMenuId;
 
     const listObj = ClientRegKeyProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -189,11 +183,9 @@ class ClientRegKey extends Component {
               </Grid>
             </Grid>
             <Grid item xs={6} >
-            {isEditable &&
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />{t("btnRegist")}
               </Button>
-            }
             </Grid>
           </Grid>
 
@@ -211,6 +203,39 @@ class ClientRegKey extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+
+                  let isEditable = true;
+                  let isDeletable = true;
+
+                  if(n.get('regKeyNo').endsWith('DEFAULT')) {
+                    isEditable = false;
+                    isDeletable = false;
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    }
+                  } else if(n.get('regKeyNo').endsWith('STD')) {
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      isDeletable = false;
+                    }
+                  } else {
+                    if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      if(window.gpmsain === Constants.SUPER_RULECODE) {
+                        isDeletable = true;
+                      } else {
+                        isDeletable = false;
+                      }
+                    }
+                  }
+
                   return (
                     <TableRow
                       hover
@@ -221,20 +246,22 @@ class ClientRegKey extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('validDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('expireDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
-                      {isEditable &&
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        <Button size="small" color="secondary" 
-                          className={classes.buttonInTableRow} 
+                      {isEditable &&
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('regKeyNo'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-                        <Button size="small" color="secondary" 
-                          className={classes.buttonInTableRow} 
+                      }
+                      {isDeletable &&
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('regKeyNo'))}>
                           <DeleteIcon />
                         </Button>
-                      </TableCell>
                       }
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -276,7 +303,8 @@ class ClientRegKey extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientRegKeyProps: state.ClientRegKeyModule
+  ClientRegKeyProps: state.ClientRegKeyModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
