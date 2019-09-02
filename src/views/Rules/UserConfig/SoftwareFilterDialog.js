@@ -71,6 +71,14 @@ class SoftwareFilterDialog extends Component {
         {no:22, tag:'gooroom-guide.desktop', name:'Gooroom Guide', name_kr:'구름 도움말'}
     ];
 
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          selectAll: false
+        };
+    }
+
     handleClose = (event) => {
         this.props.SoftwareFilterActions.closeDialog();
     }
@@ -83,18 +91,28 @@ class SoftwareFilterDialog extends Component {
         });
     }
 
+    handleSelectAll = () => event => {
+        this.setState({ selectAll: event.target.checked });
+        if(SoftwareFilterDialog.SW_LIST) {
+            SoftwareFilterDialog.SW_LIST.map(n => {
+                this.props.SoftwareFilterActions.setEditingSoftwareItemValue({
+                    name: n.tag,
+                    value: (event.target.checked) ? 'allow' : 'disallow'
+                });
+            });
+        }
+    }
+
     handleSoftwareValueChange = name => event => {
         const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'allow' : 'disallow') : event.target.value;
+
+        if(this.state.selectAll && value === 'disallow') {
+            this.setState({ selectAll: false });
+        }
+
         this.props.SoftwareFilterActions.setEditingSoftwareItemValue({
             name: name,
             value: value
-        });
-    }
-
-    handleBluetoothMacValueChange = index => event => {
-        this.props.SoftwareFilterActions.setBluetoothMac({
-            index: index,
-            value: event.target.value
         });
     }
 
@@ -269,9 +287,17 @@ class SoftwareFilterDialog extends Component {
                         </Grid>
                     </Grid>
                     {(dialogType === SoftwareFilterDialog.TYPE_EDIT || dialogType === SoftwareFilterDialog.TYPE_ADD) &&
-                        <div style={{marginTop:20}}>
-                        <InputLabel>{t("msgSelectSWItem")}</InputLabel>
-                        <Grid container alignItems="center" direction="row" justify="space-between" style={{marginTop:10}}>
+                        <Grid container alignItems="center" direction="row" justify="space-between" style={{marginTop:30}}>
+                        <Grid item xs={6} style={{marginBottom:30}}>
+                            <InputLabel>{t("msgSelectSWItem")}</InputLabel>
+                        </Grid>
+                        <Grid item xs={6} style={{marginBottom:30}}>
+                            <FormControlLabel label={t('lbSelectAll')} 
+                                control={<Checkbox onChange={this.handleSelectAll()} color="primary"
+                                    checked={this.state.selectAll}
+                                />}                                
+                            />
+                        </Grid>
                         {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
                                 return (
                                     <Grid item xs={6} key={n.no}>
@@ -285,7 +311,6 @@ class SoftwareFilterDialog extends Component {
                             })
                         }
                         </Grid>
-                        </div>
                     }
                     </div>
                     }
