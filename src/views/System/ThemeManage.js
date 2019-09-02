@@ -91,7 +91,7 @@ class ThemeManage extends Component {
     });
   }
 
-  handleSelectRow = (event, id, isEditable) => {
+  handleSelectRow = (event, id) => {
     const { ThemeManageProps, ThemeManageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -99,7 +99,7 @@ class ThemeManage extends Component {
     ThemeManageActions.showInform({
       compId: compId,
       viewItem: viewItem,
-      isEditable: isEditable
+      isEditable: false
     });
   };
 
@@ -178,19 +178,12 @@ class ThemeManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
-
     let columnHeaders = [
       { id: 'chThemeNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
       { id: 'chThemeId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chThemeCmt', isOrder: false, numeric: false, disablePadding: true, label: t("colInfo") },
-      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
-      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") }
     ];
-    //if(!isEditable) {
-      // 테마는 수정이 안되도록 조치
-      columnHeaders.splice(-1, 1);
-    //}
 
     const listObj = ThemeManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -219,11 +212,6 @@ class ThemeManage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={2} style={{textAlign:'right'}}>
-            {(isEditable && false) && 
-              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-                <AddIcon />{t("btnRegist")}
-              </Button>
-            }
             </Grid>
           </Grid>
 
@@ -244,29 +232,13 @@ class ThemeManage extends Component {
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('themeId'), isEditable)}
+                      onClick={event => this.handleSelectRow(event, n.get('themeId'))}
                       key={n.get('themeId')}
                     >
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeNm')}</TableCell>
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeId')}</TableCell>
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeCmt')}</TableCell>
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
-                    <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                    {(isEditable && false) && 
-                      <Button size="small" color="secondary" 
-                        className={classes.buttonInTableRow} 
-                        onClick={event => this.handleEditClick(event, n.get('themeId'))}>
-                        <SettingsApplicationsIcon />
-                      </Button>
-                    }
-                    {(isEditable && false) && 
-                      <Button size="small" color="secondary" 
-                        className={classes.buttonInTableRow} 
-                        onClick={event => this.handleDeleteClick(event, n.get('themeId'))}>
-                        <DeleteIcon />
-                      </Button>
-                    }
-                    </TableCell>
                   </TableRow>
                   );
                 })}
@@ -304,7 +276,7 @@ class ThemeManage extends Component {
         <ThemeSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
-          isEditable={(listObj) ? listObj.get('isEditable') : null}
+          isEditable={false}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
