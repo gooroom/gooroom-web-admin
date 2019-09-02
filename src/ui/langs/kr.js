@@ -233,6 +233,7 @@ export default {
   "msgInvalidMacAddress": "맥주소가 정확하지 않습니다.",
   "msgInvalidNumber": "설정값을 입력하세요.",
   "msgInvalidValue": "유효한 설정값을 입력하세요.",
+  "lbSelectAll": "전체선택",
 
   // options
   "stBeforeJob": "작업전",

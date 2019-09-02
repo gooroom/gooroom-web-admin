@@ -233,6 +233,7 @@ export default {
   "msgInvalidMacAddress": "The MAC address is not correct.",
   "msgInvalidNumber":"Please enter setting value.",
   "msgInvalidValue": "Please enter a valid setting value.",
+  "lbSelectAll": "Select All",
 
   // options
   "stBeforeJob": "Before",

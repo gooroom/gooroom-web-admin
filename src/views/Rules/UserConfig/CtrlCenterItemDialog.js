@@ -75,6 +75,14 @@ class CtrlCenterItemDialog extends Component {
         {no:27, tag:'themes', name:'themes', name_kr:'테마'}
     ];
 
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          selectAll: false
+        };
+    }
+
     handleClose = (event) => {
         this.props.CtrlCenterItemActions.closeDialog();
     }
@@ -87,18 +95,28 @@ class CtrlCenterItemDialog extends Component {
         });
     }
 
-    handleSoftwareValueChange = name => event => {
+    handleSelectAll = () => event => {
+        this.setState({ selectAll: event.target.checked });
+        if(CtrlCenterItemDialog.ITEM_LIST) {
+            CtrlCenterItemDialog.ITEM_LIST.map(n => {
+                this.props.CtrlCenterItemActions.setEditingCtrlCenterItemValue({
+                    name: n.tag,
+                    value: (event.target.checked) ? 'allow' : 'disallow'
+                });
+            });
+        }
+    }
+
+    handleCtrlCenterValueChange = name => event => {
         const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'allow' : 'disallow') : event.target.value;
+
+        if(this.state.selectAll && value === 'disallow') {
+            this.setState({ selectAll: false });
+        }
+
         this.props.CtrlCenterItemActions.setEditingCtrlCenterItemValue({
             name: name,
             value: value
-        });
-    }
-
-    handleBluetoothMacValueChange = index => event => {
-        this.props.CtrlCenterItemActions.setBluetoothMac({
-            index: index,
-            value: event.target.value
         });
     }
 
@@ -273,14 +291,22 @@ class CtrlCenterItemDialog extends Component {
                         </Grid>
                     </Grid>
                     {(dialogType === CtrlCenterItemDialog.TYPE_EDIT || dialogType === CtrlCenterItemDialog.TYPE_ADD) &&
-                        <div style={{marginTop:20}}>
-                        <InputLabel>{t("msgSelectCTIItem")}</InputLabel>
-                        <Grid container alignItems="center" direction="row" justify="space-between" style={{marginTop:10}}>
+                        <Grid container alignItems="center" direction="row" justify="space-between" style={{marginTop:30}}>
+                        <Grid item xs={6} style={{marginBottom:30}}>
+                            <InputLabel >{t("msgSelectCTIItem")}</InputLabel>
+                        </Grid>
+                        <Grid item xs={6} style={{marginBottom:30}}>
+                            <FormControlLabel label={t('lbSelectAll')} 
+                                control={<Checkbox onChange={this.handleSelectAll()} color="primary"
+                                    checked={this.state.selectAll}
+                                />}                                
+                            />
+                        </Grid>
                         {CtrlCenterItemDialog.ITEM_LIST && CtrlCenterItemDialog.ITEM_LIST.map(n => {
                                 return (
                                     <Grid item xs={6} key={n.no}>
                                     <FormControlLabel label={n.name}
-                                        control={<Checkbox onChange={this.handleSoftwareValueChange(n.tag)} color="primary"
+                                        control={<Checkbox onChange={this.handleCtrlCenterValueChange(n.tag)} color="primary"
                                             checked={this.checkAllow(editingItem.getIn(['CTRLITEM', n.tag]))}
                                         />}                                
                                     />
@@ -289,7 +315,6 @@ class CtrlCenterItemDialog extends Component {
                             })
                         }
                         </Grid>
-                        </div>
                     }
                     </div>
                     }
