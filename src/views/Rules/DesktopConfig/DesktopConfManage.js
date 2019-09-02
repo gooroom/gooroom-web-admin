@@ -183,8 +183,6 @@ class DesktopConfManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
-
     let columnHeaders = [
       { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: t("colDivision") },
       { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
@@ -196,9 +194,6 @@ class DesktopConfManage extends Component {
       { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
-    if(!isEditable) {
-      columnHeaders.splice(-1, 1);
-    }
 
     const listObj = DesktopConfProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -219,7 +214,6 @@ class DesktopConfManage extends Component {
                     <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
                   </FormControl>
                 </Grid>
-
                 <Grid item xs={6}>
                   <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                     <Search />{t("btnSearch")}
@@ -227,14 +221,11 @@ class DesktopConfManage extends Component {
                 </Grid>
               </Grid>
             </Grid>
-
             <Grid item xs={6} style={{textAlign:'right'}}>
-            {isEditable &&
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" 
                 onClick={() => { this.handleCreateButton(); } } >
                 <AddIcon />{t("btnRegist")}
               </Button>
-            }
             </Grid>
           </Grid>            
 
@@ -252,6 +243,39 @@ class DesktopConfManage extends Component {
               />
               <TableBody>
                 {listObj && listObj.get('listData') && listObj.get('listData').map(n => {
+
+                  let isEditable = true;
+                  let isDeletable = true;
+
+                  if(n.get('confId').endsWith('DEFAULT')) {
+                    isEditable = false;
+                    isDeletable = false;
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    }
+                  } else if(n.get('confId').endsWith('STD')) {
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      isDeletable = false;
+                    }
+                  } else {
+                    if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      if(window.gpmsain === Constants.SUPER_RULECODE) {
+                        isDeletable = true;
+                      } else {
+                        isDeletable = false;
+                      }
+                    }
+                  }
+
                   return (
                     <TableRow 
                       hover
@@ -268,20 +292,22 @@ class DesktopConfManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
-                      {isEditable &&
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditListClick(event, n.get('confId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isDeletable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('confId'))}>
                           <DeleteIcon />
-                        </Button>                        
-                      </TableCell>
+                        </Button>
                       }
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -331,7 +357,8 @@ class DesktopConfManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  DesktopConfProps: state.DesktopConfModule
+  DesktopConfProps: state.DesktopConfModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

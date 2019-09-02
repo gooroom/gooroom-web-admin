@@ -158,8 +158,6 @@ class GcspManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
-
     let columnHeaders = [
       { id: 'chGcspNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
       { id: 'chGcspId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
@@ -167,9 +165,6 @@ class GcspManage extends Component {
       { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: t("colRegUser") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
-    if(!isEditable) {
-      columnHeaders.splice(-1, 1);
-    }
 
     const listObj = GcspManageProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -203,11 +198,9 @@ class GcspManage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={2} style={{textAlign:'right'}}>
-            {isEditable &&
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />{t("btnRegist")}
               </Button>
-            }
             </Grid>
           </Grid>
 
@@ -225,6 +218,39 @@ class GcspManage extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+
+                  let isEditable = true;
+                  let isDeletable = true;
+
+                  if(n.get('gcspId').endsWith('DEFAULT')) {
+                    isEditable = false;
+                    isDeletable = false;
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    }
+                  } else if(n.get('gcspId').endsWith('STD')) {
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      isDeletable = false;
+                    }
+                  } else {
+                    if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      if(window.gpmsain === Constants.SUPER_RULECODE) {
+                        isDeletable = true;
+                      } else {
+                        isDeletable = false;
+                      }
+                    }
+                  }
+
                   return (
                     <TableRow
                       hover
@@ -235,20 +261,22 @@ class GcspManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
-                      {isEditable &&
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        <Button size="small" color="secondary" 
-                          className={classes.buttonInTableRow} 
+                      {isEditable &&
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('gcspId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-                        <Button size="small" color="secondary" 
-                          className={classes.buttonInTableRow} 
+                      }
+                      {isDeletable &&
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('gcspId'))}>
                           <DeleteIcon />
                         </Button>
-                      </TableCell>
                       }
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -290,7 +318,8 @@ class GcspManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  GcspManageProps: state.GcspManageModule
+  GcspManageProps: state.GcspManageModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

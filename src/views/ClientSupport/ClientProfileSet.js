@@ -200,8 +200,7 @@ class ClientProfileSet extends Component {
     const { classes } = this.props;
     const { ClientProfileSetProps } = this.props;
     const { t, i18n } = this.props;
-
-    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
+    const compId = this.props.match.params.grMenuId;
 
     let columnHeaders = [
       { id: 'chProfileSetNo', isOrder: true, numeric: false, disablePadding: true, label: t("colNumber") },
@@ -213,11 +212,6 @@ class ClientProfileSet extends Component {
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
       { id: 'chProfile', isOrder: false, numeric: false, disablePadding: true, label: t("colProfile") }
     ];
-    if(!isEditable) {
-      columnHeaders.splice(-2, 2);
-    }
-
-    const compId = this.props.match.params.grMenuId;
     
     const listObj = ClientProfileSetProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -247,11 +241,9 @@ class ClientProfileSet extends Component {
               </Grid>
             </Grid>
             <Grid item xs={6} style={{textAlign:'right'}}>
-            {isEditable &&
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />{t("btnRegist")}
               </Button>
-            }
             </Grid>
           </Grid>
 
@@ -269,6 +261,39 @@ class ClientProfileSet extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+
+                  let isEditable = true;
+                  let isDeletable = true;
+
+                  if(n.get('profileNo').endsWith('DEFAULT')) {
+                    isEditable = false;
+                    isDeletable = false;
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    }
+                  } else if(n.get('profileNo').endsWith('STD')) {
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      isDeletable = false;
+                    }
+                  } else {
+                    if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      if(window.gpmsain === Constants.SUPER_RULECODE) {
+                        isDeletable = true;
+                      } else {
+                        isDeletable = false;
+                      }
+                    }
+                  }
+
                   return (
                     <TableRow
                       hover
@@ -287,29 +312,33 @@ class ClientProfileSet extends Component {
                           <AssignmentIcon />
                         </Button>                        
                       </TableCell>
-                      {isEditable &&
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('profileNo'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isDeletable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('profileNo'))}>
                           <DeleteIcon />
-                        </Button>                        
-                      </TableCell>
+                        </Button>
                       }
-                      {isEditable &&
+                      </TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        <Button color="secondary" size="small" 
-                          className={classes.buttonInTableRow}
-                          onClick={event => this.handleProfileClick(event, n.get('profileNo'))}>
-                          <ArchiveIcon />
-                        </Button>                        
-                      </TableCell>
+                      {isEditable &&
+                        <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                          <Button color="secondary" size="small" 
+                            className={classes.buttonInTableRow}
+                            onClick={event => this.handleProfileClick(event, n.get('profileNo'))}>
+                            <ArchiveIcon />
+                          </Button>                        
+                        </TableCell>
                       }
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -359,7 +388,8 @@ class ClientProfileSet extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientProfileSetProps: state.ClientProfileSetModule
+  ClientProfileSetProps: state.ClientProfileSetModule,
+  AdminProps: state.AdminModule
 });
 
 

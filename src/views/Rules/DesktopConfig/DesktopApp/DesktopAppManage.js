@@ -185,8 +185,6 @@ class DesktopAppManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
-
     let columnHeaders = [
       { id: 'chAppId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chAppNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
@@ -196,9 +194,6 @@ class DesktopAppManage extends Component {
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
-    if(!isEditable) {
-      columnHeaders.splice(-1, 1);
-    }
 
     const listObj = DesktopAppProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -227,11 +222,9 @@ class DesktopAppManage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={6} style={{textAlign:'right'}}>
-            {isEditable &&
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); } } >
                 <AddIcon />{t("btnRegist")}
               </Button>
-            }
             </Grid>
           </Grid>            
 
@@ -249,6 +242,39 @@ class DesktopAppManage extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+
+                  let isEditable = true;
+                  let isDeletable = true;
+
+                  if(n.get('appId').endsWith('DEFAULT')) {
+                    isEditable = false;
+                    isDeletable = false;
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    }
+                  } else if(n.get('appId').endsWith('STD')) {
+                    if(window.gpmsain === Constants.SUPER_RULECODE) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      isDeletable = false;
+                    }
+                  } else {
+                    if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
+                      isEditable = true;
+                      isDeletable = true;
+                    } else {
+                      isEditable = false;
+                      if(window.gpmsain === Constants.SUPER_RULECODE) {
+                        isDeletable = true;
+                      } else {
+                        isDeletable = false;
+                      }
+                    }
+                  }
+
                   return (
                     <TableRow 
                       hover
@@ -262,20 +288,22 @@ class DesktopAppManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
-                      {isEditable &&
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditListClick(event, n.get('appId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isDeletable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('appId'))}>
                           <DeleteIcon />
-                        </Button>                        
-                      </TableCell>
+                        </Button>
                       }
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -324,7 +352,8 @@ class DesktopAppManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  DesktopAppProps: state.DesktopAppModule
+  DesktopAppProps: state.DesktopAppModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
