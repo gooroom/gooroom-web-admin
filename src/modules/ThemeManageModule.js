@@ -24,7 +24,7 @@ const CLOSE_THEMEMANAGE_DIALOG = 'themeManage/CLOSE_THEMEMANAGE_DIALOG';
 
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chThemeNm', 'asc', {});
+const initialState = commonHandleActions.getCommonInitialState('chThemeNm', 'asc', null, {rowsPerPage: 5});
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
