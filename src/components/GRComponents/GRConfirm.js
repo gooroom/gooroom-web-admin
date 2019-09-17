@@ -19,6 +19,13 @@ import { translate, Trans } from "react-i18next";
 
 class GRConfirm extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      showOk: true
+    };
+  }
+
   handleCancel = () => {
     const { GRConfirmActions, GRConfirmProps } = this.props;
     GRConfirmProps.handleConfirmResult(false);
@@ -30,6 +37,9 @@ class GRConfirm extends Component {
   };
 
   handleOk = () => {
+    this.setState({
+      showOk: false
+    });
     const { GRConfirmActions, GRConfirmProps } = this.props;
     GRConfirmProps.handleConfirmResult(true, GRConfirmProps.confirmObject);
     GRConfirmActions.closeConfirm({
@@ -42,7 +52,7 @@ class GRConfirm extends Component {
   render() {
     const { GRConfirmProps } = this.props;
     const { t, i18n } = this.props;
-
+    const showOk = this.state.showOk;
     return (
        <Dialog
           onClose={this.handleCancel}
@@ -58,7 +68,7 @@ class GRConfirm extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleCancel} color="primary" autoFocus>{t("btnNo")}</Button>
-            <Button onClick={this.handleOk} color="primary">{t("btnYes")}</Button>
+            {showOk && <Button onClick={this.handleOk} color="primary">{t("btnYes")}</Button>}
           </DialogActions>
         </Dialog>
     );
