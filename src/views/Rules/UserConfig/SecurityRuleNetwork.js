@@ -393,7 +393,6 @@ class SecurityRuleNetwork extends Component {
         }
       </Table>
       </div>
-      <GRConfirm />
       </Paper>
     );
   }
