@@ -22,7 +22,7 @@ class LogLevelSelect extends Component {
         onChange={this.props.onChangeSelect}
         inputProps={{name: name}}
       >
-        {logLevelData.filter(x => (x.levelNo >= minNo)).map(x => (
+        {logLevelData.filter(x => (x.levelNo >= minNo) || x.levelNo == 0).map(x => (
           <MenuItem value={x.levelVal} levelno={x.levelNo} key={x.levelId}>
             {t(x.levelNm)}
           </MenuItem>
