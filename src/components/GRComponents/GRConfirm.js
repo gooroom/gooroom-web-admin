@@ -26,6 +26,14 @@ class GRConfirm extends Component {
     };
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if(!prevState.showOk) {
+      this.setState({
+        showOk: true
+      });
+    }
+  }
+
   handleCancel = () => {
     const { GRConfirmActions, GRConfirmProps } = this.props;
     GRConfirmProps.handleConfirmResult(false);
@@ -67,8 +75,8 @@ class GRConfirm extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleCancel} color="primary" autoFocus>{t("btnNo")}</Button>
             {showOk && <Button onClick={this.handleOk} color="primary">{t("btnYes")}</Button>}
+            <Button onClick={this.handleCancel} color="primary" autoFocus>{t("btnNo")}</Button>
           </DialogActions>
         </Dialog>
     );
