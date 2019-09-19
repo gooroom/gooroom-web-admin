@@ -215,12 +215,9 @@ class ClientRegKeyDialog extends Component {
                         className={classes.fullWidth}
                         disabled={(dialogType === ClientRegKeyDialog.TYPE_VIEW)}
                     />
-                    <FormLabel disabled={true}>
-                        <i>{t("msgHelpInputIp")}</i>
-                    </FormLabel><br />
-                    <FormLabel disabled={true}>
-                        <i>{t("msgSampleIputIp")}</i>
-                    </FormLabel>
+                    <div style={{color:'#757575'}}><iv>{t("msgHelpInputIp")}</iv></div>
+                    <div style={{color:'#757575'}}><i>{t("msgSampleIputIp")}</i></div>
+
                     <TextField
                         label={t("lbDesc")}
                         value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
