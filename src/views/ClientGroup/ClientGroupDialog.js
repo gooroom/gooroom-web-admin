@@ -234,7 +234,7 @@ class ClientGroupDialog extends Component {
                         <Grid item xs={5}>
                             <TextValidator label={t("spClientRegIp")} className={classes.fullWidth}
                                 name="clientRegIp"
-                                validators={['matchRegexp:^[0-9.*-]+$']}
+                                validators={['matchRegexp:^[0-9.*-~]+$']}
                                 errorMessages={[t("msgWrongIpString")]}
                                 value={(editingItem.get('regClientIp')) ? editingItem.get('regClientIp') : ''}
                                 onChange={this.handleValueChange('regClientIp')}
