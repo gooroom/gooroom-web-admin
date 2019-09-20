@@ -312,7 +312,7 @@ class DeptTreeComp extends Component {
                       <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('deptCd'))} />
                     </TableCell>
                   }
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('deptNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('itemCount')}/{n.get('itemTotalCount')}</TableCell>
                   {(hasEdit) && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>
