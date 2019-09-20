@@ -43,7 +43,8 @@ export const showNoticeContent = (param) => dispatch => {
         type: SHOW_NOTICE_CONTENT,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('noticeId') : '',
-        viewItem: param.viewItem
+        viewItem: param.viewItem,
+        isEditable: param.isEditable
     });
 };
 

@@ -43,7 +43,8 @@ export const showNoticePublishInfo = (param) => dispatch => {
         type: SHOW_NOTICE_PUBLISH_INFO,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('noticeId') : '',
-        viewItem: param.viewItem
+        viewItem: param.viewItem,
+        isEditable: param.isEditable
     });
 };
 
