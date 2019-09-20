@@ -63,23 +63,6 @@ export const setParamItemValue = (param) => dispatch => {
     });
 };
 
-export const readSecurityLogList = (module, compId, targetType) => dispatch => {
-    dispatch({type: COMMON_PENDING});
-    return requestPostAPI('readSecurityLogList', {
-    }).then(
-        (response) => {
-            dispatch({
-                type: GET_SECURITYLOG_LIST_SUCCESS,
-                compId: compId,
-                targetType: targetType,
-                response: response
-            });
-        }
-    ).catch(error => {
-        dispatch({ type: COMMON_FAILURE, error: error });
-    });
-};
-
 export const readSecurityLogListPaged = (module, compId, extParam) => dispatch => {
     const newListParam = (module.getIn(['viewItems', compId])) ? 
         module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 

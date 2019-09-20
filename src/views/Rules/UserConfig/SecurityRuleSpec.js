@@ -160,7 +160,7 @@ export const generateSecurityRuleObject = (param, isForViewer) => {
       } else if(ename == 'firewall_network') {
         const es = evalue.split('|');
         netItem = netItem.push({
-          no: es[0],
+          no: Number(es[0]),
           direction: es[1],
           protocol: es[2],
           address: es[3],
