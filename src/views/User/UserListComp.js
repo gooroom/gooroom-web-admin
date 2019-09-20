@@ -223,12 +223,17 @@ class UserListComp extends Component {
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
           <Grid item xs={3} >
             <FormControl fullWidth={true}>
-              <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
+              <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} 
+                value={(listObj && listObj.getIn(['listParam', 'status'])) ? listObj.getIn(['listParam', 'status']) : 'STAT010'}
+              />
             </FormControl>
           </Grid>
           <Grid item xs={3}>
             <FormControl fullWidth={true}>
-              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+              <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                handleKeywordChange={this.handleKeywordChange} 
+                handleSubmit={() => this.handleSelectBtnClick()} 
+              />
             </FormControl>
           </Grid>
           <Grid item xs={2}>

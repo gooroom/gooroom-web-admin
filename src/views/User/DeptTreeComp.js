@@ -44,6 +44,13 @@ class DeptTreeComp extends Component {
 
   componentDidMount() {
     //this.props.DeptActions.readDeptListPaged(this.props.DeptProps, this.props.compId);
+    const keyword = this.props.DeptProps.getIn(['viewItems', this.props.compId, 'listParam', 'keyword']);
+    if(keyword && keyword != '') {
+      this.setState({
+        isShowTree: false
+      })
+      this.props.DeptActions.readDeptListPaged(this.props.DeptProps, this.props.compId, {page: 0});
+    }
   }
 
   handleChangePage = (event, page) => {
@@ -305,7 +312,7 @@ class DeptTreeComp extends Component {
                       <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('deptCd'))} />
                     </TableCell>
                   }
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('deptNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('itemCount')}/{n.get('itemTotalCount')}</TableCell>
                   {(hasEdit) && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>
