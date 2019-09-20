@@ -14,15 +14,15 @@ import FormControl from '@material-ui/core/FormControl';
 
 class AdminTypeSelect extends Component {
 
-  // componentDidMount() {
-  //   this.props.CommonOptionActions.changeSelectValue({
-  //     name: 'selectedAdminType',
-  //     value: {
-  //       typeId: '',
-  //       typeNm: ''
-  //     }
-  //   });
-  // }
+  componentDidMount() {
+    this.props.CommonOptionActions.changeSelectValue({
+      name: 'selectedAdminType',
+      value: {
+        typeId: '',
+        typeNm: ''
+      }
+    });
+  }
 
   handleChangeSelect = event => {
     const { CommonOptionActions } = this.props;
@@ -37,7 +37,7 @@ class AdminTypeSelect extends Component {
   };
 
   render() {
-    const { CommonOptionProps } = this.props;
+    const { CommonOptionProps, value } = this.props;
     const { t, i18n } = this.props;
 
     return (
@@ -45,7 +45,7 @@ class AdminTypeSelect extends Component {
       <FormControl fullWidth={true}>
       <InputLabel htmlFor="admin-type">{t("lbAdminType")}</InputLabel>
       <Select
-        value={CommonOptionProps.selectedAdminType.typeId}
+        value={value}
         onChange={this.handleChangeSelect}
         inputProps={{name: 'clientStatus'}}
       >
