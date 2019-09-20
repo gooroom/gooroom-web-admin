@@ -44,6 +44,14 @@ class ClientGroupTreeComp extends Component {
 
   componentDidMount() {
     //this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId);
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    const keyword = ClientGroupProps.getIn(['viewItems', this.props.compId, 'listParam', 'keyword']);
+    if(keyword && keyword != '') {
+      this.setState({
+        isShowTree: false
+      })
+      ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.compId, {page: 0});
+    }
   }
 
   handleChangePage = (event, page) => {
@@ -243,7 +251,8 @@ class ClientGroupTreeComp extends Component {
             <FormControl fullWidth={true}>
               <KeywordOption paramName="keyword" keywordValue={keyword}
                 handleKeywordChange={this.handleKeywordChange} 
-                handleSubmit={() => this.handleSelectBtnClick()} />
+                handleSubmit={() => this.handleSelectBtnClick()} 
+              />
             </FormControl>
           </Grid>
           <Grid item xs={6} >

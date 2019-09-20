@@ -44,6 +44,13 @@ class DeptTreeComp extends Component {
 
   componentDidMount() {
     //this.props.DeptActions.readDeptListPaged(this.props.DeptProps, this.props.compId);
+    const keyword = this.props.DeptProps.getIn(['viewItems', this.props.compId, 'listParam', 'keyword']);
+    if(keyword && keyword != '') {
+      this.setState({
+        isShowTree: false
+      })
+      this.props.DeptActions.readDeptListPaged(this.props.DeptProps, this.props.compId, {page: 0});
+    }
   }
 
   handleChangePage = (event, page) => {
