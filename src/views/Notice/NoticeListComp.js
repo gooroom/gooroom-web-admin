@@ -48,13 +48,13 @@ class NoticeListComp extends Component {
         });
     }
 
-    handleSelectRow = (event, id) => {
+    handleSelectRow = (event, id, isEditable) => {
         event.stopPropagation();
         const { NoticeProps, compId } = this.props;
         // get Object
         const selectRowObject = getRowObjectById(NoticeProps, compId, id, 'noticeId');
         if(this.props.onSelect && selectRowObject) {
-          this.props.onSelect(selectRowObject);
+          this.props.onSelect(selectRowObject, isEditable);
         }
     }
 
@@ -96,7 +96,7 @@ class NoticeListComp extends Component {
     };
 
     render() {
-        const { classes } = this.props;
+        const { classes, AdminProps } = this.props;
         const { NoticeProps, compId, selectorType } = this.props;
         const { t, i18n } = this.props;
 
@@ -126,24 +126,32 @@ class NoticeListComp extends Component {
                     />
                     <TableBody>
                         {listObj.get('listData') && listObj.get('listData').map(n => {
+
                             const isSelected = this.isSelected(n.get('noticeId'));
+                            let isEditable = false;
+                            if(AdminProps.get('adminId') === n.get('regUserId')) {
+                                isEditable = true;
+                            }
+
                             return (
                             <TableRow
                                 hover
                                 className={(isSelected) ? classes.grSelectedRow : ''}
-                                onClick={event => this.handleSelectRow(event, n.get('noticeId'))}
+                                onClick={event => this.handleSelectRow(event, n.get('noticeId'), isEditable)}
                                 role='checkbox'
                                 key={n.get('noticeId')}>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('noticeId')}</TableCell>
                                 <TableCell className={classes.grSmallAndClickCell}>{n.get('title')}</TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                                    {isEditable && 
                                     <Button size="small" color='secondary'
                                         className={classes.buttonInTableRow} 
                                         onClick={event => this.handleEditClick(event, n.get('noticeId'))}>
                                         <SettingsApplicationsIcon/>
                                     </Button>
-                                    {n.get('publishCount') < 1 &&
+                                    }
+                                    {isEditable && n.get('publishCount') < 1 &&
                                         <Button size="small" color="secondary"
                                             className={classes.buttonInTableRow} 
                                             onClick={event => this.handleDeleteClick(event, n.get('noticeId'))}>
@@ -184,7 +192,8 @@ class NoticeListComp extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    NoticeProps: state.NoticeModule
+    NoticeProps: state.NoticeModule,
+    AdminProps: state.AdminModule
 });
   
 const mapDispatchToProps = (dispatch) => ({

@@ -151,7 +151,7 @@ class NoticePublishListComp extends Component {
 
     render() {
         const { classes } = this.props;
-        const { NoticePublishProps, compId, CommonOptionProps } = this.props;
+        const { NoticePublishProps, compId, CommonOptionProps, isEditable } = this.props;
         const { t, i18n } = this.props;
 
         const columnHeaders = [
@@ -225,11 +225,13 @@ class NoticePublishListComp extends Component {
                                 </TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                                 <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                                    {isEditable && 
                                     <Button size="small" color="secondary"
                                         className={classes.buttonInTableRow} 
                                         onClick={event => this.handleEditClick(event, n.get('noticePublishId'))}>
                                         <SettingsApplicationsIcon/>
                                     </Button>
+                                    }
                                 </TableCell>
                             </TableRow>
                             );

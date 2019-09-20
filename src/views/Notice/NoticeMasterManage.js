@@ -42,7 +42,7 @@ class NoticeMasterManage extends Component {
     }
 
     // Select Notice Item - single
-    handleNoticeSelect = (selectedNoticeObj) => {
+    handleNoticeSelect = (selectedNoticeObj, isEditable=true) => {
         const { NoticeActions, NoticePublishActions, NoticePublishExtensionActions } = this.props;
         const compId = this.props.match.params.grMenuId; 
 
@@ -53,7 +53,7 @@ class NoticeMasterManage extends Component {
             NoticeActions.closeNoticeContent({compId: compId});
             // show notice content
             NoticeActions.showNoticeContent({
-                compId: compId, viewItem: selectedNoticeObj, selectId: noticeId
+                compId: compId, viewItem: selectedNoticeObj, selectId: noticeId, isEditable: isEditable
             });
             // close notice publish list
             NoticePublishActions.closeNoticePublishInfo({compId: compId});
@@ -65,7 +65,7 @@ class NoticeMasterManage extends Component {
             });
             // show notice content
             NoticePublishActions.showNoticePublishInfo({
-                compId: compId, viewItem: selectedNoticeObj, selectId: noticeId
+                compId: compId, viewItem: selectedNoticeObj, selectId: noticeId, isEditable: isEditable
             });
         }
     }
@@ -304,6 +304,7 @@ class NoticeMasterManage extends Component {
         const { classes, t, NoticeProps, NoticePublishProps, NoticePublishExtensionProps } = this.props;
         const compId = this.props.match.params.grMenuId;
         const noticeId = NoticeProps.getIn(['viewItems', compId, 'viewItem', 'noticeId']);
+        const isEditable = NoticeProps.getIn(['viewItems', compId, 'isEditable']);
         const informOpenNoticePublish = NoticePublishProps.getIn(['viewItems', compId, 'informOpen']);
         const informOpenNoticePublishExtension = NoticePublishExtensionProps.getIn(['viewItems', compId, 'informOpen']);
 
@@ -353,6 +354,7 @@ class NoticeMasterManage extends Component {
                         <Grid item xs={6} style={{textAlign:'right'}}>
                         </Grid>
                         <Grid item xs={6} style={{textAlign:'right'}}>
+                            {isEditable &&
                             <Grid container alignItems="flex-end" direction="row" justify="flex-end" >
                                 <Grid item>
                                     <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleInstantNotice() }} disabled={this.isNoticePublishChecked()}>
@@ -370,6 +372,7 @@ class NoticeMasterManage extends Component {
                                     </Button>
                                 </Grid>
                             </Grid>
+                            }
                         </Grid>
                     </Grid>
                     <Grid container alignItems="flex-start" direction="row" justify="space-between">
@@ -377,6 +380,7 @@ class NoticeMasterManage extends Component {
                             <NoticePublishListComp
                                 compId={compId}
                                 onSelect={this.handleNoticePublishSelect}
+                                isEditable={isEditable}
                             />
                         </Grid>
                     </Grid>
