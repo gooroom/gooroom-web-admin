@@ -223,7 +223,9 @@ class UserListComp extends Component {
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
           <Grid item xs={3} >
             <FormControl fullWidth={true}>
-              <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
+              <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} 
+                value={(listObj && listObj.getIn(['listParam', 'status'])) ? listObj.getIn(['listParam', 'status']) : 'STAT010'}
+              />
             </FormControl>
           </Grid>
           <Grid item xs={3}>

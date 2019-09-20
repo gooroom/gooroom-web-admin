@@ -229,7 +229,9 @@ class DividedAdminManage extends Component {
                 </Grid>
                 <Grid item xs={4} >
                   <FormControl fullWidth={true}>
-                    <AdminTypeSelect onChangeSelect={this.handleChangeAdminTypeSelect} />
+                    <AdminTypeSelect onChangeSelect={this.handleChangeAdminTypeSelect} 
+                      value={(listObj && listObj.getIn(['listParam', 'adminType'])) ? listObj.getIn(['listParam', 'adminType']) : 'ALL'}
+                    />
                   </FormControl>
                 </Grid>
               </Grid>
