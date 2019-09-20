@@ -216,7 +216,10 @@ class DividedAdminManage extends Component {
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={6} >
                   <FormControl fullWidth={true}>
-                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                    <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                      handleKeywordChange={this.handleKeywordChange} 
+                      handleSubmit={() => this.handleSelectBtnClick()}  
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={2} >
@@ -226,7 +229,9 @@ class DividedAdminManage extends Component {
                 </Grid>
                 <Grid item xs={4} >
                   <FormControl fullWidth={true}>
-                    <AdminTypeSelect onChangeSelect={this.handleChangeAdminTypeSelect} />
+                    <AdminTypeSelect onChangeSelect={this.handleChangeAdminTypeSelect} 
+                      value={(listObj && listObj.getIn(['listParam', 'adminType'])) ? listObj.getIn(['listParam', 'adminType']) : 'ALL'}
+                    />
                   </FormControl>
                 </Grid>
               </Grid>

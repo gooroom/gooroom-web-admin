@@ -41,7 +41,7 @@ class ClientStatusSelect extends Component {
   };
 
   render() {
-    const { CommonOptionProps } = this.props;
+    const { CommonOptionProps, value } = this.props;
     const { t, i18n } = this.props;
 
     return (
@@ -49,7 +49,7 @@ class ClientStatusSelect extends Component {
       <FormControl fullWidth={true}>
       <InputLabel htmlFor="client-status">{t("optClientStatus")}</InputLabel>
       <Select
-        value={CommonOptionProps.selectedClientStatus.statusId}
+        value={value}
         onChange={this.handleChangeSelect}
         inputProps={{name: 'clientStatus'}}
       >

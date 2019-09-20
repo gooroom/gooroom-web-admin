@@ -26,7 +26,7 @@ const initialState = {
         { statusId: "DELETE", statusVal: "STAT020", statusNm: "stDelete" },
         { statusId: "ALL", statusVal: "ALL", statusNm: "stAll" }
     ],
-    selectedUserStatus: { statusId: "NORMAL", statusVal: "STAT010", statusNm: "stNormal" },
+    selectedUserStatus: { statusId: '', statusVal: '', statusNm: '' },
 
     clientStatusData: [
         { statusId: "NORMAL", statusVal: "NORMAL", statusNm: "stNormalClient" },
