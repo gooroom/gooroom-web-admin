@@ -14,15 +14,15 @@ import FormControl from '@material-ui/core/FormControl';
 
 class AdminTypeSelect extends Component {
 
-  componentDidMount() {
-    this.props.CommonOptionActions.changeSelectValue({
-      name: 'selectedAdminType',
-      value: {
-        typeId: '',
-        typeNm: ''
-      }
-    });
-  }
+  // componentDidMount() {
+  //   this.props.CommonOptionActions.changeSelectValue({
+  //     name: 'selectedAdminType',
+  //     value: {
+  //       typeId: '',
+  //       typeNm: ''
+  //     }
+  //   });
+  // }
 
   handleChangeSelect = event => {
     const { CommonOptionActions } = this.props;

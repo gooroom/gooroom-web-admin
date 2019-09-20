@@ -41,6 +41,16 @@ class NoticeMasterManage extends Component {
         };
     }
 
+    // set last search keyword
+    componentDidMount() {
+        const { NoticeProps } = this.props;
+        const compId = this.props.match.params.grMenuId;
+        const keyword = (NoticeProps.getIn(['viewItems', compId, 'listParam', 'keyword'])) ? NoticeProps.getIn(['viewItems', compId, 'listParam', 'keyword']) : '';
+        if(keyword != '') {
+            this.setState({ noticeKeyword: keyword });
+        }
+    }
+    
     // Select Notice Item - single
     handleNoticeSelect = (selectedNoticeObj) => {
         const { NoticeActions, NoticePublishActions, NoticePublishExtensionActions } = this.props;
@@ -316,7 +326,10 @@ class NoticeMasterManage extends Component {
                         <Grid container alignItems="flex-end" direction="row">
                             <Grid item>
                                 <FormControl>
-                                    <KeywordOption handleKeywordChange={this.handleNoticeKeywordChange} handleSubmit={() => this.handleSearchNotice()}/>
+                                    <KeywordOption paramName="keyword" keywordValue={this.state.noticeKeyword} 
+                                        handleKeywordChange={this.handleNoticeKeywordChange} 
+                                        handleSubmit={() => this.handleSearchNotice()} 
+                                    />
                                 </FormControl>
                             </Grid>
                             <Grid item>

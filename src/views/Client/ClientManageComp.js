@@ -199,7 +199,10 @@ class ClientManageComp extends Component {
           </Grid>
           <Grid item xs={4} >
             <FormControl fullWidth={true}>
-              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+              <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+              handleKeywordChange={this.handleKeywordChange} 
+              handleSubmit={() => this.handleSelectBtnClick()} 
+            />
             </FormControl>
           </Grid>
           <Grid item xs={4} >
