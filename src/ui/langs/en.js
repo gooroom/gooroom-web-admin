@@ -443,7 +443,7 @@ export default {
   "lbPolicykitSudoGroup": "Sudo Group",
   "lbPolicykitLocalUser": "Local User",
   "dtRootAllow": "root Account",
-  "dtSudoAllow": "sudo Account",
+  "dtSudoAllow": "sudo Role",
   "dtTrustedBoot": "Trusted Boot",
   "dtExeProtect": "Protect executable files",
   "dtMediaProtect": "Media control",
