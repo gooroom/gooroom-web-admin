@@ -443,7 +443,7 @@ export default {
   "lbPolicykitSudoGroup": "Sudo그룹",
   "lbPolicykitLocalUser": "로컬사용자",
   "dtRootAllow": "root 계정",
-  "dtSudoAllow": "sudo 계정",
+  "dtSudoAllow": "sudo 권한",
   "dtTrustedBoot": "신뢰부팅",
   "dtExeProtect": "실행파일보호",
   "dtMediaProtect": "매체제어",
