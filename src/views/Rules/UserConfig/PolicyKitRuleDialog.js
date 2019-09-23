@@ -191,7 +191,7 @@ class PolicyKitRuleDialog extends Component {
         });
     }
 
-    generateItem = (editingItem, title, itemName) => {
+    generateItem = (editingItem, title, itemName, type) => {
         const { t, i18n } = this.props;
         const { PolicyKitRuleProps } = this.props;
 
@@ -212,9 +212,16 @@ class PolicyKitRuleDialog extends Component {
         </Grid>
 
         <Grid item >
+            {(type === undefined || type == 'type1') &&
             <FormControlLabel value="auth_self_keep" control={
                 <Radio color="primary" value="auth_self_keep" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_self_keep'} />
             } label={t("dtPkitUserAuthKeep")} labelPlacement="end" />
+            }
+            {(type !== undefined && type == 'type2') &&
+            <FormControlLabel value="auth_self_keep" control={
+                <Radio color="primary" value="auth_self_keep" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_self_keep'} disabled={true} />
+            } label={t("dtPkitUserAuthKeep")} labelPlacement="end" style={{textDecoration: 'line-through'}} />
+            }
         </Grid>
         
         <Grid item >
@@ -224,9 +231,16 @@ class PolicyKitRuleDialog extends Component {
         </Grid>
 
         <Grid item >
+            {(type === undefined || type == 'type1') &&
             <FormControlLabel value="auth_admin_keep" control={
-                <Radio color="primary" value="auth_admin_keep" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_admin_keep'} />
+                    <Radio color="primary" value="auth_admin_keep" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_admin_keep'} />
             } label={t("dtPkitAdminAuthKeep")} labelPlacement="end" />
+            }
+            {(type !== undefined && type == 'type2') &&
+            <FormControlLabel value="auth_admin_keep" control={
+                <Radio color="primary" value="auth_admin_keep" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_admin_keep'} disabled={true} />
+            } label={t("dtPkitAdminAuthKeep")} labelPlacement="end" style={{textDecoration: 'line-through'}} />
+            }
         </Grid>
 
         <Grid item >
@@ -303,10 +317,10 @@ class PolicyKitRuleDialog extends Component {
                         <Paper elevation={0} style={{ maxHeight: 420 }} >
                         {selectedTab === 0 && 
                             <div style={{border:'1px solid lightGray',padding:'10px 20px 20px 20px'}}>
-                                {this.generateItem(editingItem, t("dtPkitUpdate"), 'gooroomUpdate')}
+                                {this.generateItem(editingItem, t("dtPkitUpdate"), 'gooroomUpdate', 'type2')}
                                 {this.generateItem(editingItem, t("dtPkitAgent"), 'gooroomAgent')}
                                 {this.generateItem(editingItem, t("dtPkitRegister"), 'gooroomRegister')}
-                                {this.generateItem(editingItem, t("dtPkitGracEdit"), 'gracEditor')}
+                                {this.generateItem(editingItem, t("dtPkitGracEdit"), 'gracEditor', 'type2')}
                             </div>
                         }
                         {selectedTab === 1 && 
@@ -324,7 +338,7 @@ class PolicyKitRuleDialog extends Component {
                         {selectedTab === 3 && 
                             <div style={{border:'1px solid lightGray',padding:'10px 20px 20px 20px'}}>
                                 {this.generateItem(editingItem, t("dtPkitAdminExec"), 'pkexec')}
-                                {this.generateItem(editingItem, t("dtPkitPackageManager"), 'packageManager')}
+                                {this.generateItem(editingItem, t("dtPkitPackageManager"), 'packageManager', 'type2')}
                             </div>
                         }
                         </Paper>
