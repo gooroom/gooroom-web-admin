@@ -10,6 +10,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getEditAndDeleteRoleWithList } from 'components/GRUtils/GRCommonUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -247,37 +248,7 @@ class DesktopConfManage extends Component {
               <TableBody>
                 {listObj && listObj.get('listData') && listObj.get('listData').map(n => {
 
-                  let isEditable = true;
-                  let isDeletable = true;
-
-                  if(n.get('confId').endsWith('DEFAULT')) {
-                    isEditable = false;
-                    isDeletable = false;
-                    if(window.gpmsain === Constants.SUPER_RULECODE) {
-                      isEditable = true;
-                      isDeletable = true;
-                    }
-                  } else if(n.get('confId').endsWith('STD')) {
-                    if(window.gpmsain === Constants.SUPER_RULECODE) {
-                      isEditable = true;
-                      isDeletable = true;
-                    } else {
-                      isEditable = false;
-                      isDeletable = false;
-                    }
-                  } else {
-                    if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
-                      isEditable = true;
-                      isDeletable = true;
-                    } else {
-                      isEditable = false;
-                      if(window.gpmsain === Constants.SUPER_RULECODE) {
-                        isDeletable = true;
-                      } else {
-                        isDeletable = false;
-                      }
-                    }
-                  }
+                  let { isEditable, isDeletable } = getEditAndDeleteRoleWithList(n.get('confId'), window.gpmsain, this.props.AdminProps.get('adminId'), n.get('regUserId'));
 
                   return (
                     <TableRow 
