@@ -935,6 +935,7 @@ export default {
   "dtInheritPolicyKitRule": "PolicyKit정책 상속",
   "dtCopyPolicyKitRule": "PolicyKit정책 복사",
   "dtCategoryPolicyKitRule": "PolicyKit 정책",
+  "msgCantAvailable": "이 버전에서는 지원하지 않습니다.",
 
   "dtPkitGooroom": "구름 앱",
   "dtPkitUpdate": "구름 업데이트",
