@@ -935,6 +935,7 @@ export default {
   "dtInheritPolicyKitRule": "Inheriting Policy Kit Rule",
   "dtCopyPolicyKitRule": "Copy Policy Kit Rule",
   "dtCategoryPolicyKitRule": "Policy Kit Rule",
+  "msgCantAvailable": "Not supported in this version.",
   
   "dtPkitGooroom": "Gooroom App",
   "dtPkitUpdate": "Gooroom Update",
