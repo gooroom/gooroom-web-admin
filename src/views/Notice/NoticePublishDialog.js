@@ -199,6 +199,7 @@ class NoticePublishDialog extends Component {
         let isOpenDateDisabled = false;
         let isCloseDateDisabled = false;
         let isUnlimitedDisabled = false;
+        let isErrorCloseDate = false;
         if(dialogType === NoticePublishDialog.TYPE_ADD) {
             title = t('dtAddNoticePublish');
             if (editingItem) {
@@ -218,6 +219,7 @@ class NoticePublishDialog extends Component {
                     minCloseDate = '';
                 }
                 isUnlimitedDisabled = editingItem.get('isUnlimitedDisabled');
+                isErrorCloseDate = !editingItem.get('isUnlimited') && !editingItem.get('closeDate');
             }
         }
 
@@ -253,7 +255,7 @@ class NoticePublishDialog extends Component {
                                                 minDate={minCloseDate}
                                                 value={(editingItem.get('closeDate')) ? formatDateToSimple(editingItem.get('closeDate'), 'YYYY-MM-DD HH:mm') : null}
                                                 onChange={(date) => {this.handleDateChange(date, 'closeDate')}}
-                                                className={classes.fullWidth} disabled={isCloseDateDisabled}/>
+                                                className={classes.fullWidth} disabled={isCloseDateDisabled} error={isErrorCloseDate}/>
                                         </Grid>
                                         <Grid item xs={2}>
                                             {(dialogType === NoticePublishDialog.TYPE_ADD) &&
@@ -296,7 +298,7 @@ class NoticePublishDialog extends Component {
                                 <Button onClick={this.handleCreateData} variant="contained" color="secondary">{t('btnRegist')}</Button>
                             }
                             {(dialogType === NoticePublishDialog.TYPE_EDIT) &&
-                                <Button onClick={this.handleEditData} variant="contained" color="secondary">{t('btnSave')}</Button>
+                                <Button onClick={this.handleEditData} variant="contained" color="secondary" disabled={isErrorCloseDate}>{t('btnSave')}</Button>
                             }
                             <Button onClick={this.handleClose} variant="contained" color="primary">{t('btnClose')}</Button>
                         </DialogActions>
