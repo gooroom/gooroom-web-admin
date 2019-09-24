@@ -9,6 +9,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getEditAndDeleteRoleWithList } from 'components/GRUtils/GRCommonUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -254,37 +255,7 @@ class SecurityRuleManage extends Component {
               <TableBody>
                 {listObj.get('listData').map(n => {
 
-                  let isEditable = true;
-                  let isDeletable = true;
-
-                  if(n.get('objId').endsWith('DEFAULT')) {
-                    isEditable = false;
-                    isDeletable = false;
-                    if(window.gpmsain === Constants.SUPER_RULECODE) {
-                      isEditable = true;
-                      isDeletable = true;
-                    }
-                  } else if(n.get('objId').endsWith('STD')) {
-                    if(window.gpmsain === Constants.SUPER_RULECODE) {
-                      isEditable = true;
-                      isDeletable = true;
-                    } else {
-                      isEditable = false;
-                      isDeletable = false;
-                    }
-                  } else {
-                    if(this.props.AdminProps.get('adminId') === n.get('regUserId')) {
-                      isEditable = true;
-                      isDeletable = true;
-                    } else {
-                      isEditable = false;
-                      if(window.gpmsain === Constants.SUPER_RULECODE) {
-                        isDeletable = true;
-                      } else {
-                        isDeletable = false;
-                      }
-                    }
-                  }
+                  let { isEditable, isDeletable } = getEditAndDeleteRoleWithList(n.get('objId'), window.gpmsain, this.props.AdminProps.get('adminId'), n.get('regUserId'));
                                     
                   return (
                     <TableRow 
