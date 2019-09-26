@@ -29,6 +29,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -218,9 +219,11 @@ class PolicyKitRuleDialog extends Component {
             } label={t("dtPkitUserAuthKeep")} labelPlacement="end" />
             }
             {(type !== undefined && type == 'type2') &&
+            <Tooltip title={t("msgCantAvailable")}>
             <FormControlLabel value="auth_self_keep" control={
                 <Radio color="primary" value="auth_self_keep" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_self_keep'} disabled={true} />
             } label={t("dtPkitUserAuthKeep")} labelPlacement="end" style={{textDecoration: 'line-through'}} />
+            </Tooltip>
             }
         </Grid>
         
@@ -237,9 +240,11 @@ class PolicyKitRuleDialog extends Component {
             } label={t("dtPkitAdminAuthKeep")} labelPlacement="end" />
             }
             {(type !== undefined && type == 'type2') &&
+            <Tooltip title={t("msgCantAvailable")}>
             <FormControlLabel value="auth_admin_keep" control={
                 <Radio color="primary" value="auth_admin_keep" onChange={this.handleValueChange(itemName)} checked={editingItem.get(itemName) === 'auth_admin_keep'} disabled={true} />
             } label={t("dtPkitAdminAuthKeep")} labelPlacement="end" style={{textDecoration: 'line-through'}} />
+            </Tooltip>
             }
         </Grid>
 
