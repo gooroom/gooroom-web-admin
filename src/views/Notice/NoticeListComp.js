@@ -140,10 +140,10 @@ class NoticeListComp extends Component {
                                 onClick={event => this.handleSelectRow(event, n.get('noticeId'), isEditable)}
                                 role='checkbox'
                                 key={n.get('noticeId')}>
-                                <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('noticeId')}</TableCell>
+                                <TableCell style={{width: "100px"}} className={classes.grSmallAndClickAndCenterCell}>{n.get('noticeId')}</TableCell>
                                 <TableCell className={classes.grSmallAndClickCell}>{n.get('title')}</TableCell>
-                                <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
-                                <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                                <TableCell style={{width: "100px"}} className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
+                                <TableCell style={{width: "60px"}} className={classes.grSmallAndClickAndCenterCell}>
                                     {isEditable && 
                                     <Button size="small" color='secondary'
                                         className={classes.buttonInTableRow} 
