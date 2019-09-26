@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import moment from 'moment';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -222,7 +223,9 @@ class NoticePublishDialog extends Component {
                 isErrorCloseDate = !editingItem.get('isUnlimited') && !editingItem.get('closeDate');
             }
         }
-
+        if (editingItem && !editingItem.get('isUnlimited')) {
+            isErrorCloseDate = (moment(editingItem.get('closeDate')) - moment(editingItem.get('openDate'))) < 0;
+        }
         return (
         <div>
             {(NoticePublishProps.get('dialogOpen') && editingItem) &&
@@ -295,7 +298,7 @@ class NoticePublishDialog extends Component {
                         </DialogContent>
                         <DialogActions>
                             {(dialogType === NoticePublishDialog.TYPE_ADD) &&
-                                <Button onClick={this.handleCreateData} variant="contained" color="secondary">{t('btnRegist')}</Button>
+                                <Button onClick={this.handleCreateData} variant="contained" color="secondary" disabled={isErrorCloseDate}>{t('btnRegist')}</Button>
                             }
                             {(dialogType === NoticePublishDialog.TYPE_EDIT) &&
                                 <Button onClick={this.handleEditData} variant="contained" color="secondary" disabled={isErrorCloseDate}>{t('btnSave')}</Button>
