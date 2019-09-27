@@ -168,9 +168,11 @@ class NoticePublishListComp extends Component {
         ];
 
         const listObj = NoticePublishProps.getIn(['viewItems', compId]);
+        let activeListData = undefined;
         let emptyRows = 0; 
         if(listObj && listObj.get('listData')) {
           emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+          activeListData = listObj.get('listData').filter(n => (!this.isDisabled(n.get('statusCd'), n.get('closeDt'))));
         }
 
         return (
@@ -185,7 +187,7 @@ class NoticePublishListComp extends Component {
                         onRequestSort={this.handleChangeSort}
                         onClickAllCheck={this.handleClickAllCheck}
                         checkedIds={listObj.get('checkedIds')}
-                        listData={listObj.get('listData')}
+                        listData={activeListData}
                         columnData={columnHeaders}
                     />
                     <TableBody>
