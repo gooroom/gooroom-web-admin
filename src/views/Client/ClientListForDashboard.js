@@ -258,27 +258,27 @@ class ClientListForDashboard extends Component {
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
-                  {(n.get('loginId') !== '-') && 
+                  {(n.get('loginId') !== undefined && n.get('loginId') !== '-' && n.get('loginId') !== '') && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell} 
                       style={{fontWeight:'bold',textDecoration:'underline'}}
                       onClick={() => this.handleClickShowUserInfo(n.get('loginId'), n.get('clientId'))}>
                       {(n.get('loginId').startsWith('+')) ? n.get('loginId').substring(1) + " [LU]" : n.get('loginId')}
                     </TableCell>
                   }
-                  {(n.get('loginId') === '-' || n.get('loginId') === '') && 
+                  {(n.get('loginId') === undefined || n.get('loginId') === '-' || n.get('loginId') === '') && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell} >
                     {n.get('loginId')}
                     </TableCell>
                   }
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{formatDateToSimple(n.get('lastLoginTime'), 'YY-MM-DD HH:mm')}</TableCell>
-                  {(n.get('isProtector') == '1') && 
+                  {(n.get('isProtector') === '1') && 
                   <TableCell className={classes.grSmallAndClickAndCenterCell} 
                     style={{color:'red',fontWeight:'bold',textDecoration:'underline'}}
                     onClick={() => this.handleClickViolatedItem('ALL', n.get('clientId'))}>
                     {Number(n.get('countBootProtector')) + Number(n.get('countExeProtector')) + Number(n.get('countOsProtector')) + Number(n.get('countMediaProtector'))}
                   </TableCell>
                   }
-                  {(n.get('isProtector') == '0') && 
+                  {(n.get('isProtector') !== '1') && 
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >0</TableCell>
                   }
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('clientIp')}</TableCell>
