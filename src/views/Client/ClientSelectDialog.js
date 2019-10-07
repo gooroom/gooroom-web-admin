@@ -91,7 +91,7 @@ class ClientSelectDialog extends Component {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.handleAddButton} variant='contained' color="secondary">{t("btnAdd")}</Button>
+                        <Button onClick={this.handleAddButton} variant='contained' color="secondary" disabled={(this.state.stateData.get('selectedClient').size > 0) ? false:true}>{t("btnAdd")}</Button>
                         <Button onClick={this.props.onClose} variant='contained' color="primary">{t("btnClose")}</Button>
                     </DialogActions>
                     <GRConfirm />
