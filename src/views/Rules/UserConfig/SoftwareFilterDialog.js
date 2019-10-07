@@ -178,11 +178,11 @@ class SoftwareFilterDialog extends Component {
     handleInheritSaveDataForDept = (event, id) => {
         const { SoftwareFilterProps, DeptProps, SoftwareFilterActions, compId } = this.props;
         const { t, i18n } = this.props;
-        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+        const deptCd = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']);
 
         SoftwareFilterActions.inheritSoftwareFilterDataForDept({
             'objId': SoftwareFilterProps.getIn(['editingItem', 'objId']),
-            'deptCd': selectedDeptCd
+            'deptCd': deptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),

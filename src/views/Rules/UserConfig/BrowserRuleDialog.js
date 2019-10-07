@@ -155,11 +155,11 @@ class BrowserRuleDialog extends Component {
     handleInheritSaveDataForDept = (event, id) => {
         const { BrowserRuleProps, DeptProps, BrowserRuleActions, compId } = this.props;
         const { t, i18n } = this.props;
-        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+        const deptCd = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']);
 
         BrowserRuleActions.inheritBrowserRuleDataForDept({
             'objId': BrowserRuleProps.getIn(['editingItem', 'objId']),
-            'deptCd': selectedDeptCd
+            'deptCd': deptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),

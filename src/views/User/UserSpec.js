@@ -280,7 +280,7 @@ class UserSpec extends Component {
                 <MediaRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('ruleGrade') : null}
-                  onClickEdit={this.handleClickEditForMediaRule}
+                  onClickEdit={this.handleClickEditForMediaRule} inherit={false}
                   isEditable={selectedMediaRuleItem && AdminProps.get('adminId') === selectedMediaRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>

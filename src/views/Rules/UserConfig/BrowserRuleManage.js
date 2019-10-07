@@ -312,9 +312,10 @@ class BrowserRuleManage extends Component {
           </div>
         }
         {/* dialog(popup) component area */}
-        <BrowserRuleSpec compId={compId} specType="inform" hasAction={true}
+        <BrowserRuleSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           isEditable={(listObj) ? listObj.get('isEditable') : null}
+          hasAction={true} inherit={false}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
