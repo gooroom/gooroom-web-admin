@@ -571,10 +571,18 @@ export default handleActions({
                     // reset activeListItem
                     let activeListItem = state.getIn(['viewItems', compId, 'treeComp', 'activeListItem']);
                     activeListItem = (activeListItem > index) ? activeListItem + resData.size : activeListItem;
+
+                    let hasChild = false;
+                    if(state.getIn(['viewItems', compId, 'treeComp', 'treeData', realIndex, 'key']) === state.getIn(['viewItems', compId, 'viewItem', 'deptCd'])) {
+                        hasChild = true;
+                    } else {
+                        hasChild = state.getIn(['viewItems', compId, 'viewItem', 'hasChildren']);
+                    }
     
                     return state.setIn(['viewItems', compId, 'treeComp', 'treeData'], newTreeData)
                                 .setIn(['viewItems', compId, 'treeComp', 'expandedListItems'], newExpandedListItems)
-                                .setIn(['viewItems', compId, 'treeComp', 'activeListItem'], activeListItem);
+                                .setIn(['viewItems', compId, 'treeComp', 'activeListItem'], activeListItem)
+                                .setIn(['viewItems', compId, 'viewItem', 'hasChildren'], hasChild);
                 } else {
                     // root node
                     return state.mergeIn(['viewItems', compId, 'treeComp', 'treeData', 0], {

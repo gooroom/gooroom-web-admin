@@ -20,6 +20,15 @@ import { translate, Trans } from "react-i18next";
 
 class PolicyKitRuleSpec extends Component {
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { selectedItem } = nextProps;
+    if(selectedItem !== undefined && selectedItem !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   chgValueToReadable = (value) => {
     const { t, i18n } = this.props;
 
@@ -71,12 +80,12 @@ class PolicyKitRuleSpec extends Component {
                     onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><EditIcon /></Button>
                   }
-                  {(this.props.onClickCopy && isEditable) &&
+                  {(this.props.onClickCopy && isEditable && !selectedItem.get('objId').endsWith('DEFAULT')) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
-                  {(this.props.inherit && isEditable && !(viewItem.get('isDefault'))) && 
+                  {(this.props.inherit && isEditable) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>

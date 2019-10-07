@@ -302,7 +302,7 @@ class ClientGroupSpec extends Component {
             <Grid container spacing={16}>
               <Grid item xs={12} md={12} lg={6} xl={6} >
                 <ClientHostNameSpec compId={compId} specType="inform" targetType="GROUP"
-                  hasAction={true} inherit={false}
+                  hasAction={true}
                   selectedItem={(selectedClientHostNameItem) ? selectedClientHostNameItem.get('viewItem') : null}
                   ruleGrade={(selectedClientHostNameItem) ? selectedClientHostNameItem.get('ruleGrade') : null}
                   onClickEdit={this.handleEditClickForClientHostName}
@@ -313,7 +313,7 @@ class ClientGroupSpec extends Component {
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
                 <ClientUpdateServerSpec compId={compId} specType="inform" targetType="GROUP"
-                  hasAction={true} inherit={false}
+                  hasAction={true}
                   selectedItem={(selectedClientUpdateServerItem) ? selectedClientUpdateServerItem.get('viewItem') : null}
                   ruleGrade={(selectedClientUpdateServerItem) ? selectedClientUpdateServerItem.get('ruleGrade') : null}
                   onClickEdit={this.handleEditClickForClientUpdateServer}
@@ -324,7 +324,7 @@ class ClientGroupSpec extends Component {
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6}>
                 <ClientConfSettingSpec compId={compId} specType="inform" targetType="GROUP"
-                  hasAction={true} inherit={false}
+                  hasAction={true}
                   selectedItem={(selectedClientConfSettingItem) ? selectedClientConfSettingItem.get('viewItem') : null}
                   ruleGrade={(selectedClientConfSettingItem) ? selectedClientConfSettingItem.get('ruleGrade') : null}
                   onClickEdit={this.handleEditClickForClientConfSetting}
@@ -335,7 +335,7 @@ class ClientGroupSpec extends Component {
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
                 <MediaRuleSpec compId={compId} specType="inform" targetType="GROUP"
-                  hasAction={true} inherit={false}
+                  hasAction={true}
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForMediaRule}
@@ -346,7 +346,7 @@ class ClientGroupSpec extends Component {
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6}>
                 <BrowserRuleSpec compId={compId} specType="inform" targetType="GROUP"
-                  hasAction={true} inherit={false}
+                  hasAction={true}
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForBrowserRule}
@@ -357,7 +357,7 @@ class ClientGroupSpec extends Component {
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={6} >
                 <SecurityRuleSpec compId={compId} specType="inform" targetType="GROUP"
-                  hasAction={true} inherit={false}
+                  hasAction={true}
                   selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSecurityRule}
@@ -368,41 +368,45 @@ class ClientGroupSpec extends Component {
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
                 <SoftwareFilterSpec compId={compId} specType="inform" targetType="GROUP"
-                  hasAction={true} inherit={false}
+                  hasAction={true}
                   selectedItem={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('viewItem') : null}
                   ruleGrade={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSoftwareFilter}
                   onClickInherit={this.handleClickInheritForSoftwareFilter}
+                  inherit={viewItem.get('hasChildren')}
                   isEditable={selectedSoftwareFilterItem && AdminProps.get('adminId') === selectedSoftwareFilterItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
                 <CtrlCenterItemSpec compId={compId} specType="inform" targetType="GROUP"
-                  hasAction={true} inherit={false}
+                  hasAction={true}
                   selectedItem={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('viewItem') : null}
                   ruleGrade={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForCtrlCenterItem}
                   onClickInherit={this.handleClickInheritForCtrlCenterItem}
+                  inherit={viewItem.get('hasChildren')}
                   isEditable={selectedCtrlCenterItem && AdminProps.get('adminId') === selectedCtrlCenterItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
                 <PolicyKitRuleSpec compId={compId} specType="inform" targetType="GROUP"
-                  hasAction={true} inherit={false}
+                  hasAction={true}
                   selectedItem={(selectedPolicyKit) ? selectedPolicyKit.get('viewItem') : null}
                   ruleGrade={(selectedPolicyKit) ? selectedPolicyKit.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForPolicyKit}
                   onClickInherit={this.handleClickInheritForPolicyKit}
+                  inherit={viewItem.get('hasChildren')}
                   isEditable={selectedPolicyKit && AdminProps.get('adminId') === selectedPolicyKit.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfSpec compId={compId} specType="inform" targetType="GROUP" 
-                  hasAction={true} inherit={false}
+                  hasAction={true}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
                   ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForDesktopConf}
                   onClickInherit={this.handleClickInheritForDesktopConf}
+                  inherit={viewItem.get('hasChildren')}
                   isEditable={selectedDesktopConfItem && AdminProps.get('adminId') === selectedDesktopConfItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
