@@ -197,7 +197,7 @@ class DeptTreeComp extends Component {
         deptNm: treeNode.get('title'),
         comment: treeNode.get('comment'),
         regDate: treeNode.get('regDate'),
-        hasChildren: (treeNode.get('children') && treeNode.get('children').size > 0) ? true : false
+        hasChildren: (treeNode.get('children') !== null) ? true : false
       }));
     }
   }
@@ -210,7 +210,7 @@ class DeptTreeComp extends Component {
         deptNm: treeNode.get('title'),
         comment: treeNode.get('comment'),
         regDate: treeNode.get('regDate'),
-        hasChildren: treeNode.get('hasChildren')
+        hasChildren: (treeNode.get('children') !== null) ? true : false
       }));
     }
   };

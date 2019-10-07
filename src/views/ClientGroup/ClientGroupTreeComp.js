@@ -200,7 +200,7 @@ class ClientGroupTreeComp extends Component {
         comment: listItem.get('comment'),
         regClientIp: listItem.get('regClientIp'),
         regDate: listItem.get('regDate'),
-        hasChildren: (listItem.get('children') && listItem.get('children').size > 0) ? true : false
+        hasChildren: (listItem.get('children') !== null) ? true : false
       }));
     }
   }
@@ -214,7 +214,7 @@ class ClientGroupTreeComp extends Component {
         comment: listItem.get('comment'),
         regClientIp: listItem.get('regClientIp'),
         regDate: listItem.get('regDate'),
-        hasChildren: (listItem.get('children') && listItem.get('children').size > 0) ? true : false
+        hasChildren: (listItem.get('children') !== null) ? true : false
       }));
     }
   };
