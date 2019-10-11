@@ -584,6 +584,8 @@ export default {
   "lbPasswordExpireDate": "Password Expire Date",
   "lbUseUserExpire": "Whether User Expire Date",
   "lbUserExpireDate": "Expire Date",
+  "lbUseDeptExpire": "Whether Dept Expire Date",
+  "lbDeptExpireDate": "Expire Date",
   "ttResetLoginTrial": "Reset Login Attempts Count",
   "msgEditLoginTrialCount": "Reset login attempts count?",
 
