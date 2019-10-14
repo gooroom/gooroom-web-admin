@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -192,7 +194,7 @@ class ClientConfSettingDialog extends Component {
     }
 
     handleChangeLogLevelSelect = (event, child) => {
-        const { ClientConfSettingProps, ClientConfSettingActions } = this.props;
+        const { ClientConfSettingProps, ClientConfSettingActions, CommonOptionProps } = this.props;
 
         const name = event.target.name;
         const value = event.target.value;
@@ -206,8 +208,13 @@ class ClientConfSettingDialog extends Component {
                 value: levelNo
             });
             if(levelNo > ClientConfSettingProps.getIn(['editingItem', logGubun+'_minno'])) {
-                ClientConfSettingActions.setEditingItemValue({ name: 'transmit_'+logGubun , value: value });
-                ClientConfSettingActions.setEditingItemValue({ name: 'show_'+logGubun , value: value });
+                // get bigger item in Show-Data
+                const biggerShowItem = CommonOptionProps.logLevelShowData.find((n) => (n.levelNo >= levelNo));
+                ClientConfSettingActions.setEditingItemValue({ name: 'transmit_'+logGubun , value: biggerShowItem.levelVal });
+
+                // get bigger item in Transmit-Data
+                const biggerTransmitItem = CommonOptionProps.logLevelTransmitData.find((n) => (n.levelNo >= levelNo));
+                ClientConfSettingActions.setEditingItemValue({ name: 'show_'+logGubun , value: biggerTransmitItem.levelVal });
             }
         }
         ClientConfSettingActions.setEditingItemValue({
@@ -233,7 +240,7 @@ class ClientConfSettingDialog extends Component {
         const bull = <span className={classes.bullet}>•</span>;
         const cartBull = <span className={classes.cartBullet}>#</span>;
 
-        const { ClientConfSettingProps } = this.props;
+        const { ClientConfSettingProps, CommonOptionProps } = this.props;
         const dialogType = ClientConfSettingProps.get('dialogType');
         const editingItem = (ClientConfSettingProps.get('editingItem')) ? ClientConfSettingProps.get('editingItem') : null;
 
@@ -275,19 +282,7 @@ class ClientConfSettingDialog extends Component {
                             </Grid>
                         </Grid>
                         <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'0 0 8 0'}}>
-                            <Grid item xs={6}>
-                                <div style={{marginTop:"10px"}}>
-                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtOSProtect")}</FormLabel>
-                                    <FormControlLabel
-                                        control={
-                                        <Switch onChange={this.handleValueChange('useHypervisor')} color="primary"
-                                            checked={(editingItem.get('useHypervisor')) ? editingItem.get('useHypervisor') : false} />
-                                        }
-                                        label={(editingItem.get('useHypervisor')) ? t("selRun") : t("selStop")}
-                                    />
-                                </div>
-                            </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
                                 <div style={{marginTop:"10px"}}>
                                     <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtInitHomeFolder")}</FormLabel>
                                     <FormControlLabel
@@ -299,7 +294,10 @@ class ClientConfSettingDialog extends Component {
                                     />
                                 </div>
                             </Grid>
+                            <Grid item xs={8}>
+                            </Grid>
                         </Grid>
+
                         <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <div style={{margin:'8 0 32 0'}}>
                             <FormLabel >{bull} {t("lbViolatedLogLebel")}</FormLabel>
@@ -310,6 +308,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtTrustedBoot")}</InputLabel>
                                         <LogLevelSelect name="notify_boot" no
+                                            logLevelData={CommonOptionProps.logLevelNotifyData}
                                             value={(editingItem.get('notify_boot')) ? editingItem.get('notify_boot') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -319,6 +318,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtOSProtect")}</InputLabel>
                                         <LogLevelSelect name="notify_os" 
+                                            logLevelData={CommonOptionProps.logLevelNotifyData}
                                             value={(editingItem.get('notify_os')) ? editingItem.get('notify_os') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -328,6 +328,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtExeProtect")}</InputLabel>
                                         <LogLevelSelect name="notify_exe" 
+                                            logLevelData={CommonOptionProps.logLevelNotifyExeData}
                                             value={(editingItem.get('notify_exe')) ? editingItem.get('notify_exe') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -337,6 +338,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtMediaProtect")}</InputLabel>
                                         <LogLevelSelect name="notify_media" 
+                                            logLevelData={CommonOptionProps.logLevelNotifyData}
                                             value={(editingItem.get('notify_media')) ? editingItem.get('notify_media') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -346,6 +348,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtAgent")}</InputLabel>
                                         <LogLevelSelect name="notify_agent" 
+                                            logLevelData={CommonOptionProps.logLevelNotifyData}
                                             value={(editingItem.get('notify_agent')) ? editingItem.get('notify_agent') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -367,6 +370,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtTrustedBoot")}</InputLabel>
                                         <LogLevelSelect name="show_boot" minNo={editingItem.get('boot_minno')}
+                                            logLevelData={CommonOptionProps.logLevelShowData}
                                             value={(editingItem.get('show_boot')) ? editingItem.get('show_boot') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -376,6 +380,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtOSProtect")}</InputLabel>
                                         <LogLevelSelect name="show_os" minNo={editingItem.get('os_minno')}
+                                            logLevelData={CommonOptionProps.logLevelShowData}
                                             value={(editingItem.get('show_os')) ? editingItem.get('show_os') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -385,6 +390,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtExeProtect")}</InputLabel>
                                         <LogLevelSelect name="show_exe" minNo={editingItem.get('exe_minno')}
+                                            logLevelData={CommonOptionProps.logLevelShowData}
                                             value={(editingItem.get('show_exe')) ? editingItem.get('show_exe') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -394,6 +400,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtMediaProtect")}</InputLabel>
                                         <LogLevelSelect name="show_media" minNo={editingItem.get('media_minno')}
+                                            logLevelData={CommonOptionProps.logLevelShowData}
                                             value={(editingItem.get('show_media')) ? editingItem.get('show_media') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -403,6 +410,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtAgent")}</InputLabel>
                                         <LogLevelSelect name="show_agent" minNo={editingItem.get('agent_minno')}
+                                            logLevelData={CommonOptionProps.logLevelShowData}
                                             value={(editingItem.get('show_agent')) ? editingItem.get('show_agent') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -423,6 +431,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtTrustedBoot")}</InputLabel>
                                         <LogLevelSelect name="transmit_boot" minNo={editingItem.get('boot_minno')}
+                                            logLevelData={CommonOptionProps.logLevelTransmitData}
                                             value={(editingItem.get('transmit_boot')) ? editingItem.get('transmit_boot') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -432,6 +441,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtOSProtect")}</InputLabel>
                                         <LogLevelSelect name="transmit_os" minNo={editingItem.get('os_minno')}
+                                            logLevelData={CommonOptionProps.logLevelTransmitData}
                                             value={(editingItem.get('transmit_os')) ? editingItem.get('transmit_os') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -441,6 +451,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtExeProtect")}</InputLabel>
                                         <LogLevelSelect name="transmit_exe" minNo={editingItem.get('exe_minno')}
+                                            logLevelData={CommonOptionProps.logLevelTransmitData}
                                             value={(editingItem.get('transmit_exe')) ? editingItem.get('transmit_exe') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -450,6 +461,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtMediaProtect")}</InputLabel>
                                         <LogLevelSelect name="transmit_media" minNo={editingItem.get('media_minno')}
+                                            logLevelData={CommonOptionProps.logLevelTransmitData}
                                             value={(editingItem.get('transmit_media')) ? editingItem.get('transmit_media') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -459,6 +471,7 @@ class ClientConfSettingDialog extends Component {
                                     <FormControl fullWidth={true}>
                                         <InputLabel htmlFor="client-status">{t("dtAgent")}</InputLabel>
                                         <LogLevelSelect name="transmit_agent" minNo={editingItem.get('agent_minno')}
+                                            logLevelData={CommonOptionProps.logLevelTransmitData}
                                             value={(editingItem.get('transmit_agent')) ? editingItem.get('transmit_agent') : ""}
                                             onChangeSelect={this.handleChangeLogLevelSelect}
                                         />
@@ -496,26 +509,38 @@ class ClientConfSettingDialog extends Component {
                         <Typography variant="body1">{bull} {t("dtClientLogSetup")}</Typography>
                             <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
                                 <Grid item xs={12} sm={4} md={4}>
-                                <TextField label={t("lbLogFileMax")} value={(editingItem.get('logMaxSize')) ? editingItem.get('logMaxSize') : ''}
+                                <TextValidator name="logFileMax" label={t("lbLogFileMax")}
+                                    validators={['required', 'minNumber:1', 'maxNumber:10000', 'isNumber']}
+                                    errorMessages={[t("msgInvalidNumber"), t("msgInvalidValue"), t("msgInvalidValue"), t("msgTypeNumberOnly")]}
+                                    value={(editingItem.get('logMaxSize')) ? editingItem.get('logMaxSize') : ''}
                                     onChange={this.handleValueChange("logMaxSize")}
                                     className={classNames(classes.fullWidth)}
                                 />
-                                <Typography variant="caption">{t("msgCreateNewFileIfMax")}</Typography>
+                                <Typography variant="caption">{t("msgInputRange") + ": 1 ~ 10000"}</Typography>
                                 <Typography variant="caption">{t("msgMegabateUnit")}</Typography>
+                                <Typography variant="caption">{t("msgCreateNewFileIfMax")}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={4} md={4}>
-                                <TextField label={t("lbSavedLogFileCount")} value={(editingItem.get('logMaxCount')) ? editingItem.get('logMaxCount') : ''}
+                                <TextValidator name="logFileCount" label={t("lbSavedLogFileCount")}
+                                    validators={['required', 'minNumber:1', 'maxNumber:5', 'isNumber']}
+                                    errorMessages={[t("msgInvalidNumber"), t("msgInvalidValue"), t("msgInvalidValue"), t("msgTypeNumberOnly")]}
+                                    value={(editingItem.get('logMaxCount')) ? editingItem.get('logMaxCount') : ''}
                                     onChange={this.handleValueChange("logMaxCount")}
                                     className={classNames(classes.fullWidth)}
                                 />
+                                <Typography variant="caption">{t("msgInputRange") + ": 1 ~ 5"}</Typography>
+                                <Typography variant="caption">{t("msgRemainFileSettingCount")}</Typography>
                                 <Typography variant="caption">{t("msgDeleteFileIfOverCount")}</Typography>
-                                <Typography variant="caption">{t("msgHelpNoDeleteIfZero")}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={4} md={4}>
-                                <TextField label={t("lbMinimumDiskSizeRate")} value={(editingItem.get('systemKeepFree')) ? editingItem.get('systemKeepFree') : ''}
+                                <TextValidator name="diskSizeRate" label={t("lbMinimumDiskSizeRate")}
+                                    validators={['required', 'minNumber:1', 'maxNumber:30', 'isNumber']}
+                                    errorMessages={[t("msgInvalidNumber"), t("msgInvalidValue"), t("msgInvalidValue"), t("msgTypeNumberOnly")]}
+                                    value={(editingItem.get('systemKeepFree')) ? editingItem.get('systemKeepFree') : ''}
                                     onChange={this.handleValueChange("systemKeepFree")}
                                     className={classNames(classes.fullWidth)}
                                 />
+                                <Typography variant="caption">{t("msgInputRange") + ": 1 ~ 30"}</Typography>
                                 <Typography variant="caption">{t("msgHelpMinimumDiskSizeRate")}</Typography>
                                 <Typography variant="caption">{t("msgHelpDiskSizeData")}</Typography>
                                 </Grid>
@@ -541,7 +566,12 @@ class ClientConfSettingDialog extends Component {
                                 <Grid container spacing={0} alignItems="flex-end" direction="row" justify="flex-start" style={{margin:'0 0 16 0'}}>
                                 {editingItem.get('whiteIp') && editingItem.get('whiteIp').size > 0 && editingItem.get('whiteIp').map((value, index) => (
                                     <Grid item xs={6} key={index}>
-                                        <Input value={value} onChange={this.handleWhiteIpValueChange(index)} style={{width:'80%'}} />
+                                        <TextValidator style={{width:'80%'}}
+                                            name="whiteIp" validators={['matchRegexp:^[0-9.*-]+$']}
+                                            errorMessages={[t("msgWrongIpString")]}
+                                            value={value}
+                                            onChange={this.handleWhiteIpValueChange(index)}
+                                        />
                                         <IconButton onClick={this.handleDeleteWhiteIp(index)} aria-label="WhiteIpDelete">
                                             <DeleteForeverIcon />
                                         </IconButton>
@@ -589,10 +619,8 @@ class ClientConfSettingDialog extends Component {
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
-                <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
             </div>
         );
     }
@@ -601,7 +629,8 @@ class ClientConfSettingDialog extends Component {
 
 const mapStateToProps = (state) => ({
     ClientConfSettingProps: state.ClientConfSettingModule,
-    ClientGroupProps: state.ClientGroupModule
+    ClientGroupProps: state.ClientGroupModule,
+    CommonOptionProps: state.CommonOptionModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

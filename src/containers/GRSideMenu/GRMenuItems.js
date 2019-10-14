@@ -50,30 +50,21 @@ export default {
           id: 'GRM0104',
           url: '/clientconfig/regkey/GRM0104/menuClientRegKey',
           level: 2,
-        },
-        {
-          name: 'menuClientRule',
-          id: 'clientconfig',
-          url: '/clientconfig',
+        }, {
+          name: 'menuClientSetup',
+          id: 'GRM0703',
+          url: '/clientconfig/setting/GRM0703/menuClientSetup',
           level: 2,
-          children: [
-            {
-              name: 'menuClientSetup',
-              id: 'GRM0703',
-              url: '/clientconfig/setting/GRM0703/menuClientSetup',
-              level: 3,
-            }, {
-              name: 'menuClientHosts',
-              id: 'GRM0702',
-              url: '/clientconfig/host/GRM0702/menuClientHosts',
-              level: 3,
-            }, {
-              name: 'menuClientUpdateServer',
-              id: 'GRM0701',
-              url: '/clientconfig/update/GRM0701/menuClientUpdateServer',
-              level: 3,
-            }
-          ]
+        }, {
+          name: 'menuClientHosts',
+          id: 'GRM0702',
+          url: '/clientconfig/host/GRM0702/menuClientHosts',
+          level: 2,
+        }, {
+          name: 'menuClientUpdateServer',
+          id: 'GRM0701',
+          url: '/clientconfig/update/GRM0701/menuClientUpdateServer',
+          level: 2
         }
       ]
     }, {
@@ -169,19 +160,6 @@ export default {
           url: '/system/thememng/GRM0504/menuThemeManage',
           level: 2,
         },
-      ]
-    }, {
-      name: 'menuNotice',
-      id: 'notices',
-      url: '/notices',
-      level: 1,
-      children: [
-        {
-          name: 'menuNoticeManage',
-          id: 'GRM0801',
-          url: '/notices/noticemanage/GRM0801/menuNoticeManage',
-          level: 2
-        }
       ]
     }, {
       name: 'menuJob',

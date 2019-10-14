@@ -3,8 +3,10 @@ import React, { Component } from "react";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import * as GlobalActions from 'modules/GlobalModule';
 import * as DeptActions from 'modules/DeptModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import UserRuleSelector from 'components/GROptions/UserRuleSelector';
@@ -29,7 +31,8 @@ class DeptMultiDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.DeptActions.closeMultiDialog();
+        const { DeptActions, compId } = this.props;
+        DeptActions.closeMultiDialog({ compId: `${compId}_MRDIALOG` });
     }
 
     handleValueChange = name => event => {
@@ -43,42 +46,52 @@ class DeptMultiDialog extends Component {
     handleCheckedDept = (checked, imperfect) => {
         // Check selectedDeptCd
         const { DeptActions, compId } = this.props;
-        DeptActions.changeCompVariableObject({
-            compId: compId,
-            valueObj: {checkedDeptCd: checked}
-        });
+        DeptActions.changeTreeDataVariable({ compId: `${compId}_MRDIALOG`, name: 'checked', value: checked });
     }
 
     handleEditData = (event) => {
-        const { DeptProps, GRConfirmActions } = this.props;
+        const { DeptProps, GRConfirmActions, compId } = this.props;
         const { t, i18n } = this.props;
-        GRConfirmActions.showConfirm({
-            confirmTitle: t("ttChangMultiDeptRule"),
-            confirmMsg: t("msgChangeDeptRuleSelected"),
-            handleConfirmResult: this.handleEditConfirmResult,
-        });
-    }
-    handleEditConfirmResult = (confirmValue) => {
 
-        if(confirmValue) {
-            const { DeptProps, DeptActions, compId } = this.props;
-            const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+        const checkedDeptCd = DeptProps.getIn(['viewItems', `${compId}_MRDIALOG`, 'treeComp', 'checked']);
 
-            const checkedDeptCd = DeptProps.getIn(['viewItems', compId, 'checkedDeptCd']);
+        if(checkedDeptCd && checkedDeptCd.length > 0) {
+            GRConfirmActions.showConfirm({
+                confirmTitle: t("ttChangMultiDeptRule"),
+                confirmMsg: t("msgChangeDeptRuleSelected"),
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { DeptActions, compId } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const checkedDeptCd = paramObject.checkedDeptCd;
+                        DeptActions.editMultiDeptRule({
+                            deptCds: (checkedDeptCd) ? checkedDeptCd.join(',') : '',
 
-            DeptActions.editMultiDeptRule({
-                deptCds: (checkedDeptCd) ? checkedDeptCd.join(',') : '',
-                browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                filteredSoftwareRuleId: SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
-                desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
-            }).then((res) => {
-                // DeptActions.readDeptListPaged(DeptProps, compId);
-                // tree refresh
-                // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
-                this.handleClose();
+                            browserRuleId: BrowserRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                            mediaRuleId: MediaRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                            securityRuleId: SecurityRuleProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId']),
+                            desktopConfId: DesktopConfProps.getIn(['viewItems', compId, 'DEPT', 'selectedOptionItemId'])
+                        }).then((res) => {
+                            // DeptActions.readDeptListPaged(DeptProps, compId);
+                            // tree refresh
+                            // resetCallback(DeptProps.getIn(['editingItem', 'selectedDeptCd']));
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            this.handleClose();
+                        });
+                    }
+                },
+                confirmObject: {
+                    checkedDeptCd: checkedDeptCd
+                }
             });
+        } else {
+            this.props.GlobalActions.showElementMsg(event.currentTarget, t("msgSelectDept"));
         }
     }
 
@@ -98,7 +111,7 @@ class DeptMultiDialog extends Component {
                                 <GRTreeDeptList
                                     useFolderIcons={true}
                                     listHeight='24px'
-                                    compId={compId+'_MRDIALOG'}
+                                    compId={`${compId}_MRDIALOG`}
                                     hasSelectChild={false}
                                     hasSelectParent={false}
                                     isEnableEdit={false}
@@ -135,8 +148,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+    GlobalActions: bindActionCreators(GlobalActions, dispatch),
     DeptActions: bindActionCreators(DeptActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptMultiDialog)));

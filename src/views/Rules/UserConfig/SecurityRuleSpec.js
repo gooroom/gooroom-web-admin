@@ -27,6 +27,15 @@ import { translate, Trans } from "react-i18next";
 
 class SecurityRuleSpec extends Component {
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { selectedItem } = nextProps;
+    if(selectedItem !== undefined && selectedItem !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   render() {
 
     const { classes } = this.props;
@@ -54,12 +63,12 @@ class SecurityRuleSpec extends Component {
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><EditIcon /></Button>
-                  {(this.props.onClickCopy) &&
+                  {(this.props.onClickCopy && !selectedItem.get('objId').endsWith('DEFAULT')) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
-                  {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
+                  {(this.props.inherit) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>
@@ -108,15 +117,14 @@ class SecurityRuleSpec extends Component {
               {(viewItem.get('netItem') && viewItem.get('netItem').size > 0) &&
               <TableBody>
               {viewItem.get('netItem').map(n => {
-                const ns = n.split('|');
                 return (
-                  <TableRow hover key={ns[0]} >
-                  <TableCell >{ns[1]}</TableCell>
-                  <TableCell >{ns[2]}</TableCell>
-                  <TableCell >{ns[3]}</TableCell>
-                  <TableCell >{ns[4]}</TableCell>
-                  <TableCell >{ns[5]}</TableCell>
-                  <TableCell >{ns[6]}</TableCell>
+                  <TableRow hover key={n.no} >
+                  <TableCell >{n.direction}</TableCell>
+                  <TableCell >{n.protocol}</TableCell>
+                  <TableCell >{n.address}</TableCell>
+                  <TableCell >{n.src}</TableCell>
+                  <TableCell >{n.dst}</TableCell>
+                  <TableCell >{n.state}</TableCell>
                   </TableRow>
                 );
               })}
@@ -157,13 +165,21 @@ export const generateSecurityRuleObject = (param, isForViewer) => {
       } else if(ename == 'state') {
         netState = evalue;
       } else if(ename == 'firewall_network') {
-        netItem = netItem.push(evalue);
+        const es = evalue.split('|');
+        netItem = netItem.push({
+          no: Number(es[0]),
+          direction: es[1],
+          protocol: es[2],
+          address: es[3],
+          src: es[4],
+          dst: es[5],
+          state: es[6]
+        });
       } else if(ename == 'global_network') {
         globalNetwork = evalue;
       }
-      
     });
-  
+
     return Map({
       objId: param.get('objId'),
       objNm: param.get('objNm'),
@@ -175,7 +191,7 @@ export const generateSecurityRuleObject = (param, isForViewer) => {
       packageHandle: packageHandle,
       globalNetwork: globalNetwork,
       netState: netState,
-      netItem: netItem
+      netItem: netItem.sortBy(item => item.no)
     });
   
   } else {

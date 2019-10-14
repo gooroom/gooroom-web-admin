@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+import { Map, List, Iterable } from 'immutable';
+
+
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -128,7 +129,11 @@ class ClientProfileSet extends Component {
     const { ClientProfileSetProps, ClientProfileSetActions } = this.props;
     const viewItem = getRowObjectById(ClientProfileSetProps, this.props.match.params.grMenuId, id, 'profileNo');
     ClientProfileSetActions.showDialog({
-      viewItem: viewItem.merge({isRemoval: 'false'}),
+      viewItem: viewItem.merge({
+        isRemoval: 'false',
+        grpInfoList: List([]), 
+        clientInfoList: List([])
+      }),
       dialogType: ClientProfileSetDialog.TYPE_PROFILE
     });
   };
@@ -195,19 +200,18 @@ class ClientProfileSet extends Component {
     const { classes } = this.props;
     const { ClientProfileSetProps } = this.props;
     const { t, i18n } = this.props;
+    const compId = this.props.match.params.grMenuId;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: 'chProfileSetNo', isOrder: true, numeric: false, disablePadding: true, label: t("colNumber") },
       { id: 'chProfileSetName', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
       { id: 'chClientId', isOrder: true, numeric: false, disablePadding: true, label: t("colRefClientId") },
       { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chPackages', isOrder: false, numeric: false, disablePadding: true, label: t("colPackageInfo") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
-      { id: 'chProfile', isOrder: false, numeric: false, disablePadding: true, label: t("colProfile") },
-      { id: 'chPackages', isOrder: false, numeric: false, disablePadding: true, label: t("colPackageInfo") }
+      { id: 'chProfile', isOrder: false, numeric: false, disablePadding: true, label: t("colProfile") }
     ];
-
-    const compId = this.props.match.params.grMenuId;
     
     const listObj = ClientProfileSetProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -226,7 +230,10 @@ class ClientProfileSet extends Component {
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={6} >
                   <FormControl fullWidth={true}>
-                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                    <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                      handleKeywordChange={this.handleKeywordChange} 
+                      handleSubmit={() => this.handleSelectBtnClick()} 
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={6} >
@@ -271,29 +278,30 @@ class ClientProfileSet extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
+                          onClick={event => this.handleClickPackageShow(event, n.get('profileNo'))}>
+                          <AssignmentIcon />
+                        </Button>                        
+                      </TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('profileNo'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('profileNo'))}>
                           <DeleteIcon />
-                        </Button>                        
+                        </Button>
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        <Button color="secondary" size="small" 
-                          className={classes.buttonInTableRow}
-                          onClick={event => this.handleProfileClick(event, n.get('profileNo'))}>
-                          <ArchiveIcon />
-                        </Button>                        
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        <Button color="secondary" size="small" 
-                          className={classes.buttonInTableRow}
-                          onClick={event => this.handleClickPackageShow(event, n.get('profileNo'))}>
-                          <AssignmentIcon />
-                        </Button>                        
+                        <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                          <Button color="secondary" size="small" 
+                            className={classes.buttonInTableRow}
+                            onClick={event => this.handleProfileClick(event, n.get('profileNo'))}>
+                            <ArchiveIcon />
+                          </Button>                        
+                        </TableCell>
                       </TableCell>
                     </TableRow>
                   );
@@ -344,7 +352,8 @@ class ClientProfileSet extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    ClientProfileSetProps: state.ClientProfileSetModule
+  ClientProfileSetProps: state.ClientProfileSetModule,
+  AdminProps: state.AdminModule
 });
 
 

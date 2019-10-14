@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -153,7 +152,7 @@ class GcspManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: 'chGcspNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
       { id: 'chGcspId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chRegDt', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
@@ -182,7 +181,10 @@ class GcspManage extends Component {
                 </Grid> */}
                 <Grid item xs={4} >
                   <FormControl fullWidth={true}>
-                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                    <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                      handleKeywordChange={this.handleKeywordChange} 
+                      handleSubmit={() => this.handleSelectBtnClick()} 
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={4} >
@@ -213,6 +215,7 @@ class GcspManage extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+
                   return (
                     <TableRow
                       hover
@@ -224,13 +227,13 @@ class GcspManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        <Button size="small" color="secondary" 
-                          className={classes.buttonInTableRow} 
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('gcspId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-                        <Button size="small" color="secondary" 
-                          className={classes.buttonInTableRow} 
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('gcspId'))}>
                           <DeleteIcon />
                         </Button>
@@ -276,7 +279,8 @@ class GcspManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  GcspManageProps: state.GcspManageModule
+  GcspManageProps: state.GcspManageModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

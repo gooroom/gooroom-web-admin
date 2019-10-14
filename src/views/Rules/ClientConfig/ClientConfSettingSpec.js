@@ -25,6 +25,15 @@ import { translate, Trans } from "react-i18next";
 
 class ClientConfSettingSpec extends Component {
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { selectedItem } = nextProps;
+    if(selectedItem !== undefined && selectedItem !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // .................................................
   render() {
     const { classes } = this.props;
@@ -55,13 +64,13 @@ class ClientConfSettingSpec extends Component {
                   variant="outlined" color="primary" style={{minWidth:32}}
                   onClick={() => this.props.onClickEdit(compId, targetType)}
                 ><EditIcon /></Button>
-                {(this.props.onClickCopy) &&
+                {(this.props.onClickCopy && !selectedItem.get('objId').endsWith('DEFAULT')) &&
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                   onClick={() => this.props.onClickCopy(compId, targetType)}
                 ><CopyIcon /></Button>
                 }
-                {(this.props.inherit && !(viewItem.get('isDefault'))) && 
+                {(this.props.inherit) && 
                 <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                   onClick={() => this.props.onClickInherit(compId, targetType)}
                 ><ArrowDropDownCircleIcon /></Button>
@@ -87,18 +96,16 @@ class ClientConfSettingSpec extends Component {
             </Grid>
             }
             <Grid container spacing={0}>
-              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtOSProtect")}</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHypervisor')) ? t("selRun") : t("selStop")}</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtInitHomeFolder")}</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('useHomeReset')) ? t("selExecute") : t("selStop")}</Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtSetupConnectableIp")}</Grid>
-              <Grid item xs={3} className={classes.specContent}>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtInitHomeFolder")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('useHomeReset')) ? t("selExecute") : t("selStop")}</Grid>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtSetupConnectableIp")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>
               {viewItem.get('whiteIp').map(function(prop, index) {
                 return <span key={index}>{prop}<br/></span>;
               })}
               </Grid>
-              <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtPermitAllIp")}</Grid>
-              <Grid item xs={3} className={classes.specContent}>{(viewItem.get('whiteIpAll')) ? t("selPermit") : t("selNoPermit")}</Grid>
+              <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtPermitAllIp")}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('whiteIpAll')) ? t("selPermit") : t("selNoPermit")}</Grid>
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("dtSetupLogLevel")} ]</Grid>
               <Grid item xs={12} className={classes.specTitle}>{bull} {t("lbViolatedLogLebel")}</Grid>
               <Grid item xs={12} className={classes.specContent}>
@@ -169,12 +176,12 @@ class ClientConfSettingSpec extends Component {
               <Grid item xs={1} className={classes.specContent}>{viewItem.get('logRemainDate')}</Grid>
 
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("dtClientLogSetup")} ]</Grid>
-              <Grid item xs={5} className={classes.specTitle}>{bull} {t("lbLogFileMax")}</Grid>
-              <Grid item xs={1} className={classes.specContent}>{viewItem.get('logMaxSize')}</Grid>
-              <Grid item xs={5} className={classes.specTitle}>{bull} {t("lbSavedLogFileCount")}</Grid>
-              <Grid item xs={1} className={classes.specContent}>{viewItem.get('logMaxCount')}</Grid>
-              <Grid item xs={5} className={classes.specTitle}>{bull} {t("lbMinimumDiskSizeRate")}</Grid>
-              <Grid item xs={1} className={classes.specContent}>{viewItem.get('systemKeepFree')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbLogFileMax")}</Grid>
+              <Grid item xs={2} className={classes.specContent} style={{wordBreak: 'break-all'}}>{viewItem.get('logMaxSize')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbSavedLogFileCount")}</Grid>
+              <Grid item xs={2} className={classes.specContent} style={{wordBreak: 'break-all'}}>{viewItem.get('logMaxCount')}</Grid>
+              <Grid item xs={4} className={classes.specTitle}>{bull} {t("lbMinimumDiskSizeRate")}</Grid>
+              <Grid item xs={2} className={classes.specContent} style={{wordBreak: 'break-all'}}>{viewItem.get('systemKeepFree')}</Grid>
               <Grid item xs={6} className={classes.specContent}></Grid>
             </Grid>
           </CardContent>
@@ -187,25 +194,18 @@ class ClientConfSettingSpec extends Component {
 
 export default translate("translations")(withStyles(GRCommonStyle)(ClientConfSettingSpec));
 
-export const convertLogLevelString = (param, t) => {
-  if(param == 'emerg') {
-    return 'Emergency' + t('stEmergLevel');
-  } else if(param == 'alert') {
-    return 'Alert' + t('stAlertLevel');
-  } else if(param == 'crit') {
-    return 'Critical' + t('stCritLevel');
-  } else if(param == 'err') {
-    return 'Error' + t('stErrLevel');
-  } else if(param == 'warnning') {
-    return 'Warning' + t('stWarningLevel');
-  } else if(param == 'notice') {
-    return 'Notice' + t('stNoticeLevel');
-  } else if(param == 'info') {
-    return 'Informational' + t('stInfoLevel');
-  } else if(param == 'debug') {
-    return 'Debug' + t('stDebugLevel');
+export const convertLogLevelString = (gubun, param, t) => {
+
+  if(param == 'none') {
+    return t('stNoUse');
   } else {
-    return param;
+    if(gubun === 'notify') {
+      return t('stNoticeLevel');
+    } else if(gubun === 'show') {
+      return t('stShowLevel');
+    } else if(gubun === 'transmit') {
+      return t('stTranmitLevel');
+    }
   }
 }
 
@@ -218,7 +218,7 @@ export const convertLogLevelNo = (param) => {
     return 3;
   } else if(param == 'err') {
     return 4;
-  } else if(param == 'warnning') {
+  } else if(param == 'warning') {
     return 5;
   } else if(param == 'notice') {
     return 6;
@@ -234,7 +234,6 @@ export const convertLogLevelNo = (param) => {
 export const generateClientConfSettingObject = (param, isForViewer, t) => {
 
   if(param) {
-    let useHypervisor = false;
     let useHomeReset = false;
     let whiteIpAll = false;
     let whiteIps = [];
@@ -273,9 +272,7 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       const ename = e.get('propNm');
       const evalue = e.get('propValue');
       
-      if(ename == 'USEHYPERVISOR') {
-        useHypervisor = (evalue == "true");
-      } else if(ename == 'USEHOMERESET') {
+      if(ename == 'USEHOMERESET') {
         useHomeReset = (evalue == "true");
       } else if(ename == 'WHITEIPALL') {
         whiteIpAll = (evalue == "true");
@@ -293,43 +290,43 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       } else if(ename == 'systemKeepFree') {
         systemKeepFree = evalue;
 
-      } else if(ename == 'transmit_boot') {
-        transmit_boot = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
-      } else if(ename == 'transmit_exe') {
-        transmit_exe = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
-      } else if(ename == 'transmit_os') {
-        transmit_os = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
-      } else if(ename == 'transmit_media') {
-        transmit_media = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
-      } else if(ename == 'transmit_agent') {
-        transmit_agent = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
-
       } else if(ename == 'notify_boot') {
-        notify_boot = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
+        notify_boot = (isForViewer) ? convertLogLevelString('notify', evalue, t) : evalue;
         boot_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_exe') {
-        notify_exe = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
+        notify_exe = (isForViewer) ? convertLogLevelString('notify', evalue, t) : evalue;
         exe_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_os') {
-        notify_os = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
+        notify_os = (isForViewer) ? convertLogLevelString('notify', evalue, t) : evalue;
         os_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_media') {
-        notify_media = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
+        notify_media = (isForViewer) ? convertLogLevelString('notify', evalue, t) : evalue;
         media_minno = convertLogLevelNo(evalue);
       } else if(ename == 'notify_agent') {
-        notify_agent = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
+        notify_agent = (isForViewer) ? convertLogLevelString('notify', evalue, t) : evalue;
         agent_minno = convertLogLevelNo(evalue);
 
       } else if(ename == 'show_boot') {
-        show_boot = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
+        show_boot = (isForViewer) ? convertLogLevelString('show', evalue, t) : evalue;
       } else if(ename == 'show_exe') {
-        show_exe = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
+        show_exe = (isForViewer) ? convertLogLevelString('show', evalue, t) : evalue;
       } else if(ename == 'show_os') {
-        show_os = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
+        show_os = (isForViewer) ? convertLogLevelString('show', evalue, t) : evalue;
       } else if(ename == 'show_media') {
-        show_media = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
+        show_media = (isForViewer) ? convertLogLevelString('show', evalue, t) : evalue;
       } else if(ename == 'show_agent') {
-        show_agent = (isForViewer) ? convertLogLevelString(evalue, t) : evalue;
+        show_agent = (isForViewer) ? convertLogLevelString('show', evalue, t) : evalue;
+
+      } else if(ename == 'transmit_boot') {
+        transmit_boot = (isForViewer) ? convertLogLevelString('transmit', evalue, t) : evalue;
+      } else if(ename == 'transmit_exe') {
+        transmit_exe = (isForViewer) ? convertLogLevelString('transmit', evalue, t) : evalue;
+      } else if(ename == 'transmit_os') {
+        transmit_os = (isForViewer) ? convertLogLevelString('transmit', evalue, t) : evalue;
+      } else if(ename == 'transmit_media') {
+        transmit_media = (isForViewer) ? convertLogLevelString('transmit', evalue, t) : evalue;
+      } else if(ename == 'transmit_agent') {
+        transmit_agent = (isForViewer) ? convertLogLevelString('transmit', evalue, t) : evalue;
       }
 
     });
@@ -339,7 +336,6 @@ export const generateClientConfSettingObject = (param, isForViewer, t) => {
       objNm: param.get('objNm'),
       comment: param.get('comment'),
       modDate: param.get('modDate'),
-      useHypervisor: useHypervisor,
       useHomeReset: useHomeReset,
       whiteIpAll: whiteIpAll,
       whiteIp: List(whiteIps),

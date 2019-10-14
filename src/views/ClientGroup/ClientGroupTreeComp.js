@@ -44,6 +44,14 @@ class ClientGroupTreeComp extends Component {
 
   componentDidMount() {
     //this.props.ClientGroupActions.readClientGroupListPaged(this.props.ClientGroupProps, this.props.compId);
+    const { ClientGroupActions, ClientGroupProps } = this.props;
+    const keyword = ClientGroupProps.getIn(['viewItems', this.props.compId, 'listParam', 'keyword']);
+    if(keyword && keyword != '') {
+      this.setState({
+        isShowTree: false
+      })
+      ClientGroupActions.readClientGroupListPaged(ClientGroupProps, this.props.compId, {page: 0});
+    }
   }
 
   handleChangePage = (event, page) => {
@@ -190,7 +198,7 @@ class ClientGroupTreeComp extends Component {
         grpNm: listItem.get('title'),
         comment: listItem.get('comment'),
         regDate: listItem.get('regDate'),
-        hasChildren: listItem.get('hasChildren')
+        hasChildren: (listItem.get('children') !== null) ? true : false
       }));
     }
   }
@@ -203,7 +211,7 @@ class ClientGroupTreeComp extends Component {
         grpNm: listItem.get('title'),
         comment: listItem.get('comment'),
         regDate: listItem.get('regDate'),
-        hasChildren: listItem.get('hasChildren')
+        hasChildren: (listItem.get('children') !== null) ? true : false
       }));
     }
   };
@@ -240,7 +248,8 @@ class ClientGroupTreeComp extends Component {
             <FormControl fullWidth={true}>
               <KeywordOption paramName="keyword" keywordValue={keyword}
                 handleKeywordChange={this.handleKeywordChange} 
-                handleSubmit={() => this.handleSelectBtnClick()} />
+                handleSubmit={() => this.handleSelectBtnClick()} 
+              />
             </FormControl>
           </Grid>
           <Grid item xs={6} >
@@ -261,6 +270,7 @@ class ClientGroupTreeComp extends Component {
             <GRCommonTableHead
               classes={classes}
               keyId="grpId"
+              isDisableAllCheck={true}
               orderDir={listObj.getIn(['listParam', 'orderDir'])}
               orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
               onRequestSort={this.handleChangeSort}
@@ -298,8 +308,8 @@ class ClientGroupTreeComp extends Component {
                       <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('grpId'))} />
                     </TableCell>
                   }
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('grpNm')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientCount')}/{n.get('clientTotalCount')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('grpNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('itemCount')}/{n.get('itemTotalCount')}</TableCell>
                   {(hasEdit) && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       <Button color='secondary' size="small" 
@@ -350,6 +360,7 @@ class ClientGroupTreeComp extends Component {
             compId={compId}
             hasSelectChild={false}
             hasSelectParent={false}
+            isShowCheck={(selectorType && selectorType === 'multiple')}
             isEnableEdit={this.props.isEnableEdit}
             isActivable={this.props.isActivable}
             isShowMemberCnt={true}

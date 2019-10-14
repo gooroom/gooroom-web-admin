@@ -178,7 +178,9 @@ class ClientManageCompWithPackage extends Component {
         {/* data option area */}
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4} >
-              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect}
+                value={(listObj && listObj.getIn(['listParam', 'clientType'])) ? listObj.getIn(['listParam', 'clientType']) : 'ALL'}
+              />
           </Grid>
           <Grid item xs={4} >
               <KeywordOption paramName="keyword" keywordValue={(listObj && listObj.get('listParam')) ? listObj.getIn(['listParam', 'keyword']) : ''}

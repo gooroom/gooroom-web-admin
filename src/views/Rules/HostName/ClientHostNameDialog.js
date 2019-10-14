@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -228,10 +229,9 @@ class ClientHostNameDialog extends Component {
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
-                <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

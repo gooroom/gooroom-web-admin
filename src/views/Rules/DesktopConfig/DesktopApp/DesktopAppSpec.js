@@ -53,8 +53,7 @@ class DesktopAppSpec extends Component {
               avatar={GRAvartar}
               title={viewItem.get('appNm')} 
               subheader={viewItem.get('appId') + ', ' + viewItem.get('appInfo')}
-              action={
-                <div style={{paddingTop:16,paddingRight:24}}>
+              action={<div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(viewItem, targetType)}
@@ -65,8 +64,7 @@ class DesktopAppSpec extends Component {
                     onClick={() => this.props.onClickCopy(viewItem)}
                   ><CopyIcon /></Button>
                   }
-                </div>
-              }
+                </div>}
               style={{paddingBottom:0}}
             />
           <CardContent>

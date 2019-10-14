@@ -21,6 +21,7 @@ export default {
 
   "colRegCount": "등록수",
   "colRevokeCount": "폐기수",
+  "colWorkCount": "작업수",
 
   "colClientId": "단말아이디",
   "colClientName": "단말이름",
@@ -39,6 +40,7 @@ export default {
   "colStatus": "상태",
   "colEdit": "수정",
   "colEditDelete": "수정/삭제",
+  "colCreateUser": "생성자",
 
   "colId": "아이디",
   "colLastLoginDate": "최종접속일",
@@ -95,10 +97,25 @@ export default {
   "colViolateStatus": "침해상태",
   "colViolateRun": "보안점검기능 작동여부",
 
-  "colNoticeId": "공지글 ID",
   "colTitle": "제목",
   "colContent": "내용",
   "colRegUserId": "생성 Admin",
+
+  "colType": "타입",
+  "colTargetDept": "대상조직",
+  "colTargetGroup": "대상단말그룹",
+  "colMngClient": "단말관리",
+  "colMngUser": "사용자관리",
+  "colMngDesktop": "데스크톱환경관리",
+  "colMngNotify": "공지관리",
+  "colActHistory": "사용이력",
+
+  "colLogNo": "로그번호",
+  "colLogDate": "로그날짜",
+  "colLogType": "로그타입",
+  "colAccessIp": "접속아이피",
+  "colLogItem": "로그아이템",
+  "colLogData": "로그정보",
 
   // options
   "optDate": "날짜",
@@ -113,6 +130,9 @@ export default {
 
   "optMinutes" : "분",
   "optHours" : "시간",
+
+  "optUse" : "사용",
+  "optNoUse" : "미사용",
 
   // Buttons
   "btnSearch": "조회",
@@ -141,9 +161,9 @@ export default {
   "menuClientManage": "단말관리",
   "menuClientRegKey": "단말등록키",
   "menuClientRule": "단말정책",
-  "menuClientSetup": "단말설정",
-  "menuClientHosts": "HOSTS",
-  "menuClientUpdateServer": "업데이트서버",
+  "menuClientSetup": "에이전트설정",
+  "menuClientHosts": "HOSTS설정",
+  "menuClientUpdateServer": "업데이트서버설정",
 
   "menuSoftware": "소프트웨어",
   "menuPackageManage": "패키지관리",
@@ -152,7 +172,7 @@ export default {
   "menuUser": "사용자",
   "menuUserManage": "사용자관리",
 
-  "menuUseRule": "단말사용정책",
+  "menuUseRule": "정책관리",
   "menuMediaRuleManage": "매체제어정책",
   "menuBrowserRuleManage": "브라우저제어정책",
   "menuSecurityRuleManage": "단말보안정책",
@@ -162,7 +182,7 @@ export default {
   "menuDesktopManage": "데스크톱정보",
   "menuDesktopAppManage": "데스크톱앱관리",
   "menuCloudServiceManage": "클라우드서비스연동",
-  "menuThemeManage": "테마관리",
+  "menuThemeManage": "테마조회",
 
   "menuJob": "작업",
   "menuJobManage": "작업정보",
@@ -170,9 +190,6 @@ export default {
   "menuSiteConfig": "구름관리서버설정",
   "menuAdminUserMng": "관리자관리",
   "menuDeptAndUser": "조직/사용자 일괄등록",
-
-  "menuNotice": "공지",
-  "menuNoticeManage": "공지관리",
 
   // 공통
   "selOffline": "오프라인",
@@ -183,10 +200,12 @@ export default {
   "lbName": "이름",
   "lbId": "아이디",
   "lbClientId": "단말아이디",
+  "lbClientName": "단말이름",
   "dtSystemError": "시스템오류",
   "dtSystemNotice": "시스템알림",
   "dtEditOK": "수정 완료",
   "selBasic": "기본",
+  "selStandard": "표준",
   "selOrdinary": "일반",
   "msgInputName": "이름을 입력하세요.",
   "selDelete": "삭제함",
@@ -202,6 +221,12 @@ export default {
   "lbClientGroupRule": "단말그룹정책",
   "lbDeptRule": "조직정책",
   "lbUserRule": "사용자정책",
+  "lbClientSelect": "단말선택",
+  "msgTypeNumberOnly": "숫자를 입력하세요.",
+  "msgInvalidMacAddress": "맥주소가 정확하지 않습니다.",
+  "msgInvalidNumber": "설정값을 입력하세요.",
+  "msgInvalidValue": "유효한 설정값을 입력하세요.",
+  "lbSelectAll": "전체선택",
 
   // options
   "stBeforeJob": "작업전",
@@ -224,15 +249,18 @@ export default {
   "stExeProctect": "실행보안",
   "stBootProctect": "부팅보안",
   "stAgentProctect": "에이전트",
-  "stNoUse": "(사용안함)",
   "stEmergLevel": "(긴급)",
   "stAlertLevel": "(경보)",
   "stCritLevel": "(위험)",
   "stErrLevel": "(오류)",
   "stWarningLevel": "(경고)",
-  "stNoticeLevel": "(알림)",
   "stInfoLevel": "(정보)",
   "stDebugLevel": "(디버깅)",
+
+  "stNoUse": "무시",
+  "stNoticeLevel": "알림",
+  "stShowLevel": "표시",
+  "stTranmitLevel": "전송",
   
   // 일별접속통계
   "connectRequestCount": "접속요청수",
@@ -242,8 +270,8 @@ export default {
   "connFailCount": "접속실패",
 
   // 단말등록통계
-  "regClientCount": "등록단말수",
-  "revokeClientCount": "폐기단말수",
+  "regClientCount": "등록수",
+  "revokeClientCount": "폐기수",
 
   // 단말관리
   "ttAddNewGroup": "신규 단말그룹 등록",
@@ -331,8 +359,8 @@ export default {
   "lbProfileEtcHandle": "기타 패키지 처리방식",
   "lbReferenceClient": "레퍼런스 단말",
   "msgSelectRefClient": "레퍼런스 단말을 선택하세요.",
-  "msgSelectClientInBelow": "아래 목록에서 단말을 선택하세요.",
-  "lbTargetClient": "대상 단말",
+  "msgSelectClientInRight": "우측 버튼을 이용하여 단말을 선택하세요.",
+  "lbTargetClient": "프로파일대상 선택",
   "lbPackageInfo": "패키지 정보",
   
   // 패키지관리
@@ -391,15 +419,16 @@ export default {
   "dtCancelJob": "작업 취소",
   "msgCancelJob": "작업대상 단말중 '작업전' 상태 단말의 작업을 취소하시겠습니까?",
 
-  // 단말정책설정
-  "lbClientConf": "단말정책",
-  "dtAddClientConf": "단말정책설정 등록",
-  "msgAddClientConf": "단말정책설정를 등록하시겠습니까?",
-  "dtEditClientConf": "단말정책설정 수정",
-  "msgEditClientConf": "단말정책설정를 수정하시겠습니까?",
-  "dtCopyClientConf": "단말정책설정 복사",
-  "msgCopyClientConf": "단말정책설정를 복사하였습니다.",
-  "dtViewClientConf": "단말정책설정 정보",
+  // 에이전트설정
+  "lbClientConf": "에이전트설정",
+  "lbClientSetup": "에이전트설정",
+  "dtAddClientConf": "에이전트설정 등록",
+  "msgAddClientConf": "에이전트설정를 등록하시겠습니까?",
+  "dtEditClientConf": "에이전트설정 수정",
+  "msgEditClientConf": "에이전트설정를 수정하시겠습니까?",
+  "dtCopyClientConf": "에이전트설정 복사",
+  "msgCopyClientConf": "에이전트설정를 복사하였습니다.",
+  "dtViewClientConf": "에이전트설정 정보",
   "dtOSProtect": "운영체제보호",
   "dtInitHomeFolder": "홈폴더 초기화",
   "dtTrustedBoot": "신뢰부팅",
@@ -409,11 +438,14 @@ export default {
   "selStop": "중단",
   "selRun": "구동",
   "selExecute": "실행",
+  "selActive": "활성화",
+  "selInActive": "비활성화",
   "lbViolatedLogLebel": "침해 로그레벨(수준)",
   "lbClientLogLevel": "단말 로그보기에 표시되는 로그레벨(수준)",
   "lbServerLogLevel": "서버로 전송하는 로그레벨(수준)",
   "lbDeleteAfterSend": "전송후 삭제여부",
   "lbSaveDateAfterSend": "서버전송후 로그보관일수",
+  "msgRemainFileSettingCount": "설정한 개수만큼 로그파일 유지",
   "msgHelpNoDeleteIfZero": "'0' 으로 설정시 삭제하지 않음",
   "dtClientLogSetup": "단말 로그 (JournalD Log) 설정",
   "lbLogFileMax": "로그파일 최대크기(MB)",
@@ -430,8 +462,9 @@ export default {
   "selNoPermit": "허용안함",
   "dtSetupLogLevel": "로그레벨 설정",
   "dtIsUseDeleteFunc": "삭제기능 사용여부",
-  "lbSetupClient": "단말 설정",
+  "lbSetupClient": "에이전트 설정",
   "msgValidOnlyUpperZero": "0보다 큰 숫자만 입력할 수 있습니다.",
+  "msgInputRange": "입력가능범위",
 
   // 데스크톱앱관리
   "dtDeleteDesktopApp": "데스크톱앱 삭제",
@@ -498,13 +531,12 @@ export default {
   "lbUserName": "사용자이름",
   "lbEmail": "이메일",
   "lbDept": "조직",
-  "lbLoginTrial": "남은 로그인시도 횟수",
   "lbParentDept": "상위조직",
   "msgEnterUserName": "사용자이름을 입력하세요.",
   "msgSelectDept": "조직을 선택하세요.",
   "msgEnterEmail": "이메일 정보가 잘못 되었습니다.",
   "msgEnterUserId": "사용자아이디를 입력하세요.",
-  "msgUserIdValid": "알파벳 또는 숫자만 입력하세요.",
+  "msgUserIdValid": "소문자 알파벳 또는 숫자만 입력하세요.",
   "msgEnterPassword": "password를 입력하세요.",
   "msgSelectParentDept": "상위 조직을 선택 하세요.",
   "msgSelectDeptForAddUser": "사용자를 추가할 조직을 선택하세요.",
@@ -534,8 +566,10 @@ export default {
   "dtDeleteDept": "조직정보 삭제",
   "msgDeletedDept": "조직정보({{deptCnt}}개)를 삭제하시겠습니까? (최상위조직제외)",
   "lbDeleteInUser": "조직내 사용자삭제여부",
+  "lbUseUserExpire": "사용자 만료일 사용여부",
+  "lbUserExpireDate": "사용자 만료일",
 
-  // 테마관리
+  // 테마조회
   "lbDeleteTheme": "테마 삭제",
   "msgDeleteTheme": "테마('{{themeNm}}')를 삭제하시겠습니까?",
   "lbAddTheme": "테마 등록",
@@ -562,8 +596,6 @@ export default {
   "lbGRMServerInfo": "GRM 정보",
   "lbAgentPollingTime": "구름 Agent 폴링 타임",
   "msgAgentPollingTime": "구름단말 Agent 와 GRM 서버간의 정보교환 주기",
-  "lbLoginTrialCount": "사용자 로그인 시도횟수와 계정잠금시간",
-  "msgLoginTrialCount": "구름단말에 사용자 로그인중 인증실패시 재시도 횟수와 계정잠금시간(분)을 지정합니다. 계정잠금시간을 '0'으로 하면 잠금시간이 무제한으로 설정 됩니다.",
   "lbLoginDuplicatgeEnable": "사용자 로그인 중복 설정",
   "lbSelectLoginDuplicatgeEnable": "허용/비허용",
   "lbLoginDuplicatgeNotiType": "중복 로그인 요청시 알림방법",
@@ -585,8 +617,8 @@ export default {
   "lbPwIncludeSpecial": "특수문자 포함 여부",
   "lbPwDiffBefore": "이전 비밀번호와 문자 차이 갯수",
   "lbPwDiffZero": "일치하지 않음",
-  "lbPwDiffSmall": "조금 다름",
-  "lbPwDiffMany": "많이 다름",
+  "lbPwDiffSmall": "조금 다름(2개이상)",
+  "lbPwDiffMany": "많이 다름(5개이상)",
 
   // 클라우드서비스 관리
   "lbDeleteCloudService": "클라우드서비스 삭제",
@@ -640,7 +672,21 @@ export default {
   "lbSaveAdminConnIp": "접속가능 아이피 저장",
   "msgSaveAdminConnIp": "접속가능 아이피 정보를 저장하시겠습니까?",
   "dtAdminJobHist": "관리자({{adminId}}) 작업 이력",
-
+  "lbClientPart": "단말관리 권한",
+  "lbUserPart": "사용자관리 권한",
+  "lbDesktopPart": "데스크톱환경관리 권한",
+  "lbNoticePart": "공지관리 권한",
+  "msgNeedPartItem": "관리자 권한중 하나 이상 선택이 필요합니다.",
+  "lbManagedClientGroup": "관리대상 단말그룹",
+  "lbManagedDept": "관리대상 조직",
+  "lbManagedTargetCount": "대상수",
+  "lbConnectableIp": "접속가능 아이피",
+  "lbIp": "아이피",
+  "msgWrongIpString": "아이피정보가 잘못되었습니다.",
+  "lbHaveIt": "있음",
+  "lbHaveNotIt": "없음",
+  "lbAdminSpecifiedRole": "관리자 정보 - 권한",
+  
   // 호스트정보 관리
   "lbHosts": "Hosts정보",
   "lbAddHosts": "Hosts 정보 등록",
@@ -648,10 +694,10 @@ export default {
   "lbEditHosts": "Hosts 정보 수정",
   "msgEditHosts": "Hosts 정보를 수정하시겠습니까?",
   "msgCopyHosts": "Hosts 정보를 복사하였습니다.",
-  "dtAddHosts": "Hosts정책 등록",
-  "dtViewHosts": "Hosts정책 정보",
-  "dtEditHosts": "Hosts정책 수정",
-  "dtCopyHosts": "Hosts정책 복사",
+  "dtAddHosts": "Hosts설정 등록",
+  "dtViewHosts": "Hosts설정 정보",
+  "dtEditHosts": "Hosts설정 수정",
+  "dtCopyHosts": "Hosts설정 복사",
   "lbHostsInfo": "Hosts 정보",
   "lbHostsCategoty": "HOSTS 정보",
   "msgHostsInfo": "호스트정보를 입력하세요.",
@@ -681,22 +727,22 @@ export default {
   "msgGooroomPrefInfo": "gooroom.pref 정보를 입력하세요.",
   "msgShowDetailUpdateServer": "업데이트서버 정보를 선택하면 상세 내용이 표시됩니다.",
 
-  // 브라우져제어정책 관리
-  "lbBrowserRule": "브라우져정책",
-  "lbDeleteBrowserRule": "브라우져제어정책 삭제",
-  "msgDeleteBrowserRule": "브라우져제어정책({{objId}})을 삭제하시겠습니까?",
+  // 브라우저제어정책 관리
+  "lbBrowserRule": "브라우저정책",
+  "lbDeleteBrowserRule": "브라우저제어정책 삭제",
+  "msgDeleteBrowserRule": "브라우저제어정책({{objId}})을 삭제하시겠습니까?",
   "lbAddBrowserRule": "브라우저제어정책 등록",
   "msgAddBrowserRule": "브라우저제어정책을 등록하시겠습니까?",
   "lbEditBrowserRule": "브라우저제어정책 수정",
   "msgEditBrowserRule": "브라우저제어정책을 수정하시겠습니까?",
   "msgApplyBrowserRuleChild": "브라우저제어정책이 하위 조직에 적용되었습니다.",
   "msgCopyBrowserRule": "브라우저제어정책을 복사하였습니다.",
-  "dtAddBrowserRule": "브라우져제어정책 등록",
-  "dtViewBrowserRule": "브라우져제어정책 정보",
-  "dtEditBrowserRule": "브라우져제어정책 수정",
-  "dtInheritBrowserRule": "브라우져제어정책 상속",
-  "dtCopyBrowserRule": "브라우져제어정책 복사",
-  "dtCategoryBrowserRule": "브라우져제어 정책",
+  "dtAddBrowserRule": "브라우저제어정책 등록",
+  "dtViewBrowserRule": "브라우저제어정책 정보",
+  "dtEditBrowserRule": "브라우저제어정책 수정",
+  "dtInheritBrowserRule": "브라우저제어정책 상속",
+  "dtCopyBrowserRule": "브라우저제어정책 복사",
+  "dtCategoryBrowserRule": "브라우저제어 정책",
   "lbUseWebSocket": "Web Socket 사용",
   "lbUseWebWorker": "Web Worker 사용",
   "selPermitRule": "허용",
@@ -740,8 +786,10 @@ export default {
   "selPrinterOff": "프린터 금지",
   "selCameraOn": "카메라 허가",
   "selCameraOff": "카메라 금지",
-  "selSoundOn": "사운드(소리, 마이크) 허가",
-  "selSoundOff": "사운드(소리, 마이크) 금지",
+  "selSoundOn": "사운드/녹음 허가",
+  "selSoundOff": "사운드/녹음 금지",
+  "selMicrophoneOn": "녹음 허가",
+  "selMicrophoneOff": "녹음 금지",
   "selWifiOn": "무선랜 허가",
   "selWifiOff": "무선랜 금지",
   "selUsbKeyboardOn": "USB키보드 허가",
@@ -757,7 +805,8 @@ export default {
   "dtWifi": "무선랜",
   "dtCdDvd": "CD/DVD",
   "dtPrinter": "프린터",
-  "dtSound": "사운드(소리, 마이크)",
+  "dtSound": "사운드/녹음",
+  "dtMicrophone": "녹음",
   "dtCamera": "카메라",
   "dtUsbKeyboard": "USB키보드",
   "dtUsbMouse": "USB마우스",
@@ -797,6 +846,7 @@ export default {
   "selPackageStopOn": "켜짐",
   "selPackageStopOff": "꺼짐",
   "dtBasicNetwork": "기본네트워크허용여부",
+  "msgValidFirewallAddress": "알파벳(a~f) 또는 숫자를 입력하세요.",  
   
   // 소프트웨어정책 관리
   "lbDeleteSWRule": "소프트웨어제한정책 삭제",
@@ -838,62 +888,16 @@ export default {
   "msgShowOnlyClientGroupRule": "로컬계정으로 접속한 단말입니다. 단말정책만 표시됩니다.",
   "lbViolatedClientList": "침해 단말 목록",
 
-  // 공지
-  "dtAddNotice": "공지글 작성",
-  "msgAddNotice": "공지글을 등록하시겠습니까?",
-  "dtEditNotice": "공지글 수정",
-  "msgEditNotice": "공지글을 수정하시겠습니까?",
-  "dtInstantNotice": "즉시 알림",
-  "msgInstantNotice": "즉시 알림을 하시겠습니까?",
-  "dtInactive": "비활성화",
-  "msgInactive": "비활성화 하겠습니까?",
-  "lbNoticeTitle": "제목",
-  "lbNoticeContent": "내용",
-  "btnInstantAlarm": "즉시 알람",
-  "btnInactive": "비활성화",
-  "btnNewPublish": "신규 게시",
-  "colNoticePublishOpenDt": "시작 시간",
-  "colNoticePublishCloseDt": "종료 시간",
-  "colNoticePublishViewType": "보임 방식",
-  "colNoticePublishViewCnt": "조회",
-  "colNoticePublishInstantAlarmCnt": "즉시 알람수",
-  "colTargetType": "대상종류",
-  "colTargetName": "대상이름",
-  "lbActive": "활성",
-  "lbInactive": "비활성",
-  "lbUnlimited": "무기한",
-  "lbOnlyAlarm": "알람만",
-  "lbWithTitle": "제목과함께",
-  "dtAddNoticePublish": "게시정보 추가",
-  "msgAddNoticePublish": "게시정보을 등록하시겠습니까?",
-  "dtEditNoticePublish": "게시정보 수정",
-  "msgEditNoticePublish": "게시정보을 수정하시겠습니까?",
-  "lbSelectTarget": "대상선택",
-  "lbClientGroupAndClient": "단말그룹 & 단말",
-  "lbDepartmentAndUser": "조직 & 사용자",
-  "lbClientGroup": "단말그룹",
-  "lbClient": "단말",
-  "lbDepartment": "조직",
-  "lbUser": "사용자",
-  "lbAlarmPeriod": "알람기간",
-  "lbInstantAlarm": "즉시 알람",
-  "lbIndefiniteAlarm": "무기한 알람",
-  "lbViewType": "보임 방식",
-
-  // 1.3
-  "menuSite": "SITE",
-  "menuSiteManage": "Site관리",
-
   "menuSf": "개발중",
   "menuDividedAdminManage": "관리자관리",
 
   "lbParentGroup": "상위단말그룹",
   "msgSelectParentGroup": "상위단말그룹을 선택하세요.",
-  "ttChangMultiGroupRule": "단말그룹정책 일괄변경",
+  "ttChangeMultiGroupRule": "단말그룹정책 일괄변경",
 
-  "dtInheritClientConf": "단말정책설정 상속",
-  "msgInheritClientConf": "단말정책설정을 상속하시겠습니까?",
-  "msgApplyClientConfChild": "단말정책설정이 하위 그룹에 적용되었습니다.",
+  "dtInheritClientConf": "에이전트설정 상속",
+  "msgInheritClientConf": "에이전트설정을 상속하시겠습니까?",
+  "msgApplyClientConfChild": "에이전트설정이 하위 그룹에 적용되었습니다.",
 
   "dtInheritHosts": "Hosts 정보 상속",
   "msgInheritHosts": "Hosts 정보를 상속하시겠습니까?",
@@ -901,6 +905,8 @@ export default {
 
   "dtInheritUpdateServer": "업데이트서버정보 상속",
   "msgInheritUpdateServer": "업데이트서버정보를 상속하시겠습니까?",
-  "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다."
+  "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다.",
+
+  "lbAdminActHistory": "관리자 작업 이력"
   
 };

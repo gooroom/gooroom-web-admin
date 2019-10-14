@@ -13,7 +13,7 @@ import { translate, Trans } from "react-i18next";
 class LogLevelSelect extends Component {
 
   render() {
-    const { CommonOptionProps, name, value, minNo=0 } = this.props;
+    const { name, value, minNo=0, logLevelData } = this.props;
     const { t, i18n } = this.props;
     return (
       <React.Fragment>
@@ -22,9 +22,9 @@ class LogLevelSelect extends Component {
         onChange={this.props.onChangeSelect}
         inputProps={{name: name}}
       >
-        {CommonOptionProps.logLevelData.filter(x => (x.levelNo >= minNo)).map(x => (
+        {logLevelData.filter(x => (x.levelNo >= minNo) || x.levelNo == 0).map(x => (
           <MenuItem value={x.levelVal} levelno={x.levelNo} key={x.levelId}>
-            {x.levelId} {t(x.levelNm)}
+            {t(x.levelNm)}
           </MenuItem>
         ))}
       </Select>

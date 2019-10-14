@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -180,7 +178,7 @@ class DesktopAppManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: 'chAppId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chAppNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
       { id: 'chAppInfo', isOrder: false, numeric: false, disablePadding: true, label: t("colInfo") },
@@ -206,7 +204,10 @@ class DesktopAppManage extends Component {
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={6}>
                   <FormControl fullWidth={true}>
-                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                    <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                      handleKeywordChange={this.handleKeywordChange} 
+                      handleSubmit={() => this.handleSelectBtnClick()} 
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={6}>
@@ -251,19 +252,16 @@ class DesktopAppManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditListClick(event, n.get('appId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('appId'))}>
                           <DeleteIcon />
-                        </Button>                        
-
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -312,7 +310,8 @@ class DesktopAppManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  DesktopAppProps: state.DesktopAppModule
+  DesktopAppProps: state.DesktopAppModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

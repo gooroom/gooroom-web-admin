@@ -1,20 +1,21 @@
 import React, { Component } from "react";
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from "moment";
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
+import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { generateBrowserRuleObject } from 'views/Rules/UserConfig/BrowserRuleSpec';
@@ -29,9 +30,11 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import LoginResetIcon from '@material-ui/icons/Flare';
 
 import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
 import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
@@ -75,10 +78,7 @@ class UserSpec extends Component {
         userId: viewItem.get('userId'),
         userNm: viewItem.get('userNm'),
         deptCd: viewItem.get('deptCd'),
-        deptNm: viewItem.get('deptNm'),
-        expireDate: viewItem.get('expireDate'),
-        loginTrial: viewItem.get('loginTrial'),
-        userEmail: viewItem.get('userEmail')
+        deptNm: viewItem.get('deptNm')
       },
       ruleDialogType: UserDialog.TYPE_EDIT
     }, true);
@@ -124,7 +124,8 @@ class UserSpec extends Component {
 
   render() {
     const { classes } = this.props;
-    const { UserProps, compId } = this.props;
+    const { UserProps, compId, AdminProps, isEditable } = this.props;
+    const { t, i18n } = this.props;
 
     const informOpen = UserProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = UserProps.getIn(['viewItems', compId, 'viewItem']);
@@ -137,24 +138,28 @@ class UserSpec extends Component {
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
 
+    let userSubinfo = null;
+    let actionButton = null;
+    if(informOpen && viewItem) {
+      userSubinfo = <div>
+        {`[${t('colId')}:${viewItem.get('userId')}],[${t('colRegDate')}:${formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}}]`}
+      </div>;
+      actionButton = <div style={{width:48,paddingTop:10}}>
+                      <Button size="small"
+                        variant="outlined" color="primary" style={{minWidth:32}}
+                        onClick={() => this.handleClickEdit(viewItem, compId)}
+                      ><SettingsApplicationsIcon /></Button>
+                    </div>
+    }
+ 
     return (
       <div style={{marginTop: 10}} >
       {(informOpen && viewItem) &&
         <Card>
           <CardHeader
             title={viewItem.get('userNm')}
-            subheader={viewItem.get('userId') + 
-            ', ' + viewItem.get('userEmail') + 
-            ', [Registered:' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD') + 
-            '], [Expired:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}
-            action={
-              <div style={{width:48,paddingTop:10}}>
-                <Button size="small"
-                  variant="outlined" color="primary" style={{minWidth:32}}
-                  onClick={() => this.handleClickEdit(viewItem, compId)}
-                ><SettingsApplicationsIcon /></Button>
-              </div>
-            }
+            subheader={userSubinfo}
+            action={ (isEditable && viewItem.get('statusCd') !== 'STAT020') ? actionButton : <div></div> }
           />
           <Divider />
           <CardContent style={{padding:10}}>
@@ -165,13 +170,15 @@ class UserSpec extends Component {
                   selectedItem={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedBrowserRuleItem) ? selectedBrowserRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForBrowserRule} inherit={false}
+                  isEditable={selectedBrowserRuleItem && AdminProps.get('adminId') === selectedBrowserRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
                 <MediaRuleSpec compId={compId} specType="inform" targetType="USER" hasAction={true}
                   selectedItem={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedMediaRuleItem) ? selectedMediaRuleItem.get('ruleGrade') : null}
-                  onClickEdit={this.handleClickEditForMediaRule}
+                  onClickEdit={this.handleClickEditForMediaRule} inherit={false}
+                  isEditable={selectedMediaRuleItem && AdminProps.get('adminId') === selectedMediaRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -179,6 +186,7 @@ class UserSpec extends Component {
                   selectedItem={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('viewItem') : null}
                   ruleGrade={(selectedSecurityRuleItem) ? selectedSecurityRuleItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSecurityRule} inherit={false}
+                  isEditable={selectedSecurityRuleItem && AdminProps.get('adminId') === selectedSecurityRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -186,6 +194,7 @@ class UserSpec extends Component {
                   selectedItem={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('viewItem') : null}
                   ruleGrade={(selectedSoftwareFilterItem) ? selectedSoftwareFilterItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForSoftwareFilter} inherit={false}
+                  isEditable={selectedSoftwareFilterItem && AdminProps.get('adminId') === selectedSoftwareFilterItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -193,6 +202,7 @@ class UserSpec extends Component {
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
                   ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
                   onClickEdit={this.handleClickEditForDesktopConf} inherit={false}
+                  isEditable={selectedDesktopConfItem && AdminProps.get('adminId') === selectedDesktopConfItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
 
@@ -209,6 +219,7 @@ class UserSpec extends Component {
 
 const mapStateToProps = (state) => ({
   UserProps: state.UserModule,
+  AdminProps: state.AdminModule,
 
   MediaRuleProps: state.MediaRuleModule,
   BrowserRuleProps: state.BrowserRuleModule,
@@ -219,6 +230,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   UserActions: bindActionCreators(UserActions, dispatch),
+  GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+  GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
   
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),

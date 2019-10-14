@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -188,6 +186,8 @@ class BrowserRuleManage extends Component {
       { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colRuleId") },
       { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: t("colModUser") },
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: t("colRegUser") },
+      { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
     
@@ -207,7 +207,10 @@ class BrowserRuleManage extends Component {
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={6}>
                   <FormControl fullWidth={true}>
-                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                    <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                      handleKeywordChange={this.handleKeywordChange} 
+                      handleSubmit={() => this.handleSelectBtnClick()} 
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={6}>
@@ -238,34 +241,33 @@ class BrowserRuleManage extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+                  
                   return (
                     <TableRow 
                       hover
                       onClick={event => this.handleSelectRow(event, n.get('objId'))}
                       tabIndex={-1}
                       key={n.get('objId')}
+                      className={(n.get('objId').endsWith('DEFAULT')) ? classes.grDefaultRuleRow : ""}
                     >
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? t("selBasic") : t("selOrdinary")}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleClickEditInRow(event, n.get('objId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-
-                        { !n.get('objId').endsWith('DEFAULT') && 
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleClickDeleteInRow(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>
-                        }
-
                       </TableCell>
                     </TableRow>
                   );
@@ -296,8 +298,9 @@ class BrowserRuleManage extends Component {
           </div>
         }
         {/* dialog(popup) component area */}
-        <BrowserRuleSpec compId={compId} specType="inform" hasAction={true}
+        <BrowserRuleSpec compId={compId} specType="inform"
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
+          hasAction={true} inherit={false}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
@@ -310,7 +313,8 @@ class BrowserRuleManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  BrowserRuleProps: state.BrowserRuleModule
+  BrowserRuleProps: state.BrowserRuleModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

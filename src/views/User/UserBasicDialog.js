@@ -5,6 +5,7 @@ import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import * as UserActions from 'modules/UserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -19,6 +20,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
+import Radio from "@material-ui/core/Radio";
+
+import Grid from "@material-ui/core/Grid";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
 
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -62,41 +68,6 @@ class UserBasicDialog extends Component {
         });
     };
 
-    // 데이타 생성
-    handleCreateData = (event) => {
-        const { UserProps, GRConfirmActions } = this.props;
-        const { t, i18n } = this.props;
-
-        if(this.refs.form && this.refs.form.isFormValid()) {
-            GRConfirmActions.showConfirm({
-                confirmTitle: t("lbAddUserInfo"),
-                confirmMsg: t("msgAddUserInfo"),
-                handleConfirmResult: this.handleCreateConfirmResult,
-                confirmObject: UserProps.get('editingItem')
-            });
-        } else {
-            if(this.refs.form && this.refs.form.childs) {
-                this.refs.form.childs.map(c => {
-                    this.refs.form.validate(c);
-                });
-            }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { UserProps, UserActions, compId } = this.props;
-            UserActions.createUserData({
-                userId: UserProps.getIn(['editingItem', 'userId']),
-                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userNm']),
-                expireDate: UserProps.getIn(['editingItem', 'expireDate'])
-            }).then((res) => {
-                UserActions.readUserListPaged(UserProps, compId);
-                this.handleClose();
-            });
-        }
-    }
-
     handleEditData = (event) => {
         const { UserProps, GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
@@ -105,7 +76,23 @@ class UserBasicDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditUserInfo"),
                 confirmMsg: t("msgEditUserInfo"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { UserProps, UserActions, compId } = this.props;
+                        const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
+                        if(editingItem !== undefined) {
+                            UserActions.editUserData({
+                                userId: UserProps.getIn(['editingItem', 'userId']),
+                                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
+                                userNm: UserProps.getIn(['editingItem', 'userNm'])
+                            }).then((res) => {
+                                UserActions.readUserListPaged(UserProps, compId);
+                                this.handleClose();
+                            });
+
+                        }
+                    }
+                },
                 confirmObject: UserProps.get('editingItem')
             });
         } else {
@@ -114,21 +101,6 @@ class UserBasicDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { UserProps, UserActions, compId } = this.props;
-
-            UserActions.editUserData({
-                userId: UserProps.getIn(['editingItem', 'userId']),
-                userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                userNm: UserProps.getIn(['editingItem', 'userNm']),
-                expireDate: UserProps.getIn(['editingItem', 'expireDate'])
-            }).then((res) => {
-                UserActions.readUserListPaged(UserProps, compId);
-                this.handleClose();
-            });
         }
     }
 
@@ -147,6 +119,9 @@ class UserBasicDialog extends Component {
         const dialogType = UserProps.get('dialogType');
         const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
 
+        // default date
+        const initDate = moment().add(7, 'days');
+
         let title = "";
         if(dialogType === UserBasicDialog.TYPE_ADD) {
             title = t("dtAddUser");
@@ -163,20 +138,27 @@ class UserBasicDialog extends Component {
                     <ValidatorForm ref="form">
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent>
-                        <TextValidator
-                            label={t("lbUserId")} value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
-                            name="userId" validators={['required', 'matchRegexp:^[a-z][-a-z0-9_]*$']}
-                            errorMessages={[t("msgEnterUserId"), t("msgUserIdValid")]}
-                            onChange={this.handleValueChange("userId")}
-                            className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            disabled={(dialogType == UserBasicDialog.TYPE_EDIT) ? true : false}
-                        />
-                        <TextValidator
-                            label={t("lbUserName")} value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
-                            name="userNm" validators={['required']} errorMessages={[t("msgEnterUserName")]}
-                            onChange={this.handleValueChange("userNm")}
-                            className={classes.fullWidth}
-                        />
+
+                        <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
+                            <Grid item xs={6}>
+                                <TextValidator
+                                    label={t("lbUserId")} value={(editingItem.get('userId')) ? editingItem.get('userId') : ''}
+                                    name="userId" validators={['required', 'matchRegexp:^[a-z][-a-z0-9_]*$']}
+                                    errorMessages={[t("msgEnterUserId"), t("msgUserIdValid")]}
+                                    onChange={this.handleValueChange("userId")}
+                                    className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                                    disabled={(dialogType == UserBasicDialog.TYPE_EDIT) ? true : false}
+                                />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <TextValidator
+                                    label={t("lbUserName")} value={(editingItem.get('userNm')) ? editingItem.get('userNm') : ''}
+                                    name="userNm" validators={['required']} errorMessages={[t("msgEnterUserName")]}
+                                    onChange={this.handleValueChange("userNm")}
+                                    className={classes.fullWidth}
+                                />
+                            </Grid>
+                        </Grid>
                         <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
                             <TextValidator
                                 label={t("lbPassword")}
@@ -199,16 +181,9 @@ class UserBasicDialog extends Component {
                                 }}
                             />
                         </FormControl>
-                        <InlineDatePicker label={t('expireDate')} format='YYYY-MM-DD'
-                            value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : '1999-01-01'}
-                            onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
-                            className={classes.fullWidth} />
 
                     </DialogContent>
                     <DialogActions>
-                        {(dialogType === UserBasicDialog.TYPE_ADD) &&
-                            <Button onClick={this.handleCreateData} variant='contained' color="secondary">{t("btnRegist")}</Button>
-                        }
                         {(dialogType === UserBasicDialog.TYPE_EDIT) &&
                             <Button onClick={this.handleEditData} variant='contained' color="secondary">{t("btnSave")}</Button>
                         }

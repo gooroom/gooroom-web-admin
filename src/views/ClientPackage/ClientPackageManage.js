@@ -92,10 +92,18 @@ class ClientPackageManage extends Component {
     const { ClientPackageProps, ClientPackageActions } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    // show package list by client id
-    ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {
-      clientId: selectedClientObj.get('clientId'), page:0, isFiltered: false
-    });
+    // show client info.
+    if(selectedClientObj) {
+      
+      // show client information
+      this.props.ClientManageActions.showClientManageInform({ compId: compId, viewItem: selectedClientObj });
+
+      // show package list by client id
+      ClientPackageActions.readPackageListPagedInClient(ClientPackageProps, compId, {
+        clientId: selectedClientObj.get('clientId'), page:0, isFiltered: false
+      });
+
+    }
   };
 
   resetClientGroupRules(compId, grpId) {

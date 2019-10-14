@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import { Map, List, fromJS } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
+
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import GRAlert from 'components/GRComponents/GRAlert';
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -62,27 +63,35 @@ class ClientGroupDialog extends Component {
                         const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
                         const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
             
-                        const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
+                        const selectedObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
                         ClientGroupActions.createClientGroupData({
                             groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                             groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
                             uprGrpId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                             isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
                             
-                            clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
-                            hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
-                            updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
-                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            clientConfigId: ClientConfSettingProps.getIn(selectedObjectIdName),
+                            hostNameConfigId: ClientHostNameProps.getIn(selectedObjectIdName),
+                            updateServerConfigId: ClientUpdateServerProps.getIn(selectedObjectIdName),
+                            browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
             
                         }).then((res) => {
-                            // tree refresh
-                            const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                            resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
-                            this.handleClose();
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh for create
+                                const index = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).findIndex(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
+                                resetCallback(index);
+                                this.handleClose();
+                            }
                         }).catch((err) => {
                             console.log('handleCreateData - err :::: ', err);
                         });
@@ -112,27 +121,37 @@ class ClientGroupDialog extends Component {
                         const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
                         const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
             
-                        const selecteObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
+                        const selectedObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
                         ClientGroupActions.editClientGroupData({
                             groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                             groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                             groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
                             isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
             
-                            clientConfigId: ClientConfSettingProps.getIn(selecteObjectIdName),
-                            hostNameConfigId: ClientHostNameProps.getIn(selecteObjectIdName),
-                            updateServerConfigId: ClientUpdateServerProps.getIn(selecteObjectIdName),
-                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            clientConfigId: ClientConfSettingProps.getIn(selectedObjectIdName),
+                            hostNameConfigId: ClientHostNameProps.getIn(selectedObjectIdName),
+                            updateServerConfigId: ClientUpdateServerProps.getIn(selectedObjectIdName),
+                            browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                             
                         }).then((res) => {
-                            // tree refresh
-                            const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
-                            resetCallback(listItem.get('parentIndex'));
-                            this.handleClose();
+
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh for edit
+                                const listItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === ClientGroupProps.getIn(['editingItem', 'grpId'])));
+                                resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
+                                this.handleClose();
+                            }
+                            
                         });
                     }
                 }
@@ -154,6 +173,10 @@ class ClientGroupDialog extends Component {
         const dialogType = ClientGroupProps.get('dialogType');
         const editingItem = (ClientGroupProps.get('editingItem')) ? ClientGroupProps.get('editingItem') : null;
 
+        if(!(ClientGroupProps.get('dialogOpen') && editingItem)) {
+            return (<React.Fragment></React.Fragment>);
+        }
+
         let title = "";
         if(dialogType === ClientGroupDialog.TYPE_ADD) {
             title = t("dtAddGroup");
@@ -163,11 +186,17 @@ class ClientGroupDialog extends Component {
             title = t("dtEditGroup");
         }
 
-        const upperGroupInfo = ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpNm']) +
-            ' (' + ClientGroupProps.getIn(['viewItems', compId, 'viewItem', 'grpId']) + ')';
+        const checkedGrpId = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'checked']);
+        let upperGroupInfo = '';
+        if(checkedGrpId !== undefined && checkedGrpId.length > 0) {
+            const upperItem = ClientGroupProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedGrpId[0]));
+            if(upperItem) {
+                upperGroupInfo = `${upperItem.get('title')} (${checkedGrpId[0]})`;
+            }
+        }
 
         return (
-            <div>
+            <React.Fragment>
             {(ClientGroupProps.get('dialogOpen') && editingItem) &&
             <Dialog open={ClientGroupProps.get('dialogOpen')} scroll="paper" fullWidth={true} maxWidth="md">
                 <ValidatorForm ref="form">
@@ -177,11 +206,10 @@ class ClientGroupDialog extends Component {
                     <TextField
                         label={t("lbParentGroup")}
                         value={upperGroupInfo}
-                        className={classes.fullWidth}
                     />
                     }
                     <Grid container spacing={24}>
-                        <Grid item xs={3}>
+                        <Grid item xs={4}>
                             <TextValidator label={t("spClientGroupName")} className={classes.fullWidth}
                                 name="grpNm"
                                 validators={['required']}
@@ -190,7 +218,7 @@ class ClientGroupDialog extends Component {
                                 onChange={this.handleValueChange('grpNm')}
                             />
                         </Grid>
-                        <Grid item xs={9}>
+                        <Grid item xs={8}>
                             <TextField label={t("spClientGroupDesc")} className={classes.fullWidth}
                                 value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                                 onChange={this.handleValueChange('comment')}
@@ -214,7 +242,8 @@ class ClientGroupDialog extends Component {
                 </ValidatorForm>
             </Dialog>
             }
-            </div>
+            {/*<GRAlert /> */}
+            </React.Fragment>
         );
     }
 }
@@ -236,6 +265,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
     GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
 

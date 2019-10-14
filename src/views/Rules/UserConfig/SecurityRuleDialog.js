@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -75,7 +77,17 @@ class SecurityRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddSecuRule"),
                 confirmMsg: t("msgAddSecuRule"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { SecurityRuleProps, SecurityRuleActions } = this.props;
+                        SecurityRuleActions.createSecurityRule(SecurityRuleProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
+                                this.handleClose();
+                            }, (res) => {
+                        })
+                    }
+                },
                 confirmObject: SecurityRuleProps.get('editingItem')
             });
         } else {
@@ -84,17 +96,6 @@ class SecurityRuleDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { SecurityRuleProps, SecurityRuleActions } = this.props;
-            SecurityRuleActions.createSecurityRule(SecurityRuleProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
-                    this.handleClose();
-                }, (res) => {
-            })
         }
     }
 
@@ -106,7 +107,16 @@ class SecurityRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditSecuRule"),
                 confirmMsg: t("msgEditSecuRule"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { SecurityRuleProps, SecurityRuleActions } = this.props;
+                        SecurityRuleActions.editSecurityRule(SecurityRuleProps.get('editingItem'), this.props.compId)
+                            .then((res) => {
+                                refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: SecurityRuleProps.get('editingItem')
             });
         } else {
@@ -117,25 +127,15 @@ class SecurityRuleDialog extends Component {
             }
         }
     }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { SecurityRuleProps, SecurityRuleActions } = this.props;
-            SecurityRuleActions.editSecurityRule(SecurityRuleProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(SecurityRuleProps, SecurityRuleActions.readSecurityRuleListPaged);
-                    this.handleClose();
-                });
-        }
-    }
 
     handleInheritSaveDataForDept = (event, id) => {
         const { SecurityRuleProps, DeptProps, SecurityRuleActions, compId } = this.props;
         const { t, i18n } = this.props;
-        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+        const deptCd = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']);
 
         SecurityRuleActions.inheritSecurityRuleDataForDept({
             'objId': SecurityRuleProps.getIn(['editingItem', 'objId']),
-            'deptCd': selectedDeptCd
+            'deptCd': deptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
@@ -314,10 +314,9 @@ class SecurityRuleDialog extends Component {
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
-                <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

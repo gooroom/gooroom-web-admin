@@ -165,11 +165,8 @@ const makeParameter = (param) => {
         userPasswd: (param.userPasswd && param.userPasswd !== '') ? sha256(param.userId + sha256(param.userPasswd)) : '',
 
         userNm: param.userNm,
-        userEmail: param.userEmail,
         deptCd: param.deptCd,
         isChangePasswd: isChangePasswd,
-        expireDate: formatDateToSimple(param.expireDate, 'YYYY-MM-DD'),
-        loginTrial: param.loginTrial,
 
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
@@ -183,7 +180,6 @@ const makeParameter = (param) => {
 // create (add)
 export const createUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-
     return requestPostAPI('createUserWithRule', makeParameter(param)).then(
         (response) => {
             try {
@@ -192,10 +188,8 @@ export const createUserData = (param) => dispatch => {
                         type: CREATE_USER_SUCCESS,
                         response: response
                     });
-                } else {
-                    dispatch({ type: COMMON_FAILURE, error: response.data });
-                    return response.data;
                 }
+                return response.data;
             } catch(error) {
                 dispatch({ type: COMMON_FAILURE, error: error });
                 return error;
@@ -230,11 +224,19 @@ export const deleteUserData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteUserData', {'userId': param.userId}).then(
         (response) => {
-            dispatch({
-                type: DELETE_USER_SUCCESS,
-                compId: param.compId,
-                userId: param.userId
-            });
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: DELETE_USER_SUCCESS,
+                        compId: param.compId,
+                        userId: param.userId
+                    });
+                }
+                return response.data;
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
+            }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
@@ -315,7 +317,7 @@ export default handleActions({
         return newState;
     },
     [DELETE_USER_SUCCESS]: (state, action) => {
-        return commonHandleActions.handleDeleteSuccessAction(state, action, 'userId');
+        return state;
     },
     [SHOW_USERRULE_DIALOG]: (state, action) => {
         return state.merge({

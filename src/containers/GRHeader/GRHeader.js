@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+
 
 import { Link } from 'react-router-dom';
 
@@ -26,6 +26,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import { translate, Trans } from "react-i18next";
+import { VERSION } from "../../constants";
 
 class GRHeader extends Component {
   constructor(props) {
@@ -63,7 +64,7 @@ class GRHeader extends Component {
       <AppBar className={classes.headerRoot}>
         <Toolbar className={classes.headerToolbar}>
             <Typography type="title" className={classes.headerBrandLogo}>
-              GPMS v1.3.0424
+              GPMS {VERSION}
             </Typography>
             <IconButton onClick={this.props.toggleDrawer}>
               <MenuIcon />
@@ -96,9 +97,6 @@ class GRHeader extends Component {
                       <MenuList>
                         <MenuItem component={Link} to={'/system/siteconfig/GRM9901/menuSiteConfig'}>{t("menuSiteConfig")}</MenuItem>
                         <MenuItem component={Link} to={'/system/adminusermng/GRM9902/menuAdminUserMng'}>{t("menuAdminUserMng")}</MenuItem>
-                        {/**
-                        <MenuItem component={Link} to={'/system/deptuserreg/GRM9903/menuDeptAndUser'}>{t("menuDeptAndUser")}</MenuItem>
-                        */}                        
                       </MenuList>
                     </ClickAwayListener>
                   </Paper>

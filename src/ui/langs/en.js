@@ -21,6 +21,7 @@ export default {
 
   "colRegCount": "RegCnt",
   "colRevokeCount": "RevokeCnt",
+  "colWorkCount": "WorkCnt",
 
   "colClientId": " ClientId",
   "colClientName": "ClientName",
@@ -39,6 +40,7 @@ export default {
   "colStatus": "Status",
   "colEdit": "Edit",
   "colEditDelete": "Edit/Del",
+  "colCreateUser": "Creator",
 
   "colId": "ID",
   "colLastLoginDate": "LastLoginDate",
@@ -95,10 +97,25 @@ export default {
   "colViolateStatus": "ViolateStatus",
   "colViolateRun": "Prtector Func. Run",
 
-  "colNoticeId": "NoticeId",
   "colTitle": "Title",
   "colContent": "Content",
   "colRegUserId": "Created Admin",
+
+  "colType": "Type",
+  "colTargetDept": "Dept",
+  "colTargetGroup": "Group",
+  "colMngClient": "MngClient",
+  "colMngUser": "MngUser",
+  "colMngDesktop": "MngDesktop",
+  "colMngNotify": "MngNotify",
+  "colActHistory": "History",
+
+  "colLogNo": "LogNo",
+  "colLogDate": "LogDate",
+  "colLogType": "LogType",
+  "colAccessIp": "AccessIp",
+  "colLogItem": "LogItem",
+  "colLogData": "LogData",
 
   // options
   "optDate": "Date",
@@ -113,6 +130,9 @@ export default {
 
   "optMinutes" : "Min",
   "optHours" : "Hours",
+
+  "optUse" : "Use",
+  "optNoUse" : "No Use",
 
   // Buttons
   "btnSearch": "Search",
@@ -152,12 +172,12 @@ export default {
   "menuUser": "User",
   "menuUserManage": "UserMng",
 
-  "menuUseRule": "ClientUseRule",
+  "menuUseRule": "RuleManage",
   "menuMediaRuleManage": "MediaRule",
   "menuBrowserRuleManage": "BrowserRule",
   "menuSecurityRuleManage": "SecurityRule",
   "menuSoftwareRuleManage": "SoftwareRule",
-  
+
   "menuDesktop": "Desktop",
   "menuDesktopManage": "DesktopMng",
   "menuDesktopAppManage": "DesktopAppMng",
@@ -171,9 +191,6 @@ export default {
   "menuAdminUserMng": "Admin Mng.",
   "menuDeptAndUser": "Dept/User Batch registration",
 
-  "menuNotice": "Notice",
-  "menuNoticeManage": "NoticeMng",
-
   // 공통
   "selOffline": "Offline",
   "selOnline": "Online",
@@ -183,10 +200,12 @@ export default {
   "lbName": "Name",
   "lbId": "ID",
   "lbClientId": "ClientId",
+  "lbClientName": "ClientName",
   "dtSystemError": "System Error",
   "dtSystemNotice": "System Notice",
   "dtEditOK": "Edit Success",
   "selBasic": "Basic",
+  "selStandard": "Standard",
   "selOrdinary": "Ordinary",
   "msgInputName": "Please enter name.",
   "selDelete": "Delete",
@@ -202,6 +221,12 @@ export default {
   "lbClientGroupRule": "Client Group Rule",
   "lbDeptRule": "Dept. Rule",
   "lbUserRule": "User Rule",
+  "lbClientSelect": "Select Client",
+  "msgTypeNumberOnly": "Please enter only numbers.",
+  "msgInvalidMacAddress": "The MAC address is not correct.",
+  "msgInvalidNumber":"Please enter setting value.",
+  "msgInvalidValue": "Please enter a valid setting value.",
+  "lbSelectAll": "Select All",
 
   // options
   "stBeforeJob": "Before",
@@ -224,15 +249,18 @@ export default {
   "stExeProctect": "Execute",
   "stBootProctect": "Booting",
   "stAgentProctect": "Agent",
-  "stNoUse": "",
   "stEmergLevel": "",
   "stAlertLevel": "",
   "stCritLevel": "",
   "stErrLevel": "",
   "stWarningLevel": "",
-  "stNoticeLevel": "",
   "stInfoLevel": "",
   "stDebugLevel": "",
+
+  "stNoUse": "Ignore",
+  "stNoticeLevel": "Alarm",
+  "stShowLevel": "Show",
+  "stTranmitLevel": "Transmit",
 
   // 일별접속통계
   "connectRequestCount": "ConnReqCnt",
@@ -242,8 +270,8 @@ export default {
   "connFailCount": "ConnFailCnt",
 
   // 단말등록통계
-  "regClientCount": "RegClientCnt",
-  "revokeClientCount": "RevokeClientCnt",
+  "regClientCount": "RegCnt",
+  "revokeClientCount": "RevokeCnt",
 
   // 단말관리
   "ttAddNewGroup": "Create New Group",
@@ -331,8 +359,8 @@ export default {
   "lbProfileEtcHandle": "Other package handling methods",
   "lbReferenceClient": "Reference client",
   "msgSelectRefClient": "Select a reference client.",
-  "msgSelectClientInBelow": "Please select a client from the list below.",
-  "lbTargetClient": "Target client",
+  "msgSelectClientInRight": "Select the terminal using the right button.",
+  "lbTargetClient": "Target for Profiling",
   "lbPackageInfo": "Package Information",
   
   // 패키지관리
@@ -391,15 +419,16 @@ export default {
   "dtCancelJob": "Cancel job",
   "msgCancelJob": "Are you sure you want to cancel the operation of the 'Before operation' status client?",
 
-  // 단말정책설정
-  "lbClientConf": "ClientRule",
-  "dtAddClientConf": "Registration of client rule setting",
-  "msgAddClientConf": "Do you want to register client rule settings?",
-  "dtEditClientConf": "Edit client rule settings",
-  "msgEditClientConf": "Are you sure you want to modify client rule settings?",
-  "dtCopyClientConf": "Copy client rule settings",
-  "msgCopyClientConf": "The client rule settings have been copied.",
-  "dtViewClientConf": "Client rule setting information",
+  // 에이전트설정
+  "lbClientConf": "AgentSetup",
+  "lbClientSetup": "AgentSetup",
+  "dtAddClientConf": "Registration of agent setting",
+  "msgAddClientConf": "Do you want to register agent settings?",
+  "dtEditClientConf": "Edit agent settings",
+  "msgEditClientConf": "Are you sure you want to modify agent settings?",
+  "dtCopyClientConf": "Copy agent settings",
+  "msgCopyClientConf": "The agent settings have been copied.",
+  "dtViewClientConf": "Agent setting information",
   "dtOSProtect": "Operating system protection",
   "dtInitHomeFolder": "Initialize home folder",
   "dtTrustedBoot": "Trusted Boot",
@@ -409,11 +438,14 @@ export default {
   "selStop": "Stop",
   "selRun": "Run",
   "selExecute": "Execute",
+  "selActive": "Active",
+  "selInActive": "InActive",
   "lbViolatedLogLebel": "Infringement log level (level)",
   "lbClientLogLevel": "The log level (level) displayed in the client log view.",
   "lbServerLogLevel": "Log level to send to server (level)",
   "lbDeleteAfterSend": "Delete after transfer",
   "lbSaveDateAfterSend": "Days to keep logs after server transfer",
+  "msgRemainFileSettingCount": "Keep log files count as you set",
   "msgHelpNoDeleteIfZero": "If set to '0', do not delete",
   "dtClientLogSetup": "Setting JournalD Log",
   "lbLogFileMax": "Maximum log file size (MB)",
@@ -430,8 +462,9 @@ export default {
   "selNoPermit": "No allow",
   "dtSetupLogLevel": "Set log level",
   "dtIsUseDeleteFunc": "Whether delete function is used",
-  "lbSetupClient": "Client setting",
+  "lbSetupClient": "Agent setting",
   "msgValidOnlyUpperZero": "Only numbers greater than 0 can be entered.",
+  "msgValidNumberPeriod": "Input range",
 
   // 데스크톱앱관리
   "dtDeleteDesktopApp": "Remove desktop app",
@@ -498,13 +531,12 @@ export default {
   "lbUserName": "User name",
   "lbEmail": "Email",
   "lbDept": "Organization",
-  "lbLoginTrial": "Remain login trial count",
   "lbParentDept": "Parent organization",
   "msgEnterUserName": "Please enter username.",
   "msgSelectDept": "Please select an organization.",
   "msgEnterEmail": "Please enter email.",
   "msgEnterUserId": "Please enter user ID.",
-  "msgUserIdValid": "Please enter only alphanumeric characters.",
+  "msgUserIdValid": "Please enter only lower alphabet characters or numbers.",
   "msgEnterPassword": "Please enter a password.",
   "msgSelectParentDept": "Please select a parent organization.",
   "msgSelectDeptForAddUser": "Please select an organization to add users to.",
@@ -534,8 +566,10 @@ export default {
   "dtDeleteDept": "Delete Organization.",
   "msgDeletedDept": "Are you sure you want to remove the selected organization ({{deptCnt}}ea) ?",
   "lbDeleteInUser": "Whether users in your organization are deleted",
+  "lbUseUserExpire": "Whether User Expire Date",
+  "lbUserExpireDate": "Expire Date",
 
-  // 테마관리
+  // 테마조회
   "lbDeleteTheme": "Remove theme",
   "msgDeleteTheme": "Are you sure you want to delete the theme ('{{themeNm}}')?",
   "lbAddTheme": "Theme registration",
@@ -562,8 +596,6 @@ export default {
   "lbGRMServerInfo": "GRM Information",
   "lbAgentPollingTime": "Agent Polling Time",
   "msgAgentPollingTime": "Information exchange cycle between cloud client agent and GRM server",
-  "lbLoginTrialCount": "User login attempts and account lockout times",
-  "msgLoginTrialCount": "Specifies the number of retry attempts and the number of minutes to lock the account when authentication fails during user login to the client. If the account lock time is set to '0', the lock time is set to unlimited.",
   "lbLoginDuplicatgeEnable": "Duplicate user login settings",
   "lbSelectLoginDuplicatgeEnable": "Allow/Disallow",
   "lbLoginDuplicatgeNotiType": "How to notify when a duplicate login is requested",
@@ -585,8 +617,8 @@ export default {
   "lbPwIncludeSpecial": "Include special",
   "lbPwDiffBefore": "Number of previous passwords and character differences",
   "lbPwDiffZero": "Not match",
-  "lbPwDiffSmall": "Little",
-  "lbPwDiffMany": "Much",
+  "lbPwDiffSmall": "Little (more 2ea)",
+  "lbPwDiffMany": "Much (more 5ea)",
 
   // 클라우드서비스 관리
   "lbDeleteCloudService": "Delete cloud service",
@@ -640,6 +672,20 @@ export default {
   "lbSaveAdminConnIp": "Save connectable IP",
   "msgSaveAdminConnIp": "Do you want to save accessibility information?",
   "dtAdminJobHist": "Administrator ({{adminId}}) History",
+  "lbClientPart": "ClientMng Role",
+  "lbUserPart": "UserMng Role",
+  "lbDesktopPart": "DesktopMng Role",
+  "lbNoticePart": "Notice Role",
+  "msgNeedPartItem": "You need to select at least one of the administrator rights.",
+  "lbManagedClientGroup": "Managed Client Group",
+  "lbManagedDept": "Managed Dept.",
+  "lbManagedTargetCount": "Count",
+  "lbConnectableIp": "Connectable Ip",
+  "lbIp": "Ip",
+  "msgWrongIpString": "The IP information has been approved.",
+  "lbHaveIt": "Exist",
+  "lbHaveNotIt": "None",
+  "lbAdminSpecifiedRole": "Admin Info. - Role",
 
   // 호스트정보 관리
   "lbHosts": "Hosts",
@@ -681,7 +727,7 @@ export default {
   "msgGooroomPrefInfo": "Please enter information for gooroom.pref.",
   "msgShowDetailUpdateServer": "When you select the update server information, the details are displayed.",
 
-  // 브라우져제어정책 관리
+  // 브라우저제어정책 관리
   "lbBrowserRule": "BrowserRule",
   "lbDeleteBrowserRule": "Delete browser control rule",
   "msgDeleteBrowserRule": "Are you sure you want to delete the browser control rule {{objId}}?",
@@ -740,8 +786,10 @@ export default {
   "selPrinterOff": "Prohibit printer",
   "selCameraOn": "Camera authorization",
   "selCameraOff": "Camera prohibited",
-  "selSoundOn": "Allow sound (microphone)",
-  "selSoundOff": "No sound (microphone)",
+  "selSoundOn": "Allow sound/mic",
+  "selSoundOff": "No sound/mic",
+  "selMicrophoneOn": "Allow microphone",
+  "selMicrophoneOff": "No microphone",
   "selWifiOn": "WLAN authorization",
   "selWifiOff": "Prohibit WLAN",
   "selUsbKeyboardOn": "USB Keyboard Authorization",
@@ -757,7 +805,8 @@ export default {
   "dtWifi": "Wireless LAN",
   "dtCdDvd": "CD/DVD",
   "dtPrinter": "Printer",
-  "dtSound": "Sound (microphone)",
+  "dtSound": "Sound/Mic.",
+  "dtMicrophone": "Microphone",
   "dtCamera": "Camera",
   "dtUsbKeyboard": "USB keyboard",
   "dtUsbMouse": "USB mouse",
@@ -797,7 +846,8 @@ export default {
   "selPackageStopOn": "On",
   "selPackageStopOff": "Off",
   "dtBasicNetwork": "Default Network Allowed",
-  
+  "msgValidFirewallAddress": "Please enter only alphabet(A~F) or numeric characters.",
+
   // 소프트웨어정책 관리
   "lbDeleteSWRule": "Delete a software restriction rule",
   "msgDeleteSWRule": "Are you sure you want to delete the software restriction rule {{objId}}?",
@@ -838,62 +888,16 @@ export default {
   "msgShowOnlyClientGroupRule": "This is the Client connected to the local account. Only client rules are displayed.",
   "lbViolatedClientList": "List of infringing devices",
 
-  // 공지
-  "dtAddNotice": "Add Notice",
-  "msgAddNotice": "Do you want to register the notice?",
-  "dtEditNotice": "Edit Notice",
-  "msgEditNotice": "Do you want to edit the notice?",
-  "dtInstantNotice": "Instant Notice",
-  "msgInstantNotice": "Do you want to send the instant notice?",
-  "dtInactive": "Inactive",
-  "msgInactive": "Do you want to disable it?",
-  "lbNoticeTitle": "Title",
-  "lbNoticeContent": "Content",
-  "btnInstantAlarm": "Instant alarm",
-  "btnInactive": "Inactive",
-  "btnNewPublish": "New publish",
-  "colNoticePublishOpenDt": "Opening time",
-  "colNoticePublishCloseDt": "Closing time",
-  "colNoticePublishViewType": "Viewing type",
-  "colNoticePublishViewCnt": "Hits",
-  "colNoticePublishInstantAlarmCnt": "Instant alarm count",
-  "colTargetType": "Target type",
-  "colTargetName": "Target name",
-  "lbActive": "Active",
-  "lbInactive": "Inactive",
-  "lbUnlimited": "Unlimited",
-  "lbOnlyAlarm": "Only alarm",
-  "lbWithTitle": "With title",
-  "dtAddNoticePublish": "Add publishing information",
-  "msgAddNoticePublish": "Do you want to register the publishing information?",
-  "dtEditNoticePublish": "Edit publishing information",
-  "msgEditNoticePublish": "Do you want to edit the publishing information?",
-  "lbSelectTarget": "Select target",
-  "lbClientGroupAndClient": "ClientGroup & Client",
-  "lbDepartmentAndUser": "Department & User",
-  "lbClientGroup": "ClientGroup",
-  "lbClient": "Client",
-  "lbDepartment": "Department",
-  "lbUser": "User",
-  "lbAlarmPeriod": "Alarm period",
-  "lbInstantAlarm": "Instant alarm",
-  "lbIndefiniteAlarm": "Indefinite alram",
-  "lbViewType": "Veiwing type",
-
-  // 1.3
-  "menuSite": "site",
-  "menuSiteManage": "SiteMng",
-
   "menuSf": "Developing..",
   "menuDividedAdminManage": "Administrator Manage",
 
   "lbParentGroup": "Parent Client Group",
   "msgSelectParentGroup": "Please select a parent client group.",
-  "ttChangMultiGroupRule": "Multiple changes to client group policies",
+  "ttChangeMultiGroupRule": "Multiple changes to client group policies",
 
-  "dtInheritClientConf": "Inherit client rule settings",
-  "msgInheritClientConf": "Are you sure you want to inherit client rule settings?",
-  "msgApplyClientConfChild": "The client rule settings has been applied to the subgroup.",
+  "dtInheritClientConf": "Inherit agent settings",
+  "msgInheritClientConf": "Are you sure you want to inherit agent settings?",
+  "msgApplyClientConfChild": "The agent settings has been applied to the subgroup.",
 
   "dtInheritHosts": "Inherit hosts information",
   "msgInheritHosts": "Are you sure you want to inherit hosts information?",
@@ -901,6 +905,8 @@ export default {
 
   "dtInheritUpdateServer": "Inherit update server information",
   "msgInheritUpdateServer": "Are you sure you want to inherit update server information?",
-  "msgApplyUpdateServerChild": "The update server information has been applied to the subgroup."
+  "msgApplyUpdateServerChild": "The update server information has been applied to the subgroup.",
+
+  "lbAdminActHistory": "Admin Action History"
 
 };

@@ -61,43 +61,42 @@ class UserInfoDialog extends Component {
                     <DialogContent>
                         <Grid container spacing={16}>
                             <Grid item xs={12} md={6}>
-                                <ClientHostNameSpec specType="inform" targetType="" simpleTitle={true}
+                                <ClientHostNameSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'hostNameConfMap'])}
                                 />
                             </Grid>
                             <Grid item xs={12} md={6} >
-                                <ClientUpdateServerSpec specType="inform" targetType="" simpleTitle={true}
+                                <ClientUpdateServerSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'updateServerConfMap'])}
                                 />
                             </Grid>
                             <Grid item xs={12} md={6} >
-                                <ClientConfSettingSpec specType="inform" targetType="" simpleTitle={true}
+                                <ClientConfSettingSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'clientConfMap'])}
                                 />
                             </Grid>
-
                             <Grid item xs={12} md={6} >
-                                <BrowserRuleSpec specType="inform" targetType="" simpleTitle={true}
+                                <BrowserRuleSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'browserRuleMap'])}
                                 />
                             </Grid>
                             <Grid item xs={12} md={6} >
-                                <MediaRuleSpec specType="inform" targetType="" simpleTitle={true}
+                                <MediaRuleSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'mediaRuleMap'])}
                                 />
                             </Grid>
                             <Grid item xs={12} md={6} >
-                                <SecurityRuleSpec specType="inform" targetType="" simpleTitle={true}
+                                <SecurityRuleSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'securityRuleMap'])}
                                 />
                             </Grid>
                             <Grid item xs={12} md={12} >
-                                <SoftwareFilterSpec specType="inform" targetType="" simpleTitle={true}
+                                <SoftwareFilterSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'filteredSwRuleMap'])}
                                 />
                             </Grid>
                             <Grid item xs={12} md={12} >
-                                <DesktopConfSpec specType="inform" targetType="" simpleTitle={true}
+                                <DesktopConfSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'desktopConfMap'])}
                                 />
                             </Grid>

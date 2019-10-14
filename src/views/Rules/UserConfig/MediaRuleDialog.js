@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -87,7 +88,16 @@ class MediaRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddMediaRule"),
                 confirmMsg: t("msgAddMediaRule"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { MediaRuleProps, MediaRuleActions } = this.props;
+                        MediaRuleActions.createMediaRuleData(MediaRuleProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: MediaRuleProps.get('editingItem')
             });
         } else {
@@ -96,16 +106,6 @@ class MediaRuleDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { MediaRuleProps, MediaRuleActions } = this.props;
-            MediaRuleActions.createMediaRuleData(MediaRuleProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -117,7 +117,16 @@ class MediaRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditMediaRule"),
                 confirmMsg: t("msgEditMediaRule"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { MediaRuleProps, MediaRuleActions } = this.props;
+                        MediaRuleActions.editMediaRuleData(MediaRuleProps.get('editingItem'), this.props.compId)
+                            .then((res) => {
+                                refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: MediaRuleProps.get('editingItem')
             });
         } else {
@@ -128,25 +137,15 @@ class MediaRuleDialog extends Component {
             }
         }
     }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { MediaRuleProps, MediaRuleActions } = this.props;
-            MediaRuleActions.editMediaRuleData(MediaRuleProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(MediaRuleProps, MediaRuleActions.readMediaRuleListPaged);
-                    this.handleClose();
-                });
-        }
-    }
 
     handleInheritSaveDataForDept = (event, id) => {
         const { MediaRuleProps, DeptProps, MediaRuleActions, compId } = this.props;
         const { t, i18n } = this.props;
-        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+        const deptCd = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']);
 
         MediaRuleActions.inheritMediaRuleDataForDept({
             'objId': MediaRuleProps.getIn(['editingItem', 'objId']),
-            'deptCd': selectedDeptCd
+            'deptCd': deptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
@@ -261,7 +260,7 @@ class MediaRuleDialog extends Component {
                     {(dialogType === MediaRuleDialog.TYPE_EDIT || dialogType === MediaRuleDialog.TYPE_ADD) &&
                         <div>
                         <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={3}>
+                            <Grid item xs={4}>
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('cdAndDvd')} 
                                         checked={this.checkAllow(editingItem.get('cdAndDvd'))}
@@ -269,7 +268,7 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('cdAndDvd') == 'allow') ? t("selCdDvdOn") : t("selCdDvdOff")}
                                 />
                             </Grid>
-                            <Grid item xs={3} >
+                            <Grid item xs={4} >
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('printer')} 
                                         checked={this.checkAllow(editingItem.get('printer'))}
@@ -277,7 +276,7 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('printer') == 'allow') ? t("selPrinterOn") : t("selPrinterOff")}
                                 />
                             </Grid>
-                            <Grid item xs={3} >
+                            <Grid item xs={4} >
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('camera')} 
                                         checked={this.checkAllow(editingItem.get('camera'))}
@@ -287,15 +286,7 @@ class MediaRuleDialog extends Component {
                             </Grid>
                         </Grid>
                         <Grid container alignItems="center" direction="row" justify="space-between" >
-                            <Grid item xs={3}>
-                                <FormControlLabel style={{heigth:32}}
-                                    control={<Switch onChange={this.handleValueChange('sound')} 
-                                        checked={this.checkAllow(editingItem.get('sound'))}
-                                        color="primary" />}
-                                    label={(editingItem.get('sound') == 'allow') ? t("selSoundOn") : t("selSoundOff")}
-                                />
-                            </Grid>
-                            <Grid item xs={3} >
+                            <Grid item xs={4} >
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('wireless')} 
                                         checked={this.checkAllow(editingItem.get('wireless'))}
@@ -303,7 +294,15 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('wireless') == 'allow') ? t("selWifiOn") : t("selWifiOff")}
                                 />
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item xs={4}>
+                                <FormControlLabel style={{heigth:32}}
+                                    control={<Switch onChange={this.handleValueChange('sound')} 
+                                        checked={this.checkAllow(editingItem.get('sound'))}
+                                        color="primary" />}
+                                    label={(editingItem.get('sound') == 'allow') ? t("selSoundOn") : t("selSoundOff")}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('keyboard')} 
                                         checked={this.checkAllow(editingItem.get('keyboard'))}
@@ -311,7 +310,9 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('keyboard') == 'allow') ? t("selUsbKeyboardOn") : t("selUsbKeyboardOff")}
                                 />
                             </Grid>
-                            <Grid item xs={3} >
+                        </Grid>
+                        <Grid container alignItems="center" direction="row" justify="space-between" >
+                            <Grid item xs={4} >
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('mouse')} 
                                         checked={this.checkAllow(editingItem.get('mouse'))}
@@ -319,6 +320,7 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('mouse') == 'allow') ? t("selUsbMouseOn") : t("selUsbMouseOff")}
                                 />
                             </Grid>
+                            <Grid item xs={8} ></Grid>
                         </Grid>
                         <Grid container alignItems="flex-start" direction="row" justify="space-between" >
                             <Grid item xs={6}>
@@ -338,7 +340,12 @@ class MediaRuleDialog extends Component {
                                     <List>
                                     {editingItem.get('macAddress') && editingItem.get('macAddress').size > 0 && editingItem.get('macAddress').map((value, index) => (
                                         <ListItem key={index} style={{padding:0}} >
-                                            <Input value={value} onChange={this.handleBluetoothMacValueChange(index)} fullWidth={true} style={{padding:0}} />
+                                            <TextValidator style={{padding:0}} fullWidth={true}
+                                                name="macAddr" validators={['matchRegexp:^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$']}
+                                                errorMessages={[t("msgInvalidMacAddress")]}
+                                                value={value}
+                                                onChange={this.handleBluetoothMacValueChange(index)}
+                                            />
                                             <IconButton onClick={this.handleDeleteBluetoothMac(index)}>
                                                 <DeleteForeverIcon />
                                             </IconButton>
@@ -422,10 +429,9 @@ class MediaRuleDialog extends Component {
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
-                <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

@@ -16,6 +16,7 @@ import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
 import DividedAdminManageDialog from './DividedAdminManageDialog';
+import DividedAdminHistDialog from './DividedAdminHistDialog';
 import DividedAdminManageSpec from './DividedAdminManageSpec';
 import GRPane from 'containers/GRContent/GRPane';
 
@@ -23,12 +24,9 @@ import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
-import TextField from '@material-ui/core/TextField';
 import FormControl from '@material-ui/core/FormControl';
 
 import Button from '@material-ui/core/Button';
@@ -36,7 +34,7 @@ import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ListIcon from '@material-ui/icons/List';
+import HistoryIcon from '@material-ui/icons/Assignment';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -98,13 +96,13 @@ class DividedAdminManage extends Component {
 
   // create dialog
   handleCreateButton = () => {
-    const { AdminUserProps, AdminUserActions } = this.props;
-    AdminUserActions.showDialog({
+    this.props.AdminUserActions.showDialog({
       viewItem: Map({
         deptInfoList: List([]), 
         userInfoList: List([]), 
         grpInfoList: List([]), 
-        clientInfoList: List([])
+        clientInfoList: List([]),
+        connIps: List(['*'])
       }),
       dialogType: DividedAdminManageDialog.TYPE_ADD
     });
@@ -145,6 +143,15 @@ class DividedAdminManage extends Component {
       }
     });
   };
+  
+  // show adming action history
+  handleHistoryClick = (event, adminId) => {
+    const { AdminUserProps, AdminUserActions } = this.props;
+    const viewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, adminId, 'adminId');
+    AdminUserActions.showHistDialog({
+      viewItem: viewItem
+    });
+  };
 
   // .................................................
   handleKeywordChange = (name, value) => {
@@ -161,24 +168,13 @@ class DividedAdminManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const columnHeader_FULL = [
-      { id: 'ch1', isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
-      { id: 'ch2', isOrder: true, numeric: false, disablePadding: true, label: "이름" },
-      { id: 'ch201', isOrder: false, numeric: false, disablePadding: true, label: "상태" },
-      { id: 'ch101', isOrder: false, numeric: false, disablePadding: true, label: "대상조직" },
-      { id: 'ch102', isOrder: false, numeric: false, disablePadding: true, label: "대상단말그룹" },
-      { id: 'ch3', isOrder: false, numeric: false, disablePadding: true, label: "단말관리" },
-      { id: 'ch4', isOrder: false, numeric: false, disablePadding: true, label: "사용자관리" },
-      { id: 'ch5', isOrder: false, numeric: false, disablePadding: true, label: "정책관리" },
-      { id: 'ch6', isOrder: false, numeric: false, disablePadding: true, label: "데스크톱환경관리" },
-      { id: 'ch7', isOrder: false, numeric: false, disablePadding: true, label: "공지관리" },
-      { id: 'ch99', isOrder: false, numeric: false, disablePadding: true, label: "수정/삭제" },
-    ];
     const columnHeaders = [
-      { id: 'ch1', isOrder: true, numeric: false, disablePadding: true, label: "아이디" },
-      { id: 'ch2', isOrder: true, numeric: false, disablePadding: true, label: "이름" },
-      { id: 'ch201', isOrder: false, numeric: false, disablePadding: true, label: "상태" },
-      { id: 'ch99', isOrder: false, numeric: false, disablePadding: true, label: "수정/삭제" },
+      { id: 'ch1', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
+      { id: 'ch2', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
+      { id: 'ch201', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'createUser', isOrder: false, numeric: false, disablePadding: true, label: t("colCreateUser") },
+      { id: 'ch99', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
+      { id: 'ch90', isOrder: false, numeric: false, disablePadding: true, label: t("colActHistory") },
     ];
 
     const listObj = AdminUserProps.getIn(['viewItems', compId]);
@@ -192,24 +188,29 @@ class DividedAdminManage extends Component {
         <GRPageHeader name={t(this.props.match.params.grMenuName)} />
         <GRPane>
           {/* data option area */}
-          <Grid container alignItems="flex-end" direction="row" justify="space-between" >
+          <Grid container spacing={24} alignItems="flex-end" direction="row" justify="space-between" >
             <Grid item xs={6} >
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={6} >
                   <FormControl fullWidth={true}>
-                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                    <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                      handleKeywordChange={this.handleKeywordChange} 
+                      handleSubmit={() => this.handleSelectBtnClick()}  
+                    />
                   </FormControl>
                 </Grid>
-                <Grid item xs={6} >
+                <Grid item xs={2} >
                   <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
-                    <Search />조회
+                    <Search />{t("btnSearch")}
                   </Button>
+                </Grid>
+                <Grid item xs={4} >
                 </Grid>
               </Grid>
             </Grid>
             <Grid item xs={6} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-                <AddIcon />등록
+                <AddIcon />{t("btnRegist")}
               </Button>
             </Grid>
           </Grid>
@@ -228,6 +229,7 @@ class DividedAdminManage extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+
                   return (
                     <TableRow
                       hover
@@ -236,20 +238,8 @@ class DividedAdminManage extends Component {
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('status')}</TableCell>
-{/* 
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{
-                        (n.get('deptInfoList').size > 0) ? ((n.get('deptInfoList').size > 1) ? n.getIn(['deptInfoList', 0, 'name']) + '+' : n.getIn(['deptInfoList', 0, 'name'])) : '-'
-                      }</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{
-                        (n.get('grpInfoList').size > 0) ? ((n.get('grpInfoList').size > 1) ? n.getIn(['grpInfoList', 0, 'name']) + '+' : n.getIn(['grpInfoList', 0, 'name'])) : '-'
-                      }</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isClientAdmin')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isUserAdmin')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isRuleAdmin')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isDesktopAdmin')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('isNoticeAdmin')}</TableCell>
-*/}                                            
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('adminId'))}>
@@ -258,6 +248,12 @@ class DividedAdminManage extends Component {
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleDeleteClick(event, n.get('adminId'))}>
                           <DeleteIcon />
+                        </Button>
+                      </TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                        <Button size="small" color="secondary" className={classes.buttonInTableRow} 
+                          onClick={event => this.handleHistoryClick(event, n.get('adminId'))}>
+                          <HistoryIcon />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -291,13 +287,14 @@ class DividedAdminManage extends Component {
             />
             </div>
           }
-        </GRPane>
-        {/* dialog(popup) component area */}
-        <DividedAdminManageDialog compId={compId} />
         <DividedAdminManageSpec compId={compId} specType="inform"
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
           onClickEdit={(event, id) => this.handleEditClick(event, id)}
         />
+        </GRPane>
+        {/* dialog(popup) component area */}
+        <DividedAdminManageDialog compId={compId} />
+        <DividedAdminHistDialog compId={compId} />
         <GRConfirm />
       </React.Fragment>
     );
@@ -305,7 +302,8 @@ class DividedAdminManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  AdminUserProps: state.AdminUserModule
+  AdminUserProps: state.AdminUserModule,
+  CommonOptionProps: state.CommonOptionModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

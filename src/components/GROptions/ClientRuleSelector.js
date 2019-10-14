@@ -27,7 +27,6 @@ import BrowserRuleSelector from 'views/Rules/UserConfig/BrowserRuleSelector';
 import MediaRuleSelector from 'views/Rules/UserConfig/MediaRuleSelector';
 import SecurityRuleSelector from 'views/Rules/UserConfig/SecurityRuleSelector';
 import SoftwareFilterSelector from 'views/Rules/UserConfig/SoftwareFilterSelector';
-
 import DesktopConfSelector from 'views/Rules/DesktopConfig/DesktopConfSelector';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -133,7 +132,7 @@ class ClientRuleSelector extends Component {
                         textColor="primary"
                         onChange={this.handleChangeTabs}
                     >
-                        <Tab label={t("lbClientConf")} value={0}/>
+                        <Tab label={t("lbClientSetup")} value={0}/>
                         <Tab label={t("lbHosts")} value={1} />
                         <Tab label={t("lbUpdateServer")} value={2} />
                         <Tab label={t("lbBrowserRule")} value={3} />
@@ -168,6 +167,7 @@ const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
+
     DesktopConfProps: state.DesktopConfModule
 });
   
@@ -180,6 +180,7 @@ const mapDispatchToProps = (dispatch) => ({
     MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
     SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
     SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+
     DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
 });
 

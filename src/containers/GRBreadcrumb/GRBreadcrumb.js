@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
 import menuItems from "containers/GRSideMenu/GRMenuItems";
+
 import { ListItemSecondaryAction } from "@material-ui/core";
 import { translate, Trans } from "react-i18next";
 
@@ -37,6 +38,7 @@ class GRBreadcrumb extends Component {
     const { classes, pathname } = this.props;
     const { t, i18n } = this.props;
     const pathTitle = this.getPathTitle(menuItems.items, pathname, 'home');
+    
     return (
       <div>
         <ol className={classes.breadcrumbRoot}>

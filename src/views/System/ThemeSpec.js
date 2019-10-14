@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import { Map, List } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -32,7 +29,7 @@ class ThemeSpec extends Component {
   render() {
 
     const { classes } = this.props;
-    const { compId, selectedItem } = this.props;
+    const { compId, selectedItem, isEditable } = this.props;
 
     let viewItem = null;
     if(selectedItem) {
@@ -47,17 +44,24 @@ class ThemeSpec extends Component {
             <CardHeader
               title={viewItem.get('themeNm')}
               subheader={viewItem.get('themeCmt')}
-              action={
+              action={(isEditable) ?
                 <div style={{width:48,paddingTop:10}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(viewItem)}
                   ><SettingsApplicationsIcon /></Button>
-                </div>
+                </div> : <div></div>
               }
             ></CardHeader>
             <CardContent>
               <Grid container >
+
+                <Grid item xs={12}>
+                  <Card style={{ textAlign:'center', padding:'17px', backgroundColor:'#eaeaea', border:'10px solid #d3d3d3' }}>
+                    <img src={viewItem.get('wallpaperUrl')} width="500" style={{ border: '5px solid white' }} ></img>
+                  </Card>
+                </Grid>
+
                 {viewItem.get('themeIcons').map(n => {
                   const iconUrl = n.get('imgUrl') + n.get('fileName');
                   return (

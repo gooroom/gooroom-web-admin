@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -147,17 +146,16 @@ class ClientRegKey extends Component {
     const { classes } = this.props;
     const { ClientRegKeyProps } = this.props;
     const { t, i18n } = this.props;
+    const compId = this.props.match.params.grMenuId;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: 'chRegKey', isOrder: true, numeric: false, disablePadding: true, label: t("colClientRegKey") },
       { id: 'chValidDate', isOrder: true, numeric: false, disablePadding: true, label: t("colKeyValidDate") },
       { id: 'chExpireDate', isOrder: true, numeric: false, disablePadding: true, label: t("colCertExpireDate") },
-      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
     ];
-  
-
-    const compId = this.props.match.params.grMenuId;
 
     const listObj = ClientRegKeyProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -175,7 +173,10 @@ class ClientRegKey extends Component {
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={6} >
                   <FormControl fullWidth={true}>
-                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                    <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                      handleKeywordChange={this.handleKeywordChange} 
+                      handleSubmit={() => this.handleSelectBtnClick()} 
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={6} >
@@ -206,6 +207,7 @@ class ClientRegKey extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+
                   return (
                     <TableRow
                       hover
@@ -216,14 +218,15 @@ class ClientRegKey extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('validDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('expireDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        <Button size="small" color="secondary" 
-                          className={classes.buttonInTableRow} 
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('regKeyNo'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-                        <Button size="small" color="secondary" 
-                          className={classes.buttonInTableRow} 
+                        <Button color="secondary" size="small" 
+                          className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('regKeyNo'))}>
                           <DeleteIcon />
                         </Button>
@@ -269,7 +272,8 @@ class ClientRegKey extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientRegKeyProps: state.ClientRegKeyModule
+  ClientRegKeyProps: state.ClientRegKeyModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

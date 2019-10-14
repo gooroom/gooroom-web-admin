@@ -45,7 +45,12 @@ import { translate, Trans } from "react-i18next";
 class ClientManageComp extends Component {
 
   componentDidMount() {
-    this.props.ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {}, {isResetSelect:false, isInitParam:true});
+    const { ClientManageActions, ClientManageProps, compId } = this.props;
+    if(ClientManageProps.getIn(['viewItems', compId, 'listParam']) === undefined) {
+      ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {}, {isResetSelect:false, isInitParam:true});
+    } else {
+      ClientManageActions.readClientListPaged(this.props.ClientManageProps, this.props.compId, {});
+    }
   }
 
   handleChangePage = (event, page) => {
@@ -189,12 +194,17 @@ class ClientManageComp extends Component {
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4} >
             <FormControl fullWidth={true}>
-              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} 
+                value={(listObj && listObj.getIn(['listParam', 'clientType'])) ? listObj.getIn(['listParam', 'clientType']) : 'ALL'} 
+              />
             </FormControl>
           </Grid>
           <Grid item xs={4} >
             <FormControl fullWidth={true}>
-              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+              <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+              handleKeywordChange={this.handleKeywordChange} 
+              handleSubmit={() => this.handleSelectBtnClick()} 
+            />
             </FormControl>
           </Grid>
           <Grid item xs={4} >
@@ -259,7 +269,7 @@ class ClientManageComp extends Component {
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{(n.get('isOn') == '1') ? ((n.get('loginId') && n.get('loginId').startsWith('+')) ? n.get('loginId').substring(1) + " [LU]" : n.get('loginId')) : ''}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('clientGroupName')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('clientGroupName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{formatDateToSimple(n.get('lastLoginTime'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientIp')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >

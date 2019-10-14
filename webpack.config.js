@@ -89,7 +89,14 @@ module.exports = (env = {}) => {
       ]
     },
   
-    plugins: [new webpack.HotModuleReplacementPlugin(),
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          BUILD_DATE: `'${new Date().toISOString().slice(4,10).replace(/-/g,"")}'`,
+          VERSION: `'v1.4'`
+        }
+      }),
+      new webpack.HotModuleReplacementPlugin(),
       new webpack.optimize.UglifyJsPlugin({sourceMap: true}),
       extractCSS,
       extractSCSS,

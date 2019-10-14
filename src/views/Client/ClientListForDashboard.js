@@ -13,6 +13,8 @@ import KeywordOption from "views/Options/KeywordOption";
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 
 import Grid from '@material-ui/core/Grid';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
 
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -42,6 +44,7 @@ class ClientListForDashboard extends Component {
         listData: List([]),
         listParam: Map({
           clientType: 'ONLINE',
+          viewType: 'all',
           groupId: '',
           keyword: '',
           orderDir: 'asc',
@@ -61,6 +64,7 @@ class ClientListForDashboard extends Component {
 
     requestPostAPI('readClientListPaged', {
       clientType: 'ONLINE',
+      viewType: newListParam.get('viewType'),
       keyword: newListParam.get('keyword'),
       page: newListParam.get('page'),
       start: newListParam.get('page') * newListParam.get('rowsPerPage'),
@@ -76,6 +80,7 @@ class ClientListForDashboard extends Component {
           stateData: stateData
             .set('listData', List(data.map((e) => {return Map(e)})))
             .set('listParam', newListParam.merge({
+              viewType: newListParam.get('viewType'),
               rowsFiltered: parseInt(recordsFiltered, 10),
               rowsTotal: parseInt(recordsTotal, 10),
               page: parseInt(draw, 10),
@@ -160,13 +165,22 @@ class ClientListForDashboard extends Component {
   handleClickPackageInfo = (type, clientId) => {
     this.props.onClickShowPackageInfo(type, clientId);
   }
+
+  handleChangeListView = type => event => {
+    const { stateData } = this.state;
+    const newListParam = (stateData.get('listParam')).merge({
+      page: 0,
+      viewType: type
+    });
+    this.handleGetClientList(newListParam);
+  }
   
   render() {
     const { classes } = this.props;
     const { t, i18n } = this.props;
 
     const columnHeaders = [
-      { id: 'STATUS_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: 'STATUS_CD', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
       { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
       { id: 'CLIENT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientName") },
       { id: 'GROUP_NAME', isOrder: true, numeric: false,disablePadding: true,label: t("colClientGroup") },
@@ -179,19 +193,39 @@ class ClientListForDashboard extends Component {
     ];
 
     const listObj = this.state.stateData;
+    const listViewType = listObj.getIn(['listParam', 'viewType']);
+    let emptyRows = 0; 
+    if(listObj && listObj.get('listData')) {
+      emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
+    }
     
     return (
       <div style={{paddingTop:10}}>
       <Grid container spacing={0} >
+        <Grid item xs={6}>
+        <Grid container spacing={0} >
         <Grid item>
         <Typography style={{margin:'2px 8px',fontWeight:'bold'}}>
           Online Client List
         </Typography>
         </Grid>
-        <Grid item>
+        <Grid item xs={3}>
         <Button className={classes.GRIconSmallButton} style={{minWidth:25,marginRight:10}}
           variant="contained" color={"primary"} 
           onClick={this.handleClickRefresh} ><RefreshIcon /></Button>
+        </Grid>
+        </Grid>
+        </Grid>
+        <Grid item xs={6} style={{textAlign:'right'}}>
+          <FormControlLabel value="2" control={
+            <Radio color="primary" value="2" onChange={this.handleChangeListView('all')} checked={listViewType === 'all'} />
+          } label={t("stAll")} labelPlacement="end" />
+          <FormControlLabel value="1" control={
+              <Radio color="primary" value="1" onChange={this.handleChangeListView('violated')} checked={listViewType === 'violated'} />
+          } label={t("stViolatedClient")} labelPlacement="end" />
+          <FormControlLabel value="0" control={
+              <Radio color="primary" value="0" onChange={this.handleChangeListView('normal')} checked={listViewType === 'normal'} />
+          } label={t("stNormalClient")} labelPlacement="end" />
         </Grid>
       </Grid>
       {(listObj) &&
@@ -206,7 +240,6 @@ class ClientListForDashboard extends Component {
           />
           <TableBody>
             {listObj.get('listData').map(n => {
-
               let storageRate = '';
               let storageInfo = '';
               if(n.get('strgSize') && n.get('strgSize') > 0 && n.get('strgUse') && n.get('strgUse') > 0) {
@@ -225,27 +258,27 @@ class ClientListForDashboard extends Component {
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientName')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell} >{n.get('clientGroupName')}</TableCell>
-                  {(n.get('loginId') !== '-') && 
+                  {(n.get('loginId') !== undefined && n.get('loginId') !== '-' && n.get('loginId') !== '') && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell} 
                       style={{fontWeight:'bold',textDecoration:'underline'}}
                       onClick={() => this.handleClickShowUserInfo(n.get('loginId'), n.get('clientId'))}>
                       {(n.get('loginId').startsWith('+')) ? n.get('loginId').substring(1) + " [LU]" : n.get('loginId')}
                     </TableCell>
                   }
-                  {(n.get('loginId') === '-' || n.get('loginId') === '') && 
+                  {(n.get('loginId') === undefined || n.get('loginId') === '-' || n.get('loginId') === '') && 
                     <TableCell className={classes.grSmallAndClickAndCenterCell} >
                     {n.get('loginId')}
                     </TableCell>
                   }
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{formatDateToSimple(n.get('lastLoginTime'), 'YY-MM-DD HH:mm')}</TableCell>
-                  {(n.get('isProtector') == '1') && 
+                  {(n.get('isProtector') === '1') && 
                   <TableCell className={classes.grSmallAndClickAndCenterCell} 
                     style={{color:'red',fontWeight:'bold',textDecoration:'underline'}}
                     onClick={() => this.handleClickViolatedItem('ALL', n.get('clientId'))}>
                     {Number(n.get('countBootProtector')) + Number(n.get('countExeProtector')) + Number(n.get('countOsProtector')) + Number(n.get('countMediaProtector'))}
                   </TableCell>
                   }
-                  {(n.get('isProtector') == '0') && 
+                  {(n.get('isProtector') !== '1') && 
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >0</TableCell>
                   }
                   <TableCell className={classes.grSmallAndClickAndCenterCell} >{n.get('clientIp')}</TableCell>
@@ -268,6 +301,14 @@ class ClientListForDashboard extends Component {
                 </TableRow>
               );
             })}
+            {emptyRows == listObj.getIn(['listParam', 'rowsPerPage']) &&
+              <TableRow>
+                <TableCell
+                  colSpan={columnHeaders.length + 1}
+                  className={classes.grSmallAndClickCell}
+                />
+              </TableRow>
+            }
           </TableBody>
         </Table>
       }

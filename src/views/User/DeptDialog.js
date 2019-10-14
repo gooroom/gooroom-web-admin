@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
+
 import * as DeptActions from 'modules/DeptModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
@@ -61,23 +61,30 @@ class DeptDialog extends Component {
                     if(confirmValue) {
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
                         const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
-                        const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
+                        const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
                         DeptActions.createDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                             deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-                            uprDeptCd: DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']),
+                            uprDeptCd: DeptProps.getIn(['editingItem', 'parentDeptCd']),
             
-                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                         }).then((res) => {
-                            // DeptActions.readDeptListPaged(DeptProps, compId);
-                            // tree refresh
-                            const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd'])));
-                            resetCallback(listItem);
-                            this.handleClose();
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh
+                                const index = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).findIndex(n => (n.get('key') === DeptProps.getIn(['editingItem', 'parentDeptCd'])));
+                                resetCallback(index);
+                                this.handleClose();
+                            }
                         }).catch((err) => {
                             console.log('handleCreateData - err :::: ', err);
                         });
@@ -95,7 +102,7 @@ class DeptDialog extends Component {
     }
 
     handleEditData = (event) => {
-        const { DeptProps, GRConfirmActions } = this.props;
+        const { GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showCheckConfirm({
@@ -107,23 +114,32 @@ class DeptDialog extends Component {
                         const isInherit = isChecked;
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
                         const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
-                        const selecteObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
+                        const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
                         DeptActions.editDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                             deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
                 
                             paramIsInherit: (isInherit) ? 'Y' : 'N',
                 
-                            browserRuleId: BrowserRuleProps.getIn(selecteObjectIdName),
-                            mediaRuleId: MediaRuleProps.getIn(selecteObjectIdName),
-                            securityRuleId: SecurityRuleProps.getIn(selecteObjectIdName),
-                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selecteObjectIdName),
-                            desktopConfId: DesktopConfProps.getIn(selecteObjectIdName)
+                            browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                         }).then((res) => {
-                            // tree refresh
-                            const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['editingItem', 'deptCd'])));
-                            resetCallback(listItem);
-                            this.handleClose();
+
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh for edit
+                                const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['editingItem', 'deptCd'])));
+                                resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
+                                this.handleClose();
+                            }
                         });
                     }
                 },
@@ -158,9 +174,15 @@ class DeptDialog extends Component {
             editObject = DeptProps.get('editingItem').toJS();
         }
 
-        const upperDeptInfo = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptNm']) +
-            ' (' + DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']) + ')';
-
+        const checkedDeptCd = DeptProps.getIn(['viewItems', compId, 'treeComp', 'checked']);
+        let upperDeptInfo = '';
+        if(checkedDeptCd !== undefined && checkedDeptCd.length > 0) {
+            const upperItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedDeptCd[0]));
+            if(upperItem) {
+                upperDeptInfo = `${upperItem.get('title')} (${checkedDeptCd[0]})`;
+            }
+        }
+    
         return (
             <div>
             {(DeptProps.get('dialogOpen') && editingItem) &&
@@ -232,7 +254,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     DeptActions: bindActionCreators(DeptActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(DeptDialog)));

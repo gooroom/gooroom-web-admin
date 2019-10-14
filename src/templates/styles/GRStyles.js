@@ -279,44 +279,6 @@ export const GRCommonStyle = theme => ({
         right: 0,
         width: 30
     },
-    
-    // notice manager
-    noticeContentCard: {
-        boxShadow: 'initial',
-        backgroundColor: 'initial'
-    },
-    noticeContentCardHeader: {
-        padding: '14.5px',
-        textAlign: 'center'
-    },
-    noticeContentCardHeaderTitle: {
-        fontSize: '0.75rem',
-        color: 'rgba(0, 0, 0, 0.54);'
-    },
-    noticeContentCardContent: {
-        overflow: 'auto',
-        borderTop: '1px solid rgba(224, 224, 224, 1)',
-        borderBottom: '1px solid rgba(224, 224, 224, 1)',
-        padding: '0 16px'
-    },
-    noticeDialogContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100%',
-        outline: 'none'
-    },
-    noticeDialogHeader: {
-        padding: '24px 24px 20px'
-    },
-    noticeDialogContent: {
-        padding: '0 24px 24px'
-    },
-    noticeDialogActions: {
-        justifyContent: 'flex-end'
-    },
-
-
 
     // COMMON ----------------------------------------------------
     fullWidth: {
@@ -387,14 +349,25 @@ export const GRCommonStyle = theme => ({
         padding: "0px",
         cursor: "pointer"
     },
+    grSmallAndClickCellAndBreak: {
+        padding: "0px",
+        cursor: "pointer",
+        wordBreak: "break-all"
+    },
     grSmallAndClickAndNumericCell: {
         padding: "0px 10px 0px 0px",
-        cursor: "pointer"
+        cursor: "pointer",
     },
     grSmallAndClickAndCenterCell: {
         padding: "0px 0px 0px 0px",
         cursor: "pointer",
         textAlign: "center"
+    },
+    grSmallAndClickAndCenterCellAndBreak: {
+        padding: "0px 0px 0px 0px",
+        cursor: "pointer",
+        textAlign: "center",
+        wordBreak: "break-all"
     },
     grSmallAndClickAndRightCell: {
         padding: "0px 0px 0px 0px",
@@ -407,6 +380,13 @@ export const GRCommonStyle = theme => ({
 
     grSelectedRow: {
         backgroundColor: theme.palette.secondary.light + " !important"
+    },
+
+    grDefaultRuleRow: {
+        backgroundColor: "#fae9dc"
+    },
+    grStandardRuleRow: {
+        backgroundColor: "#faf8e4"
     },
 
     // root: {
