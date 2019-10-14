@@ -25,6 +25,15 @@ import { translate, Trans } from "react-i18next";
 
 class SoftwareFilterSpec extends Component {
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { selectedItem } = nextProps;
+    if(selectedItem !== undefined && selectedItem !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   render() {
 
     const { classes } = this.props;
@@ -52,12 +61,12 @@ class SoftwareFilterSpec extends Component {
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><EditIcon /></Button>
-                  {(this.props.onClickCopy) &&
+                  {(this.props.onClickCopy && !selectedItem.get('objId').endsWith('DEFAULT')) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
-                  {(this.props.inherit && !(selectedItem.get('isDefault'))) && 
+                  {(this.props.inherit) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>

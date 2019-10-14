@@ -15,6 +15,7 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
 import { generateBrowserRuleObject } from 'views/Rules/UserConfig/BrowserRuleSpec';
@@ -162,7 +163,7 @@ class DeptSpec extends Component {
 
   // .................................................
   render() {
-    const { DeptProps, compId } = this.props;
+    const { DeptProps, compId, AdminProps, isEditable } = this.props;
 
     const informOpen = DeptProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = DeptProps.getIn(['viewItems', compId, 'viewItem']);
@@ -181,14 +182,15 @@ class DeptSpec extends Component {
         <Card>
           <CardHeader
             title={viewItem.get('deptNm')}
+            style={{wordBreak:'break-all'}}
             subheader={viewItem.get('deptCd')}
-            action={
+            action={ (isEditable) ?
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
                   variant="outlined" color="primary" style={{minWidth:32}}
                   onClick={() => this.handleClickEdit(viewItem, compId)}
                 ><SettingsApplicationsIcon /></Button>
-              </div>
+              </div> : <div></div>
             }
           ></CardHeader>
           <Divider />
@@ -202,6 +204,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForBrowserRule}
                   onClickInherit={this.handleClickInheritForBrowserRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedBrowserRuleItem && AdminProps.get('adminId') === selectedBrowserRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -211,6 +214,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForMediaRule}
                   onClickInherit={this.handleClickInheritForMediaRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedMediaRuleItem && AdminProps.get('adminId') === selectedMediaRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} md={12} lg={6} xl={4} >
@@ -220,6 +224,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForSecurityRule}
                   onClickInherit={this.handleClickInheritForSecurityRule}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedSecurityRuleItem && AdminProps.get('adminId') === selectedSecurityRuleItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -229,6 +234,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForSoftwareFilter}
                   onClickInherit={this.handleClickInheritForSoftwareFilter}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedSoftwareFilterItem && AdminProps.get('adminId') === selectedSoftwareFilterItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
@@ -238,6 +244,7 @@ class DeptSpec extends Component {
                   onClickEdit={this.handleClickEditForDesktopConf}
                   onClickInherit={this.handleClickInheritForDesktopConf}
                   inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedDesktopConfItem && AdminProps.get('adminId') === selectedDesktopConfItem.getIn(['viewItem', 'regUserId'])}
                 />
               </Grid>
             </Grid>
@@ -253,6 +260,7 @@ class DeptSpec extends Component {
 const mapStateToProps = (state) => ({
   UserProps: state.UserModule,
   DeptProps: state.DeptModule,
+  AdminProps: state.AdminModule,
 
   MediaRuleProps: state.MediaRuleModule,
   BrowserRuleProps: state.BrowserRuleModule,

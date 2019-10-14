@@ -116,6 +116,13 @@ class DailyLoginCountManage extends Component {
     if(listObj && listObj.get('listAllData')) {
       data = listObj.get('listAllData').toJS().map((e) => {
         e.logDate = formatDateToSimple(e.logDate, 'MM/DD');
+        e.clientAll = Number(e.clientAll);
+        e.clientSuccess = Number(e.clientSuccess);
+        e.loginAll = Number(e.loginAll);
+        e.loginFail = Number(e.loginFail);
+        e.loginSuccess = Number(e.loginSuccess);
+        e.userAll = Number(e.userAll);
+        e.userSuccess = Number(e.userSuccess);
         return e;
       });
     }
@@ -164,7 +171,7 @@ class DailyLoginCountManage extends Component {
             <ResponsiveContainer width='100%' height={300} >
               <LineChart data={data} margin={{top: 30, right: 20, left: 0, bottom: 30}}>
                 <XAxis dataKey="logDate" />
-                <YAxis type="number" domain={[0, 'dataMax + 5']} />
+                <YAxis type="number" domain={[0, 'dataMax + 2']} />
                 <CartesianGrid strokeDasharray="3 3"/>
                 <Tooltip />
                 <Legend />
@@ -178,7 +185,7 @@ class DailyLoginCountManage extends Component {
             <ResponsiveContainer width='100%' height={300} >
               <LineChart data={data} margin={{top: 30, right: 20, left: 0, bottom: 30}}>
                 <XAxis dataKey="logDate" />
-                <YAxis type="number" domain={[0, 'dataMax + 5']} />
+                <YAxis type="number" domain={[0, 'dataMax + 2']} />
                 <CartesianGrid strokeDasharray="3 3"/>
                 <Tooltip />
                 <Legend />
@@ -191,7 +198,7 @@ class DailyLoginCountManage extends Component {
             <ResponsiveContainer width='100%' height={300} >
               <LineChart data={data} margin={{top: 30, right: 20, left: 0, bottom: 30}}>
                 <XAxis dataKey="logDate" />
-                <YAxis type="number" domain={[0, 'dataMax + 5']} />
+                <YAxis type="number" domain={[0, 'dataMax + 2']} />
                 <CartesianGrid strokeDasharray="3 3"/>
                 <Tooltip />
                 <Legend />

@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -13,7 +11,6 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
-import GRAlert from 'components/GRComponents/GRAlert';
 import { refreshDataListInComps } from 'components/GRUtils/GRTableListUtils';
 
 import DesktopAppViewer from './DesktopAppViewer';
@@ -74,7 +71,16 @@ class DesktopAppDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtAddDesktopApp"),
                 confirmMsg: t("msgAddDesktopApp"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { DesktopAppProps, DesktopAppActions } = this.props;
+                        DesktopAppActions.createDesktopAppData(DesktopAppProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: DesktopAppProps.get('editingItem')
             });
         } else {
@@ -84,16 +90,6 @@ class DesktopAppDialog extends Component {
                 });
             }
         }        
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { DesktopAppProps, DesktopAppActions } = this.props;
-            DesktopAppActions.createDesktopAppData(DesktopAppProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
-                    this.handleClose();
-                });
-        }
     }
 
     handleEditData = (event, id) => {
@@ -103,7 +99,39 @@ class DesktopAppDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtEditDesktopApp"),
                 confirmMsg: t("msgEditDesktopApp"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { DesktopAppProps, DesktopAppActions, DesktopConfProps, DesktopConfActions } = this.props;
+                        if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INAPP || 
+                            DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
+            
+                            DesktopAppActions.editDesktopAppData(DesktopAppProps.get('editingItem'), this.props.compId)
+                            .then((res) => {
+            
+                                if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INAPP) {
+            
+                                    refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
+                                    
+                                } else if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
+                                    // 변경이 필요한 데이타를 위해 액션 리스트를 사용함.
+                                    // OLD
+                                    // DesktopConfActions.changedDesktopApp(DesktopConfProps, [
+                                    //     DesktopConfActions.readDesktopConfListPaged, 
+                                    //     DesktopConfActions.changeDesktopConfForEditing,
+                                    //     DesktopConfActions.changeDesktopConfForViewItem
+                                    // ], {}, {isCloseInform:true});
+            
+                                    // 선택된 App 리스트 처리
+                                    //DesktopConfActions.changedDesktopConfForEdit(DesktopConfProps, DesktopConfActions);
+                                    // 전체 APP 리스트 조회 (변경된 데이타로 주입)
+                                    DesktopAppActions.readDesktopAppAllList();
+                                }
+                                this.handleClose();
+                            });
+            
+                        }
+                    }
+                },
                 confirmObject: DesktopAppProps.get('editingItem')
             });
         } else {
@@ -113,39 +141,6 @@ class DesktopAppDialog extends Component {
                 });
             }
         }        
-    }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { DesktopAppProps, DesktopAppActions, DesktopConfProps, DesktopConfActions } = this.props;
-            if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INAPP || 
-                DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
-
-                DesktopAppActions.editDesktopAppData(DesktopAppProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-
-                    if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INAPP) {
-
-                        refreshDataListInComps(DesktopAppProps, DesktopAppActions.readDesktopAppListPaged);
-                        
-                    } else if(DesktopAppProps.get('dialogType') === DesktopAppDialog.TYPE_EDIT_INCONF) {
-                        // 변경이 필요한 데이타를 위해 액션 리스트를 사용함.
-                        // OLD
-                        // DesktopConfActions.changedDesktopApp(DesktopConfProps, [
-                        //     DesktopConfActions.readDesktopConfListPaged, 
-                        //     DesktopConfActions.changeDesktopConfForEditing,
-                        //     DesktopConfActions.changeDesktopConfForViewItem
-                        // ], {}, {isCloseInform:true});
-
-                        // 선택된 App 리스트 처리
-                        //DesktopConfActions.changedDesktopConfForEdit(DesktopConfProps, DesktopConfActions);
-                        // 전체 APP 리스트 조회 (변경된 데이타로 주입)
-                        DesktopAppActions.readDesktopAppAllList();
-                    }
-                    this.handleClose();
-                });
-
-            }
-        }
     }
 
     handleCopyCreateData = (event, id) => {
@@ -274,29 +269,30 @@ class DesktopAppDialog extends Component {
                             name="iconId" style={{marginTop: 'theme.spacing.unit * 2'}}
                         >
                             <MenuItem value=""><em>None</em></MenuItem>
-                            <MenuItem value="cloud_storage">cloud storage</MenuItem>
-                            <MenuItem value="web_office">web office</MenuItem>
-                            <MenuItem value="office_sns">office SNS</MenuItem>
-                            <MenuItem value="team">team</MenuItem>
-                            <MenuItem value="video_conferencing_system">video conferencing system</MenuItem>
-                            <MenuItem value="groupware">groupware</MenuItem>
+                            <MenuItem value="gooroom-cloud-storage">cloud storage</MenuItem>
+                            <MenuItem value="gooroom-web-office">web office</MenuItem>
+                            <MenuItem value="gooroom-sns">office SNS</MenuItem>
+                            <MenuItem value="gooroom-collaboration">team</MenuItem>
+                            <MenuItem value="gooroom-video-conference">video conferencing system</MenuItem>
+                            <MenuItem value="gooroom-groupware">groupware</MenuItem>
                             <MenuItem value="memo">memo</MenuItem>
-                            <MenuItem value="kms">KMS</MenuItem>
-                            <MenuItem value="erp">ERP</MenuItem>
-                            <MenuItem value="accounting_management">accounting management</MenuItem>
-                            <MenuItem value="personnel_management">personnel management</MenuItem>
-                            <MenuItem value="etc_applications">etc applications</MenuItem>
-                            <MenuItem value="security_status">security status</MenuItem>
-                            <MenuItem value="smartcard_register">smartcard register</MenuItem>
-                            <MenuItem value="gooroom_terminal_server">gooroom terminal server</MenuItem>
-                            <MenuItem value="package_management">package management</MenuItem>
-                            <MenuItem value="updater">updater</MenuItem>
-                            <MenuItem value="archiver">archiver</MenuItem>
-                            <MenuItem value="multimedia">multimedia</MenuItem>
-                            <MenuItem value="calculator">calculator</MenuItem>
-                            <MenuItem value="network_management">network management</MenuItem>
-                            <MenuItem value="file_manager">file manager</MenuItem>
-                            <MenuItem value="gooroom_browser">gooroom browser</MenuItem>
+                            <MenuItem value="gooroom-kms">KMS</MenuItem>
+                            <MenuItem value="gooroom-erp">ERP</MenuItem>
+                            <MenuItem value="gooroom-accounting-management">accounting management</MenuItem>
+                            <MenuItem value="gooroom-personnel-management">personnel management</MenuItem>
+                            <MenuItem value="gooroom-other-applications">etc applications</MenuItem>
+                            <MenuItem value="preferences-system-firewall">security status</MenuItem>
+                            <MenuItem value="applets-screenshooter">screenshot</MenuItem>
+                            <MenuItem value="gooroom-smartcard-register">smartcard register</MenuItem>
+                            <MenuItem value="gooroom-client-server-register">gooroom terminal server</MenuItem>
+                            <MenuItem value="synaptic">package management</MenuItem>
+                            <MenuItem value="gooroomupdater">updater</MenuItem>
+                            <MenuItem value="file-roller">archiver</MenuItem>
+                            <MenuItem value="io.github.GnomeMpv">multimedia</MenuItem>
+                            <MenuItem value="galculator">calculator</MenuItem>
+                            <MenuItem value="preferences-system-network">network management</MenuItem>
+                            <MenuItem value="org.gnome.Nautilus">file manager</MenuItem>
+                            <MenuItem value="gooroom-browser">gooroom browser</MenuItem>
                         </Select>
                     </FormControl>
                     }
@@ -327,10 +323,9 @@ class DesktopAppDialog extends Component {
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
-                <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

@@ -54,7 +54,8 @@ export const showInform = (param) => dispatch => {
         type: SHOW_BROWSERRULE_INFORM,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('objId') : '',
-        viewItem: param.viewItem
+        viewItem: param.viewItem,
+        isEditable: param.isEditable
     });
 };
 

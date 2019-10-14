@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import { Redirect, Switch, Router } from 'react-router';
-
-import PropTypes from "prop-types";
-import classNames from "classnames";
+import { Redirect } from 'react-router';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';

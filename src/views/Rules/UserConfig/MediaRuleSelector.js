@@ -7,6 +7,9 @@ import classNames from 'classnames';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { generateMediaRuleObject } from './MediaRuleSpec';
+
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';

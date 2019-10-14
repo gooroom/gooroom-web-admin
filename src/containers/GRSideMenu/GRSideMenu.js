@@ -1,9 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
+import { Map, fromJS } from 'immutable';
+
+
 
 import { Link } from 'react-router-dom';
-
 import { grLayout } from "templates/default/GRLayout";
 
 import Drawer from "@material-ui/core/Drawer";
@@ -38,7 +38,7 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
-import menuItems from "./GRMenuItems";
+import menuItems from "containers/GRSideMenu/GRMenuItems";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -53,21 +53,8 @@ class GRSideMenu extends React.Component {
     };
   }
 
-  activeRoute(routeName, props) {
-    // return this.props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
-    return props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
-  }
-
-  handleMenuItemClick = (event, item) => {
-    this.setState({ selectedIndex: item, anchorEl: null });
-  };
-
   handleClick = (id, e) => {
     this.setState(state => ({ [id]: !state[id] }));
-    switch(id) {
-      case 'menu1': this.setState({ menu1Open: !this.state.menu1Open }); break;
-      case 'menu2': this.setState({ menu2Open: !this.state.menu2Open }); break;
-    }
   };
 
   render() {
@@ -139,6 +126,8 @@ class GRSideMenu extends React.Component {
       return items.map((item, index) => menuType(item, index));
     };
 
+    const sideMenuList = menuList(menuItems.items, 0);
+
     return (
       <Drawer
         classes={{ paper: classes.menuContainerClass }}
@@ -155,7 +144,7 @@ class GRSideMenu extends React.Component {
             </Toolbar>
           </AppBar>
           <List component="nav" className={classes.root}>
-          {menuList(menuItems.items, 0)}
+          {sideMenuList}
           </List>
         </div>
         <AppBar position="static" style={{backgroundColor:"gray"}}>

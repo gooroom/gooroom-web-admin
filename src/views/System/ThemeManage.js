@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
+
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -99,7 +98,8 @@ class ThemeManage extends Component {
     const viewItem = getRowObjectById(ThemeManageProps, compId, id, 'themeId');
     ThemeManageActions.showInform({
       compId: compId,
-      viewItem: viewItem
+      viewItem: viewItem,
+      isEditable: false
     });
   };
 
@@ -173,12 +173,11 @@ class ThemeManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: 'chThemeNm', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
       { id: 'chThemeId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chThemeCmt', isOrder: false, numeric: false, disablePadding: true, label: t("colInfo") },
-      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
-      { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
+      { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") }
     ];
 
     const listObj = ThemeManageProps.getIn(['viewItems', compId]);
@@ -197,7 +196,10 @@ class ThemeManage extends Component {
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={4} >
                   <FormControl fullWidth={true}>
-                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                    <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                      handleKeywordChange={this.handleKeywordChange} 
+                      handleSubmit={() => this.handleSelectBtnClick()} 
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={4} >
@@ -208,9 +210,6 @@ class ThemeManage extends Component {
               </Grid>
             </Grid>
             <Grid item xs={2} style={{textAlign:'right'}}>
-              <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
-                <AddIcon />{t("btnRegist")}
-              </Button>
             </Grid>
           </Grid>
 
@@ -238,19 +237,7 @@ class ThemeManage extends Component {
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeId')}</TableCell>
                     <TableCell className={classes.grSmallAndClickCell}>{n.get('themeCmt')}</TableCell>
                     <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
-                    <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                      <Button size="small" color="secondary" 
-                        className={classes.buttonInTableRow} 
-                        onClick={event => this.handleEditClick(event, n.get('themeId'))}>
-                        <SettingsApplicationsIcon />
-                      </Button>
-                      <Button size="small" color="secondary" 
-                        className={classes.buttonInTableRow} 
-                        onClick={event => this.handleDeleteClick(event, n.get('themeId'))}>
-                        <DeleteIcon />
-                      </Button>
-                    </TableCell>
-                    </TableRow>
+                  </TableRow>
                   );
                 })}
 
@@ -287,6 +274,7 @@ class ThemeManage extends Component {
         <ThemeSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
+          isEditable={false}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />

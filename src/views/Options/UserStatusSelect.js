@@ -33,13 +33,14 @@ class UserStatusSelect extends Component {
   };
 
   render() {
+    const { value } = this.props;
     const { t, i18n } = this.props;
 
     return (
       <React.Fragment>
       <InputLabel htmlFor="user-status">사용자상태</InputLabel>
       <Select
-        value={this.state.data.get('selectedUserStatusValue')}
+        value={value}
         onChange={this.handleChangeSelect}
       >
         {this.state.data.get('userStatusData').map(x => (

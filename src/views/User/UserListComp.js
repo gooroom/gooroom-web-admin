@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from "moment";
 
 import * as UserActions from 'modules/UserModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
@@ -33,16 +32,11 @@ import TableRow from '@material-ui/core/TableRow';
 import FormControl from '@material-ui/core/FormControl';
 
 import Checkbox from "@material-ui/core/Checkbox";
-import Tooltip from '@material-ui/core/Tooltip';
 
 import Button from "@material-ui/core/Button";
 import Search from "@material-ui/icons/Search";
-import AddIcon from "@material-ui/icons/Add";
-import MoveIcon from '@material-ui/icons/Redo';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import AccountIcon from '@material-ui/icons/AccountBox';
-import DeptIcon from '@material-ui/icons/WebAsset';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -101,7 +95,8 @@ class UserListComp extends Component {
   // edit
   handleEditClick = (event, id) => { 
     const { UserProps, UserActions, compId } = this.props;
-    const viewItem = getRowObjectById(UserProps, compId, id, 'userId');
+    let viewItem = getRowObjectById(UserProps, compId, id, 'userId');
+
     UserActions.showDialog({
       viewItem: viewItem,
       dialogType: UserBasicDialog.TYPE_EDIT
@@ -110,26 +105,7 @@ class UserListComp extends Component {
 
   // delete
   handleDeleteClick = (event, id) => {
-    const { UserProps, GRConfirmActions, compId } = this.props;
-    const { t, i18n } = this.props;
-
-    const viewItem = getRowObjectById(UserProps, compId, id, 'userId');
-    GRConfirmActions.showConfirm({
-      confirmTitle: t("lbDeleteUserInfo"),
-      confirmMsg: t("msgDeleteUserInfo", {userNm: viewItem.get('userNm')}),
-      handleConfirmResult: (confirmValue, confirmObject) => {
-        if(confirmValue) {
-          const { UserProps, UserActions, compId } = this.props;
-          UserActions.deleteUserData({
-            compId: compId,
-            userId: confirmObject.get('userId')
-          }).then(() => {
-            UserActions.readUserListPaged(UserProps, compId);
-          });
-        }
-      },
-      confirmObject: viewItem
-    });
+    this.props.onDeleteHandle(id);
   };
 
   handleClickAllCheck = (event, checked) => {
@@ -208,19 +184,22 @@ class UserListComp extends Component {
   render() {
 
     const { classes } = this.props;
-    const { UserProps, compId } = this.props;
+    const { UserProps, compId, isEnableEdit } = this.props;
     const { t, i18n } = this.props;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: "chCheckbox", isCheckbox: true},
       { id: "chUserId", isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: "chUserNm", isOrder: true, numeric: false, disablePadding: true, label: t("colUserNm") },
       { id: "chDeptNm", isOrder: true, numeric: false, disablePadding: true, label: t("colDeptNm") },
-      { id: "chStatus", isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") },
-      { id: "chLastLoginDt", isOrder: false, numeric: false, disablePadding: true, label: t("colLoginDate") },
-      { id: "chLastClientId", isOrder: false, numeric: false, disablePadding: true, label: t("colLoginClient") },
+      { id: "chStatus", isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
+      { id: "chLastLoginDt", isOrder: true, numeric: false, disablePadding: true, label: t("colLoginDate") },
+      { id: "chLastClientId", isOrder: true, numeric: false, disablePadding: true, label: t("colLoginClient") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
+    if(!isEnableEdit) {
+      columnHeaders.pop();
+    }
 
     const listObj = UserProps.getIn(['viewItems', compId]);
     let emptyRows = 0; 
@@ -234,12 +213,17 @@ class UserListComp extends Component {
         <Grid container spacing={8} alignItems="flex-end" direction="row" justify="flex-start" >
           <Grid item xs={3} >
             <FormControl fullWidth={true}>
-              <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} />
+              <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} 
+                value={(listObj && listObj.getIn(['listParam', 'status'])) ? listObj.getIn(['listParam', 'status']) : 'STAT010'}
+              />
             </FormControl>
           </Grid>
           <Grid item xs={3}>
             <FormControl fullWidth={true}>
-              <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+              <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                handleKeywordChange={this.handleKeywordChange} 
+                handleSubmit={() => this.handleSelectBtnClick()} 
+              />
             </FormControl>
           </Grid>
           <Grid item xs={2}>
@@ -294,17 +278,14 @@ class UserListComp extends Component {
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                     <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('userId'))}/>
                   </TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}
-                    style={(n.get('isExpire') === '1') ? {color:'red'} : {color:''}}
-                  
-                  >{n.get('userId')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('userNm')}</TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('deptNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('userNm')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('deptNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('lastLoginDt'), 'YY/MM/DD HH:mm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCell}>{n.get('clientId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                    {(n.get('statusCd') !== 'STAT020') &&
+                    {(n.get('statusCd') !== 'STAT020' && isEnableEdit) &&
                       <React.Fragment>
                     <Button color="secondary" size="small" 
                       className={classes.buttonInTableRow}

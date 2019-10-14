@@ -20,12 +20,21 @@ import { translate, Trans } from "react-i18next";
 
 class MediaRuleSpec extends Component {
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { selectedItem } = nextProps;
+    if(selectedItem !== undefined && selectedItem !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   render() {
 
     const { classes } = this.props;
     const { t, i18n } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle} = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -47,12 +56,12 @@ class MediaRuleSpec extends Component {
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><EditIcon /></Button>
-                  {(this.props.onClickCopy) &&
+                  {(this.props.onClickCopy && !selectedItem.get('objId').endsWith('DEFAULT')) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
-                  {(this.props.inherit && !(viewItem.get('isDefault'))) && 
+                  {(this.props.inherit) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>
@@ -78,21 +87,26 @@ class MediaRuleSpec extends Component {
               </Grid>
               }
               <Grid container spacing={0}>
-                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtWifi")}</Grid>
-                <Grid item xs={2} className={classes.specContent}>{viewItem.get('wireless')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtCdDvd")}</Grid>
-                <Grid item xs={2} className={classes.specContent}>{viewItem.get('cdAndDvd')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtPrinter")}</Grid>
-                <Grid item xs={2} className={classes.specContent}>{viewItem.get('printer')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtSound")}</Grid>
-                <Grid item xs={2} className={classes.specContent}>{viewItem.get('sound')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtCamera")}</Grid>
-                <Grid item xs={2} className={classes.specContent}>{viewItem.get('camera')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtUsbKeyboard")}</Grid>
-                <Grid item xs={2} className={classes.specContent}>{viewItem.get('keyboard')}</Grid>
-                <Grid item xs={4} className={classes.specTitle}>{bull} {t("dtUsbMouse")}</Grid>
-                <Grid item xs={2} className={classes.specContent}>{viewItem.get('mouse')}</Grid>
-                <Grid item xs={6} className={classes.specContent}></Grid>
+
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtCdDvd")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('cdAndDvd')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtPrinter")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('printer')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtCamera")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('camera')}</Grid>
+
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtWifi")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('wireless')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtSound")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('sound')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbKeyboard")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('keyboard')}</Grid>
+
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbMouse")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('mouse')}</Grid>
+
+                <Grid item xs={8}></Grid>
+
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbMemory")}</Grid>
                 <Grid item xs={1} className={classes.specContent}>{viewItem.get('usbMemory')}</Grid>
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbSerial")}</Grid>
@@ -132,6 +146,7 @@ export const generateMediaRuleObject = (param, isForViewer) => {
     let printer = '';
     let camera = '';
     let sound = '';
+    let microphone = '';
     let keyboard = '';
     let mouse = '';
     let macAddress = [];
@@ -152,6 +167,8 @@ export const generateMediaRuleObject = (param, isForViewer) => {
         printer = evalue;
       } else if(ename == 'sound') {
         sound = evalue;
+      } else if(ename == 'microphone') {
+        microphone = evalue;
       } else if(ename == 'camera') {
         camera = evalue;
       } else if(ename == 'keyboard') {
@@ -180,6 +197,7 @@ export const generateMediaRuleObject = (param, isForViewer) => {
       cdAndDvd: cdAndDvd,
       printer: printer,
       sound: sound,
+      microphone: microphone,
       camera: camera,
       keyboard: keyboard,
       mouse: mouse,

@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -100,7 +102,16 @@ class BrowserRuleDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddBrowserRule"),
                 confirmMsg: t("msgAddBrowserRule"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { BrowserRuleProps, BrowserRuleActions } = this.props;
+                        BrowserRuleActions.createBrowserRuleData(BrowserRuleProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: BrowserRuleProps.get('editingItem')
             });
         } else {
@@ -110,16 +121,6 @@ class BrowserRuleDialog extends Component {
                 });
             }
         }        
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { BrowserRuleProps, BrowserRuleActions } = this.props;
-            BrowserRuleActions.createBrowserRuleData(BrowserRuleProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(BrowserRuleProps, BrowserRuleActions.readBrowserRuleListPaged);
-                    this.handleClose();
-                });
-        }
     }
 
     handleEditData = (event, id) => {
@@ -154,11 +155,11 @@ class BrowserRuleDialog extends Component {
     handleInheritSaveDataForDept = (event, id) => {
         const { BrowserRuleProps, DeptProps, BrowserRuleActions, compId } = this.props;
         const { t, i18n } = this.props;
-        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+        const deptCd = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']);
 
         BrowserRuleActions.inheritBrowserRuleDataForDept({
             'objId': BrowserRuleProps.getIn(['editingItem', 'objId']),
-            'deptCd': selectedDeptCd
+            'deptCd': deptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
@@ -537,10 +538,9 @@ class BrowserRuleDialog extends Component {
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
-                <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

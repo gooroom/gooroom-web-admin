@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -108,14 +106,10 @@ class DesktopConfManage extends Component {
   };
 
   handleCreateButton = () => {
-    const compId = this.props.match.params.grMenuId;
-
-    // desktop app list for select
-    //this.props.DesktopAppActions.readDesktopAppList(compId);
-    // theme list for select option
-    //this.props.DesktopConfActions.readThemeInfoList();
     this.props.DesktopConfActions.showDialog({
-      viewItem: Map(),
+      viewItem: Map({
+        themeId: 1
+      }),
       dialogType: DesktopConfDialog.TYPE_ADD
     });
   }
@@ -179,7 +173,7 @@ class DesktopConfManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
-    const columnHeaders = [
+    let columnHeaders = [
       { id: 'chConfGubun', isOrder: false, numeric: false, disablePadding: true, label: t("colDivision") },
       { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'chConfName', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
@@ -207,10 +201,12 @@ class DesktopConfManage extends Component {
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={6}>
                   <FormControl fullWidth={true}>
-                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                    <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                      handleKeywordChange={this.handleKeywordChange} 
+                      handleSubmit={() => this.handleSelectBtnClick()} 
+                    />
                   </FormControl>
                 </Grid>
-
                 <Grid item xs={6}>
                   <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                     <Search />{t("btnSearch")}
@@ -218,7 +214,6 @@ class DesktopConfManage extends Component {
                 </Grid>
               </Grid>
             </Grid>
-
             <Grid item xs={6} style={{textAlign:'right'}}>
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" 
                 onClick={() => { this.handleCreateButton(); } } >
@@ -241,12 +236,14 @@ class DesktopConfManage extends Component {
               />
               <TableBody>
                 {listObj && listObj.get('listData') && listObj.get('listData').map(n => {
+
                   return (
                     <TableRow 
                       hover
                       onClick={event => this.handleSelectRow(event, n.get('confId'))}
                       tabIndex={-1}
                       key={n.get('confId')}
+                      className={(n.get('confId').endsWith('DEFAULT')) ? classes.grDefaultRuleRow : ""}
                     >
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('confId').endsWith('DEFAULT') ? t("selBasic") : t("selOrdinary")}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('confId')}</TableCell>
@@ -257,19 +254,16 @@ class DesktopConfManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditListClick(event, n.get('confId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('confId'))}>
                           <DeleteIcon />
-                        </Button>                        
-
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -305,7 +299,7 @@ class DesktopConfManage extends Component {
         {/* dialog(popup) component area */}
         <DesktopConfSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
-          hasAction={true}
+          hasAction={true} inherit={false}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
@@ -319,7 +313,8 @@ class DesktopConfManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  DesktopConfProps: state.DesktopConfModule
+  DesktopConfProps: state.DesktopConfModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
 
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -114,31 +112,31 @@ class ClientConfSettingManage extends Component {
         logMaxCount: 3,
         systemKeepFree: 10,
 
-        boot_minno: 4,
-        os_minno: 4,
-        exe_minno: 4,
-        media_minno: 3,
-        agent_minno: 3,
+        boot_minno: 0,
+        os_minno: 0,
+        exe_minno: 0,
+        media_minno: 0,
+        agent_minno: 0,
 
-        transmit_os: 'err',
-        notify_os: 'err',
-        show_os: 'info',
-        
-        transmit_exe: 'err',
-        notify_exe: 'err',
-        show_exe: 'info',
-        
-        transmit_boot: 'err',
         notify_boot: 'err',
         show_boot: 'info',
+        transmit_boot: 'info',
+
+        notify_os: 'err',
+        show_os: 'info',
+        transmit_os: 'info',
         
-        transmit_media: 'crit',
-        notify_media: 'crit',
+        notify_exe: 'notice',
+        show_exe: 'info',
+        transmit_exe: 'info',
+        
+        notify_media: 'err',
         show_media: 'info',
+        transmit_media: 'info',
         
-        transmit_agent: 'crit',
-        notify_agent: 'crit',
+        notify_agent: 'none',
         show_agent: 'info',
+        transmit_agent: 'none',
         
         whiteIpAll: true
       }),
@@ -211,6 +209,8 @@ class ClientConfSettingManage extends Component {
       { id: 'chConfId', isOrder: true, numeric: false, disablePadding: true, label: t("colRuleId") },
       { id: 'chModUser', isOrder: true, numeric: false, disablePadding: true, label: t("colModUser") },
       { id: 'chModDate', isOrder: true, numeric: false, disablePadding: true, label: t("colModDate") },
+      { id: 'chRegUser', isOrder: true, numeric: false, disablePadding: true, label: t("colRegUser") },
+      { id: 'chRegDate', isOrder: true, numeric: false, disablePadding: true, label: t("colRegDate") },
       { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") }
     ];
 
@@ -230,7 +230,10 @@ class ClientConfSettingManage extends Component {
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={6}>
                   <FormControl fullWidth={true}>
-                    <KeywordOption paramName="keyword" handleKeywordChange={this.handleKeywordChange} handleSubmit={() => this.handleSelectBtnClick()} />
+                    <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
+                      handleKeywordChange={this.handleKeywordChange} 
+                      handleSubmit={() => this.handleSelectBtnClick()} 
+                    />
                   </FormControl>
                 </Grid>
                 <Grid item xs={6}>
@@ -260,30 +263,29 @@ class ClientConfSettingManage extends Component {
                 columnData={columnHeaders}
               />
               <TableBody>
-                {listObj.get('listData').map(n => {
+                {listObj.get('listData') && listObj.get('listData').map(n => {
+
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('objId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('objId'), true)}
                       key={n.get('objId')}
+                      className={(n.get('objId').endsWith('DEFAULT')) ? classes.grDefaultRuleRow : ""}
                     >
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? t("selBasic") : t("selOrdinary")}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-
                         <Button color="secondary" size="small" className={classes.buttonInTableRow} onClick={event => this.handleEditListClick(event, n.get('objId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
-
-                        { !n.get('objId').endsWith('DEFAULT') &&
                         <Button color="secondary" size="small" className={classes.buttonInTableRow} onClick={event => this.handleDeleteClick(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>
-                        }
-
                       </TableCell>
                     </TableRow>
                   );
@@ -317,8 +319,9 @@ class ClientConfSettingManage extends Component {
             </div>
           }
         {/* dialog(popup) component area */}
-        <ClientConfSettingSpec compId={compId} specType="inform" hasAction={true}
+        <ClientConfSettingSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
+          hasAction={true} inherit={false}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
@@ -331,7 +334,8 @@ class ClientConfSettingManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  ClientConfSettingProps: state.ClientConfSettingModule
+  ClientConfSettingProps: state.ClientConfSettingModule,
+  AdminProps: state.AdminModule
 });
 
 const mapDispatchToProps = (dispatch) => ({

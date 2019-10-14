@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import * as GlobalActions from 'modules/GlobalModule';
 import * as ClientGroupActions from 'modules/ClientGroupModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
+import * as GRAlertActions from 'modules/GRAlertModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import ClientRuleSelector from 'components/GROptions/ClientRuleSelector';
@@ -30,7 +31,8 @@ class ClientGroupMultiRuleDialog extends Component {
     static TYPE_EDIT = 'EDIT';
 
     handleClose = (event) => {
-        this.props.ClientGroupActions.closeMultiDialog();
+        const { ClientGroupActions, compId } = this.props;
+        ClientGroupActions.closeMultiDialog({ compId: `${compId}_MRDIALOG` });
     }
 
     handleValueChange = name => event => {
@@ -44,19 +46,16 @@ class ClientGroupMultiRuleDialog extends Component {
     handleCheckedClientGroup = (checked, imperfect) => {
         // Check selectedDeptCd
         const { ClientGroupActions, compId } = this.props;
-        ClientGroupActions.changeCompVariableObject({
-            compId: compId,
-            valueObj: {checkedGrpId: checked}
-        });
+        ClientGroupActions.changeTreeDataVariable({ compId: `${compId}_MRDIALOG`, name: 'checked', value: checked });
     }
 
     handleEditData = (event) => {
         const { ClientGroupProps, GRConfirmActions, compId } = this.props;
         const { t, i18n } = this.props;
 
-        const checkedGrpId = ClientGroupProps.getIn(['viewItems', compId, 'checkedGrpId']);
-
-        if(checkedGrpId && checkedGrpId.size > 0) {
+        const checkedGrpId = ClientGroupProps.getIn(['viewItems', `${compId}_MRDIALOG`, 'treeComp', 'checked']);
+        
+        if(checkedGrpId && checkedGrpId.length > 0) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("ttChangMultiDeptRule"),
                 confirmMsg: t("msgChangeDeptRuleSelected"),
@@ -82,6 +81,12 @@ class ClientGroupMultiRuleDialog extends Component {
                             // ClientGroupActions.readDeptListPaged(ClientGroupProps, compId);
                             // tree refresh
                             // resetCallback(ClientGroupProps.getIn(['editingItem', 'grpId']));
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
                             this.handleClose();
                         });
                     }
@@ -110,7 +115,7 @@ class ClientGroupMultiRuleDialog extends Component {
                             <Grid item xs={4}>
                                 <GRTreeClientGroupList
                                     listHeight='24px'
-                                    compId={compId+'_MRDIALOG'}
+                                    compId={`${compId}_MRDIALOG`}
                                     hasSelectChild={false}
                                     hasSelectParent={false}
                                     isEnableEdit={false}
@@ -154,7 +159,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     GlobalActions: bindActionCreators(GlobalActions, dispatch),
     ClientGroupActions: bindActionCreators(ClientGroupActions, dispatch),
-    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch)
+    GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
+    GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
 });
 
 export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(ClientGroupMultiRuleDialog)));

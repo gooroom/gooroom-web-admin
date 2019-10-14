@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 
+
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -48,8 +49,8 @@ class SoftwareFilterDialog extends Component {
     static SW_LIST = [
         {no:1, tag:'chromium.desktop', name:'Chromium Web Browser', name_kr:'Chromium 웹 브라우저'},
         {no:2, tag:'galculator.desktop', name:'Galculator', name_kr:'계산기'},
-        {no:3, tag:'gooroom-browser.desktop', name:'Gooroom Web Browser', name_kr:'Gooroom 웹 브라우저'},
-        {no:4, tag:'gooroom-control-center.desktop', name:'Gooroom Control Center', name_kr:'제어판'},
+        {no:3, tag:'gooroom-browser.desktop', name:'Gooroom Web Browser', name_kr:'구름 브라우저'},
+        {no:4, tag:'gooroom-control-center.desktop,,,gnome-control-center.desktop', name:'Gnome Control Center', name_kr:'설정'},
         {no:5, tag:'gooroom-security-status-settings.desktop', name:'Gooroom Management Settings', name_kr:'구름 관리 설정'},
         {no:6, tag:'gooroom-security-status-view.desktop', name:'Gooroom Security Status View', name_kr:'구름 보안 상태 보기'},
         {no:7, tag:'gooroom-toolkit.desktop', name:'Gooroom Toolkit', name_kr:'구름 도구모음'},
@@ -58,17 +59,26 @@ class SoftwareFilterDialog extends Component {
         {no:10, tag:'hwpviewer.desktop', name:'Hancom Office Hwp 2014 Viewer', name_kr:'한컴오피스 한글 2014 뷰어'},
         {no:11, tag:'org.gnome.FileRoller.desktop', name:'Archive Manager', name_kr:'압축 관리자'},
         {no:12, tag:'org.gnome.Nautilus.desktop', name:'Files', name_kr:'파일 관리자'},
-        {no:13, tag:'org.gnome.Totem.desktop', name:'Videos', name_kr:'동영상'},
+        {no:13, tag:'org.gnome.Totem.desktop,,,io.github.GnomeMpv.desktop', name:'Videos', name_kr:'동영상'},
         {no:14, tag:'scratch.desktop', name:'scratch-3.0', name_kr:'스크래치 3.0'},
         {no:15, tag:'synaptic.desktop', name:'Synaptic Package Manager', name_kr:'시냅틱 패키지 관리자'},
-        {no:16, tag:'xfce4-screenshooter.desktop', name:'Screenshot', name_kr:'스크린샷'},
-        {no:17, tag:'xfce4-terminal.desktop', name:'Xfce Terminal', name_kr:'터미널'},
+        {no:16, tag:'xfce4-screenshooter.desktop,,,org.gnome.Screenshot.desktop', name:'Screenshot', name_kr:'스크린샷'},
+        {no:17, tag:'xfce4-terminal.desktop,,,org.gnome.Terminal.desktop', name:'Terminal', name_kr:'터미널'},
         {no:18, tag:'veyon-master.desktop', name:'Veyon Master', name_kr:'Veyon Master'},
         {no:19, tag:'eog.desktop', name:'Image Viewer', name_kr:'이미지 보기'},
         {no:20, tag:'blueman-manager.desktop', name:'Bluetooth Manager', name_kr:'블루투스 관리자'},
         {no:21, tag:'mousepad.desktop', name:'Mousepad', name_kr:'메모'},
-        {no:22, tag:'gooroom-guide.desktop', name:'Gooroom Guide', name_kr:'구름 도움말'}
+        {no:22, tag:'gooroom-guide.desktop', name:'Gooroom Guide', name_kr:'구름 도움말'},
+        {no:23, tag:'kr.gooroom.Software.desktop', name:'Software', name_kr:'소프트웨어'}
     ];
+
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          selectAll: false
+        };
+    }
 
     handleClose = (event) => {
         this.props.SoftwareFilterActions.closeDialog();
@@ -82,18 +92,28 @@ class SoftwareFilterDialog extends Component {
         });
     }
 
+    handleSelectAll = () => event => {
+        this.setState({ selectAll: event.target.checked });
+        if(SoftwareFilterDialog.SW_LIST) {
+            SoftwareFilterDialog.SW_LIST.map(n => {
+                this.props.SoftwareFilterActions.setEditingSoftwareItemValue({
+                    name: n.tag,
+                    value: (event.target.checked) ? 'allow' : 'disallow'
+                });
+            });
+        }
+    }
+
     handleSoftwareValueChange = name => event => {
         const value = (event.target.type === 'checkbox') ? ((event.target.checked) ? 'allow' : 'disallow') : event.target.value;
+
+        if(this.state.selectAll && value === 'disallow') {
+            this.setState({ selectAll: false });
+        }
+
         this.props.SoftwareFilterActions.setEditingSoftwareItemValue({
             name: name,
             value: value
-        });
-    }
-
-    handleBluetoothMacValueChange = index => event => {
-        this.props.SoftwareFilterActions.setBluetoothMac({
-            index: index,
-            value: event.target.value
         });
     }
 
@@ -105,7 +125,16 @@ class SoftwareFilterDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddSWRule"),
                 confirmMsg: t("msgAddSWRule"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { SoftwareFilterProps, SoftwareFilterActions } = this.props;
+                        SoftwareFilterActions.createSoftwareFilterData(SoftwareFilterProps.get('editingItem'))
+                            .then((res) => {
+                                refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: SoftwareFilterProps.get('editingItem')
             });
         } else {
@@ -114,16 +143,6 @@ class SoftwareFilterDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { SoftwareFilterProps, SoftwareFilterActions } = this.props;
-            SoftwareFilterActions.createSoftwareFilterData(SoftwareFilterProps.get('editingItem'))
-                .then((res) => {
-                    refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
-                    this.handleClose();
-                });
         }
     }
 
@@ -135,7 +154,16 @@ class SoftwareFilterDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbEditSWRule"),
                 confirmMsg: t("msgEditSWRule"),
-                handleConfirmResult: this.handleEditConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { SoftwareFilterProps, SoftwareFilterActions } = this.props;
+                        SoftwareFilterActions.editSoftwareFilterData(SoftwareFilterProps.get('editingItem'), this.props.compId)
+                            .then((res) => {
+                                refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
+                                this.handleClose();
+                            });
+                    }
+                },
                 confirmObject: SoftwareFilterProps.get('editingItem')
             });
         } else {
@@ -146,25 +174,15 @@ class SoftwareFilterDialog extends Component {
             }
         }
     }
-    handleEditConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { SoftwareFilterProps, SoftwareFilterActions } = this.props;
-            SoftwareFilterActions.editSoftwareFilterData(SoftwareFilterProps.get('editingItem'), this.props.compId)
-                .then((res) => {
-                    refreshDataListInComps(SoftwareFilterProps, SoftwareFilterActions.readSoftwareFilterListPaged);
-                    this.handleClose();
-                });
-        }
-    }
 
     handleInheritSaveDataForDept = (event, id) => {
         const { SoftwareFilterProps, DeptProps, SoftwareFilterActions, compId } = this.props;
         const { t, i18n } = this.props;
-        const selectedDeptCd = DeptProps.getIn(['viewItems', compId, 'selectedDeptCd']);
+        const deptCd = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']);
 
         SoftwareFilterActions.inheritSoftwareFilterDataForDept({
             'objId': SoftwareFilterProps.getIn(['editingItem', 'objId']),
-            'deptCd': selectedDeptCd
+            'deptCd': deptCd
         }).then((res) => {
             this.props.GRAlertActions.showAlert({
                 alertTitle: t("dtSystemNotice"),
@@ -267,9 +285,17 @@ class SoftwareFilterDialog extends Component {
                         </Grid>
                     </Grid>
                     {(dialogType === SoftwareFilterDialog.TYPE_EDIT || dialogType === SoftwareFilterDialog.TYPE_ADD) &&
-                        <div style={{marginTop:20}}>
-                        <InputLabel>{t("msgSelectSWItem")}</InputLabel>
-                        <Grid container alignItems="center" direction="row" justify="space-between" style={{marginTop:10}}>
+                        <Grid container alignItems="center" direction="row" justify="space-between" style={{marginTop:30}}>
+                        <Grid item xs={6} style={{marginBottom:30}}>
+                            <InputLabel>{t("msgSelectSWItem")}</InputLabel>
+                        </Grid>
+                        <Grid item xs={6} style={{marginBottom:30}}>
+                            <FormControlLabel label={t('lbSelectAll')} 
+                                control={<Checkbox onChange={this.handleSelectAll()} color="primary"
+                                    checked={this.state.selectAll}
+                                />}                                
+                            />
+                        </Grid>
                         {SoftwareFilterDialog.SW_LIST && SoftwareFilterDialog.SW_LIST.map(n => {
                                 return (
                                     <Grid item xs={6} key={n.no}>
@@ -283,7 +309,6 @@ class SoftwareFilterDialog extends Component {
                             })
                         }
                         </Grid>
-                        </div>
                     }
                     </div>
                     }
@@ -324,10 +349,9 @@ class SoftwareFilterDialog extends Component {
                 <Button onClick={this.handleClose} variant='contained' color="primary">{t("btnClose")}</Button>
                 </DialogActions>
                 </ValidatorForm>
-                <GRConfirm />
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

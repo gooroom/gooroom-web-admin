@@ -106,16 +106,22 @@ export const deleteClientData = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('deleteClientsCertToRevoke', {'clientIds': param.clientIds}).then(
         (response) => {
-            dispatch({
-                type: DELETE_CLIENT_SUCCESS
-            });
+            try {
+                if(response.data.status && response.data.status.result === 'success') {
+                    dispatch({
+                        type: DELETE_CLIENT_SUCCESS
+                    });
+                }
+                return response.data;
+            } catch(error) {
+                dispatch({ type: COMMON_FAILURE, error: error });
+                return error;
+            }
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
-
-
 
 export const setEditingItemValue = (param) => dispatch => {
     return dispatch({

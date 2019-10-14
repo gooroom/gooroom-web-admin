@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Map, List as GRIMTList } from 'immutable';
 
-import PropTypes from "prop-types";
+
 import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
@@ -13,13 +13,8 @@ import * as GRAlertActions from 'modules/GRAlertModule';
 
 import DividedAdminManageRuleSelector from './DividedAdminManageRuleSelector';
 
-import TreeMultiSelector from 'components/GROptions/TreeMultiSelector';
-
-import DeptAndUserMultiSelector from 'components/GROptions/DeptAndUserMultiSelector';
-import GroupAndClientMultiSelector from 'components/GROptions/GroupAndClientMultiSelector';
-
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import GRAlert from 'components/GRComponents/GRAlert';
+import DeptMultiSelector from 'components/GROptions/DeptMultiSelector';
+import GroupMultiSelector from 'components/GROptions/GroupMultiSelector';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 
@@ -50,6 +45,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
+
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -83,8 +83,7 @@ class DividedAdminManageDialog extends Component {
     }
 
     handleCreateData = (event) => {
-        const { AdminUserProps, GRConfirmActions } = this.props;
-        const { t, i18n } = this.props;
+        const { AdminUserProps, GRConfirmActions, t } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddAdminUser"),
@@ -109,7 +108,6 @@ class DividedAdminManageDialog extends Component {
                         });
                     }
                 },
-                
             });
         } else {
             if(this.refs.form && this.refs.form.childs) {
@@ -218,7 +216,7 @@ class DividedAdminManageDialog extends Component {
     }
 
     handleSelectGroup = (selectedItems) => {
-
+        
         this.props.AdminUserActions.setEditingItemValue({ name: 'grpInfoList', value: selectedItems });
     }
 
@@ -247,11 +245,13 @@ class DividedAdminManageDialog extends Component {
         //     return Map({grpId: n.get('value'), grpNm: n.get('name')});
         // }) : null;
         const selectedGroup = (editingItem && editingItem.get('grpInfoList')) ? editingItem.get('grpInfoList') : null;
-        const selectedClient = (editingItem && editingItem.get('clientInfoList')) ? editingItem.get('clientInfoList') : null;
+        // const selectedClient = (editingItem && editingItem.get('clientInfoList')) ? editingItem.get('clientInfoList') : null;
 
         let title = "";
+        let passwordCheck = [];
         if(dialogType === DividedAdminManageDialog.TYPE_ADD) {
             title = t("dtAddAdminUser");
+            passwordCheck = ['required'];
         } else if(dialogType === DividedAdminManageDialog.TYPE_VIEW) {
             title = t("dtViewAdminUser");
         } else if(dialogType === DividedAdminManageDialog.TYPE_EDIT) {
@@ -272,48 +272,58 @@ class DividedAdminManageDialog extends Component {
                     <Grid container spacing={0} style={{marginTop:10}}>
                         <Grid item xs={6} style={{paddingRight:5}}>
 
-                            <TextValidator
-                                label={t("lbAdminUserId")} value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
-                                name="adminId" validators={['required', 'matchRegexp:^[a-zA-Z0-9]*$']}
-                                errorMessages={[t("msgAdminUserId"), t("msgValidAdminUserId")]}
-                                onChange={this.handleValueChange("adminId")}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                                disabled={(dialogType == DividedAdminManageDialog.TYPE_EDIT) ? true : false}
-                            />
-                            <TextValidator
-                                label={t("lbAdminPassowrd")}
-                                type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
-                                value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
-                                name="userPasswd" validators={[]} errorMessages={[t("msgAdminPassword")]}
-                                onChange={this.handleValueChange('adminPw')}
-                                InputProps={{
-                                    endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                        aria-label="Toggle password visibility"
-                                        onClick={this.handleClickShowPassword}
-                                        onMouseDown={this.handleMouseDownPassword}
-                                        >
-                                        {(editingItem && editingItem.get('showPasswd')) ? <Visibility /> : <VisibilityOff />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                )
-                                }}
-                                className={classes.fullWidth}
-                            />
-                            <TextValidator
-                                label={t("lbAdminUserName")} value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
-                                name="adminNm" validators={['required']} errorMessages={[t("msgAdminUserName")]}
-                                onChange={this.handleValueChange("adminNm")}
-                                className={classes.fullWidth}
-                            />
+                            <Grid container spacing={0} style={{marginTop:0}}>
+                                <Grid item xs={6} style={{paddingRight:5}}>
+                                    <TextValidator
+                                        label={t("lbAdminUserName")} value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
+                                        name="adminNm" validators={['required']} errorMessages={[t("msgAdminUserName")]}
+                                        onChange={this.handleValueChange("adminNm")}
+                                        className={classes.fullWidth}
+                                    />
+                                </Grid>
+                                <Grid item xs={6} style={{paddingRight:5}}>
+                                </Grid>
+                                <Grid item xs={6} style={{paddingRight:5}}>
+                                    <TextValidator
+                                        label={t("lbAdminUserId")} value={(editingItem.get('adminId')) ? editingItem.get('adminId') : ''}
+                                        name="adminId" validators={['required', 'matchRegexp:^[a-zA-Z0-9]*$']}
+                                        errorMessages={[t("msgAdminUserId"), t("msgValidAdminUserId")]}
+                                        onChange={this.handleValueChange("adminId")}
+                                        className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                                        disabled={(dialogType == DividedAdminManageDialog.TYPE_EDIT) ? true : false}
+                                    />
+                                </Grid>
+                                <Grid item xs={6} style={{paddingRight:5}}>
+                                    <TextValidator
+                                        label={t("lbAdminPassowrd")}
+                                        type={(editingItem && editingItem.get('showPasswd')) ? 'text' : 'password'}
+                                        value={(editingItem.get('adminPw')) ? editingItem.get('adminPw') : ''}
+                                        name="userPasswd" validators={passwordCheck} errorMessages={[t("msgAdminPassword")]}
+                                        onChange={this.handleValueChange('adminPw')}
+                                        InputProps={{
+                                            endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                aria-label="Toggle password visibility"
+                                                onClick={this.handleClickShowPassword}
+                                                onMouseDown={this.handleMouseDownPassword}
+                                                >
+                                                {(editingItem && editingItem.get('showPasswd')) ? <Visibility /> : <VisibilityOff />}
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                        }}
+                                        className={classes.fullWidth}
+                                    />
+                                </Grid>
+                            </Grid>
 
                         </Grid>
                         <Grid item xs={6} style={{paddingLeft:5}}>
                             <Card >
                                 <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} 
                                     titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'} }} 
-                                    title={"접속 가능 아이피"} 
+                                    title={t('lbAdminConnIp')} 
                                     action={
                                         <Button size="small" color="primary" onClick={event => this.handleAddConnectIp()} style={{marginTop:8}}>
                                             <GRAddIcon />
@@ -326,8 +336,11 @@ class DividedAdminManageDialog extends Component {
                                         <ListItem key={index} style={{padding:'2px 32px 2px 16px'}}>
                                             <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
                                             <ListItemText primary={
-                                                <TextField className={classes.fullWidth} value={n} margin="none" 
+                                                <TextValidator value={n} name={`ip_${index}`}
+                                                    validators={['required', 'matchRegexp:^[0-9.*]+$']}
+                                                    errorMessages={[t("lbIp"), t("msgWrongIpString")]}
                                                     onChange={this.handleValueChangeForIp(index)}
+                                                    className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                                 />
                                             } />
                                             <ListItemSecondaryAction>
@@ -342,152 +355,10 @@ class DividedAdminManageDialog extends Component {
                                 </CardContent>
                             </Card>
                         </Grid>
-{/*
                         <Grid item xs={12} >
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
-*/}
                     </Grid>
-{/* 
-
-                    <GroupAndClientMultiSelector compId={compId} title={"관리대상 단말그룹"} 
-                        isCheckMasterOnly={false}
-                        selectedGroup={selectedGroup} 
-                        onSelectGroup={this.handleSelectGroup}
-                        selectedClient={selectedClient} 
-                        onSelectClient={this.handleSelectClient}
-                    />
-
-                    <DeptAndUserMultiSelector compId={compId} title={"관리대상 조직"} 
-                        isCheckMasterOnly={true}
-                        selectedDept={selectedDept} 
-                        onSelectDept={this.handleSelectDept}
-                        selectedUser={selectedUser} 
-                        onSelectUser={this.handleSelectUser}
-                    />
-*/}
-
-{/* 
-                    <Grid container spacing={0} style={{marginTop:10}}>
-                        <Grid item xs={6} style={{paddingRight:5}}>
-                            <TreeMultiSelector compId={compId} title={"관리대상 조직"} 
-                                url='readChildrenDeptList'
-                                paramKeyName='deptCd'
-                                isCheckMasterOnly={true}
-                                selectedItem={selectedDept} 
-                                onSelectItem={this.handleSelectDept} />
-                        </Grid>
-                        <Grid item xs={6} style={{paddingLeft:5}}>
-                            <TreeMultiSelector compId={compId} title={"관리대상 단말그룹"} 
-                                url='readChildrenClientGroupList'
-                                paramKeyName='grpId'
-                                isCheckMasterOnly={false}
-                                selectedItem={selectedGroup} 
-                                onSelectItem={this.handleSelectGroup} />
-                        </Grid>
-                    </Grid>
-*/}
-                    <Grid container spacing={0} style={{marginTop:10}}>
-                        <Grid item xs={6} style={{paddingRight:5}}>
-                        {/* 
-                        <Card >
-                            <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={"관리대상 조직"}></CardHeader>
-                            <CardContent style={{padding:0,height:100,overflowY:'scroll',marginBottom:10}}>
-                                <List >
-                                {selectedDept && selectedDept.map((n) => (
-                                    <ListItem key={n.get('deptCd')} style={{padding:'2px 32px 2px 32px'}}>
-                                        <ListItemIcon style={{marginRight:0}}><FolderIcon fontSize='small'/></ListItemIcon>
-                                        <ListItemText primary={n.get('deptNm')} />
-                                        <ListItemSecondaryAction>
-                                            <Button size="small" color="secondary" className={classes.buttonInTableRow} 
-                                                onClick={event => this.handleDeleteSelectedData('deptInfoList', n.get('deptCd'))}>
-                                                <DeleteIcon />
-                                            </Button>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                ))}
-                                </List>
-                            </CardContent>
-                            <Divider style={{marginBottom:20}} />
-                            <Typography variant="subtitle2">
-                            아래 조직도를 이용하여 대상 조직을 선택하세요.
-                            </Typography>
-                            <Divider />
-                            <CardContent style={{padding:0,height:200,overflowY:'auto'}}>
-                            <GRExtendedTreeList
-                                compId={compId}
-                                useFolderIcons={true}
-                                listHeight='24px'
-                                url='readChildrenDeptList'
-                                paramKeyName='deptCd'
-                                rootKeyValue='0'
-                                keyName='key'
-                                title='title'
-                                startingDepth='1'
-                                hasSelectChild={false}
-                                hasSelectParent={false}
-                                isShowCheck={true}
-                                isCheckMasterOnly={true}
-                                isEnableEdit={false}
-                                onCheckedNode={(param) => {this.handleTreeNodeCheck('deptInfoList', param);}}
-                                checkedNodes={selectedDept}
-                                onRef={ref => (this.grExtendedTreeListForDept = ref)}
-                            />
-                            </CardContent>
-                        </Card>
-                        */}
-                        </Grid>
-                        <Grid item xs={6} style={{paddingLeft:5}}>
-                        {/*
-                        <Card >
-                            <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={"관리대상 단말그룹"}></CardHeader>
-                            <CardContent style={{padding:0,height:100,overflowY:'scroll',marginBottom:10}}>
-                                <List >
-                                {selectedGroup && selectedGroup.map((n) => (
-                                    <ListItem key={n.get('grpId')} style={{padding:'2px 32px 2px 32px'}}>
-                                        <ListItemIcon style={{marginRight:0}}><FolderIcon fontSize='small'/></ListItemIcon>
-                                        <ListItemText primary={n.get('grpNm')} />
-                                        <ListItemSecondaryAction>
-                                            <Button size="small" color="secondary" className={classes.buttonInTableRow} 
-                                                onClick={event => this.handleDeleteSelectedData('grpInfoList', n.get('grpId'))}>
-                                                <DeleteIcon />
-                                            </Button>
-                                        </ListItemSecondaryAction>
-                                    </ListItem>
-                                ))}
-                                </List>
-                            </CardContent>
-                            <Divider style={{marginBottom:20}} />
-                            <Typography variant="subtitle2">
-                            아래 단말그룹 구성도를 이용하여 대상 단말그룹을 선택하세요.
-                            </Typography>
-                            <Divider />
-                            <CardContent style={{padding:0,height:200,overflowY:'auto'}}>
-                            <GRExtendedTreeList
-                                compId={compId}
-                                useFolderIcons={true}
-                                listHeight='24px'
-                                url='readChildrenClientGroupList'
-                                paramKeyName='grpId'
-                                rootKeyValue='0'
-                                keyName='key'
-                                title='title'
-                                startingDepth='1'
-                                hasSelectChild={false}
-                                hasSelectParent={false}
-                                isShowCheck={true}
-                                isCheckMasterOnly={false}
-                                isEnableEdit={false}
-                                onCheckedNode={(param) => {this.handleTreeNodeCheck('grpInfoList', param);}}
-                                checkedNodes={selectedGroup}
-                                onRef={ref => (this.grExtendedTreeListForGrp = ref)}
-                            />
-                            </CardContent>
-                        </Card>
-                         */}
-                        </Grid>
-                    </Grid>
-          
                 </DialogContent>
                 <DialogActions>
                 {(dialogType === DividedAdminManageDialog.TYPE_ADD) &&
@@ -502,7 +373,7 @@ class DividedAdminManageDialog extends Component {
                 </ValidatorForm>
             </Dialog>
             }
-            <GRAlert />
+            {/*<GRAlert /> */}
             </div>
         );
     }

@@ -86,7 +86,9 @@ class DailyLoginCountSpec extends Component {
     const columnHeaders = [
       { id: 'HIST_SEQ', isOrder: false, numeric: false, disablePadding: true, label: t("colNumber") },
       { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: t("colDate") },
+      { id: 'GRP_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colClientGroup") },
       { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
+      { id: 'DEPT_NM', isOrder: true, numeric: false, disablePadding: true, label: t("colDeptName") },
       { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colUserId") },
       { id: 'RESPONSE_CD', isOrder: true, numeric: false, disablePadding: true, label: t("colStatus") }
     ];
@@ -139,7 +141,9 @@ class DailyLoginCountSpec extends Component {
                     <TableRow hover key={n.get('histSeq')} >
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('histSeq')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD HH:mm:ss')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientGroup')}</TableCell> 
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('deptName')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('userId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
                     </TableRow>

@@ -96,14 +96,6 @@ class ClientListForViolated extends Component {
     this.handleSelectBtnClick();
   }
 
-  // componentWillReceiveProps(newProps) {
-  //   const { stateData } = this.state;
-  //   const newListParam = (stateData.get('listParam')).merge({
-  //     deptCd: newProps.deptCd
-  //   });
-  //   this.handleGetClientList(newListParam);
-  // }
-
   handleChangePage = (event, page) => {
     const { stateData } = this.state;
     const newListParam = (stateData.get('listParam')).merge({
@@ -313,7 +305,7 @@ class ClientListForViolated extends Component {
         />
       }
       <GRConfirm />
-      <GRAlert />
+      {/*<GRAlert /> */}
       </div>
     );
 

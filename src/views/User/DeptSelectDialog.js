@@ -36,10 +36,6 @@ class DeptSelectDialog extends Component {
         };
     }
 
-    handleClose = (event) => {
-        this.props.DeptActions.closeMultiDialog();
-    }
-
     handleSelectDept = (listItem) => {
         this.setState({
             selectedDept: { deptCd: listItem.key, deptNm: listItem.title }
@@ -71,7 +67,7 @@ class DeptSelectDialog extends Component {
                             rootKeyValue='0'
                             keyName='key'
                             title='title'
-                            startingDepth='2'
+                            startingDepth='1'
                             isShowCheck={isShowCheck}
                             hasSelectChild={false}
                             hasSelectParent={false}

@@ -58,7 +58,8 @@ export const showInform = (param) => dispatch => {
         type: SHOW_SECURITYRULE_INFORM,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('objId') : '',
-        viewItem: param.viewItem
+        viewItem: param.viewItem,
+        isEditable: param.isEditable
     });
 };
 
@@ -475,15 +476,14 @@ export default handleActions({
         if(netItems && netItems.size > 0) {
             let networkItems = List([]);
             netItems.forEach(n => {
-                const ns = n.split('|');
                 networkItems = networkItems.push(Map({
-                    no: ns[0],
-                    direction: ns[1],
-                    protocol: ns[2],
-                    address: ns[3],
-                    srcport: ns[4],
-                    dstport: ns[5],
-                    state: ns[6]
+                    no: n.no,
+                    direction: n.direction,
+                    protocol: n.protocol,
+                    address: n.address,
+                    srcport: n.src,
+                    dstport: n.dst,
+                    state: n.state
                 }));
             });
 

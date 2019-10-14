@@ -1,8 +1,12 @@
 import React, { Component } from "react";
+import { Map, List, fromJS } from 'immutable';
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
+import { getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
+
+import * as DeptActions from 'modules/DeptModule';
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import UserListForSelect from 'views/User/UserListForSelect';
@@ -44,8 +48,18 @@ class UserSelectDialog extends Component {
 
     render() {
         const { classes } = this.props;
-        const { isOpen, deptNm } = this.props;
+        const { isOpen, compId, DeptProps } = this.props;
         const { t, i18n } = this.props;
+
+        const checkedDeptCd = DeptProps.getIn(['viewItems', compId, 'treeComp', 'checked']);
+
+        let deptNm = '';
+        if(checkedDeptCd && checkedDeptCd.length > 0) {
+            const selectedItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(e => (e.get('key') === checkedDeptCd[0]));
+            if(selectedItem) {
+                deptNm = selectedItem.get('title');
+            }
+        }
 
         return (
             <div>
@@ -69,4 +83,12 @@ class UserSelectDialog extends Component {
     }
 }
 
-export default translate("translations")(withStyles(GRCommonStyle)(UserSelectDialog));
+const mapStateToProps = (state) => ({
+    DeptProps: state.DeptModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+    DeptActions: bindActionCreators(DeptActions, dispatch)
+});
+
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(UserSelectDialog)));

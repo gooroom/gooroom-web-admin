@@ -23,6 +23,9 @@ const CLOSE_ADMINUSER_INFORM = 'adminUser/CLOSE_ADMINUSER_INFORM';
 const SHOW_ADMINUSER_DIALOG = 'adminUser/SHOW_ADMINUSER_DIALOG';
 const CLOSE_ADMINUSER_DIALOG = 'adminUser/CLOSE_ADMINUSER_DIALOG';
 
+const SHOW_ADMINHIST_DIALOG = 'adminUser/SHOW_ADMINHIST_DIALOG';
+const CLOSE_ADMINHIST_DIALOG = 'adminUser/CLOSE_ADMINHIST_DIALOG';
+
 const SHOW_ADMINCONN_DIALOG = 'adminUser/SHOW_ADMINCONN_DIALOG';
 const CLOSE_ADMINCONN_DIALOG = 'adminUser/CLOSE_ADMINCONN_DIALOG';
 const EDIT_ADMINCONN_SUCCESS = 'adminUser/EDIT_ADMINCONN_SUCCESS';
@@ -32,7 +35,23 @@ const ADD_ADMINCONN_IP_ITEM = 'adminUser/ADD_ADMINCONN_IP_ITEM';
 const DELETE_ADMINCONN_IP_ITEM = 'adminUser/DELETE_ADMINCONN_IP_ITEM';
 
 // ...
-const initialState = commonHandleActions.getCommonInitialState('chAdminNm', 'asc', {}, {status: 'STAT010', keyword: ''});
+const initialState = commonHandleActions.getCommonInitialState('chAdminNm', 'asc', {}, {
+    status: 'STAT010', 
+    keyword: ''}
+);
+
+export const showHistDialog = (param) => dispatch => {
+    return dispatch({
+        type: SHOW_ADMINHIST_DIALOG,
+        viewItem: param.viewItem
+    });
+};
+
+export const closeHistDialog = () => dispatch => {
+    return dispatch({
+        type: CLOSE_ADMINHIST_DIALOG
+    });
+};
 
 export const showDialog = (param) => dispatch => {
     return dispatch({
@@ -53,7 +72,8 @@ export const showInform = (param) => dispatch => {
         type: SHOW_ADMINUSER_INFORM,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('userId') : '',
-        viewItem: param.viewItem
+        viewItem: param.viewItem,
+        isEditable: param.isEditable
     });
 };
 
@@ -114,38 +134,7 @@ const makeParameter = (po) => {
     return {
         adminId: po.get('adminId'),
         adminPw: (po.get('adminPw') !== '') ? sha256(po.get('adminId') + sha256(po.get('adminPw'))) : '',
-        adminNm: po.get('adminNm'),
-
-        isClientAdmin: (po.get('isClientAdmin') !== undefined) ? po.get('isClientAdmin') : '0',
-        clientAdd: (po.get('clientAdd') !== undefined) ? po.get('clientAdd') : '0',
-        clientDelete: (po.get('clientDelete') !== undefined) ? po.get('clientDelete') : '0',
-        clientMove: (po.get('clientMove') !== undefined) ? po.get('clientMove') : '0',
-        clientRule: (po.get('clientRule') !== undefined) ? po.get('clientRule') : '0',
-
-        isUserAdmin: (po.get('isUserAdmin') !== undefined) ? po.get('isUserAdmin') : '0',
-        userAdd: (po.get('userAdd') !== undefined) ? po.get('userAdd') : '0',
-        userDelete: (po.get('userDelete') !== undefined) ? po.get('userDelete') : '0',
-        userMove: (po.get('userMove') !== undefined) ? po.get('userMove') : '0',
-        userRule: (po.get('userRule') !== undefined) ? po.get('userRule') : '0',
-
-        isRuleAdmin: (po.get('isRuleAdmin') !== undefined) ? po.get('isRuleAdmin') : '0',
-        ruleEdit: (po.get('ruleEdit') !== undefined) ? po.get('ruleEdit') : '0',
-        ruleUser: (po.get('ruleUser') !== undefined) ? po.get('ruleUser') : '0',
-        ruleClient: (po.get('ruleClient') !== undefined) ? po.get('ruleClient') : '0',
-
-        isDesktopAdmin: (po.get('isDesktopAdmin') !== undefined) ? po.get('isDesktopAdmin') : '0',
-        desktopEdit: (po.get('desktopEdit') !== undefined) ? po.get('desktopEdit') : '0',
-        desktopUser: (po.get('desktopUser') !== undefined) ? po.get('desktopUser') : '0',
-        desktopClient: (po.get('desktopClient') !== undefined) ? po.get('desktopClient') : '0',
-
-        isNoticeAdmin: (po.get('isNoticeAdmin') !== undefined) ? po.get('isNoticeAdmin') : '0',
-        noticeEdit: (po.get('noticeEdit') !== undefined) ? po.get('noticeEdit') : '0',
-        noticeUser: (po.get('noticeUser') !== undefined) ? po.get('noticeUser') : '0',
-        noticeClient: (po.get('noticeClient') !== undefined) ? po.get('noticeClient') : '0',
-
-        connIps: (po.get('connIps') !== undefined) ? po.get('connIps').toJS() : [],
-        grpInfoList: (po.get('grpInfoList') !== undefined) ? po.get('grpInfoList').toJS() : [],
-        deptInfoList: (po.get('deptInfoList') !== undefined) ? po.get('deptInfoList').toJS() : []
+        adminNm: po.get('adminNm')
     };
 }
 
@@ -306,6 +295,17 @@ export default handleActions({
     },
     [CLOSE_ADMINUSER_INFORM]: (state, action) => {
         return commonHandleActions.handleCloseInformAction(state, action);
+    },
+    [SHOW_ADMINHIST_DIALOG]: (state, action) => {
+        return state.merge({
+            editingItem: action.viewItem,
+            histDialogOpen: true
+        });
+    },
+    [CLOSE_ADMINHIST_DIALOG]: (state, action) => {
+        return state.delete('editingItem').merge({
+            histDialogOpen: false
+        });
     },
     [SET_EDITING_ITEM_VALUE]: (state, action) => {
         return state.merge({

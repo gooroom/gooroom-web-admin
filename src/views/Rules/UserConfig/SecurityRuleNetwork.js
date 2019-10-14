@@ -14,6 +14,8 @@ import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+
 import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -59,7 +61,8 @@ const columns = [
 
 function createNetworkItem(editingItem, direction, protocol, address, srcport, dstport, state) {
   const nextCount = (editingItem && editingItem.get('networkItems')) ? editingItem.get('networkItems').size : 0;
-  return Map({ no: nextCount, direction, protocol, address, srcport, dstport, state });
+  const srcName = 'srcport';//_' + nextCount; 
+  return Map({ no: nextCount, direction, protocol, address, [srcName]:srcport, dstport, state });
 }
 
 let EnhancedTableToolbar = props => {
@@ -325,33 +328,31 @@ class SecurityRuleNetwork extends Component {
                     </FormControl>
                   </TableCell>
                   <TableCell>
-
-                    <Input style={{padding: 0}}
+                    <TextValidator 
+                      name='address'
+                      validators={['matchRegexp:^[a-fA-F0-9.:/]*$']}
+                      errorMessages={[t("msgValidFirewallAddress")]}
                       value={n.get('address')}
-                      name="address"
-                      variant='outlined'
                       onChange={this.changeNetworkOption(n.get('no'))}
-                    />                  
-                  
+                    />
                   </TableCell>
                   <TableCell>
-
-                    <Input style={{padding: 0}}
+                    <TextValidator 
+                      name='srcport'
+                      validators={['matchRegexp:^[0-9,-]*$']}
+                      errorMessages={[t("msgTypeNumberOnly")]}
                       value={n.get('srcport')}
-                      name="srcport"
-                      variant='outlined'
                       onChange={this.changeNetworkOption(n.get('no'))}
-                    />                  
-                  
+                    />
                   </TableCell>
                   <TableCell>
-
-                    <Input style={{padding: 0}}
+                    <TextValidator 
+                      name='dstport'
+                      validators={['matchRegexp:^[0-9,-]*$']}
+                      errorMessages={[t("msgTypeNumberOnly")]}
                       value={n.get('dstport')}
-                      name="dstport"
-                      variant='outlined'
                       onChange={this.changeNetworkOption(n.get('no'))}
-                    />                  
+                    />
                   </TableCell>
 
                   <TableCell>
@@ -392,7 +393,6 @@ class SecurityRuleNetwork extends Component {
         }
       </Table>
       </div>
-      <GRConfirm />
       </Paper>
     );
   }

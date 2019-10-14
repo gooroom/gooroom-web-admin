@@ -65,7 +65,17 @@ class AdminUserDialog extends Component {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("lbAddAdminUser"),
                 confirmMsg: t("msgAddAdminUser"),
-                handleConfirmResult: this.handleCreateConfirmResult,
+                handleConfirmResult: (confirmValue, paramObject) => {
+                    if(confirmValue) {
+                        const { AdminUserProps, AdminUserActions, compId } = this.props;
+                        AdminUserActions.createAdminUserData({
+                            itemObj: paramObject
+                        }).then((res) => {
+                                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
+                                this.handleClose();
+                        });
+                    }
+                },
                 confirmObject: AdminUserProps.get('editingItem')
             });
         } else {
@@ -74,19 +84,6 @@ class AdminUserDialog extends Component {
                     this.refs.form.validate(c);
                 });
             }
-        }
-    }
-    handleCreateConfirmResult = (confirmValue, paramObject) => {
-        if(confirmValue) {
-            const { AdminUserProps, AdminUserActions, compId } = this.props;
-            AdminUserActions.createAdminUserData({
-                adminId: paramObject.get('adminId'),
-                adminPw: (paramObject.get('adminPw') !== '') ? sha256(paramObject.get('adminId') + sha256(paramObject.get('adminPw'))) : '',
-                adminNm: paramObject.get('adminNm')
-            }).then((res) => {
-                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
-                this.handleClose();
-            });
         }
     }
 
@@ -114,9 +111,7 @@ class AdminUserDialog extends Component {
         if(confirmValue) {
             const { AdminUserProps, AdminUserActions, compId } = this.props;
             AdminUserActions.editAdminUserData({
-                adminId: paramObject.get('adminId'),
-                adminPw: (paramObject.get('adminPw') !== '') ? sha256(paramObject.get('adminId') + sha256(paramObject.get('adminPw'))) : '',
-                adminNm: paramObject.get('adminNm')
+                itemObj: paramObject
             }).then((res) => {
                 AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
                 this.handleClose();
@@ -167,14 +162,16 @@ class AdminUserDialog extends Component {
                         errorMessages={[t("msgAdminUserId"), t("msgValidAdminUserId")]}
                         onChange={this.handleValueChange("adminId")}
                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                        disabled={(dialogType == AdminUserDialog.TYPE_EDIT) ? true : false}
+                        disabled={(dialogType === AdminUserDialog.TYPE_ADD) ? false : true}
                     />
                     <TextValidator
                         label={t("lbAdminUserName")} value={(editingItem.get('adminNm')) ? editingItem.get('adminNm') : ''}
                         name="adminNm" validators={['required']} errorMessages={[t("msgAdminUserName")]}
                         onChange={this.handleValueChange("adminNm")}
                         className={classes.fullWidth}
+                        disabled={(dialogType === AdminUserDialog.TYPE_VIEW) ? true : false}
                     />
+                    {(dialogType !== AdminUserDialog.TYPE_VIEW) &&
                     <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
                         <TextValidator
                             label={t("lbAdminPassowrd")}
@@ -197,7 +194,7 @@ class AdminUserDialog extends Component {
                             }}
                         />
                     </FormControl>
-
+                    }
                 </DialogContent>
                 <DialogActions>
                     

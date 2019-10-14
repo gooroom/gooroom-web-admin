@@ -52,7 +52,8 @@ export const showInform = (param) => dispatch => {
         type: SHOW_DESKTOPCONF_INFORM,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('confId') : '',
-        viewItem: param.viewItem
+        viewItem: param.viewItem,
+        isEditable: param.isEditable
     });
 };
 

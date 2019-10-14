@@ -126,6 +126,7 @@ const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
+
     DesktopConfProps: state.DesktopConfModule
 });
   
@@ -134,6 +135,7 @@ const mapDispatchToProps = (dispatch) => ({
     MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
     SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
     SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+
     DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
 });
 

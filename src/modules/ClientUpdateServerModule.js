@@ -48,7 +48,8 @@ export const showInform = (param) => dispatch => {
         type: SHOW_UPDATESERVER_INFORM,
         compId: param.compId,
         selectId: (param.viewItem) ? param.viewItem.get('objId') : '',
-        viewItem: param.viewItem
+        viewItem: param.viewItem,
+        isEditable: param.isEditable
     });
 };
 
@@ -195,6 +196,7 @@ const makeParameter = (itemObj) => {
         objId: itemObj.get('objId'),
         objName: itemObj.get('objNm'),
         objComment: itemObj.get('comment'),
+        
         MAINOS: itemObj.get('mainos'),
         EXTOS: itemObj.get('extos'),
         PRIORITIES: itemObj.get('priorities')
