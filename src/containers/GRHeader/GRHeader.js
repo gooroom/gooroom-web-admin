@@ -3,6 +3,12 @@ import * as Constants from "components/GRComponents/GRConstants";
 
 import { Link } from 'react-router-dom';
 
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as AdminActions from 'modules/AdminModule';
+
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+
 import GRAlarmInform from 'views/Admin/GRAlarmInform';
 
 import AppBar from "@material-ui/core/AppBar";
@@ -21,6 +27,12 @@ import MenuList from '@material-ui/core/MenuList';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import SettingsApplications from '@material-ui/icons/SettingsApplications';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -52,35 +64,42 @@ class GRHeader extends Component {
     this.setState({ popMenu: false });
   };
 
+  handleCloseInfo = (e) => {
+    const { AdminActions } = this.props;
+    AdminActions.clearLoginTrialInfo();
+  }
+
   render() {
-    const { classes } = this.props;
+    const { classes, AdminProps } = this.props;
     const { t, i18n } = this.props;
 
     const changeLanguage = lng => {
       i18n.changeLanguage(lng);
     };
 
+    const dupDialogOpen = (AdminProps.get('dupLoginIp') !== undefined && AdminProps.get('dupLoginIp') !== '') ? true : false;
+
     return (
       <AppBar className={classes.headerRoot}>
         <Toolbar className={classes.headerToolbar}>
-            <Typography type="title" className={classes.headerBrandLogo}>
-              GPMS {VERSION}
-            </Typography>
-            <IconButton onClick={this.props.toggleDrawer}>
-              <MenuIcon />
-            </IconButton>
-            <div style={{flex: "1 1 auto"}}>
-              <Button onClick={() => changeLanguage("kr")}>kr</Button>
-              <Button onClick={() => changeLanguage("en")}>en</Button>
-            </div>
-          {(window.gpmsain !== Constants.PART_RULECODE) && 
+          <Typography type="title" className={classes.headerBrandLogo}>
+            GPMS {VERSION}
+          </Typography>
+          <IconButton onClick={this.props.toggleDrawer}>
+            <MenuIcon />
+          </IconButton>
+          <div style={{ flex: "1 1 auto" }}>
+            <Button onClick={() => changeLanguage("kr")}>kr</Button>
+            <Button onClick={() => changeLanguage("en")}>en</Button>
+          </div>
+          {(window.gpmsain !== Constants.PART_RULECODE) &&
             <GRAlarmInform />
           }
-            <Button onClick={this.props.onAdminClick}>
-              <AccountCircle />{t("adminMenu")}
-            </Button>
-          {(window.gpmsain !== Constants.PART_RULECODE) && 
-            <Button 
+          <Button onClick={this.props.onAdminClick}>
+            <AccountCircle />{t("adminMenu")}
+          </Button>
+          {(window.gpmsain !== Constants.PART_RULECODE) &&
+            <Button
               buttonRef={node => {
                 this.anchorEl = node;
               }}
@@ -89,33 +108,62 @@ class GRHeader extends Component {
               <SettingsApplications />Server
             </Button>
           }
-            <Popper open={this.state.popMenu} anchorEl={this.anchorEl} transition disablePortal>
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  id="menu-list-grow"
-                  style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                >
-                  <Paper>
-                    <ClickAwayListener onClickAway={this.handleClose}>
-                      <MenuList>
-                      {(window.gpmsain === Constants.SUPER_RULECODE) && 
+          <Popper open={this.state.popMenu} anchorEl={this.anchorEl} transition disablePortal>
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                id="menu-list-grow"
+                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={this.handleClose}>
+                    <MenuList>
+                      {(window.gpmsain === Constants.SUPER_RULECODE) &&
                         <MenuItem component={Link} to={'/system/siteconfig/GRM9901/menuSiteConfig'}>{t("menuSiteConfig")}</MenuItem>
                       }
-                        <MenuItem component={Link} to={'/system/adminusermng/GRM9902/menuAdminUserMng'}>{t("menuAdminUserMng")}</MenuItem>
-                        {(window.gpmsain === Constants.ADMIN_RULECODE || (window.gpmsain === Constants.PART_RULECODE && window.roleUserAdmin === 1)) && 
-                          <MenuItem component={Link} to={'/system/deptuserreg/GRM9903/menuDeptAndUser'}>{t("menuDeptAndUser")}</MenuItem>
-                        }
-                        </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
+                      <MenuItem component={Link} to={'/system/adminusermng/GRM9902/menuAdminUserMng'}>{t("menuAdminUserMng")}</MenuItem>
+                      {(window.gpmsain === Constants.ADMIN_RULECODE || (window.gpmsain === Constants.PART_RULECODE && window.roleUserAdmin === 1)) &&
+                        <MenuItem component={Link} to={'/system/deptuserreg/GRM9903/menuDeptAndUser'}>{t("menuDeptAndUser")}</MenuItem>
+                      }
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Popper>
         </Toolbar>
+        <Dialog aria-labelledby="customized-dialog-title" open={dupDialogOpen}>
+          <DialogTitle id="customized-dialog-title">관리자 계정 접속 시도</DialogTitle>
+          <DialogContent dividers>
+            <Typography gutterBottom>
+              현재 사용하시는 관리자 계정으로 아래 위치에서 접속시도가 있었습니다.
+          </Typography>
+            <Typography variant='body1' gutterBottom>
+            <div>IP : {AdminProps.get('dupLoginIp')}</div>
+            <div>Date : {formatDateToSimple(AdminProps.get('dupLoginDate'), 'YYYY-MM-DD HH:mm:ss')}</div>
+          </Typography>
+            <Typography gutterBottom>
+             "정보 확인" 버튼을 누르면 정보가 제거됩니다.
+          </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={this.handleCloseInfo}>
+              정보 확인
+          </Button>
+          </DialogActions>
+        </Dialog>
       </AppBar>
     );
   }
 }
 
-export default translate("translations")(withStyles(GRCommonStyle)(GRHeader));
+const mapStateToProps = (state) => ({
+  AdminProps: state.AdminModule
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  AdminActions: bindActionCreators(AdminActions, dispatch)
+});
+
+export default translate("translations")(connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GRHeader)));
+
