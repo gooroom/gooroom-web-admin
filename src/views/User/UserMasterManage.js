@@ -206,6 +206,8 @@ class UserMasterManage extends Component {
       this.props.DeptActions.showDialog({
         viewItem: {
           parentDeptCd: checkedDept.get("key"),
+          parentExpireDate: checkedDept.get("expireDate"),
+          expireDate: checkedDept.get("expireDate"),
           deptCd: "",
           deptNm: ""
         },

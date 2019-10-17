@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
@@ -95,7 +96,9 @@ class DeptSpec extends Component {
     this.props.DeptActions.showDialog({
       viewItem: {
         deptCd: paramObj.get('deptCd'),
-        deptNm: paramObj.get('deptNm')
+        deptNm: paramObj.get('deptNm'),
+        expireDate: paramObj.get('expireDate'),
+        parentExpireDate: paramObj.get('parentExpireDate')
       },
       dialogType: DeptDialog.TYPE_EDIT
     });
@@ -219,6 +222,14 @@ class DeptSpec extends Component {
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'DEPT']);
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
+    let userSubinfo = null;
+    if(informOpen && viewItem) {
+      userSubinfo = <div>
+        {'[DeptCode:' + viewItem.get('deptCd') + ']'}
+        {', [Regist:' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD') + ']'}
+        {', [Expire:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}
+      </div>;
+    }
 
     return (
       <div style={{marginTop: 10}}>
@@ -227,7 +238,7 @@ class DeptSpec extends Component {
           <CardHeader
             title={viewItem.get('deptNm')}
             style={{wordBreak:'break-all'}}
-            subheader={viewItem.get('deptCd')}
+            subheader={userSubinfo}
             action={ (isEditable) ?
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
