@@ -125,6 +125,8 @@ class DeptTreeComp extends Component {
         deptNm: selectRowObject.get('deptNm'),
         comment: selectRowObject.get('comment'),
         regDate: selectRowObject.get('regDate'),
+        expireDate: selectRowObject.get('expireDate'),
+        parentExpireDate: selectRowObject.get('uprExpireDate'),
         hasChildren: selectRowObject.get('hasChildren')
       }));
     }
@@ -197,6 +199,8 @@ class DeptTreeComp extends Component {
         deptNm: treeNode.get('title'),
         comment: treeNode.get('comment'),
         regDate: treeNode.get('regDate'),
+        expireDate: treeNode.get('expireDate'),
+        parentExpireDate: treeNode.get('parentExpireDate'),
         hasChildren: (treeNode.get('children') !== null) ? true : false
       }));
     }
@@ -210,6 +214,8 @@ class DeptTreeComp extends Component {
         deptNm: treeNode.get('title'),
         comment: treeNode.get('comment'),
         regDate: treeNode.get('regDate'),
+        expireDate: treeNode.get('expireDate'),
+        parentExpireDate: treeNode.get('parentExpireDate'),
         hasChildren: (treeNode.get('children') !== null) ? true : false
       }));
     }

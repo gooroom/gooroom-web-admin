@@ -68,10 +68,12 @@ class DeptDialog extends Component {
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
                         const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
                         const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
+
                         DeptActions.createDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                             deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
                             uprDeptCd: DeptProps.getIn(['editingItem', 'parentDeptCd']),
+                            expireDate: DeptProps.getIn(['editingItem', 'expireDate']),
             
                             browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
                             mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
@@ -126,7 +128,8 @@ class DeptDialog extends Component {
                         DeptActions.editDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                             deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-                
+                            expireDate: DeptProps.getIn(['editingItem', 'expireDate']),
+
                             paramIsInherit: (isInherit) ? 'Y' : 'N',
                 
                             browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
@@ -202,7 +205,6 @@ class DeptDialog extends Component {
                 upperDeptInfo = `${upperItem.get('title')} (${checkedDeptCd[0]})`;
             }
         }
-        const isUseDeptExpireDate = (editingItem && editingItem.get('isUseExpire') === '1');
         
         return (
             <div>
@@ -248,27 +250,12 @@ class DeptDialog extends Component {
                             }
                             <Grid item xs={4}>
                                 <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                    <Grid item xs={12} style={{paddingBottom:0}}><FormLabel component="legend" style={{fontSize:'0.8rem'}}>{t("lbUseDeptExpire")}</FormLabel></Grid>
-                                    <Grid item >
-                                        <FormControlLabel value="true" control={
-                                            <Radio color="primary" value="1" onChange={this.handleValueChange("isUseExpire")} checked={isUseDeptExpireDate} />
-                                        } label={t("optUse")} labelPlacement="end" />
-                                    </Grid>
-                                    <Grid item >
-                                        <FormControlLabel value="false" control={
-                                            <Radio color="primary" value="0" onChange={this.handleValueChange("isUseExpire")} checked={!isUseDeptExpireDate} />
-                                        } label={t("optNoUse")} labelPlacement="end" />
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
                                     <Grid item xs={12}>
                                     <InlineDatePicker label={t('lbDeptExpireDate')} format='YYYY-MM-DD'
                                     value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10)}
+                                    maxDate={editingItem.get('parentExpireDate')}
                                     onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
-                                    className={classes.fullWidth} 
-                                    disabled={!isUseDeptExpireDate} />
+                                    className={classes.fullWidth} />
                                     </Grid>
                                 </Grid>
                             </Grid>
