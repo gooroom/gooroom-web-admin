@@ -639,10 +639,6 @@ export default {
   "lbPwIncludeUpper": "Include capitalization",
   "lbPwIncludeLower": "Include lowercase",
   "lbPwIncludeSpecial": "Include special",
-  "lbPwDiffBefore": "Number of previous passwords and character differences",
-  "lbPwDiffZero": "Not match",
-  "lbPwDiffSmall": "Little (more 2ea)",
-  "lbPwDiffMany": "Much (more 5ea)",
 
   // 클라우드서비스 관리
   "lbDeleteCloudService": "Delete cloud service",

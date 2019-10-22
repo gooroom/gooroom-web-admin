@@ -639,10 +639,6 @@ export default {
   "lbPwIncludeUpper": "영어 대문자 포함 여부",
   "lbPwIncludeLower": "영어 소문자 포함 여부",
   "lbPwIncludeSpecial": "특수문자 포함 여부",
-  "lbPwDiffBefore": "이전 비밀번호와 문자 차이 갯수",
-  "lbPwDiffZero": "일치하지 않음",
-  "lbPwDiffSmall": "조금 다름(2개이상)",
-  "lbPwDiffMany": "많이 다름(5개이상)",
 
   // 클라우드서비스 관리
   "lbDeleteCloudService": "클라우드서비스 삭제",
