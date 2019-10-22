@@ -96,7 +96,6 @@ class DeptUserReg extends Component {
             .set('pwIncludeUpper', pwRule ? pwRule.ucredit : false)
             .set('pwIncludeLower', pwRule ? pwRule.lcredit : false)
             .set('pwIncludeSpecial', pwRule ? pwRule.ocredit : false)
-            .set('pwDiffBefore', pwRule ? pwRule.difok : '0')
             .set('enableDuplicateLogin', (data[0].enableDuplicateLogin > 0) ? true : false)
             .set('duplicateLoginNotiType', dupValue.toString())
           }));
