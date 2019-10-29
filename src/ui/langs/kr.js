@@ -588,6 +588,14 @@ export default {
   "lbDeptExpireDate": "조직 만료일",
   "ttResetLoginTrial": "로그인 시도 가능수 초기화",
   "msgEditLoginTrialCount": "로그인 시도 가능수를 초기화 하시겠습니까?",
+  "lbUserRegistredDate": "사용자 등록일",
+  "lbDeptRegistredDate": "조직 등록일",
+  "lbWillExpire": "만료예정",
+  "lbExpired": "만료됨",
+  "lbExpiredDays": "일 전",
+  "lbAccountRemailTrial": "로그인 재시도 가능 횟수",
+  "lbAccountLocked": "계정잠김",
+  "lbAccountPossibleCnt": "회",
 
   // 테마조회
   "lbDeleteTheme": "테마 삭제",
