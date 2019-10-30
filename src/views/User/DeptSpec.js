@@ -232,7 +232,7 @@ class DeptSpec extends Component {
       userSubinfo = <div>
         <Card elevation={4}>
           <CardHeader
-            avatar={<DeptIcon fontSize="large"/>}
+            avatar={<DeptIcon fontSize="large" style={{verticalAlign: 'middle', marginRight:5}}/>}
             title={<div>
             <Typography variant="h6" style={{display: 'inline-block', marginRight:18}}>{viewItem.get('deptNm')}</Typography>
             <Chip avatar={<Avatar>DC</Avatar>} label={viewItem.get('deptCd')} style={{marginRight:18}}/></div>
@@ -250,26 +250,25 @@ class DeptSpec extends Component {
           <CardContent style={{padding:10}}>
             <Grid container spacing={16}>
               <Grid item xs={12} md={12} lg={6} xl={6} >
-                <HowToRegIcon />
+                <HowToRegIcon style={{verticalAlign: 'middle', marginRight:5}} />
                 <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbDeptRegistredDate")}</Typography>
                 <Typography style={{display: 'inline-block'}}>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</Typography>
               </Grid>
               {/* Expired Date */}
-              {(viewItem.get('expireDate')) &&
-                <Grid item xs={12} md={12} lg={6} xl={6} > 
-                  <AlarmIcon />
-                  <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbDeptExpireDate")}</Typography>
+              <Grid item xs={12} md={12} lg={6} xl={6} > 
+                <AlarmIcon style={{verticalAlign: 'middle', marginRight:5}}/>
+                <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbDeptExpireDate")}</Typography>
+                {(viewItem.get('expireDate')) ?
+                  <div style={{display: 'inline-block'}}>
                   <Typography style={{display: 'inline-block', marginRight:18}}>{formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD')}</Typography>
-                  {(calculateDiffDays(viewItem.get('expireDate')) < 0) ?
-                    (
-                      <Chip label={t("lbExpired")} style={{color: "#fafafa", backgroundColor: "#d50000"}}/>
-                    ) :
+                  {calculateDiffDays(viewItem.get('expireDate')) < 0 ?
+                    <Chip label={t("lbExpired")} style={{color: "#fafafa", backgroundColor: "#d50000"}}/> :
                     calculateDiffDays(viewItem.get('expireDate')) >= 7 ? 
-                      (<Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="primary"/>) :
-                      (<Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="secondary"/>)
-                  }
-                </Grid>
-              }
+                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="primary"/> :
+                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="secondary"/>
+                  }</div> : <Typography style={{display: 'inline-block', marginRight:18}}>{t("optNoUse")}</Typography>
+                }
+              </Grid>
             </Grid>
           </CardContent>
         </Card>
