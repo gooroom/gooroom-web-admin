@@ -113,7 +113,7 @@ class ClientConfSettingSpec extends Component {
               <Grid item xs={2} className={classes.specTitle}>{bull} {t("dtPermitAllIp")}</Grid>
               <Grid item xs={2} className={classes.specContent}>{(viewItem.get('whiteIpAll')) ? t("selPermit") : t("selNoPermit")}</Grid>
               <Grid item xs={2} className={classes.specTitle}>{bull} {t("lbPolicykitUserMng")}</Grid>
-              <Grid item xs={2} className={classes.specContent}>{viewItem.get('policykitUser')}</Grid>
+              <Grid item xs={2} className={classes.specContent}>{(viewItem.get('policykitUser') === 'sudo') ? t("lbPolicykitSudoGroup") : ((viewItem.get('policykitUser') === 'user') ? t("lbPolicykitLocalUser") : viewItem.get('policykitUser'))}</Grid>
               <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("dtSetupLogLevel")} ]</Grid>
               <Grid item xs={12} className={classes.specTitle}>{bull} {t("lbViolatedLogLebel")}</Grid>
               <Grid item xs={12} className={classes.specContent}>
