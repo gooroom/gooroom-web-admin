@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { formatDateToSimple, calculateDiffDays } from 'components/GRUtils/GRDates';
 import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
@@ -36,9 +36,13 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
 
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import GroupIcon from '@material-ui/icons/SupervisedUserCircle';
 
 import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
 import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
@@ -55,11 +59,11 @@ import PolicyKitRuleSpec from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
-import Avatar from '@material-ui/core/Avatar';
 import DefaultIcon from '@material-ui/icons/Language';
-import DeptIcon from '@material-ui/icons/BusinessCenter';
 import UserIcon from '@material-ui/icons/Person';
-import GroupIcon from '@material-ui/icons/LaptopChromebook';
+import DeptIcon from '@material-ui/icons/SupervisedUserCircle';
+import HowToRegIcon from '@material-ui/icons/HowToReg';
+import AlarmIcon from '@material-ui/icons/Alarm';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -209,6 +213,7 @@ class DeptSpec extends Component {
   // .................................................
   render() {
     const { DeptProps, compId, AdminProps, isEditable } = this.props;
+    const { t, i18n } = this.props;
 
     const informOpen = DeptProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = DeptProps.getIn(['viewItems', compId, 'viewItem']);
@@ -225,20 +230,13 @@ class DeptSpec extends Component {
     let userSubinfo = null;
     if(informOpen && viewItem) {
       userSubinfo = <div>
-        {'[DeptCode:' + viewItem.get('deptCd') + ']'}
-        {', [Regist:' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD') + ']'}
-        {', [Expire:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}
-      </div>;
-    }
-
-    return (
-      <div style={{marginTop: 10}}>
-      {(informOpen && viewItem) &&
-        <Card>
+        <Card elevation={4}>
           <CardHeader
-            title={viewItem.get('deptNm')}
-            style={{wordBreak:'break-all'}}
-            subheader={userSubinfo}
+            avatar={<DeptIcon fontSize="large"/>}
+            title={<div>
+            <Typography variant="h6" style={{display: 'inline-block', marginRight:18}}>{viewItem.get('deptNm')}</Typography>
+            <Chip avatar={<Avatar>DC</Avatar>} label={viewItem.get('deptCd')} style={{marginRight:18}}/></div>
+          }
             action={ (isEditable) ?
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
@@ -247,6 +245,44 @@ class DeptSpec extends Component {
                 ><SettingsApplicationsIcon /></Button>
               </div> : <div></div>
             }
+          />
+          <Divider />
+          <CardContent style={{padding:10}}>
+            <Grid container spacing={16}>
+              <Grid item xs={12} md={12} lg={6} xl={6} >
+                <HowToRegIcon />
+                <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbDeptRegistredDate")}</Typography>
+                <Typography style={{display: 'inline-block'}}>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</Typography>
+              </Grid>
+              {/* Expired Date */}
+              {(viewItem.get('expireDate')) &&
+                <Grid item xs={12} md={12} lg={6} xl={6} > 
+                  <AlarmIcon />
+                  <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbDeptExpireDate")}</Typography>
+                  <Typography style={{display: 'inline-block', marginRight:18}}>{formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD')}</Typography>
+                  {(calculateDiffDays(viewItem.get('expireDate')) < 0) ?
+                    (
+                      <Chip label={t("lbExpired")} style={{color: "#fafafa", backgroundColor: "#d50000"}}/>
+                    ) :
+                    calculateDiffDays(viewItem.get('expireDate')) >= 7 ? 
+                      (<Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="primary"/>) :
+                      (<Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="secondary"/>)
+                  }
+                </Grid>
+              }
+            </Grid>
+          </CardContent>
+        </Card>
+      </div>;
+    }
+
+    return (
+      <div style={{marginTop: 10}}>
+      {(informOpen && viewItem) &&
+        <Card>
+          <CardHeader
+            title={userSubinfo}
+            style={{wordBreak:'break-all'}}
           ></CardHeader>
           <Divider />
           <CardContent style={{padding:10}}>
