@@ -48,9 +48,9 @@ class CtrlCenterItemDialog extends Component {
     static ITEM_LIST = [
         {no:1, tag:'bluetooth', name:'bluetooth', name_kr:'블루투스'},
         {no:2, tag:'background', name:'background', name_kr:'배경'},
-        {no:3, tag:'notifications', name:'notifications', name_kr:'알림'},
-        {no:4, tag:'search', name:'search', name_kr:'검색'},
-        {no:5, tag:'region', name:'region', name_kr:'지역 및 언어'},
+        {no:3, tag:'search', name:'search', name_kr:'검색'},
+        {no:4, tag:'region', name:'region', name_kr:'지역 및 언어'},
+        {no:5, tag:'universal-access', name:'universal-access', name_kr:'접근성'},
         {no:6, tag:'font', name:'font', name_kr:'글꼴'},
         {no:7, tag:'online-accounts', name:'online-accounts', name_kr:'온라인 계정'},
         {no:8, tag:'privacy', name:'privacy', name_kr:'개인 정보'},
