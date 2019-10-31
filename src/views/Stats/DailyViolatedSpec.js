@@ -97,7 +97,7 @@ class DailyViolatedSpec extends Component {
       { id: 'CLIENT_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colClientId") },
       { id: 'USER_ID', isOrder: true, numeric: false, disablePadding: true, label: t("colUser") },
       { id: 'LOG_TP', isOrder: true, numeric: false, disablePadding: true, label: t("colLogType") },
-      { id: 'LOG_VALUE', isOrder: true, numeric: false, disablePadding: true, label: t("colLogInfo") },
+      { id: 'LOG_VALUE', isOrder: false, numeric: false, disablePadding: true, label: t("colLogInfo") },
       { id: 'REG_DT', isOrder: false, numeric: false, disablePadding: true, label: t("colRegDate") }
     ];
 
