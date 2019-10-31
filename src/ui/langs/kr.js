@@ -1030,6 +1030,32 @@ export default {
   "lbViewType": "보임 방식",
   "colInstantNoticeDate": '즉시 알림일',
 
+  // 일괄등록
+  "lbSaveDeptDataFromFile": "조직정보 일괄등록",
+  "msgSaveDeptDataFromFile": "조직정보를 파일을 이용하여 일괄등록 하시겠습니까?",
+  "msgEditOkSaveDeptDataFromFile": "조직정보 일괄등록이 되었습니다.",
+  "msgEditErrorSaveDeptDataFromFile": "조직정보 일괄등록이 되지 않았습니다.",
+  "lbSaveUserDataFromFile": "사용자정보 일괄등록",
+  "msgSaveUserDataFromFile": "사용자정보를 파일을 이용하여 일괄등록 하시겠습니까?",
+  "msgEditOkSaveUserDataFromFile": "사용자정보 일괄등록이 되었습니다.",
+  "msgEditErrorSaveUserDataFromFile": "사용자정보 일괄등록이 되지 않았습니다.",
+
+  "msgDeptFromFileHelp01": "# 조직정보를 파일을 이용하여 등록할 수 있습니다.",
+  "msgDeptFromFileHelp02": "# 'CSV' 형식의 파일을 사용합니다.",
+  "msgDeptFromFileHelp03": "# 각 줄에 '조직아이디','조직이름','상위조직아이디' 순서로 파일을 작성합니다. (3개 항목)",
+  "msgDeptFromFileHelp04": "# [필수] 첫번줄은 \" 0,조직헤더,000000000 \" 로 작성합니다. (따옴표 제외)",
+  "msgDeptFromFileHelp05": "# [필수] 두번째줄은 \" DEPTDEFAULT,구름,0 \" 로 작성합니다. (따옴표 제외)",
+  "msgDeptFromFileHelp06": "# [필수] 작성하는 조직의 가장 상위조직의 '상위조직아이디' 는 'DEPTDEFAULT' 로 작성합니다.",
+  "msgDeptFromFileHelp07": "# [주의] 이전에 등록되어 있는 전체 조직정보가 삭제되고 등록됩니다.",
+
+  "msgUserFromFileHelp01": "# 사용자정보를 파일을 이용하여 등록할 수 있습니다.",
+  "msgUserFromFileHelp02": "# 'CSV' 형식의 파일을 사용합니다.",
+  "msgUserFromFileHelp03": "# 각 줄에 '사용자아이디','사용자이름','비밀번호','조직아이디','이메일','만료일' 순서로 파일을 작성합니다. (6개 항목)",
+  "msgUserFromFileHelp04": "# '만료일' 형식은 '년월일' 순서로 8자리로 작성합니다. (예: '20191030')",
+  "msgUserFromFileHelp05": "# [주의] 이전에 등록되어 있는 전체 사용자정보가 삭제되고 등록됩니다.",
+  "msgMustHaveSelectedFile": "파일이 선택되지 않았습니다.",
+
+
   // 1.3
   "menuSite": "SITE",
   "menuSiteManage": "Site관리",
