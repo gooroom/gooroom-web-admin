@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from "moment";
 
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import { formatDateToSimple, calculateDiffDays } from 'components/GRUtils/GRDates';
 import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
@@ -35,10 +35,19 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
 
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import LoginResetIcon from '@material-ui/icons/Flare';
+import UserIcon from '@material-ui/icons/PersonPin';
+import HowToRegIcon from '@material-ui/icons/HowToReg';
+import EmailIcon from '@material-ui/icons/Email';
+import LockIcon from '@material-ui/icons/Lock';
+import ReplayIcon from '@material-ui/icons/Replay';
+import AlarmIcon from '@material-ui/icons/Alarm'
 
 import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
 import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
@@ -218,41 +227,96 @@ class UserSpec extends Component {
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'USER']);
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
-
+    
     let userSubinfo = null;
     let actionButton = null;
     if(informOpen && viewItem) {
-      userSubinfo = <div>
-        {'[Id:' + viewItem.get('userId') + ']'}
-        {', [Regist:' + viewItem.get('regDate') + ']'}
-        {', [Email:' + ((viewItem.get('userEmail')) ? viewItem.get('userEmail') : ' - ') + ']'}
-        {(viewItem.get('expireDate')) ? ', ' : ''}
-        {(viewItem.get('isExpired') === '1') ? <font color='red'>{'[Expire:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']'}</font> : ((viewItem.get('expireDate')) ? '[Expire:' + formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD') + ']' : '')}
-        {(viewItem.get('loginTrial')) ? ', ' : ''}
-        {(viewItem.get('loginTrial') === '0') ? <font color='red'>{'[Account: Locked]'}</font> : '[RemainTrial:' + viewItem.get('loginTrial') + ']'}
-      </div>;
 
       if(viewItem.get('loginTrial') === '0') {
-        actionButton = <div style={{width:98,paddingTop:10,display:'flex'}}>
-                        <Tooltip title={t("ttResetLoginTrial")}>
-                          <Button size="small"
-                            variant="outlined" color="primary" style={{minWidth:32,marginRight:18}}
-                            onClick={() => this.handleResetTrialCount(viewItem, compId)}
-                          ><LoginResetIcon /></Button>
-                        </Tooltip>
-                        <Button size="small"
-                          variant="outlined" color="primary" style={{minWidth:32}}
-                          onClick={() => this.handleClickEdit(viewItem, compId)}
-                        ><SettingsApplicationsIcon /></Button>
-                      </div>
+        actionButton = <div style={{width:200,paddingTop:10,display:'flex'}}>
+          <Chip icon={<LockIcon style={{color: "#fafafa"}}/>} label={t("lbAccountLocked")} style={{color: "#fafafa", backgroundColor: "#d50000", marginRight:18}}/>
+          <Tooltip title={t("ttResetLoginTrial")}>
+            <Button size="small"
+              variant="outlined" color="primary" style={{minWidth:32,marginRight:18}}
+              onClick={() => this.handleResetTrialCount(viewItem, compId)}
+            ><LoginResetIcon /></Button>
+          </Tooltip>
+          <Button size="small"
+            variant="outlined" color="primary" style={{minWidth:32}}
+            onClick={() => this.handleClickEdit(viewItem, compId)}
+          ><SettingsApplicationsIcon /></Button>
+        </div>
       } else {
-        actionButton = <div style={{width:48,paddingTop:10}}>
-                        <Button size="small"
-                          variant="outlined" color="primary" style={{minWidth:32}}
-                          onClick={() => this.handleClickEdit(viewItem, compId)}
-                        ><SettingsApplicationsIcon /></Button>
-                      </div>
+        actionButton = <div style={{width:280,paddingTop:10}}>
+          <ReplayIcon style={{verticalAlign: 'middle', marginRight:5}}/>
+          <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:10}}>{t("lbAccountRemailTrial")}</Typography>
+          <Typography style={{display: 'inline-block', marginRight:18}}>[{viewItem.get('loginTrial')+t("lbAccountPossibleCnt")}]</Typography>
+          <Button size="small"
+            variant="outlined" color="primary" style={{minWidth:32}}
+            onClick={() => this.handleClickEdit(viewItem, compId)}
+          ><SettingsApplicationsIcon /></Button>
+        </div>
       }
+
+      userSubinfo = <div>
+        <Card elevation={4}>
+          <CardHeader
+            avatar={
+              <UserIcon fontSize="large"/>
+            }
+            title={<div>
+              <Typography variant="h6" style={{display: 'inline-block', marginRight:18}}>{viewItem.get('userNm')}</Typography>
+              <Chip avatar={<Avatar>ID</Avatar>} label={viewItem.get('userId')} style={{marginRight:18}}/></div>
+            }
+            action={ (isEditable && viewItem.get('statusCd') !== 'STAT020') ? actionButton : <div></div> }
+          />
+          <Divider />
+          <CardContent style={{padding:10}}>
+            <Grid container spacing={16}>
+              <Grid item xs={12} md={12} lg={6} xl={6} >
+                <HowToRegIcon style={{verticalAlign: 'middle', marginRight:5}}/>
+                <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbUserRegistredDate")}</Typography>
+                <Typography style={{display: 'inline-block'}}>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</Typography>
+              </Grid>
+              <Grid item xs={12} md={12} lg={6} xl={6} >
+                <EmailIcon style={{verticalAlign: 'middle', marginRight:5}}/>
+                <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbEmail")}</Typography>
+                <Typography style={{display: 'inline-block'}}>{((viewItem.get('userEmail')) ? viewItem.get('userEmail') : ' - ')}</Typography>
+              </Grid>
+              {/* Expired Date */}
+              <Grid item xs={12} md={12} lg={6} xl={6} > 
+                <AlarmIcon style={{verticalAlign: 'middle', marginRight:5}}/>
+                <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbUserExpireDate")}</Typography>
+                {(viewItem.get('expireDate')) ?
+                  <div style={{display: 'inline-block'}}>
+                  <Typography style={{display: 'inline-block', marginRight:18}}>{formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD')}</Typography>
+                  {(viewItem.get('isExpired') === '1') ?
+                    <Chip label={t("lbExpired")} style={{color: "#fafafa", backgroundColor: "#d50000"}}/> :
+                    calculateDiffDays(viewItem.get('expireDate')) >= 7 ? 
+                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="primary"/> :
+                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="secondary"/>
+                  }</div> : <Typography style={{display: 'inline-block', marginRight:18}}>{t("optNoUse")}</Typography>
+                }
+              </Grid>
+              {/* Password Expired Date */}
+              <Grid item xs={12} md={12} lg={6} xl={6} >
+                <AlarmIcon style={{verticalAlign: 'middle', marginRight:5}}/>
+                <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbPasswordExpireDate")}</Typography>
+                {(viewItem.get('passwordExpireDate')) ? 
+                  <div style={{display: 'inline-block'}}>
+                  <Typography style={{display: 'inline-block', marginRight:18}}>{formatDateToSimple(viewItem.get('passwordExpireDate'), 'YYYY-MM-DD')}</Typography>
+                  {(viewItem.get('isPasswordExpired') === '1') ?
+                    <Chip label={t("lbExpired")} style={{color: "#fafafa", backgroundColor: "#d50000"}}/> :
+                    calculateDiffDays(viewItem.get('passwordExpireDate')) >= 7 ? 
+                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('passwordExpireDate')) + t("lbExpiredDays")} color="primary"/> :
+                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('passwordExpireDate')) + t("lbExpiredDays")} color="secondary"/>
+                  }</div> : <Typography style={{display: 'inline-block', marginRight:18}}>{t("optNoUse")}</Typography>
+                }
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </div>;
     }
  
     return (
@@ -260,9 +324,7 @@ class UserSpec extends Component {
       {(informOpen && viewItem) &&
         <Card>
           <CardHeader
-            title={viewItem.get('userNm')}
-            subheader={userSubinfo}
-            action={ (isEditable && viewItem.get('statusCd') !== 'STAT020') ? actionButton : <div></div> }
+            title={userSubinfo}
           />
           <Divider />
           <CardContent style={{padding:10}}>

@@ -68,9 +68,8 @@ class ServerSiteConfig extends Component {
         pwIncludeUpper: false,
         pwIncludeLower: false,
         pwIncludeSpecial: false,
-        pwDiffBefore: '',
         enableDuplicateLogin: false,
-        duplicateLoginNotiType: '0'
+        duplicateLoginNotiType: '1'
       })
     };
   }
@@ -95,6 +94,10 @@ class ServerSiteConfig extends Component {
             dupValue = Math.abs(data[0].enableDuplicateLogin);
           }
 
+          if(dupValue === 0) {
+            dupValue = 1;
+          }
+
           this.setState(({stateData}) => ({
             stateData: stateData.set('gpmsDomain', data[0].pmUrl)
             .set('glmDomain', data[0].lmUrl)
@@ -108,7 +111,6 @@ class ServerSiteConfig extends Component {
             .set('pwIncludeUpper', pwRule ? pwRule.ucredit : false)
             .set('pwIncludeLower', pwRule ? pwRule.lcredit : false)
             .set('pwIncludeSpecial', pwRule ? pwRule.ocredit : false)
-            .set('pwDiffBefore', pwRule ? pwRule.difok : '0')
             .set('enableDuplicateLogin', (data[0].enableDuplicateLogin > 0) ? true : false)
             .set('duplicateLoginNotiType', dupValue.toString())
           }));
@@ -136,8 +138,7 @@ class ServerSiteConfig extends Component {
                   "dcredit": stateData.get('pwIncludeNumber'), 
                   "ucredit": stateData.get('pwIncludeUpper'), 
                   "lcredit": stateData.get('pwIncludeLower'), 
-                  "ocredit": stateData.get('pwIncludeSpecial'), 
-                  "difok":stateData.get('pwDiffBefore')
+                  "ocredit": stateData.get('pwIncludeSpecial')
                 });
 
                 const dupValue = (stateData.get('enableDuplicateLogin')) ? stateData.get('duplicateLoginNotiType') : stateData.get('duplicateLoginNotiType') * -1;
@@ -347,28 +348,6 @@ class ServerSiteConfig extends Component {
                         label={(stateData.get('pwIncludeSpecial') === '-1') ? t("selHasInclude") : t("selHasNoInclude")}
                       />
                     </ListItemSecondaryAction>
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon><PropItemIcon style={{width:'16px'}} /></ListItemIcon>
-                    <ListItemText primary={t("lbPwDiffBefore")} style={{padding:0}} />
-                  </ListItem>
-                  <ListItem style={{paddingLeft:230}}>
-                      <RadioGroup aria-label="diff-radio" name="diff"
-                        value={stateData.get('pwDiffBefore')} onChange={this.handlePwRuleChange('pwDiffBefore')}
-                      >
-                        <FormControlLabel value="0"
-                          control={<Radio color="primary" />}
-                          label={t("lbPwDiffZero")} labelPlacement="end"
-                        />
-                        <FormControlLabel value="2"
-                          control={<Radio color="primary" />}
-                          label={t("lbPwDiffSmall")} labelPlacement="end"
-                        />
-                        <FormControlLabel value="5"
-                          control={<Radio color="primary" />}
-                          label={t("lbPwDiffMany")} labelPlacement="end"
-                        />
-                      </RadioGroup>
                   </ListItem>
                 </List>
               </CardContent>
