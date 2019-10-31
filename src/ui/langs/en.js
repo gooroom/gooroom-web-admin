@@ -583,11 +583,19 @@ export default {
   "lbUsePasswordExpire": "Whether Use Password Expire Date",
   "lbPasswordExpireDate": "Password Expire Date",
   "lbUseUserExpire": "Whether User Expire Date",
-  "lbUserExpireDate": "Expire Date",
+  "lbUserExpireDate": "User Expire Date",
   "lbUseDeptExpire": "Whether Dept Expire Date",
-  "lbDeptExpireDate": "Expire Date",
+  "lbDeptExpireDate": "DeptExpire Date",
   "ttResetLoginTrial": "Reset Login Attempts Count",
   "msgEditLoginTrialCount": "Reset login attempts count?",
+  "lbUserRegistredDate": "User Register Date",
+  "lbDeptRegistredDate": "Dept Register Date",
+  "lbWillExpire": "Will Expire After",
+  "lbExpired": "Expired",
+  "lbExpiredDays": "Days",
+  "lbAccountRemailTrial": "Login Remail Trial",
+  "lbAccountLocked": "Locked",
+  "lbAccountPossibleCnt": "Count",
 
   // 테마조회
   "lbDeleteTheme": "Remove theme",
@@ -639,10 +647,6 @@ export default {
   "lbPwIncludeUpper": "Include capitalization",
   "lbPwIncludeLower": "Include lowercase",
   "lbPwIncludeSpecial": "Include special",
-  "lbPwDiffBefore": "Number of previous passwords and character differences",
-  "lbPwDiffZero": "Not match",
-  "lbPwDiffSmall": "Little (more 2ea)",
-  "lbPwDiffMany": "Much (more 5ea)",
 
   // 클라우드서비스 관리
   "lbDeleteCloudService": "Delete cloud service",
@@ -1026,6 +1030,32 @@ export default {
   "lbViewType": "Veiwing type",
   "colInstantNoticeDate": 'Instant Notice Date',
 
+  // 일괄등록
+  "lbSaveDeptDataFromFile": "Organization information registration",
+  "msgSaveDeptDataFromFile": "Do you want to register your organization information using a file?",
+  "msgEditOkSaveDeptDataFromFile": "Organization information has been collectively registered.",
+  "msgEditErrorSaveDeptDataFromFile": "The organization information has not been collectively registered.",
+  "lbSaveUserDataFromFile": "User information registration",
+  "msgSaveUserDataFromFile": "Do you want to bulk register user information using a file?",
+  "msgEditOkSaveUserDataFromFile": "User information has been collectively registered.",
+  "msgEditErrorSaveUserDataFromFile": "User information is not registered in bulk.",
+
+  "msgDeptFromFileHelp01": "# Organization information can be registered using a file.",
+  "msgDeptFromFileHelp02": "# Use a file in 'CSV' format.",
+  "msgDeptFromFileHelp03": "# Create a file on each line in the following order: Organization ID, Organization Name, Parent ID. (3 items)",
+  "msgDeptFromFileHelp04": "# [Required] The first line is written as \" 0, organization header, 000000000 \". (Without quotes)",
+  "msgDeptFromFileHelp05": "# [Required] The second line is written as \" DEPTDEFAULT, cloud, 0 \". (Without quotes)",
+  "msgDeptFromFileHelp06": "# [Required] The 'parent organization ID' of the parent organization of the organization to be written is written as 'DEPTDEFAULT'.",
+  "msgDeptFromFileHelp07": "# [Caution] All previously registered organization information will be deleted and registered.",
+
+  "msgUserFromFileHelp01": "# User information can be registered using a file.",
+  "msgUserFromFileHelp02": "# Use a file in 'CSV' format.",
+  "msgUserFromFileHelp03": "# Create a file on each line in the following order: 'User ID', 'User Name', 'Password', 'Organization ID', 'Email', 'Expiration Date'. (6 items)",
+  "msgUserFromFileHelp04": "# The 'expiration date' format is 8 digits in order of 'year month date'. (E.g. '20191030')",
+  "msgUserFromFileHelp05": "# [Caution] All previously registered user information is deleted and registered.",
+  "msgMustHaveSelectedFile": "The file is not selected.",
+
+  
   // 1.3
   "menuSite": "site",
   "menuSiteManage": "SiteMng",
