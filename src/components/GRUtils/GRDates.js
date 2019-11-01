@@ -32,8 +32,8 @@ export const formatSimpleStringToEndTime = (value, format) => {
 
 export const calculateDiffDays = (value) => {
   try {
-    const diffDur = moment.duration((moment(value).set({h: 24, m: 0, s: 0})).diff(moment(Date.now()))).abs();
-      return diffDur.days();
+    const diffDur = moment.duration((moment(value).set({h: 24, m: 0, s: 0})).diff(moment(Date.now()))).asDays();
+      return diffDur.toFixed(0);
   } catch (err) {
       return '';
   }
