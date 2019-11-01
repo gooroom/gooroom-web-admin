@@ -316,7 +316,8 @@ export default {
   "msgAddClientInGroup": "선택한 단말({{clientCnt}}개)을 단말그룹('{{groupName}}')으로 변경하시겠습니까?",
   "dtDeleteClientFromGroup": "그룹에서 단말 삭제",
   "dtChangGroupMultiple": "단말그룹 일괄 변경",
-
+  "spClientDeptRegDate": "단말그룹 등록일",
+  
   "msgAddGroup": "단말그룹을 등록하시겠습니까?",
   "msgEditGroup": "단말그룹을 수정하시겠습니까?",
   "msgInputGroupName": "단말그룹이름을 입력하세요.",
