@@ -33,18 +33,20 @@ export function grRequestPromise(url, param) {
       withCredentials: false
     }).then(function(response) {
 
-      if (response.data) {
+      if (response.data !== undefined) {
+        
         if (response.data.status && response.data.status.result === "success" && response.data.data && response.data.data.length > 0) {
             resolve(response.data);
         } else {
           resolve(response.data);
         }
+
       } else {
-          reject(response);
+        reject(response);
       }
 
     }).catch(function(error) {
-
+      reject(error);
     });
   });
 };
