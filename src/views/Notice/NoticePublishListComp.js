@@ -155,6 +155,7 @@ class NoticePublishListComp extends Component {
         const { t, i18n } = this.props;
 
         const columnHeaders = [
+            { id: 'chCheckbox', isCheckbox: true },
             { id: 'chStatusCd', isOrder: false, numeric: false, disablePadding: true, label: t('colStatus') },
             { id: 'chNoticePublishId', isOrder: true, numeric: false, disablePadding: true, label: t('colId') },
             { id: 'chOpenDt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishOpenDt') },
@@ -163,7 +164,19 @@ class NoticePublishListComp extends Component {
             { id: 'chViewCnt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishViewCnt') },
             { id: 'chInstantNoticeCnt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishInstantNoticeCnt') },
             { id: 'chRegUserId', isOrder: true, numeric: false, disablePadding: true, label: t('colRegUserId') },
+            { id: 'chAction', isOrder: false, numeric: false, disablePadding: true, label: t('colEdit') },
         ];
+
+        const columnHeadersUneditable = [
+          { id: 'chStatusCd', isOrder: false, numeric: false, disablePadding: true, label: t('colStatus') },
+          { id: 'chNoticePublishId', isOrder: true, numeric: false, disablePadding: true, label: t('colId') },
+          { id: 'chOpenDt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishOpenDt') },
+          { id: 'chCloseDt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishCloseDt') },
+          { id: 'chViewType', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishViewType') },
+          { id: 'chViewCnt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishViewCnt') },
+          { id: 'chInstantNoticeCnt', isOrder: true, numeric: false, disablePadding: true, label: t('colNoticePublishInstantNoticeCnt') },
+          { id: 'chRegUserId', isOrder: true, numeric: false, disablePadding: true, label: t('colRegUserId') },
+      ];
 
         const listObj = NoticePublishProps.getIn(['viewItems', compId]);
         let activeListData = undefined;
@@ -184,7 +197,7 @@ class NoticePublishListComp extends Component {
                         orderColumn={listObj.getIn(['listParam', 'orderColumn'])}
                         onRequestSort={this.handleChangeSort}
                         listData={activeListData}
-                        columnData={columnHeaders}
+                        columnData={(isEditable) ? columnHeaders : columnHeadersUneditable}
                     />
                     <TableBody>
                         {listObj.get('listData') && listObj.get('listData').map(n => {
