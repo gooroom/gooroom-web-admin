@@ -78,78 +78,83 @@ class GRExtendedTreeList extends Component {
     param[this.state.paramKeyName] = keyValue;
 
     grRequestPromise(this.state.url, param).then(res => {
-      const resData = res.map(x => {
-        let children = null;
-        if (x.hasChildren) {
-          children = [];
-        }
 
-        let node = {
-          key: x[keyName],
-          depth: x.level,
-          disabled: false,
-          title: x[this.state.title],
-          children: children,
-          regDate: x.regDt,
-          modDate: x.modDt,
-          comment: x.comment,
-          regClientIp: x.regClientIp,
-          itemCount: x.itemCount,
-          itemTotalCount: x.itemTotalCount,
-          _shouldRender: true
-        };
-        if (index !== undefined) {
-          node["parentIndex"] = index;
-        }
-        return node;
-      });
-
-      if (this.state.treeData.length > 0) {
-        // set children data for stop refetch.
-        let parents = this.state.treeData;
-        parents[index].children = resData.map(d => {
-          return d.key;
-        });
-        
-        // data merge.
-        // 1. delete children
-        parents = parents.filter(e => e.parentIndex != index);
-        // 2. insert new child data
-        parents.splice.apply(parents, [index + 1, 0].concat(resData));
-
-        // 3. reset parent index 
-        parents = parents.map((obj, i) => {
-          if (i > index + resData.length && obj.parentIndex > 0) {
-            if(obj.parentIndex > index) {
-              obj.parentIndex = obj.parentIndex + resData.length;
-            }
+      let resData = [];
+      if(res !== undefined && res !== '' && res.length > 0) {
+      
+        resData = res.map(x => {
+          let children = null;
+          if (x.hasChildren) {
+            children = [];
           }
-          return obj;
+
+          let node = {
+            key: x[keyName],
+            depth: x.level,
+            disabled: false,
+            title: x[this.state.title],
+            children: children,
+            regDate: x.regDt,
+            modDate: x.modDt,
+            comment: x.comment,
+            regClientIp: x.regClientIp,
+            itemCount: x.itemCount,
+            itemTotalCount: x.itemTotalCount,
+            _shouldRender: true
+          };
+          if (index !== undefined) {
+            node["parentIndex"] = index;
+          }
+          return node;
         });
 
-        // reset expandedListItems values for adding nodes.
-        const expandedListItems = this.state.expandedListItems;
-        const newExpandedListItems = expandedListItems.map(obj => {
-            if(obj > index) {
-                return obj + resData.length;
-            } else {
-                return obj;
+        if (this.state.treeData.length > 0) {
+          // set children data for stop refetch.
+          let parents = this.state.treeData;
+          parents[index].children = resData.map(d => {
+            return d.key;
+          });
+          
+          // data merge.
+          // 1. delete children
+          parents = parents.filter(e => e.parentIndex != index);
+          // 2. insert new child data
+          parents.splice.apply(parents, [index + 1, 0].concat(resData));
+
+          // 3. reset parent index 
+          parents = parents.map((obj, i) => {
+            if (i > index + resData.length && obj.parentIndex > 0) {
+              if(obj.parentIndex > index) {
+                obj.parentIndex = obj.parentIndex + resData.length;
+              }
             }
-        });
+            return obj;
+          });
 
-        this.setState({
-            expandedListItems: newExpandedListItems,
-            treeData: parents
-        });
+          // reset expandedListItems values for adding nodes.
+          const expandedListItems = this.state.expandedListItems;
+          const newExpandedListItems = expandedListItems.map(obj => {
+              if(obj > index) {
+                  return obj + resData.length;
+              } else {
+                  return obj;
+              }
+          });
 
-      } else {
-        this.setState({
-          treeData: resData
-        });
+          this.setState({
+              expandedListItems: newExpandedListItems,
+              treeData: parents
+          });
 
-        // init tree and expand
-        if(isDoExpand) {
-          this.handleClickNode(resData[0], 0);
+        } else {
+          this.setState({
+            treeData: resData
+          });
+
+          // init tree and expand
+          if(isDoExpand) {
+            this.handleClickNode(resData[0], 0);
+          }
         }
       }
 

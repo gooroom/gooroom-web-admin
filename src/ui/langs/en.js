@@ -316,6 +316,7 @@ export default {
   "msgAddClientInGroup": "Are you sure you want to change the selected clients ({{clientCnt}}) to the client group ('{{groupName}}')?",
   "dtDeleteClientFromGroup": "Delete Client From Group",
   "dtChangGroupMultiple": "Change Client Group batch",
+  "spClientDeptRegDate": "Client Group Reg Date",
 
   "msgAddGroup": "Do you want to register the client group?",
   "msgEditGroup": "Do you want to edit the client group?",
