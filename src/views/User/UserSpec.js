@@ -266,7 +266,7 @@ class UserSpec extends Component {
             }
             title={<div>
               <Typography variant="h6" style={{display: 'inline-block', marginRight:18}}>{viewItem.get('userNm')}</Typography>
-              <Chip avatar={<Avatar>ID</Avatar>} label={viewItem.get('userId')} style={{marginRight:18}}/></div>
+              <Chip avatar={<Avatar>ID</Avatar>} label={viewItem.get('userId')} style={{marginRight:8}}/></div>
             }
             action={ (isEditable && viewItem.get('statusCd') !== 'STAT020') ? actionButton : <div></div> }
           />
