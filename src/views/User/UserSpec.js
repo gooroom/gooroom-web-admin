@@ -250,7 +250,7 @@ class UserSpec extends Component {
         actionButton = <div style={{width:280,paddingTop:10}}>
           <ReplayIcon style={{verticalAlign: 'middle', marginRight:5}}/>
           <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:10}}>{t("lbAccountRemailTrial")}</Typography>
-          <Typography style={{display: 'inline-block', marginRight:18}}>[{viewItem.get('loginTrial')+t("lbAccountPossibleCnt")}]</Typography>
+          <Typography style={{display: 'inline-block', marginRight:8}}>[{viewItem.get('loginTrial')+t("lbAccountPossibleCnt")}]</Typography>
           <Button size="small"
             variant="outlined" color="primary" style={{minWidth:32}}
             onClick={() => this.handleClickEdit(viewItem, compId)}
@@ -266,7 +266,7 @@ class UserSpec extends Component {
             }
             title={<div>
               <Typography variant="h6" style={{display: 'inline-block', marginRight:18}}>{viewItem.get('userNm')}</Typography>
-              <Chip avatar={<Avatar>ID</Avatar>} label={viewItem.get('userId')} style={{marginRight:8}}/></div>
+              <Chip avatar={<Avatar>ID</Avatar>} label={viewItem.get('userId')} style={{marginRight:18}}/></div>
             }
             action={ (isEditable && viewItem.get('statusCd') !== 'STAT020') ? actionButton : <div></div> }
           />
