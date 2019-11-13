@@ -40,7 +40,7 @@ class NoticeContentComp extends Component {
                 />
                 <CardContent className={classes.noticeContentCardContent} style={{ height: contentHeight[rowPerPage] }}>
                     {informOpen && viewItem &&
-                        <div dangerouslySetInnerHTML={{__html: viewItem.get('content')}}></div>
+                        <pre style={{fontSize: '16px'}}>{viewItem.get('content')}</pre>
                     }
                 </CardContent>
             </Card>
