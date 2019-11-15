@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List, Iterable } from 'immutable';
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 
 import { bindActionCreators } from 'redux';
@@ -10,6 +10,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { getEditAndDeleteRoleWithList } from 'components/GRUtils/GRCommonUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -264,6 +265,9 @@ class ClientProfileSet extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+
+                  let { isEditable, isDeletable } = getEditAndDeleteRoleWithList(n.get('profileNo'), window.gpmsain, this.props.AdminProps.get('adminId'), n.get('regUserId'));
+
                   return (
                     <TableRow
                       hover
@@ -283,18 +287,23 @@ class ClientProfileSet extends Component {
                         </Button>                        
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('profileNo'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isDeletable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('profileNo'))}>
                           <DeleteIcon />
                         </Button>
+                      }
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <TableCell className={classes.grSmallAndClickAndCenterCell}>
                           <Button color="secondary" size="small" 
                             className={classes.buttonInTableRow}
@@ -302,6 +311,7 @@ class ClientProfileSet extends Component {
                             <ArchiveIcon />
                           </Button>                        
                         </TableCell>
+                      }
                       </TableCell>
                     </TableRow>
                   );

@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import { Switch, Route, Redirect } from "react-router-dom";
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import Dashboard from "containers/Dashboard/";
-
+import PartMain from "containers/PartMain/";
 // Client - client management
 import ClientMasterManage from "views/Client/ClientMasterManage";
 
@@ -20,6 +20,8 @@ import MediaRuleManage from "views/Rules/UserConfig/MediaRuleManage";
 import BrowserRuleManage from "views/Rules/UserConfig/BrowserRuleManage";
 import SecurityRuleManage from "views/Rules/UserConfig/SecurityRuleManage";
 import SoftwareFilterManage from "views/Rules/UserConfig/SoftwareFilterManage";
+import CtrlCenterItemManage from "views/Rules/UserConfig/CtrlCenterItemManage";
+import PolicyKitRuleManage from "views/Rules/UserConfig/PolicyKitRuleManage";
 
 import JobManage from "views/Job/JobManage";
 import PackageManage from 'views/ClientPackage/ClientPackageManage';
@@ -28,6 +30,7 @@ import UserMasterManage from "views/User/UserMasterManage";
 
 import AdminUserManage from "views/System/AdminUserManage";
 import ServerSiteConfig from "views/System/ServerSiteConfig";
+import DeptUserReg from "views/System/DeptUserReg";
 import GcspManage from "views/System/GcspManage";
 import ThemeManage from "views/System/ThemeManage";
 
@@ -40,6 +43,9 @@ import DailyViolatedManage from "views/Stats/DailyViolatedManage";
 import DailyLoginCountManage from "views/Stats/DailyLoginCountManage";
 import DailyClientCountManage from "views/Stats/DailyClientCountManage";
 
+import NoticeMasterManage from "views/Notice/NoticeMasterManage";
+import DividedAdminManage from "views/Admin/DividedAdmin/DividedAdminManage";
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
@@ -50,7 +56,13 @@ class GRRouters extends Component {
   }
 
   getBasename = () => {
-    return Dashboard;
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      return Dashboard;
+    } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
+        return Dashboard;
+    } else if(window.gpmsain === Constants.PART_RULECODE) {
+        return PartMain;
+    }
   }
 
   render() {
@@ -77,6 +89,8 @@ class GRRouters extends Component {
           <Route path="/userconfig/browser/:grMenuId/:grMenuName" component={BrowserRuleManage} />
           <Route path="/userconfig/security/:grMenuId/:grMenuName" component={SecurityRuleManage} />
           <Route path="/userconfig/swfilter/:grMenuId/:grMenuName" component={SoftwareFilterManage} />
+          <Route path="/userconfig/ctrlcenteritem/:grMenuId/:grMenuName" component={CtrlCenterItemManage} />
+          <Route path="/userconfig/policykit/:grMenuId/:grMenuName" component={PolicyKitRuleManage} />
           
           <Route path="/jobs/jobmanage/:grMenuId/:grMenuName" component={JobManage} />
           <Route path="/package/packagemanage/:grMenuId/:grMenuName" component={PackageManage} />
@@ -85,8 +99,9 @@ class GRRouters extends Component {
           <Route path="/desktopconfig/desktopapp/:grMenuId/:grMenuName" component={DesktopAppManage} />
           <Route path="/desktopconfig/desktopconf/:grMenuId/:grMenuName" component={DesktopConfManage} />
 
-          <Route path="/system/adminusermng/:grMenuId/:grMenuName" component={AdminUserManage} />
+          <Route path="/system/adminusermng/:grMenuId/:grMenuName" component={DividedAdminManage} />
           <Route path="/system/siteconfig/:grMenuId/:grMenuName" component={ServerSiteConfig} />
+          <Route path="/system/deptuserreg/:grMenuId/:grMenuName" component={DeptUserReg} />
           <Route path="/system/cloudservicemng/:grMenuId/:grMenuName" component={GcspManage} />
           <Route path="/system/thememng/:grMenuId/:grMenuName" component={ThemeManage} />
 
@@ -96,6 +111,8 @@ class GRRouters extends Component {
           <Route path="/statistic/dailyviolated/:grMenuId/:grMenuName" component={DailyViolatedManage} />
           <Route path="/statistic/dailyconnect/:grMenuId/:grMenuName" component={DailyLoginCountManage} />
           <Route path="/statistic/dailyregist/:grMenuId/:grMenuName" component={DailyClientCountManage} />
+
+          <Route path="/notices/noticemanage/:grMenuId/:grMenuName" component={NoticeMasterManage} />
 
         </Switch>
       </div>

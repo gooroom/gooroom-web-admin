@@ -97,6 +97,16 @@ class UserListComp extends Component {
     const { UserProps, UserActions, compId } = this.props;
     let viewItem = getRowObjectById(UserProps, compId, id, 'userId');
 
+    // expireDate 와 passwordExpireDate 를 초기값 설정
+    if(viewItem.get('isUseExpire') === '0' || viewItem.get('expireDate') === undefined || viewItem.get('expireDate') === '') {
+      const initDate = moment().add(7, "days");
+      viewItem = viewItem.set('expireDate', initDate.toJSON().slice(0, 10));
+    }
+    if(viewItem.get('isUsePasswordExpire') === '0' || viewItem.get('passwordExpireDate') === undefined || viewItem.get('passwordExpireDate') === '') {
+      const initDate = moment().add(7, "days");
+      viewItem = viewItem.set('passwordExpireDate', initDate.toJSON().slice(0, 10));
+    }
+
     UserActions.showDialog({
       viewItem: viewItem,
       dialogType: UserBasicDialog.TYPE_EDIT
@@ -278,7 +288,10 @@ class UserListComp extends Component {
                   <TableCell padding="checkbox" className={classes.grSmallAndClickCell} >
                     <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('userId'))}/>
                   </TableCell>
-                  <TableCell className={classes.grSmallAndClickCell}>{n.get('userId')}</TableCell>
+                  <TableCell className={classes.grSmallAndClickCell}
+                    style={(n.get('isExpired') === '1' || n.get('isPasswordExpired') === '1' || n.get('loginTrial') === '0') ? {color:'red'} : {color:''}}
+                  
+                  >{n.get('userId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('userNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('deptNm')}</TableCell>
                   <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>

@@ -81,10 +81,24 @@ class UserBasicDialog extends Component {
                         const { UserProps, UserActions, compId } = this.props;
                         const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
                         if(editingItem !== undefined) {
+                            // user expire date
+                            let userExpireDate = '';
+                            if(editingItem.get("isUseExpire") !== undefined && editingItem.get("isUseExpire") === '1') {
+                                userExpireDate = editingItem.get('expireDate')
+                            }
+                            // password expire date
+                            let passwordExpireDate = '';
+                            if(editingItem.get("isUsePasswordExpire") !== undefined && editingItem.get("isUsePasswordExpire") === '1') {
+                                passwordExpireDate = editingItem.get('passwordExpireDate')
+                            }
+                            
                             UserActions.editUserData({
                                 userId: UserProps.getIn(['editingItem', 'userId']),
                                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
-                                userNm: UserProps.getIn(['editingItem', 'userNm'])
+                                userNm: UserProps.getIn(['editingItem', 'userNm']),
+                                userEmail: UserProps.getIn(['editingItem', 'userEmail']),
+                                expireDate: userExpireDate,
+                                passwordExpireDate: passwordExpireDate
                             }).then((res) => {
                                 UserActions.readUserListPaged(UserProps, compId);
                                 this.handleClose();
@@ -131,6 +145,9 @@ class UserBasicDialog extends Component {
             title = t("dtEditUser");
         }
 
+        const isUseUserExpireDate = (editingItem && editingItem.get('isUseExpire') === '1');
+        const isUsePasswordExpireDate = (editingItem && editingItem.get('isUsePasswordExpire') === '1');
+
         return (
             <div>
             {(UserProps.get('dialogOpen') && editingItem) &&
@@ -159,6 +176,36 @@ class UserBasicDialog extends Component {
                                 />
                             </Grid>
                         </Grid>
+
+                        <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
+                            <Grid item xs={6}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12} style={{paddingBottom:0}}><FormLabel component="legend" style={{fontSize:'0.8rem'}}>{t("lbUseUserExpire")}</FormLabel></Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="true" control={
+                                            <Radio color="primary" value="1" onChange={this.handleValueChange("isUseExpire")} checked={isUseUserExpireDate} />
+                                        } label={t("optUse")} labelPlacement="end" />
+                                    </Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="false" control={
+                                            <Radio color="primary" value="0" onChange={this.handleValueChange("isUseExpire")} checked={!isUseUserExpireDate} />
+                                        } label={t("optNoUse")} labelPlacement="end" />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12}>
+                                    <InlineDatePicker label={t('lbUserExpireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10)}
+                                    onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
+                                    className={classes.fullWidth} 
+                                    disabled={!isUseUserExpireDate} />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
                         <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
                             <TextValidator
                                 label={t("lbPassword")}
@@ -179,6 +226,45 @@ class UserBasicDialog extends Component {
                                     </InputAdornment>
                                 )
                                 }}
+                            />
+                        </FormControl>
+
+                        <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" style={{marginTop:10}}>
+                            <Grid item xs={6}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12} style={{paddingBottom:0}}><FormLabel component="legend" style={{fontSize:'0.8rem'}}>{t("lbUsePasswordExpire")}</FormLabel></Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="true" control={
+                                            <Radio color="primary" value="1" onChange={this.handleValueChange("isUsePasswordExpire")} checked={isUsePasswordExpireDate} />
+                                        } label={t("optUse")} labelPlacement="end" />
+                                    </Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="false" control={
+                                            <Radio color="primary" value="0" onChange={this.handleValueChange("isUsePasswordExpire")} checked={!isUsePasswordExpireDate} />
+                                        } label={t("optNoUse")} labelPlacement="end" />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12}>
+                                    <InlineDatePicker label={t('lbPasswordExpireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('passwordExpireDate')) ? editingItem.get('passwordExpireDate') : initDate.toJSON().slice(0,10)}
+                                    onChange={(date) => {this.handleDateChange(date, 'passwordExpireDate');}} 
+                                    className={classes.fullWidth} 
+                                    disabled={!isUsePasswordExpireDate} />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
+                        <FormControl className={classNames(classes.fullWidth, classes.dialogItemRow)}>
+                            <TextValidator
+                                label={t("lbEmail")}
+                                value={(editingItem.get('userEmail')) ? editingItem.get('userEmail') : ''}
+                                name="userEmail" validators={['required', 'isEmail']} errorMessages={[t("msgEnterEmail")]}
+                                onChange={this.handleValueChange('userEmail')}
+                                className={classes.fullWidth}
                             />
                         </FormControl>
 

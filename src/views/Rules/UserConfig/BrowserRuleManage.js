@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,6 +9,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getEditAndDeleteRoleWithList } from 'components/GRUtils/GRCommonUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -80,7 +81,7 @@ class BrowserRuleManage extends Component {
     });
   }
   
-  handleSelectRow = (event, id) => {
+  handleSelectRow = (event, id, isEditable) => {
     const { BrowserRuleActions, BrowserRuleProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -97,14 +98,20 @@ class BrowserRuleManage extends Component {
     // 2. view detail content
     BrowserRuleActions.showInform({
       compId: compId,
-      viewItem: viewItem
+      viewItem: viewItem,
+      isEditable: isEditable
     });
     
   };
 
   handleCreateButton = () => {
+    let adminType = 'A';
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      adminType = 'S';
+    }
     this.props.BrowserRuleActions.showDialog({
       viewItem: Map({
+        adminType: adminType,
         webSocket: 'disallow',
         webWorker: 'disallow',
         
@@ -242,15 +249,17 @@ class BrowserRuleManage extends Component {
               <TableBody>
                 {listObj.get('listData').map(n => {
                   
+                  let { isEditable, isDeletable } = getEditAndDeleteRoleWithList(n.get('objId'), window.gpmsain, this.props.AdminProps.get('adminId'), n.get('regUserId'));
+                  
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('objId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('objId'), isEditable)}
                       tabIndex={-1}
                       key={n.get('objId')}
-                      className={(n.get('objId').endsWith('DEFAULT')) ? classes.grDefaultRuleRow : ""}
+                      className={(n.get('objId').endsWith('DEFAULT')) ? classes.grDefaultRuleRow : ((n.get('objId').endsWith('STD')) ? classes.grStandardRuleRow : "")}
                     >
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? t("selBasic") : t("selOrdinary")}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId').endsWith('DEFAULT') ? t("selBasic") : (n.get('objId').endsWith('STD') ? t("selStandard") : t("selOrdinary"))}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('objNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('objId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('modUserId')}</TableCell>
@@ -258,16 +267,21 @@ class BrowserRuleManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleClickEditInRow(event, n.get('objId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isDeletable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleClickDeleteInRow(event, n.get('objId'))}>
                           <DeleteIcon />
                         </Button>
+                      }
+
                       </TableCell>
                     </TableRow>
                   );
@@ -298,8 +312,9 @@ class BrowserRuleManage extends Component {
           </div>
         }
         {/* dialog(popup) component area */}
-        <BrowserRuleSpec compId={compId} specType="inform"
+        <BrowserRuleSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
+          isEditable={(listObj) ? listObj.get('isEditable') : null}
           hasAction={true} inherit={false}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}

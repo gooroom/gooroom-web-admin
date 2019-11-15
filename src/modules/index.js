@@ -27,6 +27,8 @@ import MediaRuleModule from './MediaRuleModule';
 import BrowserRuleModule from './BrowserRuleModule';
 import SecurityRuleModule from './SecurityRuleModule';
 import SoftwareFilterModule from './SoftwareFilterModule';
+import CtrlCenterItemModule from './CtrlCenterItemModule';
+import PolicyKitRuleModule from './PolicyKitRuleModule';
 
 import ClientMasterManageModule from './ClientMasterManageModule';
 
@@ -46,6 +48,9 @@ import DailyClientCountModule from './DailyClientCountModule';
 import DashboardModule from './DashboardModule';
 
 import SiteManageModule from './SiteManageModule';
+import NoticeModule from './NoticeModule';
+import NoticePublishModule from './NoticePublishModule';
+import NoticePublishExtensionModule from './NoticePublishExtensionModule';
 
 export default combineReducers({
 
@@ -64,6 +69,8 @@ export default combineReducers({
     BrowserRuleModule,
     SecurityRuleModule,
     SoftwareFilterModule,
+    CtrlCenterItemModule,
+    PolicyKitRuleModule,
 
     ClientMasterManageModule,
     
@@ -94,6 +101,9 @@ export default combineReducers({
 
     DashboardModule,
 
-	SiteManageModule
+	SiteManageModule,
+    NoticeModule,
+    NoticePublishModule,
+    NoticePublishExtensionModule
 
 });

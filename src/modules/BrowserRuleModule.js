@@ -239,6 +239,7 @@ const makeParameter = (param) => {
         objId: param.get('objId'),
         objName: param.get('objNm'),
         objComment: param.get('comment'),
+        adminType: param.get('adminType'),
 
         webSocket: (param.get('webSocket')) ? param.get('webSocket') : 'disallow',
         webWorker: (param.get('webWorker')) ? param.get('webWorker') : 'disallow',

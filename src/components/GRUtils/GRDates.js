@@ -30,4 +30,13 @@ export const formatSimpleStringToEndTime = (value, format) => {
     }
 };
 
+export const calculateDiffDays = (value) => {
+  try {
+    const diffDur = moment(value).diff(moment().startOf('day'), 'days');
+      return diffDur;
+  } catch (err) {
+      return '';
+  }
+}
+
 

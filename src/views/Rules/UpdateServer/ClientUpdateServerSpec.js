@@ -34,7 +34,7 @@ class ClientUpdateServerSpec extends Component {
   render() {
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle, isEditable } = this.props;
     const { t, i18n } = this.props;
 
     let viewItem = null;
@@ -56,17 +56,19 @@ class ClientUpdateServerSpec extends Component {
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
+                  {isEditable &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><EditIcon /></Button>
-                  {(this.props.onClickCopy && !selectedItem.get('objId').endsWith('DEFAULT')) &&
+                  }
+                  {(this.props.onClickCopy && isEditable && !selectedItem.get('objId').endsWith('DEFAULT')) &&
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
-                  {(this.props.inherit) && 
+                  {(this.props.inherit && isEditable) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>

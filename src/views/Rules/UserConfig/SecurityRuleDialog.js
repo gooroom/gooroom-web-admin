@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -199,6 +199,9 @@ class SecurityRuleDialog extends Component {
         let title = "";
         if(dialogType === SecurityRuleDialog.TYPE_ADD) {
             title = t("dtAddSecuRule");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === SecurityRuleDialog.TYPE_VIEW) {
             title = t("dtViewSecuRule");
         } else if(dialogType === SecurityRuleDialog.TYPE_EDIT) {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -30,6 +30,8 @@ import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
+import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
+import PolicyKitRuleDialog from 'views/Rules/UserConfig/PolicyKitRuleDialog';
 import DesktopConfDialog from "views/Rules/DesktopConfig/DesktopConfDialog";
 import DesktopAppDialog from 'views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog';
 
@@ -430,7 +432,7 @@ class ClientMasterManage extends Component {
     const { t, i18n } = this.props;
     const compId = this.state.compId;
 
-    const isEditable = true;
+    const isEditable = (window.gpmsain === Constants.SUPER_RULECODE) ? false : true;
 
     return (
       <React.Fragment>
@@ -542,6 +544,8 @@ class ClientMasterManage extends Component {
         <SecurityRuleDialog compId={compId} />
         <MediaRuleDialog compId={compId} />
         <SoftwareFilterDialog compId={compId} />
+        <CtrlCenterItemDialog compId={compId} />
+        <PolicyKitRuleDialog compId={compId} />
         <DesktopConfDialog compId={compId} isEnableDelete={false} />
         <DesktopAppDialog compId={compId} />
         

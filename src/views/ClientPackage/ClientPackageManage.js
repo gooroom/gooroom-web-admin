@@ -21,6 +21,8 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+import * as PolicyKitRuleActions from 'modules/PolicyKitRuleModule';
 
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 
@@ -109,7 +111,7 @@ class ClientPackageManage extends Component {
   resetClientGroupRules(compId, grpId) {
     const { ClientGroupProps } = this.props;
     const { ClientConfSettingActions, ClientHostNameActions, ClientUpdateServerActions } = this.props;
-    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, DesktopConfActions } = this.props;
+    const { BrowserRuleActions, MediaRuleActions, SecurityRuleActions, SoftwareFilterActions, CtrlCenterItemActions, PolicyKitRuleActions, DesktopConfActions } = this.props;
 
     const selectedGroupObj = getRowObjectById(ClientGroupProps, compId, grpId, 'grpId');
     if(selectedGroupObj) {
@@ -125,6 +127,10 @@ class ClientPackageManage extends Component {
       SecurityRuleActions.getSecurityRuleByGroupId({ compId: compId, groupId: grpId });   
       // get filtered software rule
       SoftwareFilterActions.getSoftwareFilterByGroupId({ compId: compId, groupId: grpId });   
+      // get control center item rule
+      CtrlCenterItemActions.getCtrlCenterItemByGroupId({ compId: compId, groupId: grpId });   
+      // get policy kit  rule
+      PolicyKitRuleActions.getPolicyKitByGroupId({ compId: compId, groupId: grpId });   
       // get desktop conf info
       DesktopConfActions.getDesktopConfByGroupId({ compId: compId, groupId: grpId });   
 
@@ -428,6 +434,8 @@ const mapDispatchToProps = (dispatch) => ({
   MediaRuleActions: bindActionCreators(MediaRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+  CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
+  PolicyKitRuleActions: bindActionCreators(PolicyKitRuleActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)  
 });
 

@@ -255,6 +255,7 @@ const makeParameter = (param) => {
         objId: param.get('objId'),
         objName: param.get('objNm'),
         objComment: param.get('comment'),
+        adminType: param.get('adminType'),
 
         swList: (swList) ? swList.toJS() : []
     };

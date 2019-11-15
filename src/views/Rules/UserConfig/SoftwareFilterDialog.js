@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -250,6 +250,9 @@ class SoftwareFilterDialog extends Component {
         let title = "";
         if(dialogType === SoftwareFilterDialog.TYPE_ADD) {
             title = t("dtAddSWRule");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === SoftwareFilterDialog.TYPE_VIEW) {
             title = t("dtViewSWRule");
         } else if(dialogType === SoftwareFilterDialog.TYPE_EDIT) {

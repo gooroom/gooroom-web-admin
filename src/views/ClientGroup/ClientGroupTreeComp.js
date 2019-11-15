@@ -125,6 +125,7 @@ class ClientGroupTreeComp extends Component {
         grpId: selectRowObject.get('grpId'),
         grpNm: selectRowObject.get('grpNm'),
         comment: selectRowObject.get('comment'),
+        regClientIp: selectRowObject.get('regClientIp'),
         regDate: selectRowObject.get('regDate'),
         hasChildren: selectRowObject.get('hasChildren')
       }));
@@ -197,6 +198,7 @@ class ClientGroupTreeComp extends Component {
         grpId: listItem.get('key'),
         grpNm: listItem.get('title'),
         comment: listItem.get('comment'),
+        regClientIp: listItem.get('regClientIp'),
         regDate: listItem.get('regDate'),
         hasChildren: (listItem.get('children') !== null) ? true : false
       }));
@@ -210,6 +212,7 @@ class ClientGroupTreeComp extends Component {
         grpId: listItem.get('key'),
         grpNm: listItem.get('title'),
         comment: listItem.get('comment'),
+        regClientIp: listItem.get('regClientIp'),
         regDate: listItem.get('regDate'),
         hasChildren: (listItem.get('children') !== null) ? true : false
       }));

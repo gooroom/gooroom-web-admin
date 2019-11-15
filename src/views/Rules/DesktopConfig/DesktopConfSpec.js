@@ -45,7 +45,7 @@ class DesktopConfSpec extends Component {
       return false;
     }
   }
-  
+
   handleEditAppClick = (viewItem) => {
     this.props.DesktopAppActions.showDialog({
       viewItem: viewItem,
@@ -58,7 +58,7 @@ class DesktopConfSpec extends Component {
 
     const { classes } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle } = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle, isEditable } = this.props;
     const { t, i18n } = this.props;
 
     let viewItem = null;
@@ -81,7 +81,8 @@ class DesktopConfSpec extends Component {
             <GRRuleCardHeader avatar={RuleAvartar}
               category={t("lbDesktopConf")} title={viewItem.get('confNm')}
               subheader={viewItem.get('confId')}
-              action={<div style={{paddingTop:16,paddingRight:24}}>
+              action={(isEditable) ? 
+                <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><EditIcon /></Button>
@@ -90,12 +91,13 @@ class DesktopConfSpec extends Component {
                     onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
-                  {(this.props.inherit) &&
+                  {(this.props.inherit && isEditable) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>
                   }
-                </div>}
+                </div> : <div></div>
+              }
             />
             }
             { simpleTitle &&

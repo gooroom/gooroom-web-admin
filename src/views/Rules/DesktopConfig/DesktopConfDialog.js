@@ -126,7 +126,7 @@ class DesktopConfDialog extends Component {
     handleInheritSaveDataForDept = (event, id) => {
         const { DesktopConfProps, DeptProps, DesktopConfActions, compId } = this.props;
         const { t, i18n } = this.props;
-        const deptCd = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']);
+        const deptCd = DeptProps.getIn(['viewItems', compId, 'viewItem', 'deptCd']);        
 
         DesktopConfActions.inheritDesktopConfDataForDept({
             'confId': DesktopConfProps.getIn(['editingItem', 'confId']),

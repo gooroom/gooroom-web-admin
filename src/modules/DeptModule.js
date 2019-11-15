@@ -3,6 +3,7 @@ import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 const COMMON_PENDING = 'dept/COMMON_PENDING';
 const COMMON_FAILURE = 'dept/COMMON_FAILURE';
@@ -282,11 +283,14 @@ const makeParameter = (param) => {
         
         optYn: (param.optYn && param.optYn != '') ? param.optYn : 'Y',
         sortOrder: (param.sortOrder && param.sortOrder != '') ? param.sortOrder : '1',
+        expireDate: formatDateToSimple(param.expireDate, 'YYYY-MM-DD'),
 
         browserRuleId: (param.browserRuleId == '-') ? '' : param.browserRuleId,
         mediaRuleId: (param.mediaRuleId == '-') ? '' : param.mediaRuleId,
         securityRuleId: (param.securityRuleId == '-') ? '' : param.securityRuleId,
         filteredSoftwareRuleId: (param.filteredSoftwareRuleId == '-') ? '' : param.filteredSoftwareRuleId,
+        ctrlCenterItemRuleId: (param.ctrlCenterItemRuleId == '-') ? '' : param.ctrlCenterItemRuleId,
+        policyKitRuleId: (param.policyKitRuleId == '-') ? '' : param.policyKitRuleId,
         desktopConfId: (param.desktopConfId == '-') ? '' : param.desktopConfId,
 
         paramIsInherit: (param.paramIsInherit) ? param.paramIsInherit : false
@@ -501,6 +505,8 @@ export default handleActions({
                     modDate: x.modDt,
                     itemCount: x.itemCount,
                     itemTotalCount: x.itemTotalCount,
+                    expireDate: x.expireDt,
+                    parentExpireDate: x.parentExpireDt,
                     _shouldRender: true
                 };
                 if (index !== undefined && index > -1) {

@@ -61,12 +61,13 @@ class ClientGroupDialog extends Component {
                     if(confirmValue) {
                         const { ClientGroupProps, ClientGroupActions, compId, resetCallback } = this.props;
                         const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
             
                         const selectedObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
                         ClientGroupActions.createClientGroupData({
                             groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                             groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
+                            regClientIp: ClientGroupProps.getIn(['editingItem', 'regClientIp']),
                             uprGrpId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                             isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
                             
@@ -77,6 +78,8 @@ class ClientGroupDialog extends Component {
                             mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
                             securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
             
                         }).then((res) => {
@@ -119,13 +122,14 @@ class ClientGroupDialog extends Component {
                     if(confirmValue) {
                         const { ClientGroupProps, ClientGroupActions, compId, resetCallback } = this.props;
                         const { ClientConfSettingProps, ClientHostNameProps, ClientUpdateServerProps } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
             
                         const selectedObjectIdName = ['viewItems', compId, 'GROUP', 'selectedOptionItemId'];
                         ClientGroupActions.editClientGroupData({
                             groupId: ClientGroupProps.getIn(['editingItem', 'grpId']),
                             groupName: ClientGroupProps.getIn(['editingItem', 'grpNm']),
                             groupComment: ClientGroupProps.getIn(['editingItem', 'comment']),
+                            regClientIp: ClientGroupProps.getIn(['editingItem', 'regClientIp']),
                             isDefault: ClientGroupProps.getIn(['editingItem', 'isDefault']),
             
                             clientConfigId: ClientConfSettingProps.getIn(selectedObjectIdName),
@@ -135,6 +139,8 @@ class ClientGroupDialog extends Component {
                             mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
                             securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                             
                         }).then((res) => {
@@ -206,10 +212,11 @@ class ClientGroupDialog extends Component {
                     <TextField
                         label={t("lbParentGroup")}
                         value={upperGroupInfo}
+                        className={classes.fullWidth}
                     />
                     }
                     <Grid container spacing={24}>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <TextValidator label={t("spClientGroupName")} className={classes.fullWidth}
                                 name="grpNm"
                                 validators={['required']}
@@ -218,10 +225,19 @@ class ClientGroupDialog extends Component {
                                 onChange={this.handleValueChange('grpNm')}
                             />
                         </Grid>
-                        <Grid item xs={8}>
+                        <Grid item xs={4}>
                             <TextField label={t("spClientGroupDesc")} className={classes.fullWidth}
                                 value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
                                 onChange={this.handleValueChange('comment')}
+                            />
+                        </Grid>
+                        <Grid item xs={5}>
+                            <TextValidator label={t("spClientRegIp")} className={classes.fullWidth}
+                                name="clientRegIp"
+                                validators={['matchRegexp:^[0-9.*-~]+$']}
+                                errorMessages={[t("msgWrongIpString")]}
+                                value={(editingItem.get('regClientIp')) ? editingItem.get('regClientIp') : ''}
+                                onChange={this.handleValueChange('regClientIp')}
                             />
                         </Grid>
                     </Grid>
@@ -259,6 +275,8 @@ const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
+    CtrlCenterItemProps: state.CtrlCenterItemModule,
+    PolicyKitRuleProps: state.PolicyKitRuleModule,
     DesktopConfProps: state.DesktopConfModule
 });
 

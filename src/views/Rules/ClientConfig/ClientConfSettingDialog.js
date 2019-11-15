@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -247,6 +247,9 @@ class ClientConfSettingDialog extends Component {
         let title = "";
         if(dialogType === ClientConfSettingDialog.TYPE_ADD) {
             title = t("dtAddClientConf");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === ClientConfSettingDialog.TYPE_VIEW) {
             title = t("dtViewClientConf");
         } else if(dialogType === ClientConfSettingDialog.TYPE_EDIT) {
@@ -294,9 +297,49 @@ class ClientConfSettingDialog extends Component {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={8}>
+                            <Grid item xs={4}>
+                                <div style={{marginTop:"10px"}}>
+                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtRootAllow")}</FormLabel>
+                                    <FormControlLabel
+                                        control={
+                                        <Switch onChange={this.handleValueChange('rootAllow')} color="primary"
+                                            checked={(editingItem.get('rootAllow')) ? editingItem.get('rootAllow') : false} />
+                                        }
+                                        label={(editingItem.get('rootAllow')) ? t("selActive") : t("selInActive")}
+                                    />
+                                </div>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <div style={{marginTop:"10px"}}>
+                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtSudoAllow")}</FormLabel>
+                                    <FormControlLabel
+                                        control={
+                                        <Switch onChange={this.handleValueChange('sudoAllow')} color="primary"
+                                            checked={(editingItem.get('sudoAllow')) ? editingItem.get('sudoAllow') : false} />
+                                        }
+                                        label={(editingItem.get('sudoAllow')) ? t("selActive") : t("selInActive")}
+                                    />
+                                </div>
                             </Grid>
                         </Grid>
+
+                        <div style={{marginBottom:"10px"}}>
+                            <Grid container spacing={16} direction="row" justify="flex-start" >
+                                <Grid item >
+                                    <FormLabel style={{marginRight:"22px"}}>{bull} {t("lbPolicykitUserMng")}</FormLabel>
+                                </Grid>
+                                <Grid item >
+                                    <FormControlLabel value="sudo" control={
+                                        <Radio color="primary" value="sudo" onChange={this.handleValueChange("policykitUser")} checked={editingItem.get('policykitUser') === 'sudo'} />
+                                    } label={t("lbPolicykitSudoGroup")} labelPlacement="end" />
+                                </Grid>
+                                <Grid item >
+                                    <FormControlLabel value="user" control={
+                                        <Radio color="primary" value="user" onChange={this.handleValueChange("policykitUser")} checked={editingItem.get('policykitUser') === 'user'} />
+                                    } label={t("lbPolicykitLocalUser")} labelPlacement="end" />
+                                </Grid>
+                            </Grid>
+                        </div>
 
                         <Paper elevation={4} style={{padding:10,marginBottom:10,backgroundColor:'#d8e1ec'}}>
                         <div style={{margin:'8 0 32 0'}}>

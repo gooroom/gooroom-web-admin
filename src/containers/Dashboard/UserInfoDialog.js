@@ -18,6 +18,8 @@ import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
 import MediaRuleSpec from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import CtrlCenterItemSpec from 'views/Rules/UserConfig/CtrlCenterItemSpec';
+import PolicyKitRuleSpec from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import Dialog from "@material-ui/core/Dialog";
@@ -75,6 +77,7 @@ class UserInfoDialog extends Component {
                                     selectedItem={DashboardProps.getIn(['ruleData', 'clientConfMap'])}
                                 />
                             </Grid>
+
                             <Grid item xs={12} md={6} >
                                 <BrowserRuleSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'browserRuleMap'])}
@@ -93,6 +96,16 @@ class UserInfoDialog extends Component {
                             <Grid item xs={12} md={12} >
                                 <SoftwareFilterSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
                                     selectedItem={DashboardProps.getIn(['ruleData', 'filteredSwRuleMap'])}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={12} >
+                                <CtrlCenterItemSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
+                                    selectedItem={DashboardProps.getIn(['ruleData', 'ctrlCenterItemRuleMap'])}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={12} >
+                                <PolicyKitRuleSpec specType="inform" targetType="" simpleTitle={true} hasAction={false}
+                                    selectedItem={DashboardProps.getIn(['ruleData', 'policyKitRuleMap'])}
                                 />
                             </Grid>
                             <Grid item xs={12} md={12} >

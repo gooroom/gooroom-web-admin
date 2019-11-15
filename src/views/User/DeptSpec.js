@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { formatDateToSimple, calculateDiffDays } from 'components/GRUtils/GRDates';
 import { getSelectedObjectInComp, getValueInSelectedObjectInComp, getAvatarExplainForUser } from 'components/GRUtils/GRTableListUtils';
 
 import * as UserActions from 'modules/UserModule';
@@ -15,6 +16,8 @@ import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+import * as PolicyKitRuleActions from 'modules/PolicyKitRuleModule';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
@@ -22,6 +25,8 @@ import { generateBrowserRuleObject } from 'views/Rules/UserConfig/BrowserRuleSpe
 import { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
 import { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
 import { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import { generateCtrlCenterItemObject } from 'views/Rules/UserConfig/CtrlCenterItemSpec';
+import { generatePolicyKitRuleObject } from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 
 import DeptDialog from './DeptDialog';
 
@@ -31,9 +36,13 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
 
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import GroupIcon from '@material-ui/icons/SupervisedUserCircle';
 
 import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
 import BrowserRuleSpec from 'views/Rules/UserConfig/BrowserRuleSpec';
@@ -43,14 +52,18 @@ import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SecurityRuleSpec from 'views/Rules/UserConfig/SecurityRuleSpec';
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
 import SoftwareFilterSpec from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
+import CtrlCenterItemSpec from 'views/Rules/UserConfig/CtrlCenterItemSpec';
+import PolicyKitRuleDialog from 'views/Rules/UserConfig/PolicyKitRuleDialog';
+import PolicyKitRuleSpec from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
-import Avatar from '@material-ui/core/Avatar';
 import DefaultIcon from '@material-ui/icons/Language';
-import DeptIcon from '@material-ui/icons/BusinessCenter';
 import UserIcon from '@material-ui/icons/Person';
-import GroupIcon from '@material-ui/icons/LaptopChromebook';
+import DeptIcon from '@material-ui/icons/SupervisedUserCircle';
+import HowToRegIcon from '@material-ui/icons/HowToReg';
+import AlarmIcon from '@material-ui/icons/Alarm';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -74,6 +87,12 @@ class DeptSpec extends Component {
     this.props.SoftwareFilterActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
       value: getValueInSelectedObjectInComp(this.props.SoftwareFilterProps, compId, 'DEPT', 'objId')      
     });
+    this.props.CtrlCenterItemActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
+      value: getValueInSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, 'DEPT', 'objId')      
+    });
+    this.props.PolicyKitRuleActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
+      value: getValueInSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, 'DEPT', 'objId')      
+    });
     this.props.DesktopConfActions.changeCompVariable({compId:compId, name:'selectedOptionItemId', targetType:'DEPT',
       value: getValueInSelectedObjectInComp(this.props.DesktopConfProps, compId, 'DEPT', 'confId')      
     });
@@ -81,7 +100,9 @@ class DeptSpec extends Component {
     this.props.DeptActions.showDialog({
       viewItem: {
         deptCd: paramObj.get('deptCd'),
-        deptNm: paramObj.get('deptNm')
+        deptNm: paramObj.get('deptNm'),
+        expireDate: paramObj.get('expireDate'),
+        parentExpireDate: paramObj.get('parentExpireDate')
       },
       dialogType: DeptDialog.TYPE_EDIT
     });
@@ -114,6 +135,20 @@ class DeptSpec extends Component {
     this.props.SoftwareFilterActions.showDialog({
       viewItem: generateSoftwareFilterObject(viewItem, false),
       dialogType: SoftwareFilterDialog.TYPE_EDIT
+    });
+  };
+  handleClickEditForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: generateCtrlCenterItemObject(viewItem, false),
+      dialogType: CtrlCenterItemDialog.TYPE_EDIT
+    });
+  };
+  handleClickEditForPolicyKit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
+      viewItem: generatePolicyKitRuleObject(viewItem, false),
+      dialogType: PolicyKitRuleDialog.TYPE_EDIT
     });
   };
   handleClickEditForDesktopConf = (compId, targetType) => {
@@ -152,6 +187,20 @@ class DeptSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_INHERIT_DEPT
     });
   };
+  handleClickInheritForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: viewItem,
+      dialogType: CtrlCenterItemDialog.TYPE_INHERIT_DEPT
+    });
+  };
+  handleClickInheritForPolicyKit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
+      viewItem: viewItem,
+      dialogType: PolicyKitRuleDialog.TYPE_INHERIT_DEPT
+    });
+  };
   handleClickInheritForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -164,6 +213,7 @@ class DeptSpec extends Component {
   // .................................................
   render() {
     const { DeptProps, compId, AdminProps, isEditable } = this.props;
+    const { t, i18n } = this.props;
 
     const informOpen = DeptProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = DeptProps.getIn(['viewItems', compId, 'viewItem']);
@@ -172,18 +222,21 @@ class DeptSpec extends Component {
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'DEPT']);
+    const selectedCtrlCenterItem = this.props.CtrlCenterItemProps.getIn(['viewItems', compId, 'DEPT']);
+    const selectedPolicyKit = this.props.PolicyKitRuleProps.getIn(['viewItems', compId, 'DEPT']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'DEPT']);
 
     const avatarRef = getAvatarExplainForUser(this.props.t);
-
-    return (
-      <div style={{marginTop: 10}}>
-      {(informOpen && viewItem) &&
-        <Card>
+    let userSubinfo = null;
+    if(informOpen && viewItem) {
+      userSubinfo = <div>
+        <Card elevation={4}>
           <CardHeader
-            title={viewItem.get('deptNm')}
-            style={{wordBreak:'break-all'}}
-            subheader={viewItem.get('deptCd')}
+            avatar={<DeptIcon fontSize="large" style={{verticalAlign: 'middle', marginRight:5}}/>}
+            title={<div>
+            <Typography variant="h6" style={{display: 'inline-block', marginRight:18}}>{viewItem.get('deptNm')}</Typography>
+            <Chip avatar={<Avatar>DC</Avatar>} label={viewItem.get('deptCd')} style={{marginRight:18}}/></div>
+          }
             action={ (isEditable) ?
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
@@ -192,6 +245,43 @@ class DeptSpec extends Component {
                 ><SettingsApplicationsIcon /></Button>
               </div> : <div></div>
             }
+          />
+          <Divider />
+          <CardContent style={{padding:10}}>
+            <Grid container spacing={16}>
+              <Grid item xs={12} md={12} lg={6} xl={6} >
+                <HowToRegIcon style={{verticalAlign: 'middle', marginRight:5}} />
+                <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbDeptRegistredDate")}</Typography>
+                <Typography style={{display: 'inline-block'}}>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</Typography>
+              </Grid>
+              {/* Expired Date */}
+              <Grid item xs={12} md={12} lg={6} xl={6} > 
+                <AlarmIcon style={{verticalAlign: 'middle', marginRight:5}}/>
+                <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("lbDeptExpireDate")}</Typography>
+                {(viewItem.get('expireDate')) ?
+                  <div style={{display: 'inline-block'}}>
+                  <Typography style={{display: 'inline-block', marginRight:18}}>{formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD')}</Typography>
+                  {calculateDiffDays(viewItem.get('expireDate')) < 0 ?
+                    <Chip label={t("lbExpired")} style={{color: "#fafafa", backgroundColor: "#d50000"}}/> :
+                    calculateDiffDays(viewItem.get('expireDate')) >= 7 ? 
+                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="primary"/> :
+                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="secondary"/>
+                  }</div> : <Typography style={{display: 'inline-block', marginRight:18}}>{t("optNoUse")}</Typography>
+                }
+              </Grid>
+            </Grid>
+          </CardContent>
+        </Card>
+      </div>;
+    }
+
+    return (
+      <div style={{marginTop: 10}}>
+      {(informOpen && viewItem) &&
+        <Card>
+          <CardHeader
+            title={userSubinfo}
+            style={{wordBreak:'break-all'}}
           ></CardHeader>
           <Divider />
           <CardContent style={{padding:10}}>
@@ -238,6 +328,26 @@ class DeptSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
+                <CtrlCenterItemSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
+                  selectedItem={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('viewItem') : null}
+                  ruleGrade={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForCtrlCenterItem}
+                  onClickInherit={this.handleClickInheritForCtrlCenterItem}
+                  inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedCtrlCenterItem && AdminProps.get('adminId') === selectedCtrlCenterItem.getIn(['viewItem', 'regUserId'])}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
+                <PolicyKitRuleSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
+                  selectedItem={(selectedPolicyKit) ? selectedPolicyKit.get('viewItem') : null}
+                  ruleGrade={(selectedPolicyKit) ? selectedPolicyKit.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForPolicyKit}
+                  onClickInherit={this.handleClickInheritForPolicyKit}
+                  inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedPolicyKit && AdminProps.get('adminId') === selectedPolicyKit.getIn(['viewItem', 'regUserId'])}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfSpec compId={compId} specType="inform" targetType="DEPT" hasAction={true}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
                   ruleGrade={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('ruleGrade') : null}
@@ -266,6 +376,8 @@ const mapStateToProps = (state) => ({
   BrowserRuleProps: state.BrowserRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
+  CtrlCenterItemProps: state.CtrlCenterItemModule,
+  PolicyKitRuleProps: state.PolicyKitRuleModule,
   DesktopConfProps: state.DesktopConfModule
 });
 
@@ -277,6 +389,8 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+  CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
+  PolicyKitRuleActions: bindActionCreators(PolicyKitRuleActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 

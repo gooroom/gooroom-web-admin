@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Map, List as GRIMTList } from 'immutable';
 
-
+import * as Constants from "components/GRComponents/GRConstants";
 import classNames from "classnames";
 
 import { bindActionCreators } from 'redux';
@@ -82,33 +82,58 @@ class DividedAdminManageDialog extends Component {
         AdminUserActions.setEditingItemValue({ name: 'connIps', value: oldIps });
     }
 
+    isSelectedPart = () => {
+        const editObj = this.props.AdminUserProps.get('editingItem');
+        if(editObj.get('isClientAdmin') !== undefined && editObj.get('isClientAdmin') === '1') {
+            return true;
+        } else if(editObj.get('isUserAdmin') !== undefined && editObj.get('isUserAdmin') === '1') {
+            return true;
+        } else if(editObj.get('isDesktopAdmin') !== undefined && editObj.get('isDesktopAdmin') === '1') {
+            return true;
+        } else if(editObj.get('isNoticeAdmin') !== undefined && editObj.get('isNoticeAdmin') === '1') {
+            return true;
+        }
+        return false;
+    }
+
     handleCreateData = (event) => {
         const { AdminUserProps, GRConfirmActions, t } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
-            GRConfirmActions.showConfirm({
-                confirmTitle: t("lbAddAdminUser"),
-                confirmMsg: t("msgAddAdminUser"),
-                confirmObject: AdminUserProps.get('editingItem'),
-                handleConfirmResult: (confirmValue, paramObject) => {
-                    if(confirmValue) {
-                        const { AdminUserProps, AdminUserActions, compId } = this.props;
-                        AdminUserActions.createAdminUserData({
-                            itemObj: paramObject,
-                            compId: this.props.compId
-                        }).then((reData) => {
-                            if(reData && reData.status && reData.status.result === 'fail') {
-                                this.props.GRAlertActions.showAlert({
-                                    alertTitle: this.props.t("dtSystemError"),
-                                    alertMsg: reData.status.message
-                                });
-                            } else {
-                                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
-                                this.handleClose();
-                            }
-                        });
-                    }
-                },
-            });
+            let isOk = true;
+            if(AdminUserProps.getIn(['editingItem', 'adminTp']) === 'P') {
+                isOk = this.isSelectedPart();
+            }
+            if(isOk) {
+                GRConfirmActions.showConfirm({
+                    confirmTitle: t("lbAddAdminUser"),
+                    confirmMsg: t("msgAddAdminUser"),
+                    confirmObject: AdminUserProps.get('editingItem'),
+                    handleConfirmResult: (confirmValue, paramObject) => {
+                        if(confirmValue) {
+                            const { AdminUserProps, AdminUserActions, compId } = this.props;
+                            AdminUserActions.createAdminUserData({
+                                itemObj: paramObject,
+                                compId: this.props.compId
+                            }).then((reData) => {
+                                if(reData && reData.status && reData.status.result === 'fail') {
+                                    this.props.GRAlertActions.showAlert({
+                                        alertTitle: this.props.t("dtSystemError"),
+                                        alertMsg: reData.status.message
+                                    });
+                                } else {
+                                    AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
+                                    this.handleClose();
+                                }
+                            });
+                        }
+                    },
+                });
+            } else {
+                this.props.GRAlertActions.showAlert({
+                    alertTitle: t("dtSystemNotice"),
+                    alertMsg: t("msgNeedPartItem")
+                });
+            }
         } else {
             if(this.refs.form && this.refs.form.childs) {
                 this.refs.form.childs.map(c => {
@@ -121,23 +146,34 @@ class DividedAdminManageDialog extends Component {
     handleEditData = (event) => {
         const { AdminUserProps, GRConfirmActions, t } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
-            GRConfirmActions.showConfirm({
-                confirmTitle: t("lbEditAdminUser"),
-                confirmMsg: t("msgEditAdminUser"),
-                confirmObject: AdminUserProps.get('editingItem'),
-                handleConfirmResult: (confirmValue, paramObject) => {
-                    if(confirmValue) {
-                        const { AdminUserProps, AdminUserActions, compId } = this.props;
-                        AdminUserActions.editAdminUserData({
-                            itemObj: paramObject,
-                            compId: this.props.compId
-                        }).then((res) => {
-                            AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
-                            this.handleClose();
-                        });
+            let isOk = true;
+            if(AdminUserProps.getIn(['editingItem', 'adminTp']) === 'P') {
+                isOk = this.isSelectedPart();
+            }
+            if(isOk) {
+                GRConfirmActions.showConfirm({
+                    confirmTitle: t("lbEditAdminUser"),
+                    confirmMsg: t("msgEditAdminUser"),
+                    confirmObject: AdminUserProps.get('editingItem'),
+                    handleConfirmResult: (confirmValue, paramObject) => {
+                        if(confirmValue) {
+                            const { AdminUserProps, AdminUserActions, compId } = this.props;
+                            AdminUserActions.editAdminUserData({
+                                itemObj: paramObject,
+                                compId: this.props.compId
+                            }).then((res) => {
+                                AdminUserActions.readAdminUserListPaged(AdminUserProps, compId);
+                                this.handleClose();
+                            });
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                this.props.GRAlertActions.showAlert({
+                    alertTitle: t("dtSystemNotice"),
+                    alertMsg: t("msgNeedPartItem")
+                });
+            }
         } else {
             if(this.refs.form && this.refs.form.childs) {
                 this.refs.form.childs.map(c => {
@@ -282,6 +318,21 @@ class DividedAdminManageDialog extends Component {
                                     />
                                 </Grid>
                                 <Grid item xs={6} style={{paddingRight:5}}>
+                                    <FormControl style={{width:'100%'}}>
+                                        <InputLabel>{t("lbAdminType")}</InputLabel>
+                                        <Select
+                                            value={(editingItem.get('adminTp')) ? editingItem.get('adminTp') : ''} style={{width:'100%'}}
+                                            onChange={this.handleValueChange('adminTp')}
+                                        >
+                                        {(window.gpmsain === Constants.SUPER_RULECODE) &&
+                                        <MenuItem value='S' key='SUPER'>{t("lbTotalAdmin")}</MenuItem>
+                                        }
+                                        {(window.gpmsain === Constants.SUPER_RULECODE) &&
+                                        <MenuItem value='A' key='ADMIN'>{t("lbSiteAdmin")}</MenuItem>
+                                        }
+                                        <MenuItem value='P' key='PART'>{t("lbPartAdmin")}</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </Grid>
                                 <Grid item xs={6} style={{paddingRight:5}}>
                                     <TextValidator
@@ -359,6 +410,23 @@ class DividedAdminManageDialog extends Component {
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
                     </Grid>
+                    {(editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
+                        <GroupMultiSelector compId={compId} title={t('lbManagedClientGroup')} 
+                            isCheckMasterOnly={true}
+                            selectedGroup={selectedGroup} 
+                            onSelectGroup={this.handleSelectGroup}
+                        />
+                    }
+
+                    {(editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
+                        <DeptMultiSelector compId={compId} title={t('lbManagedDept')} 
+                            isCheckMasterOnly={true}
+                            selectedDept={selectedDept} 
+                            onSelectDept={this.handleSelectDept}
+                            selectedUser={selectedUser} 
+                            onSelectUser={this.handleSelectUser}
+                        />
+                    }
                 </DialogContent>
                 <DialogActions>
                 {(dialogType === DividedAdminManageDialog.TYPE_ADD) &&

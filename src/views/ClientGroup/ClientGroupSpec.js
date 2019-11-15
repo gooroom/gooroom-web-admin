@@ -19,6 +19,8 @@ import * as BrowserRuleActions from 'modules/BrowserRuleModule';
 import * as MediaRuleActions from 'modules/MediaRuleModule';
 import * as SecurityRuleActions from 'modules/SecurityRuleModule';
 import * as SoftwareFilterActions from 'modules/SoftwareFilterModule';
+import * as CtrlCenterItemActions from 'modules/CtrlCenterItemModule';
+import * as PolicyKitRuleActions from 'modules/PolicyKitRuleModule';
 
 import * as DesktopConfActions from 'modules/DesktopConfModule';
 
@@ -32,6 +34,8 @@ import BrowserRuleSpec, { generateBrowserRuleObject } from 'views/Rules/UserConf
 import MediaRuleSpec, { generateMediaRuleObject } from 'views/Rules/UserConfig/MediaRuleSpec';
 import SecurityRuleSpec, { generateSecurityRuleObject } from 'views/Rules/UserConfig/SecurityRuleSpec';
 import SoftwareFilterSpec, { generateSoftwareFilterObject } from 'views/Rules/UserConfig/SoftwareFilterSpec';
+import CtrlCenterItemSpec, { generateCtrlCenterItemObject } from 'views/Rules/UserConfig/CtrlCenterItemSpec';
+import PolicyKitRuleSpec, { generatePolicyKitRuleObject } from 'views/Rules/UserConfig/PolicyKitRuleSpec';
 import DesktopConfSpec from 'views/Rules/DesktopConfig/DesktopConfSpec';
 
 import Grid from '@material-ui/core/Grid';
@@ -39,6 +43,9 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Divider from '@material-ui/core/Divider';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
 
 import Button from '@material-ui/core/Button';
 
@@ -52,9 +59,14 @@ import BrowserRuleDialog from 'views/Rules/UserConfig/BrowserRuleDialog';
 import MediaRuleDialog from 'views/Rules/UserConfig/MediaRuleDialog';
 import SecurityRuleDialog from 'views/Rules/UserConfig/SecurityRuleDialog';
 import SoftwareFilterDialog from 'views/Rules/UserConfig/SoftwareFilterDialog';
+import CtrlCenterItemDialog from 'views/Rules/UserConfig/CtrlCenterItemDialog';
+import PolicyKitRuleDialog from 'views/Rules/UserConfig/PolicyKitRuleDialog';
 import DesktopConfDialog from 'views/Rules/DesktopConfig/DesktopConfDialog';
 
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import DescriptionIcon from '@material-ui/icons/Description';
+import DeviceGroupIcon from '@material-ui/icons/Devices';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -147,6 +159,20 @@ class ClientGroupSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_EDIT
     });
   };
+  handleClickEditForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: generateCtrlCenterItemObject(viewItem, false),
+      dialogType: CtrlCenterItemDialog.TYPE_EDIT
+    });
+  };
+  handleClickEditForPolicyKit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
+      viewItem: generatePolicyKitRuleObject(viewItem, false),
+      dialogType: PolicyKitRuleDialog.TYPE_EDIT
+    });
+  };
   handleClickEditForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -205,6 +231,20 @@ class ClientGroupSpec extends Component {
       dialogType: SoftwareFilterDialog.TYPE_INHERIT_GROUP
     });
   };
+  handleClickInheritForCtrlCenterItem = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.CtrlCenterItemProps, compId, targetType);
+    this.props.CtrlCenterItemActions.showDialog({
+      viewItem: viewItem,
+      dialogType: CtrlCenterItemDialog.TYPE_INHERIT_GROUP
+    });
+  };
+  handleClickInheritForPolicyKit = (compId, targetType) => {
+    const viewItem = getSelectedObjectInComp(this.props.PolicyKitRuleProps, compId, targetType);
+    this.props.PolicyKitRuleActions.showDialog({
+      viewItem: viewItem,
+      dialogType: PolicyKitRuleDialog.TYPE_INHERIT_GROUP
+    });
+  };
   handleClickInheritForDesktopConf = (compId, targetType) => {
     const viewItem = getSelectedObjectInComp(this.props.DesktopConfProps, compId, targetType);
     this.props.DesktopConfActions.showDialog({
@@ -216,6 +256,7 @@ class ClientGroupSpec extends Component {
 
   render() {
     const { compId, ClientGroupProps, AdminProps, isEditable } = this.props;
+    const { t, i18n } = this.props;
 
     const informOpen = ClientGroupProps.getIn(['viewItems', compId, 'informOpen']);
     const viewItem = ClientGroupProps.getIn(['viewItems', compId, 'viewItem']);
@@ -228,19 +269,35 @@ class ClientGroupSpec extends Component {
     const selectedBrowserRuleItem = this.props.BrowserRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedSecurityRuleItem = this.props.SecurityRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedSoftwareFilterItem = this.props.SoftwareFilterProps.getIn(['viewItems', compId, 'GROUP']);
+    const selectedCtrlCenterItem = this.props.CtrlCenterItemProps.getIn(['viewItems', compId, 'GROUP']);
+    const selectedPolicyKit = this.props.PolicyKitRuleProps.getIn(['viewItems', compId, 'GROUP']);
     const selectedDesktopConfItem = this.props.DesktopConfProps.getIn(['viewItems', compId, 'GROUP']);
 
     let groupInfo = '';
+    let groupInfoSubHeader = '';
     if(viewItem && viewItem.get('grpId')) {
-      groupInfo = viewItem.get('grpId');
-      if(viewItem.get('regDate') && viewItem.get('regDate') !== '') {
-        groupInfo += ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD');
-      }
-      if(viewItem.get('comment') && viewItem.get('comment') !== '') {
-        groupInfo += ', ' + viewItem.get('comment');
-      }
+      groupInfo = <div>
+        <DeviceGroupIcon fontSize="large" style={{verticalAlign: 'middle', marginRight:10}}/>
+        <Typography variant="h6" style={{display: 'inline-block', marginRight:18}}>{(viewItem.get('grpNm')) ? viewItem.get('grpNm') : ''}</Typography>
+        <Chip avatar={<Avatar>ID</Avatar>} label={viewItem.get('grpId')} style={{marginRight:18}} />
+      </div>
     }
     
+    if(viewItem && viewItem.get('regDate') && viewItem.get('regDate') !== '') {
+      groupInfoSubHeader = <div style={{marginTop: 10}}>
+        <CheckCircleOutlineIcon style={{verticalAlign: 'middle', marginRight:5, color: 'black'}} />
+        <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("spClientDeptRegDate")}</Typography>
+        <Typography style={{display: 'inline-block'}}>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</Typography>
+        {(viewItem.get('comment') && viewItem.get('comment') !== '') &&
+          <div style={{marginTop: 10}}>
+            <DescriptionIcon style={{verticalAlign: 'middle', marginRight:5, color: 'black'}} />
+            <Typography style={{display: 'inline-block', letterSpacing: '5.3em', marginRight:'-5.3em', fontWeight:'bold'}}>{t("lbDesc")}</Typography>
+            <Typography style={{display: 'inline-block', marginLeft:18}}>{viewItem.get('comment')}</Typography>
+          </div>
+        }
+      </div>
+    }
+
     const avatarRef = getAvatarExplainForGroup(this.props.t);
 
     return (
@@ -248,9 +305,9 @@ class ClientGroupSpec extends Component {
       {(informOpen && viewItem && viewItem.get('grpId')) &&
         <Card >
           <CardHeader
-            title={(viewItem.get('grpNm')) ? viewItem.get('grpNm') : ''}
+            title={groupInfo}
             style={{wordBreak:'break-all'}}
-            subheader={groupInfo}
+            subheader={groupInfoSubHeader}
             action={ (isEditable) ?
               <div style={{width:48,paddingTop:10}}>
                 <Button size="small"
@@ -342,6 +399,28 @@ class ClientGroupSpec extends Component {
                 />
               </Grid>
               <Grid item xs={12} sm={12} lg={12}>
+                <CtrlCenterItemSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true}
+                  selectedItem={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('viewItem') : null}
+                  ruleGrade={(selectedCtrlCenterItem) ? selectedCtrlCenterItem.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForCtrlCenterItem}
+                  onClickInherit={this.handleClickInheritForCtrlCenterItem}
+                  inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedCtrlCenterItem && AdminProps.get('adminId') === selectedCtrlCenterItem.getIn(['viewItem', 'regUserId'])}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
+                <PolicyKitRuleSpec compId={compId} specType="inform" targetType="GROUP"
+                  hasAction={true}
+                  selectedItem={(selectedPolicyKit) ? selectedPolicyKit.get('viewItem') : null}
+                  ruleGrade={(selectedPolicyKit) ? selectedPolicyKit.get('ruleGrade') : null}
+                  onClickEdit={this.handleClickEditForPolicyKit}
+                  onClickInherit={this.handleClickInheritForPolicyKit}
+                  inherit={viewItem.get('hasChildren')}
+                  isEditable={selectedPolicyKit && AdminProps.get('adminId') === selectedPolicyKit.getIn(['viewItem', 'regUserId'])}
+                />
+              </Grid>
+              <Grid item xs={12} sm={12} lg={12}>
                 <DesktopConfSpec compId={compId} specType="inform" targetType="GROUP" 
                   hasAction={true}
                   selectedItem={(selectedDesktopConfItem) ? selectedDesktopConfItem.get('viewItem') : null}
@@ -376,6 +455,8 @@ const mapStateToProps = (state) => ({
   BrowserRuleProps: state.BrowserRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
+  CtrlCenterItemProps: state.CtrlCenterItemModule,
+  PolicyKitRuleProps: state.PolicyKitRuleModule,
 
   DesktopConfProps: state.DesktopConfModule
 });
@@ -392,6 +473,8 @@ const mapDispatchToProps = (dispatch) => ({
   BrowserRuleActions: bindActionCreators(BrowserRuleActions, dispatch),
   SecurityRuleActions: bindActionCreators(SecurityRuleActions, dispatch),
   SoftwareFilterActions: bindActionCreators(SoftwareFilterActions, dispatch),
+  CtrlCenterItemActions: bindActionCreators(CtrlCenterItemActions, dispatch),
+  PolicyKitRuleActions: bindActionCreators(PolicyKitRuleActions, dispatch),
   DesktopConfActions: bindActionCreators(DesktopConfActions, dispatch)
 });
 

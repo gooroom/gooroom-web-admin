@@ -112,20 +112,37 @@ class UserDialog extends Component {
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         const { UserProps, UserActions, compId } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
                         const selectedObjectIdName = ['viewItems', compId, 'USER', 'selectedOptionItemId'];
                         const editingItem = (UserProps.get('editingItem')) ? UserProps.get('editingItem') : null;
                         if(editingItem !== undefined) {
+                            // user expire date
+                            let userExpireDate = '';
+                            if(editingItem.get("isUseExpire") !== undefined && editingItem.get("isUseExpire") === '1') {
+                                userExpireDate = editingItem.get('expireDate')
+                            }
+                            // password expire date
+                            let passwordExpireDate = '';
+                            if(editingItem.get("isUsePasswordExpire") !== undefined && editingItem.get("isUsePasswordExpire") === '1') {
+                                passwordExpireDate = editingItem.get('passwordExpireDate')
+                            }
+
                             UserActions.editUserData({
                                 userId: UserProps.getIn(['editingItem', 'userId']),
                                 userPasswd: UserProps.getIn(['editingItem', 'userPasswd']),
                                 userNm: UserProps.getIn(['editingItem', 'userNm']),
+                                userEmail: UserProps.getIn(['editingItem', 'userEmail']),
                                 deptCd: UserProps.getIn(['editingItem', 'deptCd']),
+                                expireDate: userExpireDate,
+                                passwordExpireDate: passwordExpireDate,
+                                loginTrial: UserProps.getIn(['editingItem', 'loginTrial']),
                 
                                 browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
                                 mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
                                 securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
                                 filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                                ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                                policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
                                 desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                             }).then((res) => {
                                 UserActions.readUserListPaged(UserProps, compId);
@@ -183,6 +200,9 @@ class UserDialog extends Component {
         } else if(ruleDialogType === UserDialog.TYPE_EDIT) {
             title = t("dtEditUser");
         }
+
+        const isUseUserExpireDate = (editingItem && editingItem.get('isUseExpire') === '1');
+        const isUsePasswordExpireDate = (editingItem && editingItem.get('isUsePasswordExpire') === '1');
 
         return (
             <React.Fragment>
@@ -244,9 +264,95 @@ class UserDialog extends Component {
                                     className={classes.fullWidth}
                                 />
                             </Grid>
-                            <Grid item xs={8}>
+                            <Grid item xs={4}>
+                                <TextValidator
+                                    label={t("lbEmail")}
+                                    value={(editingItem.get('userEmail')) ? editingItem.get('userEmail') : ''}
+                                    name="userEmail" validators={['required', 'isEmail']} errorMessages={[t("msgEnterEmail")]}
+                                    onChange={this.handleValueChange('userEmail')}
+                                    className={classes.fullWidth}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
                             </Grid>
                         </Grid>
+
+                        <Grid container spacing={24}>
+                            <Grid item xs={3}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12} style={{paddingBottom:0}}><FormLabel component="legend" style={{fontSize:'0.8rem'}}>{t("lbUseUserExpire")}</FormLabel></Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="true" control={
+                                            <Radio color="primary" value="1" onChange={this.handleValueChange("isUseExpire")} checked={isUseUserExpireDate} />
+                                        } label={t("optUse")} labelPlacement="end" />
+                                    </Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="false" control={
+                                            <Radio color="primary" value="0" onChange={this.handleValueChange("isUseExpire")} checked={!isUseUserExpireDate} />
+                                        } label={t("optNoUse")} labelPlacement="end" />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12}>
+                                    <InlineDatePicker label={t('lbUserExpireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10)}
+                                    onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
+                                    className={classes.fullWidth} 
+                                    disabled={!isUseUserExpireDate} />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12} style={{paddingBottom:0}}><FormLabel component="legend" style={{fontSize:'0.8rem'}}>{t("lbUsePasswordExpire")}</FormLabel></Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="true" control={
+                                            <Radio color="primary" value="1" onChange={this.handleValueChange("isUsePasswordExpire")} checked={isUsePasswordExpireDate} />
+                                        } label={t("optUse")} labelPlacement="end" />
+                                    </Grid>
+                                    <Grid item >
+                                        <FormControlLabel value="false" control={
+                                            <Radio color="primary" value="0" onChange={this.handleValueChange("isUsePasswordExpire")} checked={!isUsePasswordExpireDate} />
+                                        } label={t("optNoUse")} labelPlacement="end" />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12}>
+                                    <InlineDatePicker label={t('lbPasswordExpireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('passwordExpireDate')) ? editingItem.get('passwordExpireDate') : initDate.toJSON().slice(0,10)}
+                                    onChange={(date) => {this.handleDateChange(date, 'passwordExpireDate');}} 
+                                    className={classes.fullWidth} 
+                                    disabled={!isUsePasswordExpireDate} />
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
+{/* 
+                        <Grid container spacing={24}>
+                            <Grid item xs={6}>
+                                <InlineDatePicker label={t('expireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10) }
+                                    onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
+                                    className={classes.fullWidth} />
+                            </Grid>
+                            <Grid item xs={6}>
+                            {(ruleDialogType === UserDialog.TYPE_EDIT) &&
+                                <TextValidator
+                                    label={t("lbLoginTrial")}
+                                    value={(editingItem.get('loginTrial')) ? editingItem.get('loginTrial') : ''}
+                                    name="loginTrial" validators={['required']} errorMessages={[t("msgEnterUserName")]}
+                                    onChange={this.handleValueChange("loginTrial")}
+                                    className={classes.fullWidth}
+                                />
+                            }
+                            </Grid>
+                        </Grid>
+*/}
                         <Divider style={{marginTop: 10, marginBottom: 10}} />
                         <UserRuleSelector compId={compId} module={(ruleDialogType === UserDialog.TYPE_ADD) ? 'new' : 'edit'} targetType="USER" />
                     </DialogContent>
@@ -281,6 +387,8 @@ const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
+    CtrlCenterItemProps: state.CtrlCenterItemModule,
+    PolicyKitRuleProps: state.PolicyKitRuleModule,
     DesktopConfProps: state.DesktopConfModule
 });
 

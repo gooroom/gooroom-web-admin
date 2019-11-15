@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import * as AdminUserActions from 'modules/AdminUserModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
@@ -78,6 +78,47 @@ class DividedAdminManageRuleSelector extends Component {
         <React.Fragment>
         <Card>
           <CardHeader style={{padding:3,backgroundColor:'#a1b1b9'}} titleTypographyProps={{variant:'body2', style:{fontWeight:'bold'}}} title={"관리자 권한"}></CardHeader>
+          {(editingItem.get('adminTp') === Constants.SUPER_TYPECODE || editingItem.get('adminTp') === Constants.ADMIN_TYPECODE) &&
+          <CardContent style={{padding:0}}>
+            <Typography variant="body1" style={{textAlign:'center',padding:30}} >{t("msgNoNeedPart")}</Typography>
+          </CardContent>
+          }
+          {(editingItem.get('adminTp') === Constants.PART_TYPECODE) &&
+          <CardContent style={{padding:0}}>
+
+          <Grid container spacing={0} style={{padding:'10px 20px 10px 20px'}}>
+            <Grid item xs={3} className={classes.specCategory} style={{padding:0}}>
+              <Typography variant="body1" style={{fontWeight:'bold'}} >{t("lbClientPart")}
+                <Checkbox checked={(editingItem) ? editingItem.get('isClientAdmin') == 1 : false}
+                  onChange={this.handleToggle('isClientAdmin')} value="isClientAdmin"
+                />
+              </Typography>
+            </Grid>
+            <Grid item xs={3} className={classes.specCategory} style={{padding:0}}>
+              <Typography variant="body1" style={{fontWeight:'bold'}} >{t("lbUserPart")}
+                <Checkbox checked={(editingItem) ? editingItem.get('isUserAdmin') == 1 : false}
+                  onChange={this.handleToggle('isUserAdmin')} value="isUserAdmin"
+                />
+              </Typography>
+            </Grid>
+            <Grid item xs={3} className={classes.specCategory} style={{padding:0}}>
+              <Typography variant="body1" style={{fontWeight:'bold'}} >{t("lbDesktopPart")}
+                <Checkbox checked={(editingItem) ? editingItem.get('isDesktopAdmin') == 1 : false}
+                  onChange={this.handleToggle('isDesktopAdmin')} value="isDesktopAdmin"
+                />
+              </Typography>
+            </Grid>
+            <Grid item xs={3} className={classes.specCategory} style={{padding:0}}>
+              <Typography variant="body1" style={{fontWeight:'bold'}} >{t("lbNoticePart")}
+                <Checkbox checked={(editingItem) ? editingItem.get('isNoticeAdmin') == 1 : false}
+                  onChange={this.handleToggle('isNoticeAdmin')} value="isNoticeAdmin"
+                />
+              </Typography>
+            </Grid>
+          </Grid>
+  
+          </CardContent>
+          }
           </Card>
 
         </React.Fragment>

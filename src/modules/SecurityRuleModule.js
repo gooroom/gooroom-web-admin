@@ -262,6 +262,7 @@ const makeParameter = (param) => {
         objId: param.get('objId'),
         objName: param.get('objNm'),
         objComment: param.get('comment'),
+        adminType: param.get('adminType'),
 
         screen_time: param.get('screenTime'),
         password_time: param.get('passwordTime'),

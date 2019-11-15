@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -8,6 +8,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { getEditAndDeleteRoleWithList } from 'components/GRUtils/GRCommonUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -208,6 +209,8 @@ class ClientRegKey extends Component {
               <TableBody>
                 {listObj.get('listData').map(n => {
 
+                  let { isEditable, isDeletable } = getEditAndDeleteRoleWithList(n.get('regKeyNo'), window.gpmsain, this.props.AdminProps.get('adminId'), n.get('regUserId'));
+
                   return (
                     <TableRow
                       hover
@@ -220,16 +223,20 @@ class ClientRegKey extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('regKeyNo'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isDeletable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('regKeyNo'))}>
                           <DeleteIcon />
                         </Button>
+                      }
                       </TableCell>
                     </TableRow>
                   );
