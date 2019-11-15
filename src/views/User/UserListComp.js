@@ -289,7 +289,7 @@ class UserListComp extends Component {
                     <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('userId'))}/>
                   </TableCell>
                   <TableCell className={classes.grSmallAndClickCell}
-                    style={(n.get('isExpired') === '1') ? {color:'red'} : {color:''}}
+                    style={(n.get('isExpired') === '1' || n.get('isPasswordExpired') === '1' || n.get('loginTrial') === '0') ? {color:'red'} : {color:''}}
                   
                   >{n.get('userId')}</TableCell>
                   <TableCell className={classes.grSmallAndClickCellAndBreak}>{n.get('userNm')}</TableCell>

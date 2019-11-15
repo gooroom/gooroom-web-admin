@@ -20,7 +20,6 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate } from 'react-i18next';
 
-import { Editor } from '@tinymce/tinymce-react';
 import { Card, CardContent, CardHeader, CardActions } from '@material-ui/core';
 
 //
@@ -154,8 +153,8 @@ class NoticeDialog extends Component {
         }
     }
 
-    handleContentChange = (content) => {
-        this.setState({ content: content });
+    handleContentChange = (event) => {
+        this.setState({ content: event.target.value });
     }
 
     render() {
@@ -172,44 +171,6 @@ class NoticeDialog extends Component {
         } else if(dialogType === NoticeDialog.TYPE_EDIT) {
             title = t('dtEditNotice');
         }
-
-        const tinymceInit = {
-            language: (i18n.language === 'kr' ? 'ko_KR' : null),
-            height: 400,
-            menubar: false,
-            resize: false,
-            branding: false,
-            statusbar: false,
-            plugins: 'image',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | image',
-            image_advtab: true,
-            file_picker_types: 'image',
-            file_picker_callback: function (callback, value, meta) {
-                const input = document.createElement('input');
-                input.setAttribute('type', 'file');
-                input.setAttribute('accept', 'image/*');
-                input.onchange = function () {
-                    const file = this.files[0];
-                
-                    const reader = new FileReader();
-                    reader.onload = function () {
-                        const id = 'blobid' + (new Date()).getTime();
-                        const blobCache =  tinymce.activeEditor.editorUpload.blobCache;
-                        const base64 = reader.result.split(',')[1];
-                        const blobInfo = blobCache.create(id, file, base64);
-                        blobCache.add(blobInfo);
-
-                        if (blobInfo.blob().size > 524288) {
-                            alert('big size');
-                        } else {
-                            callback(blobInfo.blobUri(), { title: file.name });
-                        }
-                    };
-                    reader.readAsDataURL(file);
-                };
-                input.click();
-            }
-        };
 
         return (
         <div>
@@ -229,10 +190,15 @@ class NoticeDialog extends Component {
                                         margin="normal"
                                         variant="outlined"
                                     />
-                                    <Editor
-                                        init={tinymceInit}
+                                    <TextField
+                                        label={t('lbNoticeContent')}
+                                        multiline
+                                        rows="15"
+                                        className={classes.fullWidth}
+                                        margin="normal"
+                                        variant="outlined"
                                         value={this.state.content}
-                                        onEditorChange={this.handleContentChange}
+                                        onChange={this.handleContentChange}
                                     />
                                 </CardContent>
                                 <CardActions className={classes.noticeDialogActions}>
