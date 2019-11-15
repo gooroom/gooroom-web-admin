@@ -302,7 +302,8 @@ const makeParameter = (param) => {
         desktopConfId: param.get('confId'),
         desktopConfNm: param.get('confNm'),
         appDatas: param.get('apps').map(x => x.get('appId')).toJS(),
-        desktopTheme: param.get('themeId')
+        desktopTheme: param.get('themeId'),
+        adminType: param.get('adminType')
     };
 }
 

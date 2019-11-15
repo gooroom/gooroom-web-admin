@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -223,6 +223,9 @@ class MediaRuleDialog extends Component {
         let title = "";
         if(dialogType === MediaRuleDialog.TYPE_ADD) {
             title = t("dtAddMediaRule");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === MediaRuleDialog.TYPE_VIEW) {
             title = t("dtViewMediaRule");
         } else if(dialogType === MediaRuleDialog.TYPE_EDIT) {
@@ -304,14 +307,30 @@ class MediaRuleDialog extends Component {
                             </Grid>
                             <Grid item xs={4}>
                                 <FormControlLabel style={{heigth:32}}
+                                    control={<Switch onChange={this.handleValueChange('microphone')} 
+                                        checked={this.checkAllow(editingItem.get('microphone'))}
+                                        color="primary" />}
+                                    label={(editingItem.get('microphone') == 'allow') ? t("selMicrophoneOn") : t("selMicrophoneOff")}
+                                />
+                            </Grid>
+                        </Grid>
+                        <Grid container alignItems="center" direction="row" justify="space-between" >
+                            <Grid item xs={4}>
+                                <FormControlLabel style={{heigth:32}}
+                                    control={<Switch onChange={this.handleValueChange('screenCapture')} 
+                                        checked={this.checkAllow(editingItem.get('screenCapture'))}
+                                        color="primary" />}
+                                    label={(editingItem.get('screenCapture') == 'allow') ? t("selScreenCaptureOn") : t("selScreenCaptureOff")}
+                                />
+                            </Grid>
+                            <Grid item xs={4}>
+                                <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('keyboard')} 
                                         checked={this.checkAllow(editingItem.get('keyboard'))}
                                         color="primary" />}
                                     label={(editingItem.get('keyboard') == 'allow') ? t("selUsbKeyboardOn") : t("selUsbKeyboardOff")}
                                 />
                             </Grid>
-                        </Grid>
-                        <Grid container alignItems="center" direction="row" justify="space-between" >
                             <Grid item xs={4} >
                                 <FormControlLabel style={{heigth:32}}
                                     control={<Switch onChange={this.handleValueChange('mouse')} 
@@ -320,7 +339,18 @@ class MediaRuleDialog extends Component {
                                     label={(editingItem.get('mouse') == 'allow') ? t("selUsbMouseOn") : t("selUsbMouseOff")}
                                 />
                             </Grid>
-                            <Grid item xs={8} ></Grid>
+                        </Grid>
+                        <Grid container alignItems="center" direction="row" justify="space-between" >
+                            <Grid item xs={4}>
+                                <FormControlLabel style={{heigth:32}}
+                                    control={<Switch onChange={this.handleValueChange('clipboard')} 
+                                        checked={this.checkAllow(editingItem.get('clipboard'))}
+                                        color="primary" />}
+                                    label={(editingItem.get('clipboard') == 'allow') ? t("selClipboardOn") : t("selClipboardOff")}
+                                />
+                            </Grid>
+                            <Grid item xs={8}>
+                            </Grid>
                         </Grid>
                         <Grid container alignItems="flex-start" direction="row" justify="space-between" >
                             <Grid item xs={6}>

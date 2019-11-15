@@ -28,13 +28,13 @@ class MediaRuleSpec extends Component {
       return false;
     }
   }
-
+  
   render() {
 
     const { classes } = this.props;
     const { t, i18n } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
-    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle} = this.props;
+    const { compId, targetType, selectedItem, ruleGrade, hasAction, simpleTitle, isEditable} = this.props;
 
     let viewItem = null;
     let RuleAvartar = null;
@@ -53,15 +53,17 @@ class MediaRuleSpec extends Component {
               subheader={viewItem.get('objId') + ', ' + viewItem.get('comment')}
               action={
                 <div style={{paddingTop:16,paddingRight:24}}>
+                  {isEditable &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(compId, targetType)}
                   ><EditIcon /></Button>
-                  {(this.props.onClickCopy && !selectedItem.get('objId').endsWith('DEFAULT')) &&
+                  }
+                  {(this.props.onClickCopy && isEditable && !selectedItem.get('objId').endsWith('DEFAULT')) &&
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickCopy(compId, targetType)}
                   ><CopyIcon /></Button>
                   }
-                  {(this.props.inherit) && 
+                  {(this.props.inherit && isEditable) && 
                   <Button size="small" variant="outlined" color="primary" style={{minWidth:32,marginLeft:10}}
                     onClick={() => this.props.onClickInherit(compId, targetType)}
                   ><ArrowDropDownCircleIcon /></Button>
@@ -99,12 +101,18 @@ class MediaRuleSpec extends Component {
                 <Grid item xs={1} className={classes.specContent}>{viewItem.get('wireless')}</Grid>
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtSound")}</Grid>
                 <Grid item xs={1} className={classes.specContent}>{viewItem.get('sound')}</Grid>
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtMicrophone")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('microphone')}</Grid>
+
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtScreenCapture")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('screenCapture')}</Grid>
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbKeyboard")}</Grid>
                 <Grid item xs={1} className={classes.specContent}>{viewItem.get('keyboard')}</Grid>
-
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbMouse")}</Grid>
                 <Grid item xs={1} className={classes.specContent}>{viewItem.get('mouse')}</Grid>
 
+                <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtClipboard")}</Grid>
+                <Grid item xs={1} className={classes.specContent}>{viewItem.get('clipboard')}</Grid>
                 <Grid item xs={8}></Grid>
 
                 <Grid item xs={3} className={classes.specTitle}>{bull} {t("dtUsbMemory")}</Grid>
@@ -147,6 +155,8 @@ export const generateMediaRuleObject = (param, isForViewer) => {
     let camera = '';
     let sound = '';
     let microphone = '';
+    let screenCapture = '';
+    let clipboard = '';
     let keyboard = '';
     let mouse = '';
     let macAddress = [];
@@ -169,6 +179,10 @@ export const generateMediaRuleObject = (param, isForViewer) => {
         sound = evalue;
       } else if(ename == 'microphone') {
         microphone = evalue;
+      } else if(ename == 'screen_capture') {
+        screenCapture = evalue;
+      } else if(ename == 'clipboard') {
+        clipboard = evalue;
       } else if(ename == 'camera') {
         camera = evalue;
       } else if(ename == 'keyboard') {
@@ -198,6 +212,8 @@ export const generateMediaRuleObject = (param, isForViewer) => {
       printer: printer,
       sound: sound,
       microphone: microphone,
+      screenCapture: screenCapture,
+      clipboard: clipboard,
       camera: camera,
       keyboard: keyboard,
       mouse: mouse,

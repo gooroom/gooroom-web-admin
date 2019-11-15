@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -29,6 +29,8 @@ import BrowserRuleDialog from "views/Rules/UserConfig/BrowserRuleDialog";
 import SecurityRuleDialog from "views/Rules/UserConfig/SecurityRuleDialog";
 import MediaRuleDialog from "views/Rules/UserConfig/MediaRuleDialog";
 import SoftwareFilterDialog from "views/Rules/UserConfig/SoftwareFilterDialog";
+import CtrlCenterItemDialog from "views/Rules/UserConfig/CtrlCenterItemDialog";
+import PolicyKitRuleDialog from "views/Rules/UserConfig/PolicyKitRuleDialog";
 import DesktopConfDialog from "views/Rules/DesktopConfig/DesktopConfDialog";
 import DesktopAppDialog from "views/Rules/DesktopConfig/DesktopApp/DesktopAppDialog";
 
@@ -204,6 +206,8 @@ class UserMasterManage extends Component {
       this.props.DeptActions.showDialog({
         viewItem: {
           parentDeptCd: checkedDept.get("key"),
+          parentExpireDate: checkedDept.get("expireDate"),
+          expireDate: checkedDept.get("expireDate"),
           deptCd: "",
           deptNm: ""
         },
@@ -379,6 +383,8 @@ class UserMasterManage extends Component {
             MediaRuleProps,
             SecurityRuleProps,
             SoftwareFilterProps,
+            CtrlCenterItemProps,
+            PolicyKitRuleProps,
             DesktopConfProps
           } = this.props;
           const selectedObjectIdName = [
@@ -389,11 +395,31 @@ class UserMasterManage extends Component {
           ];
           const editingItem = (paramObject) ? paramObject : null;
           if (editingItem !== undefined) {
+            // user expire date
+            let userExpireDate = "";
+            if (
+              editingItem.get("isUseExpire") !== undefined &&
+              editingItem.get("isUseExpire") === "1"
+            ) {
+              userExpireDate = editingItem.get("expireDate");
+            }
+            // password expire date
+            let passwordExpireDate = "";
+            if (
+              editingItem.get("isUsePasswordExpire") !== undefined &&
+              editingItem.get("isUsePasswordExpire") === "1"
+            ) {
+              passwordExpireDate = editingItem.get("passwordExpireDate");
+            }
+
             UserActions.createUserData({
               userId: UserProps.getIn(["editingItem", "userId"]),
               userPasswd: UserProps.getIn(["editingItem", "userPasswd"]),
               userNm: UserProps.getIn(["editingItem", "userNm"]),
+              userEmail: UserProps.getIn(["editingItem", "userEmail"]),
               deptCd: UserProps.getIn(["editingItem", "deptCd"]),
+              expireDate: userExpireDate,
+              passwordExpireDate: passwordExpireDate,
 
               browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
               mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
@@ -401,6 +427,10 @@ class UserMasterManage extends Component {
               filteredSoftwareRuleId: SoftwareFilterProps.getIn(
                 selectedObjectIdName
               ),
+              ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(
+                selectedObjectIdName
+              ),
+              policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
               desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
             }).then(res => {
               if (res && res.status && res.status.result === "fail") {
@@ -676,7 +706,10 @@ class UserMasterManage extends Component {
           userId: "",
           userNm: "",
           userPasswd: "",
-          showPasswd: false
+          showPasswd: false,
+          userEmail: "",
+          expireDate: initDate.toJSON().slice(0, 10),
+          passwordExpireDate: initDate.toJSON().slice(0, 10)
         },
         ruleDialogType: UserDialog.TYPE_ADD
       },
@@ -695,6 +728,8 @@ class UserMasterManage extends Component {
       "treeComp",
       "selectedDept"
     ]);
+    const isEditable =
+      window.gpmsain === Constants.SUPER_RULECODE ? false : true;
 
     return (
       <React.Fragment>
@@ -714,82 +749,84 @@ class UserMasterManage extends Component {
               lg={4}
               style={{ border: "1px solid #efefef", minWidth: 320 }}
             >
-              <Toolbar elevation={0} style={{ minHeight: 0, padding: 0 }}>
-                <Grid
-                  container
-                  spacing={0}
-                  alignItems="center"
-                  direction="row"
-                  justify="space-between"
-                >
-                  <Grid item>
-                    <Tooltip title={t("ttAddNewDept")}>
-                      <span>
-                        <Button
-                          className={classes.GRSmallButton}
-                          variant="contained"
-                          color="primary"
-                          onClick={this.handleCreateDept}
-                          disabled={this.isDeptOneSelect()}
-                          style={{ marginRight: "5px" }}
-                        >
-                          <AddIcon />
-                        </Button>
-                      </span>
-                    </Tooltip>
-                    <Tooltip title={t("ttDeleteDept")}>
-                      <span>
-                        <Button
-                          className={classes.GRSmallButton}
-                          variant="contained"
-                          color="primary"
-                          onClick={this.handleDeleteButtonForDept}
-                          disabled={this.isDeptRemovable()}
-                        >
-                          <RemoveIcon />
-                        </Button>
-                      </span>
-                    </Tooltip>
+              {isEditable && (
+                <Toolbar elevation={0} style={{ minHeight: 0, padding: 0 }}>
+                  <Grid
+                    container
+                    spacing={0}
+                    alignItems="center"
+                    direction="row"
+                    justify="space-between"
+                  >
+                    <Grid item>
+                      <Tooltip title={t("ttAddNewDept")}>
+                        <span>
+                          <Button
+                            className={classes.GRSmallButton}
+                            variant="contained"
+                            color="primary"
+                            onClick={this.handleCreateDept}
+                            disabled={this.isDeptOneSelect()}
+                            style={{ marginRight: "5px" }}
+                          >
+                            <AddIcon />
+                          </Button>
+                        </span>
+                      </Tooltip>
+                      <Tooltip title={t("ttDeleteDept")}>
+                        <span>
+                          <Button
+                            className={classes.GRSmallButton}
+                            variant="contained"
+                            color="primary"
+                            onClick={this.handleDeleteButtonForDept}
+                            disabled={this.isDeptRemovable()}
+                          >
+                            <RemoveIcon />
+                          </Button>
+                        </span>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title={t("ttChangMultiDeptRule")}>
+                        <span>
+                          <Button
+                            className={classes.GRIconSmallButton}
+                            variant="contained"
+                            color="primary"
+                            onClick={this.handleApplyMultiDept}
+                          >
+                            <TuneIcon />
+                          </Button>
+                        </span>
+                      </Tooltip>
+                    </Grid>
+                    <Grid item>
+                      <Tooltip title={t("ttAddUserInDept")}>
+                        <span>
+                          <Button
+                            className={classes.GRIconSmallButton}
+                            variant="contained"
+                            color="primary"
+                            onClick={this.handleAddUserInDept}
+                            disabled={this.isDeptOneSelect()}
+                          >
+                            <AddIcon />
+                            <UserIcon />
+                          </Button>
+                        </span>
+                      </Tooltip>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <Tooltip title={t("ttChangMultiDeptRule")}>
-                      <span>
-                        <Button
-                          className={classes.GRIconSmallButton}
-                          variant="contained"
-                          color="primary"
-                          onClick={this.handleApplyMultiDept}
-                        >
-                          <TuneIcon />
-                        </Button>
-                      </span>
-                    </Tooltip>
-                  </Grid>
-                  <Grid item>
-                    <Tooltip title={t("ttAddUserInDept")}>
-                      <span>
-                        <Button
-                          className={classes.GRIconSmallButton}
-                          variant="contained"
-                          color="primary"
-                          onClick={this.handleAddUserInDept}
-                          disabled={this.isDeptOneSelect()}
-                        >
-                          <AddIcon />
-                          <UserIcon />
-                        </Button>
-                      </span>
-                    </Tooltip>
-                  </Grid>
-                </Grid>
-              </Toolbar>
+                </Toolbar>
+              )}
               <DeptTreeComp
                 compId={compId}
                 selectorType="multiple"
                 onCheck={this.handleCheckedDept}
                 onSelect={this.handleSelectDept}
                 onEdit={this.handleEditDept}
-                isEnableEdit={true}
+                isEnableEdit={isEditable}
                 isActivable={true}
               />
             </Grid>
@@ -800,60 +837,62 @@ class UserMasterManage extends Component {
               lg={8}
               style={{ border: "1px solid #efefef" }}
             >
-              <Toolbar elevation={0} style={{ minHeight: 0, padding: 0 }}>
-                <Grid
-                  container
-                  spacing={8}
-                  alignItems="flex-start"
-                  direction="row"
-                  justify="space-between"
-                >
-                  <Grid item xs={12} sm={6} lg={6}>
-                    <Tooltip title={t("ttMoveDept")}>
-                      <span>
-                        <Button
-                          className={classes.GRIconSmallButton}
-                          variant="contained"
-                          color="primary"
-                          onClick={this.handleMoveUserToDept}
-                          disabled={this.isUserChecked()}
-                        >
-                          <MoveIcon />
-                          <DeptIcon />
-                        </Button>
-                      </span>
-                    </Tooltip>
-                  </Grid>
+              {isEditable && (
+                <Toolbar elevation={0} style={{ minHeight: 0, padding: 0 }}>
                   <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    lg={6}
-                    style={{ textAlign: "right" }}
+                    container
+                    spacing={8}
+                    alignItems="flex-start"
+                    direction="row"
+                    justify="space-between"
                   >
-                    <Tooltip title={t("ttAddUser")}>
-                      <span>
-                        <Button
-                          className={classes.GRIconSmallButton}
-                          variant="contained"
-                          color="primary"
-                          onClick={this.handleCreateUserButton}
-                          style={{ marginLeft: "4px" }}
-                        >
-                          <AddIcon />
-                          <AccountIcon />
-                        </Button>
-                      </span>
-                    </Tooltip>
+                    <Grid item xs={12} sm={6} lg={6}>
+                      <Tooltip title={t("ttMoveDept")}>
+                        <span>
+                          <Button
+                            className={classes.GRIconSmallButton}
+                            variant="contained"
+                            color="primary"
+                            onClick={this.handleMoveUserToDept}
+                            disabled={this.isUserChecked()}
+                          >
+                            <MoveIcon />
+                            <DeptIcon />
+                          </Button>
+                        </span>
+                      </Tooltip>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}
+                      lg={6}
+                      style={{ textAlign: "right" }}
+                    >
+                      <Tooltip title={t("ttAddUser")}>
+                        <span>
+                          <Button
+                            className={classes.GRIconSmallButton}
+                            variant="contained"
+                            color="primary"
+                            onClick={this.handleCreateUserButton}
+                            style={{ marginLeft: "4px" }}
+                          >
+                            <AddIcon />
+                            <AccountIcon />
+                          </Button>
+                        </span>
+                      </Tooltip>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </Toolbar>
+                </Toolbar>
+              )}
               <UserListComp
                 name="UserListComp"
                 compId={compId}
                 deptCd=""
                 onSelect={this.handleSelectUser}
-                isEnableEdit={true}
+                isEnableEdit={isEditable}
                 onMoveUserToDept={this.handleMoveUserToDept}
                 onDeleteHandle={this.handleUserDeleteData}
               />
@@ -865,8 +904,8 @@ class UserMasterManage extends Component {
               lg={12}
               style={{ border: "1px solid #efefef" }}
             >
-              <UserSpec compId={compId} isEditable={true} />
-              <DeptSpec compId={compId} isEditable={true} />
+              <UserSpec compId={compId} isEditable={isEditable} />
+              <DeptSpec compId={compId} isEditable={isEditable} />
             </Grid>
           </Grid>
         </GRPane>
@@ -902,6 +941,8 @@ class UserMasterManage extends Component {
         <SecurityRuleDialog compId={compId} />
         <MediaRuleDialog compId={compId} />
         <SoftwareFilterDialog compId={compId} />
+        <CtrlCenterItemDialog compId={compId} />
+        <PolicyKitRuleDialog compId={compId} />
         <DesktopConfDialog compId={compId} isEnableDelete={false} />
         <DesktopAppDialog compId={compId} />
 
@@ -920,6 +961,8 @@ const mapStateToProps = state => ({
   MediaRuleProps: state.MediaRuleModule,
   SecurityRuleProps: state.SecurityRuleModule,
   SoftwareFilterProps: state.SoftwareFilterModule,
+  CtrlCenterItemProps: state.CtrlCenterItemModule,
+  PolicyKitRuleProps: state.PolicyKitRuleModule,
   DesktopConfProps: state.DesktopConfModule
 });
 

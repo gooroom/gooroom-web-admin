@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import PropTypes from "prop-types";
 import classNames from "classnames";
@@ -245,6 +245,9 @@ class BrowserRuleDialog extends Component {
         let title = "";
         if(dialogType === BrowserRuleDialog.TYPE_ADD) {
             title = t("dtAddBrowserRule");
+            if(window.gpmsain === Constants.SUPER_RULECODE) {
+                title += " - " + t("selStandard");
+            }
         } else if(dialogType === BrowserRuleDialog.TYPE_VIEW) {
             title = t("dtViewBrowserRule");
         } else if(dialogType === BrowserRuleDialog.TYPE_EDIT) {

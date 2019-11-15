@@ -9,6 +9,8 @@ const COMMON_FAILURE = 'admin/COMMON_FAILURE';
 
 const GET_VIOLATED_LIST_SUCCESS = 'admin/GET_VIOLATED_LIST_SUCCESS';
 const GET_VIOLATED_COUNT_SUCCESS = 'admin/GET_VIOLATED_COUNT_SUCCESS';
+const GET_DUPLICATE_LOGINTRIAL = 'admin/GET_DUPLICATE_LOGINTRIAL';
+const SET_LOGINTRIAL_INFO = 'admin/SET_LOGINTRIAL_INFO';
 
 const GET_ADMIN_INFO = 'admin/GET_ADMIN_INFO';
 const SET_LOGOUT = 'admin/SET_LOGOUT';
@@ -27,6 +29,7 @@ const SET_REDIRECT_PAGE_VALUE = 'admin/SET_REDIRECT_PAGE_VALUE';
 const initialState = commonHandleActions.getCommonInitialState('', '', {
     adminId: '',
     adminName: '',
+    adminTp: '',
     deptInfoList: [],
     grpInfoList: [],                
     email: '',
@@ -59,10 +62,34 @@ export const readViolatedClientCount = (module, compId, targetType) => dispatch 
     return requestPostAPI('readViolatedClientCount', {
     }).then(
         (response) => {
+
+            let violatedCount = 0;
+            let dupLoginIp = '';
+            let dupLoginDate = '';
+            if(response.data && response.data.data && response.data.data.length > 0) {
+                const result = response.data.data[0];
+                if(result) {
+                    if(result.violatedCount) {
+                        violatedCount = result.violatedCount;
+                    }
+                    if(result.dupLoginIp) {
+                        dupLoginIp = result.dupLoginIp;
+                    }
+                    if(result.dupLoginDate) {
+                        dupLoginDate = result.dupLoginDate;
+                    }
+                }
+            }
             dispatch({
                 type: GET_VIOLATED_COUNT_SUCCESS,
                 compId: 'ROOT',
-                response: response
+                violatedCount: violatedCount
+            });
+            dispatch({
+                type: GET_DUPLICATE_LOGINTRIAL,
+                compId: 'ROOT',
+                dupLoginIp: dupLoginIp,
+                dupLoginDate: dupLoginDate
             });
         }
     ).catch(error => {
@@ -112,6 +139,23 @@ export const logout = (param) => dispatch => {
         dispatch({ type: COMMON_FAILURE, error: error });
     });
 };
+
+export const clearLoginTrialInfo = (param) => dispatch => {
+    return requestPostAPI('updateLoginTrialData', {
+        temp: 'dump'
+    }).then(
+        (response) => {
+            dispatch({
+                type: SET_LOGINTRIAL_INFO,
+                response: response
+            });
+        }
+    ).catch(error => {
+        dispatch({ type: COMMON_FAILURE, error: error });
+    });
+};
+
+
 
 // edit
 export const editAdminInfoData = (itemObj) => dispatch => {
@@ -164,6 +208,7 @@ export default handleActions({
             return state.merge({
                 adminId: adminInfo.adminId,
                 adminName: adminInfo.adminNm,
+                adminTp: adminInfo.adminTp,
                 deptInfoList: adminInfo.deptInfoList,
                 grpInfoList: adminInfo.grpInfoList,
                 pollingCycle: adminInfo.pollingCycle
@@ -172,6 +217,7 @@ export default handleActions({
             return state.merge({
                 adminId: '',
                 adminName: '',
+                adminTp: '',
                 deptInfoList: [],
                 grpInfoList: [],
                 pollingCycle: ''
@@ -188,8 +234,14 @@ export default handleActions({
         return commonHandleActions.handleListAction(state, action, 'objId');
     },
     [GET_VIOLATED_COUNT_SUCCESS]: (state, action) => {
-        const violatedCount = (action.response.data && action.response.data.data && action.response.data.data.length > 0) ? action.response.data.data[0] : null;
-        return state.merge({'violatedCount': violatedCount});
+        return state.merge({'violatedCount': action.violatedCount});
+    },
+    [GET_DUPLICATE_LOGINTRIAL]: (state, action) => {
+        return state.merge({'dupLoginIp': action.dupLoginIp, 'dupLoginDate': action.dupLoginDate});
+    },
+    [SET_LOGINTRIAL_INFO]: (state, action) => {
+
+        return state.merge({'dupLoginIp': '', 'dupLoginDate': ''});
     },
     [SHOW_PROTECTLIST_DIALOG]: (state, action) => {
         return state.merge({

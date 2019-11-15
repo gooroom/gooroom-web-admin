@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List, Iterable } from 'immutable';
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -29,12 +30,18 @@ import TableRow from '@material-ui/core/TableRow';
 
 import FormControl from '@material-ui/core/FormControl';
 
+import InputLabel from "@material-ui/core/InputLabel";
+
 import Button from '@material-ui/core/Button';
 import Search from '@material-ui/icons/Search';
+import CheckIcon from '@material-ui/icons/CheckCircleTwoTone';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import DeleteIcon from '@material-ui/icons/Delete';
 import HistoryIcon from '@material-ui/icons/Assignment';
+
+// option components
+import AdminTypeSelect from 'views/Options/AdminTypeSelect';
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -83,14 +90,15 @@ class DividedAdminManage extends Component {
     AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {page: 0});
   };
   
-  handleSelectRow = (event, id) => {
+  handleSelectRow = (event, id, isEditable) => {
     const { AdminUserProps, AdminUserActions } = this.props;
     const compId = this.props.match.params.grMenuId;
     const viewItem = getRowObjectById(AdminUserProps, this.props.match.params.grMenuId, id, 'adminId');
 
     AdminUserActions.showInform({
       compId: compId,
-      viewItem: viewItem
+      viewItem: viewItem,
+      isEditable: isEditable
     });
   };
 
@@ -102,7 +110,8 @@ class DividedAdminManage extends Component {
         userInfoList: List([]), 
         grpInfoList: List([]), 
         clientInfoList: List([]),
-        connIps: List(['*'])
+        connIps: List(['*']),
+        adminTp: (window.gpmsain === Constants.SUPER_RULECODE) ? 'A' : 'P'
       }),
       dialogType: DividedAdminManageDialog.TYPE_ADD
     });
@@ -162,6 +171,13 @@ class DividedAdminManage extends Component {
     });
   }
 
+  handleChangeAdminTypeSelect = (event, property) => {
+    const { AdminUserProps, AdminUserActions } = this.props;
+    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {
+      adminType: property, page:0
+    });
+  };
+
   render() {
     const { classes } = this.props;
     const { AdminUserProps } = this.props;
@@ -171,8 +187,15 @@ class DividedAdminManage extends Component {
     const columnHeaders = [
       { id: 'ch1', isOrder: true, numeric: false, disablePadding: true, label: t("colId") },
       { id: 'ch2', isOrder: true, numeric: false, disablePadding: true, label: t("colName") },
+      { id: 'ch200', isOrder: false, numeric: false, disablePadding: true, label: t("colType") },
       { id: 'ch201', isOrder: false, numeric: false, disablePadding: true, label: t("colStatus") },
       { id: 'createUser', isOrder: false, numeric: false, disablePadding: true, label: t("colCreateUser") },
+      { id: 'ch101', isOrder: false, numeric: false, disablePadding: true, label: t("colTargetDept") },
+      { id: 'ch102', isOrder: false, numeric: false, disablePadding: true, label: t("colTargetGroup") },
+      { id: 'ch3', isOrder: false, numeric: false, disablePadding: true, label: t("colMngClient") },
+      { id: 'ch4', isOrder: false, numeric: false, disablePadding: true, label: t("colMngUser") },
+      { id: 'ch6', isOrder: false, numeric: false, disablePadding: true, label: t("colMngDesktop") },
+      { id: 'ch7', isOrder: false, numeric: false, disablePadding: true, label: t("colMngNotify") },
       { id: 'ch99', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
       { id: 'ch90', isOrder: false, numeric: false, disablePadding: true, label: t("colActHistory") },
     ];
@@ -205,6 +228,11 @@ class DividedAdminManage extends Component {
                   </Button>
                 </Grid>
                 <Grid item xs={4} >
+                  <FormControl fullWidth={true}>
+                    <AdminTypeSelect onChangeSelect={this.handleChangeAdminTypeSelect} 
+                      value={(listObj && listObj.getIn(['listParam', 'adminType'])) ? listObj.getIn(['listParam', 'adminType']) : 'ALL'}
+                    />
+                  </FormControl>
                 </Grid>
               </Grid>
             </Grid>
@@ -230,25 +258,47 @@ class DividedAdminManage extends Component {
               <TableBody>
                 {listObj.get('listData').map(n => {
 
+                  let isEditable = true;
+                  if(window.gpmsain !== Constants.SUPER_RULECODE && n.get('adminTp') !== Constants.PART_TYPECODE) {
+                    isEditable = false;
+                  }
+
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('adminId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('adminId'), isEditable)}
                       key={n.get('adminId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('adminNm')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{
+                        (n.get('adminTp') === Constants.SUPER_TYPECODE) ? t("lbTotalAdmin") : ((n.get('adminTp') === Constants.ADMIN_TYPECODE) ? t("lbSiteAdmin") : ((n.get('adminTp') === Constants.PART_TYPECODE) ? t("lbPartAdmin") : ''))
+                      }</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('status')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCellAndBreak}>{
+                        (n.get('deptInfoList').size > 0) ? ((n.get('deptInfoList').size > 1) ? n.getIn(['deptInfoList', 0, 'name']) + '+' : n.getIn(['deptInfoList', 0, 'name'])) : '-'
+                      }</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCellAndBreak}>{
+                        (n.get('grpInfoList').size > 0) ? ((n.get('grpInfoList').size > 1) ? n.getIn(['grpInfoList', 0, 'name']) + '+' : n.getIn(['grpInfoList', 0, 'name'])) : '-'
+                      }</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isClientAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isUserAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isDesktopAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isNoticeAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('adminId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isEditable && 
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleDeleteClick(event, n.get('adminId'))}>
                           <DeleteIcon />
                         </Button>
+                      }
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 

@@ -17,6 +17,8 @@ const GET_UPDATESERVER_SUCCESS = 'clientUpdateServer/GET_UPDATESERVER_SUCCESS';
 const GET_BROWSERRULE_SUCCESS = 'browserRule/GET_BROWSERRULE_SUCCESS';
 const GET_MEDIACONTROL_SUCCESS = 'mediaRule/GET_MEDIACONTROL_SUCCESS';
 const GET_SOFTWAREFILTER_SUCCESS = 'softwareFilter/GET_SOFTWAREFILTER_SUCCESS';
+const GET_CTRLCENTERITEM_SUCCESS = 'ctrlCenterItem/GET_CTRLCENTERITEM_SUCCESS';
+const GET_POLICYKIT_SUCCESS = 'policyKitRule/GET_POLICYKIT_SUCCESS';
 const GET_SECURITYRULE_SUCCESS = 'securityRule/GET_SECURITYRULE_SUCCESS';
 
 const GET_DESKTOPCONF_SUCCESS = 'desktopConf/GET_DESKTOPCONF_SUCCESS';
@@ -107,6 +109,28 @@ export const getClientRuleByGroupId = (param) => dispatch => {
                 const resObj = response.data.SWFILTER;
                 dispatch({
                     type: GET_SOFTWAREFILTER_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
+
+            if(response.data && response.data.CTRLCENTERITEM) {
+                const resObj = response.data.CTRLCENTERITEM;
+                dispatch({
+                    type: GET_CTRLCENTERITEM_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
+
+            if(response.data && response.data.POLICYKIT) {
+                const resObj = response.data.POLICYKIT;
+                dispatch({
+                    type: GET_POLICYKIT_SUCCESS,
                     compId: compId,
                     data: (resObj.data) ? resObj.data : null,
                     extend: (resObj.extend) ? resObj.extend : null,
@@ -220,6 +244,28 @@ export const getAllClientRuleByGroupId = (param) => dispatch => {
                 });
             }
 
+            if(rules && rules.CTRLCENTERITEMRULE) {
+                const resObj = rules.CTRLCENTERITEMRULE;
+                dispatch({
+                    type: GET_CTRLCENTERITEM_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
+
+            if(rules && rules.POLICYKITRULE) {
+                const resObj = rules.POLICYKITRULE;
+                dispatch({
+                    type: GET_POLICYKIT_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'GROUP'
+                });
+            }
+
             if(rules && rules.DESKTOPCONF) {
                 const resObj = rules.DESKTOPCONF;
                 dispatch({
@@ -294,6 +340,28 @@ export const getAllClientUseRuleByDeptCd = (param) => dispatch => {
                 });
             }
 
+            if(rules && rules.CTRLCENTERITEMRULE) {
+                const resObj = rules.CTRLCENTERITEMRULE;
+                dispatch({
+                    type: GET_CTRLCENTERITEM_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'DEPT'
+                });
+            }
+
+            if(rules && rules.POLICYKITRULE) {
+                const resObj = rules.POLICYKITRULE;
+                dispatch({
+                    type: GET_POLICYKIT_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'DEPT'
+                });
+            }
+
             if(rules && rules.DESKTOPCONF) {
                 const resObj = rules.DESKTOPCONF;
                 dispatch({
@@ -360,6 +428,28 @@ export const getAllClientUseRuleByUserId = (param) => dispatch => {
                 const resObj = rules.FILTEREDSWRULE;
                 dispatch({
                     type: GET_SOFTWAREFILTER_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'USER'
+                });
+            }
+
+            if(rules && rules.CTRLCENTERITEMRULE) {
+                const resObj = rules.CTRLCENTERITEMRULE;
+                dispatch({
+                    type: GET_CTRLCENTERITEM_SUCCESS,
+                    compId: compId,
+                    data: (resObj.data) ? resObj.data : null,
+                    extend: (resObj.extend) ? resObj.extend : null,
+                    target: 'USER'
+                });
+            }
+
+            if(rules && rules.POLICYKITRULE) {
+                const resObj = rules.POLICYKITRULE;
+                dispatch({
+                    type: GET_POLICYKIT_SUCCESS,
                     compId: compId,
                     data: (resObj.data) ? resObj.data : null,
                     extend: (resObj.extend) ? resObj.extend : null,

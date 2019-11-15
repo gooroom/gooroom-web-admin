@@ -17,9 +17,13 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Chip from '@material-ui/core/Chip';
+import Avatar from '@material-ui/core/Avatar';
 
 import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
+import ComputerIcon from '@material-ui/icons/Computer';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -52,14 +56,30 @@ class ClientManageSpec extends Component {
       storageInfo = formatBytes(viewItem.get('strgUse'), 1) + '/' + formatBytes(viewItem.get('strgSize'), 1);
     }
 
+    let clientInfo = null;
+    let clientInfoSubHeader = null;
+    if(viewItem) {
+      clientInfo = <div>
+        <ComputerIcon fontSize="large" style={{verticalAlign: 'middle', marginRight:10}} />
+        <Typography variant="h6" style={{display: 'inline-block', marginRight:18}}>{(viewItem) ? viewItem.get('clientName') : ''}</Typography>
+        <Chip avatar={<Avatar>ID</Avatar>} label={viewItem.get('clientId')} style={{marginRight:18}} />
+      </div>;
+
+      clientInfoSubHeader = <div style={{marginTop: 10}}>
+        <CheckCircleOutlineIcon style={{verticalAlign: 'middle', marginRight:5, color: 'black'}} />
+        <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("spClientRegDate")}</Typography>
+        <Typography style={{display: 'inline-block'}}>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</Typography>
+      </div>;
+    }
+
     return (
       <div>
       {(informOpen && viewItem) &&
         <Card style={{marginBottom: 20}}>
           <CardHeader
-            title={(viewItem) ? viewItem.get('clientName') : ''}
+            title={clientInfo}
             style={{wordBreak:'break-all'}}
-            subheader={viewItem.get('clientId') + ', ' + formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}
+            subheader={clientInfoSubHeader}
           />
           <CardContent style={{paddingTop:0}}>
             <Typography component="pre">

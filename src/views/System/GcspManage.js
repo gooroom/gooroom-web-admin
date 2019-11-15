@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -8,6 +8,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { getEditAndDeleteRoleWithList } from 'components/GRUtils/GRCommonUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -80,19 +81,25 @@ class GcspManage extends Component {
     GcspManageActions.readGcspListPaged(GcspManageProps, this.props.match.params.grMenuId, {page: 0});
   };
   
-  handleSelectRow = (event, id) => {
+  handleSelectRow = (event, id, isEditable) => {
     const { GcspManageProps, GcspManageActions } = this.props;
     const viewItem = getRowObjectById(GcspManageProps, this.props.match.params.grMenuId, id, 'gcspId');
     GcspManageActions.showDialog({
       viewItem: viewItem,
-      dialogType: GcspDialog.TYPE_VIEW
+      dialogType: GcspDialog.TYPE_VIEW,
+      isEditable: isEditable
     });
   };
       
   // create dialog
   handleCreateButton = () => {
+    let adminType = 'A';
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      adminType = 'S';
+    }
     this.props.GcspManageActions.showDialog({
       viewItem: {
+        adminType: adminType,
         gcspId: '',
         certGubun: 'cert1'
       },
@@ -216,10 +223,12 @@ class GcspManage extends Component {
               <TableBody>
                 {listObj.get('listData').map(n => {
 
+                  let { isEditable, isDeletable } = getEditAndDeleteRoleWithList(n.get('gcspId'), window.gpmsain, this.props.AdminProps.get('adminId'), n.get('regUserId'));
+
                   return (
                     <TableRow
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('gcspId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('gcspId'), isEditable)}
                       key={n.get('gcspId')}
                     >
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('gcspNm')}</TableCell>
@@ -227,16 +236,20 @@ class GcspManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditClick(event, n.get('gcspId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isDeletable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('gcspId'))}>
                           <DeleteIcon />
                         </Button>
+                      }
                       </TableCell>
                     </TableRow>
                   );

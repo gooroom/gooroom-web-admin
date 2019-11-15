@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import { getDataObjectVariableInComp } from 'components/GRUtils/GRTableListUtils';
 
@@ -10,10 +11,14 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import * as GRAlertActions from 'modules/GRAlertModule';
 
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { InlineDatePicker } from 'material-ui-pickers';
 
 import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRCheckConfirm from 'components/GRComponents/GRCheckConfirm';
 import UserRuleSelector from 'components/GROptions/UserRuleSelector';
+
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -24,6 +29,7 @@ import Divider from '@material-ui/core/Divider';
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Grid from '@material-ui/core/Grid';
+import Radio from "@material-ui/core/Radio";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -60,17 +66,21 @@ class DeptDialog extends Component {
                 handleConfirmResult: (confirmValue, paramObject) => {
                     if(confirmValue) {
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
                         const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
+
                         DeptActions.createDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                             deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
                             uprDeptCd: DeptProps.getIn(['editingItem', 'parentDeptCd']),
+                            expireDate: DeptProps.getIn(['editingItem', 'expireDate']),
             
                             browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
                             mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
                             securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                         }).then((res) => {
                             if(res.status && res.status && res.status.message) {
@@ -113,18 +123,21 @@ class DeptDialog extends Component {
                     if(confirmValue) {
                         const isInherit = isChecked;
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
-                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, DesktopConfProps } = this.props;
+                        const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
                         const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
                         DeptActions.editDeptInfo({
                             deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
                             deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-                
+                            expireDate: DeptProps.getIn(['editingItem', 'expireDate']),
+
                             paramIsInherit: (isInherit) ? 'Y' : 'N',
                 
                             browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
                             mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
                             securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
                             filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
                             desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
                         }).then((res) => {
 
@@ -154,6 +167,13 @@ class DeptDialog extends Component {
         }
     }
 
+    handleDateChange = (date, name) => {
+        this.props.DeptActions.setEditingItemValue({
+          name: name, 
+          value: date.format('YYYY-MM-DD')
+        });
+    };
+
     render() {
         const { classes } = this.props;
         const { DeptProps, compId } = this.props;
@@ -161,6 +181,9 @@ class DeptDialog extends Component {
 
         const dialogType = DeptProps.get('dialogType');
         const editingItem = (DeptProps.get('editingItem')) ? DeptProps.get('editingItem') : null;
+
+        // default date
+        const initDate = moment().add(7, 'days');
 
         let title = "";
         let editObject = null;
@@ -182,7 +205,7 @@ class DeptDialog extends Component {
                 upperDeptInfo = `${upperItem.get('title')} (${checkedDeptCd[0]})`;
             }
         }
-    
+        
         return (
             <div>
             {(DeptProps.get('dialogOpen') && editingItem) &&
@@ -190,15 +213,17 @@ class DeptDialog extends Component {
                 <ValidatorForm ref="form">
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent style={{minHeight:567}}>
-                        {(dialogType === DeptDialog.TYPE_ADD) &&
-                        <TextField
-                            label={t("lbParentDept")}
-                            value={upperDeptInfo}
-                            className={classes.fullWidth}
-                        />
-                        }
                         <Grid container spacing={24}>
-                            <Grid item xs={6}>
+                            {(dialogType === DeptDialog.TYPE_ADD) &&
+                            <Grid item xs={4}>
+                                <TextField
+                                    label={t("lbParentDept")}
+                                    value={upperDeptInfo}
+                                    className={classes.fullWidth}
+                                />
+                            </Grid>
+                            }
+                            <Grid item xs={4}>
                                 <TextValidator label={t("lbDeptId")}
                                     name="deptCd"
                                     validators={['required', 'matchRegexp:^[a-zA-Z0-9_.-]*$']}
@@ -209,7 +234,7 @@ class DeptDialog extends Component {
                                     disabled={(dialogType == DeptDialog.TYPE_EDIT) ? true : false}
                                 />
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={4}>
                                 <TextValidator label={t("lbDeptName")}
                                     name="deptNm"
                                     validators={['required']}
@@ -218,6 +243,21 @@ class DeptDialog extends Component {
                                     onChange={this.handleValueChange("deptNm")}
                                     className={classes.fullWidth}
                                 />
+                            </Grid>
+                            {(dialogType !== DeptDialog.TYPE_ADD) &&
+                            <Grid item xs={4}>
+                            </Grid>
+                            }
+                            <Grid item xs={4}>
+                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
+                                    <Grid item xs={12}>
+                                    <InlineDatePicker label={t('lbDeptExpireDate')} format='YYYY-MM-DD'
+                                    value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10)}
+                                    maxDate={editingItem.get('parentExpireDate')}
+                                    onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
+                                    className={classes.fullWidth} />
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
                         <Divider style={{marginBottom: 10}} />
@@ -249,6 +289,8 @@ const mapStateToProps = (state) => ({
     MediaRuleProps: state.MediaRuleModule,
     SecurityRuleProps: state.SecurityRuleModule,
     SoftwareFilterProps: state.SoftwareFilterModule,
+    CtrlCenterItemProps: state.CtrlCenterItemModule,
+    PolicyKitRuleProps: state.PolicyKitRuleModule,
     DesktopConfProps: state.DesktopConfModule
 });
 

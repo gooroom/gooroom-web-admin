@@ -34,7 +34,7 @@ class DesktopAppSpec extends Component {
   render() {
 
     const { classes } = this.props;
-    const { compId, targetType, selectedItem } = this.props;
+    const { compId, targetType, selectedItem, isEditable } = this.props;
     const { t, i18n } = this.props;
     const bull = <span className={classes.bullet}>•</span>;
 
@@ -53,7 +53,8 @@ class DesktopAppSpec extends Component {
               avatar={GRAvartar}
               title={viewItem.get('appNm')} 
               subheader={viewItem.get('appId') + ', ' + viewItem.get('appInfo')}
-              action={<div style={{paddingTop:16,paddingRight:24}}>
+              action={(isEditable) ? 
+                <div style={{paddingTop:16,paddingRight:24}}>
                   <Button size="small"
                     variant="outlined" color="primary" style={{minWidth:32}}
                     onClick={() => this.props.onClickEdit(viewItem, targetType)}
@@ -64,7 +65,8 @@ class DesktopAppSpec extends Component {
                     onClick={() => this.props.onClickCopy(viewItem)}
                   ><CopyIcon /></Button>
                   }
-                </div>}
+                </div> : <div></div>
+              }
               style={{paddingBottom:0}}
             />
           <CardContent>

@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+
+import * as Constants from "components/GRComponents/GRConstants";
+
 import NOR from "@material-ui/icons/PlayCircleFilledWhiteTwoTone";
 import OFF from "@material-ui/icons/PauseCircleFilledTwoTone";
 import VLT from "@material-ui/icons/Warning";
@@ -6,7 +9,7 @@ import RVK from "@material-ui/icons/DeleteForever";
 
 export const getMergedObject = (source, param) => {
     let tempSource = source;
-    if(source) {
+    if (source) {
         Object.assign(tempSource, param);
     } else {
         Object.assign({}, param);
@@ -29,12 +32,12 @@ export const arrayContainsArray = (superset, subset) => {
         return 0;
     }
 
-    if(subset.every(function (value) {
+    if (subset.every(function (value) {
         return (superset.indexOf(value) >= 0);
     })) {
         return 100;
     } else {
-        if(subset.some(function (value) {
+        if (subset.some(function (value) {
             return (superset.indexOf(value) >= 0);
         })) {
             return 50;
@@ -46,16 +49,16 @@ export const arrayContainsArray = (superset, subset) => {
 
 export const getMergedArray = (masterArray, newArray, isImport) => {
 
-    if(isImport) {
+    if (isImport) {
         newArray.forEach((item) => {
-            if(!masterArray.includes(item)) {
+            if (!masterArray.includes(item)) {
                 masterArray.push(item);
             }
         });
     } else {
         let newMasterArray = [];
         masterArray.forEach((item) => {
-            if(!newArray.includes(item)) {
+            if (!newArray.includes(item)) {
                 newMasterArray.push(item);
             }
         });
@@ -70,19 +73,19 @@ export const getJobStatusToString = (status, t) => {
 
     let clientStatus = '';
 
-    if(status && status.startsWith('R')) {
-        clientStatus = t("stBeforeJob");  
-    } else if(status && status.startsWith('C')) {
-        clientStatus = t("stCompJob");  
-    } else if(status && status.startsWith('D')) {
-        clientStatus = t("stRunningJob");  
-    } else if(status && status.startsWith('E')) {
-        clientStatus = t("stFailJob");  
-    } else if(status && status.startsWith('Q')) {
-        clientStatus = t("stCancelJob");  
+    if (status && status.startsWith('R')) {
+        clientStatus = t("stBeforeJob");
+    } else if (status && status.startsWith('C')) {
+        clientStatus = t("stCompJob");
+    } else if (status && status.startsWith('D')) {
+        clientStatus = t("stRunningJob");
+    } else if (status && status.startsWith('E')) {
+        clientStatus = t("stFailJob");
+    } else if (status && status.startsWith('Q')) {
+        clientStatus = t("stCancelJob");
     }
 
-    if(status && status.endsWith('K')) {
+    if (status && status.endsWith('K')) {
         clientStatus = t("stRevokeClient") + ' (' + clientStatus + ')';
     }
 
@@ -90,7 +93,7 @@ export const getJobStatusToString = (status, t) => {
 };
 
 export const formatBytes = (bytes, decimals) => {
-    if(bytes == 0) return '0 Bytes';
+    if (bytes == 0) return '0 Bytes';
     const k = 1024,
         dm = decimals <= 0 ? 0 : decimals || 2,
         sizes = ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'],
@@ -100,14 +103,51 @@ export const formatBytes = (bytes, decimals) => {
 
 export const getClientStatusIcon = (status) => {
 
-    if(status == 'OFF') {
-        return <OFF style={{color:'gray'}} />;
-    } else if(status == 'NOR') {
-        return <NOR style={{color:'green'}} />;
-    } else if(status == 'VLT') {
-        return <VLT style={{color:'red'}} />;
-    } else if(status == 'RVK') {
-        return <RVK style={{color:'gray'}} />;
+    if (status == 'OFF') {
+        return <OFF style={{ color: 'gray' }} />;
+    } else if (status == 'NOR') {
+        return <NOR style={{ color: 'green' }} />;
+    } else if (status == 'VLT') {
+        return <VLT style={{ color: 'red' }} />;
+    } else if (status == 'RVK') {
+        return <RVK style={{ color: 'gray' }} />;
     }
 };
 
+
+export const getEditAndDeleteRoleWithList = (id, adminRole, loginId, regId) => {
+    let isEditable = true;
+    let isDeletable = true;
+
+    if (id.endsWith('DEFAULT')) {
+        isEditable = false;
+        isDeletable = false;
+        if (adminRole === Constants.SUPER_RULECODE) {
+            isEditable = true;
+            isDeletable = false;
+        }
+    } else if (id.endsWith('STD')) {
+        if (adminRole === Constants.SUPER_RULECODE) {
+            isEditable = true;
+            isDeletable = true;
+        } else {
+            isEditable = false;
+            isDeletable = false;
+        }
+    } else {
+        if (loginId === regId) {
+            isEditable = true;
+            isDeletable = true;
+        } else {
+            isEditable = false;
+            if (adminRole === Constants.SUPER_RULECODE) {
+                isDeletable = true;
+            } else {
+                isDeletable = false;
+            }
+        }
+    }
+
+    return {isEditable, isDeletable};
+
+};

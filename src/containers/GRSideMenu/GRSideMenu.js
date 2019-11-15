@@ -1,7 +1,7 @@
 import React from "react";
 import { Map, fromJS } from 'immutable';
 
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { Link } from 'react-router-dom';
 import { grLayout } from "templates/default/GRLayout";
@@ -38,7 +38,11 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
-import menuItems from "containers/GRSideMenu/GRMenuItems";
+import menuItems from "./GRMenuItems";
+
+import menuItemsSuper from "containers/GRSideMenu/GRMenuItemsSuper";
+import menuItemsAdmin from "containers/GRSideMenu/GRMenuItemsAdmin";
+import menuItemsPart from "containers/GRSideMenu/GRMenuItemsPart";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -53,8 +57,21 @@ class GRSideMenu extends React.Component {
     };
   }
 
+  activeRoute(routeName, props) {
+    // return this.props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
+    return props.location.pathname.indexOf(routeName) > -1 ? 'nav-item nav-dropdown open' : 'nav-item nav-dropdown';
+  }
+
+  handleMenuItemClick = (event, item) => {
+    this.setState({ selectedIndex: item, anchorEl: null });
+  };
+
   handleClick = (id, e) => {
     this.setState(state => ({ [id]: !state[id] }));
+    switch(id) {
+      case 'menu1': this.setState({ menu1Open: !this.state.menu1Open }); break;
+      case 'menu2': this.setState({ menu2Open: !this.state.menu2Open }); break;
+    }
   };
 
   render() {
@@ -126,7 +143,36 @@ class GRSideMenu extends React.Component {
       return items.map((item, index) => menuType(item, index));
     };
 
-    const sideMenuList = menuList(menuItems.items, 0);
+    let sideMenuList = null;
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      sideMenuList = menuList(menuItemsSuper.items, 0);
+    } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
+      sideMenuList = menuList(menuItemsAdmin.items, 0);
+    } else if(window.gpmsain === Constants.PART_RULECODE) {
+      let menus = fromJS(menuItemsPart);
+      if(window.roleClientAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuClient'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      if(window.roleUserAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuUser'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      if(window.roleClientAdmin === 0 && window.roleUserAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuUseRule'));
+        menus = menus.deleteIn(['items', index]);
+      }
+
+      if(window.roleDesktopAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuDesktop'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      if(window.roleNoticeAdmin === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuNotice'));
+        menus = menus.deleteIn(['items', index]);
+      }
+      sideMenuList = menuList(menus.get('items').toJS(), 0);
+    }
 
     return (
       <Drawer

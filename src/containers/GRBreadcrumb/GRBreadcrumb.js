@@ -1,11 +1,12 @@
 import React, { Component } from "react";
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
-import menuItems from "containers/GRSideMenu/GRMenuItems";
-
+import menuItemsSuper from "containers/GRSideMenu/GRMenuItemsSuper";
+import menuItemsAdmin from "containers/GRSideMenu/GRMenuItemsAdmin";
+import menuItemsPart from "containers/GRSideMenu/GRMenuItemsPart";
 import { ListItemSecondaryAction } from "@material-ui/core";
 import { translate, Trans } from "react-i18next";
 
@@ -37,7 +38,14 @@ class GRBreadcrumb extends Component {
   render() {
     const { classes, pathname } = this.props;
     const { t, i18n } = this.props;
-    const pathTitle = this.getPathTitle(menuItems.items, pathname, 'home');
+    let pathTitle = null;
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      pathTitle = this.getPathTitle(menuItemsSuper.items, pathname, 'home');
+    } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
+      pathTitle = this.getPathTitle(menuItemsAdmin.items, pathname, 'home');
+    } else if(window.gpmsain === Constants.PART_RULECODE) {
+      pathTitle = this.getPathTitle(menuItemsPart.items, pathname, 'home');
+    }
     
     return (
       <div>

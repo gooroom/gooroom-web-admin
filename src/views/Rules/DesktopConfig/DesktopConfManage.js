@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -10,6 +10,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComps, getRowObjectById, getSelectedObjectInComp } from 'components/GRUtils/GRTableListUtils';
+import { getEditAndDeleteRoleWithList } from 'components/GRUtils/GRCommonUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -84,7 +85,7 @@ class DesktopConfManage extends Component {
     });
   }
 
-  handleSelectRow = (event, id) => {
+  handleSelectRow = (event, id, isEditable) => {
     const { DesktopConfActions, DesktopConfProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -101,13 +102,23 @@ class DesktopConfManage extends Component {
     // 2. view detail content
     DesktopConfActions.showInform({
       compId: compId,
-      viewItem: viewItem
+      viewItem: viewItem,
+      isEditable: isEditable
     });
   };
 
   handleCreateButton = () => {
+    let adminType = 'A';
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      adminType = 'S';
+    }
+    // desktop app list for select
+    //this.props.DesktopAppActions.readDesktopAppList(compId);
+    // theme list for select option
+    //this.props.DesktopConfActions.readThemeInfoList();
     this.props.DesktopConfActions.showDialog({
       viewItem: Map({
+        adminType: adminType,
         themeId: 1
       }),
       dialogType: DesktopConfDialog.TYPE_ADD
@@ -237,15 +248,17 @@ class DesktopConfManage extends Component {
               <TableBody>
                 {listObj && listObj.get('listData') && listObj.get('listData').map(n => {
 
+                  let { isEditable, isDeletable } = getEditAndDeleteRoleWithList(n.get('confId'), window.gpmsain, this.props.AdminProps.get('adminId'), n.get('regUserId'));
+
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('confId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('confId'), isEditable)}
                       tabIndex={-1}
                       key={n.get('confId')}
-                      className={(n.get('confId').endsWith('DEFAULT')) ? classes.grDefaultRuleRow : ""}
+                      className={(n.get('confId').endsWith('DEFAULT')) ? classes.grDefaultRuleRow : ((n.get('confId').endsWith('STD')) ? classes.grStandardRuleRow : "")}
                     >
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('confId').endsWith('DEFAULT') ? t("selBasic") : t("selOrdinary")}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('confId').endsWith('DEFAULT') ? t("selBasic") : (n.get('confId').endsWith('STD') ? t("selStandard") : t("selOrdinary"))}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('confId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('confNm')}</TableCell>
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('themeNm')}</TableCell>
@@ -254,16 +267,20 @@ class DesktopConfManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('regUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditListClick(event, n.get('confId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isDeletable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('confId'))}>
                           <DeleteIcon />
                         </Button>
+                      }
                       </TableCell>
                     </TableRow>
                   );
@@ -299,6 +316,7 @@ class DesktopConfManage extends Component {
         {/* dialog(popup) component area */}
         <DesktopConfSpec compId={compId} specType="inform" 
           selectedItem={(listObj) ? listObj.get('viewItem') : null}
+          isEditable={(listObj) ? listObj.get('isEditable') : null}
           hasAction={true} inherit={false}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}

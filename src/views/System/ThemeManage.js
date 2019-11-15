@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -105,8 +105,13 @@ class ThemeManage extends Component {
 
   // create dialog
   handleCreateButton = () => {
+    let adminType = 'A';
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      adminType = 'S';
+    }
     this.props.ThemeManageActions.showDialog({
       viewItem: {
+        adminType: adminType,
         themeId: ''
       },
       dialogType: ThemeDialog.TYPE_ADD

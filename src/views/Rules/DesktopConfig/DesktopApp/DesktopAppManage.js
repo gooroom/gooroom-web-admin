@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Map, List } from 'immutable';
-
+import * as Constants from "components/GRComponents/GRConstants";
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,6 +9,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { refreshDataListInComps, getRowObjectById } from 'components/GRUtils/GRTableListUtils';
+import { getEditAndDeleteRoleWithList } from 'components/GRUtils/GRCommonUtils';
 
 import GRPageHeader from 'containers/GRContent/GRPageHeader';
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -83,7 +84,7 @@ class DesktopAppManage extends Component {
     });
   }
   
-  handleSelectRow = (event, id) => {
+  handleSelectRow = (event, id, isEditable) => {
     const { DesktopAppActions, DesktopAppProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -100,14 +101,21 @@ class DesktopAppManage extends Component {
     // 2. view detail content
     DesktopAppActions.showInform({
       compId: compId,
-      viewItem: viewItem
+      viewItem: viewItem,
+      isEditable: isEditable
     });
     
   };
 
   handleCreateButton = () => {
+    let adminType = 'A';
+    if(window.gpmsain === Constants.SUPER_RULECODE) {
+      adminType = 'S';
+    }
     this.props.DesktopAppActions.showDialog({
-      viewItem: Map(),
+      viewItem: Map({
+        adminType: adminType
+      }),
       dialogType: DesktopAppDialog.TYPE_ADD
     });
   }
@@ -238,10 +246,13 @@ class DesktopAppManage extends Component {
               />
               <TableBody>
                 {listObj.get('listData').map(n => {
+
+                  let { isEditable, isDeletable } = getEditAndDeleteRoleWithList(n.get('appId'), window.gpmsain, this.props.AdminProps.get('adminId'), n.get('regUserId'));
+
                   return (
                     <TableRow 
                       hover
-                      onClick={event => this.handleSelectRow(event, n.get('appId'))}
+                      onClick={event => this.handleSelectRow(event, n.get('appId'), isEditable)}
                       tabIndex={-1}
                       key={n.get('appId')}
                     >
@@ -252,16 +263,20 @@ class DesktopAppManage extends Component {
                       <TableCell className={classes.grSmallAndClickCell}>{n.get('modUserId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('modDate'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      {isEditable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleEditListClick(event, n.get('appId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
+                      }
+                      {isDeletable &&
                         <Button color="secondary" size="small" 
                           className={classes.buttonInTableRow}
                           onClick={event => this.handleDeleteClick(event, n.get('appId'))}>
                           <DeleteIcon />
                         </Button>
+                      }
                       </TableCell>
                     </TableRow>
                   );
@@ -299,6 +314,7 @@ class DesktopAppManage extends Component {
         <DesktopAppSpec compId={compId}
           specType="inform" 
           selectedItem={listObj}
+          isEditable={(listObj) ? listObj.get('isEditable') : null}
           onClickCopy={this.handleClickCopy}
           onClickEdit={this.handleClickEdit}
         />
