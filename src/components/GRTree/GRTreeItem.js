@@ -28,7 +28,7 @@ class GRTreeItem extends Component {
         const { isShowCheck, isShowDetail = false, isEnableEdit, isCheckMasterOnly } = this.props
         
         const { isShowMemberCnt, memberCntValue } = this.props
-        const { onClickNode, onClickDetailNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend, isActive } = this.props
+        const { onClickNode, onClickDetailNode, onFoldingNode, onEditNode, leftIcon, onCheckNode, isExtend, isActive, isExpired } = this.props
 
         const styles = {
             root: {
@@ -39,6 +39,8 @@ class GRTreeItem extends Component {
                 lineHeight: "32px"
             }
         }
+
+        const textColor = (isExpired === undefined || isExpired === '0') ? 'black' : 'red';
 
         let nodeTitle = primaryText;
         if(isShowMemberCnt) {
@@ -62,7 +64,7 @@ class GRTreeItem extends Component {
                 {(isShowDetail) &&
                     <IconButton style={{padding:0}} onClick={onClickDetailNode}>{(isActive) ? <ShowIconSelected style={{color:'#ef5350'}} /> : <ShowIcon />}</IconButton>
                 }
-                <ListItemText inset primary={nodeTitle} onClick={onClickNode} style={{paddingLeft:4,wordBreak: 'break-all'}} />
+                <ListItemText inset primary={nodeTitle} onClick={onClickNode} primaryTypographyProps={{style:{color:textColor}}} style={{paddingLeft:4, wordBreak: 'break-all'}} />
                 {(isExtend == 'Y') && 
                     <IconButton style={{padding:0}} onClick={onClickNode}><OpenIcon /></IconButton>
                 }
@@ -70,7 +72,7 @@ class GRTreeItem extends Component {
                     <IconButton style={{padding:0}} onClick={onFoldingNode}><CloseIcon /></IconButton>
                 }
                 {isEnableEdit && 
-                <IconButton onClick={onEditNode} style={{padding:0}}><SettingsApplicationsIcon style={{color:'darkgray',fontSize:'28px',paddingTop:4}} /></IconButton>
+                    <IconButton onClick={onEditNode} style={{padding:0}}><SettingsApplicationsIcon style={{color:'darkgray',fontSize:'28px',paddingTop:4}} /></IconButton>
                 }
             </ListItem>
 

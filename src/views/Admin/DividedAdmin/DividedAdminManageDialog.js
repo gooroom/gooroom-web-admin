@@ -320,18 +320,24 @@ class DividedAdminManageDialog extends Component {
                                 <Grid item xs={6} style={{paddingRight:5}}>
                                     <FormControl style={{width:'100%'}}>
                                         <InputLabel>{t("lbAdminType")}</InputLabel>
-                                        <Select
-                                            value={(editingItem.get('adminTp')) ? editingItem.get('adminTp') : ''} style={{width:'100%'}}
-                                            onChange={this.handleValueChange('adminTp')}
-                                        >
                                         {(window.gpmsain === Constants.SUPER_RULECODE) &&
-                                        <MenuItem value='S' key='SUPER'>{t("lbTotalAdmin")}</MenuItem>
+                                            <Select
+                                                value={(editingItem.get('adminTp')) ? editingItem.get('adminTp') : ''} style={{width:'100%'}}
+                                                onChange={this.handleValueChange('adminTp')}
+                                            >
+                                            <MenuItem value='S' key='SUPER'>{t("lbTotalAdmin")}</MenuItem>
+                                            <MenuItem value='A' key='ADMIN'>{t("lbSiteAdmin")}</MenuItem>
+                                            </Select>
                                         }
-                                        {(window.gpmsain === Constants.SUPER_RULECODE) &&
-                                        <MenuItem value='A' key='ADMIN'>{t("lbSiteAdmin")}</MenuItem>
+                                        {(window.gpmsain !== Constants.SUPER_RULECODE) &&
+                                            <Select
+                                                value={(editingItem.get('adminTp')) ? editingItem.get('adminTp') : ''} style={{width:'100%'}}
+                                                onChange={this.handleValueChange('adminTp')}
+                                            >
+                                            <MenuItem value='A' key='ADMIN'>{t("lbSiteAdmin")}</MenuItem>
+                                            <MenuItem value='P' key='PART'>{t("lbPartAdmin")}</MenuItem>
+                                            </Select>
                                         }
-                                        <MenuItem value='P' key='PART'>{t("lbPartAdmin")}</MenuItem>
-                                        </Select>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={6} style={{paddingRight:5}}>
