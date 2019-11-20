@@ -720,6 +720,8 @@ export default {
   "lbHaveIt": "Exist",
   "lbHaveNotIt": "None",
   "lbAdminSpecifiedRole": "Admin Info. - Role",
+  "lbUserStatus": "UserStatus",
+  "lbAdminUserStatus": "AdminStatus",
 
   // 호스트정보 관리
   "lbHosts": "Hosts",
