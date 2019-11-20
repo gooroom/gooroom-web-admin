@@ -292,9 +292,9 @@ class UserSpec extends Component {
                   <Typography style={{display: 'inline-block', marginRight:18}}>{formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD')}</Typography>
                   {(viewItem.get('isExpired') === '1') ?
                     <Chip label={t("lbExpired")} style={{color: "#fafafa", backgroundColor: "#d50000"}}/> :
-                    calculateDiffDays(viewItem.get('expireDate')) >= 7 ? 
-                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="primary"/> :
-                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('expireDate')) + t("lbExpiredDays")} color="secondary"/>
+                    (viewItem.get('userExpireRemainDate')) >= 7 ? 
+                      <Chip label={t("lbWillExpire") + viewItem.get('userExpireRemainDate') + t("lbExpiredDays")} color="primary"/> :
+                      <Chip label={t("lbWillExpire") + viewItem.get('userExpireRemainDate') + t("lbExpiredDays")} color="secondary"/>
                   }</div> : <Typography style={{display: 'inline-block', marginRight:18}}>{t("optNoUse")}</Typography>
                 }
               </Grid>
@@ -307,9 +307,9 @@ class UserSpec extends Component {
                   <Typography style={{display: 'inline-block', marginRight:18}}>{formatDateToSimple(viewItem.get('passwordExpireDate'), 'YYYY-MM-DD')}</Typography>
                   {(viewItem.get('isPasswordExpired') === '1') ?
                     <Chip label={t("lbExpired")} style={{color: "#fafafa", backgroundColor: "#d50000"}}/> :
-                    calculateDiffDays(viewItem.get('passwordExpireDate')) >= 7 ? 
-                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('passwordExpireDate')) + t("lbExpiredDays")} color="primary"/> :
-                      <Chip label={t("lbWillExpire") + calculateDiffDays(viewItem.get('passwordExpireDate')) + t("lbExpiredDays")} color="secondary"/>
+                    (viewItem.get('pwdExpireRemainDate')) >= 7 ? 
+                      <Chip label={t("lbWillExpire") + viewItem.get('pwdExpireRemainDate') + t("lbExpiredDays")} color="primary"/> :
+                      <Chip label={t("lbWillExpire") + viewItem.get('pwdExpireRemainDate') + t("lbExpiredDays")} color="secondary"/>
                   }</div> : <Typography style={{display: 'inline-block', marginRight:18}}>{t("optNoUse")}</Typography>
                 }
               </Grid>
