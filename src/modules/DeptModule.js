@@ -506,6 +506,7 @@ export default handleActions({
                     itemCount: x.itemCount,
                     itemTotalCount: x.itemTotalCount,
                     expireDate: x.expireDt,
+                    isExpired: x.isExpired,
                     parentExpireDate: x.parentExpireDt,
                     _shouldRender: true
                 };
