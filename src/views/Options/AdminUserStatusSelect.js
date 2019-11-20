@@ -7,18 +7,18 @@ import { Map, List } from "immutable";
 import { translate, Trans } from "react-i18next";
 
 
-class UserStatusSelect extends Component {
+class AdminUserStatusSelect extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       data: Map({
-        userStatusData: List([
+        adminUserStatusData: List([
           Map({ statusId: 'NORMAL', statusVal: 'STAT010', statusTxt: 'stNormal' }),
           Map({ statusId: 'DELETE', statusVal: 'STAT020', statusTxt: 'stDelete' }),
           Map({ statusId: 'ALL', statusVal: 'ALL', statusTxt: 'stAll' })
         ]),
-        selectedUserStatusValue: 'STAT010'
+        selectedAdminUserStatusValue: 'STAT010'
       })
     }
   }
@@ -27,7 +27,7 @@ class UserStatusSelect extends Component {
   handleChangeSelect = (event, child) => {
     const { data } = this.state;
     this.setState({
-      data: data.set('selectedUserStatusValue', event.target.value)
+      data: data.set('selectedAdminUserStatusValue', event.target.value)
     });
     this.props.onChangeSelect(event.target.value);
   };
@@ -38,12 +38,12 @@ class UserStatusSelect extends Component {
 
     return (
       <React.Fragment>
-      <InputLabel htmlFor="user-status">{t("lbUserStatus")}</InputLabel>
+      <InputLabel htmlFor="user-status">{t("lbAdminUserStatus")}</InputLabel>
       <Select
         value={value}
         onChange={this.handleChangeSelect}
       >
-        {this.state.data.get('userStatusData').map(x => (
+        {this.state.data.get('adminUserStatusData').map(x => (
           <MenuItem value={x.get('statusVal')} key={x.get('statusId')}>
             {t(x.get('statusTxt'))}
           </MenuItem>
@@ -54,6 +54,6 @@ class UserStatusSelect extends Component {
   }
 }
 
-export default translate("translations")(UserStatusSelect);
+export default translate("translations")(AdminUserStatusSelect);
 
 
