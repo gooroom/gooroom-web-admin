@@ -298,6 +298,7 @@ class GRTreeDeptList extends Component {
                 isEnableEdit={this.state.isEnableEdit}
                 isCheckMasterOnly={this.state.isCheckMasterOnly}
                 checked={checked}
+                isExpired={listItem.get('isExpired')}
                 imperfect={imperfect}
                 leftIcon={getLeftIcon(listItem, this.props)}
                 isActive={(activeListItem === i)}
