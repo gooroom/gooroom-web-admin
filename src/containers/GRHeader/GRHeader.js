@@ -92,7 +92,7 @@ class GRHeader extends Component {
             <Button onClick={() => changeLanguage("kr")}>kr</Button>
             <Button onClick={() => changeLanguage("en")}>en</Button>
           </div>
-          {(window.gpmsain !== Constants.PART_RULECODE) &&
+          {(window.gpmsain !== Constants.SUPER_RULECODE && window.gpmsain !== Constants.PART_RULECODE) &&
             <GRAlarmInform />
           }
           <Button onClick={this.props.onAdminClick}>
