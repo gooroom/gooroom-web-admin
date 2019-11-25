@@ -286,8 +286,19 @@ class DividedAdminManage extends Component {
                 {listObj.get('listData').map(n => {
 
                   let isEditable = true;
-                  if(window.gpmsain !== Constants.SUPER_RULECODE && n.get('adminTp') !== Constants.PART_TYPECODE) {
-                    isEditable = false;
+
+                  // 2 depth
+                  // SUPER : SUPER, ADMIN
+                  // ADMIN : ADMIN, PART
+                  // PART : NONE
+                  if(window.gpmsain === Constants.SUPER_RULECODE) {
+                    if(n.get('adminTp') === Constants.PART_TYPECODE) {
+                      isEditable = false;
+                    }
+                  } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
+                    if(n.get('adminTp') === Constants.SUPER_TYPECODE) {
+                      isEditable = false;
+                    }
                   }
 
                   return (
