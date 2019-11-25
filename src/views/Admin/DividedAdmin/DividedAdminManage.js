@@ -287,7 +287,7 @@ class DividedAdminManage extends Component {
 
                   let isEditable = true;
 
-                  // 2 depth
+                  // 2 depth ------------------------------------------
                   // SUPER : SUPER, ADMIN
                   // ADMIN : ADMIN, PART
                   // PART : NONE
@@ -300,6 +300,18 @@ class DividedAdminManage extends Component {
                       isEditable = false;
                     }
                   }
+                  // ---------------------------------------------------
+
+                  // 3 depth -------------------------------------------
+                  // SUPER : SUPER, ADMIN, PART
+                  // ADMIN : ADMIN, PART
+                  // PART : NONE
+                  // if(window.gpmsain === Constants.ADMIN_RULECODE) {
+                  //   if(n.get('adminTp') === Constants.SUPER_TYPECODE) {
+                  //     isEditable = false;
+                  //   }
+                  // }
+                  // ---------------------------------------------------
 
                   return (
                     <TableRow
