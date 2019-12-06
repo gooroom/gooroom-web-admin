@@ -275,7 +275,7 @@ class DesktopAppDialog extends Component {
                             <MenuItem value="gooroom-collaboration">team</MenuItem>
                             <MenuItem value="gooroom-video-conference">video conferencing system</MenuItem>
                             <MenuItem value="gooroom-groupware">groupware</MenuItem>
-                            <MenuItem value="memo">memo</MenuItem>
+                            <MenuItem value="accessories-text-editor">memo</MenuItem>
                             <MenuItem value="gooroom-kms">KMS</MenuItem>
                             <MenuItem value="gooroom-erp">ERP</MenuItem>
                             <MenuItem value="gooroom-accounting-management">accounting management</MenuItem>
