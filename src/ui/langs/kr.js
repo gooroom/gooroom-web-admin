@@ -203,6 +203,7 @@ export default {
   "selOnline": "온라인",
   "selViolated": "침해",
   "selUnviolated": "미침해",
+  "lbHelp":"도움말",
   "lbDesc": "설명",
   "lbName": "이름",
   "lbId": "아이디",
@@ -508,6 +509,7 @@ export default {
   "msgHelpDeleteApp": "현재 데스크톱 앱 삭제는 '데스크톱앱관리' 메뉴에서만 실행 되도록 설정되어 있습니다.",
   "msgAppList": "앱리스트 (아래 전체앱리스트에서 앱을 추가할 수 있습니다.)",
   "lbAppAllList": "전체 앱 리스트",
+  "msgNeedDesktopApp": "데스크톱환경설정은 하나이상의 앱 등록이 필요합니다.",
 
   // 데스크톱정보 관리
   "dtDeleteDesktopConf": "데스크톱정보 삭제",

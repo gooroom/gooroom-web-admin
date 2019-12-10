@@ -203,6 +203,7 @@ export default {
   "selOnline": "Online",
   "selViolated": "Violated",
   "selUnviolated": "Unviolated",
+  "lbHelp": "Help",
   "lbDesc": "Desc.",
   "lbName": "Name",
   "lbId": "ID",
@@ -508,6 +509,7 @@ export default {
   "msgHelpDeleteApp": "Currently, Desktop App deletion is set to run only from the 'Desktop App Management' menu.",
   "msgAppList": "App List (You can add apps from the list of all apps below.)",
   "lbAppAllList": "All apps list",
+  "msgNeedDesktopApp": "You need to select at least one of the Desktop App",
 
   // 데스크톱정보 관리
   "dtDeleteDesktopConf": "Delete desktop information",
