@@ -90,7 +90,7 @@ class SecurityRuleSelector extends Component {
             </FormControl>
           </div>
         }
-        {selectedOptionItemId && selectedOptionItemId != '' &&
+        {selectedOptionItemId && selectedOptionItemId != '' && selectedOptionItemId != '-' &&
           <SecurityRuleSpec compId={compId} specType="inform" hasAction={false}
             targetType={targetType} selectedItem={selectedData}
             onClickEdit={this.handleClickEdit}
