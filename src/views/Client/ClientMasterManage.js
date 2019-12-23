@@ -242,8 +242,7 @@ class ClientMasterManage extends Component {
         handleConfirmResult: (confirmValue, confirmObject, isChecked) => {
           if(confirmValue) {
             const { ClientGroupProps, ClientGroupActions, ClientManageProps, ClientManageActions } = this.props;
-            const checkedGrpId = ClientGroupProps.getIn(['viewItems', this.state.compId, 'treeComp', 'checked']);
-
+            
             if(checkedGrpId && checkedGrpId.length > 0) {
               ClientGroupActions.deleteSelectedClientGroupData({
                 grpIds: checkedGrpId,
