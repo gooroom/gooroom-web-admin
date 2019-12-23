@@ -308,7 +308,7 @@ export const createTotalPackageUpgradeForGroup = (param) => dispatch => {
 
 export const updateTotalPackage = (param) => dispatch => {
     dispatch({type: COMMON_PENDING});
-    return requestPostAPI('updateTotalPackage', {}).then(
+    return requestPostAPI('updateTotalPackage', { clientId: param.clientId }).then(
         (response) => {
             dispatch({
                 type: UPDATE_TOTLAPACKAGELIST_SUCCESS,
