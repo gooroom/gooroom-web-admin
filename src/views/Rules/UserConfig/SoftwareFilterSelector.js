@@ -90,7 +90,7 @@ class SoftwareFilterSelector extends Component {
             </FormControl>
           </div>
         }
-        {selectedOptionItemId && selectedOptionItemId != '' &&
+        {selectedOptionItemId && selectedOptionItemId != '' && selectedOptionItemId != '-' &&
           <SoftwareFilterSpec compId={compId} specType="inform" hasAction={false}
             targetType={targetType} selectedItem={selectedData}
             onClickEdit={this.handleClickEdit}
