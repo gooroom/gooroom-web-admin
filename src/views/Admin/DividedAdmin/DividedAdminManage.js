@@ -200,7 +200,7 @@ class DividedAdminManage extends Component {
 
   render() {
     const { classes } = this.props;
-    const { AdminUserProps } = this.props;
+    const { AdminProps, AdminUserProps } = this.props;
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -343,7 +343,7 @@ class DividedAdminManage extends Component {
                           <SettingsApplicationsIcon />
                         </Button>
                       }
-                      {isEditable && n.get('status') !== '삭제' &&
+                      {isEditable && n.get('status') !== '삭제' && AdminProps.get('adminId') !== n.get('adminId') &&
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleDeleteClick(event, n.get('adminId'))}>
                           <DeleteIcon />
@@ -402,6 +402,7 @@ class DividedAdminManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  AdminProps: state.AdminModule,
   AdminUserProps: state.AdminUserModule,
   CommonOptionProps: state.CommonOptionModule
 });
