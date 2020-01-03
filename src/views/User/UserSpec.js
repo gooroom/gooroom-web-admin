@@ -290,7 +290,7 @@ class UserSpec extends Component {
                 {(viewItem.get('expireDate')) ?
                   <div style={{display: 'inline-block'}}>
                   <Typography style={{display: 'inline-block', marginRight:18}}>{formatDateToSimple(viewItem.get('expireDate'), 'YYYY-MM-DD')}</Typography>
-                  {(viewItem.get('isExpired') === '1') ?
+                  {(viewItem.get('userExpireRemainDate') < 1) ?
                     <Chip label={t("lbExpired")} style={{color: "#fafafa", backgroundColor: "#d50000"}}/> :
                     (viewItem.get('userExpireRemainDate')) >= 7 ? 
                       <Chip label={t("lbWillExpire") + viewItem.get('userExpireRemainDate') + t("lbExpiredDays")} color="primary"/> :
