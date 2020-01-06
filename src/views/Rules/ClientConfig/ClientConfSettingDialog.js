@@ -254,7 +254,7 @@ class ClientConfSettingDialog extends Component {
             title = t("dtViewClientConf");
         } else if(dialogType === ClientConfSettingDialog.TYPE_EDIT) {
             title = t("dtEditClientConf");
-        } else if(dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT || dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT) {
+        } else if(dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT || dialogType === ClientConfSettingDialog.TYPE_INHERIT_GROUP) {
             title = t("dtInheritClientConf");
         } else if(dialogType === ClientConfSettingDialog.TYPE_COPY) {
             title = t("dtCopyClientConf");
@@ -625,7 +625,7 @@ class ClientConfSettingDialog extends Component {
 
                     </div>
                     }
-                    {(dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT || dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT) &&
+                    {(dialogType === ClientConfSettingDialog.TYPE_INHERIT_DEPT || dialogType === ClientConfSettingDialog.TYPE_INHERIT_GROUP) &&
                         <div>
                         <Typography variant="body1">
                             {t("msgApplyRuleToChild")}

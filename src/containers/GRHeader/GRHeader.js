@@ -48,6 +48,22 @@ class GRHeader extends Component {
     };
   }
 
+  componentDidMount() {
+    clearInterval(this.violatedTimer)
+    this.violatedTimer = null;
+    this.violatedTimer = setInterval(()=> this.getViolatedData(), 20000);
+  }
+  
+  componentWillUnmount() {
+    clearInterval(this.violatedTimer)
+    this.violatedTimer = null; // here...
+  }
+
+  getViolatedData() {
+    const { AdminActions } = this.props;
+    AdminActions.readViolatedClientCount();
+  }
+
   handleChange(event, index, value) {
     this.setState({ value });
   }
@@ -92,7 +108,7 @@ class GRHeader extends Component {
             <Button onClick={() => changeLanguage("kr")}>kr</Button>
             <Button onClick={() => changeLanguage("en")}>en</Button>
           </div>
-          {(window.gpmsain !== Constants.PART_RULECODE) &&
+          {(window.gpmsain !== Constants.SUPER_RULECODE && window.gpmsain !== Constants.PART_RULECODE) &&
             <GRAlarmInform />
           }
           <Button onClick={this.props.onAdminClick}>
