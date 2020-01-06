@@ -203,6 +203,7 @@ export default {
   "selOnline": "온라인",
   "selViolated": "침해",
   "selUnviolated": "미침해",
+  "lbHelp":"도움말",
   "lbDesc": "설명",
   "lbName": "이름",
   "lbId": "아이디",
@@ -428,6 +429,29 @@ export default {
   "dtCancelJob": "작업 취소",
   "msgCancelJob": "작업대상 단말중 '작업전' 상태 단말의 작업을 취소하시겠습니까?",
 
+  // 작업관리 - 작업이름
+  "lbHostFileChg": "호스트파일 변경",
+  "lbPwdCycleSet": "비밀번호 변경주기 설정",
+  "lbScreenSaverTimeSet": "화면 보호기 시간 설정",
+  "lbMediaRuleConf": "매체제어정책 설정",
+  "lbBrowserRuleConf": "브라우저정책 설정",
+  "lbUpdateOprSet": "패키지추가/삭제 차단기능 설정",
+  "lbSoftwareRestrictionPolicy": "소프트웨어제한정책 설정",
+  "lbLogConfChg": "로그설정 변경",
+  "lbCtrlCenterItems": "제어센터 항목정책 설정",
+  "lbPolicyKitConf": "PolicyKit정책 설정",
+  "lbAccountConf": "root계정/sudo권한 설정",
+  "lbPolkyAdminConf": "폴킷관리자 설정",
+  "lbNotice": "공지사항",
+  "lbMultiLoginMsg": "중복로그인 알림 ",
+  "lbInstallOrUpgradePackage": "패키지 업데이트",
+  "lbRemovePackage": "패키지 삭제",
+  "lbUpgradeAll": "전체패키지 업그레이드",
+  "lbInsertAllPackageToServer": "전체패키지 리스트 요청",
+  "lbProfiling": "프로파일링",
+  "lbProfilingPackages": "프로파일링 패키지리스트 요청", 
+  "lbSetHomefolderOperation": "홈폴더초기화 설정",
+
   // 에이전트설정
   "lbClientConf": "에이전트설정",
   "lbClientSetup": "에이전트설정",
@@ -508,6 +532,7 @@ export default {
   "msgHelpDeleteApp": "현재 데스크톱 앱 삭제는 '데스크톱앱관리' 메뉴에서만 실행 되도록 설정되어 있습니다.",
   "msgAppList": "앱리스트 (아래 전체앱리스트에서 앱을 추가할 수 있습니다.)",
   "lbAppAllList": "전체 앱 리스트",
+  "msgNeedDesktopApp": "데스크톱환경설정은 하나이상의 앱 등록이 필요합니다.",
 
   // 데스크톱정보 관리
   "dtDeleteDesktopConf": "데스크톱정보 삭제",

@@ -71,6 +71,13 @@ class DesktopConfDialog extends Component {
         const { DesktopConfProps, GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
+          let isOk = true;
+          if(!DesktopConfProps.getIn(['editingItem', 'apps']) || 
+              DesktopConfProps.getIn(['editingItem', 'apps']) === List([])) {
+            isOk = false;
+          }
+
+          if(isOk) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtAddDesktopConf"),
                 confirmMsg: t("msgAddDesktopConf"),
@@ -86,6 +93,12 @@ class DesktopConfDialog extends Component {
                 },
                 confirmObject: DesktopConfProps.get('editingItem')
             });
+          } else {
+            this.props.GRAlertActions.showAlert({
+              alertTitle: t("dtSystemNotice"),
+              alertMsg: t("msgNeedDesktopApp")
+            });
+          }
         } else {
             if(this.refs.form && this.refs.form.childs) {
                 this.refs.form.childs.map(c => {
@@ -99,6 +112,12 @@ class DesktopConfDialog extends Component {
         const { DesktopConfProps, GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
         if(this.refs.form && this.refs.form.isFormValid()) {
+          let isOk = true;
+          if(DesktopConfProps.getIn(['editingItem', 'apps']) === List([])) {
+            isOk = false;
+          }
+
+          if(isOk) {
             GRConfirmActions.showConfirm({
                 confirmTitle: t("dtEditDesktopConf"),
                 confirmMsg: t("msgEditDesktopConf"),
@@ -114,6 +133,12 @@ class DesktopConfDialog extends Component {
                 },
                 confirmObject: DesktopConfProps.get('editingItem')
             });
+          } else {
+            this.props.GRAlertActions.showAlert({
+              alertTitle: t("dtSystemNotice"),
+              alertMsg: t("msgNeedDesktopApp")
+            });
+          }
         } else {
             if(this.refs.form && this.refs.form.childs) {
                 this.refs.form.childs.map(c => {
