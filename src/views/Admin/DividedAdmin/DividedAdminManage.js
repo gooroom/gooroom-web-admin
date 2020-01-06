@@ -291,26 +291,26 @@ class DividedAdminManage extends Component {
                   // SUPER : SUPER, ADMIN
                   // ADMIN : ADMIN, PART
                   // PART : NONE
-                  if(window.gpmsain === Constants.SUPER_RULECODE) {
-                    if(n.get('adminTp') === Constants.PART_TYPECODE) {
-                      isEditable = false;
-                    }
-                  } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
-                    if(n.get('adminTp') === Constants.SUPER_TYPECODE) {
-                      isEditable = false;
-                    }
-                  }
+                  // if(window.gpmsain === Constants.SUPER_RULECODE) {
+                  //   if(n.get('adminTp') === Constants.PART_TYPECODE) {
+                  //     isEditable = false;
+                  //   }
+                  // } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
+                  //   if(n.get('adminTp') === Constants.SUPER_TYPECODE) {
+                  //     isEditable = false;
+                  //   }
+                  // }
                   // ---------------------------------------------------
 
                   // 3 depth -------------------------------------------
                   // SUPER : SUPER, ADMIN, PART
                   // ADMIN : ADMIN, PART
                   // PART : NONE
-                  // if(window.gpmsain === Constants.ADMIN_RULECODE) {
-                  //   if(n.get('adminTp') === Constants.SUPER_TYPECODE) {
-                  //     isEditable = false;
-                  //   }
-                  // }
+                  if(window.gpmsain === Constants.ADMIN_RULECODE) {
+                    if(n.get('adminTp') === Constants.SUPER_TYPECODE) {
+                      isEditable = false;
+                    }
+                  }
                   // ---------------------------------------------------
 
                   return (

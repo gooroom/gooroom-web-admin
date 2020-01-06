@@ -327,6 +327,7 @@ class DividedAdminManageDialog extends Component {
                                             >
                                             <MenuItem value='S' key='SUPER'>{t("lbTotalAdmin")}</MenuItem>
                                             <MenuItem value='A' key='ADMIN'>{t("lbSiteAdmin")}</MenuItem>
+                                            <MenuItem value='P' key='PART'>{t("lbPartAdmin")}</MenuItem>
                                             </Select>
                                         }
                                         {(window.gpmsain !== Constants.SUPER_RULECODE) &&
