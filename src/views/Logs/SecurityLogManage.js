@@ -150,7 +150,7 @@ class SecurityLogManage extends Component {
                 className={classes.fullWidth} />
             </Grid>
             <Grid item xs={2} >
-              <InlineDatePicker label={t('searchStartDate')} format='YYYY-MM-DD'
+              <InlineDatePicker label={t('searchEndDate')} format='YYYY-MM-DD'
                 value={(listObj && listObj.getIn(['listParam', 'toDate'])) ? listObj.getIn(['listParam', 'toDate']) : '1999-01-01'}
                 onChange={(date) => {this.handleDateChange(date, 'toDate');}} 
                 className={classes.fullWidth} />
