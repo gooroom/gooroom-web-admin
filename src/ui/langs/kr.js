@@ -140,6 +140,7 @@ export default {
   "btnSearch": "조회",
   "btnRegist": "등록",
   "btnSave": "저장",
+  "btnDownload": "다운로드",
   "btnClose": "닫기",
   "btnCreate": "생성",
   "btnAdd": "추가",
@@ -235,6 +236,7 @@ export default {
   "msgInvalidNumber": "설정값을 입력하세요.",
   "msgInvalidValue": "유효한 설정값을 입력하세요.",
   "lbSelectAll": "전체선택",
+  "lbSample": "샘플",
 
   // options
   "stBeforeJob": "작업전",
@@ -1068,19 +1070,20 @@ export default {
   "msgEditOkSaveUserDataFromFile": "사용자정보 일괄등록이 되었습니다.",
   "msgEditErrorSaveUserDataFromFile": "사용자정보 일괄등록이 되지 않았습니다.",
 
+  "msgFileFormatError": "파일은 .xls 형식 또는 .xlsx 형식만 업로드 가능합니다.",
+
   "msgDeptFromFileHelp01": "# 조직정보를 파일을 이용하여 등록할 수 있습니다.",
-  "msgDeptFromFileHelp02": "# 'CSV' 형식의 파일을 사용합니다.",
-  "msgDeptFromFileHelp03": "# 각 줄에 '조직아이디','조직이름','상위조직아이디' 순서로 파일을 작성합니다. (3개 항목)",
-  "msgDeptFromFileHelp04": "# [필수] 첫번줄은 \" 0,조직헤더,000000000 \" 로 작성합니다. (따옴표 제외)",
-  "msgDeptFromFileHelp05": "# [필수] 두번째줄은 \" DEPTDEFAULT,구름,0 \" 로 작성합니다. (따옴표 제외)",
-  "msgDeptFromFileHelp06": "# [필수] 작성하는 조직의 가장 상위조직의 '상위조직아이디' 는 'DEPTDEFAULT' 로 작성합니다.",
-  "msgDeptFromFileHelp07": "# [주의] 이전에 등록되어 있는 전체 조직정보가 삭제되고 등록됩니다.",
+  "msgDeptFromFileHelp02": "# 엑셀(.xls / .xlsx)의 형식의 파일을 사용합니다.",
+  "msgDeptFromFileHelp03": "# 각 줄에 '조직아이디(필수)','조직이름(필수)',,'조직만료일(선택)','상위조직아이디(필수)' 순서로 파일을 작성합니다. (4개 항목)",
+  "msgDeptFromFileHelp04": "# [필수] 작성하는 조직의 가장 상위조직의 '상위조직아이디' 는 'DEPTDEFAULT' 로 작성합니다.",
+  "msgDeptFromFileHelp05": "# [주의] 이전에 등록되어 있는 전체 조직정보가 삭제되고 등록됩니다.",
 
   "msgUserFromFileHelp01": "# 사용자정보를 파일을 이용하여 등록할 수 있습니다.",
-  "msgUserFromFileHelp02": "# 'CSV' 형식의 파일을 사용합니다.",
-  "msgUserFromFileHelp03": "# 각 줄에 '사용자아이디','사용자이름','비밀번호','조직아이디','이메일','만료일' 순서로 파일을 작성합니다. (6개 항목)",
+  "msgUserFromFileHelp02": "# 엑셀 형식(.xls / .xlsx)의 파일을 사용합니다.",
+  "msgUserFromFileHelp03": "# 각 줄에 '사용자아이디(필수)','사용자이름(필수)','비밀번호(선택)','조직아이디(필수)','조직이름(선택)','이메일(필수)','사용자만료일(선택)','패스워드만료일(선택)' 순서로 파일을 작성합니다. (8개 항목)",
   "msgUserFromFileHelp04": "# '만료일' 형식은 '년월일' 순서로 8자리로 작성합니다. (예: '20191030')",
-  "msgUserFromFileHelp05": "# [주의] 이전에 등록되어 있는 전체 사용자정보가 삭제되고 등록됩니다.",
+  "msgUserFromFileHelp05": "# [필수] 이미 설정된 '패스워드'는 변경하지 않습니다. 새로 등록하는 사용자의 비밀번호는 1로 초기화됩니다.",
+  "msgUserFromFileHelp06": "# [주의] 이전에 등록되어 있는 전체 사용자정보가 삭제되고 등록됩니다.",
   "msgMustHaveSelectedFile": "파일이 선택되지 않았습니다.",
 
 
