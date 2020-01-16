@@ -13,6 +13,7 @@ import * as GRConfirmActions from 'modules/GRConfirmModule';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getRowObjectById } from 'components/GRUtils/GRTableListUtils';
 import { getJobStatusToString } from 'components/GRUtils/GRCommonUtils';
+import { getJobDescByJobNm } from 'components/GRUtils/GRCommonUtils';
 
 import GRPageHeader from "containers/GRContent/GRPageHeader";
 import GRConfirm from 'components/GRComponents/GRConfirm';
@@ -195,7 +196,7 @@ class JobManage extends Component {
                       key={n.get('jobNo')}
                     >
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('jobNo')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickCell}>{n.get('jobName')}</TableCell>
+                      <TableCell className={classes.grSmallAndClickCell}>{getJobDescByJobNm(n.get('jobName'), t)}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{getJobStatusToString(n.get('jobStatus'), t)}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('clientCount')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('errorCount')}</TableCell>

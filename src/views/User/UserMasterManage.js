@@ -276,12 +276,6 @@ class UserMasterManage extends Component {
               UserProps,
               UserActions
             } = this.props;
-            const checkedDeptCd = DeptProps.getIn([
-              "viewItems",
-              this.state.compId,
-              "treeComp",
-              "checked"
-            ]);
 
             if (checkedDeptCd && checkedDeptCd.length > 0) {
               DeptActions.deleteSelectedDeptData({

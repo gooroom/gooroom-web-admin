@@ -141,9 +141,8 @@ class ClientProfileSetDialog extends Component {
             handleConfirmResult: (confirmValue, paramObject) => {
                 if(confirmValue) {
                     const { ClientProfileSetProps, ClientProfileSetActions, compId } = this.props;
-                    const { ClientGroupProps, ClientManageProps } = this.props;
-                    const selectedClientGroupIds = getDataObjectVariableInComp(ClientGroupProps, compId, 'checkedIds');
-                    const checkedClientIds = getDataObjectVariableInComp(ClientManageProps, compId, 'checkedIds');
+                    const selectedClientGroupIds = paramObject.get('grpInfoList').map(n => n.get('value'));
+                    const checkedClientIds = paramObject.get('clientInfoList').map(n => n.get('value'));
         
                     ClientProfileSetActions.createClientProfileSetJob({
                         profileNo: paramObject.get('profileNo'),
