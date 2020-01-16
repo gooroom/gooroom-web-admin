@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Map } from 'immutable';
 
-import { requestPostAPI, requestMultipartFormAPI } from 'components/GRUtils/GRRequester';
+import { requestPostAPI, requestFilePostAPI, requestMultipartFormAPI } from 'components/GRUtils/GRRequester';
+import FileSaver from 'file-saver';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,6 +15,7 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 
 import GRPane from 'containers/GRContent/GRPane';
 import Grid from '@material-ui/core/Grid';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -22,11 +24,12 @@ import Toolbar from '@material-ui/core/Toolbar';
 import AppBar from '@material-ui/core/AppBar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import GetApp from '@material-ui/icons/GetApp'; 
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
-
+import moment, { now } from 'moment';
 
 class DeptUserReg extends Component {
 
@@ -44,9 +47,17 @@ class DeptUserReg extends Component {
 
   // file select
   handleDeptFileChange = (event, gubunName) => {
+    const { t } = this.props;
     const selectedFile = event.target.files[0];
     const viewFileName = gubunName + '_GRFILE';
-    this.readDeptFileContent(event.target.files[0]).then(content => {
+    
+    if(!selectedFile.name.endsWith(".xlsx") && !selectedFile.name.endsWith(".xls")) { //file format ch
+      this.props.GRAlertActions.showAlert({
+        alertTitle: t("dtSystemError"),
+        alertMsg: t("msgFileFormatError")
+      });
+    } else {
+      this.readDeptFileContent(event.target.files[0]).then(content => {
         if(content) {
           const { stateData } = this.state;
           this.setState({
@@ -54,6 +65,7 @@ class DeptUserReg extends Component {
           });
         }
     }).catch(error => console.log(error));
+    }
   }
 
   readDeptFileContent(file) {
@@ -91,7 +103,8 @@ class DeptUserReg extends Component {
                   } else {
                     this.props.GRAlertActions.showAlert({
                       alertTitle: t("dtSystemError"),
-                      alertMsg: t("msgEditErrorSaveDeptDataFromFile")
+                      alertMsg: t("msgEditErrorSaveDeptDataFromFile"),
+                      alertMsgDetail: "(" + response.data.status.message + ")"
                     });
                   }
                 }
@@ -108,6 +121,25 @@ class DeptUserReg extends Component {
     }
   }
 
+  // https://stackoverflow.com/questions/43460162/react-excel-file-download-corrupt
+  // https://blog.bitsrc.io/exporting-data-to-excel-with-react-6943d7775a92
+  handleDownloadDeptData = (event) => {
+    requestFilePostAPI('createDeptFileFromData', {}).then(
+      (response) => {
+        var blob = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+        FileSaver.saveAs(blob, 'DEPT_gooroom_'+ formatDateToSimple(new Date(), 'YY/MM/DD') + '.xlsx');
+      }
+    )
+  }
+
+  handleDownloadSampleDeptData = (event) => {
+    requestFilePostAPI('createDeptSampleFileFromData', {}).then(
+      (response) => {
+        var blob = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+        FileSaver.saveAs(blob, 'DEPT_SAMPLE_gooroom_'+ formatDateToSimple(new Date(), 'YY/MM/DD') + '.xlsx');
+      }
+    )
+  }
 
   // file select
   handleUserFileChange = (event, gubunName) => {
@@ -156,7 +188,8 @@ class DeptUserReg extends Component {
                   } else {
                     this.props.GRAlertActions.showAlert({
                       alertTitle: t("dtSystemError"),
-                      alertMsg: t("msgEditErrorSaveUserDataFromFile")
+                      alertMsg: t("msgEditErrorSaveUserDataFromFile"),
+                      alertMsgDetail: "(" + response.data.status.message + ")"
                     });
                   }
                 }
@@ -171,6 +204,24 @@ class DeptUserReg extends Component {
       });
     }
 
+  }
+
+  handleDownloadUserData = (event) => {
+    requestFilePostAPI('createUserFileFromData', {}).then(
+      (response) => {
+        var blob = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+        FileSaver.saveAs(blob, 'USER_gooroom_'+ formatDateToSimple(new Date(), 'YY/MM/DD') + '.xlsx');
+      }
+    )
+  }
+
+  handleDownloadSampleUserData = (event) => {
+    requestFilePostAPI('createUserSampleFileFromData', {}).then(
+      (response) => {
+        var blob = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+        FileSaver.saveAs(blob, 'USER_SAMPLE_gooroom_'+ formatDateToSimple(new Date(), 'YY/MM/DD') + '.xlsx');
+      }
+    )
   }
   
 
@@ -197,15 +248,21 @@ class DeptUserReg extends Component {
           <Grid item xs={12}>
             <Card style={{marginTop: 16}}>
               <CardHeader style={{paddingBottom: 0}}
-                title={t("lbSaveDeptDataFromFile")}
+                title={<div>
+                  <Typography variant="h5" style={{marginRight:10}}>{t("lbSaveDeptDataFromFile")}</Typography>
+                  <Button className={classes.GRIconSmallButton} variant='contained' color="secondary" style={{marginRight:10}} onClick={this.handleDownloadDeptData}>
+                    <GetApp /> {t("dtViewDept")} {t("btnDownload")}
+                  </Button>
+                  <Button className={classes.GRIconSmallButton} variant='contained' color="secondary" style={{marginRight:10}} onClick={this.handleDownloadSampleDeptData}>
+                    <GetApp /> {t("dtViewDept")} {t("lbSample")} {t("btnDownload")}
+                  </Button>
+                </div>}
                 subheader={<div style={{margin:20}}>
                 <Typography variant="body1">{t("msgDeptFromFileHelp01")}</Typography>
                 <Typography variant="body1">{t("msgDeptFromFileHelp02")}</Typography>
                 <Typography variant="body1">{t("msgDeptFromFileHelp03")}</Typography>
-                  <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgDeptFromFileHelp04")}</Typography>
-                  <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgDeptFromFileHelp05")}</Typography>
-                  <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgDeptFromFileHelp06")}</Typography>
-                  <Typography variant="body1" style={{color:'red'}}>{t("msgDeptFromFileHelp07")}</Typography>
+                <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgDeptFromFileHelp04")}</Typography>
+                <Typography variant="body1" style={{color:'red'}}>{t("msgDeptFromFileHelp05")}</Typography>
                 </div>}
               />
               <CardContent style={{paddingTop: 0}}>
@@ -232,13 +289,22 @@ class DeptUserReg extends Component {
           <Grid item xs={12}>
             <Card style={{marginTop: 16}}>
               <CardHeader style={{paddingBottom: 0}}
-                title={t("lbSaveUserDataFromFile")}
+                title={<div>
+                  <Typography variant="h5" style={{marginRight:10}}>{t("lbSaveUserDataFromFile")}</Typography>
+                  <Button className={classes.GRIconSmallButton} variant='contained' color="secondary" style={{marginRight:10}} onClick={this.handleDownloadUserData}>
+                    <GetApp /> {t("dtViewUser")} {t("btnDownload")}
+                  </Button>
+                  <Button className={classes.GRIconSmallButton} variant='contained' color="secondary" style={{marginRight:10}}onClick={this.handleDownloadSampleUserData}>
+                    <GetApp /> {t("dtViewUser")} {t("lbSample")} {t("btnDownload")}
+                  </Button>
+                </div>}
                 subheader={<div style={{margin:20}}>
                   <Typography variant="body1">{t("msgUserFromFileHelp01")}</Typography>
                   <Typography variant="body1">{t("msgUserFromFileHelp02")}</Typography>
                   <Typography variant="body1">{t("msgUserFromFileHelp03")}</Typography>
                   <Typography variant="body1">{t("msgUserFromFileHelp04")}</Typography>
-                  <Typography variant="body1" style={{color:'red'}}>{t("msgUserFromFileHelp05")}</Typography>
+                  <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgUserFromFileHelp05")}</Typography>
+                  <Typography variant="body1" style={{color:'red'}}>{t("msgUserFromFileHelp06")}</Typography>
                 </div>}
               />
               <CardContent style={{paddingTop: 0}}>
