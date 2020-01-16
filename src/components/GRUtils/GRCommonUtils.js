@@ -92,6 +92,43 @@ export const getJobStatusToString = (status, t) => {
     return clientStatus;
 };
 
+export const getJobDescByJobNm = (jobNm, t) => {
+
+  let jobDesc = '';
+
+  const columnJobNm = [
+    { id: "append_contents_etc_hosts", label: t("lbHostFileChg") },
+    { id: "get_password_cycle", label: t("lbPwdCycleSet") },
+    { id: "get_screen_time", label: t("lbScreenSaverTimeSet") },
+    { id: "get_media_config", label: t("lbMediaRuleConf") },
+    { id: "get_browser_config", label: t("lbBrowserRuleConf") },
+    { id: "get_update_operation", label: t("lbUpdateOprSet") },
+    { id: "get_app_list", label: t("lbSoftwareRestrictionPolicy") },
+    { id: "get_log_config", label: t("lbLogConfChg") },
+    { id: "get_controlcenter_items", label: t("lbCtrlCenterItems") },
+    { id: "get_policykit_config", label: t("lbPolicyKitConf") },
+    { id: "get_account_config", label: t("lbAccountConf") },
+    { id: "get_polkit_admin_config", label: t("lbPolkyAdminConf") },
+    { id: "set_noti", label: t("lbNotice") },
+    { id: "set_multiple_login_msg", label: t("lbMultiLoginMsg") },
+    { id: "install_or_upgrade_package", label: t("lbInstallOrUpgradePackage") },
+    { id: "remove_package", label: t("lbRemovePackage") },
+    { id: "upgrade_all", label: t("lbUpgradeAll") },
+    { id: "insert_all_packages_to_server", label: t("lbInsertAllPackageToServer") },
+    { id: "profiling", label: t("lbProfiling") },
+    { id: "profiling_packages", label: t("lbProfilingPackages") },
+    { id: "set_homefolder_operation", label: t("lbSetHomefolderOperation") },
+  ];
+
+  columnJobNm.map(column => {
+    if(column.id === jobNm) {
+      jobDesc = column.label;
+    }
+  });
+
+  return jobDesc;
+}
+
 export const formatBytes = (bytes, decimals) => {
     if (bytes == 0) return '0 Bytes';
     const k = 1024,

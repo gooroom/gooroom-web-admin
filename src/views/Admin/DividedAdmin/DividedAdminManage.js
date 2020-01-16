@@ -16,6 +16,8 @@ import GRConfirm from 'components/GRComponents/GRConfirm';
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
 import KeywordOption from "views/Options/KeywordOption";
 
+import AdminUserStatusSelect from "views/Options/AdminUserStatusSelect";
+
 import DividedAdminManageDialog from './DividedAdminManageDialog';
 import DividedAdminHistDialog from './DividedAdminHistDialog';
 import DividedAdminManageSpec from './DividedAdminManageSpec';
@@ -55,7 +57,10 @@ class DividedAdminManage extends Component {
       selectedTab: 0,
 
       selectedAdminId: '',
-      selectedAdminName: ''
+      selectedAdminName: '',
+
+      selectedAdminType: 'ALL',
+      selectedAdminStatus: 'ALL'
     };
   }
   
@@ -174,13 +179,28 @@ class DividedAdminManage extends Component {
   handleChangeAdminTypeSelect = (event, property) => {
     const { AdminUserProps, AdminUserActions } = this.props;
     AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, {
-      adminType: property, page:0
+      page:0, status: (this.state.selectedAdminStatus == 'ALL') ? '' : value, adminType: property
+    });
+
+    this.setState({
+      selectedAdminType: property
     });
   };
 
+  handleChangeAdminUserStatusSelect = (value) => {
+    const { AdminUserProps, AdminUserActions, compId } = this.props;
+    AdminUserActions.readAdminUserListPaged(AdminUserProps, this.props.match.params.grMenuId, { 
+      page: 0, status: (value == 'ALL') ? '' : value, adminType: this.state.selectedAdminType
+    });
+
+    this.setState({
+      selectedAdminStatus: value
+    });
+  }
+
   render() {
     const { classes } = this.props;
-    const { AdminUserProps } = this.props;
+    const { AdminProps, AdminUserProps } = this.props;
     const { t, i18n } = this.props;
     const compId = this.props.match.params.grMenuId;
 
@@ -212,9 +232,9 @@ class DividedAdminManage extends Component {
         <GRPane>
           {/* data option area */}
           <Grid container spacing={24} alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={6} >
+            <Grid item xs={8} >
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
-                <Grid item xs={6} >
+                <Grid item xs={4} >
                   <FormControl fullWidth={true}>
                     <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
                       handleKeywordChange={this.handleKeywordChange} 
@@ -227,16 +247,23 @@ class DividedAdminManage extends Component {
                     <Search />{t("btnSearch")}
                   </Button>
                 </Grid>
-                <Grid item xs={4} >
+                <Grid item xs={3} >
                   <FormControl fullWidth={true}>
                     <AdminTypeSelect onChangeSelect={this.handleChangeAdminTypeSelect} 
                       value={(listObj && listObj.getIn(['listParam', 'adminType'])) ? listObj.getIn(['listParam', 'adminType']) : 'ALL'}
                     />
                   </FormControl>
                 </Grid>
+                <Grid item xs={3} >
+                  <FormControl fullWidth={true}>
+                    <AdminUserStatusSelect onChangeSelect={this.handleChangeAdminUserStatusSelect} 
+                      value={(listObj && listObj.getIn(['listParam', 'status'])) ? listObj.getIn(['listParam', 'status']) : 'ALL'}
+                    />
+                  </FormControl>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={6} >
+            <Grid item xs={4} >
               <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => { this.handleCreateButton(); }} >
                 <AddIcon />{t("btnRegist")}
               </Button>
@@ -259,9 +286,32 @@ class DividedAdminManage extends Component {
                 {listObj.get('listData').map(n => {
 
                   let isEditable = true;
-                  if(window.gpmsain !== Constants.SUPER_RULECODE && n.get('adminTp') !== Constants.PART_TYPECODE) {
-                    isEditable = false;
+
+                  // 2 depth ------------------------------------------
+                  // SUPER : SUPER, ADMIN
+                  // ADMIN : ADMIN, PART
+                  // PART : NONE
+                  // if(window.gpmsain === Constants.SUPER_RULECODE) {
+                  //   if(n.get('adminTp') === Constants.PART_TYPECODE) {
+                  //     isEditable = false;
+                  //   }
+                  // } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
+                  //   if(n.get('adminTp') === Constants.SUPER_TYPECODE) {
+                  //     isEditable = false;
+                  //   }
+                  // }
+                  // ---------------------------------------------------
+
+                  // 3 depth -------------------------------------------
+                  // SUPER : SUPER, ADMIN, PART
+                  // ADMIN : ADMIN, PART
+                  // PART : NONE
+                  if(window.gpmsain === Constants.ADMIN_RULECODE) {
+                    if(n.get('adminTp') === Constants.SUPER_TYPECODE) {
+                      isEditable = false;
+                    }
                   }
+                  // ---------------------------------------------------
 
                   return (
                     <TableRow
@@ -287,13 +337,13 @@ class DividedAdminManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isDesktopAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isNoticeAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                      {isEditable &&
+                      {isEditable && n.get('status') !== '삭제' &&
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleEditClick(event, n.get('adminId'))}>
                           <SettingsApplicationsIcon />
                         </Button>
                       }
-                      {isEditable && 
+                      {isEditable && n.get('status') !== '삭제' && AdminProps.get('adminId') !== n.get('adminId') &&
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 
                           onClick={event => this.handleDeleteClick(event, n.get('adminId'))}>
                           <DeleteIcon />
@@ -352,6 +402,7 @@ class DividedAdminManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  AdminProps: state.AdminModule,
   AdminUserProps: state.AdminUserModule,
   CommonOptionProps: state.CommonOptionModule
 });

@@ -117,7 +117,7 @@ class AdminInform extends Component {
                 { (AdminProps.get('adminTp') === 'A' || AdminProps.get('adminTp') === 'P') && 
                 <TableRow>
                   <TableCell colSpan={3} >
-                    {bull} 관리대상-조직<br />
+                    {bull} {t('lbManagedDept')}<br />
                     <List dense={true}>
                     {AdminProps.get('deptInfoList').map(n => (
                       <ListItem>
@@ -132,7 +132,7 @@ class AdminInform extends Component {
                 <TableRow>
 
                   <TableCell colSpan={3} >
-                    {bull} 관리대상-단말그룹<br />
+                    {bull} {t('lbManagedClientGroup')}<br />
                     <List dense={true}>
                     {AdminProps.get('grpInfoList').map(n => (
                       <ListItem>
@@ -143,6 +143,7 @@ class AdminInform extends Component {
                     </TableCell>
                 </TableRow>
                 }
+                { (AdminProps.get('adminTp') === 'A') && 
                 <TableRow>
                   <TableCell component="th" scope="row">{bull} {t("lbAdminCycleTime")}</TableCell>
                   <TableCell >{AdminProps.get('pollingCycle')}</TableCell>
@@ -152,7 +153,7 @@ class AdminInform extends Component {
                     </IconButton>
                   </TableCell>
                 </TableRow>
-
+                }
               </TableBody>
             </Table>
 

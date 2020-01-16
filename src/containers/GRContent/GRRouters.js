@@ -57,7 +57,7 @@ class GRRouters extends Component {
 
   getBasename = () => {
     if(window.gpmsain === Constants.SUPER_RULECODE) {
-      return Dashboard;
+      return PartMain;
     } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
         return Dashboard;
     } else if(window.gpmsain === Constants.PART_RULECODE) {

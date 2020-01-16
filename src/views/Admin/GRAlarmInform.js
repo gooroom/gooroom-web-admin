@@ -34,22 +34,6 @@ class GRAlarmInform extends Component {
     };
   }
 
-  componentDidMount() {
-    clearInterval(this.violatedTimer)
-    this.violatedTimer = null;
-    this.violatedTimer = setInterval(()=> this.getViolatedData(), 20000);
-  }
-  
-  componentWillUnmount() {
-    clearInterval(this.violatedTimer)
-    this.violatedTimer = null; // here...
-  }
-
-  getViolatedData() {
-    const { AdminActions } = this.props;
-    AdminActions.readViolatedClientCount();
-  }
-
   handleClickAlarm = (e) => {
     this.props.AdminActions.showViolatedListDialog();
   }
