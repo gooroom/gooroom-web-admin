@@ -51,6 +51,11 @@ class GRAlert extends Component {
             <DialogContentText id="alert-dialog-description">
               {GRAlertProps.alertMsg}
             </DialogContentText>
+            {(GRAlertProps.alertMsgDetail) &&
+              <DialogContentText id="alert-dialog-description">
+                {GRAlertProps.alertMsgDetail}
+              </DialogContentText>
+            }
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleOk} color="primary">
