@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 
 import * as DeptActions from 'modules/DeptModule';
 
+import { requestFilePostAPI } from 'components/GRUtils/GRRequester';
+import { formatDateToSimple } from 'components/GRUtils/GRDates';
+import FileSaver from 'file-saver';
+
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
@@ -28,10 +32,12 @@ import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import Search from '@material-ui/icons/Search'; 
 import TreeIcon from '@material-ui/icons/DeviceHub'; 
+import GetApp from '@material-ui/icons/GetApp'; 
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
+import { now } from 'moment';
 
 class DeptTreeComp extends Component {
 
@@ -181,6 +187,15 @@ class DeptTreeComp extends Component {
     })
   };
 
+  handleDownloadDeptList = (event) => {
+    requestFilePostAPI('createDeptFileFromData', {}).then(
+      (response) => {
+        var blob = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+        FileSaver.saveAs(blob, 'DEPT_gooroom_'+ formatDateToSimple(new Date(), 'YY/MM/DD') + '.xlsx');
+      }
+    )
+  }
+
   handleInitTreeData = () => {
   }
 
@@ -265,6 +280,9 @@ class DeptTreeComp extends Component {
           <Grid item xs={6} >
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} style={{marginRight:10}}>
               <Search />{t("btnSearch")}
+            </Button>
+            <Button className={classes.GRIconSmallButton} variant='contained' color="primary" onClick={() => this.handleDownloadDeptList()} style={{marginRight:10}}>
+              <GetApp /> {t("dtViewDept")} {t("btnDownload")}
             </Button>
             {!this.state.isShowTree &&
             <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => this.handleShowTreeBtnClick()} >
