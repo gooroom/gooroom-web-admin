@@ -140,6 +140,7 @@ export default {
   "btnSearch": "Search",
   "btnRegist": "Regist",
   "btnSave": "Save",
+  "btnDownload": "Download",
   "btnClose": "Close",
   "btnCreate": "Create",
   "btnAdd": "Add",
@@ -235,6 +236,7 @@ export default {
   "msgInvalidNumber":"Please enter setting value.",
   "msgInvalidValue": "Please enter a valid setting value.",
   "lbSelectAll": "Select All",
+  "lbSample": "Sample",
 
   // options
   "stBeforeJob": "Before",
@@ -1068,19 +1070,20 @@ export default {
   "msgEditOkSaveUserDataFromFile": "User information has been collectively registered.",
   "msgEditErrorSaveUserDataFromFile": "User information is not registered in bulk.",
 
+  "msgFileFormatError": "File can upload only .xls format or .xlsx format",
+
   "msgDeptFromFileHelp01": "# Organization information can be registered using a file.",
-  "msgDeptFromFileHelp02": "# Use a file in 'CSV' format.",
-  "msgDeptFromFileHelp03": "# Create a file on each line in the following order: Organization ID, Organization Name, Parent ID. (3 items)",
-  "msgDeptFromFileHelp04": "# [Required] The first line is written as \" 0, organization header, 000000000 \". (Without quotes)",
-  "msgDeptFromFileHelp05": "# [Required] The second line is written as \" DEPTDEFAULT, cloud, 0 \". (Without quotes)",
-  "msgDeptFromFileHelp06": "# [Required] The 'parent organization ID' of the parent organization of the organization to be written is written as 'DEPTDEFAULT'.",
-  "msgDeptFromFileHelp07": "# [Caution] All previously registered organization information will be deleted and registered.",
+  "msgDeptFromFileHelp02": "# Use a file in 'Excel(.xls / .xlsx)' format.",
+  "msgDeptFromFileHelp03": "# Create a file on each line in the following order: Organization ID(Required), Organization Name(Required), Organization Expiration Date(Optional), Parent ID(Required). (4 items)",
+  "msgDeptFromFileHelp04": "# [Required] The 'parent organization ID' of the parent organization of the organization to be written is written as 'DEPTDEFAULT'.",
+  "msgDeptFromFileHelp05": "# [Caution] All previously registered organization information will be deleted and registered.",
 
   "msgUserFromFileHelp01": "# User information can be registered using a file.",
-  "msgUserFromFileHelp02": "# Use a file in 'CSV' format.",
-  "msgUserFromFileHelp03": "# Create a file on each line in the following order: 'User ID', 'User Name', 'Password', 'Organization ID', 'Email', 'Expiration Date'. (6 items)",
+  "msgUserFromFileHelp02": "# Use a file in 'Excel(.xls / .xlsx)' format.",
+  "msgUserFromFileHelp03": "# Create a file on each line in the following order: 'User ID(Required)', 'User Name(Required)', 'Password(Required)', 'Organization ID(Required)', 'Organization Name(Optional)', 'Email(Required)', 'Expiration Date(Optional)', 'Password Expiration Date(Optional)'. (8 items)",
   "msgUserFromFileHelp04": "# The 'expiration date' format is 8 digits in order of 'year month date'. (E.g. '20191030')",
-  "msgUserFromFileHelp05": "# [Caution] All previously registered user information is deleted and registered.",
+  "msgUserFromFileHelp05": "# [Required] 'Password' already set cannot be changed. The password for newly registered users is reset to 1.",
+  "msgUserFromFileHelp06": "# [Caution] All previously registered user information is deleted and registered.",
   "msgMustHaveSelectedFile": "The file is not selected.",
 
   
