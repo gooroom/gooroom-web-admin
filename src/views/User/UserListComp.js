@@ -254,9 +254,9 @@ class UserListComp extends Component {
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={ () => this.handleSelectBtnClick() } style={{marginRight:10}}>
               <Search />{t("btnSearch")}
             </Button>
-            <Button className={classes.GRIconSmallButton} variant='contained' color="primary" onClick={() => this.handleDownloadUserList() } style={{marginRight:10}}>
+            {/* <Button className={classes.GRIconSmallButton} variant='contained' color="primary" onClick={() => this.handleDownloadUserList() } style={{marginRight:10}}>
               <GetApp /> {t("dtViewUser")} {t("btnDownload")}
-            </Button>
+            </Button> */}
           </Grid>
           {/* <Grid item xs={4} style={{textAlign:'right'}}>
             *

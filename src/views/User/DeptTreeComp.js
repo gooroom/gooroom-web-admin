@@ -281,9 +281,9 @@ class DeptTreeComp extends Component {
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} style={{marginRight:10}}>
               <Search />{t("btnSearch")}
             </Button>
-            <Button className={classes.GRIconSmallButton} variant='contained' color="primary" onClick={() => this.handleDownloadDeptList()} style={{marginRight:10}}>
+            {/* <Button className={classes.GRIconSmallButton} variant='contained' color="primary" onClick={() => this.handleDownloadDeptList()} style={{marginRight:10}}>
               <GetApp /> {t("dtViewDept")} {t("btnDownload")}
-            </Button>
+            </Button> */}
             {!this.state.isShowTree &&
             <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => this.handleShowTreeBtnClick()} >
               <TreeIcon />{t("stAll")}
