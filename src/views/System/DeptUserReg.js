@@ -261,8 +261,9 @@ class DeptUserReg extends Component {
                 <Typography variant="body1">{t("msgDeptFromFileHelp01")}</Typography>
                 <Typography variant="body1">{t("msgDeptFromFileHelp02")}</Typography>
                 <Typography variant="body1">{t("msgDeptFromFileHelp03")}</Typography>
-                <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgDeptFromFileHelp04")}</Typography>
-                <Typography variant="body1" style={{color:'red'}}>{t("msgDeptFromFileHelp05")}</Typography>
+                <Typography variant="body1">{t("msgDeptFromFileHelp04")}</Typography>
+                <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgDeptFromFileHelp05")}</Typography>
+                <Typography variant="body1" style={{color:'red'}}>{t("msgDeptFromFileHelp06")}</Typography>
                 </div>}
               />
               <CardContent style={{paddingTop: 0}}>
@@ -303,8 +304,10 @@ class DeptUserReg extends Component {
                   <Typography variant="body1">{t("msgUserFromFileHelp02")}</Typography>
                   <Typography variant="body1">{t("msgUserFromFileHelp03")}</Typography>
                   <Typography variant="body1">{t("msgUserFromFileHelp04")}</Typography>
-                  <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgUserFromFileHelp05")}</Typography>
-                  <Typography variant="body1" style={{color:'red'}}>{t("msgUserFromFileHelp06")}</Typography>
+                  <Typography variant="body1">{t("msgUserFromFileHelp05")}</Typography>
+                  <Typography variant="body1">{t("msgUserFromFileHelp06")}</Typography>
+                  <Typography variant="body1">{t("msgUserFromFileHelp07")}</Typography>
+                  <Typography variant="body1" style={{color:'red'}}>{t("msgUserFromFileHelp08")}</Typography>
                 </div>}
               />
               <CardContent style={{paddingTop: 0}}>
