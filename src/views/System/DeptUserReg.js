@@ -30,6 +30,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
 import moment, { now } from 'moment';
+import { Divider } from '@material-ui/core';
 
 class DeptUserReg extends Component {
 
@@ -258,12 +259,32 @@ class DeptUserReg extends Component {
                   </Button>
                 </div>}
                 subheader={<div style={{margin:20}}>
-                <Typography variant="body1">{t("msgDeptFromFileHelp01")}</Typography>
+                <Typography variant="body1">{t("msgDeptFromFileHelpMain01")}</Typography>
+                
+                <div style={{ display: "flex" }}>
+                <Typography variant="body1" style={{fontWeight:'bold', marginRight: 10}} noWrap>{t("msgFileHelpCommon01")}</Typography>
+                <Typography variant="body1" style={{fontWeight:'bold', color:'blue', marginRight: 10}} noWrap>{t("dtViewDept")} {t("btnDownload")}</Typography>
+                <Typography variant="body1">{t("msgDeptFromFileHelpMain02")}</Typography>
+                </div>
+                <div style={{ display: "flex" }}>
+                <Typography variant="body1" style={{fontWeight:'bold', marginRight: 10}} noWrap>{t("msgFileHelpCommon02")}</Typography>
+                <Typography variant="body1" style={{fontWeight:'bold', color:'blue', marginRight: 10}} noWrap>{t("dtViewDept")} {t("lbSample")} {t("btnDownload")}</Typography>
+                <Typography variant="body1">{t("msgDeptFromFileHelpMain03")}</Typography>
+                <Typography variant="body1" style={{color:'red', marginLeft: 30}}>{t("msgDeptFromFileHelpMain04")}</Typography>
+                </div>
+                <Typography variant="body1">{t("msgDeptFromFileHelpMain05")}</Typography>
+                <Typography variant="body1">{t("msgDeptFromFileHelpMain06")}</Typography>
+
+                <Divider style={{marginTop: 20, marginBottom: 20}}/>
+
+                <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgDeptFromFileHelp01")}</Typography>
                 <Typography variant="body1">{t("msgDeptFromFileHelp02")}</Typography>
                 <Typography variant="body1">{t("msgDeptFromFileHelp03")}</Typography>
                 <Typography variant="body1">{t("msgDeptFromFileHelp04")}</Typography>
-                <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgDeptFromFileHelp05")}</Typography>
-                <Typography variant="body1" style={{color:'red'}}>{t("msgDeptFromFileHelp06")}</Typography>
+                <Typography variant="body1">{t("msgDeptFromFileHelp05")}</Typography>
+                <Typography variant="body1">{t("msgDeptFromFileHelp06")}</Typography>
+                <Typography variant="body1">{t("msgDeptFromFileHelp07")}</Typography>
+                <Typography variant="body1">{t("msgDeptFromFileHelp08")}</Typography>
                 </div>}
               />
               <CardContent style={{paddingTop: 0}}>
@@ -300,14 +321,29 @@ class DeptUserReg extends Component {
                   </Button>
                 </div>}
                 subheader={<div style={{margin:20}}>
-                  <Typography variant="body1">{t("msgUserFromFileHelp01")}</Typography>
-                  <Typography variant="body1">{t("msgUserFromFileHelp02")}</Typography>
-                  <Typography variant="body1">{t("msgUserFromFileHelp03")}</Typography>
-                  <Typography variant="body1">{t("msgUserFromFileHelp04")}</Typography>
-                  <Typography variant="body1">{t("msgUserFromFileHelp05")}</Typography>
-                  <Typography variant="body1">{t("msgUserFromFileHelp06")}</Typography>
-                  <Typography variant="body1">{t("msgUserFromFileHelp07")}</Typography>
-                  <Typography variant="body1" style={{color:'red'}}>{t("msgUserFromFileHelp08")}</Typography>
+                  <Typography variant="body1">{t("msgUserFromFileHelpMain01")}</Typography>
+                <div style={{ display: "flex" }}>
+                <Typography variant="body1" style={{fontWeight:'bold', marginRight: 10}} noWrap>{t("msgFileHelpCommon01")}</Typography>
+                <Typography variant="body1" style={{fontWeight:'bold', color:'blue', marginRight: 10}} noWrap>{t("dtViewUser")} {t("btnDownload")}</Typography>
+                <Typography variant="body1">{t("msgUserFromFileHelpMain02")}</Typography>
+                </div>
+                <div style={{ display: "flex" }}>
+                <Typography variant="body1" style={{fontWeight:'bold', marginRight: 10}} noWrap>{t("msgFileHelpCommon02")}</Typography>
+                <Typography variant="body1" style={{fontWeight:'bold', color:'blue', marginRight: 10}} noWrap>{t("dtViewUser")} {t("lbSample")} {t("btnDownload")}</Typography>
+                <Typography variant="body1">{t("msgUserFromFileHelpMain03")}</Typography>
+                <Typography variant="body1" style={{color:'red', marginLeft: 30}}>{t("msgUserFromFileHelpMain04")}</Typography>
+                </div>
+                <Typography variant="body1">{t("msgUserFromFileHelpMain05")}</Typography>
+                <Typography variant="body1">{t("msgUserFromFileHelpMain06")}</Typography>
+
+                <Divider style={{marginTop: 20, marginBottom: 20}}/>
+
+                <Typography variant="body1" style={{fontWeight:'bold'}}>{t("msgUserFromFileHelp01")}</Typography>
+                <Typography variant="body1">{t("msgUserFromFileHelp02")}</Typography>
+                <Typography variant="body1">{t("msgUserFromFileHelp03")}</Typography>
+                <Typography variant="body1">{t("msgUserFromFileHelp04")}</Typography>
+                <Typography variant="body1">{t("msgUserFromFileHelp05")}</Typography>
+                <Typography variant="body1">{t("msgUserFromFileHelp06")}</Typography>
                 </div>}
               />
               <CardContent style={{paddingTop: 0}}>
