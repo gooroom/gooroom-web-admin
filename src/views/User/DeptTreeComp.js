@@ -229,6 +229,7 @@ class DeptTreeComp extends Component {
         deptNm: treeNode.get('title'),
         comment: treeNode.get('comment'),
         regDate: treeNode.get('regDate'),
+        isUseExpire: treeNode.get('isUseExpire'),
         expireDate: treeNode.get('expireDate'),
         parentExpireDate: treeNode.get('parentExpireDate'),
         hasChildren: (treeNode.get('children') !== null) ? true : false
@@ -281,9 +282,6 @@ class DeptTreeComp extends Component {
             <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} style={{marginRight:10}}>
               <Search />{t("btnSearch")}
             </Button>
-            {/* <Button className={classes.GRIconSmallButton} variant='contained' color="primary" onClick={() => this.handleDownloadDeptList()} style={{marginRight:10}}>
-              <GetApp /> {t("dtViewDept")} {t("btnDownload")}
-            </Button> */}
             {!this.state.isShowTree &&
             <Button className={classes.GRIconSmallButton} variant="contained" color="primary" onClick={() => this.handleShowTreeBtnClick()} >
               <TreeIcon />{t("stAll")}

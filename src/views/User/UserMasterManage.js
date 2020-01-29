@@ -201,20 +201,24 @@ class UserMasterManage extends Component {
   // create dept in tree
   handleCreateDept = event => {
     const { t, i18n } = this.props;
+    const { DeptActions, GlobalActions } = this.props;
+    const initDate = moment().add(7, "days");
+    
     const checkedDept = this.getSingleCheckedDept();
     if (checkedDept !== undefined) {
-      this.props.DeptActions.showDialog({
-        viewItem: {
-          parentDeptCd: checkedDept.get("key"),
-          parentExpireDate: checkedDept.get("expireDate"),
-          expireDate: checkedDept.get("expireDate"),
-          deptCd: "",
-          deptNm: ""
-        },
-        dialogType: DeptDialog.TYPE_ADD
-      });
+      DeptActions.showDialog(
+        {
+          viewItem: {
+            parentDeptCd: checkedDept.get("key"),
+            parentExpireDate: checkedDept.get("expireDate"),
+            expireDate: initDate.toJSON().slice(0, 10),
+            deptCd: "",
+            deptNm: ""
+          },
+          dialogType: DeptDialog.TYPE_ADD
+      }, true);
     } else {
-      this.props.GlobalActions.showElementMsg(
+      GlobalActions.showElementMsg(
         event.currentTarget,
         t("msgSelectParentDept")
       );

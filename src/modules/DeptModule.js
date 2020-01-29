@@ -505,6 +505,7 @@ export default handleActions({
                     modDate: x.modDt,
                     itemCount: x.itemCount,
                     itemTotalCount: x.itemTotalCount,
+                    isUseExpire: x.isUseExpire,
                     expireDate: x.expireDt,
                     isExpired: x.isExpired,
                     parentExpireDate: x.parentExpireDt,
