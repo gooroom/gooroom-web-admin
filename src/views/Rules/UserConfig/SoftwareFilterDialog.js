@@ -48,7 +48,7 @@ class SoftwareFilterDialog extends Component {
 
     static SW_LIST = [
         {no:1, tag:'chromium.desktop', name:'Chromium Web Browser', name_kr:'Chromium 웹 브라우저'},
-        {no:2, tag:'galculator.desktop', name:'Galculator', name_kr:'계산기'},
+        {no:2, tag:'org.gnome.Calculator.desktop', name:'Galculator', name_kr:'계산기'},
         {no:3, tag:'gooroom-browser.desktop', name:'Gooroom Web Browser', name_kr:'구름 브라우저'},
         {no:4, tag:'gooroom-control-center.desktop,,,gnome-control-center.desktop', name:'Gnome Control Center', name_kr:'설정'},
         {no:5, tag:'gooroom-security-status-settings.desktop', name:'Gooroom Management Settings', name_kr:'구름 관리 설정'},
@@ -67,7 +67,7 @@ class SoftwareFilterDialog extends Component {
         {no:18, tag:'veyon-master.desktop', name:'Veyon Master', name_kr:'Veyon Master'},
         {no:19, tag:'eog.desktop', name:'Image Viewer', name_kr:'이미지 보기'},
         {no:20, tag:'blueman-manager.desktop', name:'Bluetooth Manager', name_kr:'블루투스 관리자'},
-        {no:21, tag:'mousepad.desktop', name:'Mousepad', name_kr:'메모'},
+        {no:21, tag:'org.gnome.gedit.desktop', name:'Mousepad', name_kr:'메모'},
         {no:22, tag:'gooroom-guide.desktop', name:'Gooroom Guide', name_kr:'구름 도움말'},
         {no:23, tag:'kr.gooroom.Software.desktop', name:'Software', name_kr:'소프트웨어'}
     ];
