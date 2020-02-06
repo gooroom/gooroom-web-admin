@@ -161,17 +161,24 @@ class UserMasterManage extends Component {
 
   // edit dept in tree
   handleEditDept = treeNode => {
-    const { TotalRuleActions } = this.props;
+    const { TotalRuleActions, DeptActions } = this.props;
     if (treeNode && treeNode.get("deptCd")) {
       TotalRuleActions.getAllClientUseRuleByDeptCd({
         compId: this.state.compId,
         deptCd: treeNode.get("deptCd")
       })
         .then(e => {
-          this.props.DeptActions.showDialog({
-            viewItem: treeNode,
-            dialogType: DeptDialog.TYPE_EDIT
-          });
+          DeptActions.getDeptInfo({
+            compId: this.state.compId,
+            deptCd: treeNode.get("deptCd")
+          })
+            .then(res => {
+              treeNode = treeNode.set('expireDate', res.data.data[0].expireDate);
+              this.props.DeptActions.showDialog({
+                viewItem: treeNode,
+                dialogType: DeptDialog.TYPE_EDIT
+              });
+            });
         })
         .catch(e => {});
     }
