@@ -5,8 +5,9 @@
   "license": "MIT",
   "NODE_PATH": "./src",
   "scripts": {
+    "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js",
     "build": "webpack -p --progress",
-    "start": "webpack-dev-server --progress --color --inline --watch-content-base --env.dev",
+    "start": "npm run webpack-dev-server --progress --color --inline --watch-content-base --env.dev",
     "clean": "rimraf ./build"
   },
   "devDependencies": {

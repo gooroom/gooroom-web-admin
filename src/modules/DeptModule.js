@@ -164,6 +164,7 @@ export const getDeptInfo = (param) => dispatch => {
                 compId: compId,
                 response: response
             });
+            return response;
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
