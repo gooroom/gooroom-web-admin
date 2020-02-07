@@ -219,7 +219,9 @@ class ClientListForSelect extends Component {
         <Grid container alignItems="flex-end" direction="row" justify="space-between" >
           <Grid item xs={4} >
             <FormControl fullWidth={true}>
-              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} />
+              <ClientStatusSelect onChangeSelect={this.handleChangeClientStatusSelect} 
+                value={(listObj && listObj.getIn(['listParam', 'clientType'])) ? listObj.getIn(['listParam', 'clientType']) : 'ALL'}
+              />
             </FormControl>
           </Grid>
           <Grid item xs={4}>
