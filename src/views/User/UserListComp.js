@@ -193,7 +193,9 @@ class UserListComp extends Component {
 
   handleChangeUserStatusSelect = (value) => {
     const { UserActions, UserProps, compId } = this.props;
-    UserActions.readUserListPaged(UserProps, compId, { page: 0, status: (value == 'ALL') ? '' : value });
+    UserActions.readUserListPaged(UserProps, compId, { 
+      page: 0, status: (value === 'ALL') ? '' : value 
+    });
   }
 
   handleDownloadUserList = (event) => {
@@ -238,7 +240,8 @@ class UserListComp extends Component {
           <Grid item xs={3} >
             <FormControl fullWidth={true}>
               <UserStatusSelect onChangeSelect={this.handleChangeUserStatusSelect} 
-                value={(listObj && listObj.getIn(['listParam', 'status'])) ? listObj.getIn(['listParam', 'status']) : 'STAT010'}
+                value={(listObj && listObj.getIn(['listParam', 'status'])) ? listObj.getIn(['listParam', 'status']) : 
+                (listObj && listObj.getIn(['listParam', 'status']) === '') ? 'ALL' : 'STAT010'}
               />
             </FormControl>
           </Grid>
