@@ -284,7 +284,6 @@ class DeptUserReg extends Component {
                 <Typography variant="body1">{t("msgDeptFromFileHelp05")}</Typography>
                 <Typography variant="body1">{t("msgDeptFromFileHelp06")}</Typography>
                 <Typography variant="body1">{t("msgDeptFromFileHelp07")}</Typography>
-                <Typography variant="body1">{t("msgDeptFromFileHelp08")}</Typography>
                 </div>}
               />
               <CardContent style={{paddingTop: 0}}>
