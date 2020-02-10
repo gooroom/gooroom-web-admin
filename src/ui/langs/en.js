@@ -1084,11 +1084,11 @@ export default {
 
   "msgDeptFromFileHelp01": "[Organization Collective Registration Rule]",
   "msgDeptFromFileHelp02": "# Create a file on each line in the following order: Organization ID(Required), Organization Name(Required), Organization Expiration Date(Optional), Parent ID(Optional). (4 items)",
-  "msgDeptFromFileHelp04": "# The 'dept expiration date' format is 8 digits in order of 'year month date'. (E.g. '20191030')",
-  "msgDeptFromFileHelp05": "# Organizations to be registered must be entered in order from the parent organization.",
-  "msgDeptFromFileHelp06": "# In order to be included under the 'Gooroom' organization, which is the top organization, 'parent organization ID' is written as 'DEPTDEFAULT'.",
-  "msgDeptFromFileHelp07": "# If the 'parent organization ID' entered does not exist, it is included as a child of the 'Gooroom' organization.",
-  "msgDeptFromFileHelp08": "# If you do not enter a 'parent organization ID', it will be included as a child of the top organization 'Gooroom'.",
+  "msgDeptFromFileHelp03": "# The 'dept expiration date' format is 8 digits in order of 'year month date'. (E.g. '20191030')",
+  "msgDeptFromFileHelp04": "# Organizations to be registered must be entered in order from the parent organization.",
+  "msgDeptFromFileHelp05": "# In order to be included under the 'Gooroom' organization, which is the top organization, 'parent organization ID' is written as 'DEPTDEFAULT'.",
+  "msgDeptFromFileHelp06": "# If the 'parent organization ID' entered does not exist, it is included as a child of the 'Gooroom' organization.",
+  "msgDeptFromFileHelp07": "# If you do not enter a 'parent organization ID', it will be included as a child of the top organization 'Gooroom'.",
 
   "msgUserFromFileHelpMain01": "User information can be registered using a file.",
   "msgUserFromFileHelpMain02": "Download the Excel file and enter the user information to add.",

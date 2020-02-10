@@ -1084,11 +1084,11 @@ export default {
 
   "msgDeptFromFileHelp01": "[조직 일괄등록 규칙]",
   "msgDeptFromFileHelp02": "# 각 줄에 '조직아이디(필수)','조직이름(필수)',,'조직만료일(선택)','상위조직아이디(선택)' 순서로 파일을 작성합니다. (4개 항목)",
-  "msgDeptFromFileHelp04": "# '조직만료일' 형식은 '년월일' 순서로 8자리로 작성합니다. (예: '20191030')",
-  "msgDeptFromFileHelp05": "# 등록할 조직은 상위조직 부터 순서대로 입력되어야 합니다.",
-  "msgDeptFromFileHelp06": "# 최상위 조직인 '구름' 조직 하위로 포함되기 위해서는 '상위조직아이디'는 'DEPTDEFAULT'로 작성합니다.",
-  "msgDeptFromFileHelp07": "# 입력한 '상위조직아이디'가 존재하지 않을 경우 최상위 조직인 '구름' 조직 하위로 포함됩니다.",
-  "msgDeptFromFileHelp08": "# '상위조직아이디'를 입력하지 않을 경우 최상위 조직인 '구름' 조직 하위로 포함됩니다.",
+  "msgDeptFromFileHelp03": "# '조직만료일' 형식은 '년월일' 순서로 8자리로 작성합니다. (예: '20191030')",
+  "msgDeptFromFileHelp04": "# 등록할 조직은 상위조직 부터 순서대로 입력되어야 합니다.",
+  "msgDeptFromFileHelp05": "# 최상위 조직인 '구름' 조직 하위로 포함되기 위해서는 '상위조직아이디'는 'DEPTDEFAULT'로 작성합니다.",
+  "msgDeptFromFileHelp06": "# 입력한 '상위조직아이디'가 존재하지 않을 경우 최상위 조직인 '구름' 조직 하위로 포함됩니다.",
+  "msgDeptFromFileHelp07": "# '상위조직아이디'를 입력하지 않을 경우 최상위 조직인 '구름' 조직 하위로 포함됩니다.",
 
   "msgUserFromFileHelpMain01": "파일을 이용하여 사용자정보를 일괄등록할 수 있습니다.",
   "msgUserFromFileHelpMain02": "엑셀파일을 다운로드하여 추가할 사용자 정보를 입력하시면 됩니다.",
