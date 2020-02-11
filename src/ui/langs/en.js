@@ -915,7 +915,7 @@ export default {
   "selPackageStopOn": "On",
   "selPackageStopOff": "Off",
   "dtBasicNetwork": "Default Network Allowed",
-  "msgValidFirewallAddress": "Please enter only alphabet(A~F) or numeric characters.",
+  "msgValidFirewallAddress": "Please enter only domain or ip address",
 
   // 소프트웨어정책 관리
   "lbDeleteSWRule": "Delete a software restriction rule",
