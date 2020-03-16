@@ -1,6 +1,7 @@
 export default {
   "gpmsTest": "Community",
   "adminMenu": "ADMIN",
+  "serverMenu": "SERVER",
 
   // columns
   "colDate": "DATE",
