@@ -884,6 +884,7 @@ export default {
   "dtUsbSerial": "USB serial information",
   "dtBluetooth": "Bluetooth",
   "lbBluetoothMac": "Bluetooth MAC address",
+  "lbReadOnly": "ReadOnly",
   
   // 단말보안정책 관리
   "lbSecuRule": "ClientSecuRule",
