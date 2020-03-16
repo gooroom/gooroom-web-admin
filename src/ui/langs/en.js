@@ -205,7 +205,7 @@ export default {
   "selViolated": "Violated",
   "selUnviolated": "Unviolated",
   "lbHelp": "Help",
-  "lbDesc": "Desc.",
+  "lbDesc": "Desc",
   "lbName": "Name",
   "lbId": "ID",
   "lbClientId": "ClientId",
