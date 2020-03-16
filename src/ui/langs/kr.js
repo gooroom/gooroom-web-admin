@@ -1064,6 +1064,8 @@ export default {
   "lbIndefiniteAlarm": "무기한 알람",
   "lbViewType": "보임 방식",
   "colInstantNoticeDate": '즉시 알림일',
+  "msgPleaseSelectBefore": "종료시간을 현재보다 이전 날짜로 선택하세요.",
+  "msgPleaseSelectTarget": "게시 대상을 선택하세요.",
 
   // 일괄등록
   "lbSaveDeptDataFromFile": "조직정보 일괄등록",
