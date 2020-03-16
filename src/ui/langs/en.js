@@ -577,6 +577,7 @@ export default {
   "msgEnterUserName": "Please enter username.",
   "msgSelectDept": "Please select an organization.",
   "msgEnterEmail": "Please enter email.",
+  "msgValidEmail": "Email information is incorrect.",
   "msgEnterUserId": "Please enter user ID.",
   "msgUserIdValid": "Please enter only lower alphabet characters or numbers.",
   "msgEnterPassword": "Please enter a password.",
