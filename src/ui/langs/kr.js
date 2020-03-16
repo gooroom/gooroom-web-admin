@@ -1,6 +1,7 @@
 export default {
   "gpmsTest": "커뮤니티",
-  "adminMenu": "어드민",
+  "adminMenu": "관리자",
+  "serverMenu": "서버관리",
 
   // columns
   "colDate": "날짜",
