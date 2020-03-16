@@ -285,28 +285,16 @@ class ClientGroupSpec extends Component {
     
     if(viewItem && viewItem.get('regDate') && viewItem.get('regDate') !== '') {
       groupInfoSubHeader = <Grid container spacing={0} style={{marginTop:10}}>
-        <Grid container spacing={0} style={{marginTop:10}}>
-          <Grid item xs={1}>
-            <CheckCircleOutlineIcon style={{verticalAlign: 'middle', color: 'black'}} />
-          </Grid>
-          <Grid item xs={3}>
-            <Typography style={{fontWeight:'bold'}}>{t("spClientDeptRegDate")}</Typography>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</Typography>
-          </Grid>
+        <Grid container direction="row" spacing={0} style={{marginTop:10}}>
+          <CheckCircleOutlineIcon style={{verticalAlign: 'middle', color: 'black', marginRight: 10}} />
+          <Grid item xs={3}><Typography style={{fontWeight:'bold'}}>{t("spClientDeptRegDate")}</Typography></Grid>
+          <Grid item xs={7}><Typography>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</Typography></Grid>
         </Grid>
         
         <Grid container spacing={0} style={{marginTop:10}}>
-          <Grid item xs={1}>
-            <DescriptionIcon style={{verticalAlign: 'middle', color: 'black'}} />
-          </Grid>
-          <Grid item xs={3}>
-            <Typography style={{fontWeight:'bold'}}>{t("lbDesc")}</Typography>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography>{viewItem.get('comment')}</Typography>
-          </Grid>
+          <DescriptionIcon style={{verticalAlign: 'middle', color: 'black', marginRight: 10}} />
+          <Grid item xs={3}><Typography style={{fontWeight:'bold'}}>{t("lbDesc")}</Typography></Grid>
+          <Grid item xs={7}><Typography>{viewItem.get('comment')}</Typography></Grid>
         </Grid>
       </Grid>
     }
