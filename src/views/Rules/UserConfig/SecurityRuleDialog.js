@@ -255,10 +255,13 @@ class SecurityRuleDialog extends Component {
                                 </FormControl>
                                 </Grid>
                                 <Grid item xs={12} sm={4} md={4}>
-                                    <TextField
-                                        label={t("lbPasswordChangeCycle")}
+                                    <TextValidator
+                                        label={t("lbPasswordChangeCycle")} 
+                                        validators={['required', 'isNumber']} 
+                                        errorMessages={[t("msgInvalidNumber"), t("msgTypeNumberOnly")]}
                                         multiline
                                         value={(editingItem.get('passwordTime')) ? editingItem.get('passwordTime') : ''}
+                                        name="passwordTime"
                                         onChange={this.handleValueChange("passwordTime")}
                                         className={classNames(classes.fullWidth, classes.dialogItemRow)}
                                     />
