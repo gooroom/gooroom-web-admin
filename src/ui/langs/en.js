@@ -1064,6 +1064,8 @@ export default {
   "lbIndefiniteAlarm": "Indefinite alram",
   "lbViewType": "Veiwing type",
   "colInstantNoticeDate": 'Instant Notice Date',
+  "msgPleaseSelectBefore": "Please select an end time earlier than the current date.",
+  "msgPleaseSelectTarget": "Please select a posting target.",
 
   // 일괄등록
   "lbSaveDeptDataFromFile": "Organization information registration",
