@@ -59,6 +59,7 @@ export const readJobManageListPaged = (module, compId, extParam) => dispatch => 
     dispatch({type: COMMON_PENDING});
     return requestPostAPI('readJobListPaged', {
         jobStatus: jobStatusParam,
+        jobType: newListParam.get('jobType') !== 'all' ? newListParam.get('jobType') : '', 
         keyword: newListParam.get('keyword'),
         page: newListParam.get('page'),
         start: newListParam.get('page') * newListParam.get('rowsPerPage'),

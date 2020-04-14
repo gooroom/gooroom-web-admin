@@ -58,6 +58,31 @@ const initialState = {
         statusIds: ["R", "D"]
     },
 
+    jobTypeData: [
+        { typeId: "all", typeNm: "stAll" },
+        { typeId: "append_contents_etc_hosts", typeNm: "lbHostFileChg" },
+        { typeId: "get_password_cycle", typeNm: "lbPwdCycleSet" },
+        { typeId: "get_screen_time", typeNm: "lbScreenSaverTimeSet" },
+        { typeId: "get_media_config", typeNm: "lbMediaRuleConf" },
+        { typeId: "get_browser_config", typeNm: "lbBrowserRuleConf" },
+        { typeId: "get_update_operation", typeNm: "lbUpdateOprSet" },
+        { typeId: "get_app_list", typeNm: "lbSoftwareRestrictionPolicy" },
+        { typeId: "get_log_config", typeNm: "lbLogConfChg" },
+        { typeId: "get_controlcenter_items", typeNm: "lbCtrlCenterItems" },
+        { typeId: "get_policykit_config", typeNm: "lbPolicyKitConf" },
+        { typeId: "get_account_config", typeNm: "lbAccountConf" },
+        { typeId: "get_polkit_admin_config", typeNm: "lbPolkyAdminConf" },
+        { typeId: "set_noti", typeNm: "lbNotice" },
+        { typeId: "set_multiple_login_msg", typeNm: "lbMultiLoginMsg" },
+        { typeId: "install_or_upgrade_package", typeNm: "lbInstallOrUpgradePackage" },
+        { typeId: "remove_package", typeNm: "lbRemovePackage" },
+        { typeId: "upgrade_all", typeNm: "lbUpgradeAll" },
+        { typeId: "insert_all_packages_to_server", typeNm: "lbInsertAllPackageToServer" },
+        { typeId: "profiling", typeNm: "lbProfiling" },
+        { typeId: "profiling_packages", typeNm: "lbProfilingPackages" },
+        { typeId: "set_homefolder_operation", typeNm: "lbSetHomefolderOperation" },
+    ],
+
     logLevelNotifyData: [
         { levelNo: "0", levelId: "None", levelVal: "none", levelNm: "stNoUse" },
         { levelNo: "4", levelId: "Error", levelVal: "err", levelNm: "stNoticeLevel" }

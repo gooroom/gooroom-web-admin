@@ -7,6 +7,8 @@ import classNames from "classnames";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import clsx from 'clsx';
+
 import * as JobManageActions from 'modules/JobManageModule';
 import * as GRConfirmActions from 'modules/GRConfirmModule';
 
@@ -33,13 +35,16 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Paper from '@material-ui/core/Paper';
 
 import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import ListItemText from '@material-ui/core/ListItemText';
 
 import Search from '@material-ui/icons/Search';
 import AddIcon from '@material-ui/icons/Add';
@@ -105,6 +110,13 @@ class JobManage extends Component {
     });
   }
 
+  handleJobTypeChange = (event, value) => {
+    const compId = this.props.match.params.grMenuId;
+    this.props.JobManageActions.readJobManageListPaged(this.props.JobManageProps, compId, {
+      page: 0, jobType: event.target.value
+    });
+  };
+
   handleChangeJobStatusSelect = (event, property) => {
     this.props.JobManageActions.changeListParamData(this.props.JobManageProps, {
       name: 'jobStatus',
@@ -119,6 +131,7 @@ class JobManage extends Component {
   render() {
     const { classes } = this.props;
     const { JobManageProps } = this.props;
+    const { CommonOptionProps } = this.props;
     const { t, i18n } = this.props;
 
     const compId = this.props.match.params.grMenuId;
@@ -140,6 +153,20 @@ class JobManage extends Component {
       emptyRows = listObj.getIn(['listParam', 'rowsPerPage']) - listObj.get('listData').size;
     }
 
+    const jobType = (listObj) ? (listObj.getIn(['listParam', 'jobType']) != undefined 
+                                ? listObj.getIn(['listParam', 'jobType']) : 'all') : 'all';
+
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+      PaperProps: {
+        style: {
+          maxHeight: 48 * 4.5 + 8,
+          width: 250,
+        },
+      },
+    };
+
     return (
 
       <React.Fragment>
@@ -148,7 +175,7 @@ class JobManage extends Component {
 
           {/* data option area */}
           <Grid container alignItems="flex-end" direction="row" justify="space-between" >
-            <Grid item xs={10} >
+            {/* <Grid item xs={10} > */}
               <Grid container spacing={24} alignItems="flex-end" direction="row" justify="flex-start" >
                 <Grid item xs={4} >
                   <FormControl fullWidth={true}>
@@ -157,6 +184,26 @@ class JobManage extends Component {
                   </FormControl>
                 </Grid>
                 <Grid item xs={4} >
+                  <FormControl fullWidth={true} className={clsx(classes.formControl, classes.noLabel)}>
+                    <Select
+                      value={jobType}
+                      input={<Input />}
+                      onChange={this.handleJobTypeChange}
+                      inputProps={{ 'aria-label': 'Without label' }}
+                      MenuProps={{PaperProps: {
+                        style: {
+                          maxHeight: 250,
+                          width: 250,
+                        }
+                      }}}
+                    >
+                      {CommonOptionProps.jobTypeData.map(x => (
+                        <MenuItem value={x.typeId} key={x.typeId}>{t(x.typeNm)}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={2} >
                   <FormControl fullWidth={true}>
                     <KeywordOption paramName="keyword" keywordValue={(listObj) ? listObj.getIn(['listParam', 'keyword']) : ''}
                       handleKeywordChange={this.handleKeywordChange} 
@@ -164,15 +211,15 @@ class JobManage extends Component {
                     />
                   </FormControl>
                 </Grid>
-                <Grid item xs={4} >
+                <Grid item xs={2} >
                   <Button className={classes.GRIconSmallButton} variant="contained" color="secondary" onClick={() => this.handleSelectBtnClick()} >
                     <Search />{t("btnSearch")}
                   </Button>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={2} style={{textAlign:'right'}}>
-            </Grid>
+            {/* </Grid> */}
+            {/* <Grid item xs={2} style={{textAlign:'right'}}>
+            </Grid> */}
           </Grid>
 
           {/* data area */}
@@ -244,7 +291,8 @@ class JobManage extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  JobManageProps: state.JobManageModule
+  JobManageProps: state.JobManageModule,
+  CommonOptionProps: state.CommonOptionModule
 });
 
 const mapDispatchToProps = (dispatch) => ({
