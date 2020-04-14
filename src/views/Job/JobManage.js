@@ -156,17 +156,6 @@ class JobManage extends Component {
     const jobType = (listObj) ? (listObj.getIn(['listParam', 'jobType']) != undefined 
                                 ? listObj.getIn(['listParam', 'jobType']) : 'all') : 'all';
 
-    const ITEM_HEIGHT = 48;
-    const ITEM_PADDING_TOP = 8;
-    const MenuProps = {
-      PaperProps: {
-        style: {
-          maxHeight: 48 * 4.5 + 8,
-          width: 250,
-        },
-      },
-    };
-
     return (
 
       <React.Fragment>
