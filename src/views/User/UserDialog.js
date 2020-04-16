@@ -268,7 +268,7 @@ class UserDialog extends Component {
                                 <TextValidator
                                     label={t("lbEmail")}
                                     value={(editingItem.get('userEmail')) ? editingItem.get('userEmail') : ''}
-                                    name="userEmail" validators={['required', 'isEmail']} errorMessages={[t("msgEnterEmail")]}
+                                    name="userEmail" validators={['required', 'isEmail', 'matchRegexp:^[a-zA-Z0-9.@_-]*$']} errorMessages={[t("msgEnterEmail"), t("msgValidEmail"), t("msgValidEmail")]}
                                     onChange={this.handleValueChange('userEmail')}
                                     className={classes.fullWidth}
                                 />
