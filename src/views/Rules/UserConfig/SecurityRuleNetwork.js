@@ -330,7 +330,7 @@ class SecurityRuleNetwork extends Component {
                   <TableCell>
                     <TextValidator 
                       name='address'
-                      validators={['matchRegexp:^[a-fA-F0-9.:/]*$']}
+                      validators={['matchRegexp:^[a-zA-Z0-9.:/]*$']}
                       errorMessages={[t("msgValidFirewallAddress")]}
                       value={n.get('address')}
                       onChange={this.changeNetworkOption(n.get('no'))}

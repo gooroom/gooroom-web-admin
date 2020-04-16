@@ -391,7 +391,7 @@ class MediaRuleDialog extends Component {
                                         color="primary" />}
                                     label={(editingItem.get('usbMemory') !== 'disallow') ? t("selUsbMemoryOn") : t("selUsbMemoryOff")}
                                 />
-                                <FormControlLabel label="Readonly" disabled={!(editingItem.get('usbMemory') !== 'disallow')} style={{heigth:32}}
+                                <FormControlLabel label={t("lbReadOnly")} disabled={!(editingItem.get('usbMemory') !== 'disallow')} style={{heigth:32}}
                                     control={<Checkbox onChange={this.handleValueChange('usbReadonly')} color="primary"
                                         checked={this.checkAllow(editingItem.get('usbReadonly'))}
                                     />}                                

@@ -1,6 +1,7 @@
 export default {
   "gpmsTest": "Community",
   "adminMenu": "ADMIN",
+  "serverMenu": "SERVER",
 
   // columns
   "colDate": "DATE",
@@ -140,6 +141,7 @@ export default {
   "btnSearch": "Search",
   "btnRegist": "Regist",
   "btnSave": "Save",
+  "btnDownload": "Download",
   "btnClose": "Close",
   "btnCreate": "Create",
   "btnAdd": "Add",
@@ -204,7 +206,7 @@ export default {
   "selViolated": "Violated",
   "selUnviolated": "Unviolated",
   "lbHelp": "Help",
-  "lbDesc": "Desc.",
+  "lbDesc": "Desc",
   "lbName": "Name",
   "lbId": "ID",
   "lbClientId": "ClientId",
@@ -235,6 +237,7 @@ export default {
   "msgInvalidNumber":"Please enter setting value.",
   "msgInvalidValue": "Please enter a valid setting value.",
   "lbSelectAll": "Select All",
+  "lbSample": "Sample",
 
   // options
   "stBeforeJob": "Before",
@@ -575,6 +578,7 @@ export default {
   "msgEnterUserName": "Please enter username.",
   "msgSelectDept": "Please select an organization.",
   "msgEnterEmail": "Please enter email.",
+  "msgValidEmail": "Email information is incorrect.",
   "msgEnterUserId": "Please enter user ID.",
   "msgUserIdValid": "Please enter only lower alphabet characters or numbers.",
   "msgEnterPassword": "Please enter a password.",
@@ -691,7 +695,9 @@ export default {
   "msgCloudServiceName": "Please enter a service name.",
   "lbCloudServiceDesc": "Service description",
   "lbCloudServiceIp": "Accessible IP",
+  "msgCloudServiceAccessIp": "This is not a valid IP address.",
   "lbCloudServiceDomain": "Service domain",
+  "msgCloudServiceDomain": "This is not a valid domain address.",
   "lbCreateCertType": "How to generate a certificate",
   "selAutoCreateCert": "Auto generation",
   "msgAutoCreateCert": "The server automatically generates a certificate.",
@@ -881,6 +887,7 @@ export default {
   "dtUsbSerial": "USB serial information",
   "dtBluetooth": "Bluetooth",
   "lbBluetoothMac": "Bluetooth MAC address",
+  "lbReadOnly": "ReadOnly",
   
   // 단말보안정책 관리
   "lbSecuRule": "ClientSecuRule",
@@ -913,7 +920,7 @@ export default {
   "selPackageStopOn": "On",
   "selPackageStopOff": "Off",
   "dtBasicNetwork": "Default Network Allowed",
-  "msgValidFirewallAddress": "Please enter only alphabet(A~F) or numeric characters.",
+  "msgValidFirewallAddress": "Please enter only domain or ip address",
 
   // 소프트웨어정책 관리
   "lbDeleteSWRule": "Delete a software restriction rule",
@@ -1057,6 +1064,8 @@ export default {
   "lbIndefiniteAlarm": "Indefinite alram",
   "lbViewType": "Veiwing type",
   "colInstantNoticeDate": 'Instant Notice Date',
+  "msgPleaseSelectBefore": "Please select an end time earlier than the current date.",
+  "msgPleaseSelectTarget": "Please select a posting target.",
 
   // 일괄등록
   "lbSaveDeptDataFromFile": "Organization information registration",
@@ -1068,19 +1077,39 @@ export default {
   "msgEditOkSaveUserDataFromFile": "User information has been collectively registered.",
   "msgEditErrorSaveUserDataFromFile": "User information is not registered in bulk.",
 
-  "msgDeptFromFileHelp01": "# Organization information can be registered using a file.",
-  "msgDeptFromFileHelp02": "# Use a file in 'CSV' format.",
-  "msgDeptFromFileHelp03": "# Create a file on each line in the following order: Organization ID, Organization Name, Parent ID. (3 items)",
-  "msgDeptFromFileHelp04": "# [Required] The first line is written as \" 0, organization header, 000000000 \". (Without quotes)",
-  "msgDeptFromFileHelp05": "# [Required] The second line is written as \" DEPTDEFAULT, cloud, 0 \". (Without quotes)",
-  "msgDeptFromFileHelp06": "# [Required] The 'parent organization ID' of the parent organization of the organization to be written is written as 'DEPTDEFAULT'.",
-  "msgDeptFromFileHelp07": "# [Caution] All previously registered organization information will be deleted and registered.",
+  "msgFileFormatError": "The file can only be uploaded to Excel97-2003 Workbook (* .xls) or Excel Workbook (* .xlsx).",
 
-  "msgUserFromFileHelp01": "# User information can be registered using a file.",
-  "msgUserFromFileHelp02": "# Use a file in 'CSV' format.",
-  "msgUserFromFileHelp03": "# Create a file on each line in the following order: 'User ID', 'User Name', 'Password', 'Organization ID', 'Email', 'Expiration Date'. (6 items)",
-  "msgUserFromFileHelp04": "# The 'expiration date' format is 8 digits in order of 'year month date'. (E.g. '20191030')",
-  "msgUserFromFileHelp05": "# [Caution] All previously registered user information is deleted and registered.",
+  "msgFileHelpCommon01": "[Method 1]",
+  "msgFileHelpCommon02": "[Method 2]",
+
+  "msgDeptFromFileHelpMain01": "Organization information can be registered using a file.",
+  "msgDeptFromFileHelpMain02": "Download the Excel file and enter the organizational information to add",
+  "msgDeptFromFileHelpMain03": "Download the Excel file and enter the organization information to register.",
+  "msgDeptFromFileHelpMain04": "[Caution] All previously registered organization information will be deleted and registered.",
+  "msgDeptFromFileHelpMain05": "After editing, upload the Excel file and the organization will be registered.",
+  "msgDeptFromFileHelpMain06": "When saving an Excel file, you must save it as an Excel 97-2003 workbook (* .xls) or an Excel workbook (* .xlsx).",
+
+  "msgDeptFromFileHelp01": "[Organization Collective Registration Rule]",
+  "msgDeptFromFileHelp02": "# Create a file on each line in the following order: Organization ID(Required), Organization Name(Required), Organization Expiration Date(Optional), Parent ID(Optional). (4 items)",
+  "msgDeptFromFileHelp03": "# The 'dept expiration date' format is 8 digits in order of 'year month date'. (E.g. '20191030')",
+  "msgDeptFromFileHelp04": "# Organizations to be registered must be entered in order from the parent organization.",
+  "msgDeptFromFileHelp05": "# In order to be included under the 'Gooroom' organization, which is the top organization, 'parent organization ID' is written as 'DEPTDEFAULT'.",
+  "msgDeptFromFileHelp06": "# If the 'parent organization ID' entered does not exist, it is included as a child of the 'Gooroom' organization.",
+  "msgDeptFromFileHelp07": "# If you do not enter a 'parent organization ID', it will be included as a child of the top organization 'Gooroom'.",
+
+  "msgUserFromFileHelpMain01": "User information can be registered using a file.",
+  "msgUserFromFileHelpMain02": "Download the Excel file and enter the user information to add.",
+  "msgUserFromFileHelpMain03": "Download the Excel file and enter the organization information to register",
+  "msgUserFromFileHelpMain04": "[Caution] All previously registered user information is deleted and registered.",
+  "msgUserFromFileHelpMain05": "After editing, upload the Excel file and the user will be registered.",
+  "msgUserFromFileHelpMain06": "When saving an Excel file, you must save it as an Excel 97-2003 workbook (* .xls) or an Excel workbook (* .xlsx).",
+
+  "msgUserFromFileHelp01": "[User Bulk Registration Rules]",
+  "msgUserFromFileHelp02": "# Create a file on each line in the following order: 'User ID(Required)', 'User Name(Required)', 'User Password(Do not modify)', 'Organization ID(Required)', 'Email(Required)', 'Expiration Date(Optional)', 'Password Expiration Date(Optional)'. (6 items)",
+  "msgUserFromFileHelp03": "# 'Password' is not registered, modified or deleted. Existing users will retain their passwords, and new users will be reset to 1.",
+  "msgUserFromFileHelp04": "# If you do not enter the 'Organization ID', it will be included under the 'Gooroom' organization.",
+  "msgUserFromFileHelp05": "# If you enter an 'Organization ID' that does not exist, it will be included under the 'Cloud' organization",
+  "msgUserFromFileHelp06": "# The 'expiration date' format is 8 digits in order of 'year month date'. (E.g. '20191030')",
   "msgMustHaveSelectedFile": "The file is not selected.",
 
   
