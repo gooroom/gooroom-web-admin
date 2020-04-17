@@ -202,12 +202,12 @@ class ServerSiteConfig extends Component {
   handlePwIncludeRuleChange = name => event => {
     const { stateData } = this.state;
     this.setState({
-      stateData: (event.target.checked) ? stateData.set(name, "1") : stateData.set(name, "0")
+      stateData: (event.target.checked) ? stateData.set(name, "-1") : stateData.set(name, "0")
     });
   }
 
   checkInclude = value => {
-    return (value == '1');
+    return (value == '-1');
   }
 
   render() {
@@ -309,7 +309,7 @@ class ServerSiteConfig extends Component {
                           control={<Switch onChange={this.handlePwIncludeRuleChange('pwIncludeNumber')} 
                               checked={this.checkInclude(stateData.get('pwIncludeNumber'))}
                               color="primary" />}
-                          label={(stateData.get('pwIncludeNumber') === '1') ? t("selHasInclude") : t("selHasNoInclude")}
+                          label={(stateData.get('pwIncludeNumber') === '-1') ? t("selHasInclude") : t("selHasNoInclude")}
                       />
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -321,7 +321,7 @@ class ServerSiteConfig extends Component {
                         control={<Switch onChange={this.handlePwIncludeRuleChange('pwIncludeUpper')} 
                             checked={this.checkInclude(stateData.get('pwIncludeUpper'))}
                             color="primary" />}
-                        label={(stateData.get('pwIncludeUpper') === '1') ? t("selHasInclude") : t("selHasNoInclude")}
+                        label={(stateData.get('pwIncludeUpper') === '-1') ? t("selHasInclude") : t("selHasNoInclude")}
                       />
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -333,7 +333,7 @@ class ServerSiteConfig extends Component {
                         control={<Switch onChange={this.handlePwIncludeRuleChange('pwIncludeLower')} 
                             checked={this.checkInclude(stateData.get('pwIncludeLower'))}
                             color="primary" />}
-                        label={(stateData.get('pwIncludeLower') === '1') ? t("selHasInclude") : t("selHasNoInclude")}
+                        label={(stateData.get('pwIncludeLower') === '-1') ? t("selHasInclude") : t("selHasNoInclude")}
                       />
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -345,7 +345,7 @@ class ServerSiteConfig extends Component {
                         control={<Switch onChange={this.handlePwIncludeRuleChange('pwIncludeSpecial')} 
                             checked={this.checkInclude(stateData.get('pwIncludeSpecial'))}
                             color="primary" />}
-                        label={(stateData.get('pwIncludeSpecial') === '1') ? t("selHasInclude") : t("selHasNoInclude")}
+                        label={(stateData.get('pwIncludeSpecial') === '-1') ? t("selHasInclude") : t("selHasNoInclude")}
                       />
                     </ListItemSecondaryAction>
                   </ListItem>
