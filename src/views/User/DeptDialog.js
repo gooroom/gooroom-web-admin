@@ -68,47 +68,36 @@ class DeptDialog extends Component {
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
                         const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
                         const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
-                        const editingItem = (DeptProps.get('editingItem')) ? DeptProps.get('editingItem') : null;
-                        if(editingItem !== undefined) {
-                          // dept expire date
-                          let deptExpireDate = '';
-                          if(editingItem.get("isUseExpire") !== undefined && editingItem.get("isUseExpire") === '1') {
-                              deptExpireDate = editingItem.get('expireDate');
-                              if(editingItem.get('expireDate') === null) {
-                                deptExpireDate = initDate; // set basic date
-                              }
-                          }
-                          
-                          DeptActions.createDeptInfo({
-                              deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
-                              deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-                              uprDeptCd: DeptProps.getIn(['editingItem', 'parentDeptCd']),
-                              expireDate: deptExpireDate,
-              
-                              browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
-                              mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
-                              securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
-                              filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
-                              ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
-                              policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
-                              desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
-                          }).then((res) => {
-                              if(res.status && res.status && res.status.message) {
-                                  this.props.GRAlertActions.showAlert({
-                                    alertTitle: t("dtSystemNotice"),
-                                    alertMsg: res.status.message
-                                  });
-                              }
-                              if(res.status && res.status && res.status.result === 'success') {
-                                  // tree refresh
-                                  const index = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).findIndex(n => (n.get('key') === DeptProps.getIn(['editingItem', 'parentDeptCd'])));
-                                  resetCallback(index);
-                                  this.handleClose();
-                              }
-                          }).catch((err) => {
-                              console.log('handleCreateData - err :::: ', err);
-                          });
-                        }
+
+                        DeptActions.createDeptInfo({
+                            deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
+                            deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
+                            uprDeptCd: DeptProps.getIn(['editingItem', 'parentDeptCd']),
+                            expireDate: DeptProps.getIn(['editingItem', 'expireDate']),
+            
+                            browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
+                        }).then((res) => {
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
+                            }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh
+                                const index = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).findIndex(n => (n.get('key') === DeptProps.getIn(['editingItem', 'parentDeptCd'])));
+                                resetCallback(index);
+                                this.handleClose();
+                            }
+                        }).catch((err) => {
+                            console.log('handleCreateData - err :::: ', err);
+                        });
                     }
                 },
                 confirmObject: DeptProps.get('editingItem')
@@ -125,8 +114,6 @@ class DeptDialog extends Component {
     handleEditData = (event) => {
         const { GRConfirmActions } = this.props;
         const { t, i18n } = this.props;
-        const initDate = moment().add(7, "days");
-
         if(this.refs.form && this.refs.form.isFormValid()) {
             GRConfirmActions.showCheckConfirm({
                 confirmTitle: t("lbEditDeptInfo"),
@@ -138,47 +125,35 @@ class DeptDialog extends Component {
                         const { DeptProps, DeptActions, compId, resetCallback } = this.props;
                         const { BrowserRuleProps, MediaRuleProps, SecurityRuleProps, SoftwareFilterProps, CtrlCenterItemProps, PolicyKitRuleProps, DesktopConfProps } = this.props;
                         const selectedObjectIdName = ['viewItems', compId, 'DEPT', 'selectedOptionItemId'];
-                        const editingItem = (DeptProps.get('editingItem')) ? DeptProps.get('editingItem') : null;
-                        if(editingItem !== undefined) {
-                            // dept expire date
-                            let deptExpireDate = '';
-                            if(editingItem.get("isUseExpire") !== undefined && editingItem.get("isUseExpire") === '1') {
-                                deptExpireDate = editingItem.get('expireDate')
-                                if(editingItem.get('expireDate') === null) {
-                                  deptExpireDate = initDate; // set basic date
-                                }
+                        DeptActions.editDeptInfo({
+                            deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
+                            deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
+                            expireDate: DeptProps.getIn(['editingItem', 'expireDate']),
+
+                            paramIsInherit: (isInherit) ? 'Y' : 'N',
+                
+                            browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
+                            mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
+                            securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
+                            filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
+                            ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
+                            policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
+                            desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
+                        }).then((res) => {
+
+                            if(res.status && res.status && res.status.message) {
+                                this.props.GRAlertActions.showAlert({
+                                  alertTitle: t("dtSystemNotice"),
+                                  alertMsg: res.status.message
+                                });
                             }
-
-                            DeptActions.editDeptInfo({
-                                deptCd: DeptProps.getIn(['editingItem', 'deptCd']),
-                                deptNm: DeptProps.getIn(['editingItem', 'deptNm']),
-                                expireDate: deptExpireDate,
-
-                                paramIsInherit: (isInherit) ? 'Y' : 'N',
-                    
-                                browserRuleId: BrowserRuleProps.getIn(selectedObjectIdName),
-                                mediaRuleId: MediaRuleProps.getIn(selectedObjectIdName),
-                                securityRuleId: SecurityRuleProps.getIn(selectedObjectIdName),
-                                filteredSoftwareRuleId: SoftwareFilterProps.getIn(selectedObjectIdName),
-                                ctrlCenterItemRuleId: CtrlCenterItemProps.getIn(selectedObjectIdName),
-                                policyKitRuleId: PolicyKitRuleProps.getIn(selectedObjectIdName),
-                                desktopConfId: DesktopConfProps.getIn(selectedObjectIdName)
-                            }).then((res) => {
-
-                                if(res.status && res.status && res.status.message) {
-                                    this.props.GRAlertActions.showAlert({
-                                      alertTitle: t("dtSystemNotice"),
-                                      alertMsg: res.status.message
-                                    });
-                                }
-                                if(res.status && res.status && res.status.result === 'success') {
-                                    // tree refresh for edit
-                                    const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['editingItem', 'deptCd'])));
-                                    resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
-                                    this.handleClose();
-                                }
-                            });
-                        }
+                            if(res.status && res.status && res.status.result === 'success') {
+                                // tree refresh for edit
+                                const listItem = DeptProps.getIn(['viewItems', compId, 'treeComp', 'treeData']).find(n => (n.get('key') === DeptProps.getIn(['editingItem', 'deptCd'])));
+                                resetCallback((listItem.get('parentIndex')) ? listItem.get('parentIndex') : 0);
+                                this.handleClose();
+                            }
+                        });
                     }
                 },
                 confirmObject: null
@@ -222,7 +197,6 @@ class DeptDialog extends Component {
             editObject = DeptProps.get('editingItem').toJS();
         }
 
-        const isUseDeptExpireDate = (editingItem && editingItem.get('isUseExpire') === '1');
         const checkedDeptCd = DeptProps.getIn(['viewItems', compId, 'treeComp', 'checked']);
         let upperDeptInfo = '';
         if(checkedDeptCd !== undefined && checkedDeptCd.length > 0) {
@@ -231,7 +205,7 @@ class DeptDialog extends Component {
                 upperDeptInfo = `${upperItem.get('title')} (${checkedDeptCd[0]})`;
             }
         }
-
+        
         return (
             <div>
             {(DeptProps.get('dialogOpen') && editingItem) &&
@@ -274,23 +248,6 @@ class DeptDialog extends Component {
                             <Grid item xs={4}>
                             </Grid>
                             }
-                            {(DeptProps.getIn(['editingItem', 'deptCd']) !== 'DEPTDEFAULT') &&
-                            <Grid item xs={4}>
-                                <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
-                                <Grid item xs={12} style={{paddingBottom:0}}><FormLabel component="legend" style={{fontSize:'0.8rem'}}>{t("lbUseDeptExpire")}</FormLabel></Grid>
-                                <Grid item >
-                                    <FormControlLabel value="true" control={
-                                        <Radio color="primary" value="1" onChange={this.handleValueChange("isUseExpire")} checked={isUseDeptExpireDate} />
-                                    } label={t("optUse")} labelPlacement="end" />
-                                </Grid>
-                                <Grid item >
-                                    <FormControlLabel value="false" control={
-                                        <Radio color="primary" value="0" onChange={this.handleValueChange("isUseExpire")} checked={!isUseDeptExpireDate} />
-                                    } label={t("optNoUse")} labelPlacement="end" />
-                                </Grid>
-                                </Grid>
-                            </Grid>
-                            }
                             <Grid item xs={4}>
                                 <Grid container spacing={16} alignItems="flex-end" direction="row" justify="flex-start" >
                                     <Grid item xs={12}>
@@ -298,8 +255,7 @@ class DeptDialog extends Component {
                                     value={(editingItem && editingItem.get('expireDate')) ? editingItem.get('expireDate') : initDate.toJSON().slice(0,10)}
                                     maxDate={editingItem.get('parentExpireDate')}
                                     onChange={(date) => {this.handleDateChange(date, 'expireDate');}} 
-                                    className={classes.fullWidth} 
-                                    disabled={!isUseDeptExpireDate} />
+                                    className={classes.fullWidth} />
                                     </Grid>
                                 </Grid>
                             </Grid>

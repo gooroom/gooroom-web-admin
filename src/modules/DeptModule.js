@@ -164,7 +164,6 @@ export const getDeptInfo = (param) => dispatch => {
                 compId: compId,
                 response: response
             });
-            return response;
         }
     ).catch(error => {
         dispatch({ type: COMMON_FAILURE, error: error });
@@ -506,7 +505,6 @@ export default handleActions({
                     modDate: x.modDt,
                     itemCount: x.itemCount,
                     itemTotalCount: x.itemTotalCount,
-                    isUseExpire: x.isUseExpire,
                     expireDate: x.expireDt,
                     isExpired: x.isExpired,
                     parentExpireDate: x.parentExpireDt,

@@ -81,12 +81,6 @@ class NoticePublishDialog extends Component {
                 confirmObject: editingItem
             });
         } else {
-          if(!isTargetValid) {
-            this.props.GRAlertActions.showAlert({
-              alertTitle: t("dtSystemNotice"),
-              alertMsg: t("msgPleaseSelectTarget")
-            });
-          }
             if(this.refs.form && this.refs.form.childs) {
                 this.refs.form.childs.map(c => {
                     this.refs.form.validate(c);
@@ -98,7 +92,6 @@ class NoticePublishDialog extends Component {
     handleCreateDataConfirmResult = (confirmValue, paramObject) => {
         if(confirmValue) {
             const { NoticePublishActions, NoticePublishExtensionActions } = this.props;
-            const { t, i18n } = this.props;
 
             const noticeId = paramObject.get('noticeId');
             const grpInfos = paramObject.get('grpInfoList').map(x => (x.get('value') + ':' + (x.get('isCheck') ? 1 : 0))).toArray();
@@ -108,13 +101,6 @@ class NoticePublishDialog extends Component {
             const openDt = (!paramObject.get('isInstantNotice') ? new Date(paramObject.get('openDate')) : new Date()).toISOString().replace('Z' , '+0000');
             const closeDt = !paramObject.get('isUnlimited') ? new Date(paramObject.get('closeDate')).toISOString().replace('Z' , '+0000') : undefined;
             const viewType = paramObject.get('viewType');
-
-            if(new Date().getTime() > new Date(paramObject.get('closeDate')).getTime()) {
-              this.props.GRAlertActions.showAlert({
-                alertTitle: t("dtSystemNotice"),
-                alertMsg: t("msgPleaseSelectBefore")
-              });
-            } else {
 
             NoticePublishActions.createNoticePublish({
                 noticeId: noticeId,
@@ -140,7 +126,6 @@ class NoticePublishDialog extends Component {
                 });
             });
             this.handleClose();
-            }
         }
     }
 
@@ -172,12 +157,6 @@ class NoticePublishDialog extends Component {
             const openDt = new Date(paramObject.get('openDate')).toISOString().replace('Z' , '+0000');
             const closeDt = !paramObject.get('isUnlimited') ? new Date(paramObject.get('closeDate')).toISOString().replace('Z' , '+0000') : undefined;
 
-            if(new Date().getTime() > new Date(paramObject.get('closeDate')).getTime()) {
-              this.props.GRAlertActions.showAlert({
-                alertTitle: t("dtSystemNotice"),
-                alertMsg: t("msgPleaseSelectBefore")
-              });
-            } else {
             NoticePublishActions.updateNoticePublish({
                 noticePublishId: noticePublishId,
                 openDt: openDt,
@@ -187,7 +166,6 @@ class NoticePublishDialog extends Component {
             }).then((res) => {
                 this.refreshNoticePublishList(noticePublishId);
             });
-            }
         }
     }
 
