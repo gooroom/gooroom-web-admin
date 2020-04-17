@@ -63,11 +63,11 @@ class ServerSiteConfig extends Component {
         trialCount: '',
         lockTime: '',
         passwordRule: '',
-        pwMinLength: '',
-        pwIncludeNumber: false,
-        pwIncludeUpper: false,
-        pwIncludeLower: false,
-        pwIncludeSpecial: false,
+        pwMinLength: '8',
+        pwIncludeNumber: '0',
+        pwIncludeUpper: '0',
+        pwIncludeLower: '0',
+        pwIncludeSpecial: '0',
         enableDuplicateLogin: false,
         duplicateLoginNotiType: '1'
       })
