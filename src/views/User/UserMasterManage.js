@@ -161,24 +161,17 @@ class UserMasterManage extends Component {
 
   // edit dept in tree
   handleEditDept = treeNode => {
-    const { TotalRuleActions, DeptActions } = this.props;
+    const { TotalRuleActions } = this.props;
     if (treeNode && treeNode.get("deptCd")) {
       TotalRuleActions.getAllClientUseRuleByDeptCd({
         compId: this.state.compId,
         deptCd: treeNode.get("deptCd")
       })
         .then(e => {
-          DeptActions.getDeptInfo({
-            compId: this.state.compId,
-            deptCd: treeNode.get("deptCd")
-          })
-            .then(res => {
-              treeNode = treeNode.set('expireDate', res.data.data[0].expireDate);
-              this.props.DeptActions.showDialog({
-                viewItem: treeNode,
-                dialogType: DeptDialog.TYPE_EDIT
-              });
-            });
+          this.props.DeptActions.showDialog({
+            viewItem: treeNode,
+            dialogType: DeptDialog.TYPE_EDIT
+          });
         })
         .catch(e => {});
     }
@@ -208,24 +201,20 @@ class UserMasterManage extends Component {
   // create dept in tree
   handleCreateDept = event => {
     const { t, i18n } = this.props;
-    const { DeptActions, GlobalActions } = this.props;
-    const initDate = moment().add(7, "days");
-    
     const checkedDept = this.getSingleCheckedDept();
     if (checkedDept !== undefined) {
-      DeptActions.showDialog(
-        {
-          viewItem: {
-            parentDeptCd: checkedDept.get("key"),
-            parentExpireDate: checkedDept.get("expireDate"),
-            expireDate: initDate.toJSON().slice(0, 10),
-            deptCd: "",
-            deptNm: ""
-          },
-          dialogType: DeptDialog.TYPE_ADD
-      }, true);
+      this.props.DeptActions.showDialog({
+        viewItem: {
+          parentDeptCd: checkedDept.get("key"),
+          parentExpireDate: checkedDept.get("expireDate"),
+          expireDate: checkedDept.get("expireDate"),
+          deptCd: "",
+          deptNm: ""
+        },
+        dialogType: DeptDialog.TYPE_ADD
+      });
     } else {
-      GlobalActions.showElementMsg(
+      this.props.GlobalActions.showElementMsg(
         event.currentTarget,
         t("msgSelectParentDept")
       );

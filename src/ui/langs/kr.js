@@ -1,7 +1,6 @@
 export default {
   "gpmsTest": "커뮤니티",
-  "adminMenu": "관리자",
-  "serverMenu": "서버관리",
+  "adminMenu": "어드민",
 
   // columns
   "colDate": "날짜",
@@ -141,7 +140,6 @@ export default {
   "btnSearch": "조회",
   "btnRegist": "등록",
   "btnSave": "저장",
-  "btnDownload": "다운로드",
   "btnClose": "닫기",
   "btnCreate": "생성",
   "btnAdd": "추가",
@@ -237,7 +235,6 @@ export default {
   "msgInvalidNumber": "설정값을 입력하세요.",
   "msgInvalidValue": "유효한 설정값을 입력하세요.",
   "lbSelectAll": "전체선택",
-  "lbSample": "샘플",
 
   // options
   "stBeforeJob": "작업전",
@@ -577,8 +574,7 @@ export default {
   "lbParentDept": "상위조직",
   "msgEnterUserName": "사용자이름을 입력하세요.",
   "msgSelectDept": "조직을 선택하세요.",
-  "msgEnterEmail": "이메일 정보를 입력하세요",
-  "msgValidEmail": "이메일 정보가 잘못되었습니다.",
+  "msgEnterEmail": "이메일 정보가 잘못 되었습니다.",
   "msgEnterUserId": "사용자아이디를 입력하세요.",
   "msgUserIdValid": "소문자 알파벳 또는 숫자만 입력하세요.",
   "msgEnterPassword": "password를 입력하세요.",
@@ -695,9 +691,7 @@ export default {
   "msgCloudServiceName": "서비스이름을 입력하세요.",
   "lbCloudServiceDesc": "서비스설명",
   "lbCloudServiceIp": "접근가능 IP",
-  "msgCloudServiceAccessIp": "올바른 IP 주소가 아닙니다.",
   "lbCloudServiceDomain": "서비스 도메인",
-  "msgCloudServiceDomain": "올바른 도메인 주소가 아닙니다.",
   "lbCreateCertType": "인증서 생성 방법",
   "selAutoCreateCert": "자동 생성",
   "msgAutoCreateCert": "구름서버에서 인증서를 자동으로 생성합니다.",
@@ -887,7 +881,6 @@ export default {
   "dtUsbSerial": "USB시리얼정보",
   "dtBluetooth": "블루투스",
   "lbBluetoothMac": "블루투스 맥주소",
-  "lbReadOnly": "읽기전용",
   
   // 단말보안정책 관리
   "lbSecuRule": "단말보안정책",
@@ -920,7 +913,7 @@ export default {
   "selPackageStopOn": "켜짐",
   "selPackageStopOff": "꺼짐",
   "dtBasicNetwork": "기본네트워크허용여부",
-  "msgValidFirewallAddress": "도메인주소 또는 IP 주소를 입력하세요.",  
+  "msgValidFirewallAddress": "알파벳(a~f) 또는 숫자를 입력하세요.",  
   
   // 소프트웨어정책 관리
   "lbDeleteSWRule": "소프트웨어제한정책 삭제",
@@ -1064,8 +1057,6 @@ export default {
   "lbIndefiniteAlarm": "무기한 알람",
   "lbViewType": "보임 방식",
   "colInstantNoticeDate": '즉시 알림일',
-  "msgPleaseSelectBefore": "종료시간을 현재보다 이전 날짜로 선택하세요.",
-  "msgPleaseSelectTarget": "게시 대상을 선택하세요.",
 
   // 일괄등록
   "lbSaveDeptDataFromFile": "조직정보 일괄등록",
@@ -1077,40 +1068,19 @@ export default {
   "msgEditOkSaveUserDataFromFile": "사용자정보 일괄등록이 되었습니다.",
   "msgEditErrorSaveUserDataFromFile": "사용자정보 일괄등록이 되지 않았습니다.",
 
-  "msgFileFormatError": "파일은 Excel97-2003통합문서(*.xls) 또는 Excel통합문서(*.xlsx)만 업로드 가능합니다.",
+  "msgDeptFromFileHelp01": "# 조직정보를 파일을 이용하여 등록할 수 있습니다.",
+  "msgDeptFromFileHelp02": "# 'CSV' 형식의 파일을 사용합니다.",
+  "msgDeptFromFileHelp03": "# 각 줄에 '조직아이디','조직이름','상위조직아이디' 순서로 파일을 작성합니다. (3개 항목)",
+  "msgDeptFromFileHelp04": "# [필수] 첫번줄은 \" 0,조직헤더,000000000 \" 로 작성합니다. (따옴표 제외)",
+  "msgDeptFromFileHelp05": "# [필수] 두번째줄은 \" DEPTDEFAULT,구름,0 \" 로 작성합니다. (따옴표 제외)",
+  "msgDeptFromFileHelp06": "# [필수] 작성하는 조직의 가장 상위조직의 '상위조직아이디' 는 'DEPTDEFAULT' 로 작성합니다.",
+  "msgDeptFromFileHelp07": "# [주의] 이전에 등록되어 있는 전체 조직정보가 삭제되고 등록됩니다.",
 
-  "msgFileHelpCommon01": "[방법 1]",
-  "msgFileHelpCommon02": "[방법 2]",
-
-  "msgDeptFromFileHelpMain01": "파일을 이용하여 조직정보를 일괄등록할 수 있습니다.",
-  "msgDeptFromFileHelpMain02": "엑셀파일을 다운로드하여 추가할 조직 정보를 입력하시면 됩니다.",
-  "msgDeptFromFileHelpMain03": "엑셀파일을 다운로드하여 등록할 조직 정보를 입력하시면 됩니다.",
-  "msgDeptFromFileHelpMain04": "[주의] 이전에 등록되어 있는 전체 조직정보가 삭제되고 등록됩니다.",
-  "msgDeptFromFileHelpMain05": "수정완료 후 엑셀파일을 업로드하시면 조직이 일괄등록됩니다.",
-  "msgDeptFromFileHelpMain06": "엑셀파일을 저장하실 때는 Excel97-2003통합문서(*.xls) 또는 Excel통합문서(*.xlsx)로 저장하셔야 합니다.",
-
-  "msgDeptFromFileHelp01": "[조직 일괄등록 규칙]",
-  "msgDeptFromFileHelp02": "# 각 줄에 '조직아이디(필수)','조직이름(필수)',,'조직만료일(선택)','상위조직아이디(선택)' 순서로 파일을 작성합니다. (4개 항목)",
-  "msgDeptFromFileHelp03": "# '조직만료일' 형식은 '년월일' 순서로 8자리로 작성합니다. (예: '20191030')",
-  "msgDeptFromFileHelp04": "# 등록할 조직은 상위조직 부터 순서대로 입력되어야 합니다.",
-  "msgDeptFromFileHelp05": "# 최상위 조직인 '구름' 조직 하위로 포함되기 위해서는 '상위조직아이디'는 'DEPTDEFAULT'로 작성합니다.",
-  "msgDeptFromFileHelp06": "# 입력한 '상위조직아이디'가 존재하지 않을 경우 최상위 조직인 '구름' 조직 하위로 포함됩니다.",
-  "msgDeptFromFileHelp07": "# '상위조직아이디'를 입력하지 않을 경우 최상위 조직인 '구름' 조직 하위로 포함됩니다.",
-
-  "msgUserFromFileHelpMain01": "파일을 이용하여 사용자정보를 일괄등록할 수 있습니다.",
-  "msgUserFromFileHelpMain02": "엑셀파일을 다운로드하여 추가할 사용자 정보를 입력하시면 됩니다.",
-  "msgUserFromFileHelpMain03": "엑셀파일을 다운로드하여 등록할 조직 정보를 입력하시면 됩니다.",
-  "msgUserFromFileHelpMain04": "[주의] 이전에 등록되어 있는 전체 사용자정보가 삭제되고 등록됩니다.",
-  "msgUserFromFileHelpMain05": "수정완료 후 엑셀파일을 업로드하시면 사용자가 일괄등록됩니다.",
-  "msgUserFromFileHelpMain06": "엑셀파일을 저장하실 때는 Excel97-2003통합문서(*.xls) 또는 Excel통합문서(*.xlsx)로 저장하셔야 합니다.",
-
-  "msgUserFromFileHelp01": "[사용자 일괄등록 규칙]",
-  "msgUserFromFileHelp02": "# 각 줄에 '사용자아이디(필수)','사용자이름(필수)','비밀번호(수정금지)','조직아이디(필수)','이메일(필수)','사용자만료일(선택)','패스워드만료일(선택)' 순서로 파일을 작성합니다. (7개 항목)",
-  "msgUserFromFileHelp03": "# '비밀번호'는 등록, 수정, 삭제 하지 않습니다. 기존 사용자는 비밀번호가 유지되며, 신규 사용자는 1로 초기화됩니다.",
-  "msgUserFromFileHelp04": "# '조직아이디'를 입력하지 않을 경우 '구름'조직 아래로 포함됩니다.",
-  "msgUserFromFileHelp05": "# 존재하지 않는 '조직아이디'를 입력할 경우 '구름' 조직 아래로 포함됩니다.",
-  "msgUserFromFileHelp06": "# '만료일' 형식은 '년월일' 순서로 8자리로 작성합니다. (예: '20191030')",
-
+  "msgUserFromFileHelp01": "# 사용자정보를 파일을 이용하여 등록할 수 있습니다.",
+  "msgUserFromFileHelp02": "# 'CSV' 형식의 파일을 사용합니다.",
+  "msgUserFromFileHelp03": "# 각 줄에 '사용자아이디','사용자이름','비밀번호','조직아이디','이메일','만료일' 순서로 파일을 작성합니다. (6개 항목)",
+  "msgUserFromFileHelp04": "# '만료일' 형식은 '년월일' 순서로 8자리로 작성합니다. (예: '20191030')",
+  "msgUserFromFileHelp05": "# [주의] 이전에 등록되어 있는 전체 사용자정보가 삭제되고 등록됩니다.",
   "msgMustHaveSelectedFile": "파일이 선택되지 않았습니다.",
 
 

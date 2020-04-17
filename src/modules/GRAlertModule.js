@@ -9,7 +9,6 @@ export const showAlert = (param) => dispatch => {
         type: SHOW_ALERT,
         alertTitle: param.alertTitle,
         alertMsg: param.alertMsg,
-        alertMsgDetail: param.alertMsgDetail,
         alertOpen: true,
         alertObject: param.alertObject
     });
@@ -25,7 +24,6 @@ export const closeConfirm = (param) => dispatch => {
 const initialState = {
     alertTitle: '',
     alertMsg: '',
-    alertMsgDetail: '',
     alertOpen: false,
     alertResult: false
 };
@@ -37,7 +35,6 @@ export default handleActions({
             ...state,
             alertTitle: action.alertTitle,
             alertMsg: action.alertMsg,
-            alertMsgDetail: action.alertMsgDetail,
             alertOpen: action.alertOpen,
             alertObject: (action.alertObject) ? action.alertObject : null
         };

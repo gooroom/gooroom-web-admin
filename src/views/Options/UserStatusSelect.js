@@ -6,7 +6,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import { Map, List } from "immutable";
 import { translate, Trans } from "react-i18next";
 
-import FormControl from '@material-ui/core/FormControl';
 
 class UserStatusSelect extends Component {
   constructor(props) {
@@ -25,7 +24,7 @@ class UserStatusSelect extends Component {
   }
   
   // Events...
-  handleChangeSelect = event => {
+  handleChangeSelect = (event, child) => {
     const { data } = this.state;
     this.setState({
       data: data.set('selectedUserStatusValue', event.target.value)
@@ -39,12 +38,10 @@ class UserStatusSelect extends Component {
 
     return (
       <React.Fragment>
-      <FormControl fullWidth={true}>
       <InputLabel htmlFor="user-status">{t("lbUserStatus")}</InputLabel>
       <Select
         value={value}
         onChange={this.handleChangeSelect}
-        inputProps={{name: 'userStatus'}}
       >
         {this.state.data.get('userStatusData').map(x => (
           <MenuItem value={x.get('statusVal')} key={x.get('statusId')}>
@@ -52,7 +49,6 @@ class UserStatusSelect extends Component {
           </MenuItem>
         ))}
       </Select>
-      </FormControl>
       </React.Fragment>
     );
   }

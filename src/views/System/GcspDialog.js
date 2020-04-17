@@ -200,19 +200,17 @@ class GcspDialog extends Component {
                         }
                         className={classes.fullWidth}
                     />
-                    <TextValidator
+                    <TextField
                         label={t("lbCloudServiceIp")}
                         value={(editingItem.get('ipRanges')) ? editingItem.get('ipRanges') : ''}
-                        name="ipRanges" validators={['matchRegexp:^[0-9A-Fa-f.:]*$']} errorMessages={[t("msgCloudServiceAccessIp")]}
                         onChange={
                             (dialogType == GcspDialog.TYPE_VIEW) ? null : this.handleValueChange("ipRanges")
                         }
                         className={classes.fullWidth}
                     />
-                    <TextValidator
+                    <TextField
                         label={t("lbCloudServiceDomain")}
                         value={(editingItem.get('url')) ? editingItem.get('url') : ''}
-                        name="url" validators={['matchRegexp:^[0-9A-Za-z.:/]*$']} errorMessages={[t("msgCloudServiceDomain")]}
                         onChange={
                             (dialogType == GcspDialog.TYPE_VIEW) ? null : this.handleValueChange("url")
                         }
