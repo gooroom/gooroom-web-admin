@@ -284,19 +284,18 @@ class ClientGroupSpec extends Component {
     }
     
     if(viewItem && viewItem.get('regDate') && viewItem.get('regDate') !== '') {
-      groupInfoSubHeader = <Grid container spacing={0} style={{marginTop:10}}>
-        <Grid container direction="row" spacing={0} style={{marginTop:10}}>
-          <CheckCircleOutlineIcon style={{verticalAlign: 'middle', color: 'black', marginRight: 10}} />
-          <Grid item xs={3}><Typography style={{fontWeight:'bold'}}>{t("spClientDeptRegDate")}</Typography></Grid>
-          <Grid item xs={7}><Typography>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</Typography></Grid>
-        </Grid>
-        
-        <Grid container spacing={0} style={{marginTop:10}}>
-          <DescriptionIcon style={{verticalAlign: 'middle', color: 'black', marginRight: 10}} />
-          <Grid item xs={3}><Typography style={{fontWeight:'bold'}}>{t("lbDesc")}</Typography></Grid>
-          <Grid item xs={7}><Typography>{viewItem.get('comment')}</Typography></Grid>
-        </Grid>
-      </Grid>
+      groupInfoSubHeader = <div style={{marginTop: 10}}>
+        <CheckCircleOutlineIcon style={{verticalAlign: 'middle', marginRight:5, color: 'black'}} />
+        <Typography style={{display: 'inline-block', fontWeight:'bold', marginRight:18}}>{t("spClientDeptRegDate")}</Typography>
+        <Typography style={{display: 'inline-block'}}>{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD')}</Typography>
+        {(viewItem.get('comment') && viewItem.get('comment') !== '') &&
+          <div style={{marginTop: 10}}>
+            <DescriptionIcon style={{verticalAlign: 'middle', marginRight:5, color: 'black'}} />
+            <Typography style={{display: 'inline-block', letterSpacing: '5.3em', marginRight:'-5.3em', fontWeight:'bold'}}>{t("lbDesc")}</Typography>
+            <Typography style={{display: 'inline-block', marginLeft:18}}>{viewItem.get('comment')}</Typography>
+          </div>
+        }
+      </div>
     }
 
     const avatarRef = getAvatarExplainForGroup(this.props.t);

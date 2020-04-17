@@ -121,7 +121,7 @@ class GRHeader extends Component {
               }}
               onClick={this.handleClickSystem}
             >
-              <SettingsApplications />{t("serverMenu")}
+              <SettingsApplications />Server
             </Button>
           }
           <Popper open={this.state.popMenu} anchorEl={this.anchorEl} transition disablePortal>

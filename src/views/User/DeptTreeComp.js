@@ -6,10 +6,6 @@ import { connect } from 'react-redux';
 
 import * as DeptActions from 'modules/DeptModule';
 
-import { requestFilePostAPI } from 'components/GRUtils/GRRequester';
-import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import FileSaver from 'file-saver';
-
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 
 import GRCommonTableHead from 'components/GRComponents/GRCommonTableHead';
@@ -32,12 +28,10 @@ import Button from '@material-ui/core/Button';
 import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
 import Search from '@material-ui/icons/Search'; 
 import TreeIcon from '@material-ui/icons/DeviceHub'; 
-import GetApp from '@material-ui/icons/GetApp'; 
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 import { translate, Trans } from "react-i18next";
-import { now } from 'moment';
 
 class DeptTreeComp extends Component {
 
@@ -187,15 +181,6 @@ class DeptTreeComp extends Component {
     })
   };
 
-  handleDownloadDeptList = (event) => {
-    requestFilePostAPI('createDeptFileFromData', {}).then(
-      (response) => {
-        var blob = new Blob([response.data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-        FileSaver.saveAs(blob, 'DEPT_gooroom_'+ formatDateToSimple(new Date(), 'YY/MM/DD') + '.xlsx');
-      }
-    )
-  }
-
   handleInitTreeData = () => {
   }
 
@@ -229,7 +214,6 @@ class DeptTreeComp extends Component {
         deptNm: treeNode.get('title'),
         comment: treeNode.get('comment'),
         regDate: treeNode.get('regDate'),
-        isUseExpire: treeNode.get('isUseExpire'),
         expireDate: treeNode.get('expireDate'),
         parentExpireDate: treeNode.get('parentExpireDate'),
         hasChildren: (treeNode.get('children') !== null) ? true : false
