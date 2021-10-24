@@ -1,0 +1,16 @@
+// Core css
+
+$primary-color: rgb(89, 180, 157);
+
+body {
+    background-color: $primary-color;
+}
+
+.grTableRow {
+    height: "36px !important";
+}
+
+$list-table-background: rgb(243, 184, 74);
+.grTempBackground {
+    background-color: $list-table-background;
+}
