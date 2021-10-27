@@ -965,6 +965,7 @@ export default {
   "selPackageStopOff": "Off",
   "dtBasicNetwork": "Default Network Allowed",
   "msgValidFirewallAddress": "Please enter only domain or ip address",
+  "msgValidIptablesCmd": "Please enter only alphabet(A~Z) or numeric characters.",
 
   // 소프트웨어정책 관리
   "lbDeleteSWRule": "Delete a software restriction rule",

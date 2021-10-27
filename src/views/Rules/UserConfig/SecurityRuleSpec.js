@@ -106,33 +106,62 @@ class SecurityRuleSpec extends Component {
                 <Grid item xs={12} className={classes.specCategory} style={{paddingTop:16}}>[ {t("lbSetupFirewall")} ]</Grid>
                 <Grid item xs={12} className={classes.specContent}>
                 <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell component="th" scope="row">DIRECTION</TableCell>
-                    <TableCell component="th" scope="row">PROTOCOL</TableCell>
-                    <TableCell component="th" scope="row">ADDRESS</TableCell>
-                    <TableCell component="th" scope="row">SRC PORT</TableCell>
-                    <TableCell component="th" scope="row">DST PORT</TableCell>
-                    <TableCell component="th" scope="row">STATE</TableCell>
-                  </TableRow>
-                </TableHead>
-              {(viewItem.get('netItem') && viewItem.get('netItem').size > 0) &&
-              <TableBody>
-              {viewItem.get('netItem').map(n => {
-                return (
-                  <TableRow hover key={n.no} >
-                  <TableCell >{n.direction}</TableCell>
-                  <TableCell >{n.protocol}</TableCell>
-                  <TableCell >{n.address}</TableCell>
-                  <TableCell >{n.src}</TableCell>
-                  <TableCell >{n.dst}</TableCell>
-                  <TableCell >{n.state}</TableCell>
-                  </TableRow>
-                );
-              })}
-              </TableBody>
-              }
-              </Table>
+                  {(viewItem.get('netItem') && viewItem.get('netItem').size > 0) &&
+                  <TableBody>
+                  {viewItem.get('netItem').map(n => {
+                    return (
+                      n.type === 'basic' 
+                      ? <TableRow hover key={n.no} >
+                          <TableCell>
+                            <Grid container direction="column">
+                              <Grid item>DIRECTION</Grid>
+                              <Grid item>{n.direction}</Grid>
+                            </Grid>
+                          </TableCell>
+                          <TableCell>
+                            <Grid container direction="column">
+                              <Grid item>PROTOCOL</Grid>
+                              <Grid item>{n.protocol}</Grid>
+                            </Grid>
+                          </TableCell>
+                          <TableCell>
+                            <Grid container direction="column">
+                              <Grid item>ADDRESS</Grid>
+                              <Grid item>{n.address}</Grid>
+                            </Grid>
+                          </TableCell>
+                          <TableCell>
+                            <Grid container direction="column">
+                              <Grid item>SRC PORT</Grid>
+                              <Grid item>{n.src}</Grid>
+                            </Grid>
+                          </TableCell>
+                          <TableCell>
+                            <Grid container direction="column">
+                              <Grid item>DST PORT</Grid>
+                              <Grid item>{n.dst}</Grid>
+                            </Grid>
+                          </TableCell>
+                          <TableCell>
+                            <Grid container direction="column">
+                              <Grid item>STATE</Grid>
+                              <Grid item>{n.state}</Grid>
+                            </Grid>
+                          </TableCell>
+                        </TableRow>
+                      : <TableRow>
+                          <TableCell>
+                            <Grid container direction="column">
+                              <Grid item>COMMAND</Grid>
+                              <Grid item>{n.command}</Grid>
+                            </Grid>
+                          </TableCell>
+                        </TableRow>
+                    );
+                  })}
+                  </TableBody>
+                  }
+                  </Table>
                 </Grid>
               </Grid>
             </CardContent>
@@ -168,15 +197,24 @@ export const generateSecurityRuleObject = (param, isForViewer) => {
         netState = evalue;
       } else if(ename == 'firewall_network') {
         const es = evalue.split('|');
-        netItem = netItem.push({
-          no: Number(es[0]),
-          direction: es[1],
-          protocol: es[2],
-          address: es[3],
-          src: es[4],
-          dst: es[5],
-          state: es[6]
-        });
+        if(es[1] === 'basic') {
+          netItem = netItem.push({
+            no: Number(es[0]),
+            type: es[1],
+            direction: es[2],
+            protocol: es[3],
+            address: es[4],
+            src: es[5],
+            dst: es[6],
+            state: es[7]
+          });
+        } else { //advanced
+          netItem = netItem.push({
+            no: Number(es[0]),
+            type: es[1],
+            command: es[2],
+          });
+        }
       } else if(ename == 'global_network') {
         globalNetwork = evalue;
       }
