@@ -137,7 +137,7 @@ class ClientConfSettingManage extends Component {
         show_os: 'info',
         transmit_os: 'info',
         
-        notify_exe: 'notice',
+        notify_exe: 'err',
         show_exe: 'info',
         transmit_exe: 'info',
         
