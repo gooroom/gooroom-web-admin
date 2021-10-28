@@ -57,7 +57,7 @@ class SoftwareFilterDialog extends Component {
         {no:8, tag:'grac-editor.desktop', name:'Grac Editor', name_kr:'매체제어 편집기'},
         {no:9, tag:'hwpviewer.desktop', name:'Hancom Office Hwp 2014 Viewer', name_kr:'한컴오피스 한글 2014 뷰어'},
         {no:10, tag:'org.gnome.FileRoller.desktop', name:'Archive Manager', name_kr:'압축 관리자'},
-        {no:11, tag:'org.gnome.Nautilus.desktop', name:'Files', name_kr:'파일 관리자'},
+        {no:11, tag:'org.gnome.Nautilus.desktop,,,nemo.desktop', name:'Files', name_kr:'파일 관리자'},
         {no:12, tag:'org.gnome.Totem.desktop,,,io.github.GnomeMpv.desktop', name:'Videos', name_kr:'동영상'},
         {no:13, tag:'scratch.desktop', name:'scratch-3.0', name_kr:'스크래치 3.0'},
         {no:14, tag:'synaptic.desktop', name:'Synaptic Package Manager', name_kr:'시냅틱 패키지 관리자'},
