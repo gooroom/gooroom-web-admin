@@ -271,23 +271,23 @@ class ClientConfSettingDialog extends Component {
                     <div>
                         <Grid container spacing={16} alignItems="flex-end" direction="row" justify="space-between" >
                             <Grid item xs={12} sm={4} md={4}>
-                            <TextValidator label={t("lbName")} value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
-                                name="objNm" validators={['required']} errorMessages={[t("msgInputName")]}
-                                onChange={this.handleValueChange("objNm")}
-                                className={classes.fullWidth}
-                            />
+                                <TextValidator label={t("lbName")} value={(editingItem.get('objNm')) ? editingItem.get('objNm') : ''}
+                                    name="objNm" validators={['required']} errorMessages={[t("msgInputName")]}
+                                    onChange={this.handleValueChange("objNm")}
+                                    className={classes.fullWidth}
+                                />
                             </Grid>
                             <Grid item xs={12} sm={8} md={8}>
-                            <TextField label={t("lbDesc")} value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
-                                onChange={this.handleValueChange("comment")}
-                                className={classNames(classes.fullWidth, classes.dialogItemRow)}
-                            />
+                                <TextField label={t("lbDesc")} value={(editingItem.get('comment')) ? editingItem.get('comment') : ''}
+                                    onChange={this.handleValueChange("comment")}
+                                    className={classNames(classes.fullWidth, classes.dialogItemRow)}
+                                />
                             </Grid>
                         </Grid>
                         <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'0 0 8 0'}}>
-                            <Grid item xs={4}>
+                            <Grid item xs={12} sm={6} md={6}>
                                 <div style={{marginTop:"10px"}}>
-                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtInitHomeFolder")}</FormLabel>
+                                    <div style={{width: '170px', display: 'inline-block'}}><FormLabel style={{marginRight:"50px"}}>{bull} {t("dtInitHomeFolder")}</FormLabel></div>
                                     <FormControlLabel
                                         control={
                                         <Switch onChange={this.handleValueChange('useHomeReset')} color="primary"
@@ -297,9 +297,23 @@ class ClientConfSettingDialog extends Component {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={12} sm={6} md={6}>
                                 <div style={{marginTop:"10px"}}>
-                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtRootAllow")}</FormLabel>
+                                    <div style={{width: '170px', display: 'inline-block'}}><FormLabel>{bull} {t("dtCleanMode")}</FormLabel></div>
+                                    <FormControlLabel
+                                        control={
+                                        <Switch onChange={this.handleValueChange('cleanModeAllow')} color="primary"
+                                            checked={(editingItem.get('cleanModeAllow')) ? editingItem.get('cleanModeAllow') : false} />
+                                        }
+                                        label={(editingItem.get('cleanModeAllow')) ? t("selActive") : t("selInActive")}
+                                    />
+                                </div>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={0} alignItems="flex-end" direction="row" justify="space-between" style={{margin:'0 0 8 0'}}>
+                            <Grid item xs={12} sm={6} md={6}>
+                                <div style={{marginTop:"10px"}}>
+                                    <div style={{width: '170px', display: 'inline-block'}}><FormLabel style={{marginRight:"50px"}}>{bull} {t("dtRootAllow")}</FormLabel></div>
                                     <FormControlLabel
                                         control={
                                         <Switch onChange={this.handleValueChange('rootAllow')} color="primary"
@@ -309,9 +323,9 @@ class ClientConfSettingDialog extends Component {
                                     />
                                 </div>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={12} sm={6} md={6}>
                                 <div style={{marginTop:"10px"}}>
-                                    <FormLabel style={{marginRight:"50px"}}>{bull} {t("dtSudoAllow")}</FormLabel>
+                                    <div style={{width: '170px', display: 'inline-block'}}><FormLabel style={{marginRight:"50px"}}>{bull} {t("dtSudoAllow")}</FormLabel></div>
                                     <FormControlLabel
                                         control={
                                         <Switch onChange={this.handleValueChange('sudoAllow')} color="primary"
@@ -323,10 +337,10 @@ class ClientConfSettingDialog extends Component {
                             </Grid>
                         </Grid>
 
-                        <div style={{marginBottom:"10px"}}>
+                        <div style={{margin:"15px 0"}}>
                             <Grid container spacing={16} direction="row" justify="flex-start" >
                                 <Grid item >
-                                    <FormLabel style={{marginRight:"22px"}}>{bull} {t("lbPolicykitUserMng")}</FormLabel>
+                                    <div style={{width: '156px', display: 'inline-block'}}><FormLabel>{bull} {t("lbPolicykitUserMng")}</FormLabel></div>
                                 </Grid>
                                 <Grid item >
                                     <FormControlLabel value="sudo" control={

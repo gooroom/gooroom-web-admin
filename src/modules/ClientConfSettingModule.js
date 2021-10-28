@@ -229,7 +229,9 @@ const makeParameter = (param) => {
         SUDOALLOW: param.get('sudoAllow'),
         policykit_user: param.get('policykitUser'),
         WHITEIPALL: param.get('whiteIpAll'),
-        WHITEIPS: (param.get('whiteIp')) ? param.get('whiteIp').toArray() : []
+        WHITEIPS: (param.get('whiteIp')) ? param.get('whiteIp').toArray() : [],
+
+        CLEANMODEALLOW: param.get('cleanModeAllow')
     };
 }
 

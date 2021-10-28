@@ -112,6 +112,10 @@ class ClientManageSpec extends Component {
                       <TableCell component="th" scope="row">{bull} {t("spInstalledPkgCnt")}</TableCell>
                       <TableCell >{viewItem.get('totalCnt')}</TableCell>
                     </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">{bull} {t("spCleanModeSupport")}</TableCell>
+                      <TableCell >{viewItem.get('useCleanMode')}</TableCell>
+                    </TableRow>
                   </TableBody>
                 </Table>
               </Grid>
@@ -141,6 +145,10 @@ class ClientManageSpec extends Component {
                     <TableRow>
                       <TableCell component="th" scope="row">{bull} {t("spClientRegDate")}</TableCell>
                       <TableCell >{formatDateToSimple(viewItem.get('regDate'), 'YYYY-MM-DD HH:mm:ss')}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">{bull} {t("spCleanModeRun")}</TableCell>
+                      <TableCell >{viewItem.get('cleanModeAllow') === "true" ? t("selActive") : t("selInActive")}</TableCell>
                     </TableRow>
                   </TableBody>
 
