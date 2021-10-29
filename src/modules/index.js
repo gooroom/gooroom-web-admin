@@ -53,6 +53,11 @@ import NoticeModule from './NoticeModule';
 import NoticePublishModule from './NoticePublishModule';
 import NoticePublishExtensionModule from './NoticePublishExtensionModule';
 
+/* for PTGR */
+import PortableBulkModule from './PortableBulkModule';
+import PortableApplyModule from './PortableApplyModule';
+import PortableImageModule from './PortableImageModule';
+
 export default combineReducers({
 
     GlobalModule,
@@ -106,6 +111,9 @@ export default combineReducers({
 	SiteManageModule,
     NoticeModule,
     NoticePublishModule,
-    NoticePublishExtensionModule
+    NoticePublishExtensionModule,
 
+    PortableBulkModule,
+    PortableApplyModule,
+    PortableImageModule,
 });

@@ -1,6 +1,7 @@
 export default {
   "gpmsTest": "Community",
   "adminMenu": "ADMIN",
+  "userMenu": "USER",
   "serverMenu": "SERVER",
 
   // columns
@@ -1184,6 +1185,116 @@ export default {
   "msgInheritUpdateServer": "Are you sure you want to inherit update server information?",
   "msgApplyUpdateServerChild": "The update server information has been applied to the subgroup.",
 
-  "lbAdminActHistory": "Admin Action History"
+  "lbAdminActHistory": "Admin Action History",
 
+  /* for PTGR */
+  "lbPortablePart": "PortableMng Role",
+  "colMngPortable": "MngPortable",
+  "menuPortable": "Portable",
+  "menuPortableBulkManage": "Bulk Regist",
+  "menuPortableApplyManage": "Apply Manage",
+  "menuPortableImageManage": "Image Manage",
+  "menuPortableServer": "Portable Gooroom Server",
+
+  // portable bulk manage
+  "btnApplyCsv": "CSV regist",
+  "btnDownloadCsv": "CSV Template Download",
+  "btnAllCreate": "Create",
+  "lbResultCsv": "Regist Result",
+  "msgEmptyCsv": "Please upload a CSV file.",
+  "msgDuplicateIds": "There are duplicate IDs.\n {{ids}}",
+  "msgInvalidEmails": "There is an error in your email address.\n {{emails}}",
+  "msgCompleteCsv": "File registration is complete.",
+
+  "lbInputPasswordTitle": "Set Image Password",
+  "lbPortablePassword": "Password",
+  "lbConfirmPassword": "Confirm Password",
+
+  "lbInputDateTitle": "Set Expiration Date",
+  "lbToday": "Today",
+  "lbBeginDate": "Begin Date",
+  "lbEndDate": "End Date",
+  "msgErrorEndDate": "It cannot be set earlier than the start date.",
+  "msgErrorPasswordInvalid": "It must consist of word + numbers + special characters and 8 or more characters.",
+  "msgErrorPasswordNotCompare": "Password do not match.",
+  "msgErrorPasswordEmpty": "Please enter a password.",
+  "msgBulkSuccess": "Bulk registration is performed on the server.",
+
+  // apply manage
+  "stUser": "User",
+  "stRegDate": "Regist date",
+  "stImageStatus": "Image Status",
+  "btnReApproveAll": "Re-Approve All",
+  "btnDeleteAll": "Delete All",
+
+  "colUserId": "User ID",
+  "colRegDate": "Regist date",
+  "colExpireDate": "Expiration date",
+  "colCertStatus": "Cert Status",
+  "colBuildStatus": "Build Transfer",
+  "colImageName": "Image Name",
+  "colImageUrl": "Image URL",
+  "colImagePublish": "Image Pusblish",
+  "colApproveStatus": "Approve Status",
+
+  "btnApprove": "Approve",
+  "btnReapprove": "Reapprove",
+  "btnOpenImagePath": "Open Detail",
+  "lbImagePathTitle": "View Detail",
+  "txApproveRequest": "Request",
+  "txApproveReApprove": "Re-Approve",
+  "txApproveApprove": "Approve",
+
+  "dtPortable": "Portable Gooroom",
+  "dtDeletePortableInfo": "Delete Portable",
+  "msgApproveConfirm": "Would you like to approve this application?",
+  "msgReApproveAllConfirm": "Do you want to re-approve all {{count}} entries??",
+  "msgReApproveAll": "Approval is in process.",
+  "msgDeleteAllPortableConfirm": "All {{count}} pieces of information will be deleted. Do you want to continue?",
+  "msgDeletePortableInfo": "Are you sure you want to delete the selected item?",
+
+  // image manage
+  "txPortableImageApply": "Apply",
+  "txPortableImageCreate": "Create",
+  "txPortableImageComplete": "Complete",
+  "txPortableImageDelete": "Delete",
+  "txPortableImageFailed": "Failed",
+  "stImageCreatedDate": "Created Date",
+  "colImageCreatedDate": "Created Date",
+  "colImageSize": "Image Size",
+  "dtDeleteImageInfo": "Delete Image Info",
+
+  // client apply
+  "menuPortableClientApply": "Apply Portable Gooroom",
+  "lbApplydAccount": "Apply User",
+  "lbInputReceiveTitle": "Receive Path",
+  "lbNotiFromGPMS": "Noti from GPMS",
+  "msgInvalidEmail": "Invalid email",
+  "msgEmptyEmail": "Please enter your email",
+  "btnPortableRegist": "Regist",
+  "msgRegistPortable": "You have completed the portable cloud application",
+
+  // client apply list
+  "menuPortableClient": "Portable Gooroom",
+  "menuPortableClientApplyList": "Apply List",
+  "btnDownload": "Download",
+  "btnExpire": "Expired",
+  "colCreateDate": "Create Date",
+  "colTransferDate": "Transfer Date",
+  "dtCertDialog": "Cert log",
+  "btnPtgrSearch": "Search",
+  "stEnterDirect":"Enter Manually",
+
+  // ptgr build server
+  "lbPortableServerConf": "Build Server Conf",
+  "lbPtgrBuildDomain": "URL",
+  "lbPtgrBuildId": "Id",
+  "lbPtgrBuildToken": "Token",
+  "lbSavePortableServer": "Portable Gooroom Server Config",
+  "msgSavePortableServer": "Do you want to save your settings?",
+  "msgErrorPortableServer": "Settings not saved.",
+  "msgCreatePortableBuildServerBefore": "When using portable cloud, you need to set up a build server.",
+  "msgPortableInputDomain": "Enter the Domain server.",
+  "msgPortableInputId": "Enter the server Id value.",
+  "msgPortableInputToken": "Enter the server token value.",
 };

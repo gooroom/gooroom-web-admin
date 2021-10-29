@@ -216,6 +216,7 @@ class DividedAdminManage extends Component {
       { id: 'ch4', isOrder: false, numeric: false, disablePadding: true, label: t("colMngUser") },
       { id: 'ch6', isOrder: false, numeric: false, disablePadding: true, label: t("colMngDesktop") },
       { id: 'ch7', isOrder: false, numeric: false, disablePadding: true, label: t("colMngNotify") },
+      { id: 'ch8', isOrder: false, numeric: false, disablePadding: true, label: t("colMngPortable") },
       { id: 'ch99', isOrder: false, numeric: false, disablePadding: true, label: t("colEditDelete") },
       { id: 'ch90', isOrder: false, numeric: false, disablePadding: true, label: t("colActHistory") },
     ];
@@ -336,6 +337,7 @@ class DividedAdminManage extends Component {
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isUserAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isDesktopAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isNoticeAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
+                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{(n.get('isPortableAdmin') === '1') ? <CheckIcon /> : ''}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       {isEditable && n.get('status') !== '삭제' &&
                         <Button size="small" color="secondary" className={classes.buttonInTableRow} 

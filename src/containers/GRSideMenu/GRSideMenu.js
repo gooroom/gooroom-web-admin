@@ -29,7 +29,7 @@ import StatisticIcon from '@material-ui/icons/ShowChartTwoTone';
 import RuleIcon from '@material-ui/icons/BallotTwoTone';
 import SoftwareIcon from '@material-ui/icons/SettingsSystemDaydreamTwoTone';
 import DesktopIcon from '@material-ui/icons/CallToActionTwoTone';
-
+import CloudIcon from '@material-ui/icons/CloudTwoTone';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import DraftsIcon from '@material-ui/icons/Drafts';
@@ -104,6 +104,7 @@ class GRSideMenu extends React.Component {
               (item.id == 'jobs') ? <JobIcon /> : 
               (item.id == 'user') ? <UserIcon /> : 
               (item.id == 'clients') ? <ClientIcon /> : 
+              (item.id == 'portable') ? <CloudIcon /> :
               (isDrop) ? <MenuIcon /> : <KeyboardArrowRightIcon />;
       return (
         <ListItem key={key} button className={menuclass} onClick={() => this.handleClick(item.id)}
@@ -171,6 +172,14 @@ class GRSideMenu extends React.Component {
         const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuNotice'));
         menus = menus.deleteIn(['items', index]);
       }
+      if (window.rolePortableAdmin === 0) {
+        let index = menus.get('items').findIndex((n) => (n.get('name') === 'menuPortable'));
+        menus = menus.deleteIn(['items', index]);
+      } else if (window.rolePortableAdmin === 1) {
+        let index = menus.get('items').findIndex((n) => (n.get('name') === 'menuJob'));
+        menus = menus.deleteIn(['items', index]);
+      }
+
       sideMenuList = menuList(menus.get('items').toJS(), 0);
     }
 

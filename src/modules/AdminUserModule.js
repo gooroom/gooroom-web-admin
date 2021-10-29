@@ -167,7 +167,9 @@ const makeParameter = (po) => {
 
         connIps: (po.get('connIps') !== undefined) ? po.get('connIps').toJS() : [],
         grpInfoList: (po.get('grpInfoList') !== undefined) ? po.get('grpInfoList').toJS() : [],
-        deptInfoList: (po.get('deptInfoList') !== undefined) ? po.get('deptInfoList').toJS() : []
+        deptInfoList: (po.get('deptInfoList') !== undefined) ? po.get('deptInfoList').toJS() : [],
+
+        isPortableAdmin: (po.get('isPortableAdmin') !== undefined) ? po.get('isPortableAdmin') : '0',
     };
 }
 

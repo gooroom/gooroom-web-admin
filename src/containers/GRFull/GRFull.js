@@ -32,6 +32,8 @@ import Popover from '@material-ui/core/Popover';
 import Typography from '@material-ui/core/Typography';
 
 import GRTheme from 'ui/theme/GRTheme';
+import * as Constants from "components/GRComponents/GRConstants";
+import { isUndefined, isEmpty } from 'components/GRUtils/GRCommonUtils';
 
 class GRFull extends Component {
 
@@ -57,8 +59,9 @@ class GRFull extends Component {
 
   componentDidMount() {
     const { AdminActions } = this.props;
+
     AdminActions.getAdminInfo();
-  }  
+  }
 
   toggleDrawer() {
     this.setState({
@@ -110,7 +113,6 @@ class GRFull extends Component {
             </div>
           </div>
         </div>
-
         <Drawer anchor="right" open={this.state.rightDrawer} onClose={this.toggleRightDrawer('rightDrawer', false)}>
           <AdminInform 
             role="button"
@@ -135,12 +137,14 @@ class GRFull extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  GlobalProps: state.GlobalModule
+  AdminProps: state.AdminModule,
+  UserInfoProps: state.UserInfoModule,
+  GlobalProps: state.GlobalModule,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   GlobalActions: bindActionCreators(GlobalActions, dispatch),
-  AdminActions: bindActionCreators(AdminActions, dispatch)
+  AdminActions: bindActionCreators(AdminActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GRFull));
