@@ -95,7 +95,7 @@ class PortableImageManage extends React.Component {
     });
   };
 
-  handleCheckClick(event, id) {
+  handleClickCheck(event, id) {
     event.stopPropagation();
 
     const { ImageActions, ImageProps } = this.props;
@@ -148,7 +148,7 @@ class PortableImageManage extends React.Component {
     GRConfirmActions.showConfirm({
       confirmTitle: t("dtDeleteImageInfo"),
       confirmMsg: isAll ?
-        t("msgDeleteAllPortableConfirm", {count: ImageProps.getIn(['viewItems', compId, 'listParam', 'rowsTotal'])})
+        t("msgDeleteAllPortableConfirm", {count: ImageProps.getIn(['viewItems', compId, 'listData']).size})
       :
         t("msgDeletePortableConfirm"),
       handleConfirmResult: (confirmValue, confirmObject) => {
@@ -219,7 +219,7 @@ class PortableImageManage extends React.Component {
     const now = moment(new Date().getTime('YYYY-MM-DD'));
     const fromDate = listObj && listObj.getIn(['listParam', 'fromDate']) ? listObj.getIn(['listParam', 'fromDate']) : now;
     const toDate = listObj && listObj.getIn(['listParam', 'toDate']) ? listObj.getIn(['listParam', 'toDate']) : now;
-    const buttonDisabled = !listObj || listObj.get('listData').size === 0;
+    const hasItems = listObj && listObj.get('listData') && listObj.get('listData').size > 0;
 
     let columnHeaders = [
       {id: "chCheckbox", isCheckbox: true},
@@ -287,7 +287,7 @@ class PortableImageManage extends React.Component {
                     className={classes.smallIconButton}
                     size="small"
                     onClick={this.handleClickDelete}
-                    disabled={buttonDisabled}
+                    disabled={!hasItems}
                   >
                     <DeleteIcon />
                   </Button>
@@ -299,7 +299,7 @@ class PortableImageManage extends React.Component {
                     color="primary"
                     size="small"
                     onClick={this.handleClickDeleteAll}
-                    disabled={buttonDisabled}
+                    disabled={!hasItems}
                   >
                     {t("btnDeleteAll")}
                   </Button>
@@ -334,7 +334,7 @@ class PortableImageManage extends React.Component {
                       key={n.get('imageId')}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                        <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('imageId'))} />
+                        <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleClickCheck(event, n.get('imageId'))} />
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('userId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>

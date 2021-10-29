@@ -49,6 +49,7 @@ class PortableApplyManage extends Component {
 
     this.state = {
       lang: i18n.language === 'kr' ? 'ko' : i18n.language,
+      isCheckItemss: false,
     };
   }
 
@@ -84,20 +85,6 @@ class PortableApplyManage extends Component {
     });
   }
 
-  handleCheckClick = (event, id) => {
-    event.stopPropagation();
-
-    const { ApplyActions, ApplyProps } = this.props;
-    const compId = this.props.match.params.grMenuId;
-    const newCheckedIds = setCheckedIdsInComp(ApplyProps, compId, id);  
-
-    ApplyActions.changeCompVariable({
-      name: 'checkedIds',
-      value: newCheckedIds,
-      compId: compId
-    });
-  }
-
   handleClickPathDetail = (path) => {
     const { ApplyActions } = this.props;
 
@@ -108,6 +95,20 @@ class PortableApplyManage extends Component {
     const { ApplyActions, ApplyProps } = this.props;
     const compId = this.props.match.params.grMenuId;
     const newCheckedIds = getDataPropertyInCompByParam(ApplyProps, compId, 'ptgrId', checked);
+
+    ApplyActions.changeCompVariable({
+      name: 'checkedIds',
+      value: newCheckedIds,
+      compId: compId
+    });
+  }
+
+  handleClickCheck = (event, id) => {
+    event.stopPropagation();
+
+    const { ApplyActions, ApplyProps } = this.props;
+    const compId = this.props.match.params.grMenuId;
+    const newCheckedIds = setCheckedIdsInComp(ApplyProps, compId, id);  
 
     ApplyActions.changeCompVariable({
       name: 'checkedIds',
@@ -288,7 +289,7 @@ class PortableApplyManage extends Component {
     const now = moment(new Date().getTime('YYYY-MM-DD'));
     const fromDate = listObj && listObj.getIn(['listParam', 'fromDate']) ? listObj.getIn(['listParam', 'fromDate']) : now;
     const toDate = listObj && listObj.getIn(['listParam', 'toDate']) ? listObj.getIn(['listParam', 'toDate']) : now;
-    const buttonDisabled = !listObj || listObj.get('listData').size === 0;
+    const hasItems = listObj && listObj.get('listData') && listObj.get('listData').size > 0;
 
     let columnHeaders = [
       {id: "chCheckbox", isCheckbox: true},
@@ -370,7 +371,7 @@ class PortableApplyManage extends Component {
                     className={classes.smallIconButton}
                     size="small"
                     onClick={this.handleClickDelete}
-                    disabled={buttonDisabled}
+                    disabled={!hasItems}
                   >
                     <DeleteIcon />
                   </Button>
@@ -382,7 +383,7 @@ class PortableApplyManage extends Component {
                     color="primary"
                     size="small"
                     onClick={this.handleClickDeleteAll}
-                    disabled={buttonDisabled}
+                    disabled={!hasItems}
                   >
                     {t("btnDeleteAll")}
                   </Button>
@@ -420,7 +421,7 @@ class PortableApplyManage extends Component {
                       key={n.get('ptgrId')}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                        <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleCheckClick(event, n.get('ptgrId'))} />
+                        <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleClickCheck(event, n.get('ptgrId'))} />
                       </TableCell>
                       <TableCell className={classes.grSmallCenterCell}>{n.get('userId')}</TableCell>
                       <TableCell className={classes.grSmallCenterCell}>{regDate}</TableCell>
