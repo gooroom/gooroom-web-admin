@@ -43,6 +43,7 @@ import menuItems from "./GRMenuItems";
 import menuItemsSuper from "containers/GRSideMenu/GRMenuItemsSuper";
 import menuItemsAdmin from "containers/GRSideMenu/GRMenuItemsAdmin";
 import menuItemsPart from "containers/GRSideMenu/GRMenuItemsPart";
+import menuItemsUser from "containers/GRSideMenu/GRMenuItemsUser";
 
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
@@ -179,6 +180,10 @@ class GRSideMenu extends React.Component {
         let index = menus.get('items').findIndex((n) => (n.get('name') === 'menuJob'));
         menus = menus.deleteIn(['items', index]);
       }
+
+      sideMenuList = menuList(menus.get('items').toJS(), 0);
+    } else if(window.gpmsain === Constants.USER_RULECODE) {
+      let menus = fromJS(menuItemsUser);
 
       sideMenuList = menuList(menus.get('items').toJS(), 0);
     }

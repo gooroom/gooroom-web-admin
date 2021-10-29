@@ -6,6 +6,7 @@ import * as Constants from "components/GRComponents/GRConstants";
 
 import Dashboard from "containers/Dashboard/";
 import PartMain from "containers/PartMain/";
+import PortableUserMain from "views/Portable/User/PortableUserMain";
 // Client - client management
 import ClientMasterManage from "views/Client/ClientMasterManage";
 
@@ -53,6 +54,9 @@ import PortableApplyManage from 'views/Portable/Admin/PortableApplyManage';
 import PortableImageManage from 'views/Portable/Admin/PortableImageManage';
 import PortableServerManage from 'views/Portable/Admin/PortableServerManage';
 
+import PortableUserApply from 'views/Portable/User/PortableUserApply';
+import PortableUserReview from 'views/Portable/User/PortableUserReview';
+
 import { withStyles } from '@material-ui/core/styles';
 import { GRCommonStyle } from 'templates/styles/GRStyles';
 
@@ -70,6 +74,8 @@ class GRRouters extends Component {
         return Dashboard;
     } else if(window.gpmsain === Constants.PART_RULECODE) {
         return PartMain;
+    } else if(window.gpmsain === Constants.USER_RULECODE) {
+        return PortableUserMain;
     }
   }
 
@@ -191,6 +197,17 @@ class GRRouters extends Component {
     )
   }
 
+  renderUser = () => {
+    return (
+      <div>
+        <Switch>
+          <Route path="/portable/client/apply/:grMenuId/:grMenuName" component={PortableUserApply} />
+          <Route path="/portable/client/list/:grMenuId/:grMenuName" component={PortableUserReview} />
+        </Switch>
+      </div>
+    )
+  }
+
   renderRouterState = () => {
     switch (window.gpmsain) {
       case Constants.SUPER_RULECODE:
@@ -199,6 +216,8 @@ class GRRouters extends Component {
         return this.renderAdmin();
       case Constants.PART_RULECODE:
         return this.renderPart();
+      case Constants.USER_RULECODE:
+        return this.renderUser();
     }
   }
 

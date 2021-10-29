@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 
 import * as GlobalActions from 'modules/GlobalModule';
 import * as AdminActions from 'modules/AdminModule';
+import * as UserInfoActions from 'modules/UserInfoModule';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -22,6 +23,7 @@ import GRSideMenu from "containers/GRSideMenu";
 import GRBreadcrumb from "containers/GRBreadcrumb/";
 
 import AdminInform from "views/Admin/AdminInform";
+import UserInform from "views/User/UserInform";
 
 import GRRouters from "containers/GRContent/";
 
@@ -33,7 +35,6 @@ import Typography from '@material-ui/core/Typography';
 
 import GRTheme from 'ui/theme/GRTheme';
 import * as Constants from "components/GRComponents/GRConstants";
-import { isUndefined, isEmpty } from 'components/GRUtils/GRCommonUtils';
 
 class GRFull extends Component {
 
@@ -58,9 +59,13 @@ class GRFull extends Component {
   }
 
   componentDidMount() {
-    const { AdminActions } = this.props;
+    const { AdminActions, UserInfoActions } = this.props;
 
-    AdminActions.getAdminInfo();
+    if (window.gpmsain === Constants.USER_RULECODE) {
+      UserInfoActions.getUserInfo();
+    } else {
+      AdminActions.getAdminInfo();
+    }
   }
 
   toggleDrawer() {
@@ -95,6 +100,7 @@ class GRFull extends Component {
     const { classes } = this.props;
     const { GlobalProps } = this.props;
     const anchorEl = GlobalProps.get('popoverElement');
+    const isAdmin = window.rolePortableUser !== 1;
     
     return (
       <MuiThemeProvider theme={createMuiTheme(GRTheme)}>
@@ -114,12 +120,21 @@ class GRFull extends Component {
           </div>
         </div>
         <Drawer anchor="right" open={this.state.rightDrawer} onClose={this.toggleRightDrawer('rightDrawer', false)}>
+        {isAdmin ?
           <AdminInform 
             role="button"
             onClick={this.toggleRightDrawer('rightDrawer', false)}
             onKeyDown={this.toggleRightDrawer('rightDrawer', false)}
             {...this.props}
           />
+        :
+          <UserInform 
+            role="button"
+            onClick={this.toggleRightDrawer('rightDrawer', false)}
+            onKeyDown={this.toggleRightDrawer('rightDrawer', false)}
+            {...this.props}
+          />
+        }
         </Drawer>
 
         <Popover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={this.handlePopoverClose}
@@ -145,6 +160,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   GlobalActions: bindActionCreators(GlobalActions, dispatch),
   AdminActions: bindActionCreators(AdminActions, dispatch),
+  UserInfoActions: bindActionCreators(UserInfoActions, dispatch),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(GRCommonStyle)(GRFull));

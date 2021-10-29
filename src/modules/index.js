@@ -58,6 +58,10 @@ import PortableBulkModule from './PortableBulkModule';
 import PortableApplyModule from './PortableApplyModule';
 import PortableImageModule from './PortableImageModule';
 
+import PortableUserApplyModule from './PortableUserApplyModule';
+import PortableUserReviewModule from './PortableUserReviewModule';
+import UserInfoModule from './UserInfoModule';
+
 export default combineReducers({
 
     GlobalModule,
@@ -116,4 +120,7 @@ export default combineReducers({
     PortableBulkModule,
     PortableApplyModule,
     PortableImageModule,
+    PortableUserApplyModule,
+    PortableUserReviewModule,
+    UserInfoModule,
 });
