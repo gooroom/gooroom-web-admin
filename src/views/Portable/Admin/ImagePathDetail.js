@@ -28,7 +28,9 @@ class ImagePathDetail extends React.Component {
 
     return(
       <Dialog maxWidth="lg" open={ApplyProps.get('isOpenImagePath')}>
-        <DialogTitle>{t('lbImagePathTitle')}</DialogTitle>
+        <DialogTitle
+          sx={{ m: 0, p: 2 }}
+        >{t('lbImagePathTitle')}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-title">
             { ApplyProps.get('imagePath') }

@@ -35,8 +35,10 @@ import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
 import { bytesToSize } from 'components/GRUtils/GRConvertUtils';
 import { isNull, isEmpty, isUndefined } from 'components/GRUtils/GRValidationUtils'
+import { getItemsExceptCreating } from 'components/GRUtils/GRPortableUtils';
+
 import {
-  PORTABLE_IMAGE_STATUS,
+  PORTABLE_IMAGE_STATUS_TO_LOCALE,
   PORTABLE_IMAGE_STATUS_CODE,
 } from 'components/GRComponents/GRPortableConstants';
   
@@ -86,7 +88,7 @@ class PortableImageManage extends React.Component {
   handleClickAllCheck = (event, checked) => {
     const { ImageActions, ImageProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const newCheckedIds = getDataPropertyInCompByParam(ImageProps, compId, 'imageId', checked);
+    const newCheckedIds = getItemsExceptCreating(ImageProps, compId, 'ptgrId', checked);
 
     ImageActions.changeCompVariable({
       name: 'checkedIds',
@@ -187,17 +189,6 @@ class PortableImageManage extends React.Component {
   }
 
   handleClickDeleteAll = () => {
-//    const { ApplyProps } = this.props;
-//    const compId = this.props.match.params.grMenuId;
-//    const ids = ApplyProps
-//      .getIn(['viewItems', compId, 'listData'])
-//      .map(item => {
-//        return item.get('imageId');
-//    });
-//
-//    if (isNull(ids) || isUndefined(ids) || isEmpty(ids))
-//      return;
-
     this.deleteImageInfo([], true);
   }
 
@@ -216,10 +207,12 @@ class PortableImageManage extends React.Component {
     const compId = this.props.match.params.grMenuId;
 
     const listObj = ImageProps.getIn(['viewItems', compId]);
+    const checkableItems =  listObj && getItemsExceptCreating(ImageProps, compId, 'ptgrId', true, false);
+    const disableDelete = !listObj || !listObj.get('checkedIds') || listObj.get('checkedIds') === 0;
+
     const now = moment(new Date().getTime('YYYY-MM-DD'));
     const fromDate = listObj && listObj.getIn(['listParam', 'fromDate']) ? listObj.getIn(['listParam', 'fromDate']) : now;
     const toDate = listObj && listObj.getIn(['listParam', 'toDate']) ? listObj.getIn(['listParam', 'toDate']) : now;
-    const hasItems = listObj && listObj.get('listData') && listObj.get('listData').size > 0;
 
     let columnHeaders = [
       {id: "chCheckbox", isCheckbox: true},
@@ -287,7 +280,7 @@ class PortableImageManage extends React.Component {
                     className={classes.smallIconButton}
                     size="small"
                     onClick={this.handleClickDelete}
-                    disabled={!hasItems}
+                    disabled={disableDelete}
                   >
                     <DeleteIcon />
                   </Button>
@@ -299,7 +292,6 @@ class PortableImageManage extends React.Component {
                     color="primary"
                     size="small"
                     onClick={this.handleClickDeleteAll}
-                    disabled={!hasItems}
                   >
                     {t("btnDeleteAll")}
                   </Button>
@@ -319,14 +311,15 @@ class PortableImageManage extends React.Component {
                 onRequestSort={this.handleChangeSort}
                 onClickAllCheck={this.handleClickAllCheck}
                 checkedIds={listObj.get('checkedIds')}
-                listData={listObj.get('listData')}
+                listData={checkableItems}
                 columnData={columnHeaders}
               />
               <TableBody>
                 {listObj.get('listData') && listObj.get('listData').map(n => {
                   const isChecked = this.isChecked(compId, n.get('imageId'));
-                  const imageStatus = t(PORTABLE_IMAGE_STATUS[n.get('status')]);
-                  const imageStatusComplete = PORTABLE_IMAGE_STATUS_CODE[n.get('status')] === PORTABLE_IMAGE_STATUS_CODE.COMPLETE;
+                  const imageStatus = t(PORTABLE_IMAGE_STATUS_TO_LOCALE[n.get('status')]);
+                  const isCreating = PORTABLE_IMAGE_STATUS_CODE[n.get('status')] === PORTABLE_IMAGE_STATUS_CODE.CREATE;
+                  const isComplete = PORTABLE_IMAGE_STATUS_CODE[n.get('status')] === PORTABLE_IMAGE_STATUS_CODE.COMPLETE;
 
                   return (
                     <TableRow
@@ -334,21 +327,36 @@ class PortableImageManage extends React.Component {
                       key={n.get('imageId')}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                        <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleClickCheck(event, n.get('imageId'))} />
+                          <Checkbox
+                            checked={isChecked}
+                            disabled={isCreating}
+                            color="primary"
+                            className={classes.grObjInCell}
+                            onClick={event => this.handleClickCheck(event, n.get('imageId'))}
+                          />
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('userId')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        {imageStatusComplete ?
+                        {isComplete ?
                           n.get('name')
                         : null
                         }
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                          {formatDateToSimple(n.get('createdDt'), 'YYYY-MM-DD')}
+                        {isCreating ?
+                          n.get('durationTime') === 0 ?
+                            t("txWaiting")
+                          :
+                            t("txEstimate", {minutes: Math.ceil(n.get('durationTime') / 60000)})
+                        :
+                          isComplete ?
+                            formatDateToSimple(n.get('createdDt'), 'YYYY-MM-DD HH:mm:ss')
+                          : null
+                        }
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        {imageStatusComplete ?
+                        {isComplete ?
                           bytesToSize(n.get('size'))
                         : null
                         }

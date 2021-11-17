@@ -61,6 +61,7 @@ import PortableImageModule from './PortableImageModule';
 import PortableUserApplyModule from './PortableUserApplyModule';
 import PortableUserReviewModule from './PortableUserReviewModule';
 import UserInfoModule from './UserInfoModule';
+import PortableCertModule from './PortableCertModule';
 
 export default combineReducers({
 
@@ -123,4 +124,5 @@ export default combineReducers({
     PortableUserApplyModule,
     PortableUserReviewModule,
     UserInfoModule,
+    PortableCertModule,
 });

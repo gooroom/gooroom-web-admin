@@ -1,3 +1,6 @@
+import { PORTABLE_IMAGE_STATUS_CODE } from 'components/GRComponents/GRPortableConstants';
+import { List } from 'immutable';
+
 export const convertCsvToJson = (csv) => {
   const rows = csv.split('\r\n');
 
@@ -41,3 +44,27 @@ export const toStringList = (ids) => {
     return acc + ',';
   }, '');
 };
+
+export const getItemsExceptCreating = (propObj, compId, idName, checked, mappingToId = true) => {
+  const listData = propObj.getIn(['viewItems', compId, 'listData']);
+
+  if(checked) {
+    const datas = (listData) ? listData.filter((e) => {
+
+      if (PORTABLE_IMAGE_STATUS_CODE[e.get('imageStatus')] !== PORTABLE_IMAGE_STATUS_CODE.CREATE) {
+        return true;
+      }
+
+      return false;
+      })
+    : List([]);
+
+    if (datas && mappingToId) {
+      return datas.map(e => e.get(idName))
+    } else {
+      return datas;
+    }
+  } else {
+    return List([]);
+  }
+}

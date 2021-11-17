@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import * as ListActions from 'modules/PortableUserReviewModule';
 import * as GRAlertActions from "modules/GRAlertModule";
 import * as GRConfirmActions from "modules/GRConfirmModule";
+import * as PortableCertActions from "modules/PortableCertModule";
 
 import moment from "moment";
 
@@ -29,7 +30,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import ListSearchSelect from './ListSearchSelect';
-import CertDetailDialog from './CertDetailDialog';
+import CertDetailDialog from '../common/CertDetailDialog';
 import EmptyList from '../common/EmptyList';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
@@ -101,10 +102,8 @@ class PortableUserReview extends React.Component {
     document.body.removeChild(element);
   }
 
-  /* 여기 할 차례 */
-  handleClickCert = (certId) => {
-    this.props.ListActions.readCert(certId);
-    this.props.ListActions.openCertDialog(true, certId);
+  handleOpenCertDialog = (certId) => {
+    this.props.PortableCertActions.openCertDialog(true, certId, userId);
   }
 
   handleChangePage = (event, page) => {
@@ -251,11 +250,17 @@ class PortableUserReview extends React.Component {
                       </TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{regDate}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{expireDate}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
-                        <Button onClick={() => this.handleClickCert(n.get('certId'))}>
-                          {n.get('certStatus') === 1 ? 'Y' : 'N'}
-                        </Button>
-                      </TableCell>
+                      {n.get('certStatus') === 1 ?
+                        <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                            <Button className={classes.ptgrImagePath} onClick={() => this.handleOpenCertDialog(n.get('certId'), n.get('userId'))}>
+                              Y
+                            </Button>
+                        </TableCell>
+                      :
+                        <TableCell className={classes.grSmallCenterCell}>
+                          N
+                        </TableCell>
+                      }
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('buildStatus') === 1 ? 'Y' : 'N'}</TableCell>
                       <TableCell className={classes.grSmallAndClickAndCenterCell}>
                         {imageStatusComplete ?
@@ -328,6 +333,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ListActions: bindActionCreators(ListActions, dispatch),
+  PortableCertActions: bindActionCreators(PortableCertActions, dispatch),
   GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
 });

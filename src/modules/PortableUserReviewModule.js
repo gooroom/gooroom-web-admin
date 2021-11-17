@@ -1,13 +1,9 @@
 import { handleActions } from 'redux-actions';
-import { Map, List, fromJS } from 'immutable';
 
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
 import * as commonHandleActions from 'modules/commons/commonHandleActions';
-import { toStringList } from 'components/GRUtils/GRCommonUtils';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { PORTABLE_APPROVE_STATUS_TYPE } from 'components/GRComponents/GRConstants';
-import { EvStation } from '@material-ui/icons';
 import moment from 'moment';
 
 const PORTABLE_USER_REVIEW = 'portableReview';
@@ -20,9 +16,6 @@ const CHG_LISTPARAM_DATA = `${PORTABLE_USER_REVIEW}/CHG_LISTPARAM_DATA`;
 const CHG_COMPDATA_VALUE = `${PORTABLE_USER_REVIEW}/CHG_COMPDATA_VALUE`;
 const CHG_SEARCH_TYPE = `${PORTABLE_USER_REVIEW}/CHG_SEARCH_TYPE`;
 
-const SET_CERT_DETAIL = `${PORTABLE_USER_REVIEW}/SET_CERT_DETAIL`
-const OPEN_CERT_DIALOG = `${PORTABLE_USER_REVIEW}/OPEN_CERT_DIALOG`
-
 const initialState = commonHandleActions.getCommonInitialState(
   'chRegDate',
   'asc',
@@ -30,41 +23,7 @@ const initialState = commonHandleActions.getCommonInitialState(
     searchType: 'ALL',
     fromDate: null,
     toDate: null,
-
-    certCreateDate: null,
-    certTransferDate: null,
-    isOpenCertDialog: false,
 });
-
-export const openCertDialog = (isOpen, certId) => dispatch => {
-  if (isOpen) {
-    return requestPostAPI('portable/readCert', {
-      certId: certId
-    }).then(response => {
-      console.log(response);
-
-      if (response && response.data && response.data.status.result === 'success') {
-        const data = response.data.data[0];
-
-        dispatch({
-          type: SET_CERT_DETAIL,
-          certCreateDate: data.createdDt,
-          certTransferDate: data.transferDt,
-        });
-
-        dispatch({
-          type: OPEN_CERT_DIALOG,
-          isOpenCertDialog: isOpen,
-        })
-      }
-    });
-  }
-
-  return dispatch({
-    type: OPEN_CERT_DIALOG,
-    isOpenCertDialog: isOpen,
-  });
-}
 
 export const readCert = (certId) => dispatch => {
   return requestPostAPI('portable/readCert', {
@@ -178,17 +137,6 @@ export const reducer = {
   [GET_REVIEW_LISTPAGED_SUCCESS]: (state, action) => {
     return commonHandleActions.handleListPagedAction(state, action);
   },
-  [SET_CERT_DETAIL]: (state, action) => {
-    return state.merge({
-      certCreateDate: action.certCreateDate,
-      certTransferDate: action.certTransferDate,
-    })
-  },
-  [OPEN_CERT_DIALOG]: (state, action) => {
-    return state.merge({
-      isOpenCertDialog: action.isOpenCertDialog,
-    })
-  }
 }
 
 export default handleActions(reducer, initialState);

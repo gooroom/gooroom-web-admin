@@ -1260,10 +1260,13 @@ export default {
   "txPortableImageComplete": "경로전송",
   "txPortableImageDelete": "삭제",
   "txPortableImageFailed": "실패",
+  "txPortableImageAborted": "중단",
   "stImageCreatedDate": "생성시간",
   "colImageCreatedDate": "이미지 생성시간",
   "colImageSize": "이미지 크기",
   "dtDeleteImageInfo": "이미지 정보 삭제",
+  "txWaiting": "대기중",
+  "txEstimate": "{{minutes}}분 예상",
 
   // client apply
   "menuPortableClientApply": "휴대형 구름 신청",
@@ -1281,8 +1284,8 @@ export default {
   "menuPortableClientApplyList": "휴대형 구름 신청 현황",
   "btnDownload": "다운로드",
   "btnExpire": "기간만료",
-  "colCreateDate": "생성일",
-  "colTransferDate": "전송일",
+  "colCreateDate": "생성시간",
+  "colTransferDate": "전송시간",
   "dtCertDialog": "인증서 생성 로그",
   "btnPtgrSearch": "검색",
 

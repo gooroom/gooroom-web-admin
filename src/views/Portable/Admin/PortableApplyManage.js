@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import * as ApplyActions from 'modules/PortableApplyModule';
 import * as GRAlertActions from "modules/GRAlertModule";
 import * as GRConfirmActions from "modules/GRConfirmModule";
+import * as PortableCertActions from "modules/PortableCertModule";
 import moment from "moment";
 
 import GRPageHeader from "containers/GRContent/GRPageHeader";
@@ -31,13 +32,16 @@ import TableRow from '@material-ui/core/TableRow';
 import EmptyList from '../common/EmptyList';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { getRowObjectById, getDataObjectVariableInComp, setCheckedIdsInComp, getDataPropertyInCompByParam } from 'components/GRUtils/GRTableListUtils';
+import { getDataObjectVariableInComp, setCheckedIdsInComp } from 'components/GRUtils/GRTableListUtils';
 import { isNull, isEmpty, isUndefined } from 'components/GRUtils/GRValidationUtils';
+import { getItemsExceptCreating } from 'components/GRUtils/GRPortableUtils';
+
+import CertDetailDialog from '../common/CertDetailDialog';
 
 import {
   PORTABLE_APPROVE,
   PORTABLE_APPROVE_STATUS_TYPE,
-  PORTABLE_IMAGE_STATUS,
+  PORTABLE_IMAGE_STATUS_TO_LOCALE,
   PORTABLE_IMAGE_STATUS_CODE,
 } from 'components/GRComponents/GRPortableConstants';
 
@@ -94,7 +98,7 @@ class PortableApplyManage extends Component {
   handleClickAllCheck = (event, checked) => {
     const { ApplyActions, ApplyProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const newCheckedIds = getDataPropertyInCompByParam(ApplyProps, compId, 'ptgrId', checked);
+    const newCheckedIds = getItemsExceptCreating(ApplyProps, compId, 'ptgrId', checked);
 
     ApplyActions.changeCompVariable({
       name: 'checkedIds',
@@ -259,15 +263,6 @@ class PortableApplyManage extends Component {
   }
 
   handleClickDeleteAll = () => {
-//    const { ApplyProps } = this.props;
-//    const compId = this.props.match.params.grMenuId;
-//    const ids = ApplyProps.getIn(['viewItems', compId, 'listData']).map(item => {
-//      return item.get('ptgrId');
-//    });
-//
-//    if ((isNull(ids) || isUndefined(ids) || isEmpty(ids)))
-//      return;
-
     this.deletePortableInfo([], true);
   }
 
@@ -280,16 +275,22 @@ class PortableApplyManage extends Component {
       return false;
   }
 
+  handleOpenCertDialog = (certId, userId) => {
+    this.props.PortableCertActions.openCertDialog(true, certId, userId);
+  }
+
   render() {
     const { t, classes } = this.props;
     const { ApplyProps } = this.props;
     const compId = this.props.match.params.grMenuId;
 
     const listObj = ApplyProps.getIn(['viewItems', compId]);
+    const checkableItems =  listObj && getItemsExceptCreating(ApplyProps, compId, 'ptgrId', true, false);
+    const disableDelete = !listObj || !listObj.get('checkedIds') || listObj.get('checkedIds').size === 0;
+
     const now = moment(new Date().getTime('YYYY-MM-DD'));
     const fromDate = listObj && listObj.getIn(['listParam', 'fromDate']) ? listObj.getIn(['listParam', 'fromDate']) : now;
     const toDate = listObj && listObj.getIn(['listParam', 'toDate']) ? listObj.getIn(['listParam', 'toDate']) : now;
-    const hasItems = listObj && listObj.get('listData') && listObj.get('listData').size > 0;
 
     let columnHeaders = [
       {id: "chCheckbox", isCheckbox: true},
@@ -371,7 +372,7 @@ class PortableApplyManage extends Component {
                     className={classes.smallIconButton}
                     size="small"
                     onClick={this.handleClickDelete}
-                    disabled={!hasItems}
+                    disabled={disableDelete}
                   >
                     <DeleteIcon />
                   </Button>
@@ -383,7 +384,6 @@ class PortableApplyManage extends Component {
                     color="primary"
                     size="small"
                     onClick={this.handleClickDeleteAll}
-                    disabled={!hasItems}
                   >
                     {t("btnDeleteAll")}
                   </Button>
@@ -403,7 +403,7 @@ class PortableApplyManage extends Component {
                 onRequestSort={this.handleChangeSort}
                 onClickAllCheck={this.handleClickAllCheck}
                 checkedIds={listObj.get('checkedIds')}
-                listData={listObj.get('listData')}
+                listData={checkableItems}
                 columnData={columnHeaders}
               />
               <TableBody>
@@ -413,31 +413,46 @@ class PortableApplyManage extends Component {
                   const regDate = formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD');
                   const expireDate = `${formatDateToSimple(n.get('beginDt'), 'YYYY-MM-DD')} ~ ${formatDateToSimple(n.get('expiredDt'), 'YYYY-MM-DD')}`;
                   const approveStatus = t(PORTABLE_APPROVE[n.get('approveStatus')]);
-                  const imageStatus = t(PORTABLE_IMAGE_STATUS[n.get('imageStatus')]);
-                  const imageStatusComplete = PORTABLE_IMAGE_STATUS_CODE[n.get('imageStatus')] === PORTABLE_IMAGE_STATUS_CODE.COMPLETE;
+                  const imageStatus = t(PORTABLE_IMAGE_STATUS_TO_LOCALE[n.get('imageStatus')]);
+                  const imageComplete = PORTABLE_IMAGE_STATUS_CODE[n.get('imageStatus')] === PORTABLE_IMAGE_STATUS_CODE.COMPLETE;
+                  const imageCreating = PORTABLE_IMAGE_STATUS_CODE[n.get('imageStatus')] === PORTABLE_IMAGE_STATUS_CODE.CREATE;
 
                   return (
                     <TableRow
                       key={n.get('ptgrId')}
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
-                        <Checkbox checked={isChecked} color="primary" className={classes.grObjInCell} onClick={event => this.handleClickCheck(event, n.get('ptgrId'))} />
+                          <Checkbox
+                            checked={isChecked}
+                            disabled={imageCreating}
+                            color="primary"
+                            className={classes.grObjInCell}
+                            onClick={event => this.handleClickCheck(event, n.get('ptgrId'))}
+                          />
                       </TableCell>
                       <TableCell className={classes.grSmallCenterCell}>{n.get('userId')}</TableCell>
                       <TableCell className={classes.grSmallCenterCell}>{regDate}</TableCell>
                       <TableCell className={classes.grSmallCenterCell}>{expireDate}</TableCell>
-                      <TableCell className={classes.grSmallCenterCell}>
-                        {n.get('certStatus') === 1 ? 'Y' : 'N'}
-                      </TableCell>
+                      {n.get('certStatus') === 1 ?
+                        <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                            <Button className={classes.ptgrImagePath} onClick={() => this.handleOpenCertDialog(n.get('certId'), n.get('userId'))}>
+                              Y
+                            </Button>
+                        </TableCell>
+                      :
+                        <TableCell className={classes.grSmallCenterCell}>
+                          N
+                        </TableCell>
+                      }
                       <TableCell className={classes.grSmallCenterCell}>{n.get('buildStatus') === 1 ? 'Y' : 'N'}</TableCell>
                       <TableCell className={classes.grSmallCenterCell}>
-                        {imageStatusComplete ?
+                        {imageComplete ?
                           n.get('imageName')
                         : null
                         }
                       </TableCell>
                       <TableCell className={classes.grSmallOverflowClickCenterCell}>
-                        {imageStatusComplete ?
+                        {imageComplete ?
                           <Button className={classes.ptgrImagePath} variant="contained" color="secondary" onClick={ () => this.handleClickPathDetail(n.get('imageUrl')) }>
                             {t('btnOpenImagePath')}
                           </Button>
@@ -491,6 +506,7 @@ class PortableApplyManage extends Component {
         </GRPane>
         <GRConfirm />
         <ImagePathDetail />
+        <CertDetailDialog />
       </React.Fragment>
     );
   }
@@ -503,6 +519,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   ApplyActions: bindActionCreators(ApplyActions, dispatch),
+  PortableCertActions: bindActionCreators(PortableCertActions, dispatch),
   GRAlertActions: bindActionCreators(GRAlertActions, dispatch),
   GRConfirmActions: bindActionCreators(GRConfirmActions, dispatch),
 });

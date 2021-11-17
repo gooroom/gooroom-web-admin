@@ -420,9 +420,10 @@ export const GRCommonStyle = theme => ({
         textAlign: "center",
         textOverflow: "ellipsis",
     },
-    grSmallAndAndDateCell: {
-        padding: "10px 10px 10px 0px",
+    grSmallAndDateCell: {
+        padding: "0px 10px 0px 10px",
         cursor: "center",
+        textAlign: "center",
     },
     grSmallOverflowClickCenterCell: {
       padding: "0px 0px 0px 0px",
