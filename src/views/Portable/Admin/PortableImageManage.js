@@ -88,7 +88,7 @@ class PortableImageManage extends React.Component {
   handleClickAllCheck = (event, checked) => {
     const { ImageActions, ImageProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const newCheckedIds = getItemsExceptCreating(ImageProps, compId, 'ptgrId', checked);
+    const newCheckedIds = getItemsExceptCreating(ImageProps, compId, 'imageId', 'status', checked);
 
     ImageActions.changeCompVariable({
       name: 'checkedIds',
@@ -207,7 +207,7 @@ class PortableImageManage extends React.Component {
     const compId = this.props.match.params.grMenuId;
 
     const listObj = ImageProps.getIn(['viewItems', compId]);
-    const checkableItems =  listObj && getItemsExceptCreating(ImageProps, compId, 'ptgrId', true, false);
+    const checkableItems =  listObj && getItemsExceptCreating(ImageProps, compId, 'ptgrId', 'status', true, false);
     const disableDelete = !listObj || !listObj.get('checkedIds') || listObj.get('checkedIds') === 0;
 
     const now = moment(new Date().getTime('YYYY-MM-DD'));

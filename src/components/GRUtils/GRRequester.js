@@ -109,5 +109,12 @@ export function requestMultipartFormAPI(url, param, headers) {
 
 // const instanceOfCollection = collection();
 
+export function grRequestGetAPI(url, data) {
 
-
+  return axios({
+    method: 'GET',
+    url: GPMS_URL + url,
+    withCredentials: false,
+    data: data,
+  });
+}

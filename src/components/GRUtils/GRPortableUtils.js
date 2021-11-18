@@ -45,13 +45,13 @@ export const toStringList = (ids) => {
   }, '');
 };
 
-export const getItemsExceptCreating = (propObj, compId, idName, checked, mappingToId = true) => {
+export const getItemsExceptCreating = (propObj, compId, idName, status, checked, mappingToId = true) => {
   const listData = propObj.getIn(['viewItems', compId, 'listData']);
 
   if(checked) {
     const datas = (listData) ? listData.filter((e) => {
 
-      if (PORTABLE_IMAGE_STATUS_CODE[e.get('imageStatus')] !== PORTABLE_IMAGE_STATUS_CODE.CREATE) {
+      if (PORTABLE_IMAGE_STATUS_CODE[e.get(status)] !== PORTABLE_IMAGE_STATUS_CODE.CREATE) {
         return true;
       }
 
@@ -59,11 +59,17 @@ export const getItemsExceptCreating = (propObj, compId, idName, checked, mapping
       })
     : List([]);
 
-    if (datas && mappingToId) {
-      return datas.map(e => e.get(idName))
-    } else {
-      return datas;
+    if (datas) {
+      if (mappingToId) {
+        return datas.map(e => {
+          return e.get(idName)
+        });
+      } else {
+        return datas;
+      }
     }
+
+    return List([]);
   } else {
     return List([]);
   }

@@ -98,7 +98,7 @@ class PortableApplyManage extends Component {
   handleClickAllCheck = (event, checked) => {
     const { ApplyActions, ApplyProps } = this.props;
     const compId = this.props.match.params.grMenuId;
-    const newCheckedIds = getItemsExceptCreating(ApplyProps, compId, 'ptgrId', checked);
+    const newCheckedIds = getItemsExceptCreating(ApplyProps, compId, 'ptgrId', 'imageStatus', checked);
 
     ApplyActions.changeCompVariable({
       name: 'checkedIds',
@@ -285,7 +285,7 @@ class PortableApplyManage extends Component {
     const compId = this.props.match.params.grMenuId;
 
     const listObj = ApplyProps.getIn(['viewItems', compId]);
-    const checkableItems =  listObj && getItemsExceptCreating(ApplyProps, compId, 'ptgrId', true, false);
+    const checkableItems =  listObj && getItemsExceptCreating(ApplyProps, compId, 'ptgrId', 'imageStatus', true, false);
     const disableDelete = !listObj || !listObj.get('checkedIds') || listObj.get('checkedIds').size === 0;
 
     const now = moment(new Date().getTime('YYYY-MM-DD'));
