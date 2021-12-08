@@ -4,6 +4,7 @@ export const INPUT_STATUS = Object.freeze({
   SUCCESS: 'SUCCESS',
   EMPTY: 'EMPTY',
   FAILURE: 'FAILRE',
+  INVALID: 'INVALID',
 });
 
 export const PORTABLE_APPROVE_STATUS_TYPE = Object.freeze({

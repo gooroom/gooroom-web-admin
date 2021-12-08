@@ -1205,6 +1205,7 @@ export default {
   "msgDuplicateIds": "There are duplicate IDs.\n {{ids}}",
   "msgInvalidEmails": "There is an error in your email address.\n {{emails}}",
   "msgCompleteCsv": "File registration is complete.",
+  "msgInvalidCsvFile": "Invalid CSV file has been uploaded.",
 
   "lbInputPasswordTitle": "Set Image Password",
   "lbPortablePassword": "Password",

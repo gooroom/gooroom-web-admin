@@ -20,7 +20,7 @@ const CHG_SEARCH_TYPE = `${PORTABLE_IMAGE}/CHG_SEARCH_TYPE`;
 
 const initialState = commonHandleActions.getCommonInitialState(
   'chRegDate',
-  'asc',
+  'desc',
   {}, {
     searchType: 'ALL',
     fromDate: null,
@@ -53,7 +53,7 @@ export const readImageListPaged = (module, extParam, {alertActions, compId, lang
           alertMsg: response.data.status.message,
         });
 
-        throw response.data;
+        //throw response.data;
       }
 
       dispatch({
@@ -62,6 +62,8 @@ export const readImageListPaged = (module, extParam, {alertActions, compId, lang
         listParam: newListParam,
         response: response,
       });
+
+      return response.data;
     }
   ).catch(error => {
     dispatch({ type: COMMON_FAILURE, error: error });

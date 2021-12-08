@@ -41,7 +41,7 @@ import {
   PORTABLE_IMAGE_STATUS_TO_LOCALE,
   PORTABLE_IMAGE_STATUS_CODE,
 } from 'components/GRComponents/GRPortableConstants';
-  
+
 class PortableImageManage extends React.Component {
   constructor(props) {
     super(props);
@@ -207,8 +207,8 @@ class PortableImageManage extends React.Component {
     const compId = this.props.match.params.grMenuId;
 
     const listObj = ImageProps.getIn(['viewItems', compId]);
-    const checkableItems =  listObj && getItemsExceptCreating(ImageProps, compId, 'ptgrId', 'status', true, false);
-    const disableDelete = !listObj || !listObj.get('checkedIds') || listObj.get('checkedIds') === 0;
+    const checkableItems =  listObj && getItemsExceptCreating(ImageProps, compId, 'imageId', 'status', true, false);
+    const disableDelete = !listObj || !listObj.get('checkedIds') || listObj.get('checkedIds').size === 0;
 
     const now = moment(new Date().getTime('YYYY-MM-DD'));
     const fromDate = listObj && listObj.getIn(['listParam', 'fromDate']) ? listObj.getIn(['listParam', 'fromDate']) : now;
@@ -335,15 +335,15 @@ class PortableImageManage extends React.Component {
                             onClick={event => this.handleClickCheck(event, n.get('imageId'))}
                           />
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('userId')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      <TableCell className={classes.ptgrImageTableRowUserId}>{n.get('userId')}</TableCell>
+                      <TableCell className={classes.ptgrImageTableRowRegAt}>{formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD')}</TableCell>
+                      <TableCell className={classes.ptgrImageTableRowIsoName}>
                         {isComplete ?
                           n.get('name')
                         : null
                         }
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      <TableCell className={classes.ptgrImageTableRowIsoCreatedAt}>
                         {isCreating ?
                           n.get('durationTime') === 0 ?
                             t("txWaiting")
@@ -355,13 +355,13 @@ class PortableImageManage extends React.Component {
                           : null
                         }
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      <TableCell className={classes.ptgrImageTableRowIsoSize}>
                         {isComplete ?
                           bytesToSize(n.get('size'))
                         : null
                         }
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{imageStatus}</TableCell>
+                      <TableCell className={classes.ptgrImageTableRowImageStatus}>{imageStatus}</TableCell>
                     </TableRow>
                   )
                   })

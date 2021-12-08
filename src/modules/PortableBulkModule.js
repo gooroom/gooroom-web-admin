@@ -1,6 +1,5 @@
 import { handleActions } from 'redux-actions';
 import { requestPostAPI } from 'components/GRUtils/GRRequester';
-import { Map, fromJS } from 'immutable';
 
 import { getDuplicateStringArray } from 'components/GRUtils/GRPortableUtils';
 import { getInvalidEmailInJson, isEmpty } from 'components/GRUtils/GRValidationUtils';
@@ -27,6 +26,7 @@ const SET_STATUS_ALL = `${PORTABLE_BULK}/SET_STATUS_ALL`;
 
 const CREATE_BULK_SUCCESS = `${PORTABLE_BULK}/CREATE_BULK_SUCCESS`;
 const OPEN_CSV_GUIDE = `${PORTABLE_BULK}/OPEN_CSV_GUIDE`;
+const INVALID_CSV = `${PORTABLE_BULK}/INVALID_CSV`
 
 const initialState = {
   pending: false,
@@ -79,6 +79,13 @@ export const openCsvGuide = (isOpen) => dispatch => {
     type: OPEN_CSV_GUIDE,
     isOpenCsvGuide: isOpen,
   });
+}
+
+export const setCsvStatus = (status) => dispatch => {
+  return dispatch({
+    type: INVALID_CSV,
+    csvStatus: INPUT_STATUS.INVALID,
+  })
 }
 
 export const uploadCsvItems = (items) => dispatch => {
@@ -260,6 +267,12 @@ const reducer = {
       beginDate: action.beginDate,
       endDate: action.endDate,
       dateStatus: action.status,
+    }
+  },
+  [INVALID_CSV]: (state, action) => {
+    return {
+      ...state,
+      csvStatus: action.csvStatus,
     }
   },
   [SET_STATUS_ALL]: (state, action) => {

@@ -66,6 +66,7 @@ class PortableApplyManage extends Component {
       this.props.ApplyProps,
       extParam,
       {
+        alertActions: this.props.GRAlertActions,
         compId: this.props.match.params.grMenuId,
         lang: this.state.lang
       });
@@ -430,28 +431,28 @@ class PortableApplyManage extends Component {
                             onClick={event => this.handleClickCheck(event, n.get('ptgrId'))}
                           />
                       </TableCell>
-                      <TableCell className={classes.grSmallCenterCell}>{n.get('userId')}</TableCell>
-                      <TableCell className={classes.grSmallCenterCell}>{regDate}</TableCell>
-                      <TableCell className={classes.grSmallCenterCell}>{expireDate}</TableCell>
+                      <TableCell className={classes.ptgrApplyTableRowUserId}>{n.get('userId')}</TableCell>
+                      <TableCell className={classes.ptgrApplyTableRowRegAt}>{regDate}</TableCell>
+                      <TableCell className={classes.ptgrApplyTableRowUseAt}>{expireDate}</TableCell>
                       {n.get('certStatus') === 1 ?
-                        <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                        <TableCell className={classes.ptgrApplyTableRowCert}>
                             <Button className={classes.ptgrImagePath} onClick={() => this.handleOpenCertDialog(n.get('certId'), n.get('userId'))}>
                               Y
                             </Button>
                         </TableCell>
                       :
-                        <TableCell className={classes.grSmallCenterCell}>
+                        <TableCell className={classes.ptgrApplyTableRowCert}>
                           N
                         </TableCell>
                       }
-                      <TableCell className={classes.grSmallCenterCell}>{n.get('buildStatus') === 1 ? 'Y' : 'N'}</TableCell>
-                      <TableCell className={classes.grSmallCenterCell}>
+                      <TableCell className={classes.ptgrApplyTableRowBuildStatus}>{n.get('buildStatus') === 1 ? 'Y' : 'N'}</TableCell>
+                      <TableCell className={classes.ptgrApplyTableRowIsoName}>
                         {imageComplete ?
                           n.get('imageName')
                         : null
                         }
                       </TableCell>
-                      <TableCell className={classes.grSmallOverflowClickCenterCell}>
+                      <TableCell className={classes.ptgrApplyTableRowIsoUrl}>
                         {imageComplete ?
                           <Button className={classes.ptgrImagePath} variant="contained" color="secondary" onClick={ () => this.handleClickPathDetail(n.get('imageUrl')) }>
                             {t('btnOpenImagePath')}
@@ -459,8 +460,10 @@ class PortableApplyManage extends Component {
                         : null
                         }
                       </TableCell>
-                      <TableCell className={classes.grSmallCenterCell}>{imageStatus}</TableCell>
-                      <TableCell className={classes.grSmallCenterCell}>
+                      <TableCell className={classes.ptgrApplyTableRowImageStatus}>
+                        {imageStatus}
+                      </TableCell>
+                      <TableCell className={classes.ptgrApplyTableRowApprove}>
                         <React.Fragment>
                           {n.get('approveStatus') === 'APPROVE' ?
                             <div>{approveStatus}</div>

@@ -38,6 +38,7 @@ import { formatDateToSimple } from 'components/GRUtils/GRDates';
 import {
   PORTABLE_IMAGE_STATUS,
   PORTABLE_IMAGE_STATUS_CODE,
+  PORTABLE_IMAGE_STATUS_TO_LOCALE,
 } from 'components/GRComponents/GRPortableConstants';
 
 class PortableUserReview extends React.Component {
@@ -102,7 +103,7 @@ class PortableUserReview extends React.Component {
     document.body.removeChild(element);
   }
 
-  handleOpenCertDialog = (certId) => {
+  handleOpenCertDialog = (certId, userId) => {
     this.props.PortableCertActions.openCertDialog(true, certId, userId);
   }
 
@@ -239,7 +240,7 @@ class PortableUserReview extends React.Component {
                   const regDate = formatDateToSimple(n.get('regDt'), 'YYYY-MM-DD');
                   const expireDate = `${formatDateToSimple(n.get('beginDt'), 'YYYY-MM-DD')} ~ ${formatDateToSimple(n.get('expiredDt'), 'YYYY-MM-DD')}`;
                   const isExpired = moment(n.get('expiredDt')).isBefore(moment(nowDate));
-                  const imageStatus = t(PORTABLE_IMAGE_STATUS[n.get('imageStatus')]);
+                  const imageStatus = t(PORTABLE_IMAGE_STATUS_TO_LOCALE[n.get('imageStatus')]);
                   const imageStatusComplete = PORTABLE_IMAGE_STATUS_CODE[n.get('imageStatus')] === PORTABLE_IMAGE_STATUS_CODE.COMPLETE;
 
                   return (
@@ -248,8 +249,8 @@ class PortableUserReview extends React.Component {
                     >
                       <TableCell padding="checkbox" className={classes.grSmallAndClickCell}>
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{regDate}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{expireDate}</TableCell>
+                      <TableCell className={classes.grSmallCenterCell}>{regDate}</TableCell>
+                      <TableCell className={classes.grSmallCenterCell}>{expireDate}</TableCell>
                       {n.get('certStatus') === 1 ?
                         <TableCell className={classes.grSmallAndClickAndCenterCell}>
                             <Button className={classes.ptgrImagePath} onClick={() => this.handleOpenCertDialog(n.get('certId'), n.get('userId'))}>
@@ -261,37 +262,36 @@ class PortableUserReview extends React.Component {
                           N
                         </TableCell>
                       }
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{n.get('buildStatus') === 1 ? 'Y' : 'N'}</TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
+                      <TableCell className={classes.grSmallCenterCell}>{n.get('buildStatus') === 1 ? 'Y' : 'N'}</TableCell>
+                      <TableCell className={classes.grSmallCenterCell}>
                         {imageStatusComplete ?
                           n.get('imageName')
                         : null
                         }
                       </TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>
                       {imageStatusComplete ?
                         isExpired ?
-                          <Button
-                            className={classes.ptgrExpiredImageButton}
-                            variant="contained"
-                            color="secondary"
-                            style={{pointerEvent: "none" }}
-                          >
-                            {t('btnExpire')}
-                          </Button>
+                          <TableCell className={classes.grSmallCenterCell}>
+                            <div
+                              className={classes.ptgrExpiredImageDiv}
+                            >
+                              {t('btnExpire')}
+                            </div>
+                          </TableCell>
                         :
-                          <Button
-                            className={classes.ptgrDownloadImageButton}
-                            variant="contained"
-                            color="secondary"
-                            onClick={ () => this.handleClickDownload(n.get('imageUrl')) }
-                          >
-                            {t('btnDownload')}
-                          </Button>
+                          <TableCell className={classes.grSmallCenterCell}>
+                            <Button
+                              className={classes.ptgrDownloadImageButton}
+                              variant="contained"
+                              color="secondary"
+                              onClick={ () => this.handleClickDownload(n.get('imageUrl')) }
+                            >
+                              {t('btnDownload')}
+                            </Button>
+                          </TableCell>
                       : null
                       }
-                      </TableCell>
-                      <TableCell className={classes.grSmallAndClickAndCenterCell}>{imageStatus}</TableCell>
+                      <TableCell className={classes.grSmallCenterCell}>{imageStatus}</TableCell>
                     </TableRow>
                   )
                   })

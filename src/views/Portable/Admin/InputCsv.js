@@ -15,10 +15,18 @@ import ReactFileReader from 'react-file-reader';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 
 import { grRequestGetAPI } from 'components/GRUtils/GRRequester';
-import { convertCsvToJson } from 'components/GRUtils/GRPortableUtils'
+import { convertCsvToJson, isPortableCsvFile } from 'components/GRUtils/GRPortableUtils'
 import { isEmpty, isUndefined } from 'components/GRUtils/GRValidationUtils';
 
 import { INPUT_STATUS } from 'components/GRComponents/GRPortableConstants';
+
+const rowHeads = {
+  id: 'ID',
+  passwd: 'Password',
+  email: 'Email',
+  name: 'Name',
+  phone: 'Phone',
+};
 
 class InputCsv extends React.Component {
   constructor(props) {
@@ -57,22 +65,28 @@ class InputCsv extends React.Component {
   readCsv = (files) => {
     const reader = new FileReader();
 
-      reader.onload = (e) => {
-      const items = convertCsvToJson(reader.result.toString());
-      const rearItem = items[items.length - 1];
-      if (isEmpty(rearItem['ID']) && isUndefined(rearItem['Email'])) {
-            items.splice(items.length - 1, 1);
-          }
+    reader.onload = (e) => {
+      const { t } = this.props;
+      if (isPortableCsvFile(reader.result.toString())) {
+        const items = convertCsvToJson(reader.result.toString());
+        const rearItem = items[items.length - 1];
+        if (isEmpty(rearItem['ID']) && isUndefined(rearItem['Email']) &&
+            isUndefined(rearItem['Password']) && isUndefined(rearItem['Phone']) &&
+            isUndefined(rearItem['NamE']))
+          items.splice(items.length - 1, 1);
 
-      this.props.BulkActions.uploadCsvItems(
-        items
-      ).then(response => {
-      }).catch(error => {
-        this.props.GRAlertActions.showAlert({
-          alertTitle: t('dtSystemError'),
-          alertMsg: error.message,
+        this.props.BulkActions.uploadCsvItems(
+          items
+        ).then(response => {
+        }).catch(error => {
+          this.props.GRAlertActions.showAlert({
+            alertTitle: t('dtSystemError'),
+            alertMsg: error.message,
+          });
         });
-      });
+      } else {
+        this.props.BulkActions.setCsvStatus(INPUT_STATUS.INVALID);
+      }
     }
 
     reader.readAsText(files[0]);
@@ -109,6 +123,9 @@ class InputCsv extends React.Component {
     let message = t('msgEmptyCsv');
     const status = BulkProps['csvStatus'];
     switch (status) {
+      case INPUT_STATUS.INVALID:
+        message = t('msgInvalidCsvFile');
+        break;
       case INPUT_STATUS.FAILURE:
         message = this.updateErrorMessage();
         break;
@@ -178,7 +195,7 @@ class InputCsv extends React.Component {
                     width: 450
                   }}
                   value={message}
-                  error={status === INPUT_STATUS.FAILURE || status === INPUT_STATUS.EMPTY}
+                  error={status === INPUT_STATUS.FAILURE || status === INPUT_STATUS.EMPTY || status === INPUT_STATUS.INVALID}
                 />
               </Grid>
             </Grid>

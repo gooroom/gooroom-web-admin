@@ -1206,6 +1206,7 @@ export default {
   "msgDuplicateIds": "해당 아이디가 중복되었습니다.\n {{ids}}",
   "msgInvalidEmails": "이메일 주소에 오류가 있습니다.\n {{emails}}",
   "msgCompleteCsv": "파일 등록이 완료되었습니다.",
+  "msgInvalidCsvFile": "유효하지 않은 CSV파일이 업로드 되었습니다.",
 
   "lbInputPasswordTitle": "이미지 암호화 설정",
   "lbPortablePassword": "비밀번호",

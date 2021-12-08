@@ -1,13 +1,29 @@
 import { PORTABLE_IMAGE_STATUS_CODE } from 'components/GRComponents/GRPortableConstants';
 import { List } from 'immutable';
 
+//const rowHeads = {
+//  id: 'ID',
+//  passwd: 'Password',
+//  email: 'Email',
+//  name: 'Name',
+//  phone: 'Phone',
+//};
+
+const rowHeads = ['ID', 'Password', 'Email', 'Name', 'Phone'];
+
+const getCsvRows = (csv) => {
+  return csv.split('\r\n')
+}
+
+const getCsvHead = (rows) => {
+  return rows[0].split(',');
+}
+
 export const convertCsvToJson = (csv) => {
-  const rows = csv.split('\r\n');
+  const rows = getCsvRows(csv);
+  const headers = getCsvHead(rows);
 
   const json = [];
-
-  const headers = rows[0].split(',');
-
   for (let i = 1; i < rows.length; i++) {
     let obj = {};
     let row = rows[i].split(',');
@@ -21,6 +37,21 @@ export const convertCsvToJson = (csv) => {
 
   return json;
 };
+
+export const isPortableCsvFile = (csv) => {
+  const rows = getCsvRows(csv);
+  const headers = getCsvHead(rows);
+
+  if (headers.length !== rowHeads.length)
+    return false;
+
+  for (let i = 0; i < rowHeads.length; i++) {
+    if (headers.indexOf(rowHeads[i]) === -1)
+      return false;
+  }
+
+  return true;
+}
 
 export const getDuplicateStringArray = (arr) => {
   const duplicate = [];

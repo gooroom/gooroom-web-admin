@@ -576,8 +576,99 @@ export const GRCommonStyle = theme => ({
         color: "#ffffff",
         backgroundColor: "#c00000",
     },
+    ptgrExpiredImageDiv: {
+      borderRadius: "5px",
+      padding: "2px 0px 0px 0px",
+      minWidth: "26px",
+      minHeight: "24px",
+      color: "#ffffff",
+      backgroundColor: "#c00000",
+      textAlign: "center",
+      verticalAlign: "middle",
+      curdor: "pointer",
+    },
     ptgrEmailTextField: {
       width: "130px"
-    }
+    },
+    ptgrApplyTableRowCheck: {
+        padding: "0px",
+        cursor: "pointer",
+        width: "50px",
+    },
+    ptgrApplyTableRowUserId: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "100px",
+    },
+    ptgrApplyTableRowRegAt: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "114px",
+    },
+    ptgrApplyTableRowUseAt: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "254px",
+    },
+    ptgrApplyTableRowCert: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "100px",
+    },
+    ptgrApplyTableRowBuildStatus: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "100px",
+    },
+    ptgrApplyTableRowIsoName: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "450px",
+    },
+    ptgrApplyTableRowIsoUrl: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "170px",
+    },
+    ptgrApplyTableRowImageStatus: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "147px",
+    },
+    ptgrApplyTableRowApprove: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "93px",
+    },
+    ptgrImageTableRowUserId: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "130px",
+    },
+    ptgrImageTableRowRegAt: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "100px",
+    },
+    ptgrImageTableRowIsoName: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "530px",
+    },
+    ptgrImageTableRowIsoCreatedAt: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "350px",
+    },
+    ptgrImageTableRowIsoSize: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "143px",
+    },
+    ptgrImageTableRowImageStatus: {
+        padding: "0px 0px 0px 0px",
+        textAlign: "center",
+        width: "210px",
+    },
 });
 

@@ -6,10 +6,7 @@ import * as commonHandleActions from 'modules/commons/commonHandleActions';
 import { toStringList } from 'components/GRUtils/GRPortableUtils';
 
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
-import { EvStation } from '@material-ui/icons';
 import moment from 'moment';
-
-import { PORTABLE_APPROVE_STATUS_TYPE } from 'components/GRComponents/GRPortableConstants';
 
 const PORTABLE_APPLY = 'portableApply';
 
@@ -28,7 +25,7 @@ const OPEN_IMAGE_PATH = `${PORTABLE_APPLY}/OPEN_IMAGE_PATH`;
 
 const initialState = commonHandleActions.getCommonInitialState(
   'chRegDate',
-  'asc',
+  'desc',
   {}, {
     searchType: 'ALL',
     fromDate: null,
@@ -46,7 +43,7 @@ export const openImagePathDetail = (isOpen, imagePath) => dispatch => {
   })
 }
 
-export const readApplyListPaged = (module, extParam, { compId, lang }) => dispatch => {
+export const readApplyListPaged = (module, extParam, { alertActions, compId, lang }) => dispatch => {
   const newListParam = (module.getIn(['viewItems', compId])) ? 
     module.getIn(['viewItems', compId, 'listParam']).merge(extParam) : 
     module.get('defaultListParam');
@@ -72,14 +69,6 @@ export const readApplyListPaged = (module, extParam, { compId, lang }) => dispat
         //  alertMsg: response.data.status.message,
         //});
 
-        dispatch({
-          type: GET_APPLY_LISTPAGED_SUCCESS,
-          compId: compId,
-          listParam: newListParam,
-          response: response,
-        });
-
-        return response.data;
       }
 
       dispatch({
@@ -88,6 +77,8 @@ export const readApplyListPaged = (module, extParam, { compId, lang }) => dispat
         listParam: newListParam,
         response: response,
       });
+
+      return response.data;
     }
   ).catch(error => {
     dispatch({ type: COMMON_FAILURE, error: error });
