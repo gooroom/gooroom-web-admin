@@ -150,7 +150,7 @@ class PortableImageManage extends React.Component {
     GRConfirmActions.showConfirm({
       confirmTitle: t("dtDeleteImageInfo"),
       confirmMsg: isAll ?
-        t("msgDeleteAllPortableConfirm", {count: ImageProps.getIn(['viewItems', compId, 'listData']).size})
+        t("msgDeleteAllPortableConfirm", {count: ImageProps.getIn(['viewItems', compId, 'listParam', 'rowsFiltered'])})
       :
         t("msgDeletePortableConfirm"),
       handleConfirmResult: (confirmValue, confirmObject) => {

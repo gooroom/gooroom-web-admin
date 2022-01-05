@@ -224,7 +224,7 @@ class PortableApplyManage extends Component {
     GRConfirmActions.showConfirm({
       confirmTitle: t("dtDeletePortableInfo"),
       confirmMsg: isAll ?
-        t("msgDeleteAllPortableConfirm", {count: ApplyProps.getIn(['viewItems', compId, 'listParam', 'rowsTotal'])})
+        t("msgDeleteAllPortableConfirm", {count: ApplyProps.getIn(['viewItems', compId, 'listParam', 'rowsFiltered'])})
       :
         t("msgDeletePortableConfirm"),
       handleConfirmResult: (confirmValue, confirmObject) => {
