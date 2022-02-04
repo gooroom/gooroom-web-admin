@@ -10,6 +10,7 @@ import sha256 from 'sha-256-js';
 import { formatDateToSimple } from 'components/GRUtils/GRDates';
 
 import { INPUT_STATUS } from 'components/GRComponents/GRPortableConstants';
+import { isValidPassword } from 'components/GRUtils/GRValidationUtils';
 
 export const PORTABLE_BULK = 'portableBulk';
 const COMMON_PENDING = `${PORTABLE_BULK}/COMMON_PENDING`;
@@ -54,12 +55,15 @@ const initialState = {
 
 const makeParameter = (module, params, adminId) => {
   return params.reduce((acc, cur, index) => {
+    const userPw = sha256(cur.ID + sha256(cur.Password));
+    const isoPw = module['passwd'];
+
     const obj = {
       [`portableListVO[${index}].userId`]: cur.ID,
       [`portableListVO[${index}].userNm`]: cur.Name,
-      [`portableListVO[${index}].userPw`]: sha256(cur.ID + sha256(cur.Password)),
+      [`portableListVO[${index}].userPw`]: userPw,
       [`portableListVO[${index}].notiEmail`]: cur.Email,
-      [`portableListVO[${index}].isoPw`]: module['passwd'],
+      [`portableListVO[${index}].isoPw`]: isoPw,
       [`portableListVO[${index}].beginDt`]: formatDateToSimple(module['beginDate'], 'YYYY-MM-DD'),
       [`portableListVO[${index}].expiredDt`]: formatDateToSimple(module['endDate'], 'YYYY-MM-DD'),
       [`portableListVO[${index}].adminId`]: adminId,
@@ -144,6 +148,8 @@ export const setPasswd = (passwd, confirm) => dispatch => {
 
   if (isEmpty(passwd)) {
     param['status'] = INPUT_STATUS.EMPTY;
+  } else if (!isValidPassword(passwd)) {
+    param['status'] = INPUT_STATUS.INVALID;
   } else if (!isEmpty(confirm) && passwd !== confirm) {
     param['status'] = INPUT_STATUS.FAILURE;
   } else if (isEmpty(confirm)) {

@@ -1217,7 +1217,7 @@ export default {
   "lbBeginDate": "시작일",
   "lbEndDate": "종료일",
   "msgErrorEndDate": "시작일보다 이전으로 설정할 수 없습니다.",
-  "msgErrorPasswordInvalid": "영문 + 숫자 + 특수문자 및 8자리 이상으로 구성하여야 합니다.",
+  "msgErrorPasswordInvalid": "영문 + 숫자 + 특수문자 및 8자리 이상 20자 이하로 구성하여야 합니다.",
   "msgErrorPasswordNotCompare": "비밀번호가 일치하지 않습니다.",
   "msgErrorPasswordEmpty": "비밀번호를 입력하세요.",
   "msgBulkSuccess": "서버에서 일괄등록을 진행합니다.",

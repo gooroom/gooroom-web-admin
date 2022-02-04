@@ -1216,7 +1216,7 @@ export default {
   "lbBeginDate": "Begin Date",
   "lbEndDate": "End Date",
   "msgErrorEndDate": "It cannot be set earlier than the start date.",
-  "msgErrorPasswordInvalid": "It must consist of word + numbers + special characters and 8 or more characters.",
+  "msgErrorPasswordInvalid": "It must consist of word + numbers + special characters and 8 or more and 20 or less characters.",
   "msgErrorPasswordNotCompare": "Password do not match.",
   "msgErrorPasswordEmpty": "Please enter a password.",
   "msgBulkSuccess": "Bulk registration is performed on the server.",

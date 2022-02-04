@@ -29,6 +29,9 @@ class InputPassword extends React.PureComponent {
 
     let message = '';
     switch (status) {
+      case INPUT_STATUS.INVALID:
+          message = t('msgErrorPasswordInvalid');
+        break;
       case INPUT_STATUS.FAILURE:
           message = t('msgErrorPasswordNotCompare');
         break;
