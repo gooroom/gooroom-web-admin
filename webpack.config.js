@@ -92,8 +92,9 @@ module.exports = (env = {}) => {
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-          BUILD_DATE: `'${new Date().toISOString().slice(4,10).replace(/-/g,"")}'`,
-          VERSION: `'v2.0'`
+          BUILD_DATE: `'${new Date().toISOString().slice(4,10).replace(/-/g,"").replace(/(^0+)/, "")}'`,
+          MAJOR_VERSION: `'v2'`,
+          MINOR_VERSION: `'${new Date().toISOString().slice(3,4).replace(/-/g,"")}'`,
         }
       }),
       new webpack.HotModuleReplacementPlugin(),
