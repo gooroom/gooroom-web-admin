@@ -119,6 +119,8 @@ class ClientConfSettingManage extends Component {
         logMaxCount: 3,
         systemKeepFree: 10,
 
+        useHomeReset: false,
+        cleanModeAllow: false,
         rootAllow: true,
         sudoAllow: true,
         policykitUser: 'sudo',
