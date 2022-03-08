@@ -92,6 +92,8 @@ class DividedAdminManageDialog extends Component {
             return true;
         } else if(editObj.get('isNoticeAdmin') !== undefined && editObj.get('isNoticeAdmin') === '1') {
             return true;
+        } else if(editObj.get('isPortableAdmin') !== undefined && editObj.get('isPortableAdmin') === '1') {
+            return true;
         }
         return false;
     }
@@ -395,7 +397,7 @@ class DividedAdminManageDialog extends Component {
                                             <ListItemIcon style={{marginRight:0}}><GRItemIcon fontSize='small'/></ListItemIcon>
                                             <ListItemText primary={
                                                 <TextValidator value={n} name={`ip_${index}`}
-                                                    validators={['required', 'matchRegexp:^[0-9a-fA-F:.*]+$']}
+                                                    validators={['required', 'matchRegexp:^[0-9.*]+$']}
                                                     errorMessages={[t("lbIp"), t("msgWrongIpString")]}
                                                     onChange={this.handleValueChangeForIp(index)}
                                                     className={classNames(classes.fullWidth, classes.dialogItemRow)}
@@ -417,6 +419,9 @@ class DividedAdminManageDialog extends Component {
                             <DividedAdminManageRuleSelector compId={compId} editingItem={editingItem} />
                         </Grid>
                     </Grid>
+                    {/*(editingItem.get('isPortableAdmin') === '1') &&
+                      <div style={{color: "red"}}>{t("msgCreatePortableBuildServerBefore")}</div>
+                    */}
                     {(editingItem.get('adminTp') !== Constants.SUPER_TYPECODE) &&
                         <GroupMultiSelector compId={compId} title={t('lbManagedClientGroup')} 
                             isCheckMasterOnly={true}

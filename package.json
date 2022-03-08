@@ -50,6 +50,7 @@
     "react-app-polyfill": "^1.0.4",
     "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.8.6",
+    "react-file-reader": "^1.1.4",
     "react-i18next": "9.0.2",
     "react-measure": "^2.3.0",
     "react-motion": "^0.5.2",

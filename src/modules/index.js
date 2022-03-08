@@ -53,6 +53,16 @@ import NoticeModule from './NoticeModule';
 import NoticePublishModule from './NoticePublishModule';
 import NoticePublishExtensionModule from './NoticePublishExtensionModule';
 
+/* for PTGR */
+import PortableBulkModule from './PortableBulkModule';
+import PortableApplyModule from './PortableApplyModule';
+import PortableImageModule from './PortableImageModule';
+
+import PortableUserApplyModule from './PortableUserApplyModule';
+import PortableUserReviewModule from './PortableUserReviewModule';
+import UserInfoModule from './UserInfoModule';
+import PortableCertModule from './PortableCertModule';
+
 export default combineReducers({
 
     GlobalModule,
@@ -106,6 +116,13 @@ export default combineReducers({
 	SiteManageModule,
     NoticeModule,
     NoticePublishModule,
-    NoticePublishExtensionModule
+    NoticePublishExtensionModule,
 
+    PortableBulkModule,
+    PortableApplyModule,
+    PortableImageModule,
+    PortableUserApplyModule,
+    PortableUserReviewModule,
+    UserInfoModule,
+    PortableCertModule,
 });

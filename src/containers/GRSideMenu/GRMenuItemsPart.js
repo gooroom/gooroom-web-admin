@@ -134,6 +134,31 @@ export default {
           level: 2,
         }
       ]
+    },
+    /* for PTGR */
+    {
+      name: 'menuPortable',
+      id: 'portable',
+      url: '/portable',
+      level: 1,
+      children: [
+        {
+          name: 'menuPortableBulkManage',
+          id: 'GRM1001',
+          url: '/portable/admin/bulk/GRM1001/menuPortableBulkManage',
+          level: 2,
+        }, {
+          name: 'menuPortableApplyManage',
+          id: 'GRM1002',
+          url: '/portable/admin/apply/GRM1002/menuPortableApplyManage',
+          level: 2,
+        }, {
+          name: 'menuPortableImageManage',
+          id: 'GRM1003',
+          url: '/portable/admin/image/GRM1003/menuPortableImageManage',
+          level: 2,
+        }
+      ]
     }
   ]
 };

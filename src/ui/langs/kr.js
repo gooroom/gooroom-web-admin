@@ -1,6 +1,7 @@
 export default {
   "gpmsTest": "커뮤니티",
   "adminMenu": "관리자",
+  "userMenu": "사용자",
   "serverMenu": "서버관리",
 
   // columns
@@ -1185,6 +1186,120 @@ export default {
   "msgInheritUpdateServer": "업데이트서버정보를 상속하시겠습니까?",
   "msgApplyUpdateServerChild": "업데이트서버정보가 하위 그룹에 적용되었습니다.",
 
-  "lbAdminActHistory": "관리자 작업 이력"
-  
+  "lbAdminActHistory": "관리자 작업 이력",
+ 
+  /* for PTGR  */
+  "lbPortablePart": "휴대형구름 권한",
+  "colMngPortable": "휴대형구름관리",
+  "menuPortable": "휴대형구름",
+  "menuPortableBulkManage": "일괄 신청",
+  "menuPortableApplyManage": "신청 현황 조회",
+  "menuPortableImageManage": "이미지 신청 관리",
+  "menuPortableServer": "휴대형구름 서버 설정",
+
+  // portable bulk manage
+  "btnApplyCsv": "CSV 일괄 등록",
+  "btnDownloadCsv": "CSV 템플릿 다운로드",
+  "btnAllCreate": "일괄 생성",
+  "lbResultCsv": "등록 결과",
+  "msgEmptyCsv": "CSV파일을 등록하세요.",
+  "msgDuplicateIds": "해당 아이디가 중복되었습니다.\n {{ids}}",
+  "msgInvalidEmails": "이메일 주소에 오류가 있습니다.\n {{emails}}",
+  "msgCompleteCsv": "파일 등록이 완료되었습니다.",
+  "msgInvalidCsvFile": "유효하지 않은 CSV파일이 업로드 되었습니다.",
+
+  "lbInputPasswordTitle": "이미지 암호화 설정",
+  "lbPortablePassword": "비밀번호",
+  "lbConfirmPassword": "비밀번호 확인",
+
+  "lbInputDateTitle": "사용기간 설정",
+  "lbToday": "오늘 날짜",
+  "lbBeginDate": "시작일",
+  "lbEndDate": "종료일",
+  "msgErrorEndDate": "시작일보다 이전으로 설정할 수 없습니다.",
+  "msgErrorPasswordInvalid": "영문 + 숫자 + 특수문자 및 8자리 이상 20자 이하로 구성하여야 합니다.",
+  "msgErrorPasswordNotCompare": "비밀번호가 일치하지 않습니다.",
+  "msgErrorPasswordEmpty": "비밀번호를 입력하세요.",
+  "msgBulkSuccess": "서버에서 일괄등록을 진행합니다.",
+
+  // apply manage
+  "stUser": "신청자",
+  "stRegDate": "신청일",
+  "stImageStatus": "발급 결과",
+  "btnReApproveAll": "일괄 재등록",
+  "btnDeleteAll": "전체 삭제",
+
+  "colUserId": "신청자",
+  "colRegDate": "신청일",
+  "colExpireDate": "사용기간",
+  "colCertStatus": "인증서 발급",
+  "colBuildStatus": "빌드 전달 결과",
+  "colImageName": "이미지 명",
+  "colImageUrl": "이미지 경로",
+  "colImagePublish": "이미지 발급절차",
+  "colApproveStatus": "승인 여부",
+
+  "btnApprove": "승인",
+  "btnReapprove": "재승인",
+  "btnOpenImagePath": "경로확인",
+  "lbImagePathTitle": "이미지 경로 확인",
+  "txApproveRequest": "승인",
+  "txApproveReApprove": "재등록",
+  "txApproveApprove": "승인완료",
+
+  "dtPortable": "휴대형구름",
+  "dtDeletePortableInfo": "신청 정보 삭제",
+  "msgApproveConfirm": "해당 신청 내역을 승인하시겠습니까?",
+  "msgReApproveAllConfirm": "전체 {{count}}개의 내역을 재승인 하시겠습니까?",
+  "msgReApproveAll": "승인 처리 중입니다.",
+  "msgDeletePortableConfirm": "선택된 항목을 삭제하시겠습니까?",
+  "msgDeleteAllPortableConfirm": "전체 {{count}}개의 정보가 삭제됩니다. 계속 하시겠습니까?",
+
+  // image manage
+  "txPortableImageApply": "신청",
+  "txPortableImageCreate": "생성",
+  "txPortableImageComplete": "경로전송",
+  "txPortableImageDelete": "삭제",
+  "txPortableImageFailed": "실패",
+  "txPortableImageAborted": "중단",
+  "stImageCreatedDate": "생성시간",
+  "colImageCreatedDate": "이미지 생성시간",
+  "colImageSize": "이미지 크기",
+  "dtDeleteImageInfo": "이미지 정보 삭제",
+  "txWaiting": "대기중",
+  "txEstimate": "{{minutes}}분 예상",
+
+  // client apply
+  "menuPortableClientApply": "휴대형 구름 신청",
+  "lbApplyAccount": "신청 계정",
+  "lbInputReceiveTitle": "이미지 수신경로 설정",
+  "lbNotiFromGPMS": "GPMS 화면 알림 받기",
+  "btnPortableRegist": "사용 신청",
+  "msgInvalidEmail": "유효하지 않은 이메일입니다.",
+  "msgEmptyEmail": "이메일을 입력하세요.",
+  "msgRegistPortable": "휴대형 구름 신청을 완료하였습니다.",
+  "stEnterDirect":"직접 입력",
+
+  // client apply list
+  "menuPortableClient": "휴대형구름",
+  "menuPortableClientApplyList": "휴대형 구름 신청 현황",
+  "btnDownload": "다운로드",
+  "btnExpire": "기간만료",
+  "colCreateDate": "생성시간",
+  "colTransferDate": "전송시간",
+  "dtCertDialog": "인증서 생성 로그",
+  "btnPtgrSearch": "검색",
+
+  // ptgr build server
+  "lbPortableServerConf": "빌드 서버 설정",
+  "lbPtgrBuildDomain": "주소",
+  "lbPtgrBuildId": "아이디",
+  "lbPtgrBuildToken": "토큰",
+  "lbSavePortableServer": "휴대형구름 서버 설정",
+  "msgSavePortableServer": "설정을 저장하시겠습니까?",
+  "msgErrorPortableServer": "설정이 저장되지 않았습니다.",
+  "msgCreatePortableBuildServerBefore": "휴대형구름 사용 시 빌드서버를 설정해야합니다.",
+  "msgPortableInputDomain": "도메인을 입력하세요.",
+  "msgPortableInputId": "아이디를 입력하세요.",
+  "msgPortableInputToken": "토큰값을 입력하세요.",
 };

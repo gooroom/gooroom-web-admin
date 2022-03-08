@@ -1,4 +1,4 @@
-import axios, { post }  from "axios";
+import axios  from "axios";
 import qs from "qs";
 
 export const GPMS_URL = '/gpms/';
@@ -109,5 +109,12 @@ export function requestMultipartFormAPI(url, param, headers) {
 
 // const instanceOfCollection = collection();
 
+export function grRequestGetAPI(url, data) {
 
-
+  return axios({
+    method: 'GET',
+    url: GPMS_URL + url,
+    withCredentials: false,
+    data: data,
+  });
+}
