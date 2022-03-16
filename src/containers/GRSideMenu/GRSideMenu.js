@@ -149,7 +149,15 @@ class GRSideMenu extends React.Component {
     if(window.gpmsain === Constants.SUPER_RULECODE) {
       sideMenuList = menuList(menuItemsSuper.items, 0);
     } else if(window.gpmsain === Constants.ADMIN_RULECODE) {
-      sideMenuList = menuList(menuItemsAdmin.items, 0);
+      //sideMenuList = menuList(menuItemsAdmin.items, 0);
+      let menus = fromJS(menuItemsAdmin);
+
+      if(window.usePortable === 0) {
+        const index = menus.get('items').findIndex((n) => (n.get('name') === 'menuPortable'));
+        menus = menus.deleteIn(['items', index]);
+      }
+
+      sideMenuList = menuList(menus.get('items').toJS(), 0);
     } else if(window.gpmsain === Constants.PART_RULECODE) {
       let menus = fromJS(menuItemsPart);
       if(window.roleClientAdmin === 0) {

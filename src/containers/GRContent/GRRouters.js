@@ -74,9 +74,12 @@ class GRRouters extends Component {
         return Dashboard;
     } else if(window.gpmsain === Constants.PART_RULECODE) {
         return PartMain;
-    } else if(window.gpmsain === Constants.USER_RULECODE) {
+    }
+    /*
+    else if(window.gpmsain === Constants.USER_RULECODE) {
         return PortableUserMain;
     }
+    */
   }
 
   renderSuper = () => {
@@ -133,11 +136,14 @@ class GRRouters extends Component {
         <Route path="/notices/noticemanage/:grMenuId/:grMenuName" component={NoticeMasterManage} />
 
         <Route path="/jobs/jobmanage/:grMenuId/:grMenuName" component={JobManage} />
-
-        <Route path="/portable/admin/bulk/:grMenuId/:grMenuName" component={PortableBulkManage} />
-        <Route path="/portable/admin/apply/:grMenuId/:grMenuName" component={PortableApplyManage} />
-        <Route path="/portable/admin/image/:grMenuId/:grMenuName" component={PortableImageManage} />
-
+        {window.usePortable ?
+        <Switch>
+          <Route path="/portable/admin/bulk/:grMenuId/:grMenuName" component={PortableBulkManage} />
+          <Route path="/portable/admin/apply/:grMenuId/:grMenuName" component={PortableApplyManage} />
+          <Route path="/portable/admin/image/:grMenuId/:grMenuName" component={PortableImageManage} />
+        </Switch>
+          : null
+        }
       </Switch>
     )
   }
